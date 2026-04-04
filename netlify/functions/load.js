@@ -1,19 +1,55 @@
-import { getStore } from "@netlify/blobs";
+const { getStore } = require('@netlify/blobs');
 
-export default async (req) => {
-  const url = new URL(req.url);
-  const name = url.searchParams.get("name");
-  if (!name) {
-    return new Response(JSON.stringify({ error: "Missing name" }), { status: 400 });
+exports.handler = async (event, context) => {
+  const headers = {
+    'Content-Type': 'application/json',
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Methods': 'GET, OPTIONS'
+  };
+
+  if (event.httpMethod === 'OPTIONS') {
+    return { statusCode: 200, headers, body: '' };
   }
-  const store = getStore("schedules");
-  const data = await store.getJSON(name);
-  if (!data) {
-    return new Response(JSON.stringify({ error: "Not found" }), { status: 404 });
+  if (event.httpMethod !== 'GET') {
+    return { statusCode: 405, headers, body: 'Method not allowed' };
   }
-  return new Response(JSON.stringify(data), {
-    headers: { "Content-Type": "application/json" }
-  });
+
+  try {
+    const store = getStore({
+      name: 'schedules',
+      siteID: process.env.SITE_ID || process.env.NETLIFY_SITE_ID,
+      token: process.env.NETLIFY_TOKEN,
+      consistency: 'strong'
+    });
+
+    const name = event.queryStringParameters?.name;
+
+    if (!name) {
+      const { blobs } = await store.list();
+      return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify({ schedules: blobs.map(b => b.key) })
+      };
+    }
+
+    const data = await store.getJSON(name);
+    if (data === null || data === undefined) {
+      return { statusCode: 404, headers, body: JSON.stringify({ error: 'Not found' }) };
+    }
+
+    return {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify(data)
+    };
+  } catch (err) {
+    console.error('Load error:', err);
+    return {
+      statusCode: 500,
+      headers,
+      body: JSON.stringify({ error: err.message })
+    };
+  }
 };
-
-export const config = { path: "/api/load" };
