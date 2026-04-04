@@ -2,15 +2,12 @@
   publish = "."
   command = ""
 
-[build.environment]
-  NODE_VERSION = "20"
-  AWS_LAMBDA_JS_RUNTIME = "nodejs20.x"
-
-[functions]
-  directory = "netlify/functions"
-  node_bundler = "esbuild"
-
 [[headers]]
   for = "/*"
   [headers.values]
-    Access-Control-Allow-Origin = "*"
+    X-Frame-Options = "SAMEORIGIN"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
