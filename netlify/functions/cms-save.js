@@ -42,11 +42,12 @@ exports.handler = async (event) => {
     });
 
     const config = {
-      actions: body.actions || [],
-      colors:  body.colors  || {},
-      labels:  body.labels  || {},
-      logo:    body.logo    || null,
-      savedAt: Date.now(),
+      actions:      body.actions      || [],
+      colors:       body.colors       || {},
+      actionStyles: body.actionStyles || {},
+      labels:       body.labels       || {},
+      logo:         body.logo         || null,
+      savedAt:      Date.now(),
     };
     // Never store the PIN in the blob
     await store.set('rp_cms_config', JSON.stringify(config), { metadata: { savedAt: config.savedAt } });
