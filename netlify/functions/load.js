@@ -17,7 +17,8 @@ exports.handler = async (event) => {
   }
 
   try {
-    const store = getStore('schedules', {
+    const store = getStore({
+      name: 'schedules',
       siteID: process.env.NETLIFY_SITE_ID,
       token: process.env.NETLIFY_TOKEN,
     });
@@ -58,7 +59,9 @@ exports.handler = async (event) => {
       body: JSON.stringify({
         error: err.message,
         code: err.code || null,
-        status: err.status || null
+        status: err.status || null,
+        hasSiteID: !!process.env.NETLIFY_SITE_ID,
+        hasToken: !!process.env.NETLIFY_TOKEN
       })
     };
   }
