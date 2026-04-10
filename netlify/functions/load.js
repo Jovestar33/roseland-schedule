@@ -1,4 +1,4 @@
-const { getStore } = require('@netlify/blobs');
+const { connectLambda, getStore } = require('@netlify/blobs');
 
 exports.handler = async (event) => {
   const headers = {
@@ -17,11 +17,8 @@ exports.handler = async (event) => {
   }
 
   try {
-    const store = getStore({
-      name: 'schedules',
-      siteID: process.env.NETLIFY_SITE_ID,
-      token: process.env.NETLIFY_TOKEN,
-    });
+    connectLambda(event);
+    const store = getStore('schedules');
 
     const name = event.queryStringParameters?.name;
 
@@ -59,9 +56,7 @@ exports.handler = async (event) => {
       body: JSON.stringify({
         error: err.message,
         code: err.code || null,
-        status: err.status || null,
-        hasSiteID: !!process.env.NETLIFY_SITE_ID,
-        hasToken: !!process.env.NETLIFY_TOKEN
+        status: err.status || null
       })
     };
   }
