@@ -20,9 +20,40 @@ exports.handler = async (event) => {
     connectLambda(event);
 
     const body = JSON.parse(event.body || '{}');
-    const store = getStore('cms');
+    const submittedPin = String(body.pin || '').trim();
+    const verifyOnly = !!body.verify;
+    const requiredPin = process.env.SCHEDULE_DELETE_PASSWORD;
 
-    await store.set('rp_cms_config', JSON.stringify(body));
+    if (!requiredPin) {
+      return {
+        statusCode: 500,
+        headers,
+        body: JSON.stringify({ error: 'Missing CMS/delete password env var' }),
+      };
+    }
+
+    if (!submittedPin || submittedPin !== requiredPin) {
+      return {
+        statusCode: 401,
+        headers,
+        body: JSON.stringify({ ok: false, error: 'Invalid CMS passcode' }),
+      };
+    }
+
+    if (verifyOnly) {
+      return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify({ ok: true, verified: true }),
+      };
+    }
+
+    const cleanBody = { ...body };
+    delete cleanBody.pin;
+    delete cleanBody.verify;
+
+    const store = getStore('cms');
+    await store.set('rp_cms_config', JSON.stringify(cleanBody));
 
     return {
       statusCode: 200,
