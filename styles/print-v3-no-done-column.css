@@ -1,0 +1,566 @@
+@page{
+  size:letter landscape;
+  margin:0.18in;
+}
+
+@media print{
+  *{
+    -webkit-print-color-adjust:exact!important;
+    print-color-adjust:exact!important;
+    box-sizing:border-box!important;
+  }
+
+  html,body{
+    margin:0!important;
+    padding:0!important;
+    width:100%!important;
+    max-width:none!important;
+    background:#fff!important;
+    color:#111!important;
+    overflow:visible!important;
+  }
+
+  body{
+    font-family:var(--fb), Arial, sans-serif!important;
+    font-size:8.5px!important;
+    line-height:1.25!important;
+  }
+
+  /* Hide all screen/editing UI chrome */
+  .hdr .hdr-right,
+  .toolbar,
+  .add-area,
+  .del-btn,
+  .overlay,
+  .toast,
+  .notif-banner,
+  .wx-refresh,
+  .map-pin,
+  .ac-dropdown,
+  .loc-map-btn,
+  .drag-handle,
+  .move-btns,
+  .scroll-hint,
+  .url-chip,
+  .view-chip,
+  .readonly-bar,
+  .lock-hint,
+  .time-lock-btn,
+  .contact-done-btn,
+  .status-mini-btn,
+  .mclose{
+    display:none!important;
+    visibility:hidden!important;
+  }
+
+  /* Hide inactive/blank rows and the delete column */
+  tbody tr.inactive{display:none!important;}
+  colgroup .c-x,
+  thead th:last-child,
+  tbody td:last-child{display:none!important;width:0!important;padding:0!important;border:0!important;}
+
+  /* Main panel */
+  .panel{
+    box-shadow:none!important;
+    margin:0!important;
+    border-radius:0!important;
+    overflow:visible!important;
+    height:auto!important;
+    width:100%!important;
+    max-width:none!important;
+    background:#fff!important;
+  }
+
+  /* Header: compact document masthead */
+  .hdr{
+    display:flex!important;
+    align-items:center!important;
+    justify-content:space-between!important;
+    padding:5px 8px 7px!important;
+    min-height:56px!important;
+    border-bottom:3px solid #e91e8c!important;
+    background:#111!important;
+    break-inside:avoid!important;
+    page-break-inside:avoid!important;
+  }
+  .hdr img{
+    height:48px!important;
+    width:auto!important;
+    max-width:145px!important;
+    object-fit:contain!important;
+    display:block!important;
+  }
+  .hdr-title{
+    display:block!important;
+    color:#fff!important;
+    font-family:var(--fd), Impact, sans-serif!important;
+    font-size:18px!important;
+    line-height:1!important;
+    letter-spacing:3px!important;
+    text-transform:uppercase!important;
+    margin-left:auto!important;
+    text-align:right!important;
+  }
+  .hdr::after{display:none!important;content:none!important;}
+
+  /* Weather strip: single compact bar */
+  .wx-strip.show{
+    display:grid!important;
+    grid-template-columns:repeat(6, minmax(0,1fr))!important;
+    gap:0!important;
+    padding:5px 8px!important;
+    background:#111827!important;
+    border-bottom:1px solid #334155!important;
+    break-inside:avoid!important;
+    page-break-inside:avoid!important;
+  }
+  .wx-item,
+  .wx-item:not(:last-child){
+    min-width:0!important;
+    margin:0!important;
+    padding:1px 8px 1px 0!important;
+    border-right:1px solid #334155!important;
+  }
+  .wx-item:last-child{border-right:none!important;}
+  .wx-label{
+    font-size:7px!important;
+    line-height:1.1!important;
+    margin:0 0 1px!important;
+    color:#94a3b8!important;
+    letter-spacing:.08em!important;
+    text-transform:uppercase!important;
+    white-space:nowrap!important;
+  }
+  .wx-val{
+    font-size:8.5px!important;
+    line-height:1.15!important;
+    color:#e5e7eb!important;
+    font-weight:700!important;
+    white-space:nowrap!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+  }
+  .wx-val a{color:#38bdf8!important;text-decoration:none!important;}
+  .wx-sunrise{color:#fbbf24!important;}
+  .wx-sunset{color:#fb923c!important;}
+  .wx-ts{font-size:8px!important;color:#94a3b8!important;}
+
+  /* Meta: compact professional info band */
+  .meta{
+    padding:6px 8px 7px!important;
+    border-bottom:1px solid #d4d4d8!important;
+    background:#fff!important;
+    break-inside:avoid!important;
+    page-break-inside:avoid!important;
+  }
+  .meta-grid{
+    display:grid!important;
+    grid-template-columns:1.15fr .85fr .85fr!important;
+    gap:5px 14px!important;
+    width:100%!important;
+    max-width:none!important;
+  }
+  .mf{min-width:0!important;overflow:visible!important;}
+  .mf label{
+    display:block!important;
+    margin:0 0 2px!important;
+    font-size:7px!important;
+    line-height:1!important;
+    font-weight:800!important;
+    color:#71717a!important;
+    letter-spacing:.08em!important;
+    text-transform:uppercase!important;
+    white-space:nowrap!important;
+  }
+  .mf input,
+  .call-disp{
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    height:auto!important;
+    min-height:14px!important;
+    padding:1px 4px 2px!important;
+    border:0!important;
+    border-bottom:1px solid #d4d4d8!important;
+    border-radius:0!important;
+    background:transparent!important;
+    color:#111!important;
+    font-family:var(--fb), Arial, sans-serif!important;
+    font-size:9px!important;
+    font-weight:600!important;
+    line-height:1.15!important;
+    white-space:nowrap!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+    box-shadow:none!important;
+  }
+  .call-disp{
+    display:block!important;
+    color:#e91e8c!important;
+    font-size:10px!important;
+    font-weight:800!important;
+  }
+
+  /* Table */
+  .tbl-wrap{
+    overflow:visible!important;
+    width:100%!important;
+    max-width:none!important;
+    background:#fff!important;
+    border-radius:0!important;
+  }
+  table{
+    min-width:0!important;
+    width:100%!important;
+    max-width:100%!important;
+    table-layout:fixed!important;
+    border-collapse:collapse!important;
+    border-spacing:0!important;
+  }
+  thead{display:table-header-group!important;}
+  thead tr{background:#111!important;}
+  thead th{
+    font-family:var(--fd), Impact, sans-serif!important;
+    font-size:8px!important;
+    line-height:1!important;
+    letter-spacing:.08em!important;
+    color:#d1d5db!important;
+    padding:5px 4px!important;
+    text-align:left!important;
+    font-weight:400!important;
+    white-space:nowrap!important;
+    border-bottom:0!important;
+  }
+  thead th.tc{text-align:center!important;}
+  thead th.tp{color:#f472b6!important;}
+  thead th.col-dv{background:#27272a!important;padding:0!important;}
+
+  tbody tr{
+    break-inside:avoid!important;
+    page-break-inside:avoid!important;
+    border-bottom:1px solid #ececf1!important;
+  }
+  tbody tr:nth-child(even):not(.sun-row){background:#fdf4f9!important;}
+  tbody tr.sun-row{background:#fffbeb!important;}
+  tbody tr.completed{opacity:1!important;}
+
+  td{
+    padding:5px 4px!important;
+    font-size:8.5px!important;
+    line-height:1.25!important;
+    vertical-align:top!important;
+    color:#111!important;
+    overflow:hidden!important;
+    word-break:normal!important;
+    overflow-wrap:break-word!important;
+    border-bottom:0!important;
+  }
+  td.rn{
+    text-align:center!important;
+    font-size:7px!important;
+    color:#a1a1aa!important;
+    vertical-align:top!important;
+    padding:5px 2px!important;
+    user-select:none!important;
+  }
+  td.rn span{
+    display:block!important;
+    font-size:7px!important;
+    color:#a1a1aa!important;
+  }
+  td.col-dv{
+    background:#d1d5db!important;
+    width:2px!important;
+    padding:0!important;
+  }
+
+  /* Form controls print as plain content */
+  select.cs,
+  input.ci,
+  .ci,
+  .ci-ta,
+  textarea{
+    -webkit-appearance:none!important;
+    appearance:none!important;
+    width:100%!important;
+    max-width:100%!important;
+    border:none!important;
+    box-shadow:none!important;
+    outline:none!important;
+    background:transparent!important;
+    font-family:var(--fb), Arial, sans-serif!important;
+    font-size:8.5px!important;
+    line-height:1.25!important;
+    color:#111!important;
+    padding:1px 2px!important;
+    margin:0!important;
+    resize:none!important;
+    overflow:hidden!important;
+  }
+  select.cs{
+    font-weight:600!important;
+    border-radius:9px!important;
+    padding:2px 5px!important;
+  }
+  .ci-ta{
+    min-height:0!important;
+    height:auto!important;
+    white-space:pre-wrap!important;
+  }
+  .ci-ta::placeholder,
+  textarea::placeholder,
+  input::placeholder{color:transparent!important;opacity:0!important;}
+  select.cs option[value=""]{display:none!important;}
+
+  /* Notes/status layout */
+  .notes-status-wrap{display:block!important;}
+  .status-icon-slot{display:none!important;}
+  .status-notes-slot{display:block!important;width:100%!important;}
+
+  /* Times */
+  .time-cell-wrap{display:block!important;}
+  .tdsp,
+  .anchor-text{
+    display:block!important;
+    padding:1px 2px!important;
+    font-size:9px!important;
+    line-height:1.15!important;
+    font-weight:700!important;
+    color:#111!important;
+    white-space:nowrap!important;
+    text-align:left!important;
+  }
+  .tout{color:#9d1468!important;font-weight:800!important;}
+  .dur-warn{display:none!important;}
+
+  .done-cb{
+    width:10px!important;
+    height:10px!important;
+    margin:0 auto!important;
+    accent-color:#e91e8c!important;
+  }
+
+  /* Sun rows */
+  .sun-label{
+    font-size:9px!important;
+    font-weight:800!important;
+    line-height:1.2!important;
+    padding:1px 2px!important;
+    display:block!important;
+  }
+  .sun-note{
+    font-size:7.5px!important;
+    line-height:1.2!important;
+    color:#92400e!important;
+    font-style:italic!important;
+    padding:1px 2px!important;
+  }
+  .aSunrise .sun-label{color:#92400e!important;}
+  .aSunset .sun-label{color:#9a3412!important;}
+
+  /* Action color badges */
+  select.cs.aShoot{background:#fce7f3!important;color:#9d1468!important;font-weight:800!important;}
+  select.cs.aLunch{background:#fef9c3!important;color:#854d0e!important;font-weight:800!important;}
+  select.cs.aDinner{background:#fff1f2!important;color:#9f1239!important;}
+  select.cs.aWrap{background:#dcfce7!important;color:#166534!important;font-weight:800!important;}
+  select.cs.aDayOff{background:#f0fdf4!important;color:#15803d!important;font-style:italic!important;}
+  select.cs.aDrive{background:#eff6ff!important;color:#1d4ed8!important;}
+  select.cs.aMove{background:#f5f3ff!important;color:#6d28d9!important;}
+  select.cs.aCrewCall{background:#fff7ed!important;color:#c2410c!important;font-weight:800!important;}
+  select.cs.aBreakfast{background:#fefce8!important;color:#a16207!important;}
+  select.cs.aBreak{background:#f0fdf4!important;color:#166534!important;font-style:italic!important;}
+  select.cs.aSetup{background:#faf5ff!important;color:#7e22ce!important;}
+  select.cs.aOther{background:#f1f5f9!important;color:#475569!important;}
+
+  .other-wrap{display:block!important;}
+  .other-inp{display:none!important;}
+  .other-back{display:none!important;}
+  .other-inp-inline{
+    display:block!important;
+    font-size:8.5px!important;
+    border:none!important;
+    background:transparent!important;
+    padding:0!important;
+    margin-top:1px!important;
+  }
+
+  /* Column widths - optimized for letter landscape */
+  colgroup .c-n{width:2.5%!important;}
+  colgroup .c-a{width:15%!important;}
+  colgroup .c-d{width:20%!important;}
+  colgroup .c-l{width:24%!important;}
+  colgroup .c-nt{width:18%!important;}
+  colgroup .c-dv{width:.5%!important;}
+  colgroup .c-ti{width:7%!important;}
+  colgroup .c-du{width:6%!important;}
+  colgroup .c-to{width:7%!important;}
+  colgroup .c-cb{width:2%!important;}
+
+  body{height:auto!important;}
+  tbody tr:last-child{border-bottom:1px solid #e4e4e7!important;}
+}
+
+/* ─────────────────────────────────────────────
+   PRINT V2 POLISH — document-quality PDF refinements
+   CSS-only. No app functionality changes.
+───────────────────────────────────────────── */
+@media print{
+  /* Keep the print clean when weather API values are incomplete.
+     Sunrise/sunset are retained because they are reliable schedule aids. */
+  .wx-strip.show{
+    grid-template-columns:repeat(2, minmax(0, 1fr)) !important;
+  }
+  .wx-strip.show .wx-item:nth-child(n+3){
+    display:none !important;
+  }
+  .wx-strip.show .wx-item:nth-child(1),
+  .wx-strip.show .wx-item:nth-child(2){
+    border-right:1px solid #334155 !important;
+    padding-right:14px !important;
+  }
+  .wx-strip.show .wx-item:nth-child(2){
+    border-right:none !important;
+  }
+
+  /* Hide the Done checkbox column in PDF. It reads as app UI, not a document field,
+     and the recovered width helps the real schedule content breathe. */
+  colgroup .c-cb,
+  thead th:nth-last-child(2),
+  tbody td:nth-last-child(2){
+    display:none !important;
+    width:0 !important;
+    padding:0 !important;
+    border:0 !important;
+  }
+
+  /* Let content wrap instead of being visually chopped. */
+  td{
+    overflow:visible !important;
+    line-height:1.22 !important;
+    padding-top:4px !important;
+    padding-bottom:4px !important;
+  }
+  select.cs,
+  input.ci,
+  .ci,
+  .ci-ta,
+  textarea{
+    overflow:visible !important;
+    white-space:normal !important;
+    text-overflow:clip !important;
+  }
+
+  /* Textarea controls do not naturally auto-expand in print engines, so give
+     the core text columns enough room for a professional multi-line read. */
+  tbody td:nth-child(3) .ci-ta,
+  tbody td:nth-child(4) .ci-ta,
+  tbody td:nth-child(5) .ci-ta{
+    min-height:28px !important;
+    height:34px !important;
+    max-height:none !important;
+    line-height:1.22 !important;
+  }
+
+  /* Keep very short rows compact. */
+  tbody tr.sun-row td,
+  tbody tr:first-child td{
+    padding-top:4px !important;
+    padding-bottom:4px !important;
+  }
+
+  /* Time block: tighter, clearer, and less app-like. */
+  .tdsp,
+  .anchor-text{
+    text-align:left !important;
+    font-size:8.6px !important;
+    padding:1px 2px !important;
+  }
+
+  /* Slightly quieter row numbers and more elegant header. */
+  td.rn,
+  td.rn span{
+    color:#b6b6bf !important;
+    font-size:6.8px !important;
+  }
+  thead th{
+    letter-spacing:.11em !important;
+    font-size:7.6px !important;
+    padding-top:5px !important;
+    padding-bottom:5px !important;
+  }
+
+  /* Rebalance widths now that Done/Delete are hidden. */
+  colgroup .c-n{width:2.4% !important;}
+  colgroup .c-a{width:14.6% !important;}
+  colgroup .c-d{width:23.8% !important;}
+  colgroup .c-l{width:24.2% !important;}
+  colgroup .c-nt{width:19.5% !important;}
+  colgroup .c-dv{width:.45% !important;}
+  colgroup .c-ti{width:5.7% !important;}
+  colgroup .c-du{width:4.8% !important;}
+  colgroup .c-to{width:5.1% !important;}
+
+  /* Stronger page behavior: no accidental blank trailing page if possible. */
+  html,body,.panel,.tbl-wrap{
+    height:auto !important;
+    min-height:0 !important;
+  }
+  .panel::after,
+  .tbl-wrap::after{
+    content:none !important;
+    display:none !important;
+  }
+}
+
+/* ─────────────────────────────────────────────
+   PRINT V3 — remove Done checkbox column entirely
+   CSS-only. Explicit column-index lock so the Done column cannot reserve space.
+───────────────────────────────────────────── */
+@media print{
+  /* Column order:
+     1 row #, 2 action, 3 location, 4 description, 5 notes,
+     6 divider, 7 time in, 8 duration, 9 time out, 10 done, 11 delete */
+  colgroup .c-cb,
+  table col.c-cb,
+  thead th:nth-child(10),
+  tbody td:nth-child(10){
+    display:none !important;
+    width:0 !important;
+    max-width:0 !important;
+    min-width:0 !important;
+    padding:0 !important;
+    border:0 !important;
+    overflow:hidden !important;
+  }
+
+  /* Keep delete column hidden too. */
+  colgroup .c-x,
+  table col.c-x,
+  thead th:nth-child(11),
+  tbody td:nth-child(11){
+    display:none !important;
+    width:0 !important;
+    max-width:0 !important;
+    min-width:0 !important;
+    padding:0 !important;
+    border:0 !important;
+    overflow:hidden !important;
+  }
+
+  .done-cb,
+  .done-tools{
+    display:none !important;
+    visibility:hidden !important;
+  }
+
+  /* Reclaim the Done column width for the readable production content. */
+  colgroup .c-n{width:2.4% !important;}
+  colgroup .c-a{width:14.8% !important;}
+  colgroup .c-d{width:24.2% !important;}
+  colgroup .c-l{width:24.6% !important;}
+  colgroup .c-nt{width:20.0% !important;}
+  colgroup .c-dv{width:.45% !important;}
+  colgroup .c-ti{width:5.6% !important;}
+  colgroup .c-du{width:4.7% !important;}
+  colgroup .c-to{width:5.0% !important;}
+}
