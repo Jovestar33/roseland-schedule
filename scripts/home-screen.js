@@ -1,8 +1,6 @@
-/* Home Screen
-   Placeholder for future home/close schedule flow.
+/* Home Screen placeholder.
    No behavior changes yet.
  */
-
 window.RoselandHomeScreen = window.RoselandHomeScreen || {
   enabled: false
 };
