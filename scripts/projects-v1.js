@@ -1,8 +1,6 @@
-/* Projects v1
-   Placeholder for future project/folder organization.
+/* Projects v1 placeholder.
    No behavior changes yet.
  */
-
 window.RoselandProjectsV1 = window.RoselandProjectsV1 || {
   enabled: false
 };
