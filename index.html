@@ -3468,6 +3468,80 @@ async function remoteLoad(name){
   if(!res.ok) throw new Error('Load failed');
   return await res.json();
 }
+
+function applyScheduleToEditor(name, data){
+  if(!data) return false;
+  clearAll();
+  rows=(data.rows||[]).map(r=>({...makeRow(),...r}));
+  setMeta(data.meta||{});
+  curName=name;
+  isDirty=false;
+  setKnownRemoteSavedAt(name, data.savedAt||0);
+  document.getElementById('sched-label').textContent=name;
+  const slug=encodeURIComponent(name);
+  const editUrl=window.location.origin+window.location.pathname+'?s='+slug;
+  const chip=document.getElementById('url-chip');
+  if(chip){
+    chip.textContent='🔗 Copy Link';
+    chip.style.display='';
+    chip.dataset.url=editUrl;
+    chip.dataset.viewname=name;
+  }
+  const vchip=document.getElementById('view-chip');
+  if(vchip) vchip.style.display='';
+  render();
+  return true;
+}
+
+function showOverwriteProtectionDialog(name, remoteSavedAt){
+  return new Promise(resolve=>{
+    const existing=document.getElementById('overwrite-protection-overlay');
+    if(existing) existing.remove();
+    const time=remoteSavedAt?new Date(remoteSavedAt).toLocaleString():'recently';
+    const ov=document.createElement('div');
+    ov.className='snapshot-preview-overlay';
+    ov.id='overwrite-protection-overlay';
+    ov.innerHTML=`<div class="snapshot-preview-modal" role="dialog" aria-modal="true" aria-label="Overwrite protection"><div class="snapshot-preview-head"><div><div class="snapshot-preview-title">Overwrite Protection</div><div class="snapshot-preview-sub">${snapshotCell(name)} was changed in the Library after you opened it.</div></div></div><div class="snapshot-preview-body"><div class="snapshot-preview-empty" style="text-align:left;line-height:1.45">A newer saved version exists in Blobs from ${snapshotCell(time)}.<br><br>Choose what you want to do before saving.</div><div class="ver-acts" style="justify-content:flex-start;gap:10px;flex-wrap:wrap;margin-top:14px"><button class="btn btn-pink btn-sm" data-choice="overwrite">Save Anyway</button><button class="btn btn-light btn-sm" data-choice="saveas">Save As New Schedule</button><button class="btn btn-light btn-sm" data-choice="reload">Reload Remote Version</button><button class="btn btn-light btn-sm" data-choice="cancel">Cancel</button></div></div></div>`;
+    function done(choice){ov.remove(); resolve(choice);}
+    ov.addEventListener('click', e=>{ if(e.target===ov) done('cancel'); });
+    ov.querySelectorAll('[data-choice]').forEach(btn=>btn.addEventListener('click',()=>done(btn.dataset.choice)));
+    document.body.appendChild(ov);
+  });
+}
+
+async function checkOverwriteProtection(name, localData){
+  if(!name || !navigator.onLine) return true;
+  let remote=null;
+  try{ remote=await remoteLoad(name); }catch(e){ return true; }
+  if(!remote) return true;
+  const remoteSavedAt=remote.savedAt||0;
+  const knownRemoteSavedAt=getKnownRemoteSavedAt(name)||0;
+  const isDifferentOpenSchedule=curName && curName!==name;
+  const isExistingNameWithNoBaseline=!knownRemoteSavedAt;
+  const remoteChangedSinceOpen=remoteSavedAt && knownRemoteSavedAt && remoteSavedAt>knownRemoteSavedAt;
+  if(!(remoteChangedSinceOpen || isDifferentOpenSchedule || isExistingNameWithNoBaseline)) return true;
+
+  const choice=await showOverwriteProtectionDialog(name, remoteSavedAt);
+  if(choice==='overwrite'){
+    saveSnapshot(name, remote, 'Remote version before overwrite');
+    return true;
+  }
+  if(choice==='saveas'){
+    const inp=document.getElementById('saveas-inp');
+    if(inp) inp.value=`${name} copy`;
+    openSaveAs();
+    toast('Save cancelled — choose a new name to keep both versions');
+    return false;
+  }
+  if(choice==='reload'){
+    if(localData) saveSnapshot(name, localData, 'Before remote reload');
+    applyScheduleToEditor(name, remote);
+    toast('Reloaded latest remote version');
+    return false;
+  }
+  toast('Save cancelled');
+  return false;
+}
 async function remoteList(){
   if(!editorToken) throw new Error('Editor login required');
   const res=await fetch(`/.netlify/functions/load?editorToken=${encodeURIComponent(editorToken)}`);
@@ -3783,6 +3857,8 @@ async function doSave(name){
   saveCrewName('dir',document.getElementById('m-dir').value);
   saveCrewName('dp',document.getElementById('m-dp').value);
   const data={meta:getMeta(),rows:JSON.parse(JSON.stringify(rows)),savedAt:Date.now()};
+  const safeToSave=await checkOverwriteProtection(name, data);
+  if(!safeToSave) return;
   const ok=await blobSave(name,data);
   if(!ok){toast('Save did not finish — check your connection and try again');return;}
   if(activeFolderId && activeFolderId!=='all' && activeFolderId!=='uncategorized') setScheduleFolder(name, activeFolderId);
