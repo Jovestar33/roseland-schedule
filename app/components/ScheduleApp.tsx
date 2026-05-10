@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type ScheduleRow = {
   timeIn: string;
@@ -15,6 +15,12 @@ type ScheduleMeta = {
   shootDate: string;
   crewCall: string;
   mainLocation: string;
+};
+
+type SavedDraft = {
+  meta: ScheduleMeta;
+  rows: ScheduleRow[];
+  updatedAt: string;
 };
 
 const blankRow: ScheduleRow = {
@@ -56,10 +62,41 @@ const initialRows: ScheduleRow[] = [
   },
 ];
 
+const localDraftKey = "roseland-schedule-draft";
+
 export default function ScheduleApp() {
   const [meta, setMeta] = useState<ScheduleMeta>(initialMeta);
   const [rows, setRows] = useState<ScheduleRow[]>(initialRows);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [lastSavedAt, setLastSavedAt] = useState<string>("");
+
+  useEffect(() => {
+    const savedDraftText = localStorage.getItem(localDraftKey);
+
+    if (!savedDraftText) {
+      return;
+    }
+
+    try {
+      const savedDraft = JSON.parse(savedDraftText) as SavedDraft;
+
+      if (savedDraft.meta) {
+        setMeta(savedDraft.meta);
+      }
+
+      if (Array.isArray(savedDraft.rows) && savedDraft.rows.length > 0) {
+        setRows(savedDraft.rows);
+      }
+
+      if (savedDraft.updatedAt) {
+        setLastSavedAt(savedDraft.updatedAt);
+      }
+
+      setHasUnsavedChanges(false);
+    } catch {
+      console.warn("Could not load saved local draft.");
+    }
+  }, []);
 
   function markUnsaved() {
     setHasUnsavedChanges(true);
@@ -101,16 +138,39 @@ export default function ScheduleApp() {
     markUnsaved();
   }
 
+  function newSchedule() {
+    const confirmed = window.confirm(
+      "Start a new blank schedule? Unsaved changes will be lost."
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    setMeta(initialMeta);
+    setRows([{ ...blankRow }]);
+    setHasUnsavedChanges(true);
+  }
+
   function saveLocalDraft() {
-    const draft = {
+    const updatedAt = new Date().toISOString();
+
+    const draft: SavedDraft = {
       meta,
       rows,
-      updatedAt: new Date().toISOString(),
+      updatedAt,
     };
 
-    localStorage.setItem("roseland-schedule-draft", JSON.stringify(draft));
+    localStorage.setItem(localDraftKey, JSON.stringify(draft));
+    setLastSavedAt(updatedAt);
     setHasUnsavedChanges(false);
   }
+
+  const statusText = hasUnsavedChanges ? "Unsaved changes" : "Saved locally";
+
+  const savedTimeText = lastSavedAt
+    ? `Last saved: ${new Date(lastSavedAt).toLocaleString()}`
+    : "No local save yet";
 
   return (
     <div className="min-h-screen bg-neutral-100 text-neutral-900">
@@ -121,7 +181,7 @@ export default function ScheduleApp() {
               Roseland Production Schedule
             </h1>
             <p className="text-sm text-neutral-500">
-              Next migration shell — local draft save test.
+              Next migration shell — local draft load test.
             </p>
           </div>
 
@@ -130,7 +190,10 @@ export default function ScheduleApp() {
               Library
             </button>
 
-            <button className="rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm font-medium shadow-sm hover:bg-neutral-50">
+            <button
+              onClick={newSchedule}
+              className="rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm font-medium shadow-sm hover:bg-neutral-50"
+            >
               New
             </button>
 
@@ -158,8 +221,9 @@ export default function ScheduleApp() {
             <div>
               <h2 className="text-lg font-semibold">Schedule Workspace</h2>
               <p className="text-sm text-neutral-600">
-                Header fields and grid edits now track unsaved changes.
+                Local draft saving and loading are now active.
               </p>
+              <p className="mt-1 text-xs text-neutral-500">{savedTimeText}</p>
             </div>
 
             <div
@@ -169,7 +233,7 @@ export default function ScheduleApp() {
                   : "rounded-full border border-green-300 bg-green-50 px-3 py-1 text-sm font-medium text-green-700"
               }
             >
-              {hasUnsavedChanges ? "Unsaved changes" : "Saved locally"}
+              {statusText}
             </div>
           </div>
 
