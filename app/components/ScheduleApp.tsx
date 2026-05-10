@@ -1,5 +1,29 @@
 "use client";
 
+const scheduleRows = [
+  {
+    timeIn: "7:00 AM",
+    timeOut: "7:30 AM",
+    action: "Crew Call",
+    location: "Basecamp",
+    notes: "Arrival, parking, breakfast, and prep.",
+  },
+  {
+    timeIn: "7:30 AM",
+    timeOut: "8:30 AM",
+    action: "Move / Set Up",
+    location: "Location 1",
+    notes: "Load in, stage gear, confirm first setup.",
+  },
+  {
+    timeIn: "8:30 AM",
+    timeOut: "10:30 AM",
+    action: "Shoot",
+    location: "Location 1",
+    notes: "Primary coverage.",
+  },
+];
+
 export default function ScheduleApp() {
   return (
     <div className="min-h-screen bg-neutral-100 text-neutral-900">
@@ -10,7 +34,7 @@ export default function ScheduleApp() {
               Roseland Production Schedule
             </h1>
             <p className="text-sm text-neutral-500">
-              Next migration shell — schedule header fields.
+              Next migration shell — first schedule grid.
             </p>
           </div>
 
@@ -40,7 +64,7 @@ export default function ScheduleApp() {
             <div>
               <h2 className="text-lg font-semibold">Schedule Workspace</h2>
               <p className="text-sm text-neutral-600">
-                Basic schedule metadata is now moving into the Next app.
+                Basic schedule metadata and first grid are now inside the Next app.
               </p>
             </div>
 
@@ -93,6 +117,34 @@ export default function ScheduleApp() {
 
           <div className="mt-5 rounded-lg border border-dashed border-neutral-300 bg-neutral-50 p-4 text-sm text-neutral-600">
             Weather / sunrise / sunset area will go here next.
+          </div>
+
+          <div className="mt-5 overflow-x-auto rounded-xl border border-neutral-300">
+            <table className="w-full min-w-[900px] border-collapse text-left text-sm">
+              <thead className="bg-neutral-900 text-white">
+                <tr>
+                  <th className="px-3 py-3 font-semibold">Time In</th>
+                  <th className="px-3 py-3 font-semibold">Time Out</th>
+                  <th className="px-3 py-3 font-semibold">Action</th>
+                  <th className="px-3 py-3 font-semibold">Location</th>
+                  <th className="px-3 py-3 font-semibold">Notes</th>
+                </tr>
+              </thead>
+              <tbody>
+                {scheduleRows.map((row, index) => (
+                  <tr
+                    key={index}
+                    className="border-t border-neutral-200 odd:bg-white even:bg-neutral-50"
+                  >
+                    <td className="px-3 py-3 font-medium">{row.timeIn}</td>
+                    <td className="px-3 py-3 font-medium">{row.timeOut}</td>
+                    <td className="px-3 py-3">{row.action}</td>
+                    <td className="px-3 py-3">{row.location}</td>
+                    <td className="px-3 py-3 text-neutral-600">{row.notes}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </section>
       </main>
