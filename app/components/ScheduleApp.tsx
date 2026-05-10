@@ -10,6 +10,14 @@ type ScheduleRow = {
   notes: string;
 };
 
+const blankRow: ScheduleRow = {
+  timeIn: "",
+  timeOut: "",
+  action: "",
+  location: "",
+  notes: "",
+};
+
 const initialRows: ScheduleRow[] = [
   {
     timeIn: "7:00 AM",
@@ -37,16 +45,26 @@ const initialRows: ScheduleRow[] = [
 export default function ScheduleApp() {
   const [rows, setRows] = useState<ScheduleRow[]>(initialRows);
 
-  function updateRow(
-    index: number,
-    field: keyof ScheduleRow,
-    value: string
-  ) {
+  function updateRow(index: number, field: keyof ScheduleRow, value: string) {
     setRows((currentRows) =>
       currentRows.map((row, rowIndex) =>
         rowIndex === index ? { ...row, [field]: value } : row
       )
     );
+  }
+
+  function addRow() {
+    setRows((currentRows) => [...currentRows, { ...blankRow }]);
+  }
+
+  function deleteRow(index: number) {
+    setRows((currentRows) => {
+      if (currentRows.length === 1) {
+        return [{ ...blankRow }];
+      }
+
+      return currentRows.filter((_, rowIndex) => rowIndex !== index);
+    });
   }
 
   return (
@@ -58,7 +76,7 @@ export default function ScheduleApp() {
               Roseland Production Schedule
             </h1>
             <p className="text-sm text-neutral-500">
-              Next migration shell — editable schedule grid.
+              Next migration shell — faithful row controls.
             </p>
           </div>
 
@@ -88,7 +106,7 @@ export default function ScheduleApp() {
             <div>
               <h2 className="text-lg font-semibold">Schedule Workspace</h2>
               <p className="text-sm text-neutral-600">
-                The first schedule grid is now editable.
+                The schedule grid is editable, with Add Row below the table.
               </p>
             </div>
 
@@ -143,8 +161,12 @@ export default function ScheduleApp() {
             Weather / sunrise / sunset area will go here next.
           </div>
 
-          <div className="mt-5 overflow-x-auto rounded-xl border border-neutral-300">
-            <table className="w-full min-w-[900px] border-collapse text-left text-sm">
+          <div className="mt-5">
+            <h3 className="text-base font-semibold">Schedule Grid</h3>
+          </div>
+
+          <div className="mt-3 overflow-x-auto rounded-xl border border-neutral-300">
+            <table className="w-full min-w-[1050px] border-collapse text-left text-sm">
               <thead className="bg-neutral-900 text-white">
                 <tr>
                   <th className="px-3 py-3 font-semibold">Time In</th>
@@ -152,8 +174,10 @@ export default function ScheduleApp() {
                   <th className="px-3 py-3 font-semibold">Action</th>
                   <th className="px-3 py-3 font-semibold">Location</th>
                   <th className="px-3 py-3 font-semibold">Notes</th>
+                  <th className="px-3 py-3 font-semibold">Row</th>
                 </tr>
               </thead>
+
               <tbody>
                 {rows.map((row, index) => (
                   <tr
@@ -209,10 +233,28 @@ export default function ScheduleApp() {
                         }
                       />
                     </td>
+
+                    <td className="px-2 py-2">
+                      <button
+                        onClick={() => deleteRow(index)}
+                        className="rounded-md border border-red-200 bg-red-50 px-2 py-2 text-xs font-medium text-red-700 shadow-sm hover:bg-red-100"
+                      >
+                        Delete
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
             </table>
+          </div>
+
+          <div className="mt-3 flex justify-start">
+            <button
+              onClick={addRow}
+              className="rounded-lg border border-neutral-900 bg-neutral-900 px-3 py-2 text-sm font-medium text-white shadow-sm hover:bg-neutral-700"
+            >
+              Add Row
+            </button>
           </div>
         </section>
       </main>
