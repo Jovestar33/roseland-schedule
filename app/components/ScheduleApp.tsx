@@ -10,12 +10,26 @@ type ScheduleRow = {
   notes: string;
 };
 
+type ScheduleMeta = {
+  scheduleName: string;
+  shootDate: string;
+  crewCall: string;
+  mainLocation: string;
+};
+
 const blankRow: ScheduleRow = {
   timeIn: "",
   timeOut: "",
   action: "",
   location: "",
   notes: "",
+};
+
+const initialMeta: ScheduleMeta = {
+  scheduleName: "Untitled Schedule",
+  shootDate: "",
+  crewCall: "",
+  mainLocation: "",
 };
 
 const initialRows: ScheduleRow[] = [
@@ -43,7 +57,22 @@ const initialRows: ScheduleRow[] = [
 ];
 
 export default function ScheduleApp() {
+  const [meta, setMeta] = useState<ScheduleMeta>(initialMeta);
   const [rows, setRows] = useState<ScheduleRow[]>(initialRows);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+
+  function markUnsaved() {
+    setHasUnsavedChanges(true);
+  }
+
+  function updateMeta(field: keyof ScheduleMeta, value: string) {
+    setMeta((currentMeta) => ({
+      ...currentMeta,
+      [field]: value,
+    }));
+
+    markUnsaved();
+  }
 
   function updateRow(index: number, field: keyof ScheduleRow, value: string) {
     setRows((currentRows) =>
@@ -51,10 +80,13 @@ export default function ScheduleApp() {
         rowIndex === index ? { ...row, [field]: value } : row
       )
     );
+
+    markUnsaved();
   }
 
   function addRow() {
     setRows((currentRows) => [...currentRows, { ...blankRow }]);
+    markUnsaved();
   }
 
   function deleteRow(index: number) {
@@ -65,6 +97,19 @@ export default function ScheduleApp() {
 
       return currentRows.filter((_, rowIndex) => rowIndex !== index);
     });
+
+    markUnsaved();
+  }
+
+  function saveLocalDraft() {
+    const draft = {
+      meta,
+      rows,
+      updatedAt: new Date().toISOString(),
+    };
+
+    localStorage.setItem("roseland-schedule-draft", JSON.stringify(draft));
+    setHasUnsavedChanges(false);
   }
 
   return (
@@ -76,7 +121,7 @@ export default function ScheduleApp() {
               Roseland Production Schedule
             </h1>
             <p className="text-sm text-neutral-500">
-              Next migration shell — faithful row controls.
+              Next migration shell — local draft save test.
             </p>
           </div>
 
@@ -84,15 +129,22 @@ export default function ScheduleApp() {
             <button className="rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm font-medium shadow-sm hover:bg-neutral-50">
               Library
             </button>
+
             <button className="rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm font-medium shadow-sm hover:bg-neutral-50">
               New
             </button>
-            <button className="rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm font-medium shadow-sm hover:bg-neutral-50">
+
+            <button
+              onClick={saveLocalDraft}
+              className="rounded-lg border border-neutral-900 bg-neutral-900 px-3 py-2 text-sm font-medium text-white shadow-sm hover:bg-neutral-700"
+            >
               Save
             </button>
+
             <button className="rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm font-medium shadow-sm hover:bg-neutral-50">
               Save As…
             </button>
+
             <button className="rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm font-medium shadow-sm hover:bg-neutral-50">
               Snapshot
             </button>
@@ -106,12 +158,18 @@ export default function ScheduleApp() {
             <div>
               <h2 className="text-lg font-semibold">Schedule Workspace</h2>
               <p className="text-sm text-neutral-600">
-                The schedule grid is editable, with Add Row below the table.
+                Header fields and grid edits now track unsaved changes.
               </p>
             </div>
 
-            <div className="rounded-full border border-green-300 bg-green-50 px-3 py-1 text-sm font-medium text-green-700">
-              Synced
+            <div
+              className={
+                hasUnsavedChanges
+                  ? "rounded-full border border-amber-300 bg-amber-50 px-3 py-1 text-sm font-medium text-amber-700"
+                  : "rounded-full border border-green-300 bg-green-50 px-3 py-1 text-sm font-medium text-green-700"
+              }
+            >
+              {hasUnsavedChanges ? "Unsaved changes" : "Saved locally"}
             </div>
           </div>
 
@@ -122,7 +180,10 @@ export default function ScheduleApp() {
               </span>
               <input
                 className="rounded-lg border border-neutral-300 px-3 py-2 text-sm outline-none focus:border-neutral-700"
-                defaultValue="Untitled Schedule"
+                value={meta.scheduleName}
+                onChange={(event) =>
+                  updateMeta("scheduleName", event.target.value)
+                }
               />
             </label>
 
@@ -133,6 +194,8 @@ export default function ScheduleApp() {
               <input
                 type="date"
                 className="rounded-lg border border-neutral-300 px-3 py-2 text-sm outline-none focus:border-neutral-700"
+                value={meta.shootDate}
+                onChange={(event) => updateMeta("shootDate", event.target.value)}
               />
             </label>
 
@@ -143,6 +206,8 @@ export default function ScheduleApp() {
               <input
                 type="time"
                 className="rounded-lg border border-neutral-300 px-3 py-2 text-sm outline-none focus:border-neutral-700"
+                value={meta.crewCall}
+                onChange={(event) => updateMeta("crewCall", event.target.value)}
               />
             </label>
 
@@ -153,6 +218,10 @@ export default function ScheduleApp() {
               <input
                 className="rounded-lg border border-neutral-300 px-3 py-2 text-sm outline-none focus:border-neutral-700"
                 placeholder="Enter location"
+                value={meta.mainLocation}
+                onChange={(event) =>
+                  updateMeta("mainLocation", event.target.value)
+                }
               />
             </label>
           </div>
