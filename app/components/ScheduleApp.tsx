@@ -1,6 +1,16 @@
 "use client";
 
-const scheduleRows = [
+import { useState } from "react";
+
+type ScheduleRow = {
+  timeIn: string;
+  timeOut: string;
+  action: string;
+  location: string;
+  notes: string;
+};
+
+const initialRows: ScheduleRow[] = [
   {
     timeIn: "7:00 AM",
     timeOut: "7:30 AM",
@@ -25,6 +35,20 @@ const scheduleRows = [
 ];
 
 export default function ScheduleApp() {
+  const [rows, setRows] = useState<ScheduleRow[]>(initialRows);
+
+  function updateRow(
+    index: number,
+    field: keyof ScheduleRow,
+    value: string
+  ) {
+    setRows((currentRows) =>
+      currentRows.map((row, rowIndex) =>
+        rowIndex === index ? { ...row, [field]: value } : row
+      )
+    );
+  }
+
   return (
     <div className="min-h-screen bg-neutral-100 text-neutral-900">
       <header className="border-b border-neutral-300 bg-white px-5 py-4">
@@ -34,7 +58,7 @@ export default function ScheduleApp() {
               Roseland Production Schedule
             </h1>
             <p className="text-sm text-neutral-500">
-              Next migration shell — first schedule grid.
+              Next migration shell — editable schedule grid.
             </p>
           </div>
 
@@ -64,7 +88,7 @@ export default function ScheduleApp() {
             <div>
               <h2 className="text-lg font-semibold">Schedule Workspace</h2>
               <p className="text-sm text-neutral-600">
-                Basic schedule metadata and first grid are now inside the Next app.
+                The first schedule grid is now editable.
               </p>
             </div>
 
@@ -131,16 +155,60 @@ export default function ScheduleApp() {
                 </tr>
               </thead>
               <tbody>
-                {scheduleRows.map((row, index) => (
+                {rows.map((row, index) => (
                   <tr
                     key={index}
                     className="border-t border-neutral-200 odd:bg-white even:bg-neutral-50"
                   >
-                    <td className="px-3 py-3 font-medium">{row.timeIn}</td>
-                    <td className="px-3 py-3 font-medium">{row.timeOut}</td>
-                    <td className="px-3 py-3">{row.action}</td>
-                    <td className="px-3 py-3">{row.location}</td>
-                    <td className="px-3 py-3 text-neutral-600">{row.notes}</td>
+                    <td className="px-2 py-2">
+                      <input
+                        className="w-full rounded-md border border-neutral-200 bg-white px-2 py-2 font-medium outline-none focus:border-neutral-700"
+                        value={row.timeIn}
+                        onChange={(event) =>
+                          updateRow(index, "timeIn", event.target.value)
+                        }
+                      />
+                    </td>
+
+                    <td className="px-2 py-2">
+                      <input
+                        className="w-full rounded-md border border-neutral-200 bg-white px-2 py-2 font-medium outline-none focus:border-neutral-700"
+                        value={row.timeOut}
+                        onChange={(event) =>
+                          updateRow(index, "timeOut", event.target.value)
+                        }
+                      />
+                    </td>
+
+                    <td className="px-2 py-2">
+                      <input
+                        className="w-full rounded-md border border-neutral-200 bg-white px-2 py-2 outline-none focus:border-neutral-700"
+                        value={row.action}
+                        onChange={(event) =>
+                          updateRow(index, "action", event.target.value)
+                        }
+                      />
+                    </td>
+
+                    <td className="px-2 py-2">
+                      <input
+                        className="w-full rounded-md border border-neutral-200 bg-white px-2 py-2 outline-none focus:border-neutral-700"
+                        value={row.location}
+                        onChange={(event) =>
+                          updateRow(index, "location", event.target.value)
+                        }
+                      />
+                    </td>
+
+                    <td className="px-2 py-2">
+                      <input
+                        className="w-full rounded-md border border-neutral-200 bg-white px-2 py-2 text-neutral-700 outline-none focus:border-neutral-700"
+                        value={row.notes}
+                        onChange={(event) =>
+                          updateRow(index, "notes", event.target.value)
+                        }
+                      />
+                    </td>
                   </tr>
                 ))}
               </tbody>
