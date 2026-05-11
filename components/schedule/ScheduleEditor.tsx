@@ -72,6 +72,12 @@ export default function ScheduleEditor({ name }: Props) {
             updateRow(statusRow, { status });
           }
         }}
+        onClear={() => {
+          if (statusRow !== null) {
+            pushUndo();
+            updateRow(statusRow, { status: '' });
+          }
+        }}
         onClose={() => setStatusRow(null)}
       />
       <NotesModal

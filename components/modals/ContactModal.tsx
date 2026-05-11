@@ -51,46 +51,34 @@ export default function ContactModal({ open, row, onSave, onClose }: Props) {
     <Modal
       open={open}
       onClose={onClose}
-      title="Contact"
+      title="Location Contact"
       className="location-contact-modal"
       footer={
         <>
-          <button className="btn btn-light" onClick={onClose}>Cancel</button>
-          <button className="btn btn-pink" onClick={handleSave}>Save</button>
+          <button className="btn btn-light" onClick={() => { window.location.href = `mailto:${email}`; }}>Email</button>
+          <button className="btn btn-light" onClick={() => { window.location.href = `tel:${phone}`; }}>Call</button>
+          <button className="btn btn-pink" onClick={handleSave}>Save Contact</button>
         </>
       }
     >
-      <p className="location-contact-subtitle">
-        Location contact, crew member, or booking reference.
-      </p>
       <div className="location-contact-grid">
-        <div>
-          <span className="location-contact-label">Name</span>
-          <input autoFocus style={inp} placeholder="Full name" value={name} onChange={(e) => setName(e.target.value)} />
+        <div className="location-contact-full">
+          <label className="location-contact-label">Name</label>
+          <input autoFocus style={inp} type="text" placeholder="Contact name" value={name} onChange={(e) => setName(e.target.value)} />
         </div>
-        <div>
-          <span className="location-contact-label">Title / Role</span>
-          <input style={inp} placeholder="e.g. Location Manager" value={title} onChange={(e) => setTitle(e.target.value)} />
+        <div className="location-contact-full">
+          <label className="location-contact-label">Title</label>
+          <input style={inp} type="text" placeholder="Role / title" value={title} onChange={(e) => setTitle(e.target.value)} />
         </div>
-        <div>
-          <span className="location-contact-label">Phone</span>
-          <input style={inp} type="tel" placeholder="555-0100" value={phone} onChange={(e) => setPhone(e.target.value)} />
+        <div className="location-contact-full">
+          <label className="location-contact-label">Phone</label>
+          <input style={inp} type="tel" placeholder="Phone" value={phone} onChange={(e) => setPhone(e.target.value)} />
         </div>
-        <div>
-          <span className="location-contact-label">Email</span>
-          <input style={inp} type="email" placeholder="email@example.com" value={email} onChange={(e) => setEmail(e.target.value)} />
+        <div className="location-contact-full">
+          <label className="location-contact-label">Email</label>
+          <input style={inp} type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
         </div>
       </div>
-      {(phone || email) && (
-        <div className="location-contact-actions">
-          {phone && (
-            <a href={`tel:${phone}`} className="btn btn-light btn-sm">📞 Call</a>
-          )}
-          {email && (
-            <a href={`mailto:${email}`} className="btn btn-light btn-sm">✉ Email</a>
-          )}
-        </div>
-      )}
     </Modal>
   );
 }

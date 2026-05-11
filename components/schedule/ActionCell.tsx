@@ -1,5 +1,5 @@
 'use client';
-import { ACTIONS } from '@/lib/constants';
+import { ACTIONS, ACTION_CLASS_MAP } from '@/lib/constants';
 import { useScheduleStore } from '@/lib/store/scheduleStore';
 import type { ScheduleRow } from '@/lib/types';
 
@@ -28,26 +28,28 @@ export default function ActionCell({ index, row }: Props) {
     return (
       <div className="other-wrap">
         <input
-          className="ci other-inp-inline"
+          className={`other-inp-inline cs aOther`}
           type="text"
           value={row.otherText}
           onChange={(e) => updateRow(index, { otherText: e.target.value })}
           onFocus={pushUndo}
           placeholder="Describe…"
         />
-        <button className="other-back" onClick={handleBackClick} title="Clear">✕</button>
+        <button className="other-back" onClick={handleBackClick} title="Change action">↩</button>
       </div>
     );
   }
 
+  const colorClass = ACTION_CLASS_MAP[row.action] ?? '';
+
   return (
     <select
-      className="cs"
+      className={`cs${colorClass ? ` ${colorClass}` : ''}`}
       value={row.action}
       onChange={(e) => handleSelectChange(e.target.value)}
     >
       {ACTIONS.map((a) => (
-        <option key={a} value={a}>{a}</option>
+        <option key={a} value={a}>{a || '—'}</option>
       ))}
     </select>
   );

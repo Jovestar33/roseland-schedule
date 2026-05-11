@@ -11,6 +11,10 @@ interface Props {
 export default function TimeInCell({ index, row }: Props) {
   const updateRow = useScheduleStore((s) => s.updateRow);
   const pushUndo  = useScheduleStore((s) => s.pushUndo);
+  const rows      = useScheduleStore((s) => s.rows);
+
+  const firstNonSun = rows.findIndex((r) => !r.sunLocked);
+  const isFirstRow  = index === firstNonSun;
 
   if (row.sunLocked) {
     return (
@@ -30,6 +34,8 @@ export default function TimeInCell({ index, row }: Props) {
     updateRow(index, { timeIn });
   }
 
+  const showSelect = isFirstRow || row.fixedIn;
+
   return (
     <div className="time-cell-wrap">
       <button
@@ -37,13 +43,13 @@ export default function TimeInCell({ index, row }: Props) {
         onClick={toggleFixedIn}
         title={row.fixedIn ? 'Unlock time-in' : 'Lock time-in'}
       />
-      {row.fixedIn ? (
+      {showSelect ? (
         <select
           className="cs"
           value={row.timeIn}
           onChange={(e) => handleTimeChange(e.target.value)}
         >
-          <option value="">—</option>
+          <option value="">— set —</option>
           {TIMES.map((t) => (
             <option key={t} value={t}>{t}</option>
           ))}

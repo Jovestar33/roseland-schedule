@@ -11,11 +11,11 @@ export const TIMES: string[] = Array.from({ length: 96 }, (_, i) => {
 
 // Common duration presets for the Duration selector
 export const DURATIONS: string[] = [
-  '0:15', '0:30', '0:45',
-  '1:00', '1:15', '1:30', '1:45',
-  '2:00', '2:30', '3:00', '3:30',
-  '4:00', '4:30', '5:00', '6:00',
-  '7:00', '8:00',
+  '00:15', '00:30', '00:45',
+  '01:00', '01:15', '01:30', '01:45',
+  '02:00', '02:30', '03:00', '03:30',
+  '04:00', '04:30', '05:00', '06:00',
+  '07:00', '08:00',
 ];
 
 // Parse 12-hour time string ("7:00 AM") to minutes since midnight. Returns -1 if invalid.
@@ -49,12 +49,12 @@ export function durm(s: string): number {
   return parseInt(m[1], 10) * 60 + parseInt(m[2], 10);
 }
 
-// Format minutes as duration string ("1:30").
+// Format minutes as duration string ("01:30").
 export function mDur(v: number): string {
   if (v <= 0) return '';
   const h = Math.floor(v / 60);
   const min = v % 60;
-  return `${h}:${String(min).padStart(2, '0')}`;
+  return `${String(h).padStart(2, '0')}:${String(min).padStart(2, '0')}`;
 }
 
 // Compute the display Time Out for a single row (not stored in the row).

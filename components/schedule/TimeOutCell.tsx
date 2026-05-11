@@ -30,18 +30,13 @@ export default function TimeOutCell({ index, row }: Props) {
 
   return (
     <div className="time-cell-wrap">
-      <button
-        className={`time-lock-btn out${row.fixedOut ? ' active' : ''}`}
-        onClick={toggleFixedOut}
-        title={row.fixedOut ? 'Unlock time-out' : 'Lock time-out'}
-      />
       {row.fixedOut ? (
         <select
           className="cs"
           value={row.fixedOutTime}
           onChange={(e) => handleTimeChange(e.target.value)}
         >
-          <option value="">—</option>
+          <option value="">— set —</option>
           {TIMES.map((t) => (
             <option key={t} value={t}>{t}</option>
           ))}
@@ -51,6 +46,11 @@ export default function TimeOutCell({ index, row }: Props) {
           {displayTime || '—'}
         </span>
       )}
+      <button
+        className={`time-lock-btn out${row.fixedOut ? ' active' : ''}`}
+        onClick={toggleFixedOut}
+        title={row.fixedOut ? 'Unlock time-out' : 'Lock time-out'}
+      />
     </div>
   );
 }

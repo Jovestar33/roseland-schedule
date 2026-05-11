@@ -23,7 +23,7 @@ export default function NotesCell({ index, row, onOpenStatus, onOpenNotes }: Pro
           className={`status-mini-btn${hasStatus ? ' has-status' : ''}`}
           onClick={onOpenStatus}
           title={hasStatus ? 'Edit booking status' : 'Add booking status'}
-        />
+        >&#10003;</button>
       </div>
       <div className="status-notes-slot">
         <AutoResizeTextarea

@@ -7,10 +7,11 @@ interface Props {
   open: boolean;
   row: ScheduleRow | null;
   onSave: (status: string) => void;
+  onClear: () => void;
   onClose: () => void;
 }
 
-export default function StatusModal({ open, row, onSave, onClose }: Props) {
+export default function StatusModal({ open, row, onSave, onClear, onClose }: Props) {
   const [value, setValue] = useState('');
 
   useEffect(() => {
@@ -22,26 +23,31 @@ export default function StatusModal({ open, row, onSave, onClose }: Props) {
     onClose();
   }
 
+  function handleClear() {
+    onClear();
+    onClose();
+  }
+
   return (
     <Modal
       open={open}
       onClose={onClose}
-      title="Booking Status"
+      title="Status"
       className="status-modal"
       footer={
         <>
+          <button className="btn btn-light" onClick={handleClear}>Clear</button>
           <button className="btn btn-light" onClick={onClose}>Cancel</button>
-          <button className="btn btn-pink" onClick={handleSave}>Save</button>
+          <button className="btn btn-pink" onClick={handleSave}>Save Status</button>
         </>
       }
     >
-      <span className="status-label">Notes on booking, confirmations, special instructions</span>
       <textarea
         autoFocus
         className="ci-ta status-ta"
         value={value}
         onChange={(e) => setValue(e.target.value)}
-        placeholder="e.g. Confirmed — awaiting signed contract. Contact: Sarah @ 555-0100."
+        placeholder="Add booking progress, outreach status, confirmations, issues, next steps, or other status notes."
         rows={6}
       />
     </Modal>

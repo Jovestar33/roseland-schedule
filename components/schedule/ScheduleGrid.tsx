@@ -45,7 +45,7 @@ export default function ScheduleGrid({ onOpenContact, onOpenStatus, onOpenNotes 
           <thead>
             <tr>
               <th />
-              <th>Action</th>
+              <th className="tp">Action</th>
               <th>Location</th>
               <th>Description</th>
               <th>Notes</th>

@@ -1,4 +1,5 @@
 'use client';
+import { computeTimeOut } from '@/lib/time';
 import type { ScheduleRow } from '@/lib/types';
 
 interface Props {
@@ -7,26 +8,29 @@ interface Props {
 }
 
 export default function SunriseSunsetRow({ index, row }: Props) {
-  const isSunrise = row.action === 'Sunrise' || row.timeIn < '12:00 PM';
-  const actionClass = isSunrise ? 'aSunrise' : 'aSunset';
-  const label = row.action || (isSunrise ? '🌅 Sunrise' : '🌇 Sunset');
+  const isSunrise = row.action.includes('Sunrise') || row.timeIn < '12:00 PM';
+  const timeColor = isSunrise ? '#92400e' : '#9a3412';
+  const timeOut = computeTimeOut(row);
 
   return (
     <tr className="sun-row">
       <td className="rn">{index + 1}</td>
       <td>
-        <span className={`sun-label ${actionClass}`}>{label}</span>
+        <div className="sun-label">{row.action}</div>
       </td>
-      <td>{row.loc && <span className="tdsp">{row.loc}</span>}</td>
-      <td>{row.desc && <span className="tdsp">{row.desc}</span>}</td>
+      <td />
+      <td>
+        {row.desc && <div className="sun-note">{row.desc}</div>}
+      </td>
       <td />
       <td className="col-dv" />
       <td className="tc-t">
-        <span className="anchor-text">{row.timeIn}</span>
-        {row.notes && <div className="sun-note">{row.notes}</div>}
+        <div className="tdsp" style={{ fontWeight: 700, color: timeColor }}>{row.timeIn}</div>
       </td>
       <td className="tc-t" />
-      <td className="tc-t" />
+      <td className="tc-t">
+        {timeOut && <div className="tdsp tout">{timeOut}</div>}
+      </td>
       <td />
       <td />
     </tr>

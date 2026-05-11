@@ -32,9 +32,7 @@ export default function DoneContactCell({ index, row, onOpenContact }: Props) {
         className={`contact-done-btn${hasContact ? ' has-contact' : ''}`}
         onClick={onOpenContact}
         title={hasContact ? 'Edit contact' : 'Add contact'}
-      >
-        {hasContact ? '👤' : '+'}
-      </button>
+      >&#128100;</button>
     </div>
   );
 }
