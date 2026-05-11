@@ -1,5 +1,23 @@
 import type { ScheduleRow } from './types';
 
+// 15-minute interval time options for Time In / Time Out selectors (96 entries)
+export const TIMES: string[] = Array.from({ length: 96 }, (_, i) => {
+  const h24 = Math.floor((i * 15) / 60);
+  const min = (i * 15) % 60;
+  const ampm = h24 >= 12 ? 'PM' : 'AM';
+  const h12 = h24 % 12 || 12;
+  return `${h12}:${String(min).padStart(2, '0')} ${ampm}`;
+});
+
+// Common duration presets for the Duration selector
+export const DURATIONS: string[] = [
+  '0:15', '0:30', '0:45',
+  '1:00', '1:15', '1:30', '1:45',
+  '2:00', '2:30', '3:00', '3:30',
+  '4:00', '4:30', '5:00', '6:00',
+  '7:00', '8:00',
+];
+
 // Parse 12-hour time string ("7:00 AM") to minutes since midnight. Returns -1 if invalid.
 export function t12m(s: string): number {
   if (!s) return -1;

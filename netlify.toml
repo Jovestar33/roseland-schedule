@@ -8,8 +8,6 @@
 [[plugins]]
   package = "@netlify/plugin-nextjs"
 
-[[plugins]]
-  package = "@netlify/plugin-functions-install-core"
 
 [[headers]]
   for = "/*"

@@ -9,25 +9,29 @@ function isPublicPath(pathname: string): boolean {
   return pathname === '/login' || pathname.startsWith('/view');
 }
 
+function redirect(request: NextRequest, pathname: string): NextResponse {
+  const url = request.nextUrl.clone();
+  url.pathname = pathname;
+  url.search = '';
+  return NextResponse.redirect(url);
+}
+
 export function middleware(request: NextRequest) {
-  const { pathname, searchParams } = request.nextUrl;
+  const { pathname } = request.nextUrl;
+  const searchParams = request.nextUrl.searchParams;
 
   // Legacy query-param redirects (must run before auth check)
   const s = searchParams.get('s');
   const v = searchParams.get('v');
   const vt = searchParams.get('vt');
   if (s) {
-    return NextResponse.redirect(
-      new URL(`/schedule/${encodeURIComponent(s)}`, request.url),
-    );
+    return redirect(request, `/schedule/${encodeURIComponent(s)}`);
   }
   if (v && vt) {
-    return NextResponse.redirect(
-      new URL(
-        `/view?v=${encodeURIComponent(v)}&vt=${encodeURIComponent(vt)}`,
-        request.url,
-      ),
-    );
+    const url = request.nextUrl.clone();
+    url.pathname = '/view';
+    url.search = `?v=${encodeURIComponent(v)}&vt=${encodeURIComponent(vt)}`;
+    return NextResponse.redirect(url);
   }
 
   // Public paths need no cookie
@@ -35,13 +39,14 @@ export function middleware(request: NextRequest) {
 
   // All other app routes require the auth flag cookie
   if (!request.cookies.get(AUTH_COOKIE)?.value) {
-    return NextResponse.redirect(new URL('/login', request.url));
+    return redirect(request, '/login');
   }
 
   return NextResponse.next();
 }
 
 export const config = {
-  // Run on all paths except Next.js internals, static assets, and Netlify infra
-  matcher: ['/((?!_next/|favicon|icons|manifest|\\.netlify|api).*)'],
+  matcher: [
+    '/((?!_next/static|_next/image|favicon\\.ico|icons|manifest).*)',
+  ],
 };
