@@ -1,4 +1,5 @@
 'use client';
+import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/lib/store/authStore';
@@ -58,30 +59,14 @@ export default function LoginPage() {
         }}
       >
         <div style={{ textAlign: 'center', marginBottom: '32px' }}>
-          <div
-            style={{
-              fontFamily: 'var(--fd)',
-              fontSize: '36px',
-              letterSpacing: '4px',
-              color: 'var(--pink, #e91e8c)',
-              lineHeight: 1,
-            }}
-          >
-            ROSELAND
-          </div>
-          <div
-            style={{
-              fontFamily: 'var(--fb)',
-              fontSize: '12px',
-              fontWeight: 500,
-              letterSpacing: '3px',
-              textTransform: 'uppercase',
-              color: '#71717a',
-              marginTop: '5px',
-            }}
-          >
-            Schedule
-          </div>
+          <Image
+            src="/logo-login.png"
+            alt="Roseland Pictures"
+            width={1380}
+            height={1108}
+            style={{ maxWidth: '240px', height: 'auto', display: 'block', margin: '0 auto' }}
+            priority
+          />
         </div>
 
         <form onSubmit={handleSubmit}>
