@@ -10,3 +10,11 @@ export async function postLoad(
   if (!res.ok) throw new Error(`Load failed: HTTP ${res.status}`);
   return res.json() as Promise<ScheduleData>;
 }
+
+export async function listSchedules(editorToken: string): Promise<string[]> {
+  const params = new URLSearchParams({ editorToken, _: String(Date.now()) });
+  const res = await fetch(`/.netlify/functions/load?${params}`, { cache: 'no-store' });
+  if (!res.ok) throw new Error(`List failed: HTTP ${res.status}`);
+  const body = await res.json() as { schedules?: string[] };
+  return body.schedules ?? [];
+}

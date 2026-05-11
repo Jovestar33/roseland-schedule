@@ -58,3 +58,19 @@ export async function postSave(
 
   return res.json() as Promise<SaveResult>;
 }
+
+export async function postDelete(
+  name: string,
+  editorToken: string,
+  deletePassword: string
+): Promise<void> {
+  const res = await fetch('/.netlify/functions/save', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name, data: null, deleted: true, editorToken, deletePassword }),
+  });
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({ error: 'Delete failed' })) as { error?: string };
+    throw new Error(body.error ?? `Delete failed: HTTP ${res.status}`);
+  }
+}
