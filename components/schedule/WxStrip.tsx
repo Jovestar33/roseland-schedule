@@ -41,7 +41,7 @@ export default function WxStrip({ onRefresh, onClear }: Props) {
           </div>
           <div className="wx-item">
             <span className="wx-label">Precip</span>
-            <span className="wx-val">
+            <span className="wx-val" id="wx-prec">
               {wx.prec !== undefined ? (
                 <>
                   {wx.prec}%&nbsp;
@@ -67,7 +67,7 @@ export default function WxStrip({ onRefresh, onClear }: Props) {
       )}
       <div className="wx-item" style={{ border: 'none', margin: 0, minWidth: 0 }}>
         <span className="wx-label">Updated</span>
-        <span className="wx-val">{wx.fetchedAt || '—'}</span>
+        <span className="wx-val wx-ts" id="wx-ts">{wx.fetchedAt || '—'}</span>
       </div>
       <button className="wx-refresh" onClick={onRefresh} title="Refresh weather">↻ Refresh</button>
       <button className="wx-refresh" onClick={onClear} title="Clear weather" style={{ marginLeft: '8px' }}>✕ Clear</button>
