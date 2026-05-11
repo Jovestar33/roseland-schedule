@@ -1,6 +1,6 @@
 'use client';
-import { ACTIONS, ACTION_CLASS_MAP } from '@/lib/constants';
 import { useScheduleStore } from '@/lib/store/scheduleStore';
+import { useCmsActions, useCmsActionClassMap } from '@/lib/store/cmsStore';
 import type { ScheduleRow } from '@/lib/types';
 
 interface Props {
@@ -9,8 +9,10 @@ interface Props {
 }
 
 export default function ActionCell({ index, row }: Props) {
-  const updateRow = useScheduleStore((s) => s.updateRow);
-  const pushUndo  = useScheduleStore((s) => s.pushUndo);
+  const updateRow      = useScheduleStore((s) => s.updateRow);
+  const pushUndo       = useScheduleStore((s) => s.pushUndo);
+  const actions        = useCmsActions();
+  const actionClassMap = useCmsActionClassMap();
 
   const isOther = row.action === 'Other';
 
@@ -40,7 +42,7 @@ export default function ActionCell({ index, row }: Props) {
     );
   }
 
-  const colorClass = ACTION_CLASS_MAP[row.action] ?? '';
+  const colorClass = actionClassMap[row.action] ?? '';
 
   return (
     <select
@@ -48,7 +50,7 @@ export default function ActionCell({ index, row }: Props) {
       value={row.action}
       onChange={(e) => handleSelectChange(e.target.value)}
     >
-      {ACTIONS.map((a) => (
+      {actions.map((a) => (
         <option key={a} value={a}>{a || '—'}</option>
       ))}
     </select>

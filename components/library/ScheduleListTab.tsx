@@ -48,9 +48,13 @@ export default function ScheduleListTab({
     setNewFolderInput('');
   }
 
+  const [copiedName, setCopiedName] = useState<string | null>(null);
+
   function copyTeamLink(name: string) {
     const url = `${window.location.origin}/schedule/${encodeURIComponent(name)}`;
     navigator.clipboard.writeText(url).catch(() => prompt('Copy link:', url));
+    setCopiedName(name);
+    setTimeout(() => setCopiedName((n) => (n === name ? null : n)), 2000);
   }
 
   const counts: Record<string, number> = { all: schedules.length, uncategorized: 0 };
@@ -192,7 +196,7 @@ export default function ScheduleListTab({
                       <option key={o.value} value={o.value}>{o.label}</option>
                     ))}
                   </select>
-                  <button className="sitem-copy" onClick={() => copyTeamLink(name)} title="Copy edit link">Team Link</button>
+                  <button className="sitem-copy" onClick={() => copyTeamLink(name)} title="Copy edit link">{copiedName === name ? '✓ Copied!' : 'Team Link'}</button>
                   <button className="sitem-del" onClick={() => onDelete(name)} title="Delete schedule">🗑</button>
                 </div>
               </div>

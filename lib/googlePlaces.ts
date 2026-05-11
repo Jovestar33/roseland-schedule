@@ -1,4 +1,5 @@
-const GKEY = process.env.NEXT_PUBLIC_GOOGLE_PLACES_KEY ?? '';
+// Key is already public in the deployed index.html — env var allows override
+const GKEY = process.env.NEXT_PUBLIC_GOOGLE_PLACES_KEY || 'AIzaSyCW5tTOZLTvsjrV0XpE_-RcCL-pT7k0HHE';
 
 export interface PlaceSuggestion {
   label: string;

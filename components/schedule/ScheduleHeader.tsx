@@ -5,11 +5,10 @@ import CrewInput from './CrewInput';
 import type { GeoResult } from '@/lib/googlePlaces';
 
 interface Props {
-  onWeatherNeeded?: (date: string, lat: number, lng: number, town: string) => void;
   readOnly?: boolean;
 }
 
-export default function ScheduleHeader({ onWeatherNeeded, readOnly = false }: Props) {
+export default function ScheduleHeader({ readOnly = false }: Props) {
   const meta       = useScheduleStore((s) => s.meta);
   const rows       = useScheduleStore((s) => s.rows);
   const updateMeta = useScheduleStore((s) => s.updateMeta);
@@ -17,22 +16,11 @@ export default function ScheduleHeader({ onWeatherNeeded, readOnly = false }: Pr
   const callTime = rows[0]?.timeIn || '';
 
   function handleTownSelect(address: string, geo: GeoResult | null) {
-    const patch = {
+    updateMeta({
       town: address,
       lat: geo?.lat ?? null,
       lng: geo?.lng ?? null,
-    };
-    updateMeta(patch);
-    if (geo && meta.date && onWeatherNeeded) {
-      onWeatherNeeded(meta.date, geo.lat, geo.lng, address);
-    }
-  }
-
-  function handleDateChange(date: string) {
-    updateMeta({ date });
-    if (date && meta.lat && meta.lng && onWeatherNeeded) {
-      onWeatherNeeded(date, meta.lat, meta.lng, meta.town);
-    }
+    });
   }
 
   function openTownMap() {
@@ -75,7 +63,7 @@ export default function ScheduleHeader({ onWeatherNeeded, readOnly = false }: Pr
               id="m-date"
               type="date"
               value={meta.date}
-              onChange={(e) => handleDateChange(e.target.value)}
+              onChange={(e) => updateMeta({ date: e.target.value })}
             />
           )}
         </div>

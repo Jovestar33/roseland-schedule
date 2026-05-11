@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useScheduleStore } from '@/lib/store/scheduleStore';
 import { useAuthStore } from '@/lib/store/authStore';
 import { useSaveActions } from '@/lib/hooks/useSaveActions';
@@ -60,56 +60,59 @@ export default function ScheduleEditor({ name }: Props) {
     loaderRef.current(name);
   }, [name, hydrated]);
 
-  // Auto-fetch weather when date + lat/lng are all present
-  const wxFetchKey = useRef<string | null>(null);
-  const triggerWeather = useCallback(async (
-    date: string,
-    lat: number,
-    lng: number,
-    town: string
-  ) => {
+  // Weather — key of the date+lat+lng that was active when the schedule last loaded
+  const loadedWxKey = useRef('');
+  const wxFetchKey  = useRef('');
+
+  // When a schedule loads: restore sun rows from saved wx, or fetch fresh if no saved wx
+  useEffect(() => {
+    const key = `${meta.date}|${meta.lat}|${meta.lng}`;
+    loadedWxKey.current = key;
+
+    if (meta.wx?.sunrise && meta.wx?.sunset) {
+      const hasSunRows = rows.some(r => r.sunLocked);
+      if (!hasSunRows) insertSunRows(meta.wx.sunrise, meta.wx.sunset);
+      return;
+    }
+    if (meta.date && meta.lat && meta.lng) {
+      wxFetchKey.current = '';
+      doFetchWeather(meta.date, meta.lat, meta.lng, meta.town);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [scheduleName]);
+
+  // When user changes date or location during a session, auto-fetch weather
+  useEffect(() => {
+    if (!meta.date || !meta.lat || !meta.lng) return;
+    const key = `${meta.date}|${meta.lat}|${meta.lng}`;
+    if (key === loadedWxKey.current) return; // same values as when schedule loaded
+    doFetchWeather(meta.date, meta.lat, meta.lng, meta.town);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [meta.date, meta.lat, meta.lng]);
+
+  async function doFetchWeather(date: string, lat: number, lng: number, town: string) {
     const key = `${date}|${lat}|${lng}`;
     if (wxFetchKey.current === key) return;
     wxFetchKey.current = key;
     const wx = await fetchWeather(date, lat, lng, town);
     if (!wx) return;
     setWx(wx);
-    if (wx.sunrise && wx.sunset) {
-      insertSunRows(wx.sunrise, wx.sunset);
-    }
-  }, [setWx, insertSunRows]);
-
-  // Re-run weather when a schedule loads and already has lat/lng + date
-  useEffect(() => {
-    if (meta.lat && meta.lng && meta.date && !meta.wx) {
-      triggerWeather(meta.date, meta.lat, meta.lng, meta.town);
-    }
-    // If weather was saved with the schedule, restore sun rows
-    if (meta.wx?.sunrise && meta.wx?.sunset) {
-      const hasSunRows = rows.some(r => r.sunLocked);
-      if (!hasSunRows) {
-        insertSunRows(meta.wx.sunrise, meta.wx.sunset);
-      }
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [scheduleName]);
+    if (wx.sunrise && wx.sunset) insertSunRows(wx.sunrise, wx.sunset);
+  }
 
   async function handleRefreshWeather() {
     if (!meta.lat || !meta.lng || !meta.date) return;
-    wxFetchKey.current = null;
+    wxFetchKey.current = '';
     const wx = await fetchWeather(meta.date, meta.lat, meta.lng, meta.town);
     if (!wx) return;
     setWx(wx);
-    if (wx.sunrise && wx.sunset) {
-      clearSunRows();
-      insertSunRows(wx.sunrise, wx.sunset);
-    }
+    if (wx.sunrise && wx.sunset) insertSunRows(wx.sunrise, wx.sunset);
   }
 
   function handleClearWeather() {
     setWx(null);
     clearSunRows();
-    wxFetchKey.current = null;
+    wxFetchKey.current = '';
   }
 
   function getSaveAsDefault(): string {
@@ -117,8 +120,7 @@ export default function ScheduleEditor({ name }: Props) {
       const town = meta.town.split(',')[0].trim();
       if (meta.date) {
         const d = new Date(meta.date + 'T12:00:00').toLocaleDateString('en-US', {
-          month: 'short',
-          day: 'numeric',
+          month: 'short', day: 'numeric',
         });
         return `${town} – ${d}`;
       }
@@ -136,20 +138,14 @@ export default function ScheduleEditor({ name }: Props) {
         onClose={closeSchedule}
       />
       <WxStrip onRefresh={handleRefreshWeather} onClear={handleClearWeather} />
-      <ScheduleHeader onWeatherNeeded={triggerWeather} />
+      <ScheduleHeader />
       <ScheduleGrid
         onOpenContact={(i) => setContactRow(i)}
         onOpenStatus={(i)  => setStatusRow(i)}
         onOpenNotes={(i)   => setNotesRow(i)}
       />
       <div className="add-area">
-        <button
-          className="btn btn-light"
-          onClick={() => {
-            pushUndo();
-            addRowAfter(rows.length - 1);
-          }}
-        >
+        <button className="btn btn-light" onClick={() => { pushUndo(); addRowAfter(rows.length - 1); }}>
           + Add Row
         </button>
       </div>
@@ -160,60 +156,31 @@ export default function ScheduleEditor({ name }: Props) {
         onSave={saveAs}
         onClose={() => setSaveAsOpen(false)}
       />
-
       <ConflictModal
         open={conflictData !== null}
         conflictData={conflictData}
-        onOverwrite={() => {
-          if (conflictData) resolveConflictOverwrite(conflictData);
-        }}
-        onSaveAs={() => {
-          setConflictData(null);
-          setSaveAsOpen(true);
-        }}
-        onReload={() => {
-          if (conflictData) resolveConflictReload(conflictData);
-        }}
+        onOverwrite={() => { if (conflictData) resolveConflictOverwrite(conflictData); }}
+        onSaveAs={() => { setConflictData(null); setSaveAsOpen(true); }}
+        onReload={() => { if (conflictData) resolveConflictReload(conflictData); }}
         onClose={() => setConflictData(null)}
       />
-
       <ContactModal
         open={contactRow !== null}
         row={contactRow !== null ? rows[contactRow] : null}
-        onSave={(patch) => {
-          if (contactRow !== null) {
-            pushUndo();
-            updateRow(contactRow, patch as Partial<ScheduleRow>);
-          }
-        }}
+        onSave={(patch) => { if (contactRow !== null) { pushUndo(); updateRow(contactRow, patch as Partial<ScheduleRow>); } }}
         onClose={() => setContactRow(null)}
       />
       <StatusModal
         open={statusRow !== null}
         row={statusRow !== null ? rows[statusRow] : null}
-        onSave={(status) => {
-          if (statusRow !== null) {
-            pushUndo();
-            updateRow(statusRow, { status });
-          }
-        }}
-        onClear={() => {
-          if (statusRow !== null) {
-            pushUndo();
-            updateRow(statusRow, { status: '' });
-          }
-        }}
+        onSave={(status) => { if (statusRow !== null) { pushUndo(); updateRow(statusRow, { status }); } }}
+        onClear={() => { if (statusRow !== null) { pushUndo(); updateRow(statusRow, { status: '' }); } }}
         onClose={() => setStatusRow(null)}
       />
       <NotesModal
         open={notesRow !== null}
         notes={notesRow !== null ? rows[notesRow]?.notes ?? '' : ''}
-        onSave={(notes) => {
-          if (notesRow !== null) {
-            pushUndo();
-            updateRow(notesRow, { notes });
-          }
-        }}
+        onSave={(notes) => { if (notesRow !== null) { pushUndo(); updateRow(notesRow, { notes }); } }}
         onClose={() => setNotesRow(null)}
       />
     </div>
