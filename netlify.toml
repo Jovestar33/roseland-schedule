@@ -1,6 +1,12 @@
 [build]
-  publish = "."
-  command = ""
+  command = "npm run build"
+  publish = ".next"
+
+[functions]
+  directory = "netlify/functions"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
 
 [[plugins]]
   package = "@netlify/plugin-functions-install-core"
@@ -9,8 +15,3 @@
   for = "/*"
   [headers.values]
     X-Frame-Options = "SAMEORIGIN"
-
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
