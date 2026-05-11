@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { makeRow, makeMeta, normalizeRows } from '../rowNormalizer';
 import { recalcRows } from '../time';
 import { UNDO_LIMIT, DEFAULT_ROW_COUNT } from '../constants';
-import type { ScheduleRow, ScheduleMeta, ScheduleData } from '../types';
+import type { ScheduleRow, ScheduleMeta, ScheduleData, SyncStatus, ConflictState } from '../types';
 
 type Snapshot = { rows: ScheduleRow[]; meta: ScheduleMeta };
 
@@ -12,12 +12,16 @@ function cloneRows(rows: ScheduleRow[]): ScheduleRow[] { return rows.map(r => ({
 
 export interface ScheduleStore {
   rows: ScheduleRow[];
-  rowKeys: string[];          // stable DnD keys, parallel to rows[], not persisted
+  rowKeys: string[];
   meta: ScheduleMeta;
   scheduleName: string | null;
   dirty: boolean;
   undoStack: Snapshot[];
   redoStack: Snapshot[];
+
+  syncStatus: SyncStatus;
+  remoteBaseline: { savedAt: number; hash: string } | null;
+  conflictData: ConflictState | null;
 
   pushUndo: () => void;
   undo: () => void;
@@ -33,6 +37,10 @@ export interface ScheduleStore {
   newSchedule: (name?: string) => void;
   markClean: () => void;
   getScheduleData: () => ScheduleData;
+
+  setSyncStatus: (s: SyncStatus) => void;
+  setRemoteBaseline: (savedAt: number, hash: string) => void;
+  setConflictData: (d: ConflictState | null) => void;
 }
 
 function makeDefaultRows(): ScheduleRow[] {
@@ -50,6 +58,10 @@ export const useScheduleStore = create<ScheduleStore>((set, get) => ({
   dirty: false,
   undoStack: [],
   redoStack: [],
+
+  syncStatus: 'synced',
+  remoteBaseline: null,
+  conflictData: null,
 
   pushUndo() {
     const { rows, meta, undoStack } = get();
@@ -133,6 +145,8 @@ export const useScheduleStore = create<ScheduleStore>((set, get) => ({
       dirty: false,
       undoStack: [],
       redoStack: [],
+      syncStatus: 'synced',
+      conflictData: null,
     });
   },
 
@@ -146,6 +160,9 @@ export const useScheduleStore = create<ScheduleStore>((set, get) => ({
       dirty: false,
       undoStack: [],
       redoStack: [],
+      syncStatus: 'synced',
+      remoteBaseline: null,
+      conflictData: null,
     });
   },
 
@@ -157,4 +174,8 @@ export const useScheduleStore = create<ScheduleStore>((set, get) => ({
     const { rows, meta } = get();
     return { rows, meta, savedAt: Date.now() };
   },
+
+  setSyncStatus(s) { set({ syncStatus: s }); },
+  setRemoteBaseline(savedAt, hash) { set({ remoteBaseline: { savedAt, hash } }); },
+  setConflictData(d) { set({ conflictData: d }); },
 }));

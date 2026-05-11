@@ -1,6 +1,8 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useScheduleStore } from '@/lib/store/scheduleStore';
+import { useAuthStore } from '@/lib/store/authStore';
+import { useSaveActions } from '@/lib/hooks/useSaveActions';
 import type { ScheduleRow } from '@/lib/types';
 import ScheduleHeader from './ScheduleHeader';
 import ScheduleGrid from './ScheduleGrid';
@@ -8,6 +10,8 @@ import EditorToolbar from '@/components/toolbar/EditorToolbar';
 import ContactModal from '@/components/modals/ContactModal';
 import StatusModal from '@/components/modals/StatusModal';
 import NotesModal from '@/components/modals/NotesModal';
+import SaveAsModal from '@/components/modals/SaveAsModal';
+import ConflictModal from '@/components/modals/ConflictModal';
 
 interface Props {
   name: string;
@@ -16,24 +20,65 @@ interface Props {
 export default function ScheduleEditor({ name }: Props) {
   const scheduleName = useScheduleStore((s) => s.scheduleName);
   const rows         = useScheduleStore((s) => s.rows);
-  const newSchedule  = useScheduleStore((s) => s.newSchedule);
-  const addRowAfter  = useScheduleStore((s) => s.addRowAfter);
+  const meta         = useScheduleStore((s) => s.meta);
+  const conflictData = useScheduleStore((s) => s.conflictData);
+  const setConflictData = useScheduleStore((s) => s.setConflictData);
   const updateRow    = useScheduleStore((s) => s.updateRow);
+  const addRowAfter  = useScheduleStore((s) => s.addRowAfter);
   const pushUndo     = useScheduleStore((s) => s.pushUndo);
+
+  const hydrated = useAuthStore((s) => s.hydrated);
+
+  const {
+    loadScheduleFromCloud,
+    save,
+    saveAs,
+    takeSnapshot,
+    resolveConflictOverwrite,
+    resolveConflictReload,
+    closeSchedule,
+  } = useSaveActions();
 
   const [contactRow, setContactRow] = useState<number | null>(null);
   const [statusRow,  setStatusRow]  = useState<number | null>(null);
   const [notesRow,   setNotesRow]   = useState<number | null>(null);
+  const [saveAsOpen, setSaveAsOpen] = useState(false);
+
+  const loadedName = useRef<string | null>(null);
+  const loaderRef  = useRef(loadScheduleFromCloud);
+  loaderRef.current = loadScheduleFromCloud;
 
   useEffect(() => {
-    if (scheduleName !== name) {
-      newSchedule(name);
+    if (!hydrated) return;
+    if (loadedName.current === name) return;
+    loadedName.current = name;
+    loaderRef.current(name);
+  }, [name, hydrated]);
+
+  // Default name for Save As: town – date, falling back to current name
+  function getSaveAsDefault(): string {
+    if (meta.town) {
+      const town = meta.town.split(',')[0].trim();
+      if (meta.date) {
+        const d = new Date(meta.date + 'T12:00:00').toLocaleDateString('en-US', {
+          month: 'short',
+          day: 'numeric',
+        });
+        return `${town} – ${d}`;
+      }
+      return town;
     }
-  }, [name, scheduleName, newSchedule]);
+    return scheduleName ?? '';
+  }
 
   return (
     <div className="panel">
-      <EditorToolbar />
+      <EditorToolbar
+        onSave={save}
+        onOpenSaveAs={() => setSaveAsOpen(true)}
+        onSnapshot={takeSnapshot}
+        onClose={closeSchedule}
+      />
       <ScheduleHeader />
       <ScheduleGrid
         onOpenContact={(i) => setContactRow(i)}
@@ -52,13 +97,36 @@ export default function ScheduleEditor({ name }: Props) {
         </button>
       </div>
 
+      <SaveAsModal
+        open={saveAsOpen}
+        defaultName={getSaveAsDefault()}
+        onSave={saveAs}
+        onClose={() => setSaveAsOpen(false)}
+      />
+
+      <ConflictModal
+        open={conflictData !== null}
+        conflictData={conflictData}
+        onOverwrite={() => {
+          if (conflictData) resolveConflictOverwrite(conflictData);
+        }}
+        onSaveAs={() => {
+          setConflictData(null);
+          setSaveAsOpen(true);
+        }}
+        onReload={() => {
+          if (conflictData) resolveConflictReload(conflictData);
+        }}
+        onClose={() => setConflictData(null)}
+      />
+
       <ContactModal
         open={contactRow !== null}
         row={contactRow !== null ? rows[contactRow] : null}
         onSave={(patch) => {
           if (contactRow !== null) {
             pushUndo();
-            updateRow(contactRow, patch);
+            updateRow(contactRow, patch as Partial<ScheduleRow>);
           }
         }}
         onClose={() => setContactRow(null)}
