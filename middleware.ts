@@ -46,7 +46,12 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
+  // Exclude Netlify functions (/.netlify/functions/*), static assets, and
+  // well-known files. The \.netlify exclusion is required: Netlify does NOT
+  // automatically exempt its own function paths from edge middleware, so
+  // without it /.netlify/functions/auth is intercepted and redirected before
+  // the Lambda can run — breaking login.
   matcher: [
-    '/((?!_next/static|_next/image|favicon\\.ico|icons|manifest).*)',
+    '/((?!_next/static|_next/image|favicon\\.ico|icons|manifest|\\.netlify).*)',
   ],
 };
