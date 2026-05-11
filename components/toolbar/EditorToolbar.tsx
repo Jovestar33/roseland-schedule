@@ -1,5 +1,8 @@
 'use client';
+import { useState } from 'react';
 import { useScheduleStore } from '@/lib/store/scheduleStore';
+import { useAuthStore } from '@/lib/store/authStore';
+import { getViewLink } from '@/lib/api/viewLink';
 import SyncStatusPill from './SyncStatusPill';
 import UndoRedoButtons from './UndoRedoButtons';
 
@@ -12,6 +15,20 @@ interface Props {
 
 export default function EditorToolbar({ onSave, onOpenSaveAs, onSnapshot, onClose }: Props) {
   const scheduleName = useScheduleStore((s) => s.scheduleName);
+  const token = useAuthStore((s) => s.token);
+  const [viewLinkCopied, setViewLinkCopied] = useState(false);
+
+  async function handleViewLink() {
+    if (!scheduleName || !token) return;
+    try {
+      const url = await getViewLink(scheduleName, token);
+      await navigator.clipboard.writeText(url).catch(() => prompt('Copy read-only link:', url));
+      setViewLinkCopied(true);
+      setTimeout(() => setViewLinkCopied(false), 2500);
+    } catch (e) {
+      alert((e as Error).message || 'Could not generate view link');
+    }
+  }
 
   return (
     <div className="toolbar">
@@ -21,6 +38,16 @@ export default function EditorToolbar({ onSave, onOpenSaveAs, onSnapshot, onClos
       <button className="btn btn-light btn-sm" onClick={onOpenSaveAs}>Save As&hellip;</button>
       <UndoRedoButtons />
       <button className="btn btn-light btn-sm" onClick={onSnapshot}>&#128247; Snapshot</button>
+      {scheduleName && scheduleName !== 'Untitled' && (
+        <button
+          className="url-chip"
+          onClick={handleViewLink}
+          title="Copy read-only link for clients"
+          style={{ background: viewLinkCopied ? '#bbf7d0' : '#dcfce7', color: '#166534', borderColor: '#86efac' }}
+        >
+          {viewLinkCopied ? '✓ Copied!' : '🔒 Client / Vendor Link'}
+        </button>
+      )}
       <button className="btn btn-light btn-sm" onClick={onClose}>Close Schedule</button>
     </div>
   );

@@ -1,11 +1,13 @@
 'use client';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useScheduleStore } from '@/lib/store/scheduleStore';
 import { useAuthStore } from '@/lib/store/authStore';
 import { useSaveActions } from '@/lib/hooks/useSaveActions';
+import { fetchWeather } from '@/lib/weather';
 import type { ScheduleRow } from '@/lib/types';
 import ScheduleHeader from './ScheduleHeader';
 import ScheduleGrid from './ScheduleGrid';
+import WxStrip from './WxStrip';
 import EditorToolbar from '@/components/toolbar/EditorToolbar';
 import ContactModal from '@/components/modals/ContactModal';
 import StatusModal from '@/components/modals/StatusModal';
@@ -18,14 +20,17 @@ interface Props {
 }
 
 export default function ScheduleEditor({ name }: Props) {
-  const scheduleName = useScheduleStore((s) => s.scheduleName);
-  const rows         = useScheduleStore((s) => s.rows);
-  const meta         = useScheduleStore((s) => s.meta);
-  const conflictData = useScheduleStore((s) => s.conflictData);
+  const scheduleName    = useScheduleStore((s) => s.scheduleName);
+  const rows            = useScheduleStore((s) => s.rows);
+  const meta            = useScheduleStore((s) => s.meta);
+  const conflictData    = useScheduleStore((s) => s.conflictData);
   const setConflictData = useScheduleStore((s) => s.setConflictData);
-  const updateRow    = useScheduleStore((s) => s.updateRow);
-  const addRowAfter  = useScheduleStore((s) => s.addRowAfter);
-  const pushUndo     = useScheduleStore((s) => s.pushUndo);
+  const updateRow       = useScheduleStore((s) => s.updateRow);
+  const addRowAfter     = useScheduleStore((s) => s.addRowAfter);
+  const pushUndo        = useScheduleStore((s) => s.pushUndo);
+  const insertSunRows   = useScheduleStore((s) => s.insertSunRows);
+  const clearSunRows    = useScheduleStore((s) => s.clearSunRows);
+  const setWx           = useScheduleStore((s) => s.setWx);
 
   const hydrated = useAuthStore((s) => s.hydrated);
 
@@ -55,7 +60,58 @@ export default function ScheduleEditor({ name }: Props) {
     loaderRef.current(name);
   }, [name, hydrated]);
 
-  // Default name for Save As: town – date, falling back to current name
+  // Auto-fetch weather when date + lat/lng are all present
+  const wxFetchKey = useRef<string | null>(null);
+  const triggerWeather = useCallback(async (
+    date: string,
+    lat: number,
+    lng: number,
+    town: string
+  ) => {
+    const key = `${date}|${lat}|${lng}`;
+    if (wxFetchKey.current === key) return;
+    wxFetchKey.current = key;
+    const wx = await fetchWeather(date, lat, lng, town);
+    if (!wx) return;
+    setWx(wx);
+    if (wx.sunrise && wx.sunset) {
+      insertSunRows(wx.sunrise, wx.sunset);
+    }
+  }, [setWx, insertSunRows]);
+
+  // Re-run weather when a schedule loads and already has lat/lng + date
+  useEffect(() => {
+    if (meta.lat && meta.lng && meta.date && !meta.wx) {
+      triggerWeather(meta.date, meta.lat, meta.lng, meta.town);
+    }
+    // If weather was saved with the schedule, restore sun rows
+    if (meta.wx?.sunrise && meta.wx?.sunset) {
+      const hasSunRows = rows.some(r => r.sunLocked);
+      if (!hasSunRows) {
+        insertSunRows(meta.wx.sunrise, meta.wx.sunset);
+      }
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [scheduleName]);
+
+  async function handleRefreshWeather() {
+    if (!meta.lat || !meta.lng || !meta.date) return;
+    wxFetchKey.current = null;
+    const wx = await fetchWeather(meta.date, meta.lat, meta.lng, meta.town);
+    if (!wx) return;
+    setWx(wx);
+    if (wx.sunrise && wx.sunset) {
+      clearSunRows();
+      insertSunRows(wx.sunrise, wx.sunset);
+    }
+  }
+
+  function handleClearWeather() {
+    setWx(null);
+    clearSunRows();
+    wxFetchKey.current = null;
+  }
+
   function getSaveAsDefault(): string {
     if (meta.town) {
       const town = meta.town.split(',')[0].trim();
@@ -79,7 +135,8 @@ export default function ScheduleEditor({ name }: Props) {
         onSnapshot={takeSnapshot}
         onClose={closeSchedule}
       />
-      <ScheduleHeader />
+      <WxStrip onRefresh={handleRefreshWeather} onClear={handleClearWeather} />
+      <ScheduleHeader onWeatherNeeded={triggerWeather} />
       <ScheduleGrid
         onOpenContact={(i) => setContactRow(i)}
         onOpenStatus={(i)  => setStatusRow(i)}

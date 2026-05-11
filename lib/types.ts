@@ -26,10 +26,17 @@ export interface ScheduleRow {
 export interface WeatherData {
   sunrise?: string;
   sunset?: string;
-  temp?: number;
-  condition?: string;
-  precipitation?: number;
-  updatedAt?: number;
+  // Full forecast fields (from Open-Meteo)
+  maxC?: number;
+  minC?: number;
+  maxF?: number;
+  minF?: number;
+  prec?: number;
+  code?: number;
+  cond?: string;
+  fetchedAt?: string;
+  town?: string;
+  noForecast?: boolean;
 }
 
 export interface ScheduleMeta {

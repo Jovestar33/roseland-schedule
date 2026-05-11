@@ -1,68 +1,129 @@
 'use client';
 import { useScheduleStore } from '@/lib/store/scheduleStore';
+import PlacesAutocomplete from './PlacesAutocomplete';
+import CrewInput from './CrewInput';
+import type { GeoResult } from '@/lib/googlePlaces';
 
-export default function ScheduleHeader() {
-  const meta      = useScheduleStore((s) => s.meta);
-  const rows      = useScheduleStore((s) => s.rows);
+interface Props {
+  onWeatherNeeded?: (date: string, lat: number, lng: number, town: string) => void;
+  readOnly?: boolean;
+}
+
+export default function ScheduleHeader({ onWeatherNeeded, readOnly = false }: Props) {
+  const meta       = useScheduleStore((s) => s.meta);
+  const rows       = useScheduleStore((s) => s.rows);
   const updateMeta = useScheduleStore((s) => s.updateMeta);
 
   const callTime = rows[0]?.timeIn || '';
+
+  function handleTownSelect(address: string, geo: GeoResult | null) {
+    const patch = {
+      town: address,
+      lat: geo?.lat ?? null,
+      lng: geo?.lng ?? null,
+    };
+    updateMeta(patch);
+    if (geo && meta.date && onWeatherNeeded) {
+      onWeatherNeeded(meta.date, geo.lat, geo.lng, address);
+    }
+  }
+
+  function handleDateChange(date: string) {
+    updateMeta({ date });
+    if (date && meta.lat && meta.lng && onWeatherNeeded) {
+      onWeatherNeeded(date, meta.lat, meta.lng, meta.town);
+    }
+  }
+
+  function openTownMap() {
+    const url = meta.lat && meta.lng
+      ? `https://www.google.com/maps/search/?api=1&query=${meta.lat},${meta.lng}`
+      : `https://www.google.com/maps/search/${encodeURIComponent(meta.town)}`;
+    window.open(url, '_blank', 'noopener');
+  }
 
   return (
     <div className="meta">
       <div className="meta-grid">
         <div className="mf">
           <label htmlFor="m-town">Town / Location</label>
-          <input
-            id="m-town"
-            type="text"
-            value={meta.town}
-            onChange={(e) => updateMeta({ town: e.target.value })}
-            placeholder="City, State"
-          />
+          {readOnly ? (
+            <div className="call-disp">{meta.town || '—'}</div>
+          ) : (
+            <div className="ac-wrap">
+              <PlacesAutocomplete
+                id="m-town"
+                value={meta.town}
+                onChange={(v) => updateMeta({ town: v })}
+                onSelect={handleTownSelect}
+                placeholder="e.g. Garner, NC"
+              />
+              {meta.town && (
+                <button className="map-pin" onClick={openTownMap} title="Open in Google Maps">
+                  📍
+                </button>
+              )}
+            </div>
+          )}
         </div>
         <div className="mf">
           <label htmlFor="m-date">Date</label>
-          <input
-            id="m-date"
-            type="date"
-            value={meta.date}
-            onChange={(e) => updateMeta({ date: e.target.value })}
-          />
+          {readOnly ? (
+            <div className="call-disp">{meta.date || '—'}</div>
+          ) : (
+            <input
+              id="m-date"
+              type="date"
+              value={meta.date}
+              onChange={(e) => handleDateChange(e.target.value)}
+            />
+          )}
         </div>
         <div className="mf">
           <label>Call Time</label>
-          <div className="call-disp">{callTime}</div>
+          <div className="call-disp">{callTime || '—'}</div>
         </div>
         <div className="mf">
           <label htmlFor="m-prod">Production</label>
-          <input
-            id="m-prod"
-            type="text"
-            value={meta.prod}
-            onChange={(e) => updateMeta({ prod: e.target.value })}
-            placeholder="Film / Show title"
-          />
+          {readOnly ? (
+            <div className="call-disp">{meta.prod || '—'}</div>
+          ) : (
+            <CrewInput
+              id="m-prod"
+              field="prod"
+              value={meta.prod}
+              onChange={(v) => updateMeta({ prod: v })}
+              placeholder="Film / Show title"
+            />
+          )}
         </div>
         <div className="mf">
           <label htmlFor="m-dir">Director</label>
-          <input
-            id="m-dir"
-            type="text"
-            value={meta.dir}
-            onChange={(e) => updateMeta({ dir: e.target.value })}
-            placeholder="Director name"
-          />
+          {readOnly ? (
+            <div className="call-disp">{meta.dir || '—'}</div>
+          ) : (
+            <CrewInput
+              id="m-dir"
+              field="dir"
+              value={meta.dir}
+              onChange={(v) => updateMeta({ dir: v })}
+              placeholder="Director name"
+            />
+          )}
         </div>
         <div className="mf">
           <label htmlFor="m-dp">DP</label>
-          <input
-            id="m-dp"
-            type="text"
-            value={meta.dp}
-            onChange={(e) => updateMeta({ dp: e.target.value })}
-            placeholder="DP name"
-          />
+          {readOnly ? (
+            <div className="call-disp">{meta.dp || '—'}</div>
+          ) : (
+            <CrewInput
+              id="m-dp"
+              field="dp"
+              value={meta.dp}
+              onChange={(v) => updateMeta({ dp: v })}
+              placeholder="DP name"
+            />
+          )}
         </div>
       </div>
     </div>
