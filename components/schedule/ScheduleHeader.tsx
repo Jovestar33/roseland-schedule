@@ -1,5 +1,6 @@
 'use client';
 import { useScheduleStore } from '@/lib/store/scheduleStore';
+import { useCmsLabel } from '@/lib/store/cmsStore';
 import PlacesAutocomplete from './PlacesAutocomplete';
 import CrewInput from './CrewInput';
 import type { GeoResult } from '@/lib/googlePlaces';
@@ -12,6 +13,13 @@ export default function ScheduleHeader({ readOnly = false }: Props) {
   const meta       = useScheduleStore((s) => s.meta);
   const rows       = useScheduleStore((s) => s.rows);
   const updateMeta = useScheduleStore((s) => s.updateMeta);
+
+  const labelTown = useCmsLabel('metaTown', 'Town / Location');
+  const labelDate = useCmsLabel('metaDate', 'Date');
+  const labelCall = useCmsLabel('metaCall', 'Call Time');
+  const labelProd = useCmsLabel('metaProd', 'Producer');
+  const labelDir  = useCmsLabel('metaDir',  'Director');
+  const labelDp   = useCmsLabel('metaDp',   'Camera');
 
   const callTime = rows.find(r => !r.sunLocked)?.timeIn || '';
 
@@ -34,7 +42,7 @@ export default function ScheduleHeader({ readOnly = false }: Props) {
     <div className="meta">
       <div className="meta-grid">
         <div className="mf">
-          <label htmlFor="m-town">Town / Location</label>
+          <label htmlFor="m-town">{labelTown}</label>
           {readOnly ? (
             <div className="call-disp">{meta.town || '—'}</div>
           ) : (
@@ -55,7 +63,7 @@ export default function ScheduleHeader({ readOnly = false }: Props) {
           )}
         </div>
         <div className="mf">
-          <label htmlFor="m-date">Date</label>
+          <label htmlFor="m-date">{labelDate}</label>
           {readOnly ? (
             <div className="call-disp">{meta.date || '—'}</div>
           ) : (
@@ -68,11 +76,11 @@ export default function ScheduleHeader({ readOnly = false }: Props) {
           )}
         </div>
         <div className="mf">
-          <label>Call Time</label>
+          <label>{labelCall}</label>
           <div className="call-disp">{callTime || '—'}</div>
         </div>
         <div className="mf">
-          <label htmlFor="m-prod">Producer</label>
+          <label htmlFor="m-prod">{labelProd}</label>
           {readOnly ? (
             <div className="call-disp">{meta.prod || '—'}</div>
           ) : (
@@ -86,7 +94,7 @@ export default function ScheduleHeader({ readOnly = false }: Props) {
           )}
         </div>
         <div className="mf">
-          <label htmlFor="m-dir">Director</label>
+          <label htmlFor="m-dir">{labelDir}</label>
           {readOnly ? (
             <div className="call-disp">{meta.dir || '—'}</div>
           ) : (
@@ -100,7 +108,7 @@ export default function ScheduleHeader({ readOnly = false }: Props) {
           )}
         </div>
         <div className="mf">
-          <label htmlFor="m-dp">Camera</label>
+          <label htmlFor="m-dp">{labelDp}</label>
           {readOnly ? (
             <div className="call-disp">{meta.dp || '—'}</div>
           ) : (

@@ -19,6 +19,7 @@ export default function EditorToolbar({ onSave, onOpenSaveAs, onSnapshot, onClos
   const token         = useAuthStore((s) => s.token);
   const openCmsModal  = useCmsStore((s) => s.openModal);
   const [viewLinkCopied, setViewLinkCopied] = useState(false);
+  const [editLinkCopied, setEditLinkCopied] = useState(false);
 
   async function handleViewLink() {
     if (!scheduleName || !token) return;
@@ -32,10 +33,27 @@ export default function EditorToolbar({ onSave, onOpenSaveAs, onSnapshot, onClos
     }
   }
 
+  function handleEditLink() {
+    const url = window.location.href;
+    navigator.clipboard.writeText(url).catch(() => prompt('Copy edit link:', url));
+    setEditLinkCopied(true);
+    setTimeout(() => setEditLinkCopied(false), 2500);
+  }
+
   return (
     <div className="toolbar">
       <span className="tbar-name">{scheduleName ?? 'Untitled'}</span>
       <SyncStatusPill />
+      {scheduleName && (
+        <span
+          className="url-chip"
+          onClick={handleEditLink}
+          title="Copy edit link"
+          style={{ cursor: 'pointer' }}
+        >
+          {editLinkCopied ? '✓ Copied!' : '🔗 Edit Link'}
+        </span>
+      )}
       <button className="btn btn-light btn-sm" onClick={onSave}>&#128190; Save</button>
       <button className="btn btn-light btn-sm" onClick={onOpenSaveAs}>Save As&hellip;</button>
       <UndoRedoButtons />

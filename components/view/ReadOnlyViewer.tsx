@@ -145,7 +145,7 @@ export default function ReadOnlyViewer({ name, viewToken }: Props) {
               <div className="call-disp">{callTime || '—'}</div>
             </div>
             <div className="mf">
-              <label>Production</label>
+              <label>Producer</label>
               <div className="call-disp">{meta.prod || '—'}</div>
             </div>
             <div className="mf">
@@ -153,7 +153,7 @@ export default function ReadOnlyViewer({ name, viewToken }: Props) {
               <div className="call-disp">{meta.dir || '—'}</div>
             </div>
             <div className="mf">
-              <label>DP</label>
+              <label>Camera</label>
               <div className="call-disp">{meta.dp || '—'}</div>
             </div>
           </div>
@@ -168,6 +168,7 @@ export default function ReadOnlyViewer({ name, viewToken }: Props) {
               <col className="c-l" />
               <col className="c-d" />
               <col className="c-nt" />
+              <col className="c-dv" />
               <col className="c-ti" />
               <col className="c-du" />
               <col className="c-to" />
@@ -179,6 +180,7 @@ export default function ReadOnlyViewer({ name, viewToken }: Props) {
                 <th>Location</th>
                 <th>Description</th>
                 <th>Notes</th>
+                <th className="col-dv" />
                 <th className="tc tp">Time In</th>
                 <th className="tc tp">Duration</th>
                 <th className="tc tp">Time Out</th>
@@ -194,6 +196,7 @@ export default function ReadOnlyViewer({ name, viewToken }: Props) {
                         {row.action}
                         {row.desc && <span style={{ marginLeft: '8px', opacity: 0.7 }}>{row.desc}</span>}
                       </td>
+                      <td className="col-dv" />
                       <td className="tc" style={{ color: '#64748b', fontStyle: 'italic' }}>{row.timeIn}</td>
                       <td />
                       <td />
@@ -218,6 +221,7 @@ export default function ReadOnlyViewer({ name, viewToken }: Props) {
                     </td>
                     <td>{row.desc}</td>
                     <td>{row.notes}</td>
+                    <td className="col-dv" />
                     <td className="tc">{row.timeIn}</td>
                     <td className="tc">{row.dur}</td>
                     <td className="tc">{computeTimeOut(row)}</td>

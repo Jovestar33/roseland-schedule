@@ -14,7 +14,7 @@ export default function SunriseSunsetRow({ index, row }: Props) {
 
   return (
     <tr className="sun-row">
-      <td className="rn">{index + 1}</td>
+      <td className="rn" />
       <td>
         <div className="sun-label">{row.action}</div>
       </td>

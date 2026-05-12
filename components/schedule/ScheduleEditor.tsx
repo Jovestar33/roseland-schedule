@@ -4,6 +4,7 @@ import { useScheduleStore } from '@/lib/store/scheduleStore';
 import { useAuthStore } from '@/lib/store/authStore';
 import { useSaveActions } from '@/lib/hooks/useSaveActions';
 import { fetchWeather } from '@/lib/weather';
+import { AUTO_SNAPSHOT_INTERVAL_MS } from '@/lib/constants';
 import type { ScheduleRow } from '@/lib/types';
 import ScheduleHeader from './ScheduleHeader';
 import ScheduleGrid from './ScheduleGrid';
@@ -23,6 +24,7 @@ export default function ScheduleEditor({ name }: Props) {
   const scheduleName    = useScheduleStore((s) => s.scheduleName);
   const rows            = useScheduleStore((s) => s.rows);
   const meta            = useScheduleStore((s) => s.meta);
+  const dirty           = useScheduleStore((s) => s.dirty);
   const conflictData    = useScheduleStore((s) => s.conflictData);
   const setConflictData = useScheduleStore((s) => s.setConflictData);
   const updateRow       = useScheduleStore((s) => s.updateRow);
@@ -49,9 +51,19 @@ export default function ScheduleEditor({ name }: Props) {
   const [notesRow,   setNotesRow]   = useState<number | null>(null);
   const [saveAsOpen, setSaveAsOpen] = useState(false);
 
-  const loadedName = useRef<string | null>(null);
-  const loaderRef  = useRef(loadScheduleFromCloud);
-  loaderRef.current = loadScheduleFromCloud;
+  const loadedName   = useRef<string | null>(null);
+  const loaderRef    = useRef(loadScheduleFromCloud);
+  loaderRef.current  = loadScheduleFromCloud;
+
+  // Auto-snapshot every 5 minutes when schedule is dirty.
+  useEffect(() => {
+    if (!scheduleName) return;
+    const timer = setInterval(() => {
+      if (dirty) takeSnapshot('Auto snapshot');
+    }, AUTO_SNAPSHOT_INTERVAL_MS);
+    return () => clearInterval(timer);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [scheduleName]);
 
   useEffect(() => {
     if (!hydrated) return;

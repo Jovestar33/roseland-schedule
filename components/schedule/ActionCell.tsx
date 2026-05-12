@@ -1,6 +1,7 @@
 'use client';
 import { useScheduleStore } from '@/lib/store/scheduleStore';
 import { useCmsActions, useCmsActionClassMap } from '@/lib/store/cmsStore';
+import { isLocked } from '@/lib/time';
 import type { ScheduleRow } from '@/lib/types';
 
 interface Props {
@@ -11,11 +12,13 @@ interface Props {
 export default function ActionCell({ index, row }: Props) {
   const updateRow      = useScheduleStore((s) => s.updateRow);
   const pushUndo       = useScheduleStore((s) => s.pushUndo);
+  const rows           = useScheduleStore((s) => s.rows);
   const actions        = useCmsActions();
   const actionClassMap = useCmsActionClassMap();
 
   const isOther  = row.action === 'Other';
-  const showHint = !row.sunLocked && !row.timeIn && index > 0;
+  const locked   = isLocked(rows, index);
+  const showHint = locked;
 
   function handleSelectChange(action: string) {
     pushUndo();
@@ -49,7 +52,7 @@ export default function ActionCell({ index, row }: Props) {
   return (
     <>
       <select
-        className={`cs${colorClass ? ` ${colorClass}` : ''}`}
+        className={`cs${colorClass ? ` ${colorClass}` : ''}${locked ? ' locked' : ''}`}
         value={row.action}
         onChange={(e) => handleSelectChange(e.target.value)}
       >

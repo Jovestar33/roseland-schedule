@@ -9,8 +9,9 @@ import type { ScheduleData } from '@/lib/types';
 import ScheduleListTab, { type LibrarySchedule } from './ScheduleListTab';
 import TemplatesTab from './TemplatesTab';
 import VersionsTab from './VersionsTab';
+import BackupTab from './BackupTab';
 
-type Tab = 'schedules' | 'templates' | 'versions';
+type Tab = 'schedules' | 'templates' | 'backup' | 'versions';
 
 function makeId(prefix: string): string {
   return `${prefix}_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 7)}`;
@@ -163,6 +164,9 @@ export default function LibraryPage() {
         <button className={`mtab${tab === 'templates' ? ' active' : ''}`} onClick={() => setTab('templates')}>
           ★ Templates
         </button>
+        <button className={`mtab${tab === 'backup' ? ' active' : ''}`} onClick={() => setTab('backup')}>
+          &#128279; Backup
+        </button>
         <button className={`mtab${tab === 'versions' ? ' active' : ''}`} onClick={() => setTab('versions')}>
           🕐 Versions / Restore
         </button>
@@ -188,6 +192,9 @@ export default function LibraryPage() {
           </div>
           <div className={`mtab-panel${tab === 'templates' ? ' active' : ''}`}>
             <TemplatesTab />
+          </div>
+          <div className={`mtab-panel${tab === 'backup' ? ' active' : ''}`}>
+            <BackupTab schedules={schedules} onRefresh={loadLibrary} />
           </div>
           <div className={`mtab-panel${tab === 'versions' ? ' active' : ''}`}>
             <VersionsTab scheduleNames={scheduleNames} />

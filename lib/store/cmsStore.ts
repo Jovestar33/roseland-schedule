@@ -79,6 +79,11 @@ export function useCmsActions(): readonly string[] {
   return ACTIONS;
 }
 
+export function useCmsLabel(key: string, def: string): string {
+  const labels = useCmsStore(s => s.config.labels) as Record<string, string> | undefined;
+  return labels?.[key] || def;
+}
+
 export function useCmsActionClassMap(): Record<string, string> {
   const actions = useCmsStore(s => s.config.actions);
   if (!actions?.length) return ACTION_CLASS_MAP;

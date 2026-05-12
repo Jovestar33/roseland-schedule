@@ -66,6 +66,93 @@ export function computeTimeOut(row: ScheduleRow): string {
   return m12(timeInMins + durMins);
 }
 
+// Find the next downstream fixed anchor (fixedIn or fixedOut) after row i.
+// Stops if a row has no duration (cascade can't propagate past it).
+export function nextFixedAnchorMin(
+  rows: ScheduleRow[],
+  i: number,
+): { idx: number; type: 'in' | 'out'; min: number } | null {
+  for (let j = i + 1; j < rows.length; j++) {
+    if (rows[j].sunLocked) continue;
+    if (rows[j].fixedIn && rows[j].timeIn) {
+      const min = t12m(rows[j].timeIn);
+      if (min >= 0) return { idx: j, type: 'in', min };
+    }
+    if (rows[j].fixedOut && rows[j].fixedOutTime) {
+      const min = t12m(rows[j].fixedOutTime);
+      if (min >= 0) return { idx: j, type: 'out', min };
+    }
+    if (!rows[j].dur) break;
+  }
+  return null;
+}
+
+export type ConflictInfo = { kind: string; msg: string };
+
+// Detect duration conflicts: overrun, fixedOut mismatch, negative duration.
+export function rowConflictInfo(rows: ScheduleRow[], i: number): ConflictInfo | null {
+  const r = rows[i];
+  if (!r || r.sunLocked) return null;
+
+  // Natural (duration-only) time out — ignoring fixedOut override
+  const tim = t12m(r.timeIn);
+  const dur = durm(r.dur);
+  const naturalOut = tim >= 0 && dur > 0 ? m12(tim + dur) : '';
+  const natm = t12m(naturalOut);
+
+  if (r.fixedOut && r.fixedOutTime && naturalOut && naturalOut !== r.fixedOutTime) {
+    return { kind: 'fixedOutMismatch', msg: `Duration implies ${naturalOut}; fixed out is ${r.fixedOutTime}.` };
+  }
+  const next = nextFixedAnchorMin(rows, i);
+  if (next && natm >= 0 && natm > next.min) {
+    return { kind: 'overrun', msg: `Pushes past fixed ${next.type === 'in' ? 'Time In' : 'Time Out'} on row ${next.idx + 1}.` };
+  }
+  if (r.fixedOut && r.fixedOutTime && tim >= 0) {
+    const out = t12m(r.fixedOutTime);
+    if (out >= 0 && out < tim) return { kind: 'negative', msg: 'Fixed Time Out is earlier than Time In.' };
+  }
+  return null;
+}
+
+// Return the filtered DURATIONS list — exclude options that overrun the next fixed anchor.
+export function allowedDurationsForRow(rows: ScheduleRow[], i: number): string[] {
+  const r = rows[i];
+  if (!r || r.sunLocked) return DURATIONS;
+
+  const tim = t12m(r.timeIn);
+  if (tim < 0) return DURATIONS;
+
+  let max: number | null = null;
+
+  if (r.fixedOut && r.fixedOutTime) {
+    const out = t12m(r.fixedOutTime);
+    if (out >= 0 && out >= tim) max = out - tim;
+  }
+
+  const next = nextFixedAnchorMin(rows, i);
+  if (next && next.min >= tim) {
+    const diff = next.min - tim;
+    max = max === null ? diff : Math.min(max, diff);
+  }
+
+  if (max === null) return DURATIONS;
+  return DURATIONS.filter(d => !d || durm(d) <= max!);
+}
+
+// A row is "locked" when the previous non-sun row has no duration (cascade can't flow into it).
+// The first non-sun row and fixedIn rows are never locked.
+export function isLocked(rows: ScheduleRow[], i: number): boolean {
+  const r = rows[i];
+  if (!r || r.sunLocked || r.fixedIn) return false;
+  const firstNonSun = rows.findIndex(r => !r.sunLocked);
+  if (i === firstNonSun) return false;
+  for (let j = i - 1; j >= 0; j--) {
+    if (rows[j].sunLocked) continue;
+    return !rows[j].dur;
+  }
+  return false;
+}
+
 // Cascade time recalculation across all rows.
 // Rules:
 //   sunLocked        — timeIn is set externally (sunrise/sunset); cursor advances past it
