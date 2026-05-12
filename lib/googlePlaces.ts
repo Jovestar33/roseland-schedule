@@ -1,6 +1,3 @@
-// Key is already public in the deployed index.html — env var allows override
-const GKEY = process.env.NEXT_PUBLIC_GOOGLE_PLACES_KEY || 'AIzaSyCW5tTOZLTvsjrV0XpE_-RcCL-pT7k0HHE';
-
 export interface PlaceSuggestion {
   label: string;
   main: string;
@@ -9,11 +6,11 @@ export interface PlaceSuggestion {
 }
 
 export async function searchPlaces(q: string): Promise<PlaceSuggestion[]> {
-  if (!GKEY || !q.trim()) return [];
+  if (!q.trim()) return [];
   try {
-    const res = await fetch('https://places.googleapis.com/v1/places:autocomplete', {
+    const res = await fetch('/api/places', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'X-Goog-Api-Key': GKEY },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ input: q, languageCode: 'en' }),
     });
     const data = await res.json() as { suggestions?: Array<{ placePrediction?: { text?: { text?: string }; structuredFormat?: { mainText?: { text?: string }; secondaryText?: { text?: string } }; placeId?: string } }> };
@@ -58,10 +55,9 @@ function formatAddress(
 }
 
 export async function geocodePlace(placeId: string, fallbackName = ''): Promise<GeoResult | null> {
-  if (!GKEY) return null;
   try {
     const res = await fetch(
-      `https://places.googleapis.com/v1/places/${placeId}?fields=location,formattedAddress,addressComponents&key=${GKEY}`
+      `/api/places?placeId=${encodeURIComponent(placeId)}&fields=location,formattedAddress,addressComponents`
     );
     const data = await res.json() as { location?: { latitude?: number; longitude?: number }; formattedAddress?: string; addressComponents?: Array<{ types?: string[]; longText?: string; long_name?: string; longName?: string; shortText?: string; short_name?: string; shortName?: string }> };
     if (data.location?.latitude !== undefined) {

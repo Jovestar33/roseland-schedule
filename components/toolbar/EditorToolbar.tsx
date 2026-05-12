@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { useScheduleStore } from '@/lib/store/scheduleStore';
 import { useAuthStore } from '@/lib/store/authStore';
+import { useCmsStore } from '@/lib/store/cmsStore';
 import { getViewLink } from '@/lib/api/viewLink';
 import SyncStatusPill from './SyncStatusPill';
 import UndoRedoButtons from './UndoRedoButtons';
@@ -14,8 +15,9 @@ interface Props {
 }
 
 export default function EditorToolbar({ onSave, onOpenSaveAs, onSnapshot, onClose }: Props) {
-  const scheduleName = useScheduleStore((s) => s.scheduleName);
-  const token = useAuthStore((s) => s.token);
+  const scheduleName  = useScheduleStore((s) => s.scheduleName);
+  const token         = useAuthStore((s) => s.token);
+  const openCmsModal  = useCmsStore((s) => s.openModal);
   const [viewLinkCopied, setViewLinkCopied] = useState(false);
 
   async function handleViewLink() {
@@ -37,7 +39,9 @@ export default function EditorToolbar({ onSave, onOpenSaveAs, onSnapshot, onClos
       <button className="btn btn-light btn-sm" onClick={onSave}>&#128190; Save</button>
       <button className="btn btn-light btn-sm" onClick={onOpenSaveAs}>Save As&hellip;</button>
       <UndoRedoButtons />
+      <button className="btn btn-light btn-sm" onClick={() => window.print()}>&#128438; Print</button>
       <button className="btn btn-light btn-sm" onClick={onSnapshot}>&#128247; Snapshot</button>
+      <button className="btn btn-light btn-sm" onClick={openCmsModal}>&#9881; CMS</button>
       {scheduleName && (
         <button
           className="url-chip"

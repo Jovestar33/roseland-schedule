@@ -90,7 +90,9 @@ export default function LoginPage() {
           <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
             <input
               type="password"
-              autoComplete="off"
+              id=""
+              name="fake-password"
+              autoComplete="new-password"
               placeholder="Password…"
               value={password}
               onChange={(e) => setPassword(e.target.value)}

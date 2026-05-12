@@ -131,14 +131,14 @@ export default function ScheduleEditor({ name }: Props) {
 
   return (
     <div className="panel">
-      <WxStrip onRefresh={handleRefreshWeather} onClear={handleClearWeather} />
-      <ScheduleHeader />
       <EditorToolbar
         onSave={save}
         onOpenSaveAs={() => setSaveAsOpen(true)}
         onSnapshot={takeSnapshot}
         onClose={closeSchedule}
       />
+      <WxStrip onRefresh={handleRefreshWeather} onClear={handleClearWeather} />
+      <ScheduleHeader />
       <ScheduleGrid
         onOpenContact={(i) => setContactRow(i)}
         onOpenStatus={(i)  => setStatusRow(i)}
