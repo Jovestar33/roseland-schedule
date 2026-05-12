@@ -58,6 +58,18 @@ export default function ScheduleEditor({ name }: Props) {
   const loaderRef    = useRef(loadScheduleFromCloud);
   loaderRef.current  = loadScheduleFromCloud;
 
+  // Warn before browser refresh / tab close when there are unsaved changes.
+  useEffect(() => {
+    function handleBeforeUnload(e: BeforeUnloadEvent) {
+      if (dirty) {
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    }
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [dirty]);
+
   // Auto-snapshot every 5 minutes when schedule is dirty.
   useEffect(() => {
     if (!scheduleName) return;

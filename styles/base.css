@@ -100,6 +100,10 @@ body{font-family:var(--fb);background:var(--g100);color:var(--black);min-height:
 .mf input:focus{border-bottom-color:var(--pink)}
 .mf input::placeholder{color:var(--g300);font-weight:400}
 #m-town{white-space:normal}
+.date-field-wrap{position:relative;display:block}
+.date-unset{color:transparent!important;-webkit-text-fill-color:transparent!important}
+.date-placeholder{position:absolute;left:0;top:50%;transform:translateY(-50%);
+  color:var(--g300);font-size:14px;font-weight:400;pointer-events:none;white-space:nowrap}
 .call-disp{font-size:18px;font-weight:600;color:var(--pink);
   padding:4px 0;border-bottom:1.5px solid var(--g200);min-height:32px}
 

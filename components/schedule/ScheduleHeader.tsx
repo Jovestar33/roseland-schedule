@@ -67,12 +67,17 @@ export default function ScheduleHeader({ readOnly = false }: Props) {
           {readOnly ? (
             <div className="call-disp">{meta.date || '—'}</div>
           ) : (
-            <input
-              id="m-date"
-              type="date"
-              value={meta.date}
-              onChange={(e) => updateMeta({ date: e.target.value })}
-            />
+            <div className="date-field-wrap">
+              <input
+                id="m-date"
+                type="date"
+                autoComplete="off"
+                value={meta.date}
+                onChange={(e) => updateMeta({ date: e.target.value })}
+                className={meta.date ? '' : 'date-unset'}
+              />
+              {!meta.date && <span className="date-placeholder">— pick a date —</span>}
+            </div>
           )}
         </div>
         <div className="mf">

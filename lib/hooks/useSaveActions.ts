@@ -25,6 +25,9 @@ export function useSaveActions() {
   const setConflictData   = useScheduleStore((s) => s.setConflictData);
 
   async function loadScheduleFromCloud(name: string) {
+    // If the store already has this schedule with a remote baseline (e.g. navigation triggered
+    // immediately after saveAs), skip the fetch — the data is already current.
+    if (scheduleName === name && remoteBaseline !== null) return;
     // Immediately clear to blank so the UI never flashes the previous schedule's data.
     // If the server has real data for this name, loadSchedule() will replace the blank state.
     newSchedule(name);

@@ -162,19 +162,19 @@ export default function VersionsTab({ scheduleNames, initialName = '' }: Props) 
                   <div style={{ overflow: 'auto' }}>
                     <table className="snapshot-preview-table">
                       <thead>
-                        <tr><th>#</th><th>Action</th><th>Time In</th><th>Duration</th><th>Time Out</th><th>Description</th><th>Location</th><th>Notes</th></tr>
+                        <tr><th>#</th><th>Action</th><th>Location</th><th>Description</th><th>Notes</th><th>Time In</th><th>Duration</th><th>Time Out</th></tr>
                       </thead>
                       <tbody>
                         {rows.map((r, i) => (
                           <tr key={i}>
                             <td>{i + 1}</td>
                             <td>{r.action === 'Other' ? r.otherText || 'Other' : r.action}</td>
+                            <td>{r.loc}</td>
+                            <td>{r.desc}</td>
+                            <td>{r.notes}</td>
                             <td>{r.timeIn}</td>
                             <td>{r.dur}</td>
                             <td>{computeTimeOut(r)}</td>
-                            <td>{r.desc}</td>
-                            <td>{r.loc}</td>
-                            <td>{r.notes}</td>
                           </tr>
                         ))}
                       </tbody>
