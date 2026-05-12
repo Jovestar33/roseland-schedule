@@ -38,13 +38,13 @@ export default function LocationCell({ index, row }: Props) {
         onFocus={pushUndo}
         placeholder="Location…"
         dropdownClass="loc-ac"
+        multiline
       />
       {row.locLat && (
         <button
-          className="loc-map-btn map-pin"
+          className="loc-map-btn"
           onClick={openMap}
           title="Get directions"
-          style={{ display: '' }}
         >
           &#128205;
         </button>

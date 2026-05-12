@@ -12,6 +12,7 @@ interface Props {
   id?: string;
   className?: string;
   dropdownClass?: string;
+  multiline?: boolean;
 }
 
 export default function PlacesAutocomplete({
@@ -23,6 +24,7 @@ export default function PlacesAutocomplete({
   id,
   className,
   dropdownClass = 'ac-dropdown',
+  multiline = false,
 }: Props) {
   const [suggestions, setSuggestions] = useState<PlaceSuggestion[]>([]);
   const [open, setOpen]         = useState(false);
@@ -31,14 +33,23 @@ export default function PlacesAutocomplete({
   const [mounted, setMounted]   = useState(false);
 
   const debounceRef  = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const inputRef     = useRef<HTMLInputElement>(null);
+  // Single ref works for both input and textarea via callback ref pattern
+  const elementRef   = useRef<HTMLInputElement | HTMLTextAreaElement | null>(null);
 
   useEffect(() => { setMounted(true); }, []);
 
-  // Keep dropdown anchored to input during scroll / resize
+  // Auto-resize textarea when value changes
+  useEffect(() => {
+    if (!multiline || !elementRef.current) return;
+    const el = elementRef.current as HTMLTextAreaElement;
+    el.style.height = 'auto';
+    el.style.height = `${el.scrollHeight}px`;
+  }, [value, multiline]);
+
+  // Keep dropdown anchored during scroll / resize
   useEffect(() => {
     if (!open) return;
-    const update = () => setRect(inputRef.current?.getBoundingClientRect() ?? null);
+    const update = () => setRect(elementRef.current?.getBoundingClientRect() ?? null);
     window.addEventListener('scroll', update, { passive: true, capture: true });
     window.addEventListener('resize', update, { passive: true });
     return () => {
@@ -56,7 +67,7 @@ export default function PlacesAutocomplete({
       console.log('[places] got', results.length, 'results');
       setSuggestions(results);
       if (results.length > 0) {
-        setRect(inputRef.current?.getBoundingClientRect() ?? null);
+        setRect(elementRef.current?.getBoundingClientRect() ?? null);
         setOpen(true);
       } else {
         setOpen(false);
@@ -65,7 +76,7 @@ export default function PlacesAutocomplete({
     }, 220);
   }, []);
 
-  function handleInput(e: React.ChangeEvent<HTMLInputElement>) {
+  function handleInput(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     const v = e.target.value;
     onChange(v);
     search(v);
@@ -82,15 +93,15 @@ export default function PlacesAutocomplete({
   }
 
   function handleKeyDown(e: React.KeyboardEvent) {
+    // Prevent newlines in textarea mode
+    if (multiline && e.key === 'Enter') e.preventDefault();
     if (!open || !suggestions.length) return;
-    if (e.key === 'ArrowDown')   { e.preventDefault(); setFocused(f => Math.min(f + 1, suggestions.length - 1)); }
+    if (e.key === 'ArrowDown')    { e.preventDefault(); setFocused(f => Math.min(f + 1, suggestions.length - 1)); }
     else if (e.key === 'ArrowUp') { e.preventDefault(); setFocused(f => Math.max(f - 1, 0)); }
     else if (e.key === 'Enter' && suggestions[focused]) { e.preventDefault(); handleSelect(suggestions[focused]); }
-    else if (e.key === 'Escape') { setOpen(false); }
+    else if (e.key === 'Escape')  { setOpen(false); }
   }
 
-  // Render the dropdown via portal so it escapes any overflow:hidden/auto ancestors
-  // (tbl-wrap has overflow-x:auto which implicitly clips abs-pos children)
   const dropdown = open && suggestions.length > 0 && mounted && rect
     ? createPortal(
         <div
@@ -107,7 +118,6 @@ export default function PlacesAutocomplete({
             <div
               key={s.placeId || i}
               className={`ac-item${i === focused ? ' focused' : ''}`}
-              // preventDefault stops the click from stealing focus (and triggering input blur)
               onMouseDown={(e) => e.preventDefault()}
               onClick={() => handleSelect(s)}
             >
@@ -120,21 +130,34 @@ export default function PlacesAutocomplete({
       )
     : null;
 
+  const sharedProps = {
+    id,
+    className,
+    value,
+    placeholder,
+    autoComplete: 'off' as const,
+    onChange: handleInput,
+    onKeyDown: handleKeyDown,
+    onFocus: () => { onFocus?.(); },
+    onBlur: () => setOpen(false),
+  };
+
   return (
     <>
-      <input
-        ref={inputRef}
-        id={id}
-        type="text"
-        className={className}
-        value={value}
-        placeholder={placeholder}
-        autoComplete="off"
-        onChange={handleInput}
-        onKeyDown={handleKeyDown}
-        onFocus={() => { onFocus?.(); }}
-        onBlur={() => setOpen(false)}
-      />
+      {multiline ? (
+        <textarea
+          ref={(el) => { elementRef.current = el; }}
+          {...sharedProps}
+          rows={1}
+          style={{ resize: 'none', overflow: 'hidden' }}
+        />
+      ) : (
+        <input
+          ref={(el) => { elementRef.current = el; }}
+          type="text"
+          {...sharedProps}
+        />
+      )}
       {dropdown}
     </>
   );

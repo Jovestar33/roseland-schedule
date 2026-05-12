@@ -13,7 +13,7 @@ export default function ScheduleHeader({ readOnly = false }: Props) {
   const rows       = useScheduleStore((s) => s.rows);
   const updateMeta = useScheduleStore((s) => s.updateMeta);
 
-  const callTime = rows[0]?.timeIn || '';
+  const callTime = rows.find(r => !r.sunLocked)?.timeIn || '';
 
   function handleTownSelect(address: string, geo: GeoResult | null) {
     updateMeta({
@@ -100,7 +100,7 @@ export default function ScheduleHeader({ readOnly = false }: Props) {
           )}
         </div>
         <div className="mf">
-          <label htmlFor="m-dp">DP</label>
+          <label htmlFor="m-dp">Camera</label>
           {readOnly ? (
             <div className="call-disp">{meta.dp || '—'}</div>
           ) : (

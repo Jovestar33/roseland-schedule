@@ -68,19 +68,23 @@ export function computeTimeOut(row: ScheduleRow): string {
 
 // Cascade time recalculation across all rows.
 // Rules:
-//   sunLocked  — timeIn is set externally (sunrise/sunset); cursor advances past it
-//   fixedIn    — timeIn is user-pinned; cursor advances past it but incoming cascade skips it
-//   fixedOut   — timeOut is user-pinned via fixedOutTime; dur is back-computed; cursor advances past it
-//   default    — timeIn = previous timeOut; timeOut = timeIn + dur
+//   sunLocked        — timeIn is set externally (sunrise/sunset); cursor advances past it
+//   fixedIn          — timeIn is user-pinned; cursor advances past it but incoming cascade skips it
+//   first editable   — treated like fixedIn: call time is owned by the user, never overwritten
+//   fixedOut         — timeOut is user-pinned via fixedOutTime; dur is back-computed; cursor advances past it
+//   default          — timeIn = previous timeOut; timeOut = timeIn + dur
 export function recalcRows(rows: ScheduleRow[]): ScheduleRow[] {
   const result = rows.map((r) => ({ ...r }));
   let cursor = -1;
+  let firstEditableSeen = false;
 
   for (const r of result) {
     if (r.sunLocked) {
       const mins = t12m(r.timeIn);
       if (mins >= 0) cursor = mins;
-    } else if (r.fixedIn) {
+    } else if (r.fixedIn || !firstEditableSeen) {
+      // First editable row is always the call-time anchor — never overwritten by cascade
+      firstEditableSeen = true;
       const mins = t12m(r.timeIn);
       if (mins >= 0) cursor = mins;
     } else if (cursor >= 0) {
