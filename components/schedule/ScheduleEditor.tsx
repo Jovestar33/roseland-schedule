@@ -54,9 +54,14 @@ export default function ScheduleEditor({ name }: Props) {
   const [notesRow,   setNotesRow]   = useState<number | null>(null);
   const [saveAsOpen, setSaveAsOpen] = useState(false);
 
-  const loadedName   = useRef<string | null>(null);
-  const loaderRef    = useRef(loadScheduleFromCloud);
-  loaderRef.current  = loadScheduleFromCloud;
+  const loadedName      = useRef<string | null>(null);
+  const loaderRef       = useRef(loadScheduleFromCloud);
+  loaderRef.current     = loadScheduleFromCloud;
+  // Keep refs current every render so interval callbacks are never stale.
+  const dirtyRef        = useRef(dirty);
+  dirtyRef.current      = dirty;
+  const snapshotRef     = useRef(takeSnapshot);
+  snapshotRef.current   = takeSnapshot;
 
   // Warn before browser refresh / tab close when there are unsaved changes.
   useEffect(() => {
@@ -73,11 +78,18 @@ export default function ScheduleEditor({ name }: Props) {
   // Auto-snapshot every 5 minutes when schedule is dirty.
   useEffect(() => {
     if (!scheduleName) return;
+    console.log('[AutoSnapshot] Watcher started for', scheduleName);
     const timer = setInterval(() => {
-      if (dirty) takeSnapshot('Auto snapshot');
+      console.log('[AutoSnapshot] Tick — dirty:', dirtyRef.current, 'schedule:', scheduleName);
+      if (dirtyRef.current) {
+        console.log('[AutoSnapshot] Firing snapshot for', scheduleName);
+        snapshotRef.current('Auto snapshot');
+      }
     }, AUTO_SNAPSHOT_INTERVAL_MS);
-    return () => clearInterval(timer);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    return () => {
+      console.log('[AutoSnapshot] Watcher cleared for', scheduleName);
+      clearInterval(timer);
+    };
   }, [scheduleName]);
 
   useEffect(() => {

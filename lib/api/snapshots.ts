@@ -6,7 +6,7 @@ export async function postAddSnapshot(
   label: string,
   editorToken: string
 ): Promise<void> {
-  await fetch('/.netlify/functions/snapshots', {
+  const res = await fetch('/.netlify/functions/snapshots', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -21,6 +21,12 @@ export async function postAddSnapshot(
       action: 'add',
     }),
   });
+  if (!res.ok) {
+    const text = await res.text().catch(() => '');
+    console.error('[Snapshot] Save failed — HTTP', res.status, text);
+  } else {
+    console.log('[Snapshot] Saved OK —', label, 'for', name);
+  }
 }
 
 export async function getSnapshots(
