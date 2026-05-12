@@ -47,8 +47,8 @@ export default function ScheduleGrid({ onOpenContact, onOpenStatus, onOpenNotes 
 
   function handleDragEnd(result: DropResult) {
     if (!result.destination) return;
-    if (result.destination.index === 0) {
-      addToast('The first row is the call-time anchor and cannot be displaced.', 'info');
+    if (result.source.index === 0 || result.destination.index === 0) {
+      addToast('The first row is the call-time anchor and cannot be moved or displaced.', 'info');
       return;
     }
     if (hasOpenRows(rows)) {

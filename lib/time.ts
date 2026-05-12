@@ -149,14 +149,16 @@ export function rowGapInfo(rows: ScheduleRow[], i: number): GapInfo | null {
   const firstNonSun = rows.findIndex((x) => !x.sunLocked);
   if (i === firstNonSun) return null;
 
+  // Walk backwards past sun rows AND past rows with no computable timeOut
+  // (e.g. empty cascade rows that got Sunrise's time but have no duration).
   let prev: ScheduleRow | null = null;
   for (let j = i - 1; j >= 0; j--) {
-    if (!rows[j].sunLocked) { prev = rows[j]; break; }
+    if (rows[j].sunLocked) continue;
+    if (computeTimeOut(rows[j])) { prev = rows[j]; break; }
   }
   if (!prev) return null;
 
-  const prevOut = computeTimeOut(prev);
-  if (!prevOut) return null;
+  const prevOut = computeTimeOut(prev)!;
 
   const prevOutM = t12m(prevOut);
   const thisInM  = t12m(r.timeIn);

@@ -152,14 +152,16 @@ export default function VersionsTab({ scheduleNames, initialName = '' }: Props) 
                 <div><b>Town / Location</b>{preview.data?.meta?.town || '—'}</div>
               </div>
               {(() => {
-                const rows = (preview.data?.rows ?? []).filter((r) => !r.sunLocked && (r.action || r.timeIn || r.notes));
+                const rows = (preview.data?.rows ?? []).filter(
+                  (r) => !r.sunLocked && (r.action || r.notes || r.loc || r.desc)
+                );
                 return rows.length === 0 ? (
                   <div className="snapshot-preview-empty">This snapshot does not contain visible schedule rows.</div>
                 ) : (
                   <div style={{ overflow: 'auto' }}>
                     <table className="snapshot-preview-table">
                       <thead>
-                        <tr><th>#</th><th>Action</th><th>Time In</th><th>Duration</th><th>Location</th><th>Notes</th></tr>
+                        <tr><th>#</th><th>Action</th><th>Time In</th><th>Dur</th><th>Description</th><th>Location</th><th>Notes</th></tr>
                       </thead>
                       <tbody>
                         {rows.map((r, i) => (
@@ -168,6 +170,7 @@ export default function VersionsTab({ scheduleNames, initialName = '' }: Props) 
                             <td>{r.action === 'Other' ? r.otherText || 'Other' : r.action}</td>
                             <td>{r.timeIn}</td>
                             <td>{r.dur}</td>
+                            <td>{r.desc}</td>
                             <td>{r.loc}</td>
                             <td>{r.notes}</td>
                           </tr>

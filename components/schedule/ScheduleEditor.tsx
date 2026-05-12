@@ -159,6 +159,10 @@ export default function ScheduleEditor({ name }: Props) {
     return scheduleName ?? '';
   }
 
+  // Suppress rendering the schedule body until the store is synced to this route's name.
+  // Without this, the previous schedule's data is visible for one frame after navigation.
+  const storeReady = scheduleName === name;
+
   return (
     <div className="panel">
       <EditorToolbar
@@ -167,6 +171,8 @@ export default function ScheduleEditor({ name }: Props) {
         onSnapshot={handleSnapshot}
         onClose={closeSchedule}
       />
+      {!storeReady ? null : (
+      <>
       <WxStrip onRefresh={handleRefreshWeather} onClear={handleClearWeather} />
       <ScheduleHeader />
       <ScheduleGrid
@@ -213,6 +219,8 @@ export default function ScheduleEditor({ name }: Props) {
         onSave={(notes) => { if (notesRow !== null) { pushUndo(); updateRow(notesRow, { notes }); } }}
         onClose={() => setNotesRow(null)}
       />
+      </>
+      )}
     </div>
   );
 }
