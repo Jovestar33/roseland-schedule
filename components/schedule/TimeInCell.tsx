@@ -1,5 +1,5 @@
 'use client';
-import { TIMES } from '@/lib/time';
+import { TIMES, rowGapInfo } from '@/lib/time';
 import { useScheduleStore } from '@/lib/store/scheduleStore';
 import type { ScheduleRow } from '@/lib/types';
 
@@ -15,6 +15,7 @@ export default function TimeInCell({ index, row }: Props) {
 
   const firstNonSun = rows.findIndex((r) => !r.sunLocked);
   const isFirstRow  = index === firstNonSun;
+  const gap         = rowGapInfo(rows, index);
 
   if (row.sunLocked) {
     return (
@@ -37,26 +38,29 @@ export default function TimeInCell({ index, row }: Props) {
   const showSelect = isFirstRow || row.fixedIn;
 
   return (
-    <div className="time-cell-wrap">
-      <button
-        className={`time-lock-btn in${row.fixedIn ? ' active' : ''}`}
-        onClick={toggleFixedIn}
-        title={row.fixedIn ? 'Unlock time-in' : 'Lock time-in'}
-      />
-      {showSelect ? (
-        <select
-          className="cs"
-          value={row.timeIn}
-          onChange={(e) => handleTimeChange(e.target.value)}
-        >
-          <option value="">— set —</option>
-          {TIMES.map((t) => (
-            <option key={t} value={t}>{t}</option>
-          ))}
-        </select>
-      ) : (
-        <span className="anchor-text">{row.timeIn || '—'}</span>
-      )}
-    </div>
+    <>
+      <div className="time-cell-wrap">
+        <button
+          className={`time-lock-btn in${row.fixedIn ? ' active' : ''}`}
+          onClick={toggleFixedIn}
+          title={row.fixedIn ? 'Unlock time-in' : 'Lock time-in'}
+        />
+        {showSelect ? (
+          <select
+            className={`cs${gap ? ' time-conflict' : ''}`}
+            value={row.timeIn}
+            onChange={(e) => handleTimeChange(e.target.value)}
+          >
+            <option value="">— set —</option>
+            {TIMES.map((t) => (
+              <option key={t} value={t}>{t}</option>
+            ))}
+          </select>
+        ) : (
+          <span className="anchor-text">{row.timeIn || '—'}</span>
+        )}
+      </div>
+      {gap && <div className="time-warn">{gap.msg}</div>}
+    </>
   );
 }

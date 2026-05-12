@@ -15,6 +15,7 @@ import StatusModal from '@/components/modals/StatusModal';
 import NotesModal from '@/components/modals/NotesModal';
 import SaveAsModal from '@/components/modals/SaveAsModal';
 import ConflictModal from '@/components/modals/ConflictModal';
+import { useToast } from '@/components/ui/ToastProvider';
 
 interface Props {
   name: string;
@@ -45,6 +46,8 @@ export default function ScheduleEditor({ name }: Props) {
     resolveConflictReload,
     closeSchedule,
   } = useSaveActions();
+
+  const { addToast } = useToast();
 
   const [contactRow, setContactRow] = useState<number | null>(null);
   const [statusRow,  setStatusRow]  = useState<number | null>(null);
@@ -127,6 +130,21 @@ export default function ScheduleEditor({ name }: Props) {
     wxFetchKey.current = '';
   }
 
+  // Bug 4: Redirect "Save" to SaveAs with smart default when the schedule is still Untitled.
+  function handleSave() {
+    if (scheduleName === 'Untitled') {
+      setSaveAsOpen(true);
+    } else {
+      save();
+    }
+  }
+
+  // Bug 3: Snapshot button passes a click Event as the label argument; wrap to ignore it.
+  async function handleSnapshot() {
+    await takeSnapshot();
+    addToast('Snapshot saved', 'success');
+  }
+
   function getSaveAsDefault(): string {
     if (meta.town) {
       const town = meta.town.split(',')[0].trim();
@@ -144,9 +162,9 @@ export default function ScheduleEditor({ name }: Props) {
   return (
     <div className="panel">
       <EditorToolbar
-        onSave={save}
+        onSave={handleSave}
         onOpenSaveAs={() => setSaveAsOpen(true)}
-        onSnapshot={takeSnapshot}
+        onSnapshot={handleSnapshot}
         onClose={closeSchedule}
       />
       <WxStrip onRefresh={handleRefreshWeather} onClear={handleClearWeather} />

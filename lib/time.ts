@@ -88,6 +88,7 @@ export function nextFixedAnchorMin(
 }
 
 export type ConflictInfo = { kind: string; msg: string };
+export type GapInfo = { kind: 'gap' | 'overlap'; minutes: number; msg: string };
 
 // Detect duration conflicts: overrun, fixedOut mismatch, negative duration.
 export function rowConflictInfo(rows: ScheduleRow[], i: number): ConflictInfo | null {
@@ -137,6 +138,34 @@ export function allowedDurationsForRow(rows: ScheduleRow[], i: number): string[]
 
   if (max === null) return DURATIONS;
   return DURATIONS.filter(d => !d || durm(d) <= max!);
+}
+
+// Detect a gap or overlap between this fixedIn row and the previous row's computed time out.
+// Only applies to fixedIn rows (not the first editable row — that's the call-time anchor).
+export function rowGapInfo(rows: ScheduleRow[], i: number): GapInfo | null {
+  const r = rows[i];
+  if (!r || r.sunLocked || !r.fixedIn || !r.timeIn) return null;
+
+  const firstNonSun = rows.findIndex((x) => !x.sunLocked);
+  if (i === firstNonSun) return null;
+
+  let prev: ScheduleRow | null = null;
+  for (let j = i - 1; j >= 0; j--) {
+    if (!rows[j].sunLocked) { prev = rows[j]; break; }
+  }
+  if (!prev) return null;
+
+  const prevOut = computeTimeOut(prev);
+  if (!prevOut) return null;
+
+  const prevOutM = t12m(prevOut);
+  const thisInM  = t12m(r.timeIn);
+  if (prevOutM < 0 || thisInM < 0) return null;
+
+  const diff = thisInM - prevOutM;
+  if (diff === 0) return null;
+  if (diff > 0) return { kind: 'gap',     minutes: diff,  msg: `${diff}-min gap after previous row.`       };
+  return           { kind: 'overlap', minutes: -diff, msg: `Overlaps previous row by ${-diff} min.` };
 }
 
 // A row is "locked" when the previous non-sun row has no duration (cascade can't flow into it).

@@ -25,10 +25,10 @@ export function useSaveActions() {
   const setConflictData   = useScheduleStore((s) => s.setConflictData);
 
   async function loadScheduleFromCloud(name: string) {
-    if (!token) {
-      newSchedule(name);
-      return;
-    }
+    // Immediately clear to blank so the UI never flashes the previous schedule's data.
+    // If the server has real data for this name, loadSchedule() will replace the blank state.
+    newSchedule(name);
+    if (!token) return;
     setSyncStatus('syncing');
     try {
       const data = await postLoad(name, token);
@@ -36,13 +36,9 @@ export function useSaveActions() {
         const normalized = { ...data, rows: normalizeRows(data.rows) };
         loadSchedule(name, normalized);
         setRemoteBaseline(normalized.savedAt ?? 0, hashSchedule(normalized));
-        setSyncStatus('synced');
-      } else {
-        newSchedule(name);
-        setSyncStatus('synced');
       }
+      setSyncStatus('synced');
     } catch {
-      newSchedule(name);
       setSyncStatus('offline');
     }
   }

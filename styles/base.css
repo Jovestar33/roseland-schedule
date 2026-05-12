@@ -173,6 +173,7 @@ body{font-family:var(--fb);background:var(--g100);color:var(--black);min-height:
 .anchor-text{font-size:12px;color:var(--g700);font-weight:600;white-space:nowrap}
 .time-conflict{border-color:#ef4444!important;background:#fef2f2!important}
 .dur-warn{font-size:10px;color:#b91c1c;margin-top:2px;line-height:1.2;text-align:left}
+.time-warn{font-size:10px;color:#b45309;margin-top:2px;line-height:1.2;text-align:left}
 
 body.security-locked{
   overflow:hidden!important;
