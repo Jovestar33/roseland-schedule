@@ -1,48 +1,98 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const GKEY = process.env.GOOGLE_PLACES_KEY || process.env.NEXT_PUBLIC_GOOGLE_PLACES_KEY || 'AIzaSyCW5tTOZLTvsjrV0XpE_-RcCL-pT7k0HHE';
-
-export async function POST(req: NextRequest) {
-  const keySource = process.env.GOOGLE_PLACES_KEY
+// Key is resolved at request time so a newly-set env var is picked up after redeploy.
+function getKey() {
+  return process.env.GOOGLE_PLACES_KEY
+    || process.env.NEXT_PUBLIC_GOOGLE_PLACES_KEY
+    || 'AIzaSyCW5tTOZLTvsjrV0XpE_-RcCL-pT7k0HHE';
+}
+function keySource() {
+  return process.env.GOOGLE_PLACES_KEY
     ? 'GOOGLE_PLACES_KEY'
     : process.env.NEXT_PUBLIC_GOOGLE_PLACES_KEY
     ? 'NEXT_PUBLIC_GOOGLE_PLACES_KEY'
     : 'hardcoded-fallback';
-  console.log('[places] POST autocomplete — key source:', keySource, '— key prefix:', GKEY.slice(0, 12));
+}
+
+// Health-check: GET /api/places (no placeId param)
+export async function GET(req: NextRequest) {
+  const placeId = req.nextUrl.searchParams.get('placeId');
+
+  if (!placeId) {
+    const key = getKey();
+    return NextResponse.json({
+      ok: true,
+      keySource: keySource(),
+      keyPrefix: key.slice(0, 12),
+      node: process.version,
+    });
+  }
+
+  const fields = req.nextUrl.searchParams.get('fields') || 'location,formattedAddress,addressComponents';
+  const key    = getKey();
+  const origin = req.headers.get('origin') || req.headers.get('referer') || '';
+  console.log('[places] GET geocode — placeId:', placeId, '— origin:', origin);
 
   try {
-    const body = await req.json();
-    console.log('[places] input:', body.input);
-    const res = await fetch('https://places.googleapis.com/v1/places:autocomplete', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'X-Goog-Api-Key': GKEY },
-      body: JSON.stringify(body),
-    });
-    const data = await res.json();
-    console.log('[places] status:', res.status, '— suggestions:', (data as { suggestions?: unknown[] }).suggestions?.length ?? 0);
-    if (!res.ok) console.error('[places] error body:', JSON.stringify(data));
-    return NextResponse.json(data);
+    const headers: Record<string, string> = {
+      'X-Goog-Api-Key': key,
+      'X-Goog-FieldMask': fields,
+    };
+    if (origin) headers['Referer'] = origin;
+
+    const res = await fetch(`https://places.googleapis.com/v1/places/${placeId}`, { headers });
+    const text = await res.text();
+    console.log('[places] geocode status:', res.status, '— body:', text.slice(0, 300));
+    try {
+      return NextResponse.json(JSON.parse(text));
+    } catch {
+      return NextResponse.json({ error: 'bad-json', raw: text.slice(0, 500) }, { status: 502 });
+    }
   } catch (err) {
-    console.error('[places] fetch error:', err);
-    return NextResponse.json({ suggestions: [] }, { status: 200 });
+    console.error('[places] geocode fetch error:', err);
+    return NextResponse.json({ error: String(err) }, { status: 502 });
   }
 }
 
-export async function GET(req: NextRequest) {
-  const placeId = req.nextUrl.searchParams.get('placeId');
-  const fields  = req.nextUrl.searchParams.get('fields') || 'location,formattedAddress,addressComponents';
-  if (!placeId) return NextResponse.json({}, { status: 400 });
-  console.log('[places] GET geocode — placeId:', placeId);
+export async function POST(req: NextRequest) {
+  const key    = getKey();
+  const origin = req.headers.get('origin') || req.headers.get('referer') || '';
+  console.log('[places] POST — keySource:', keySource(), '— keyPrefix:', key.slice(0, 12), '— origin:', origin);
+
   try {
-    const res = await fetch(
-      `https://places.googleapis.com/v1/places/${placeId}?fields=${fields}&key=${GKEY}`
-    );
-    const data = await res.json();
-    console.log('[places] geocode status:', res.status);
-    if (!res.ok) console.error('[places] geocode error:', JSON.stringify(data));
+    const body = await req.json() as { input?: string };
+    console.log('[places] input:', body.input);
+
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+      'X-Goog-Api-Key': key,
+    };
+    // Forward the caller's origin as Referer so HTTP-referrer API key restrictions match
+    if (origin) headers['Referer'] = origin;
+
+    const res = await fetch('https://places.googleapis.com/v1/places:autocomplete', {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(body),
+    });
+
+    const text = await res.text();
+    console.log('[places] Google status:', res.status, '— body preview:', text.slice(0, 400));
+
+    let data: unknown;
+    try {
+      data = JSON.parse(text);
+    } catch {
+      console.error('[places] JSON parse error — raw:', text.slice(0, 500));
+      return NextResponse.json({ suggestions: [] });
+    }
+
+    const d = data as { suggestions?: unknown[]; error?: unknown };
+    if (d.error) console.error('[places] Google error:', JSON.stringify(d.error));
+
     return NextResponse.json(data);
   } catch (err) {
-    console.error('[places] geocode fetch error:', err);
-    return NextResponse.json({}, { status: 200 });
+    console.error('[places] outer error:', err);
+    return NextResponse.json({ suggestions: [] });
   }
 }
