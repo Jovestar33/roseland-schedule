@@ -186,7 +186,7 @@ export function isLocked(rows: ScheduleRow[], i: number): boolean {
 
 // Cascade time recalculation across all rows.
 // Rules:
-//   sunLocked        — timeIn is set externally (sunrise/sunset); cursor advances past it
+//   sunLocked        — display-only marker; timeIn is set externally; does NOT advance cursor
 //   fixedIn          — timeIn is user-pinned; cursor advances past it but incoming cascade skips it
 //   first editable   — treated like fixedIn: call time is owned by the user, never overwritten
 //   fixedOut         — timeOut is user-pinned via fixedOutTime; dur is back-computed; cursor advances past it
@@ -198,8 +198,10 @@ export function recalcRows(rows: ScheduleRow[]): ScheduleRow[] {
 
   for (const r of result) {
     if (r.sunLocked) {
-      const mins = t12m(r.timeIn);
-      if (mins >= 0) cursor = mins;
+      // Sun rows are display markers only. Their timeIn is set by insertSunRows, not the cascade.
+      // Do not advance the cursor — the row after a sun row must continue from the previous
+      // action row's computed timeOut, not from the sunrise/sunset time.
+      continue;
     } else if (r.fixedIn || !firstEditableSeen) {
       // First editable row is always the call-time anchor — never overwritten by cascade
       firstEditableSeen = true;

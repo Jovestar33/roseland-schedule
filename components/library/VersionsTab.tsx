@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/lib/store/authStore';
 import { getSnapshots, deleteSnapshot } from '@/lib/api/snapshots';
 import { postSave } from '@/lib/api/save';
+import { computeTimeOut } from '@/lib/time';
 import type { Snapshot } from '@/lib/types';
 
 interface Props {
@@ -161,7 +162,7 @@ export default function VersionsTab({ scheduleNames, initialName = '' }: Props) 
                   <div style={{ overflow: 'auto' }}>
                     <table className="snapshot-preview-table">
                       <thead>
-                        <tr><th>#</th><th>Action</th><th>Time In</th><th>Dur</th><th>Description</th><th>Location</th><th>Notes</th></tr>
+                        <tr><th>#</th><th>Action</th><th>Time In</th><th>Duration</th><th>Time Out</th><th>Description</th><th>Location</th><th>Notes</th></tr>
                       </thead>
                       <tbody>
                         {rows.map((r, i) => (
@@ -170,6 +171,7 @@ export default function VersionsTab({ scheduleNames, initialName = '' }: Props) 
                             <td>{r.action === 'Other' ? r.otherText || 'Other' : r.action}</td>
                             <td>{r.timeIn}</td>
                             <td>{r.dur}</td>
+                            <td>{computeTimeOut(r)}</td>
                             <td>{r.desc}</td>
                             <td>{r.loc}</td>
                             <td>{r.notes}</td>
