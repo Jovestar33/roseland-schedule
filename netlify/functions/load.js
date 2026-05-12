@@ -50,7 +50,8 @@ exports.handler = async (event) => {
       return { statusCode: 200, headers, body: JSON.stringify({ schedules: blobs.map((b) => b.key) }) };
     }
 
-    if (!isAuthorizedEditor(editorToken) && !isAuthorizedView(name, viewToken)) {
+    const isPublicRead = event.queryStringParameters?.public === '1';
+    if (!isPublicRead && !isAuthorizedEditor(editorToken) && !isAuthorizedView(name, viewToken)) {
       return { statusCode: 403, headers, body: JSON.stringify({ error: 'Unauthorized access' }) };
     }
 

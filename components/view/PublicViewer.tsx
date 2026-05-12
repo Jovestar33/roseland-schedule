@@ -1,26 +1,25 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { postLoadView } from '@/lib/api/load';
+import { postLoadPublic } from '@/lib/api/load';
 import ScheduleReadView from './ScheduleReadView';
 import type { ScheduleData } from '@/lib/types';
 
 interface Props {
   name: string;
-  viewToken: string;
 }
 
-export default function ReadOnlyViewer({ name, viewToken }: Props) {
+export default function PublicViewer({ name }: Props) {
   const [data, setData] = useState<ScheduleData | null>(null);
   const [status, setStatus] = useState<'loading' | 'error' | 'ok'>('loading');
   const [errorMsg, setErrorMsg] = useState('');
 
   useEffect(() => {
-    if (!name || !viewToken) {
+    if (!name) {
       setStatus('error');
-      setErrorMsg('Missing schedule name or access token.');
+      setErrorMsg('Missing schedule name.');
       return;
     }
-    postLoadView(name, viewToken)
+    postLoadPublic(name)
       .then(d => {
         if (!d) { setStatus('error'); setErrorMsg('Schedule not found.'); return; }
         setData(d);
@@ -30,7 +29,7 @@ export default function ReadOnlyViewer({ name, viewToken }: Props) {
         setStatus('error');
         setErrorMsg((e as Error).message || 'Could not load schedule.');
       });
-  }, [name, viewToken]);
+  }, [name]);
 
   if (status === 'loading') {
     return <div className="empty" style={{ padding: '40px', textAlign: 'center' }}>Loading…</div>;
@@ -49,13 +48,27 @@ export default function ReadOnlyViewer({ name, viewToken }: Props) {
 
   return (
     <div>
-      <div
-        className="readonly-bar"
-        style={{ display: 'flex', background: '#f0fdf4', borderBottom: '2px solid #16a34a', padding: '10px 24px', alignItems: 'center', justifyContent: 'space-between', gap: '10px' }}
-      >
-        <span>🔒 Read-only view — shared by Roseland Pictures</span>
-        <button className="btn btn-light btn-sm" onClick={() => window.print()}>🖨 Print / Save PDF</button>
+      {/* Branded header */}
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: '10px 24px',
+        background: '#0a0a0f',
+        borderBottom: '1px solid rgba(255,255,255,.1)',
+        gap: '12px',
+      }}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/logo-header.png"
+          alt="Roseland Pictures"
+          style={{ height: '52px', width: 'auto', objectFit: 'contain' }}
+        />
+        <button className="btn btn-light btn-sm" onClick={() => window.print()}>
+          🖨 Print / Save PDF
+        </button>
       </div>
+
       <ScheduleReadView data={data} />
     </div>
   );

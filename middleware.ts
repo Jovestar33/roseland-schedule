@@ -16,6 +16,14 @@ function redirect(request: NextRequest, pathname: string): NextResponse {
   return NextResponse.redirect(url);
 }
 
+function redirectToLogin(request: NextRequest): NextResponse {
+  const url = request.nextUrl.clone();
+  const next = request.nextUrl.pathname + request.nextUrl.search;
+  url.pathname = '/login';
+  url.search = next && next !== '/' ? `?next=${encodeURIComponent(next)}` : '';
+  return NextResponse.redirect(url);
+}
+
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const searchParams = request.nextUrl.searchParams;
@@ -39,7 +47,7 @@ export function middleware(request: NextRequest) {
 
   // All other app routes require the auth flag cookie
   if (!request.cookies.get(AUTH_COOKIE)?.value) {
-    return redirect(request, '/login');
+    return redirectToLogin(request);
   }
 
   return NextResponse.next();

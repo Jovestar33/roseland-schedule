@@ -23,6 +23,14 @@ export async function postLoad(
   return res.json() as Promise<ScheduleData>;
 }
 
+export async function postLoadPublic(name: string): Promise<ScheduleData | null> {
+  const params = new URLSearchParams({ name, public: '1', _: String(Date.now()) });
+  const res = await fetch(`/.netlify/functions/load?${params}`, { cache: 'no-store' });
+  if (res.status === 404) return null;
+  if (!res.ok) throw new Error(`Load failed: HTTP ${res.status}`);
+  return res.json() as Promise<ScheduleData>;
+}
+
 export async function listSchedules(editorToken: string): Promise<string[]> {
   const params = new URLSearchParams({ editorToken, _: String(Date.now()) });
   const res = await fetch(`/.netlify/functions/load?${params}`, { cache: 'no-store' });

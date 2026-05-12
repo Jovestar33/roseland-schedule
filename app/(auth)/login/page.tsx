@@ -11,14 +11,21 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
+  function getRedirectTarget(): string {
+    if (typeof window === 'undefined') return '/';
+    const next = new URLSearchParams(window.location.search).get('next');
+    return next && next.startsWith('/') ? next : '/';
+  }
+
   useEffect(() => {
     hydrate();
   }, [hydrate]);
 
   useEffect(() => {
     if (hydrated && isAuthenticated) {
-      router.replace('/');
+      router.replace(getRedirectTarget());
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hydrated, isAuthenticated, router]);
 
   async function handleSubmit(e: React.FormEvent) {
@@ -29,7 +36,7 @@ export default function LoginPage() {
     const result = await login(password);
     setLoading(false);
     if (result.ok) {
-      router.replace('/');
+      router.replace(getRedirectTarget());
     } else {
       setError(result.error ?? 'Incorrect password');
     }
