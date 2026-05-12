@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/lib/store/authStore';
+import loginLogoImg from '@/public/logo-login.png';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -58,11 +59,11 @@ export default function LoginPage() {
           fontFamily: 'system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif',
         }}
       >
-        {/* Logo */}
+        {/* Logo — imported as static asset so it lands in _next/static/media/ */}
         <div style={{ textAlign: 'center', marginBottom: '24px' }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/logo-login.png"
+            src={loginLogoImg.src}
             alt="Roseland Pictures"
             style={{ display: 'block', height: '124px', width: 'auto', maxWidth: '360px', margin: '0 auto', objectFit: 'contain' }}
           />
@@ -86,12 +87,16 @@ export default function LoginPage() {
         </p>
 
         {/* Form */}
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} autoComplete="off">
+          {/* Hidden decoy inputs absorb browser autofill before the real field */}
+          <input type="text" name="username" autoComplete="username" aria-hidden="true" tabIndex={-1} style={{ position: 'absolute', opacity: 0, pointerEvents: 'none', width: 0, height: 0 }} />
+          <input type="password" name="password" autoComplete="current-password" aria-hidden="true" tabIndex={-1} style={{ position: 'absolute', opacity: 0, pointerEvents: 'none', width: 0, height: 0 }} />
+
           <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
             <input
               type="password"
-              id=""
-              name="fake-password"
+              id="editor-password"
+              name="editor-password"
               autoComplete="new-password"
               placeholder="Password…"
               value={password}
