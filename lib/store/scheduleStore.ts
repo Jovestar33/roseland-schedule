@@ -4,6 +4,55 @@ import { recalcRows, t12m, computeTimeOut } from '../time';
 import { UNDO_LIMIT, DEFAULT_ROW_COUNT } from '../constants';
 import type { ScheduleRow, ScheduleMeta, ScheduleData, WeatherData, SyncStatus, ConflictState } from '../types';
 
+// After any row mutation, re-position sun-locked rows to their correct chronological slot.
+function repositionSunRows(rows: ScheduleRow[], rowKeys: string[]): { rows: ScheduleRow[]; rowKeys: string[] } {
+  const sunRows: ScheduleRow[] = [];
+  const sunKeys: string[] = [];
+  const cleanRows: ScheduleRow[] = [];
+  const cleanKeys: string[] = [];
+
+  rows.forEach((r, i) => {
+    if (r.sunLocked) { sunRows.push(r); sunKeys.push(rowKeys[i]); }
+    else             { cleanRows.push(r); cleanKeys.push(rowKeys[i]); }
+  });
+
+  if (sunRows.length === 0) return { rows: recalcRows(rows), rowKeys };
+
+  const recalced = recalcRows(cleanRows);
+  const times = recalced.map(r => ({ in: t12m(r.timeIn), out: t12m(computeTimeOut(r)) }));
+  const hasT = times.some(t => t.in >= 0);
+
+  function findPt(timeMin: number, isRise: boolean): { idx: number; note: string } {
+    if (!hasT) return { idx: isRise ? 0 : 1, note: '' };
+    const evtName = isRise ? 'Sunrise' : 'Sunset';
+    for (let i = 0; i < times.length; i++) {
+      const { in: inM, out: outM } = times[i];
+      if (inM >= 0 && timeMin <= inM) return { idx: i, note: '' };
+      if (inM >= 0 && outM >= 0 && timeMin > inM && timeMin < outM && recalced[i].action) {
+        return { idx: i + 1, note: `${evtName} during: ${recalced[i].action}` };
+      }
+    }
+    return { idx: recalced.length, note: '' };
+  }
+
+  const inserts = sunRows
+    .map((row, i) => {
+      const isRise = row.action.includes('Sunrise');
+      const pt = findPt(t12m(row.timeIn), isRise);
+      return { row: { ...row, desc: pt.note }, key: sunKeys[i], idx: pt.idx };
+    })
+    .sort((a, b) => b.idx - a.idx);
+
+  const newRows = [...recalced];
+  const newKeys = [...cleanKeys];
+  inserts.forEach(({ row, key, idx }) => {
+    newRows.splice(idx, 0, row);
+    newKeys.splice(idx, 0, key);
+  });
+
+  return { rows: recalcRows(newRows), rowKeys: newKeys };
+}
+
 type Snapshot = { rows: ScheduleRow[]; meta: ScheduleMeta };
 
 let keySeq = 0;
@@ -102,9 +151,10 @@ export const useScheduleStore = create<ScheduleStore>((set, get) => ({
   },
 
   updateRow(index, patch) {
-    const { rows } = get();
+    const { rows, rowKeys } = get();
     const updated = rows.map((r, i) => (i === index ? { ...r, ...patch } : r));
-    set({ rows: recalcRows(updated), dirty: true });
+    const result = repositionSunRows(updated, rowKeys);
+    set({ rows: result.rows, rowKeys: result.rowKeys, dirty: true });
   },
 
   addRowAfter(afterIndex) {
@@ -112,7 +162,8 @@ export const useScheduleStore = create<ScheduleStore>((set, get) => ({
     const newRow = makeRow({ action: '' });
     const updated = [...rows.slice(0, afterIndex + 1), newRow, ...rows.slice(afterIndex + 1)];
     const updatedKeys = [...rowKeys.slice(0, afterIndex + 1), newKey(), ...rowKeys.slice(afterIndex + 1)];
-    set({ rows: recalcRows(updated), rowKeys: updatedKeys, dirty: true });
+    const result = repositionSunRows(updated, updatedKeys);
+    set({ rows: result.rows, rowKeys: result.rowKeys, dirty: true });
   },
 
   deleteRow(index) {
@@ -120,7 +171,8 @@ export const useScheduleStore = create<ScheduleStore>((set, get) => ({
     if (rows.length <= 1) return;
     const updated = rows.filter((_, i) => i !== index);
     const updatedKeys = rowKeys.filter((_, i) => i !== index);
-    set({ rows: recalcRows(updated), rowKeys: updatedKeys, dirty: true });
+    const result = repositionSunRows(updated, updatedKeys);
+    set({ rows: result.rows, rowKeys: result.rowKeys, dirty: true });
   },
 
   reorderRows(from, to) {
@@ -131,7 +183,8 @@ export const useScheduleStore = create<ScheduleStore>((set, get) => ({
     const [movedKey] = updatedKeys.splice(from, 1);
     updatedRows.splice(to, 0, movedRow);
     updatedKeys.splice(to, 0, movedKey);
-    set({ rows: recalcRows(updatedRows), rowKeys: updatedKeys, dirty: true });
+    const result = repositionSunRows(updatedRows, updatedKeys);
+    set({ rows: result.rows, rowKeys: result.rowKeys, dirty: true });
   },
 
   updateMeta(patch) {

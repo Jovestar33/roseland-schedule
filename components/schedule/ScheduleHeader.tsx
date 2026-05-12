@@ -46,8 +46,8 @@ export default function ScheduleHeader({ readOnly = false }: Props) {
                 onSelect={handleTownSelect}
                 placeholder="e.g. Garner, NC"
               />
-              {meta.town && (
-                <button className="map-pin" onClick={openTownMap} title="Open in Google Maps">
+              {meta.lat !== null && meta.lng !== null && (
+                <button className="loc-map-btn" onClick={openTownMap} title="Open in Google Maps">
                   📍
                 </button>
               )}
@@ -72,7 +72,7 @@ export default function ScheduleHeader({ readOnly = false }: Props) {
           <div className="call-disp">{callTime || '—'}</div>
         </div>
         <div className="mf">
-          <label htmlFor="m-prod">Production</label>
+          <label htmlFor="m-prod">Producer</label>
           {readOnly ? (
             <div className="call-disp">{meta.prod || '—'}</div>
           ) : (
@@ -81,7 +81,7 @@ export default function ScheduleHeader({ readOnly = false }: Props) {
               field="prod"
               value={meta.prod}
               onChange={(v) => updateMeta({ prod: v })}
-              placeholder="Film / Show title"
+              placeholder="Producer name"
             />
           )}
         </div>
