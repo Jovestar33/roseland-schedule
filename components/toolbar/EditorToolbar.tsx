@@ -50,7 +50,7 @@ export default function EditorToolbar({ onSave, onOpenSaveAs, onSnapshot, onClos
           {viewLinkCopied ? '✓ Copied!' : '🔒 Client / Vendor Link'}
         </button>
       )}
-      <button className="btn btn-dark btn-sm" onClick={openCmsModal}>&#9881; CMS</button>
+      <button className="btn btn-light btn-sm" style={{ background: '#1a1a1a', color: '#fff', borderColor: '#444' }} onClick={openCmsModal}>&#9881; CMS</button>
       <button className="btn btn-light btn-sm" onClick={onClose}>Close Schedule</button>
     </div>
   );

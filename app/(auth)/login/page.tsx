@@ -1,5 +1,4 @@
 'use client';
-import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/lib/store/authStore';
@@ -59,13 +58,11 @@ export default function LoginPage() {
         }}
       >
         <div style={{ textAlign: 'center', marginBottom: '32px' }}>
-          <Image
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
             src="/logo-login.png"
             alt="Roseland Pictures"
-            width={1380}
-            height={1108}
             style={{ maxWidth: '240px', height: 'auto', display: 'block', margin: '0 auto' }}
-            priority
           />
         </div>
 
