@@ -48,13 +48,20 @@ export default function ScheduleListTab({
     setNewFolderInput('');
   }
 
-  const [copiedName, setCopiedName] = useState<string | null>(null);
+  const [copiedInfo, setCopiedInfo] = useState<{ name: string; url: string; kind: 'team' | 'client' } | null>(null);
+
+  function copyLink(name: string, url: string, kind: 'team' | 'client') {
+    navigator.clipboard.writeText(url).catch(() => prompt(`Copy ${kind} link:`, url));
+    setCopiedInfo({ name, url, kind });
+    setTimeout(() => setCopiedInfo((c) => (c?.url === url ? null : c)), 3000);
+  }
 
   function copyTeamLink(name: string) {
-    const url = `${window.location.origin}/schedule/${encodeURIComponent(name)}`;
-    navigator.clipboard.writeText(url).catch(() => prompt('Copy link:', url));
-    setCopiedName(name);
-    setTimeout(() => setCopiedName((n) => (n === name ? null : n)), 2000);
+    copyLink(name, `${window.location.origin}/schedule/${encodeURIComponent(name)}?auth=true`, 'team');
+  }
+
+  function copyClientLink(name: string) {
+    copyLink(name, `${window.location.origin}/view/${encodeURIComponent(name)}`, 'client');
   }
 
   const counts: Record<string, number> = { all: schedules.length, uncategorized: 0 };
@@ -196,8 +203,16 @@ export default function ScheduleListTab({
                       <option key={o.value} value={o.value}>{o.label}</option>
                     ))}
                   </select>
-                  <button className="sitem-copy" onClick={() => copyTeamLink(name)} title="Copy edit link">{copiedName === name ? '✓ Copied!' : 'Team Link'}</button>
+                  <button className="sitem-copy" onClick={() => copyTeamLink(name)} title="Copy team link (requires PIN)">
+                    {copiedInfo?.name === name && copiedInfo.kind === 'team' ? '✓ Team Link' : 'Team Link'}
+                  </button>
+                  <button className="sitem-copy sitem-copy-client" onClick={() => copyClientLink(name)} title="Copy public read-only link">
+                    {copiedInfo?.name === name && copiedInfo.kind === 'client' ? '✓ Client Link' : 'Client Link'}
+                  </button>
                   <button className="sitem-del" onClick={() => onDelete(name)} title="Delete schedule">🗑</button>
+                  {copiedInfo?.name === name && (
+                    <span className="sitem-copied-url">Copied: {copiedInfo.url}</span>
+                  )}
                 </div>
               </div>
             );
