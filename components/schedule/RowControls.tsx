@@ -32,7 +32,7 @@ export default function RowControls({ index, dragHandleProps }: Props) {
         {...(dragHandleProps ?? {})}
         title="Drag to reorder"
       >
-        ⠿
+        ≡
       </span>
       <div className="move-btns">
         <button className="move-btn" onClick={moveUp} disabled={index === 0} title="Move up">▲</button>

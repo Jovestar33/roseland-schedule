@@ -14,7 +14,6 @@ export default function LoginPage() {
     hydrate();
   }, [hydrate]);
 
-  // Already authenticated — skip straight to app
   useEffect(() => {
     if (hydrated && isAuthenticated) {
       router.replace('/');
@@ -42,93 +41,105 @@ export default function LoginPage() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: '#fafafa',
+        background: 'radial-gradient(circle at 50% 18%, rgba(216,42,137,.22), transparent 32%), linear-gradient(180deg,#111116 0%,#050507 100%)',
         padding: '24px',
+        boxSizing: 'border-box',
       }}
     >
       <div
         style={{
-          width: '100%',
-          maxWidth: '360px',
-          background: '#fff',
-          borderRadius: '12px',
-          border: '1px solid #e4e4e7',
-          boxShadow: '0 4px 24px rgba(0,0,0,0.08)',
-          padding: '40px 32px 36px',
+          width: 'min(460px, 100%)',
+          border: '1px solid rgba(255,255,255,.13)',
+          borderRadius: '22px',
+          background: 'rgba(255,255,255,.97)',
+          boxShadow: '0 28px 90px rgba(0,0,0,.48)',
+          padding: '30px',
+          boxSizing: 'border-box',
+          fontFamily: 'system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif',
         }}
       >
-        <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+        {/* Logo */}
+        <div style={{ textAlign: 'center', marginBottom: '24px' }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/logo-login.png"
             alt="Roseland Pictures"
-            style={{ maxWidth: '240px', height: 'auto', display: 'block', margin: '0 auto' }}
+            style={{ display: 'block', height: '124px', width: 'auto', maxWidth: '360px', margin: '0 auto', objectFit: 'contain' }}
           />
         </div>
 
+        {/* Heading */}
+        <h2
+          style={{
+            margin: '0 0 8px',
+            fontFamily: 'var(--fd, "Bebas Neue", system-ui, sans-serif)',
+            fontSize: '32px',
+            letterSpacing: '2px',
+            textTransform: 'uppercase',
+            color: '#111',
+          }}
+        >
+          Editor Access
+        </h2>
+        <p style={{ margin: '0 0 18px', color: '#6b7280', fontSize: '13px', lineHeight: 1.45 }}>
+          Enter the editor password to continue.
+        </p>
+
+        {/* Form */}
         <form onSubmit={handleSubmit}>
-          <div style={{ marginBottom: '12px' }}>
+          <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
             <input
               type="password"
-              autoComplete="current-password"
-              placeholder="Password"
+              autoComplete="off"
+              placeholder="Password…"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               autoFocus
               disabled={loading}
               style={{
-                width: '100%',
-                padding: '10px 14px',
-                fontSize: '15px',
-                fontFamily: 'var(--fb)',
-                border: '1px solid #d4d4d8',
-                borderRadius: '6px',
+                flex: 1,
+                minWidth: 0,
+                height: '44px',
+                padding: '0 12px',
+                border: '1px solid #d1d5db',
+                borderRadius: '10px',
+                font: 'inherit',
+                fontSize: '14px',
                 outline: 'none',
                 boxSizing: 'border-box',
                 background: '#fff',
                 color: '#111',
               }}
             />
+            <button
+              type="submit"
+              disabled={loading || !password.trim()}
+              style={{
+                height: '44px',
+                border: 0,
+                borderRadius: '10px',
+                background: loading || !password.trim() ? '#d1d5db' : '#d82a89',
+                color: '#fff',
+                padding: '0 18px',
+                fontWeight: 700,
+                fontSize: '14px',
+                cursor: loading || !password.trim() ? 'not-allowed' : 'pointer',
+                whiteSpace: 'nowrap',
+                transition: 'background 0.15s',
+              }}
+            >
+              {loading ? 'Checking…' : 'Unlock'}
+            </button>
           </div>
 
           {error && (
             <div
               role="alert"
-              style={{
-                fontSize: '13px',
-                fontFamily: 'var(--fb)',
-                color: '#9d1468',
-                marginBottom: '12px',
-              }}
+              style={{ marginTop: '10px', minHeight: '18px', color: '#b91c1c', fontSize: '12px' }}
             >
               {error}
             </div>
           )}
-
-          <button
-            type="submit"
-            disabled={loading || !password.trim()}
-            style={{
-              width: '100%',
-              padding: '11px',
-              fontSize: '13px',
-              fontFamily: 'var(--fb)',
-              fontWeight: 600,
-              letterSpacing: '1.5px',
-              textTransform: 'uppercase',
-              color: '#fff',
-              background:
-                loading || !password.trim()
-                  ? '#d4d4d8'
-                  : 'var(--pink, #e91e8c)',
-              border: 'none',
-              borderRadius: '6px',
-              cursor: loading || !password.trim() ? 'not-allowed' : 'pointer',
-              transition: 'background 0.15s',
-            }}
-          >
-            {loading ? 'Signing in…' : 'Sign In'}
-          </button>
         </form>
       </div>
     </div>

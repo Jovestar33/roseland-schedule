@@ -14,7 +14,8 @@ export default function ActionCell({ index, row }: Props) {
   const actions        = useCmsActions();
   const actionClassMap = useCmsActionClassMap();
 
-  const isOther = row.action === 'Other';
+  const isOther  = row.action === 'Other';
+  const showHint = !row.sunLocked && !row.timeIn && index > 0;
 
   function handleSelectChange(action: string) {
     pushUndo();
@@ -38,6 +39,7 @@ export default function ActionCell({ index, row }: Props) {
           placeholder="Describe…"
         />
         <button className="other-back" onClick={handleBackClick} title="Change action">↩</button>
+        {showHint && <div className="lock-hint">⏱ Set duration above</div>}
       </div>
     );
   }
@@ -45,14 +47,17 @@ export default function ActionCell({ index, row }: Props) {
   const colorClass = actionClassMap[row.action] ?? '';
 
   return (
-    <select
-      className={`cs${colorClass ? ` ${colorClass}` : ''}`}
-      value={row.action}
-      onChange={(e) => handleSelectChange(e.target.value)}
-    >
-      {actions.map((a) => (
-        <option key={a} value={a}>{a || '—'}</option>
-      ))}
-    </select>
+    <>
+      <select
+        className={`cs${colorClass ? ` ${colorClass}` : ''}`}
+        value={row.action}
+        onChange={(e) => handleSelectChange(e.target.value)}
+      >
+        {actions.map((a) => (
+          <option key={a} value={a}>{a || '—'}</option>
+        ))}
+      </select>
+      {showHint && <div className="lock-hint">⏱ Set duration above</div>}
+    </>
   );
 }
