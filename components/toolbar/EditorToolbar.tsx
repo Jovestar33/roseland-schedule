@@ -13,7 +13,6 @@ interface Props {
 
 export default function EditorToolbar({ onSave, onOpenSaveAs, onSnapshot, onClose }: Props) {
   const scheduleName = useScheduleStore((s) => s.scheduleName);
-  const meta         = useScheduleStore((s) => s.meta);
 
   return (
     <div className="toolbar">
@@ -22,7 +21,7 @@ export default function EditorToolbar({ onSave, onOpenSaveAs, onSnapshot, onClos
       <button className="btn btn-light btn-sm" onClick={onSave}>&#128190; Save</button>
       <button className="btn btn-light btn-sm" onClick={onOpenSaveAs}>Save As&hellip;</button>
       <UndoRedoButtons />
-      <button className="btn btn-light btn-sm" onClick={() => printSchedule(scheduleName ?? 'Schedule', meta?.date)}>&#128438; Print</button>
+      <button className="btn btn-light btn-sm" onClick={() => printSchedule(scheduleName ?? 'Schedule')}>&#128438; Print</button>
       <button className="btn btn-light btn-sm" onClick={onSnapshot}>&#128247; Snapshot</button>
       <button className="btn btn-light btn-sm" onClick={onClose}>Close Schedule</button>
     </div>
