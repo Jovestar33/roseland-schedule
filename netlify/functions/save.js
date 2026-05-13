@@ -74,23 +74,19 @@ exports.handler = async (event) => {
 
     if (!force && currentData) {
       const currentSavedAt = Number(currentData.savedAt || 0);
+      const expectedSavedAtNum = Number(expectedSavedAt || 0);
       const currentHash = scheduleHash(currentData);
-      const hasBaseline = Boolean(Number(expectedSavedAt || 0) || expectedHash);
-      const changedSinceBaseline = hasBaseline && (
+      const hasBaseline = Boolean(expectedSavedAtNum || expectedHash);
+      // If the blob's savedAt is older than our baseline the read is stale (Netlify Blobs
+      // eventual consistency after a recent write). Skip conflict detection — the write
+      // that set our baseline simply hasn't propagated to this read yet.
+      const blobIsStale = expectedSavedAtNum > 0 && currentSavedAt < expectedSavedAtNum;
+      const changedSinceBaseline = !blobIsStale && hasBaseline && (
         (expectedHash && currentHash && currentHash !== expectedHash) ||
-        (Number(expectedSavedAt || 0) && currentSavedAt && currentSavedAt > Number(expectedSavedAt || 0))
+        (expectedSavedAtNum && currentSavedAt && currentSavedAt > expectedSavedAtNum)
       );
 
       if (changedSinceBaseline) {
-        const hashMatch = !expectedHash || !currentHash || currentHash === expectedHash;
-        console.log('[Save] Conflict 409 —', name, {
-          expectedSavedAt: Number(expectedSavedAt || 0),
-          currentSavedAt,
-          timeConflict: currentSavedAt > Number(expectedSavedAt || 0),
-          hashConflict: !hashMatch,
-          expectedHashPrefix: (expectedHash || '').slice(0, 16),
-          currentHashPrefix: currentHash.slice(0, 16),
-        });
         return {
           statusCode: 409,
           headers,
