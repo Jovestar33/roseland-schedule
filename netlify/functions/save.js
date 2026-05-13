@@ -75,18 +75,11 @@ exports.handler = async (event) => {
     if (!force && currentData) {
       const currentSavedAt = Number(currentData.savedAt || 0);
       const expectedSavedAtNum = Number(expectedSavedAt || 0);
-      const currentHash = scheduleHash(currentData);
-      const hasBaseline = Boolean(expectedSavedAtNum || expectedHash);
-      // If the blob's savedAt is older than our baseline the read is stale (Netlify Blobs
-      // eventual consistency after a recent write). Skip conflict detection — the write
-      // that set our baseline simply hasn't propagated to this read yet.
-      const blobIsStale = expectedSavedAtNum > 0 && currentSavedAt < expectedSavedAtNum;
-      const changedSinceBaseline = !blobIsStale && hasBaseline && (
-        (expectedHash && currentHash && currentHash !== expectedHash) ||
-        (expectedSavedAtNum && currentSavedAt && currentSavedAt > expectedSavedAtNum)
-      );
-
-      if (changedSinceBaseline) {
+      // Three-way savedAt comparison — hash dropped because Netlify Blobs eventual
+      // consistency makes hash comparison unreliable across rapid successive reads.
+      //   currentSavedAt > expectedSavedAt → real concurrent change → 409
+      //   currentSavedAt <= expectedSavedAt → stale read or no change → allow write
+      if (expectedSavedAtNum > 0 && currentSavedAt > expectedSavedAtNum) {
         return {
           statusCode: 409,
           headers,
@@ -95,7 +88,6 @@ exports.handler = async (event) => {
             conflict: true,
             name,
             remoteSavedAt: currentSavedAt,
-            remoteHash: currentHash,
             remoteData: currentData
           })
         };
