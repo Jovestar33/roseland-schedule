@@ -7,7 +7,7 @@
 | Framework | Next.js 15, App Router, TypeScript |
 | State | Zustand (scheduleStore, authStore, cmsStore) |
 | Drag & Drop | @hello-pangea/dnd |
-| Storage | Netlify Blobs (schedules, snapshots, CMS config, library meta) |
+| Storage | Netlify Blobs (schedules, snapshots, CMS config, library meta, templates) |
 | Auth | HMAC token (password → SHA-256 HMAC) stored in sessionStorage |
 | Styling | Plain CSS (`styles/base.css`, no CSS-in-JS) |
 | Hosting | Netlify (static export + serverless functions) |
@@ -38,7 +38,7 @@ lib/
   recalcRows.ts      # Time cascade engine
   time.ts            # computeTimeOut, formatTime helpers
   constants.ts       # ACTIONS, CMS_COLORS, limits, intervals
-  templates.ts       # localStorage-based local templates
+  templates.ts       # Template type + LS_TEMPLATES_KEY (kept for migration helper)
   types.ts           # All shared TypeScript types
 netlify/functions/   # Serverless: save, load, snapshots, library, cms, places
 middleware.ts        # Auth gate + ?next= redirect preservation
@@ -113,6 +113,7 @@ Public client links (`/view/[name]`) bypass auth entirely — no token needed, l
 | `snapshots.js` | Read/write named snapshots per schedule |
 | `library.js` | Folder metadata + schedule→folder mapping (separate blob key) |
 | `cms.js` | Read/write CMS branding config |
+| `templates.js` | Read/write reusable schedule templates (store: schedule-templates) |
 | `places.js` | Google Places API proxy (forwards Referer, adds API key) |
 
 All functions share the same HMAC auth check. Delete operations require a separate `SCHEDULE_DELETE_PASSWORD` env var.
