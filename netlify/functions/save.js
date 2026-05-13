@@ -82,6 +82,15 @@ exports.handler = async (event) => {
       );
 
       if (changedSinceBaseline) {
+        const hashMatch = !expectedHash || !currentHash || currentHash === expectedHash;
+        console.log('[Save] Conflict 409 —', name, {
+          expectedSavedAt: Number(expectedSavedAt || 0),
+          currentSavedAt,
+          timeConflict: currentSavedAt > Number(expectedSavedAt || 0),
+          hashConflict: !hashMatch,
+          expectedHashPrefix: (expectedHash || '').slice(0, 16),
+          currentHashPrefix: currentHash.slice(0, 16),
+        });
         return {
           statusCode: 409,
           headers,

@@ -5,7 +5,6 @@ import { useScheduleStore } from '../store/scheduleStore';
 import { postSave, type SaveError } from '../api/save';
 import { postLoad } from '../api/load';
 import { postAddSnapshot } from '../api/snapshots';
-import { hashSchedule } from '../hash';
 import { normalizeRows } from '../rowNormalizer';
 import type { ConflictState } from '../types';
 
@@ -38,7 +37,12 @@ export function useSaveActions() {
       if (data) {
         const normalized = { ...data, rows: normalizeRows(data.rows) };
         loadSchedule(name, normalized);
-        setRemoteBaseline(normalized.savedAt ?? 0, hashSchedule(normalized));
+        // Use only savedAt for the initial baseline — no client-computed hash.
+        // The client hash (JSON.stringify, unsorted keys) differs from the server hash
+        // (stableStringify, sorted keys), causing false conflict 409s on every first save.
+        // After the first successful save the server returns its own hash, which we store
+        // and use for all subsequent conflict checks.
+        setRemoteBaseline(normalized.savedAt ?? 0, '');
       }
       setSyncStatus('synced');
     } catch {
@@ -57,11 +61,18 @@ export function useSaveActions() {
         expectedHash:    remoteBaseline?.hash    ?? '',
       });
       markClean();
-      setRemoteBaseline(result.savedAt, result.hash ?? hashSchedule(data));
+      // Always use the server-returned hash — never a client-computed hash.
+      setRemoteBaseline(result.savedAt, result.hash ?? '');
       setSyncStatus('synced');
     } catch (e) {
       const err = e as SaveError;
       if (err.conflict) {
+        console.warn('[Save] Conflict detected — baseline:', {
+          expectedSavedAt: remoteBaseline?.savedAt ?? 0,
+          expectedHash:    remoteBaseline?.hash    ?? '',
+          remoteSavedAt:   err.remoteSavedAt,
+          remoteHash:      err.remoteHash,
+        });
         setSyncStatus('conflict');
         setConflictData({
           local: data,
@@ -81,7 +92,7 @@ export function useSaveActions() {
     try {
       const result = await postSave(scheduleName, data, token, { force: true });
       markClean();
-      setRemoteBaseline(result.savedAt, result.hash ?? hashSchedule(data));
+      setRemoteBaseline(result.savedAt, result.hash ?? '');
       setSyncStatus('synced');
       setConflictData(null);
     } catch {
@@ -97,7 +108,7 @@ export function useSaveActions() {
       const result = await postSave(newName, data, token, {});
       const savedData = { ...data, savedAt: result.savedAt };
       loadSchedule(newName, savedData);
-      setRemoteBaseline(result.savedAt, result.hash ?? hashSchedule(savedData));
+      setRemoteBaseline(result.savedAt, result.hash ?? '');
       setSyncStatus('synced');
       router.push(`/schedule/${encodeURIComponent(newName)}`);
     } catch {
@@ -142,7 +153,8 @@ export function useSaveActions() {
     } catch { /* best-effort */ }
     const remote = conflictState.remote;
     loadSchedule(conflictState.scheduleName, remote);
-    setRemoteBaseline(remote.savedAt ?? 0, hashSchedule(remote));
+    // Use only savedAt — we don't have the server's hash for the remote version here.
+    setRemoteBaseline(remote.savedAt ?? 0, '');
     setSyncStatus('synced');
     setConflictData(null);
   }
