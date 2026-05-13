@@ -3,18 +3,21 @@
 ## 🔴 Immediate (current session / next 1-2 days)
 *App is deployed with real data — these must be done before team use*
 
-1. **Save overwrite warning audit** — behavior is acting weird, needs retest and fix
-2. **Print/PDF verification** — test on laptop, tablet, mobile; fix layout issues
+1. ✅ **Save overwrite warning audit** — conflict detection rebuilt with pure savedAt comparison; Netlify Blobs eventual-consistency stale-read handled correctly
+2. ✅ **Print/PDF verification** — landscape default set via `@page { size: landscape }`; filename format `"[scheduleName] – [YYYY-MM-DD]"` working
 3. **Mobile/iPad layout pass** — Library never had one; schedule grid on small screens; toolbar on mobile
+   - Note: Safari and Chrome favicons confirmed working as of 2026-05-13
 4. **PWA manifest** — make app installable on iPad home screen
+   - Status: `manifest.ts` built and deployed, iOS meta tags in place, icons generated at 192×192 and 512×512. Remaining: test PWA install on real iPad in Safari (Share → Add to Home Screen) and verify standalone landscape mode launches correctly
 
 ## 🟠 Short-Term Polish (v1 — next 2-4 sessions)
 *Quality of life improvements before wider use*
 
 5. **Schedule header fields** — add Project Name, Phase, Day Out of Days above Town/Location
-6. **Move CMS to Library** — remove CMS button from schedule toolbar
+6. ✅ **Move CMS to Library** — CMS button removed from schedule toolbar, now in Library header
 7. **Export Current JSON** — move to schedule toolbar, remove from Backup tab
 8. **Library/Snapshots accessible without closing schedule** — slide-over drawer
+   - Note: Templates tab is currently broken because "Save Current as Template" requires an open schedule, but templates are only accessible from the Library when no schedule is open. This must be fixed as part of the Library slide-over drawer feature — templates need to work from within an open schedule context.
 9. **Push notifications for overtime** — alert when action runs over its duration
 10. **Library improvements** — search/filter schedules, sort options, archive instead of hard delete, open recent
 11. **Contact sheet / extract** — generate a shareable contact list URL or exportable sheet from schedule row data; evaluate whether a lightweight contacts DB is needed to support this properly
@@ -51,8 +54,6 @@
 
 ## Session Order
 - **Current session:** Finish link cleanup → test → wrap
-- **Next session:** Items 1–2 (save warning + print pass)
-- **Dedicated mobile session:** Item 3 (full mobile/tablet pass)
-- **Then:** Item 4 (PWA manifest)
+- **Next session:** Items 3–4 (mobile/tablet pass + PWA install test)
 - **Then v1 polish:** Items 5–13 grouped by theme
 - **Item 17 (CMS architecture):** Planning conversation before any code

@@ -40,8 +40,10 @@ lib/
   constants.ts       # ACTIONS, CMS_COLORS, limits, intervals
   templates.ts       # Template type + LS_TEMPLATES_KEY (kept for migration helper)
   types.ts           # All shared TypeScript types
-netlify/functions/   # Serverless: save, load, snapshots, library, cms, places
+netlify/functions/   # Serverless: save, load, snapshots, library, cms, templates, places
 middleware.ts        # Auth gate + ?next= redirect preservation
+app/favicon.ico      # Served as Next.js metadata route — bypasses middleware entirely
+app/manifest.ts      # PWA manifest, auto-served at /manifest.webmanifest
 ```
 
 ## 3. Key Files
@@ -70,7 +72,7 @@ Three Zustand stores:
 
 **authStore** — `token: string | null` from sessionStorage
 
-**cmsStore** — branding config; `applyConfig()` injects CSS custom properties + `<style>` block
+**cmsStore** — branding config; `applyConfig()` injects CSS custom properties + `<style>` block; CMS button lives in Library header (not editor toolbar)
 
 ## 5. Data Flow
 
@@ -140,6 +142,16 @@ All functions share the same HMAC auth check. Delete operations require a separa
 
 **Auto-snapshot** — 5-minute `setInterval` in `ScheduleEditor`. Uses `dirtyRef`/`snapshotRef` mutable refs (updated every render) to avoid stale closure capturing `dirty=false` at mount time.
 
+**Favicon** — served from `app/favicon.ico` as a Next.js metadata route. Public-directory assets (`public/*.ico`) were intercepted by Netlify's edge middleware despite matcher exclusions; the `app/` placement bypasses middleware entirely.
+
+**Static asset middleware exclusion** — matcher uses `[^/]*\\.(?:png|jpg|jpeg|svg|ico|webp|gif|woff2?|ttf|eot)` negative lookahead with non-capturing group (`(?:)` required — Next.js 15 rejects capturing groups in matchers).
+
+**PWA** — `app/manifest.ts` auto-served at `/manifest.webmanifest`; iOS meta tags via `appleWebApp` in layout metadata; 192×192 and 512×512 icons generated from `apple-touch-icon.png` (1254×1254 source).
+
+**Print** — `@page { size: landscape }` in `print.css`. `lib/print.ts` sets `document.title` to `"[scheduleName] – [YYYY-MM-DD today]"` before `window.print()`, restores via `setTimeout(100)`.
+
+**Templates** — migrated from localStorage to Netlify Blobs (`schedule-templates` store). One-time migration: on first load, if remote is empty and localStorage has templates, they are pushed up and localStorage is cleared.
+
 ## 10. Feature Map
 
 **Schedule editing**: action rows, custom rows, sun rows, notes, call time, location, town, date, weather strip  
@@ -156,4 +168,6 @@ All functions share the same HMAC auth check. Delete operations require a separa
 **Backup**: export current schedule JSON, export all schedules ZIP  
 **Google Places**: location autocomplete via proxied Places API  
 **Weather**: Open-Meteo integration, weather strip on schedule header  
-**Print/PDF**: print stylesheet, browser print dialog  
+**Templates**: reusable row sets stored in Netlify Blobs, synced across devices  
+**Print/PDF**: landscape default via `@page`; filename `"[name] – [YYYY-MM-DD]"` set on `document.title` before print  
+**PWA**: installable via Safari Add to Home Screen; manifest at `/manifest.webmanifest`  
