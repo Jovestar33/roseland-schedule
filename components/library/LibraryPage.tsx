@@ -171,7 +171,7 @@ export default function LibraryPage() {
           &#128279; Backup
         </button>
         <button className={`mtab${tab === 'versions' ? ' active' : ''}`} onClick={() => setTab('versions')}>
-          🕐 Versions / Restore
+          🕐 Restore
         </button>
       </div>
 
