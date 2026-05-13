@@ -1,0 +1,58 @@
+# Roseland Schedule — Master Roadmap
+
+## 🔴 Immediate (current session / next 1-2 days)
+*App is deployed with real data — these must be done before team use*
+
+1. **Save overwrite warning audit** — behavior is acting weird, needs retest and fix
+2. **Print/PDF verification** — test on laptop, tablet, mobile; fix layout issues
+3. **Mobile/iPad layout pass** — Library never had one; schedule grid on small screens; toolbar on mobile
+4. **PWA manifest** — make app installable on iPad home screen
+
+## 🟠 Short-Term Polish (v1 — next 2-4 sessions)
+*Quality of life improvements before wider use*
+
+5. **Schedule header fields** — add Project Name, Phase, Day Out of Days above Town/Location
+6. **Move CMS to Library** — remove CMS button from schedule toolbar
+7. **Export Current JSON** — move to schedule toolbar, remove from Backup tab
+8. **Library/Snapshots accessible without closing schedule** — slide-over drawer
+9. **Push notifications for overtime** — alert when action runs over its duration
+10. **Library improvements** — search/filter schedules, sort options, archive instead of hard delete, open recent
+11. **Contact sheet / extract** — generate a shareable contact list URL or exportable sheet from schedule row data; evaluate whether a lightweight contacts DB is needed to support this properly
+12. **Version history UX** — named versions, better restore UX, compare versions, save version as new schedule
+13. **Client read-only view enhancements** — crew contact cards visible in public view
+
+## 🟡 Medium-Term (v2 — next major development cycle)
+*New feature categories that expand scope significantly*
+
+14. **Call sheets** — generate from schedule, pull weather/locations/contacts/rows, add parking/safety notes, export PDF
+15. **Multi-day projects** — master schedule containing multiple daily schedules, duplicate day, move rows between days
+16. **Production management** — booking/permit/release/vendor/location status tracking, crew/gear/travel notes — film-specific not generic PM
+17. **CMS branding architecture** — per-schedule templates, multi-brand support (Roseland/Saluki/neutral SaaS shell) — needs dedicated planning session before any code
+
+## 🟢 Longer-Term (SaaS layer)
+*Architectural shift — plan carefully before starting*
+
+18. **User accounts** — replace shared PIN with real auth (Clerk recommended)
+19. **Roles** — Admin / Producer / Editor / Read-only / Client / Vendor
+20. **Multi-org** — each company gets own data, branding, CMS config; aligns with CMS branding architecture above
+21. **Billing** — Stripe, seat-based or per-org subscription
+22. **Collaboration** — presence indicators, conflict prevention, eventually live shared editing
+23. **PWA/App Store** — installable PWA first, App Store packaging later
+
+## 🔵 Vision (longer horizon)
+*Where this becomes a platform*
+
+24. **Budgeting integration** — connect schedule (shoot days, crew, gear, locations) to budget rollups
+25. **Saluki Media version** — AED currency, VAT, Arabic market branding
+26. **Master Schedule** — birds-eye view across all active productions
+27. **AI production tools** — shot tracking, prompt/reference tracking, generated shot status, rights/licensing
+
+---
+
+## Session Order
+- **Current session:** Finish link cleanup → test → wrap
+- **Next session:** Items 1–2 (save warning + print pass)
+- **Dedicated mobile session:** Item 3 (full mobile/tablet pass)
+- **Then:** Item 4 (PWA manifest)
+- **Then v1 polish:** Items 5–13 grouped by theme
+- **Item 17 (CMS architecture):** Planning conversation before any code
