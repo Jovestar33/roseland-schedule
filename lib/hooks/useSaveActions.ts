@@ -35,6 +35,11 @@ export function useSaveActions() {
     const next = { savedAt, hash };
     remoteBaselineRef.current = next;   // synchronous — visible in the same JS tick
     setRemoteBaseline(savedAt, hash);   // async via Zustand/React (for store subscribers)
+    console.log('BASELINE UPDATED', {
+      newSavedAt: savedAt,
+      newHash: hash,
+      refCurrentAfterUpdate: remoteBaselineRef.current.savedAt,
+    });
   }
 
   async function loadScheduleFromCloud(name: string) {
@@ -71,10 +76,19 @@ export function useSaveActions() {
     const data = getScheduleData();
     // Read from the ref — always the latest value regardless of render cycle.
     const baseline = remoteBaselineRef.current;
+    console.log('SAVE ATTEMPT', {
+      expectedSavedAt: baseline?.savedAt ?? 0,
+      expectedHash:    baseline?.hash    ?? '',
+      timestamp: Date.now(),
+    });
     try {
       const result = await postSave(scheduleName, data, token, {
         expectedSavedAt: baseline?.savedAt ?? 0,
         expectedHash:    baseline?.hash    ?? '',
+      });
+      console.log('SAVE SUCCESS - updating baseline to:', {
+        savedAt: result.savedAt,
+        hash: result.hash,
       });
       markClean();
       updateBaseline(result.savedAt, result.hash ?? '');
@@ -82,11 +96,10 @@ export function useSaveActions() {
     } catch (e) {
       const err = e as SaveError;
       if (err.conflict) {
-        console.warn('[Save] Conflict detected — baseline:', {
-          expectedSavedAt: baseline?.savedAt ?? 0,
-          expectedHash:    baseline?.hash    ?? '',
-          remoteSavedAt:   err.remoteSavedAt,
-          remoteHash:      err.remoteHash,
+        console.log('CONFLICT TRIGGERED', {
+          sentSavedAt: baseline?.savedAt ?? 0,
+          sentHash:    baseline?.hash    ?? '',
+          serverSavedAt: err.remoteSavedAt,
         });
         setSyncStatus('conflict');
         setConflictData({
