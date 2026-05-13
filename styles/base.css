@@ -30,7 +30,8 @@ body{font-family:var(--fb);background:var(--g100);color:var(--black);min-height:
 .hdr{background:var(--black);padding:8px 24px;display:flex;align-items:center;
   justify-content:space-between;gap:12px;border-bottom:3px solid var(--pink);flex-wrap:wrap}
 .hdr img{height:88px;width:auto;object-fit:contain;display:block}
-.hdr-title{font-family:var(--fd);color:var(--white);font-size:24px;letter-spacing:3px}
+.hdr-title{font-family:var(--fd);color:var(--white);font-size:24px;letter-spacing:3px;font-weight:700;text-transform:uppercase;white-space:nowrap;pointer-events:none;position:absolute;left:50%;transform:translateX(-50%)}
+@media(max-width:600px){.hdr-title{display:none}}
 .hdr-right{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
 
 /* BUTTONS */

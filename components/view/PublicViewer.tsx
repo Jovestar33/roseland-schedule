@@ -63,7 +63,7 @@ export default function PublicViewer({ name }: Props) {
         <img
           src="/logo-header.png"
           alt="Roseland Pictures"
-          style={{ height: '52px', width: 'auto', objectFit: 'contain' }}
+          style={{ height: '78px', width: 'auto', objectFit: 'contain' }}
         />
         <button className="btn btn-light btn-sm" onClick={() => printSchedule(name, data.meta?.date)}>
           🖨 Print / Save PDF
