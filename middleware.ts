@@ -60,6 +60,6 @@ export const config = {
   // without it /.netlify/functions/auth is intercepted and redirected before
   // the Lambda can run — breaking login.
   matcher: [
-    '/((?!_next/static|_next/image|favicon\\.ico|icons|manifest|\\.netlify).*)',
+    '/((?!_next/static|_next/image|favicon\\.ico|icons|manifest|\\.netlify|.*\\.(png|jpg|jpeg|svg|ico|webp|gif|woff2?|ttf|eot)).*)',
   ],
 };

@@ -48,12 +48,12 @@ export default function ScheduleListTab({
     setNewFolderInput('');
   }
 
-  const [copiedInfo, setCopiedInfo] = useState<{ name: string; url: string; kind: 'team' | 'client' } | null>(null);
+  const [copiedInfo, setCopiedInfo] = useState<{ name: string; kind: 'team' | 'client' } | null>(null);
 
   function copyLink(name: string, url: string, kind: 'team' | 'client') {
     navigator.clipboard.writeText(url).catch(() => prompt(`Copy ${kind} link:`, url));
-    setCopiedInfo({ name, url, kind });
-    setTimeout(() => setCopiedInfo((c) => (c?.url === url ? null : c)), 3000);
+    setCopiedInfo({ name, kind });
+    setTimeout(() => setCopiedInfo((c) => (c?.name === name && c?.kind === kind ? null : c)), 3000);
   }
 
   function copyTeamLink(name: string) {
@@ -210,9 +210,6 @@ export default function ScheduleListTab({
                     {copiedInfo?.name === name && copiedInfo.kind === 'client' ? '✓ Client Link' : 'Client Link'}
                   </button>
                   <button className="sitem-del" onClick={() => onDelete(name)} title="Delete schedule">🗑</button>
-                  {copiedInfo?.name === name && (
-                    <span className="sitem-copied-url">Copied: {copiedInfo.url}</span>
-                  )}
                 </div>
               </div>
             );
