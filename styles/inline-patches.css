@@ -14,8 +14,6 @@ body{overflow-x:hidden;max-width:100dvw}
 
 /* ── MOBILE POLISH (originally <style id="cms-action-styles">) ── */
 @media (max-width: 760px){
-  /* DEBUG — REMOVE BEFORE MERGE */
-  *{outline:2px solid red!important}
   html,body{width:100%;max-width:100vw;overflow-x:hidden}
   body{font-size:12px;overflow-x:hidden;-webkit-text-size-adjust:100%;text-size-adjust:100%}
   .hdr{
