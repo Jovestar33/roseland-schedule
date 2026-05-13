@@ -36,6 +36,10 @@ export default function LoginPage() {
     const result = await login(password);
     setLoading(false);
     if (result.ok) {
+      (document.activeElement as HTMLElement | null)?.blur?.();
+      window.scrollTo(0, window.scrollY);
+      document.documentElement.scrollLeft = 0;
+      document.body.scrollLeft = 0;
       router.replace(getRedirectTarget());
     } else {
       setError(result.error ?? 'Incorrect password');
