@@ -32,7 +32,7 @@
 ## 🟢 Longer-Term (SaaS layer)
 *Architectural shift — plan carefully before starting*
 
-18. **User accounts** — replace shared PIN with real auth (Clerk recommended)
+18. **User accounts** — replace shared PIN with real auth (Clerk recommended); migrate storage from Netlify Blobs to a database with true atomic writes (PlanetScale or Supabase) — Netlify Blobs has ~15 second eventual consistency which is acceptable for single-PIN use but insufficient for real multi-user collaboration
 19. **Roles** — Admin / Producer / Editor / Read-only / Client / Vendor
 20. **Multi-org** — each company gets own data, branding, CMS config; aligns with CMS branding architecture above
 21. **Billing** — Stripe, seat-based or per-org subscription
