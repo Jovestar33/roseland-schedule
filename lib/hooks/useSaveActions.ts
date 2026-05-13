@@ -1,4 +1,5 @@
 'use client';
+import { useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '../store/authStore';
 import { useScheduleStore } from '../store/scheduleStore';
@@ -23,10 +24,23 @@ export function useSaveActions() {
   const setRemoteBaseline = useScheduleStore((s) => s.setRemoteBaseline);
   const setConflictData   = useScheduleStore((s) => s.setConflictData);
 
+  // Mutable ref that stays current every render AND is updated synchronously
+  // right after each save response — before React's re-render cycle runs.
+  // This prevents stale closures from reading the pre-save baseline on the
+  // very next save attempt (the alternating-conflict bug).
+  const remoteBaselineRef = useRef(remoteBaseline);
+  remoteBaselineRef.current = remoteBaseline;
+
+  function updateBaseline(savedAt: number, hash: string) {
+    const next = { savedAt, hash };
+    remoteBaselineRef.current = next;   // synchronous — visible in the same JS tick
+    setRemoteBaseline(savedAt, hash);   // async via Zustand/React (for store subscribers)
+  }
+
   async function loadScheduleFromCloud(name: string) {
     // If the store already has this schedule with a remote baseline (e.g. navigation triggered
     // immediately after saveAs), skip the fetch — the data is already current.
-    if (scheduleName === name && remoteBaseline !== null) return;
+    if (scheduleName === name && remoteBaselineRef.current !== null) return;
     // Immediately clear to blank so the UI never flashes the previous schedule's data.
     // If the server has real data for this name, loadSchedule() will replace the blank state.
     newSchedule(name);
@@ -42,7 +56,7 @@ export function useSaveActions() {
         // (stableStringify, sorted keys), causing false conflict 409s on every first save.
         // After the first successful save the server returns its own hash, which we store
         // and use for all subsequent conflict checks.
-        setRemoteBaseline(normalized.savedAt ?? 0, '');
+        updateBaseline(normalized.savedAt ?? 0, '');
       }
       setSyncStatus('synced');
     } catch {
@@ -55,21 +69,22 @@ export function useSaveActions() {
     if (!token) { router.push('/login'); return; }
     setSyncStatus('syncing');
     const data = getScheduleData();
+    // Read from the ref — always the latest value regardless of render cycle.
+    const baseline = remoteBaselineRef.current;
     try {
       const result = await postSave(scheduleName, data, token, {
-        expectedSavedAt: remoteBaseline?.savedAt ?? 0,
-        expectedHash:    remoteBaseline?.hash    ?? '',
+        expectedSavedAt: baseline?.savedAt ?? 0,
+        expectedHash:    baseline?.hash    ?? '',
       });
       markClean();
-      // Always use the server-returned hash — never a client-computed hash.
-      setRemoteBaseline(result.savedAt, result.hash ?? '');
+      updateBaseline(result.savedAt, result.hash ?? '');
       setSyncStatus('synced');
     } catch (e) {
       const err = e as SaveError;
       if (err.conflict) {
         console.warn('[Save] Conflict detected — baseline:', {
-          expectedSavedAt: remoteBaseline?.savedAt ?? 0,
-          expectedHash:    remoteBaseline?.hash    ?? '',
+          expectedSavedAt: baseline?.savedAt ?? 0,
+          expectedHash:    baseline?.hash    ?? '',
           remoteSavedAt:   err.remoteSavedAt,
           remoteHash:      err.remoteHash,
         });
@@ -92,7 +107,7 @@ export function useSaveActions() {
     try {
       const result = await postSave(scheduleName, data, token, { force: true });
       markClean();
-      setRemoteBaseline(result.savedAt, result.hash ?? '');
+      updateBaseline(result.savedAt, result.hash ?? '');
       setSyncStatus('synced');
       setConflictData(null);
     } catch {
@@ -108,7 +123,7 @@ export function useSaveActions() {
       const result = await postSave(newName, data, token, {});
       const savedData = { ...data, savedAt: result.savedAt };
       loadSchedule(newName, savedData);
-      setRemoteBaseline(result.savedAt, result.hash ?? '');
+      updateBaseline(result.savedAt, result.hash ?? '');
       setSyncStatus('synced');
       router.push(`/schedule/${encodeURIComponent(newName)}`);
     } catch {
@@ -154,7 +169,7 @@ export function useSaveActions() {
     const remote = conflictState.remote;
     loadSchedule(conflictState.scheduleName, remote);
     // Use only savedAt — we don't have the server's hash for the remote version here.
-    setRemoteBaseline(remote.savedAt ?? 0, '');
+    updateBaseline(remote.savedAt ?? 0, '');
     setSyncStatus('synced');
     setConflictData(null);
   }
