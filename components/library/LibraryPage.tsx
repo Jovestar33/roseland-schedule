@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/lib/store/authStore';
+import { useCmsStore } from '@/lib/store/cmsStore';
 import { listSchedules, postLoad } from '@/lib/api/load';
 import { postDelete } from '@/lib/api/save';
 import { getLibraryMeta, putLibraryMeta, type LibraryData, type LibraryFolder } from '@/lib/api/library';
@@ -19,9 +20,10 @@ function makeId(prefix: string): string {
 
 export default function LibraryPage() {
   const router = useRouter();
-  const token   = useAuthStore((s) => s.token);
-  const hydrated = useAuthStore((s) => s.hydrated);
-  const logout   = useAuthStore((s) => s.logout);
+  const token      = useAuthStore((s) => s.token);
+  const hydrated   = useAuthStore((s) => s.hydrated);
+  const logout     = useAuthStore((s) => s.logout);
+  const openCmsModal = useCmsStore((s) => s.openModal);
 
   const [tab, setTab]               = useState<Tab>('schedules');
   const [schedules, setSchedules]   = useState<LibrarySchedule[]>([]);
@@ -152,6 +154,7 @@ export default function LibraryPage() {
           <button className="btn btn-pink btn-sm" onClick={() => router.push('/schedule/Untitled')}>
             + New Schedule
           </button>
+          <button className="btn btn-light btn-sm" onClick={openCmsModal}>&#9881; CMS</button>
           <button className="btn btn-light btn-sm" onClick={handleLogout}>Log Out</button>
         </div>
       </div>
