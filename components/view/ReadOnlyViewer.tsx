@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { postLoadView } from '@/lib/api/load';
+import { printSchedule } from '@/lib/print';
 import ScheduleReadView from './ScheduleReadView';
 import type { ScheduleData } from '@/lib/types';
 
@@ -54,7 +55,7 @@ export default function ReadOnlyViewer({ name, viewToken }: Props) {
         style={{ display: 'flex', background: '#f0fdf4', borderBottom: '2px solid #16a34a', padding: '10px 24px', alignItems: 'center', justifyContent: 'space-between', gap: '10px' }}
       >
         <span>🔒 Read-only view — shared by Roseland Pictures</span>
-        <button className="btn btn-light btn-sm" onClick={() => window.print()}>🖨 Print / Save PDF</button>
+        <button className="btn btn-light btn-sm" onClick={() => printSchedule(name, data.meta?.date)}>🖨 Print / Save PDF</button>
       </div>
       <ScheduleReadView data={data} />
     </div>

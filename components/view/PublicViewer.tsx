@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { postLoadPublic } from '@/lib/api/load';
+import { printSchedule } from '@/lib/print';
 import ScheduleReadView from './ScheduleReadView';
 import type { ScheduleData } from '@/lib/types';
 
@@ -64,7 +65,7 @@ export default function PublicViewer({ name }: Props) {
           alt="Roseland Pictures"
           style={{ height: '52px', width: 'auto', objectFit: 'contain' }}
         />
-        <button className="btn btn-light btn-sm" onClick={() => window.print()}>
+        <button className="btn btn-light btn-sm" onClick={() => printSchedule(name, data.meta?.date)}>
           🖨 Print / Save PDF
         </button>
       </div>
