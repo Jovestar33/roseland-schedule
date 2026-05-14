@@ -27,7 +27,7 @@ colgroup .c-dv {width:3px}
 colgroup .c-ti {width:7%}
 colgroup .c-du {width:7%}
 colgroup .c-to {width:7%}
-colgroup .c-cb {width:56px}
+colgroup .c-cb {width:64px}
 colgroup .c-x  {width:36px}
 
 thead tr{background:var(--black)}
@@ -69,6 +69,7 @@ td.tc-t .tdsp{white-space:nowrap}
 .cs{cursor:pointer}
 tbody td:nth-child(2) .cs{min-width:170px}
 tbody td:nth-child(8) .tdsp,tbody td:nth-child(9) .tdsp,tbody td:nth-child(10) .tdsp{white-space:nowrap}
+tbody td:nth-child(10){padding-left:0;padding-right:0}
 tbody td:nth-child(11){min-width:34px}
 .cs.locked{opacity:.3;pointer-events:none}
 .lock-hint{font-size:10px;color:var(--g400);font-style:italic;padding:1px 5px}
