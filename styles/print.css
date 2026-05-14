@@ -1494,3 +1494,206 @@
   .sun-note{font-size:7.25px!important;}
   .sun-label{font-size:8px!important;}
 }
+
+/* V14l: tablet (iPad) print font fix + phone thead-th bump.
+   Root cause: V14d–V14k were iterated against phone-width viewports. Two problems resulted:
+   1. thead th was progressively shrunk below the desktop 9px baseline (7.55px landscape,
+      7px portrait) and hdr-title in portrait fell to 14.3px vs desktop 17px.
+   2. Tablets match the same (hover:none)(pointer:coarse) query as phones but have wider
+      viewports (~768–1024px CSS), so the browser's auto-scale-to-paper factor is much
+      smaller than on a phone. zoom:0.655 (portrait) then compresses tablet text to ~70%
+      of desktop size — unreadable.
+   Strategy: bump thead th and hdr-title for all touch devices first, then override with
+   a tablet-specific block (min-device-width:768px, honored by iOS Safari in print) that
+   resets zoom to 1.0 and fully restores desktop-baseline font sizes. Desktop/laptop print
+   and phone-tuned zoom values are not changed. */
+
+/* ── All touch: thead-th + portrait hdr-title bump ──────────────────────────── */
+/* Landscape: thead th was 7.55px vs desktop 9px. */
+@media print and (hover:none) and (pointer:coarse) and (orientation:landscape){
+  thead th{
+    font-size:8.8px!important;
+    letter-spacing:.85px!important;
+  }
+}
+
+/* Portrait: thead th was 7px vs desktop 9px; hdr-title was 14.3px vs desktop 17px.
+   Keep changes conservative — portrait is layout-sensitive with zoom:0.655 in place. */
+@media print and (hover:none) and (pointer:coarse) and (orientation:portrait){
+  .hdr-title{font-size:16px!important;letter-spacing:2.5px!important;}
+  thead th{
+    font-size:8.5px!important;
+    letter-spacing:.72px!important;
+  }
+}
+
+/* ── Tablet (iPad): kill weather gradient + input grey on both orientations ─── */
+/* base.css sets background:linear-gradient(135deg,#0f172a,#1e293b) on .wx-strip.
+   iOS Safari print converts that gradient to a grey tone instead of honoring
+   background:#fff!important from the earlier print block. Explicitly zero the
+   background-image here so only the white fill applies.
+   The meta input grey is iOS system appearance; -webkit-appearance:none removes it. */
+@media print and (hover:none) and (pointer:coarse) and (min-device-width:768px){
+  .wx-strip,
+  .wx-strip.show{
+    background:#fff!important;
+    background-color:#fff!important;
+    background-image:none!important;
+  }
+  .wx-item,.wx-label,.wx-val{
+    background:transparent!important;
+    background-image:none!important;
+  }
+  .meta,.mf{
+    background:#fff!important;
+    background-image:none!important;
+  }
+  .mf input,
+  .call-disp{
+    -webkit-appearance:none!important;
+    appearance:none!important;
+    background:transparent!important;
+    background-color:transparent!important;
+    background-image:none!important;
+  }
+}
+
+/* ── Tablet (iPad) portrait — full desktop baseline restore ──────────────────── */
+/* min-device-width:768px targets iPad Mini (768px) and larger in iOS Safari print.
+   Overrides the phone zoom and restores desktop-equivalent sizes throughout. */
+@media print and (hover:none) and (pointer:coarse) and (min-device-width:768px) and (orientation:portrait){
+  body{zoom:1.0!important;}
+
+  .hdr img{height:44px!important;max-height:44px!important;}
+  .hdr-title{font-size:17px!important;letter-spacing:3px!important;line-height:1!important;}
+
+  .meta-grid{
+    grid-template-columns:2.2fr 1fr 1fr 1.2fr 1.2fr 1.2fr!important;
+    gap:4px 12px!important;
+  }
+  .mf label{font-size:6.5px!important;letter-spacing:.09em!important;}
+  .mf input,.call-disp{font-size:8.5px!important;line-height:1.15!important;}
+
+  thead th{
+    font-size:9px!important;
+    letter-spacing:1px!important;
+    padding:3.4px 5px!important;
+  }
+  td,.ci,.ci-ta,textarea{
+    font-size:8.1px!important;
+    line-height:1.22!important;
+    padding:3.4px 5px!important;
+  }
+  td.rn{font-size:7px!important;}
+  select.cs,.other-inp,.other-inp-inline{
+    font-size:7.8px!important;
+    line-height:1.15!important;
+    padding:3px 4px!important;
+  }
+  .tdsp,.anchor-text{font-size:8px!important;line-height:1.15!important;}
+  .sun-note{font-size:7.5px!important;}
+  .sun-label{font-size:8.5px!important;}
+}
+
+/* ── Tablet (iPad) landscape — full desktop baseline restore ─────────────────── */
+@media print and (hover:none) and (pointer:coarse) and (min-device-width:768px) and (orientation:landscape){
+  body{zoom:1.0!important;}
+
+  .hdr img{height:44px!important;max-height:44px!important;}
+  .hdr-title{font-size:17px!important;letter-spacing:3px!important;line-height:1!important;}
+
+  .meta-grid{
+    grid-template-columns:2.2fr 1fr 1fr 1.2fr 1.2fr 1.2fr!important;
+    gap:4px 12px!important;
+  }
+  .mf label{font-size:6.5px!important;letter-spacing:.09em!important;}
+  .mf input,.call-disp{font-size:8.5px!important;line-height:1.15!important;}
+
+  thead th{
+    font-size:9px!important;
+    letter-spacing:1px!important;
+    padding:3.4px 5px!important;
+  }
+  td,.ci,.ci-ta,textarea{
+    font-size:8.1px!important;
+    line-height:1.22!important;
+    padding:3.4px 5px!important;
+  }
+  td.rn{font-size:7px!important;}
+  select.cs,.other-inp,.other-inp-inline{
+    font-size:7.8px!important;
+    line-height:1.15!important;
+    padding:3px 4px!important;
+  }
+  .tdsp,.anchor-text{font-size:8px!important;line-height:1.15!important;}
+  .sun-note{font-size:7.5px!important;}
+  .sun-label{font-size:8.5px!important;}
+}
+
+/* V14m: phone print — reset zoom + restore desktop-equivalent font sizes.
+   V14d–V14k iterated font sizes and zoom for phones (zoom:1.13 landscape /
+   0.655 portrait) but the resulting printed output is still too small.
+   The same fix that worked for tablets in V14l applies here: zoom:1.0 + the
+   established desktop-print baseline sizes. This block comes after V14l so it
+   overrides the earlier phone-tuned values.
+   Landscape: same desktop-landscape density (9px / 8.1px), zoom:0.96 to fit one
+   page (zoom:1.0 overflowed by ~4%). max-device-width:767px keeps tablets on
+   V14l's confirmed zoom:1.0.
+   Portrait: desktop-portrait density (7.5px / 6.8px) — smaller than landscape
+   because portrait pages are narrower. max-device-width:767px keeps iPads (768px+)
+   on their V14l tablet-density sizes. */
+
+/* ── Phone landscape: desktop landscape baseline, scaled to fit one page ─────── */
+/* max-device-width:767px keeps tablets on V14l's zoom:1.0 (confirmed one-page).
+   Phones at zoom:1.0 overflow by ~4%; 0.96 keeps the full schedule on one page. */
+@media print and (hover:none) and (pointer:coarse) and (max-device-width:767px) and (orientation:landscape){
+  body{zoom:0.96!important;}
+  .hdr-title{font-size:17px!important;letter-spacing:3px!important;}
+  thead th{
+    font-size:9px!important;
+    letter-spacing:1px!important;
+    padding:3.4px 5px!important;
+  }
+  td,.ci,.ci-ta,textarea{
+    font-size:8.1px!important;
+    line-height:1.22!important;
+    padding:3.4px 5px!important;
+  }
+  td.rn{font-size:7px!important;}
+  select.cs,.other-inp,.other-inp-inline{
+    font-size:7.8px!important;
+    line-height:1.15!important;
+    padding:3px 4px!important;
+  }
+  .tdsp,.anchor-text{font-size:8px!important;line-height:1.15!important;}
+  .sun-note{font-size:7.5px!important;}
+  .sun-label{font-size:8.5px!important;}
+}
+
+/* ── Phone portrait only: desktop portrait baseline ──────────────────────────── */
+/* max-device-width:767px excludes iPads (768px+) so they keep the
+   higher-density V14l tablet portrait sizes (9px / 8.1px). */
+@media print and (hover:none) and (pointer:coarse) and (max-device-width:767px) and (orientation:portrait){
+  body{zoom:1.0!important;}
+  .hdr img{height:36px!important;max-height:36px!important;}
+  .hdr-title{font-size:14px!important;letter-spacing:2px!important;}
+  thead th{
+    font-size:7.5px!important;
+    letter-spacing:.4px!important;
+    padding:4px 3px!important;
+  }
+  td,.ci,.ci-ta,textarea{
+    font-size:6.8px!important;
+    line-height:1.12!important;
+    padding:3px!important;
+  }
+  td.rn{font-size:6.2px!important;}
+  select.cs,.other-inp,.other-inp-inline{
+    font-size:6.8px!important;
+    line-height:1.08!important;
+    padding:2px 2px!important;
+  }
+  .tdsp,.anchor-text{font-size:6.6px!important;line-height:1.08!important;}
+  .sun-note{font-size:6.5px!important;}
+  .sun-label{font-size:7.5px!important;}
+}
