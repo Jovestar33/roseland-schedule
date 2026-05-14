@@ -37,10 +37,16 @@ export default function LoginPage() {
     setLoading(false);
     if (result.ok) {
       (document.activeElement as HTMLElement | null)?.blur?.();
-      window.scrollTo(0, window.scrollY);
+      // iOS Safari: keyboard/autofill may have scrolled the page up and won't
+      // always reset scrollY when it dismisses. Reset before navigating.
+      history.scrollRestoration = 'manual';
+      window.scrollTo(0, 0);
       document.documentElement.scrollLeft = 0;
       document.body.scrollLeft = 0;
-      router.replace(getRedirectTarget());
+      // Short delay lets iOS finish the keyboard-dismiss scroll animation
+      // so the next page inherits scrollY = 0, not the keyboard-induced offset.
+      const target = getRedirectTarget();
+      setTimeout(() => router.replace(target), 80);
     } else {
       setError(result.error ?? 'Incorrect password');
     }
