@@ -1629,3 +1629,67 @@
   .sun-note{font-size:7.5px!important;}
   .sun-label{font-size:8.5px!important;}
 }
+
+/* V14m: phone print — reset zoom + restore desktop-equivalent font sizes.
+   V14d–V14k iterated font sizes and zoom for phones (zoom:1.13 landscape /
+   0.655 portrait) but the resulting printed output is still too small.
+   The same fix that worked for tablets in V14l applies here: zoom:1.0 + the
+   established desktop-print baseline sizes. This block comes after V14l so it
+   overrides the earlier phone-tuned values.
+   Landscape: same desktop-landscape density as tablet (9px / 8.1px).
+   Portrait: desktop-portrait density (7.5px / 6.8px) — smaller than landscape
+   because portrait pages are narrower. max-device-width:767px in the portrait
+   block keeps iPads (768px+) on their V14l tablet-density sizes. */
+
+/* ── Phone + tablet landscape: desktop landscape baseline ────────────────────── */
+@media print and (hover:none) and (pointer:coarse) and (orientation:landscape){
+  body{zoom:1.0!important;}
+  .hdr-title{font-size:17px!important;letter-spacing:3px!important;}
+  thead th{
+    font-size:9px!important;
+    letter-spacing:1px!important;
+    padding:3.4px 5px!important;
+  }
+  td,.ci,.ci-ta,textarea{
+    font-size:8.1px!important;
+    line-height:1.22!important;
+    padding:3.4px 5px!important;
+  }
+  td.rn{font-size:7px!important;}
+  select.cs,.other-inp,.other-inp-inline{
+    font-size:7.8px!important;
+    line-height:1.15!important;
+    padding:3px 4px!important;
+  }
+  .tdsp,.anchor-text{font-size:8px!important;line-height:1.15!important;}
+  .sun-note{font-size:7.5px!important;}
+  .sun-label{font-size:8.5px!important;}
+}
+
+/* ── Phone portrait only: desktop portrait baseline ──────────────────────────── */
+/* max-device-width:767px excludes iPads (768px+) so they keep the
+   higher-density V14l tablet portrait sizes (9px / 8.1px). */
+@media print and (hover:none) and (pointer:coarse) and (max-device-width:767px) and (orientation:portrait){
+  body{zoom:1.0!important;}
+  .hdr img{height:36px!important;max-height:36px!important;}
+  .hdr-title{font-size:14px!important;letter-spacing:2px!important;}
+  thead th{
+    font-size:7.5px!important;
+    letter-spacing:.4px!important;
+    padding:4px 3px!important;
+  }
+  td,.ci,.ci-ta,textarea{
+    font-size:6.8px!important;
+    line-height:1.12!important;
+    padding:3px!important;
+  }
+  td.rn{font-size:6.2px!important;}
+  select.cs,.other-inp,.other-inp-inline{
+    font-size:6.8px!important;
+    line-height:1.08!important;
+    padding:2px 2px!important;
+  }
+  .tdsp,.anchor-text{font-size:6.6px!important;line-height:1.08!important;}
+  .sun-note{font-size:6.5px!important;}
+  .sun-label{font-size:7.5px!important;}
+}
