@@ -8,7 +8,12 @@ const bebasNeue = Bebas_Neue({
   weight: '400',
   variable: '--fd',
   subsets: ['latin'],
-  display: 'swap',
+  // 'block' suppresses text until the font is ready rather than swapping from a
+  // fallback. AirPrint (physical print) re-renders the page independently and does
+  // not inherit document.fonts.ready; 'swap' causes it to capture a fallback-font
+  // render before Bebas Neue loads, producing blurry print output. 'block' forces
+  // AirPrint to wait, and next/font's automatic preload keeps the block period <100ms.
+  display: 'block',
 });
 
 const dmSans = DM_Sans({
