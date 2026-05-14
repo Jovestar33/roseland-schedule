@@ -490,6 +490,7 @@ body.readonly .readonly-bar{display:flex}
     overflow-x:auto;
     overflow-y:visible;
     -webkit-overflow-scrolling:touch;
+    padding-right:10px;
   }
   .tbl-wrap thead th{
     position:-webkit-sticky;
