@@ -37,7 +37,7 @@ export default function AppHeader() {
   }, []);
 
   return (
-    <div ref={hdrRef} className="hdr" style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+    <div ref={hdrRef} className="hdr" style={{ position: 'relative', display: 'flex', alignItems: 'center', paddingTop: '70px' }}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={logo || '/logo-header.png'}
