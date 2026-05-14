@@ -1527,6 +1527,37 @@
   }
 }
 
+/* ── Tablet (iPad): kill weather gradient + input grey on both orientations ─── */
+/* base.css sets background:linear-gradient(135deg,#0f172a,#1e293b) on .wx-strip.
+   iOS Safari print converts that gradient to a grey tone instead of honoring
+   background:#fff!important from the earlier print block. Explicitly zero the
+   background-image here so only the white fill applies.
+   The meta input grey is iOS system appearance; -webkit-appearance:none removes it. */
+@media print and (hover:none) and (pointer:coarse) and (min-device-width:768px){
+  .wx-strip,
+  .wx-strip.show{
+    background:#fff!important;
+    background-color:#fff!important;
+    background-image:none!important;
+  }
+  .wx-item,.wx-label,.wx-val{
+    background:transparent!important;
+    background-image:none!important;
+  }
+  .meta,.mf{
+    background:#fff!important;
+    background-image:none!important;
+  }
+  .mf input,
+  .call-disp{
+    -webkit-appearance:none!important;
+    appearance:none!important;
+    background:transparent!important;
+    background-color:transparent!important;
+    background-image:none!important;
+  }
+}
+
 /* ── Tablet (iPad) portrait — full desktop baseline restore ──────────────────── */
 /* min-device-width:768px targets iPad Mini (768px) and larger in iOS Safari print.
    Overrides the phone zoom and restores desktop-equivalent sizes throughout. */
