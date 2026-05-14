@@ -1,9 +1,16 @@
 'use client';
+import { useEffect } from 'react';
 import { useCmsStore, useCmsLabel } from '@/lib/store/cmsStore';
 
 export default function AppHeader() {
   const logo     = useCmsStore((s) => s.config.logo as string | undefined);
   const hdrTitle = useCmsLabel('hdrTitle', 'Production Schedule');
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    history.scrollRestoration = 'manual';
+    window.scrollTo(0, 0);
+  }, []);
 
   return (
     <div className="hdr" style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
