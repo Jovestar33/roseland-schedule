@@ -1494,3 +1494,107 @@
   .sun-note{font-size:7.25px!important;}
   .sun-label{font-size:8px!important;}
 }
+
+/* V14l: tablet (iPad) print font fix + phone thead-th bump.
+   Root cause: V14d–V14k were iterated against phone-width viewports. Two problems resulted:
+   1. thead th was progressively shrunk below the desktop 9px baseline (7.55px landscape,
+      7px portrait) and hdr-title in portrait fell to 14.3px vs desktop 17px.
+   2. Tablets match the same (hover:none)(pointer:coarse) query as phones but have wider
+      viewports (~768–1024px CSS), so the browser's auto-scale-to-paper factor is much
+      smaller than on a phone. zoom:0.655 (portrait) then compresses tablet text to ~70%
+      of desktop size — unreadable.
+   Strategy: bump thead th and hdr-title for all touch devices first, then override with
+   a tablet-specific block (min-device-width:768px, honored by iOS Safari in print) that
+   resets zoom to 1.0 and fully restores desktop-baseline font sizes. Desktop/laptop print
+   and phone-tuned zoom values are not changed. */
+
+/* ── All touch: thead-th + portrait hdr-title bump ──────────────────────────── */
+/* Landscape: thead th was 7.55px vs desktop 9px. */
+@media print and (hover:none) and (pointer:coarse) and (orientation:landscape){
+  thead th{
+    font-size:8.8px!important;
+    letter-spacing:.85px!important;
+  }
+}
+
+/* Portrait: thead th was 7px vs desktop 9px; hdr-title was 14.3px vs desktop 17px.
+   Keep changes conservative — portrait is layout-sensitive with zoom:0.655 in place. */
+@media print and (hover:none) and (pointer:coarse) and (orientation:portrait){
+  .hdr-title{font-size:16px!important;letter-spacing:2.5px!important;}
+  thead th{
+    font-size:8.5px!important;
+    letter-spacing:.72px!important;
+  }
+}
+
+/* ── Tablet (iPad) portrait — full desktop baseline restore ──────────────────── */
+/* min-device-width:768px targets iPad Mini (768px) and larger in iOS Safari print.
+   Overrides the phone zoom and restores desktop-equivalent sizes throughout. */
+@media print and (hover:none) and (pointer:coarse) and (min-device-width:768px) and (orientation:portrait){
+  body{zoom:1.0!important;}
+
+  .hdr img{height:44px!important;max-height:44px!important;}
+  .hdr-title{font-size:17px!important;letter-spacing:3px!important;line-height:1!important;}
+
+  .meta-grid{
+    grid-template-columns:2.2fr 1fr 1fr 1.2fr 1.2fr 1.2fr!important;
+    gap:4px 12px!important;
+  }
+  .mf label{font-size:6.5px!important;letter-spacing:.09em!important;}
+  .mf input,.call-disp{font-size:8.5px!important;line-height:1.15!important;}
+
+  thead th{
+    font-size:9px!important;
+    letter-spacing:1px!important;
+    padding:3.4px 5px!important;
+  }
+  td,.ci,.ci-ta,textarea{
+    font-size:8.1px!important;
+    line-height:1.22!important;
+    padding:3.4px 5px!important;
+  }
+  td.rn{font-size:7px!important;}
+  select.cs,.other-inp,.other-inp-inline{
+    font-size:7.8px!important;
+    line-height:1.15!important;
+    padding:3px 4px!important;
+  }
+  .tdsp,.anchor-text{font-size:8px!important;line-height:1.15!important;}
+  .sun-note{font-size:7.5px!important;}
+  .sun-label{font-size:8.5px!important;}
+}
+
+/* ── Tablet (iPad) landscape — full desktop baseline restore ─────────────────── */
+@media print and (hover:none) and (pointer:coarse) and (min-device-width:768px) and (orientation:landscape){
+  body{zoom:1.0!important;}
+
+  .hdr img{height:44px!important;max-height:44px!important;}
+  .hdr-title{font-size:17px!important;letter-spacing:3px!important;line-height:1!important;}
+
+  .meta-grid{
+    grid-template-columns:2.2fr 1fr 1fr 1.2fr 1.2fr 1.2fr!important;
+    gap:4px 12px!important;
+  }
+  .mf label{font-size:6.5px!important;letter-spacing:.09em!important;}
+  .mf input,.call-disp{font-size:8.5px!important;line-height:1.15!important;}
+
+  thead th{
+    font-size:9px!important;
+    letter-spacing:1px!important;
+    padding:3.4px 5px!important;
+  }
+  td,.ci,.ci-ta,textarea{
+    font-size:8.1px!important;
+    line-height:1.22!important;
+    padding:3.4px 5px!important;
+  }
+  td.rn{font-size:7px!important;}
+  select.cs,.other-inp,.other-inp-inline{
+    font-size:7.8px!important;
+    line-height:1.15!important;
+    padding:3px 4px!important;
+  }
+  .tdsp,.anchor-text{font-size:8px!important;line-height:1.15!important;}
+  .sun-note{font-size:7.5px!important;}
+  .sun-label{font-size:8.5px!important;}
+}
