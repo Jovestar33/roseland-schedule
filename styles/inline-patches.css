@@ -10,7 +10,7 @@
    apply at every viewport width to prevent horizontal scrolling on mobile. */
 html{overflow-x:hidden}
 body{overflow-x:hidden;max-width:100dvw}
-.hdr{max-width:100dvw;overflow-x:hidden;padding-top:calc(env(safe-area-inset-top) + 20px)!important}
+.hdr{max-width:100dvw;overflow-x:hidden;padding-top:max(70px,env(safe-area-inset-top))!important}
 
 /* ── MOBILE POLISH (originally <style id="cms-action-styles">) ── */
 @media (max-width: 760px){
