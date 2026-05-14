@@ -301,7 +301,10 @@ body.readonly .readonly-bar{display:flex}
     max-width:100vw !important;
     overflow:hidden !important;
     box-sizing:border-box !important;
-    padding:10px 10px 14px !important;
+    padding-top:max(70px, env(safe-area-inset-top, 70px)) !important;
+    padding-left:10px !important;
+    padding-right:10px !important;
+    padding-bottom:14px !important;
     gap:10px !important;
     align-items:stretch !important;
     justify-content:flex-start !important;
