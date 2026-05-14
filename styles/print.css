@@ -1636,14 +1636,18 @@
    The same fix that worked for tablets in V14l applies here: zoom:1.0 + the
    established desktop-print baseline sizes. This block comes after V14l so it
    overrides the earlier phone-tuned values.
-   Landscape: same desktop-landscape density as tablet (9px / 8.1px).
+   Landscape: same desktop-landscape density (9px / 8.1px), zoom:0.96 to fit one
+   page (zoom:1.0 overflowed by ~4%). max-device-width:767px keeps tablets on
+   V14l's confirmed zoom:1.0.
    Portrait: desktop-portrait density (7.5px / 6.8px) — smaller than landscape
-   because portrait pages are narrower. max-device-width:767px in the portrait
-   block keeps iPads (768px+) on their V14l tablet-density sizes. */
+   because portrait pages are narrower. max-device-width:767px keeps iPads (768px+)
+   on their V14l tablet-density sizes. */
 
-/* ── Phone + tablet landscape: desktop landscape baseline ────────────────────── */
-@media print and (hover:none) and (pointer:coarse) and (orientation:landscape){
-  body{zoom:1.0!important;}
+/* ── Phone landscape: desktop landscape baseline, scaled to fit one page ─────── */
+/* max-device-width:767px keeps tablets on V14l's zoom:1.0 (confirmed one-page).
+   Phones at zoom:1.0 overflow by ~4%; 0.96 keeps the full schedule on one page. */
+@media print and (hover:none) and (pointer:coarse) and (max-device-width:767px) and (orientation:landscape){
+  body{zoom:0.96!important;}
   .hdr-title{font-size:17px!important;letter-spacing:3px!important;}
   thead th{
     font-size:9px!important;
