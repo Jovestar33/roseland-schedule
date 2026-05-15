@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import { useAuthStore } from '@/lib/store/authStore';
 import type { LibrarySchedule } from './ScheduleListTab';
 
 interface Props {
@@ -8,7 +9,10 @@ interface Props {
 }
 
 export default function BackupTab({ schedules, onRefresh }: Props) {
+  const token = useAuthStore((s) => s.token);
   const [syncMsg, setSyncMsg] = useState('');
+  const [migrateState, setMigrateState] = useState<'idle' | 'running' | 'done' | 'error'>('idle');
+  const [migrateResult, setMigrateResult] = useState<{ migrated: string[]; skipped: string[]; errors: string[] } | null>(null);
 
   function exportJson(data: unknown, filename: string) {
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
@@ -64,6 +68,30 @@ export default function BackupTab({ schedules, onRefresh }: Props) {
     setSyncMsg(`Synced at ${new Date().toLocaleTimeString()}`);
   }
 
+  async function handleMigrateProjectMeta() {
+    const confirmed = window.confirm(
+      'This will set Project Name to "Main to Main Trail" and Phase to "Drive In / Drive Out" on all schedules that are missing a project name.\n\nSchedules that already have a project name will not be touched.\n\nContinue?'
+    );
+    if (!confirmed) return;
+    setMigrateState('running');
+    setMigrateResult(null);
+    try {
+      const res = await fetch('/.netlify/functions/migrate-project-meta', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ editorToken: token }),
+      });
+      const json = await res.json();
+      if (!res.ok || !json.ok) throw new Error(json.error || 'Migration failed');
+      setMigrateResult({ migrated: json.migrated, skipped: json.skipped, errors: json.errors });
+      setMigrateState('done');
+    } catch (err) {
+      setMigrateResult(null);
+      setMigrateState('error');
+      console.error('Migration error:', err);
+    }
+  }
+
   return (
     <div className="backup-wrap">
       <div className="backup-head">
@@ -98,6 +126,35 @@ export default function BackupTab({ schedules, onRefresh }: Props) {
             </label>
           </div>
           <div className="backup-note">Export the full library as JSON, or import a JSON backup to inspect it.</div>
+        </div>
+        <div className="backup-card">
+          <h3>Admin Utilities</h3>
+          <div className="backup-actions">
+            <button
+              className="btn btn-light btn-sm"
+              onClick={handleMigrateProjectMeta}
+              disabled={migrateState === 'running'}
+            >
+              {migrateState === 'running' ? 'Migrating…' : 'Migrate Project Metadata'}
+            </button>
+          </div>
+          <div className="backup-note">
+            One-time utility: sets Project Name and Phase on schedules that are missing them. Safe to run repeatedly — schedules with an existing project name are skipped.
+          </div>
+          {migrateState === 'done' && migrateResult && (
+            <div className="backup-note" style={{ marginTop: 8 }}>
+              <strong>Done.</strong> Migrated {migrateResult.migrated.length}, skipped {migrateResult.skipped.length}
+              {migrateResult.errors.length > 0 && `, errors: ${migrateResult.errors.join(', ')}`}.
+              {migrateResult.migrated.length > 0 && (
+                <> Updated: {migrateResult.migrated.join(', ')}.</>
+              )}
+            </div>
+          )}
+          {migrateState === 'error' && (
+            <div className="backup-note" style={{ marginTop: 8, color: 'red' }}>
+              Migration failed — check the browser console for details.
+            </div>
+          )}
         </div>
       </div>
     </div>
