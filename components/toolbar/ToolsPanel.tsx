@@ -242,7 +242,7 @@ function RestoreTabPanel() {
       )}
 
       {!loading && snapshots.length > 0 && (
-        <div className="ver-list">
+        <div>
           {snapshots.map((snap) => {
             const time = new Date(snap.savedAt).toLocaleString('en-US', {
               month: 'short', day: 'numeric', year: 'numeric',
@@ -250,19 +250,19 @@ function RestoreTabPanel() {
             });
             const actCount = (snap.data?.rows ?? []).filter((r) => r.action && !r.sunLocked).length;
             return (
-              <div key={snap.id} className="ver-item">
-                <div className="ver-meta">
-                  <div className="ver-title">
-                    {time}
-                    <span className="snapshot-badge">{snap.label || 'Snapshot'}</span>
-                  </div>
-                  <div className="ver-sub">{actCount} action{actCount === 1 ? '' : 's'}</div>
+              <div key={snap.id} className="tp-snap-card">
+                <div className="tp-snap-top">
+                  <span className="tp-snap-time">{time}</span>
+                  <span className="snapshot-badge">{snap.label || 'Snapshot'}</span>
                 </div>
-                <div className="ver-acts">
-                  <button className="btn btn-light btn-sm" onClick={() => setPreview(snap)}>Preview</button>
-                  <button className="btn btn-light btn-sm" onClick={() => handleSaveAsNew(snap)}>Save As New</button>
-                  <button className="btn btn-pink btn-sm"  onClick={() => handleRestore(snap)}>Restore</button>
-                  <button className="btn btn-light btn-sm" onClick={() => handleDelete(snap)}>Delete</button>
+                <div className="tp-snap-bottom">
+                  <span className="tp-snap-count">{actCount} action{actCount === 1 ? '' : 's'}</span>
+                  <div className="tp-snap-acts">
+                    <button className="btn btn-light btn-sm" onClick={() => setPreview(snap)}>Preview</button>
+                    <button className="btn btn-light btn-sm" onClick={() => handleSaveAsNew(snap)}>Save As New</button>
+                    <button className="btn btn-pink btn-sm"  onClick={() => handleRestore(snap)}>Restore</button>
+                    <button className="tp-snap-del"          onClick={() => handleDelete(snap)}>Delete</button>
+                  </div>
                 </div>
               </div>
             );

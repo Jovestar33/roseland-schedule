@@ -108,6 +108,74 @@
   margin-bottom: 10px;
 }
 
+/* ── Restore tab: snapshot cards ─────────────────────────────────────────── */
+
+.tp-snap-card {
+  background: #fff;
+  border: 1px solid var(--g200);
+  border-radius: 8px;
+  padding: 12px 14px;
+  margin-bottom: 10px;
+}
+
+/* Row 1: timestamp + badge */
+.tp-snap-top {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+.tp-snap-time {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+/* Row 2: action count left, buttons right */
+.tp-snap-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.tp-snap-count {
+  font-size: 12px;
+  color: var(--g500);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.tp-snap-acts {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+/* Delete — ghost/text style with destructive hover */
+.tp-snap-del {
+  background: none;
+  border: 1px solid transparent;
+  color: var(--g500);
+  cursor: pointer;
+  font-family: var(--fb);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 10px;
+  border-radius: 8px;
+  min-height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.tp-snap-del:hover {
+  color: #dc2626;
+  background: #fef2f2;
+  border-color: #fecaca;
+}
+
 /* Toolbar: Tools button active state */
 .tbar-tools.tp-open {
   background: var(--g200) !important;
@@ -131,6 +199,10 @@
     width: 36px !important;
     padding: 0 !important;
     justify-content: center !important;
+  }
+  .tp-snap-acts .btn,
+  .tp-snap-del {
+    min-height: 44px;
   }
 }
 
