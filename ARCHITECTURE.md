@@ -25,10 +25,11 @@ app/
   view/[name]/       # Public client viewer (no auth)
   api/health/        # Health check (local dev)
 components/
-  schedule/          # ScheduleEditor, row types, toolbar, conflict modal
+  schedule/          # ScheduleEditor, ScheduleHeader, ScheduleGrid, row types, modals
+  schedule/CrewIdentityBlock.tsx  # Compact PRODUCER/DIRECTOR/CAMERA inline-edit block
   library/           # LibraryModal, ScheduleListTab, SnapshotsTab, BackupTab
   cms/               # CmsModal, CmsEditor
-  toolbar/           # EditorToolbar
+  toolbar/           # EditorToolbar, SaveDropdown, ShareDropdown, UndoRedoButtons, SyncStatusPill
   view/              # ReadOnlyViewer, PublicViewer, ScheduleReadView
 lib/
   store/             # scheduleStore.ts, authStore.ts, cmsStore.ts
@@ -58,6 +59,9 @@ app/manifest.ts      # PWA manifest, auto-served at /manifest.webmanifest
 | `netlify/functions/save.js` | Conflict detection (expectedSavedAt + expectedHash), stableStringify |
 | `netlify/functions/load.js` | Auth-gated load; `public=1` param for unauthenticated client view |
 | `components/schedule/ScheduleEditor.tsx` | Main editor mount; auto-snapshot watcher; storeReady guard |
+| `components/schedule/CrewIdentityBlock.tsx` | Inline-edit crew display between identity line and meta-grid |
+| `components/toolbar/SaveDropdown.tsx` | Split Save button; dropdown uses position:fixed to escape overflow |
+| `components/toolbar/ShareDropdown.tsx` | Share/Print/Export dropdown; same fixed-position escape pattern |
 
 ## 4. State Management
 
@@ -69,6 +73,7 @@ Three Zustand stores:
 - `undoStack` / `redoStack` (max 80 entries, serialized row snapshots)
 - `loadSchedule()` calls `recalcRows()` + `repositionSunRows()` internally
 - `getScheduleData()` returns current rows + meta for save/snapshot payloads
+- `updateMeta(patch)` sets `dirty: true` — triggers autosave
 
 **authStore** — `token: string | null` from sessionStorage
 
@@ -150,26 +155,35 @@ All functions share the same HMAC auth check. Delete operations require a separa
 
 **Print** — `@page { size: landscape }` in `print.css`. `lib/print.ts` sets `document.title` to `"[scheduleName] – [YYYY-MM-DD today]"` before `window.print()`, restores via `setTimeout(100)`. Print CSS is structured in versioned blocks (V5–V14k) appended over time. Desktop/laptop baseline: `thead th { font-size: 9px }`, `td { font-size: 8.1px }`, `.hdr-title { font-size: 17px }`. Touch/mobile device print overrides are scoped with `@media print and (hover: none) and (pointer: coarse)` — this catches both phones AND tablets. Landscape and portrait are further split with `and (orientation: landscape/portrait)`. As of 2026-05-14, mobile/touch font sizes in those blocks are smaller than desktop (thead th ~7–7.5px), causing "too small" complaints on tablet and mobile printouts. Active fix branch: `mobile-and-tablet-print`.
 
-**Mobile CSS architecture** — `styles/mobile.css` contains both screen and print rules. Critical: the `@media (max-width: 760px)` block for `.hdr` uses `!important` on individual padding sides — `padding-top: max(70px, env(safe-area-inset-top, 70px)) !important` — to clear the Dynamic Island. Previously this was a shorthand `padding` with `!important` which overrode all JS-applied padding; fixed 2026-05-14. The `c-cb` column (done/contact cell) is `width: 64px` with `td:nth-child(10) { padding-left:0; padding-right:0 }` to prevent the contact button from being clipped. `.tbl-wrap` has `padding-right: 10px` at ≤760px to prevent content reaching the screen's rounded-corner edge in portrait.
+**Mobile CSS architecture** — Three CSS files interact on mobile: `styles/mobile.css` (primary mobile rules), `styles/inline-patches.css` (loads after mobile.css, has two `@media (max-width:760px)` blocks — "V2" ~line 509 and "V3 CORRECTION" ~line 728 — both use `!important` and win on specificity ties). When fixing mobile layout, both V2 and V3 blocks in inline-patches.css must be updated, not just mobile.css.
+
+**Toolbar CSS architecture** — `EditorToolbar` renders `.toolbar > .toolbar-head + .toolbar-btns`. On desktop both are `display:contents` (children become direct flex items of `.toolbar`). On mobile they become explicit flex rows: `.toolbar-head` is `justify-content:space-between` (name left, sync pill right); `.toolbar-btns` is a flex row of the four button groups with no overflow scroll. `SaveDropdown` and `ShareDropdown` compute their dropdown position via `getBoundingClientRect()` and render at `position:fixed` to escape the mobile `overflow:hidden` panel context.
+
+**Panel flex ordering** — `styles/base.css` adds `display:flex; flex-direction:column` to `.panel` inside `@media screen`, with explicit `order` values that place `.wx-strip` (order 3) after `.meta` (order 2) and before `.scroll-hint`/`.tbl-wrap` (orders 4–5). This visually repositions the weather strip below the schedule header fields and above the grid without moving it in the DOM. Print uses `display:block` (unaffected by `@media screen`), preserving the weather strip's original print position above the header block.
+
+**Weather strip theming** — dark gradient background and light text colors are the global default (also used by print CSS which sets `background:#fff!important` and `color:#111!important` with `!important`). Screen colors are overridden in a separate `@media screen` block: background `#ebebeb`, text uses design system grey variables (`--g400`, `--g600`, `--g800`), links use `--pink`. This lets print CSS remain unchanged.
+
+**CrewIdentityBlock** — `components/schedule/CrewIdentityBlock.tsx` replaces the three `CrewInput` `.mf` fields (Producer, Director, Camera) that previously lived in `ScheduleHeader`'s `meta-grid`. The block sits between `HeaderIdentityLine` and the remaining 3-column `meta-grid` (Town / Date / Call Time). Tap the label or value to edit inline; Enter/blur confirms and calls `updateMeta()` (sets `dirty:true`); Escape reverts. One field editable at a time. Fields: `meta.prod`, `meta.dir`, `meta.dp`.
 
 **Templates** — migrated from localStorage to Netlify Blobs (`schedule-templates` store). One-time migration: on first load, if remote is empty and localStorage has templates, they are pushed up and localStorage is cleared.
 
 ## 10. Feature Map
 
-**Schedule editing**: action rows, custom rows, sun rows, notes, call time, location, town, date, weather strip  
-**Time cascade**: automatic timeOut recalc on any duration/order change  
-**Drag & drop**: row reorder (row 0 protected), DnD via @hello-pangea/dnd  
-**Undo/redo**: 80-level history, row-level snapshots  
-**Conflict detection**: optimistic concurrency via savedAt + content hash, resolution modal (overwrite or reload)  
-**Auto-snapshot**: every 5 min while dirty  
-**Manual snapshots**: named versions, restore, compare (BackupTab)  
-**Library**: folder/project organization, sort by savedAt, move between folders  
-**Sharing**: Team Link (`?auth=true` deep link), Client Link (`/view/[name]` public)  
-**Public viewer**: branded read-only view, no auth required  
-**CMS**: per-brand colors, fonts, logo, action style overrides — applied via CSS custom properties  
-**Backup**: export current schedule JSON, export all schedules ZIP  
-**Google Places**: location autocomplete via proxied Places API  
-**Weather**: Open-Meteo integration, weather strip on schedule header  
-**Templates**: reusable row sets stored in Netlify Blobs, synced across devices  
-**Print/PDF**: landscape default via `@page`; filename `"[name] – [YYYY-MM-DD]"` set on `document.title` before print  
-**PWA**: installable via Safari Add to Home Screen; manifest at `/manifest.webmanifest`  
+**Schedule editing**: action rows, custom rows, sun rows, notes, call time, location, town, date, weather strip
+**Schedule header**: identity line (project/route/day), compact crew block (PRODUCER/DIRECTOR/CAMERA inline edit), Town/Location, Date, Call Time
+**Time cascade**: automatic timeOut recalc on any duration/order change
+**Drag & drop**: row reorder (row 0 protected), DnD via @hello-pangea/dnd
+**Undo/redo**: 80-level history, row-level snapshots
+**Conflict detection**: optimistic concurrency via savedAt + content hash, resolution modal (overwrite or reload)
+**Auto-snapshot**: every 5 min while dirty
+**Manual snapshots**: named versions, restore, compare (BackupTab)
+**Library**: folder/project organization, sort by savedAt, move between folders
+**Sharing**: Team Link (`?auth=true` deep link), Client Link (`/view/[name]` public)
+**Public viewer**: branded read-only view, no auth required
+**CMS**: per-brand colors, fonts, logo, action style overrides — applied via CSS custom properties
+**Backup**: export current schedule JSON, export all schedules ZIP
+**Google Places**: location autocomplete via proxied Places API
+**Weather**: Open-Meteo integration; weather strip sits between Call Time field and schedule grid (screen); light grey background (#ebebeb) with design-system text colors
+**Templates**: reusable row sets stored in Netlify Blobs, synced across devices
+**Print/PDF**: landscape default via `@page`; filename `"[name] – [YYYY-MM-DD]"` set on `document.title` before print
+**PWA**: installable via Safari Add to Home Screen; manifest at `/manifest.webmanifest`
