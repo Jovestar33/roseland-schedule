@@ -146,6 +146,13 @@
   }
   .wx-val a{color:inherit!important;text-decoration:none!important;}
 
+  /* Crew identity block */
+  .crew-id{display:flex!important;flex-direction:row!important;gap:12px!important;padding:3px 0 5px!important;}
+  .crew-col{display:flex!important;flex-direction:column!important;gap:1px!important;flex:1!important;min-width:0!important;}
+  .crew-label{font-size:6.5px!important;font-weight:600!important;letter-spacing:.09em!important;color:#71717a!important;text-transform:uppercase!important;cursor:default!important;}
+  .crew-val,.crew-empty{font-size:9px!important;font-weight:400!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;}
+  .crew-input{display:none!important;}
+
   /* Meta block */
   .meta{
     padding:0 0 5px 0!important;
@@ -164,7 +171,7 @@
   .hi-val{cursor:default!important;}
   .meta-grid{
     display:grid!important;
-    grid-template-columns:2.2fr 1fr 1fr 1.2fr 1.2fr 1.2fr!important;
+    grid-template-columns:2.2fr 1fr 1fr!important;
     gap:4px 12px!important;
     width:100%!important;
   }
@@ -709,7 +716,7 @@
   }
   .meta-grid{
     display:grid!important;
-    grid-template-columns:2.2fr 1fr 1fr 1.2fr 1.2fr 1.2fr!important;
+    grid-template-columns:2.2fr 1fr 1fr!important;
     gap:4px 12px!important;
     width:100%!important;
     max-width:none!important;
@@ -967,7 +974,7 @@
   }
   .meta-grid{
     display:grid!important;
-    grid-template-columns:2.2fr 1fr 1fr 1.2fr 1.2fr 1.2fr!important;
+    grid-template-columns:2.2fr 1fr 1fr!important;
     gap:4px 12px!important;
     width:100%!important;
     max-width:100%!important;
@@ -1024,7 +1031,7 @@
   .hdr-title{font-size:18px!important;letter-spacing:3px!important;line-height:1!important;}
 
   .meta-grid{
-    grid-template-columns:2.2fr 1fr 1fr 1.2fr 1.2fr 1.2fr!important;
+    grid-template-columns:2.2fr 1fr 1fr!important;
     gap:4px 12px!important;
   }
 
@@ -1577,7 +1584,7 @@
   .hdr-title{font-size:17px!important;letter-spacing:3px!important;line-height:1!important;}
 
   .meta-grid{
-    grid-template-columns:2.2fr 1fr 1fr 1.2fr 1.2fr 1.2fr!important;
+    grid-template-columns:2.2fr 1fr 1fr!important;
     gap:4px 12px!important;
   }
   .mf label{font-size:6.5px!important;letter-spacing:.09em!important;}
@@ -1612,7 +1619,7 @@
   .hdr-title{font-size:17px!important;letter-spacing:3px!important;line-height:1!important;}
 
   .meta-grid{
-    grid-template-columns:2.2fr 1fr 1fr 1.2fr 1.2fr 1.2fr!important;
+    grid-template-columns:2.2fr 1fr 1fr!important;
     gap:4px 12px!important;
   }
   .mf label{font-size:6.5px!important;letter-spacing:.09em!important;}
