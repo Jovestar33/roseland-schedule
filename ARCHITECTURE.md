@@ -29,7 +29,7 @@ components/
   schedule/CrewIdentityBlock.tsx  # Compact PRODUCER/DIRECTOR/CAMERA inline-edit block
   library/           # LibraryModal, ScheduleListTab, SnapshotsTab, BackupTab
   cms/               # CmsModal, CmsEditor
-  toolbar/           # EditorToolbar, SaveDropdown, ShareDropdown, UndoRedoButtons, SyncStatusPill
+  toolbar/           # EditorToolbar, SaveDropdown, ShareDropdown, UndoRedoButtons, SyncStatusPill, ToolsPanel
   view/              # ReadOnlyViewer, PublicViewer, ScheduleReadView
 lib/
   store/             # scheduleStore.ts, authStore.ts, cmsStore.ts
@@ -62,6 +62,7 @@ app/manifest.ts      # PWA manifest, auto-served at /manifest.webmanifest
 | `components/schedule/CrewIdentityBlock.tsx` | Inline-edit crew display between identity line and meta-grid |
 | `components/toolbar/SaveDropdown.tsx` | Split Save button; dropdown uses position:fixed to escape overflow |
 | `components/toolbar/ShareDropdown.tsx` | Share/Print/Export dropdown; same fixed-position escape pattern |
+| `components/toolbar/ToolsPanel.tsx` | Slide-over panel (Templates / Backup / Restore tabs); portal to document.body |
 
 ## 4. State Management
 
@@ -159,7 +160,7 @@ All functions share the same HMAC auth check. Delete operations require a separa
 
 **Landscape phone breakpoint** — `@media (orientation: landscape) and (max-height: 500px)` is the correct way to target landscape iPhones without catching tablets. All iPhones in landscape are ~330–430px tall; all iPads in landscape are >700px tall. The old `max-width:900px and orientation:landscape` approach missed iPhone 14/15/16 Pro Max (932px wide) and could incorrectly match small tablets (~800px wide). Two blocks in `inline-patches.css` (safe-area padding and toolbar single-row) use this breakpoint.
 
-**Toolbar CSS architecture** — `EditorToolbar` renders `.toolbar > .toolbar-head + .toolbar-btns`. On desktop both are `display:contents` (children become direct flex items of `.toolbar`). On mobile they become explicit flex rows: `.toolbar-head` is `justify-content:space-between` (name left, sync pill right); `.toolbar-btns` is a flex row of the four button groups with no overflow scroll. `SaveDropdown` and `ShareDropdown` compute their dropdown position via `getBoundingClientRect()` and render at `position:fixed` to escape the mobile `overflow:hidden` panel context.
+**Toolbar CSS architecture** — `EditorToolbar` renders `.toolbar > .toolbar-head + .toolbar-btns`. On desktop both are `display:contents` (children become direct flex items of `.toolbar`). On mobile they become explicit flex rows: `.toolbar-head` is `justify-content:space-between` (name left, sync pill right); `.toolbar-btns` is a flex row of the four button groups with `gap:4px` and `padding:4px 8px 6px 8px` (no overflow scroll). `SaveDropdown` and `ShareDropdown` compute their dropdown position via `getBoundingClientRect()` and render at `position:fixed` to escape the mobile panel context. `.toolbar` uses `overflow:visible` on mobile — the `border-top-radius:18px` rounds the toolbar's own background paint without needing to clip children. The panel (`.panel`) also uses `overflow:visible` to let fixed-position dropdowns escape.
 
 **Panel flex ordering** — `styles/base.css` adds `display:flex; flex-direction:column` to `.panel` inside `@media screen`, with explicit `order` values that place `.wx-strip` (order 3) after `.meta` (order 2) and before `.scroll-hint`/`.tbl-wrap` (orders 4–5). This visually repositions the weather strip below the schedule header fields and above the grid without moving it in the DOM. Print uses `display:block` (unaffected by `@media screen`), preserving the weather strip's original print position above the header block.
 
@@ -169,7 +170,13 @@ All functions share the same HMAC auth check. Delete operations require a separa
 
 **Unified meta label style** — `.mf label` (TOWN / LOCATION, DATE, CALL TIME) and `.crew-label` (PRODUCER, DIRECTOR, CAMERA) are intentionally matched: `font-size:10px`, `font-weight:600`, `letter-spacing:1px`, `color:var(--g400)`, `text-transform:uppercase`. Any future label additions in the meta section should use this same style. The old `.mf label` values (11px, .08–.09em letter-spacing, `#71717a`) are superseded.
 
-**Templates** — migrated from localStorage to Netlify Blobs (`schedule-templates` store). One-time migration: on first load, if remote is empty and localStorage has templates, they are pushed up and localStorage is cleared.
+**Templates** — migrated from localStorage to Netlify Blobs (`schedule-templates` store). One-time migration: on first load, if remote is empty and localStorage has templates, they are pushed up and localStorage is cleared. Templates are accessible from within the editor via the Tools Panel (no longer require closing the schedule to reach the Library).
+
+**Tools Panel** — `ToolsPanel.tsx` mounts via `ReactDOM.createPortal(…, document.body)` to escape all ancestor `overflow` contexts. Renders a backdrop + slide-over panel (380px from right on desktop/tablet; 70vh bottom sheet on mobile). Three tabs: (1) Templates — loads from Netlify Blobs, applies rows in-place via `loadSchedule(scheduleName, …) + updateMeta({})` to preserve the current schedule name while marking dirty; (2) Backup — Export JSON with dated filename; (3) Restore — lists snapshots for the current schedule (no picker), restores via `postSave(force) → loadSchedule → setRemoteBaseline → setSyncStatus('synced')`, with 4-second inline success toast. Snapshot preview overlay uses inline `z-index:10002` to clear the panel's stacking context. Panel z-index: backdrop 10000, panel 10001. Active state `.tp-open` on the Tools toolbar button.
+
+**NOTES column header alignment** — The notes cell (`NotesCell.tsx`) has a `notes-status-wrap` flex row: `status-icon-slot` (24px desktop / 22px mobile ≤760px) + 8px gap + notes textarea. The `<th className="th-notes">` uses `padding-left:37px` (desktop: 5px td-pad + 24px icon + 8px gap) or `36px` (mobile: 6px td-pad + 22px icon + 8px gap) so the header text aligns with the textarea content. Applied to both the actual thead and the `#mobile-grid-sticky` sticky overlay.
+
+**Done/Contact cell column width** — The `.c-cb` column contains both a done checkbox and a 24px contact button in a `display:flex; gap:8px` row (`.done-tools`). On mobile the V9 block (`@media (max-width:760px)` in inline-patches.css) sets the column to 64px with `overflow:hidden` on the td. Width formula: 5px-pad + 20px-checkbox + 8px-gap + 24px-button + 7px-pad ≈ 64px. A narrower column clips the contact button on the right.
 
 ## 10. Feature Map
 
@@ -188,6 +195,7 @@ All functions share the same HMAC auth check. Delete operations require a separa
 **Backup**: export current schedule JSON, export all schedules ZIP
 **Google Places**: location autocomplete via proxied Places API
 **Weather**: Open-Meteo integration; weather strip sits between Call Time field and schedule grid (screen); light grey background (#ebebeb) with design-system text colors
-**Templates**: reusable row sets stored in Netlify Blobs, synced across devices
+**Templates**: reusable row sets stored in Netlify Blobs, synced across devices; accessible from within the editor via Tools Panel
+**Tools Panel**: slide-over drawer (Templates / Backup / Restore) accessible from the editor toolbar without closing the schedule
 **Print/PDF**: landscape default via `@page`; filename `"[name] – [YYYY-MM-DD]"` set on `document.title` before print
 **PWA**: installable via Safari Add to Home Screen; manifest at `/manifest.webmanifest`

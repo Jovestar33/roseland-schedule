@@ -23,8 +23,7 @@
 7. **Schedule header fields** — add Project Name, Phase, Day Out of Days above Town/Location (crew block already done; these three fields remain)
 8. ✅ **Move CMS to Library** — CMS button removed from schedule toolbar, now in Library header
 9. **Export Current JSON** — move to schedule toolbar, remove from Backup tab
-10. **Library/Snapshots accessible without closing schedule** — slide-over drawer
-    - Note: Templates tab is currently broken because "Save Current as Template" requires an open schedule, but templates are only accessible from the Library when no schedule is open. This must be fixed as part of the Library slide-over drawer feature — templates need to work from within an open schedule context.
+10. ✅ **Tools Panel slide-over** — `ToolsPanel.tsx` renders via `createPortal` to `document.body`; slides from right on desktop/tablet (380px), bottom sheet on mobile (70vh). Three tabs: Templates (save/apply/delete templates from within an open schedule — the context problem is now solved), Backup (Export JSON), Restore (snapshot cards with Preview, Save As New, Restore, Delete). Merged to main 2026-05-15.
 11. **Push notifications for overtime** — alert when action runs over its duration
 12. **Library improvements** — search/filter schedules, sort options, archive instead of hard delete, open recent
 13. **Contact sheet / extract** — generate a shareable contact list URL or exportable sheet from schedule row data; evaluate whether a lightweight contacts DB is needed to support this properly
@@ -60,10 +59,9 @@
 ---
 
 ## Session Order
-- **Next session:** Item 8 (Library slide-over drawer — implementation brief incoming)
 - **Also pending:** Item 4 (PWA install test on real iPad — manual test only)
-- **Then v1 polish:** Items 7, 9–15 grouped by theme
+- **Next v1 polish:** Items 7, 9, 11–15 grouped by theme
 - **Item 19 (CMS architecture):** Planning conversation before any code
 
 ---
-*Last updated: 2026-05-15 — mobile-and-tablet-print merged to main; all items 1–3, 5–6, 8 (CMS move) complete*
+*Last updated: 2026-05-15 — Tools Panel (Item 10) merged to main; mobile toolbar/grid polish pass complete*
