@@ -90,7 +90,7 @@ export default function ScheduleGrid({ onOpenContact, onOpenStatus, onOpenNotes 
                 <th className="tp">{colAction}</th>
                 <th>{colLocation}</th>
                 <th>{colDesc}</th>
-                <th>{colNotes}</th>
+                <th className="th-notes">{colNotes}</th>
                 <th className="col-dv" />
                 <th className="tc tp">{colTimeIn}</th>
                 <th className="tc tp">{colDur}</th>
