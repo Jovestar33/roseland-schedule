@@ -199,6 +199,7 @@ body{font-family:var(--fb);background:var(--g100);color:var(--black);min-height:
 .tbar-icon{display:inline}
 .tbar-btn-text{display:inline}
 .tbar-close-icon{display:none}
+.toolbar-btns{display:contents}
 .time-cell-wrap{display:flex;align-items:center;gap:4px;justify-content:center}
 .time-cell-wrap .cs{min-width:82px}
 .time-lock-btn{border:1px solid transparent;background:transparent;color:var(--g300);border-radius:999px;

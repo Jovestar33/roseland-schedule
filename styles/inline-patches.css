@@ -664,10 +664,11 @@ body{overflow-x:hidden;max-width:100dvw}
   .ac-dropdown,
   .loc-ac{z-index:5000 !important;}
 
-  /* ── Toolbar: single flex row (grid removed) ── */
-  .toolbar{position:static !important;display:flex !important;flex-direction:row !important;flex-wrap:nowrap !important;overflow-x:auto !important;overflow-y:visible !important;-webkit-overflow-scrolling:touch !important;align-items:center !important;gap:6px !important;padding:6px 8px !important;background:#fafafa !important;border-bottom:1px solid var(--g200) !important;width:100% !important;box-sizing:border-box !important;}
-  .toolbar > *{flex-shrink:0 !important;height:36px !important;min-height:unset !important;width:auto !important;min-width:unset !important;}
-  .tbar-name{flex:0 1 auto !important;min-width:50px !important;max-width:110px !important;white-space:nowrap !important;overflow:hidden !important;text-overflow:ellipsis !important;margin:0 !important;font-size:13px !important;height:auto !important;}
+  /* ── Toolbar: name row + buttons row on mobile ── */
+  .toolbar{position:static !important;display:flex !important;flex-direction:column !important;flex-wrap:nowrap !important;align-items:stretch !important;gap:0 !important;padding:0 !important;background:#fafafa !important;border-bottom:1px solid var(--g200) !important;width:100% !important;box-sizing:border-box !important;overflow:visible !important;}
+  .tbar-name{display:block !important;width:100% !important;max-width:100% !important;height:auto !important;white-space:nowrap !important;overflow:visible !important;text-overflow:clip !important;padding:8px 10px 4px !important;margin:0 !important;font-size:12px !important;flex-shrink:0 !important;}
+  .toolbar-btns{display:flex !important;flex-direction:row !important;flex-wrap:nowrap !important;overflow-x:auto !important;overflow-y:visible !important;-webkit-overflow-scrolling:touch !important;align-items:center !important;gap:6px !important;padding:4px 8px 6px !important;flex-shrink:0 !important;}
+  .toolbar-btns > *{flex-shrink:0 !important;height:36px !important;min-height:unset !important;width:auto !important;min-width:unset !important;}
   .sync-pill{height:36px !important;min-height:unset !important;padding:0 8px !important;font-size:11px !important;align-self:center !important;width:auto !important;}
   .toolbar .btn,.tbar-split-main,.tbar-split-chev{flex-shrink:0 !important;height:36px !important;min-height:unset !important;width:auto !important;min-width:unset !important;padding:0 10px !important;font-size:13px !important;white-space:nowrap !important;}
   .undo-redo-pair{display:flex !important;flex-direction:row !important;gap:4px !important;flex-shrink:0 !important;width:auto !important;min-width:unset !important;}
@@ -752,10 +753,11 @@ body{overflow-x:hidden;max-width:100dvw}
   .ac-wrap,.loc-wrap{overflow:visible!important;}
   .ac-dropdown,.loc-ac{z-index:5000!important;}
 
-  /* ── Toolbar: single flex row (grid removed) ── */
-  .toolbar{position:static!important;display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;overflow-x:auto!important;overflow-y:visible!important;-webkit-overflow-scrolling:touch!important;align-items:center!important;gap:6px!important;padding:6px 8px!important;background:#fafafa!important;border-bottom:1px solid var(--g200)!important;width:100%!important;box-sizing:border-box!important;}
-  .toolbar > *{flex-shrink:0!important;height:36px!important;min-height:unset!important;width:auto!important;min-width:unset!important;}
-  .tbar-name{flex:0 1 auto!important;min-width:50px!important;max-width:110px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;margin:0!important;font-size:13px!important;height:auto!important;}
+  /* ── Toolbar: name row + buttons row on mobile ── */
+  .toolbar{position:static!important;display:flex!important;flex-direction:column!important;flex-wrap:nowrap!important;align-items:stretch!important;gap:0!important;padding:0!important;background:#fafafa!important;border-bottom:1px solid var(--g200)!important;width:100%!important;box-sizing:border-box!important;overflow:visible!important;}
+  .tbar-name{display:block!important;width:100%!important;max-width:100%!important;height:auto!important;white-space:nowrap!important;overflow:visible!important;text-overflow:clip!important;padding:8px 10px 4px!important;margin:0!important;font-size:12px!important;flex-shrink:0!important;}
+  .toolbar-btns{display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;overflow-x:auto!important;overflow-y:visible!important;-webkit-overflow-scrolling:touch!important;align-items:center!important;gap:6px!important;padding:4px 8px 6px!important;flex-shrink:0!important;}
+  .toolbar-btns > *{flex-shrink:0!important;height:36px!important;min-height:unset!important;width:auto!important;min-width:unset!important;}
   .sync-pill{height:36px!important;min-height:unset!important;padding:0 8px!important;font-size:11px!important;align-self:center!important;width:auto!important;}
   .toolbar .btn,.tbar-split-main,.tbar-split-chev{flex-shrink:0!important;height:36px!important;min-height:unset!important;width:auto!important;min-width:unset!important;padding:0 10px!important;font-size:13px!important;white-space:nowrap!important;}
   .undo-redo-pair{display:flex!important;flex-direction:row!important;gap:4px!important;flex-shrink:0!important;width:auto!important;min-width:unset!important;}

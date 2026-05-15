@@ -18,14 +18,16 @@ export default function EditorToolbar({ onSave, onOpenSaveAs, onSnapshot, onClos
   return (
     <div className="toolbar">
       <span className="tbar-name">{scheduleName ?? 'Untitled'}</span>
-      <SyncStatusPill />
-      <SaveDropdown onSave={onSave} onSaveAs={onOpenSaveAs} onSnapshot={onSnapshot} />
-      <UndoRedoButtons />
-      <ShareDropdown />
-      <button className="btn btn-light btn-sm tbar-close" onClick={onClose} title="Close" aria-label="Close">
-        <span className="tbar-btn-text">Close</span>
-        <span className="tbar-close-icon" aria-hidden="true">✕</span>
-      </button>
+      <div className="toolbar-btns">
+        <SyncStatusPill />
+        <SaveDropdown onSave={onSave} onSaveAs={onOpenSaveAs} onSnapshot={onSnapshot} />
+        <UndoRedoButtons />
+        <ShareDropdown />
+        <button className="btn btn-light btn-sm tbar-close" onClick={onClose} title="Close" aria-label="Close">
+          <span className="tbar-btn-text">Close</span>
+          <span className="tbar-close-icon" aria-hidden="true">✕</span>
+        </button>
+      </div>
     </div>
   );
 }
