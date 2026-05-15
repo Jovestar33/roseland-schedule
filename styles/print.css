@@ -1650,24 +1650,24 @@
   body{zoom:0.96!important;}
   .hdr-title{font-size:17px!important;letter-spacing:3px!important;}
   thead th{
-    font-size:9px!important;
+    font-size:10px!important;
     letter-spacing:1px!important;
     padding:3.4px 5px!important;
   }
   td,.ci,.ci-ta,textarea{
-    font-size:8.1px!important;
+    font-size:11px!important;
     line-height:1.22!important;
     padding:3.4px 5px!important;
   }
-  td.rn{font-size:7px!important;}
+  td.rn{font-size:8.5px!important;}
   select.cs,.other-inp,.other-inp-inline{
-    font-size:7.8px!important;
+    font-size:10px!important;
     line-height:1.15!important;
     padding:3px 4px!important;
   }
-  .tdsp,.anchor-text{font-size:8px!important;line-height:1.15!important;}
-  .sun-note{font-size:7.5px!important;}
-  .sun-label{font-size:8.5px!important;}
+  .tdsp,.anchor-text{font-size:10px!important;line-height:1.15!important;}
+  .sun-note{font-size:9px!important;}
+  .sun-label{font-size:10px!important;}
 }
 
 /* ── Phone portrait only: desktop portrait baseline ──────────────────────────── */
@@ -1678,22 +1678,22 @@
   .hdr img{height:36px!important;max-height:36px!important;}
   .hdr-title{font-size:14px!important;letter-spacing:2px!important;}
   thead th{
-    font-size:7.5px!important;
+    font-size:9px!important;
     letter-spacing:.4px!important;
     padding:4px 3px!important;
   }
   td,.ci,.ci-ta,textarea{
-    font-size:6.8px!important;
+    font-size:9px!important;
     line-height:1.12!important;
     padding:3px!important;
   }
-  td.rn{font-size:6.2px!important;}
+  td.rn{font-size:7.5px!important;}
   select.cs,.other-inp,.other-inp-inline{
-    font-size:6.8px!important;
+    font-size:8.5px!important;
     line-height:1.08!important;
     padding:2px 2px!important;
   }
-  .tdsp,.anchor-text{font-size:6.6px!important;line-height:1.08!important;}
-  .sun-note{font-size:6.5px!important;}
-  .sun-label{font-size:7.5px!important;}
+  .tdsp,.anchor-text{font-size:8.5px!important;line-height:1.08!important;}
+  .sun-note{font-size:8px!important;}
+  .sun-label{font-size:9px!important;}
 }
