@@ -1,8 +1,9 @@
 'use client';
 import { useScheduleStore } from '@/lib/store/scheduleStore';
-import { printSchedule } from '@/lib/print';
 import SyncStatusPill from './SyncStatusPill';
 import UndoRedoButtons from './UndoRedoButtons';
+import SaveDropdown from './SaveDropdown';
+import ShareDropdown from './ShareDropdown';
 
 interface Props {
   onSave: () => void;
@@ -18,12 +19,10 @@ export default function EditorToolbar({ onSave, onOpenSaveAs, onSnapshot, onClos
     <div className="toolbar">
       <span className="tbar-name">{scheduleName ?? 'Untitled'}</span>
       <SyncStatusPill />
-      <button className="btn btn-light btn-sm" onClick={onSave}>&#128190; Save</button>
-      <button className="btn btn-light btn-sm" onClick={onOpenSaveAs}>Save As&hellip;</button>
+      <SaveDropdown onSave={onSave} onSaveAs={onOpenSaveAs} onSnapshot={onSnapshot} />
       <UndoRedoButtons />
-      <button className="btn btn-light btn-sm" onClick={() => printSchedule(scheduleName ?? 'Schedule')}>&#128438; Print</button>
-      <button className="btn btn-light btn-sm" onClick={onSnapshot}>&#128247; Snapshot</button>
-      <button className="btn btn-light btn-sm" onClick={onClose}>Close Schedule</button>
+      <ShareDropdown />
+      <button className="btn btn-light btn-sm" onClick={onClose}>Close</button>
     </div>
   );
 }

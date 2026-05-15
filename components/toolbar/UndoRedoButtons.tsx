@@ -7,20 +7,22 @@ export default function UndoRedoButtons() {
   return (
     <div className="btn-pair undo-redo-pair">
       <button
-        className={`btn btn-light${!canUndo ? ' undo-disabled' : ''}`}
+        className={`btn btn-light btn-sm${!canUndo ? ' undo-disabled' : ''}`}
         onClick={undo}
         disabled={!canUndo}
         title="Undo (Ctrl+Z)"
+        aria-label="Undo"
       >
-        ↩ Undo
+        ↩
       </button>
       <button
-        className={`btn btn-light${!canRedo ? ' undo-disabled' : ''}`}
+        className={`btn btn-light btn-sm${!canRedo ? ' undo-disabled' : ''}`}
         onClick={redo}
         disabled={!canRedo}
         title="Redo (Ctrl+Y)"
+        aria-label="Redo"
       >
-        Redo ↪
+        ↪
       </button>
     </div>
   );

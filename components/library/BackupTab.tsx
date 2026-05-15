@@ -22,14 +22,6 @@ export default function BackupTab({ schedules, onRefresh }: Props) {
     URL.revokeObjectURL(url);
   }
 
-  function exportCurrentJson() {
-    const loaded = schedules.filter(s => s.data);
-    if (!loaded.length) { alert('No loaded schedules to export.'); return; }
-    // Export the first loaded schedule alphabetically
-    const sorted = [...loaded].sort((a, b) => a.name.localeCompare(b.name));
-    exportJson(sorted[0].data, `${sorted[0].name.replace(/[^a-z0-9]/gi, '_')}.json`);
-  }
-
   function exportLibraryJson() {
     const bundle = schedules.reduce<Record<string, unknown>>((acc, s) => {
       if (s.data) acc[s.name] = s.data;
@@ -113,7 +105,6 @@ export default function BackupTab({ schedules, onRefresh }: Props) {
         <div className="backup-card">
           <h3>Backup &amp; Import</h3>
           <div className="backup-actions">
-            <button className="btn btn-light btn-sm" onClick={exportCurrentJson}>Export Current JSON</button>
             <button className="btn btn-light btn-sm" onClick={exportLibraryJson}>Export Library JSON</button>
             <label className="btn btn-pink btn-sm" style={{ cursor: 'pointer' }}>
               Import JSON

@@ -744,3 +744,59 @@ body.readonly .readonly-bar{display:flex}
   }
 }
 
+
+/* ── Redesigned toolbar: flex row replaces old grid ──────────────────────── */
+@media (max-width: 760px) {
+  .toolbar{
+    display:flex !important;
+    flex-wrap:wrap !important;
+    align-items:center !important;
+    gap:6px !important;
+    padding:8px 10px !important;
+    overflow:visible !important;
+  }
+  .tbar-name{
+    flex:1 1 100% !important;
+    min-width:0 !important;
+    white-space:nowrap !important;
+    overflow:hidden !important;
+    text-overflow:ellipsis !important;
+    margin:0 0 2px !important;
+  }
+  /* Hide text labels on Save and Share; keep icons + chevrons */
+  .tbar-label{display:none !important;}
+  .tbar-icon{margin:0 !important;}
+  /* Uniform touch targets for all toolbar items */
+  .toolbar .btn,
+  .tbar-split-main,
+  .tbar-split-chev{
+    min-height:40px !important;
+    padding:8px 10px !important;
+    font-size:14px !important;
+    border-radius:10px !important;
+    flex-shrink:0 !important;
+  }
+  .tbar-split-main{border-radius:10px 0 0 10px !important;}
+  .tbar-split-chev{border-radius:0 10px 10px 0 !important;padding:8px 9px !important;}
+  .undo-redo-pair{
+    display:flex !important;
+    flex-direction:row !important;
+    gap:4px !important;
+    flex-shrink:0 !important;
+  }
+  .undo-redo-pair .btn{
+    min-height:40px !important;
+    min-width:40px !important;
+    padding:8px !important;
+    border-radius:10px !important;
+  }
+  /* Sync pill stays compact */
+  .sync-pill{
+    grid-column:unset !important;
+    grid-row:unset !important;
+    min-height:40px !important;
+    padding:6px 10px !important;
+    font-size:11px !important;
+    flex-shrink:0 !important;
+  }
+}
