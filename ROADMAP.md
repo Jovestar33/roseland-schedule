@@ -14,11 +14,7 @@
    - ✅ Header polish pass — landscape toolbar breakpoint fixed (max-height:500px captures all iPhones incl. Pro Max, excludes tablets); Close button shows ✕ icon in landscape; weather strip #ebebeb background enforced with !important; crew divider 1.5px var(--g300); meta-grid 12px top margin; TOWN/DATE/CALL TIME labels unified to crew-label style (10px, 1px letter-spacing, var(--g400)); crew block labels PRODUCER/DIRECTOR/CAMERA. Merged to main 2026-05-15.
 4. **PWA manifest** — make app installable on iPad home screen
    - Status: `manifest.ts` built and deployed, iOS meta tags in place, icons generated at 192×192 and 512×512. Remaining: test PWA install on real iPad in Safari (Share → Add to Home Screen) and verify standalone landscape mode launches correctly
-5. **Print font sizes — tablet and mobile** ← ACTIVE, branch: `mobile-and-tablet-print` (cut from main 2026-05-14)
-   - Desktop/laptop prints correctly (baseline)
-   - **Tablet**: "PRODUCTION SCHEDULE" header text too small; grid column headers (ACTION, LOCATION, etc.) too small
-   - **Mobile**: same header issues PLUS grid field body text also too small
-   - Root cause: `print.css` uses `@media print and (hover: none) and (pointer: coarse)` to target touch devices. Touch font sizes (~7–7.5px) are smaller than desktop baseline (9px). Need separate tablet breakpoint or targeted size bump.
+5. ✅ **Print font sizes — tablet and mobile** — resolved and merged to main 2026-05-15. Branch `mobile-and-tablet-print` closed.
 
 ## 🟠 Short-Term Polish (v1 — next 2-4 sessions)
 *Quality of life improvements before wider use*
@@ -64,9 +60,10 @@
 ---
 
 ## Session Order
-- **Next session:** Item 4 (PWA install test on real iPad) + Item 5 (print font sizes — tablet/mobile, `mobile-and-tablet-print` branch)
-- **Then v1 polish:** Items 7–15 grouped by theme
+- **Next session:** Item 8 (Library slide-over drawer — implementation brief incoming)
+- **Also pending:** Item 4 (PWA install test on real iPad — manual test only)
+- **Then v1 polish:** Items 7, 9–15 grouped by theme
 - **Item 19 (CMS architecture):** Planning conversation before any code
 
 ---
-*Last updated: 2026-05-15 — toolbar-redesign branch merged to main*
+*Last updated: 2026-05-15 — mobile-and-tablet-print merged to main; all items 1–3, 5–6, 8 (CMS move) complete*
