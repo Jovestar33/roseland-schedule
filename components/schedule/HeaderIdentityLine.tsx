@@ -1,16 +1,41 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useScheduleStore } from '@/lib/store/scheduleStore';
+import ComboInput from './ComboInput';
 
 type Field = 'projectName' | 'phase' | 'day';
 
 interface Props { readOnly?: boolean; }
 
+function titleCase(s: string): string {
+  return s.trim().replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
+function readOptions(key: string): string[] {
+  try {
+    const raw = localStorage.getItem(key);
+    return raw ? (JSON.parse(raw) as string[]) : [];
+  } catch { return []; }
+}
+
 export default function HeaderIdentityLine({ readOnly = false }: Props) {
   const meta       = useScheduleStore((s) => s.meta);
   const updateMeta = useScheduleStore((s) => s.updateMeta);
   const [editing, setEditing] = useState<Field | null>(null);
-  const [draft,   setDraft]   = useState('');
+  const [draft,   _setDraft]  = useState('');
+  const draftRef              = useRef('');
+  const [projectOptions, setProjectOptions] = useState<string[]>([]);
+  const [phaseOptions,   setPhaseOptions]   = useState<string[]>([]);
+
+  useEffect(() => {
+    setProjectOptions(readOptions('rp_lib_project_options'));
+    setPhaseOptions(readOptions('rp_lib_phase_options'));
+  }, []);
+
+  function setDraft(v: string) {
+    draftRef.current = v;
+    _setDraft(v);
+  }
 
   const dayStr = meta.dayNumber !== null
     ? (meta.totalDays !== null ? `Day ${meta.dayNumber}/${meta.totalDays}` : `Day ${meta.dayNumber}`)
@@ -31,12 +56,13 @@ export default function HeaderIdentityLine({ readOnly = false }: Props) {
 
   function commit() {
     if (!editing) return;
+    const val = draftRef.current;
     if (editing === 'projectName') {
-      updateMeta({ projectName: draft.trim() });
+      updateMeta({ projectName: titleCase(val) });
     } else if (editing === 'phase') {
-      updateMeta({ phase: draft.trim() });
+      updateMeta({ phase: titleCase(val) });
     } else {
-      const t = draft.trim();
+      const t = val.trim();
       if (!t) {
         updateMeta({ dayNumber: null, totalDays: null });
       } else {
@@ -73,8 +99,6 @@ export default function HeaderIdentityLine({ readOnly = false }: Props) {
     );
   }
 
-  // Edit mode: always show all three fields with separators between them.
-  // Empty fields display their muted placeholder so they remain tappable.
   const FIELDS: { id: Field; val: string; ph: string }[] = [
     { id: 'projectName', val: meta.projectName, ph: 'Project'  },
     { id: 'phase',       val: meta.phase,        ph: 'Phase'    },
@@ -87,16 +111,40 @@ export default function HeaderIdentityLine({ readOnly = false }: Props) {
         <span key={f.id} className="hi-item">
           {i > 0 && <span className="hi-sep"> · </span>}
           {editing === f.id ? (
-            <input
-              className="hi-field"
-              autoFocus
-              value={draft}
-              placeholder={f.ph}
-              onChange={(e) => setDraft(e.target.value)}
-              onBlur={commit}
-              onKeyDown={onKey}
-              style={{ width: `${Math.max((draft || f.ph).length, 2)}ch` }}
-            />
+            f.id === 'projectName' ? (
+              <ComboInput
+                className="hi-field"
+                value={draft}
+                onChange={setDraft}
+                onBlur={commit}
+                onEscape={revert}
+                options={projectOptions}
+                placeholder={f.ph}
+                autoFocus
+              />
+            ) : f.id === 'phase' ? (
+              <ComboInput
+                className="hi-field"
+                value={draft}
+                onChange={setDraft}
+                onBlur={commit}
+                onEscape={revert}
+                options={phaseOptions}
+                placeholder={f.ph}
+                autoFocus
+              />
+            ) : (
+              <input
+                className="hi-field"
+                autoFocus
+                value={draft}
+                placeholder={f.ph}
+                onChange={(e) => setDraft(e.target.value)}
+                onBlur={commit}
+                onKeyDown={onKey}
+                style={{ width: `${Math.max((draft || f.ph).length, 2)}ch` }}
+              />
+            )
           ) : (
             <span
               className={f.val ? 'hi-val' : 'hi-empty'}

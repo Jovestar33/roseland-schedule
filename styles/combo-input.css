@@ -1,0 +1,45 @@
+/* ComboInput — text input with filtered suggestion dropdown */
+
+.combo-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: baseline;
+}
+
+.combo-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  min-width: 200px;
+  background: #fff;
+  border: 1px solid var(--g200);
+  border-radius: 10px;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.12);
+  z-index: 2000;
+  padding: 4px;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.combo-option {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: none;
+  padding: 7px 10px;
+  font-family: var(--fb);
+  font-size: 13px;
+  color: var(--ink, #111);
+  cursor: pointer;
+  border-radius: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: background 0.1s;
+}
+
+.combo-option:hover,
+.combo-option.active {
+  background: var(--g100);
+}

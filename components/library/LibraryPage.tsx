@@ -5,7 +5,6 @@ import { useAuthStore } from '@/lib/store/authStore';
 import { useCmsStore } from '@/lib/store/cmsStore';
 import { listSchedules, postLoad } from '@/lib/api/load';
 import { postDelete } from '@/lib/api/save';
-import { getLibraryMeta, putLibraryMeta, type LibraryData, type LibraryFolder } from '@/lib/api/library';
 import type { ScheduleData } from '@/lib/types';
 import ScheduleListTab, { type LibrarySchedule } from './ScheduleListTab';
 import TemplatesTab from './TemplatesTab';
@@ -13,10 +12,6 @@ import VersionsTab from './VersionsTab';
 import BackupTab from './BackupTab';
 
 type Tab = 'schedules' | 'templates' | 'backup' | 'versions';
-
-function makeId(prefix: string): string {
-  return `${prefix}_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 7)}`;
-}
 
 export default function LibraryPage() {
   const router = useRouter();
@@ -27,8 +22,6 @@ export default function LibraryPage() {
 
   const [tab, setTab]               = useState<Tab>('schedules');
   const [schedules, setSchedules]   = useState<LibrarySchedule[]>([]);
-  const [libMeta, setLibMeta]       = useState<LibraryData>({ version: 1, folders: [], scheduleFolderMap: {}, updatedAt: 0 });
-  const [selectedFolder, setSelectedFolder] = useState('all');
   const [loadingList, setLoadingList] = useState(true);
 
   useEffect(() => {
@@ -40,16 +33,11 @@ export default function LibraryPage() {
   async function loadLibrary() {
     setLoadingList(true);
     try {
-      const [names, meta] = await Promise.all([
-        listSchedules(token!),
-        getLibraryMeta(token!),
-      ]);
-      setLibMeta(meta);
-      // Initialise items with loading placeholders
+      const names = await listSchedules(token!);
       const items: LibrarySchedule[] = names.map((name) => ({ name, data: null, loading: true }));
       setSchedules(items);
       setLoadingList(false);
-      // Parallel-fetch all schedule data
+
       const fetched = await Promise.all(
         names.map((name) =>
           postLoad(name, token!)
@@ -58,69 +46,21 @@ export default function LibraryPage() {
         )
       );
       setSchedules(fetched);
+
+      // Populate ComboInput caches for the editor identity line
+      try {
+        const projectNames = [...new Set(
+          fetched.flatMap((s) => { const n = s.data?.meta?.projectName?.trim(); return n ? [n] : []; })
+        )];
+        const phases = [...new Set(
+          fetched.flatMap((s) => { const p = s.data?.meta?.phase?.trim(); return p ? [p] : []; })
+        )];
+        localStorage.setItem('rp_lib_project_options', JSON.stringify(projectNames));
+        localStorage.setItem('rp_lib_phase_options', JSON.stringify(phases));
+      } catch {}
     } catch {
       setLoadingList(false);
     }
-  }
-
-  async function updateLibMeta(updated: LibraryData) {
-    setLibMeta(updated);
-    try {
-      const saved = await putLibraryMeta(updated, token!);
-      setLibMeta(saved);
-    } catch { /* best-effort */ }
-  }
-
-  function handleCreateFolder(name: string) {
-    if (libMeta.folders.some((f) => f.name.toLowerCase() === name.toLowerCase())) {
-      alert('A project with that name already exists.');
-      return;
-    }
-    const folder: LibraryFolder = { id: makeId('folder'), name, createdAt: Date.now(), updatedAt: Date.now() };
-    const updated = { ...libMeta, folders: [...libMeta.folders, folder], updatedAt: Date.now() };
-    setSelectedFolder(folder.id);
-    updateLibMeta(updated);
-  }
-
-  function handleRenameFolder(id: string) {
-    const f = libMeta.folders.find((x) => x.id === id);
-    if (!f) return;
-    const name = (prompt('Rename project:', f.name) ?? '').trim();
-    if (!name) return;
-    if (libMeta.folders.some((x) => x.id !== id && x.name.toLowerCase() === name.toLowerCase())) {
-      alert('A project with that name already exists.');
-      return;
-    }
-    const updated = {
-      ...libMeta,
-      folders: libMeta.folders.map((x) => x.id === id ? { ...x, name, updatedAt: Date.now() } : x),
-      updatedAt: Date.now(),
-    };
-    updateLibMeta(updated);
-  }
-
-  function handleDeleteFolder(id: string) {
-    const f = libMeta.folders.find((x) => x.id === id);
-    if (!f) return;
-    const count = Object.values(libMeta.scheduleFolderMap).filter((fid) => fid === id).length;
-    if (count > 0) { alert('Move or delete schedules out of this project before deleting it.'); return; }
-    if (!confirm(`Delete project "${f.name}"? Schedules will not be deleted.`)) return;
-    const updated = {
-      ...libMeta,
-      folders: libMeta.folders.filter((x) => x.id !== id),
-      updatedAt: Date.now(),
-    };
-    setSelectedFolder('all');
-    updateLibMeta(updated);
-  }
-
-  function handleMoveSchedule(name: string, folderId: string) {
-    const updated = {
-      ...libMeta,
-      scheduleFolderMap: { ...libMeta.scheduleFolderMap, [name]: folderId },
-      updatedAt: Date.now(),
-    };
-    updateLibMeta(updated);
   }
 
   async function handleDelete(name: string) {
@@ -181,17 +121,7 @@ export default function LibraryPage() {
       ) : (
         <>
           <div className={`mtab-panel${tab === 'schedules' ? ' active' : ''}`}>
-            <ScheduleListTab
-              schedules={schedules}
-              libraryMeta={libMeta}
-              selectedFolder={selectedFolder}
-              onSelectFolder={setSelectedFolder}
-              onCreateFolder={handleCreateFolder}
-              onRenameFolder={handleRenameFolder}
-              onDeleteFolder={handleDeleteFolder}
-              onMoveSchedule={handleMoveSchedule}
-              onDelete={handleDelete}
-            />
+            <ScheduleListTab schedules={schedules} onDelete={handleDelete} />
           </div>
           <div className={`mtab-panel${tab === 'templates' ? ' active' : ''}`}>
             <TemplatesTab />

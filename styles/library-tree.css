@@ -1,0 +1,227 @@
+/* Library tree view — collapsible production → phase → schedule hierarchy */
+
+.lbt-tree {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* ── Production group ─────────────────────────────────────────────────────── */
+
+.lbt-prod {
+  border: 1px solid var(--g200);
+  border-radius: 12px;
+  background: #fff;
+  overflow: hidden;
+}
+
+.lbt-prod-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 14px;
+  cursor: pointer;
+  user-select: none;
+  background: #fafafa;
+  transition: background 0.12s;
+}
+
+.lbt-prod-row:hover { background: var(--g100); }
+
+.lbt-prod-chevron {
+  font-size: 11px;
+  color: var(--g500);
+  flex-shrink: 0;
+  width: 14px;
+  text-align: center;
+  transition: transform 0.15s;
+  line-height: 1;
+}
+
+.lbt-prod-name {
+  font-weight: 800;
+  font-size: 14px;
+  color: var(--ink);
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.lbt-prod-count {
+  font-size: 12px;
+  color: var(--g500);
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+/* ── Phase group ──────────────────────────────────────────────────────────── */
+
+.lbt-phase {
+  border-top: 1px solid var(--g100);
+}
+
+.lbt-phase-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px 8px 36px;
+  cursor: pointer;
+  user-select: none;
+  background: #fff;
+  transition: background 0.12s;
+}
+
+.lbt-phase-row:hover { background: var(--g50); }
+
+.lbt-phase-chevron {
+  font-size: 10px;
+  color: var(--g400);
+  flex-shrink: 0;
+  width: 12px;
+  text-align: center;
+  transition: transform 0.15s;
+  line-height: 1;
+}
+
+.lbt-phase-name {
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--g800);
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.lbt-phase-count {
+  font-size: 11px;
+  color: var(--g400);
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+/* ── Schedule rows ────────────────────────────────────────────────────────── */
+
+.lbt-sched-list {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Schedules under a phase: double-indented */
+.lbt-phase .lbt-sched-list .lbt-sched-row {
+  padding-left: 60px;
+}
+
+/* Schedules directly under production (no-phase group): single-indented */
+.lbt-prod-direct .lbt-sched-row {
+  padding-left: 36px;
+}
+
+.lbt-sched-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 14px;
+  border-top: 1px solid var(--g100);
+  transition: background 0.12s;
+  min-width: 0;
+}
+
+.lbt-sched-row:hover { background: var(--g50); }
+
+.lbt-sched-name {
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--pink);
+  cursor: pointer;
+  flex-shrink: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 280px;
+  text-decoration: none;
+}
+
+.lbt-sched-name:hover { text-decoration: underline; }
+
+.lbt-sched-meta {
+  font-size: 12px;
+  color: var(--g500);
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lbt-sched-acts {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+}
+
+.lbt-sched-loading {
+  font-size: 12px;
+  color: var(--g400);
+  font-style: italic;
+}
+
+/* ── Ungrouped section ────────────────────────────────────────────────────── */
+
+.lbt-ungrouped {
+  border: 1px solid var(--g200);
+  border-radius: 12px;
+  background: #fff;
+  overflow: hidden;
+  margin-top: 8px;
+}
+
+.lbt-ungrouped-hdr {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 14px;
+  background: #fafafa;
+}
+
+.lbt-ungrouped-name {
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--g600);
+  flex: 1;
+}
+
+.lbt-ungrouped-count {
+  font-size: 12px;
+  color: var(--g500);
+  flex-shrink: 0;
+}
+
+.lbt-ungrouped .lbt-sched-row {
+  padding-left: 14px;
+}
+
+/* ── Empty state ──────────────────────────────────────────────────────────── */
+
+.lbt-empty-state {
+  padding: 40px 24px;
+  text-align: center;
+  color: var(--g500);
+  font-size: 13px;
+  border: 1px dashed var(--g300);
+  border-radius: 12px;
+  background: #fafafa;
+}
+
+/* ── Responsive ───────────────────────────────────────────────────────────── */
+
+@media (max-width: 760px) {
+  .lbt-sched-name { max-width: 140px; }
+  .lbt-sched-meta { display: none; }
+  .lbt-phase .lbt-sched-list .lbt-sched-row { padding-left: 44px; }
+  .lbt-prod-direct .lbt-sched-row { padding-left: 28px; }
+}
