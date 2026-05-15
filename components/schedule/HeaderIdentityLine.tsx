@@ -16,7 +16,9 @@ export default function HeaderIdentityLine({ readOnly = false }: Props) {
     ? (meta.totalDays !== null ? `Day ${meta.dayNumber}/${meta.totalDays}` : `Day ${meta.dayNumber}`)
     : '';
 
-  const allEmpty = !meta.projectName && !meta.phase && !dayStr;
+  const dayEditStr = meta.dayNumber !== null
+    ? (meta.totalDays !== null ? `${meta.dayNumber}/${meta.totalDays}` : `${meta.dayNumber}`)
+    : '';
 
   function startEdit(field: Field) {
     if (readOnly) return;
@@ -39,10 +41,10 @@ export default function HeaderIdentityLine({ readOnly = false }: Props) {
         updateMeta({ dayNumber: null, totalDays: null });
       } else {
         const [a, b] = t.split('/');
-        const n = parseInt(a, 10);
+        const n   = parseInt(a, 10);
         const tot = b !== undefined ? parseInt(b, 10) : null;
         if (n > 0) updateMeta({ dayNumber: n, totalDays: tot && tot > 0 ? tot : null });
-        else updateMeta({ dayNumber: null, totalDays: null });
+        else       updateMeta({ dayNumber: null, totalDays: null });
       }
     }
     setEditing(null);
@@ -55,33 +57,33 @@ export default function HeaderIdentityLine({ readOnly = false }: Props) {
     if (e.key === 'Escape') { e.preventDefault(); revert(); }
   }
 
-  if (allEmpty && !editing) {
-    if (readOnly) return null;
+  // Read-only: show only non-empty values, omit empties and their separators.
+  if (readOnly) {
+    const parts = [meta.projectName, meta.phase, dayStr].filter(Boolean);
+    if (!parts.length) return null;
     return (
       <div className="hdr-identity">
-        <span className="hi-ph" onClick={() => startEdit('projectName')}>
-          Add project info
-        </span>
+        {parts.map((p, i) => (
+          <span key={i} className="hi-item">
+            {i > 0 && <span className="hi-sep"> · </span>}
+            <span className="hi-val">{p}</span>
+          </span>
+        ))}
       </div>
     );
   }
 
-  const dayEditStr = meta.dayNumber !== null
-    ? (meta.totalDays !== null ? `${meta.dayNumber}/${meta.totalDays}` : `${meta.dayNumber}`)
-    : '';
-
+  // Edit mode: always show all three fields with separators between them.
+  // Empty fields display their muted placeholder so they remain tappable.
   const FIELDS: { id: Field; val: string; ph: string }[] = [
-    { id: 'projectName', val: meta.projectName, ph: 'Project' },
-    { id: 'phase',       val: meta.phase,        ph: 'Phase'   },
-    { id: 'day',         val: dayStr,             ph: 'Day #/#' },
+    { id: 'projectName', val: meta.projectName, ph: 'Project'  },
+    { id: 'phase',       val: meta.phase,        ph: 'Phase'    },
+    { id: 'day',         val: dayStr,             ph: 'Day #/#'  },
   ];
-
-  // Only render fields that have a value OR are currently being edited.
-  const visible = FIELDS.filter(f => f.val || editing === f.id);
 
   return (
     <div className="hdr-identity">
-      {visible.map((f, i) => (
+      {FIELDS.map((f, i) => (
         <span key={f.id} className="hi-item">
           {i > 0 && <span className="hi-sep"> · </span>}
           {editing === f.id ? (
@@ -97,10 +99,10 @@ export default function HeaderIdentityLine({ readOnly = false }: Props) {
             />
           ) : (
             <span
-              className="hi-val"
+              className={f.val ? 'hi-val' : 'hi-empty'}
               onClick={() => startEdit(f.id)}
             >
-              {f.val}
+              {f.val || f.ph}
             </span>
           )}
         </span>

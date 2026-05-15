@@ -100,6 +100,8 @@ body{font-family:var(--fb);background:var(--g100);color:var(--black);min-height:
 .hi-ph:hover{text-decoration:underline;text-decoration-style:dotted}
 .hi-val{cursor:pointer}
 .hi-val:hover{text-decoration:underline;text-decoration-style:dotted}
+.hi-empty{cursor:pointer;font-style:italic;opacity:0.55}
+.hi-empty:hover{text-decoration:underline;text-decoration-style:dotted;opacity:0.75}
 .hi-field{background:transparent;border:none;border-bottom:1px dashed currentColor;
   outline:none;font:inherit;color:inherit;padding:0 1px;min-width:2ch;
   box-sizing:content-box}
