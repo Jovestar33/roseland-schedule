@@ -69,8 +69,10 @@ export default function WxStrip({ onRefresh, onClear }: Props) {
         <span className="wx-label">Updated</span>
         <span className="wx-val wx-ts" id="wx-ts">{wx.fetchedAt || '—'}</span>
       </div>
-      <button className="wx-refresh" onClick={onRefresh} title="Refresh weather">↻ Refresh</button>
-      <button className="wx-refresh" onClick={onClear} title="Clear weather" style={{ marginLeft: '8px' }}>✕ Clear</button>
+      <div className="wx-refresh-row">
+        <button className="wx-refresh" onClick={onRefresh} title="Refresh weather">↻ Refresh</button>
+        <button className="wx-refresh" onClick={onClear} title="Clear weather">✕ Clear</button>
+      </div>
     </div>
   );
 }
