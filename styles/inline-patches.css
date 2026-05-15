@@ -625,7 +625,8 @@ body{overflow-x:hidden;max-width:100dvw}
     margin-bottom:6px !important;
     font-size:10px !important;
     line-height:1.1 !important;
-    letter-spacing:1.3px !important;
+    letter-spacing:1px !important;
+    color:var(--g400) !important;
     white-space:nowrap !important;
     overflow:hidden !important;
     text-overflow:clip !important;
@@ -746,7 +747,7 @@ body{overflow-x:hidden;max-width:100dvw}
   .meta{width:100%!important;max-width:100%!important;min-width:0!important;padding:16px 14px 14px!important;overflow:visible!important;box-sizing:border-box!important;}
   .meta-grid{width:100%!important;max-width:100%!important;min-width:0!important;display:grid!important;grid-template-columns:1fr!important;gap:14px!important;}
   .meta-grid .mf{min-width:0!important;max-width:100%!important;width:100%!important;overflow:visible!important;grid-column:1/-1!important;}
-  .mf label{max-width:100%!important;margin-bottom:6px!important;font-size:10px!important;line-height:1.1!important;letter-spacing:1.3px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:clip!important;}
+  .mf label{max-width:100%!important;margin-bottom:6px!important;font-size:10px!important;line-height:1.1!important;letter-spacing:1px!important;color:var(--g400)!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:clip!important;}
   .mf input,.call-disp{width:100%!important;max-width:100%!important;min-width:0!important;height:auto!important;min-height:0!important;padding:10px 12px!important;border:1px solid #e3e3e8!important;border-radius:12px!important;background:#fff!important;box-sizing:border-box!important;overflow:hidden!important;}
   .mf input{font-size:16px!important;line-height:1.2!important;white-space:nowrap!important;text-overflow:ellipsis!important;}
   input[type="date"]{text-align:left!important;-webkit-appearance:none!important;appearance:none!important;}
