@@ -5,9 +5,9 @@ import { useScheduleStore } from '@/lib/store/scheduleStore';
 type CrewField = 'prod' | 'dir' | 'dp';
 
 const FIELDS: { key: CrewField; label: string }[] = [
-  { key: 'prod', label: 'PROD' },
-  { key: 'dir',  label: 'DIR'  },
-  { key: 'dp',   label: 'CAM'  },
+  { key: 'prod', label: 'PRODUCER' },
+  { key: 'dir',  label: 'DIRECTOR' },
+  { key: 'dp',   label: 'CAMERA'   },
 ];
 
 interface Props {
