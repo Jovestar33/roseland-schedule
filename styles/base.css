@@ -90,6 +90,19 @@ body{font-family:var(--fb);background:var(--g100);color:var(--black);min-height:
 
 /* META */
 .meta{padding:20px 24px 16px;border-bottom:1px solid var(--g200)}
+/* IDENTITY LINE */
+.hdr-identity{display:flex;flex-wrap:wrap;align-items:baseline;
+  font-size:11px;color:var(--text);opacity:0.6;font-family:var(--fb);
+  padding-bottom:12px;line-height:1.4}
+.hi-item{display:inline-flex;align-items:baseline}
+.hi-sep{padding:0 5px;pointer-events:none;user-select:none}
+.hi-ph{cursor:pointer;font-style:italic}
+.hi-ph:hover{text-decoration:underline;text-decoration-style:dotted}
+.hi-val{cursor:pointer}
+.hi-val:hover{text-decoration:underline;text-decoration-style:dotted}
+.hi-field{background:transparent;border:none;border-bottom:1px dashed currentColor;
+  outline:none;font:inherit;color:inherit;padding:0 1px;min-width:2ch;
+  box-sizing:content-box}
 .meta-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px 24px}
 .mf{position:relative}
 .mf label{display:block;font-size:11px;font-weight:600;text-transform:uppercase;

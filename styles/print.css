@@ -153,6 +153,15 @@
     border-bottom:1px solid #e4e4e7!important;
     background:#fff!important;
   }
+  .hdr-identity{
+    display:flex!important;flex-wrap:wrap!important;align-items:baseline!important;
+    font-size:7px!important;color:#111!important;opacity:0.65!important;
+    font-family:var(--fb)!important;padding-bottom:3px!important;
+    letter-spacing:.03em!important;
+  }
+  .hi-sep{padding:0 3px!important;}
+  .hi-ph,.hi-field{display:none!important;}
+  .hi-val{cursor:default!important;}
   .meta-grid{
     display:grid!important;
     grid-template-columns:2.2fr 1fr 1fr 1.2fr 1.2fr 1.2fr!important;

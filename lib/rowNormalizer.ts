@@ -36,6 +36,10 @@ export function makeMeta(overrides: Partial<ScheduleMeta> = {}): ScheduleMeta {
     lat: null,
     lng: null,
     wx: null,
+    projectName: '',
+    phase: '',
+    dayNumber: null,
+    totalDays: null,
     ...overrides,
   };
 }

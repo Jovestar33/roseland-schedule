@@ -48,6 +48,10 @@ export interface ScheduleMeta {
   lat: number | null;
   lng: number | null;
   wx: WeatherData | null;
+  projectName: string;
+  phase: string;
+  dayNumber: number | null;
+  totalDays: number | null;
 }
 
 // Wire format stored in Netlify Blobs — must stay compatible with save.js / load.js

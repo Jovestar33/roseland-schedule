@@ -275,6 +275,7 @@ body.readonly .readonly-bar{display:flex}
 @media(max-width:600px){
   .hdr{padding:10px 10px;gap:6px}.hdr img{height:90px}.hdr-title{display:none}
   .meta-grid{grid-template-columns:1fr 1fr}.meta{padding:10px 10px 8px}
+  .hdr-identity{font-size:11px;padding-bottom:8px}
   .panel{margin:6px 4px;border-radius:8px}
   .scroll-hint{display:flex}
   .wx-strip{flex-direction:column;padding:8px 12px;gap:0}

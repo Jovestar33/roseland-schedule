@@ -3,6 +3,7 @@ import { useScheduleStore } from '@/lib/store/scheduleStore';
 import { useCmsLabel } from '@/lib/store/cmsStore';
 import PlacesAutocomplete from './PlacesAutocomplete';
 import CrewInput from './CrewInput';
+import HeaderIdentityLine from './HeaderIdentityLine';
 import type { GeoResult } from '@/lib/googlePlaces';
 
 interface Props {
@@ -40,6 +41,7 @@ export default function ScheduleHeader({ readOnly = false }: Props) {
 
   return (
     <div className="meta">
+      <HeaderIdentityLine readOnly={readOnly} />
       <div className="meta-grid">
         <div className="mf">
           <label htmlFor="m-town">{labelTown}</label>
