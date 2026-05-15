@@ -267,7 +267,7 @@ body.readonly .readonly-bar{display:flex}
 
 /* RESPONSIVE */
 @media(max-width:900px){
-  .hdr{padding:12px 14px}.hdr img{height:112px}.hdr-title{font-size:18px}
+  .hdr{padding:12px 14px}.hdr img{height:112px}.hdr-title{font-size:24px}
   .meta-grid{grid-template-columns:1fr 1fr}.meta{padding:14px 14px 12px}
   .panel{margin:10px 6px}
 }

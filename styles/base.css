@@ -114,7 +114,7 @@ body{font-family:var(--fb);background:var(--g100);color:var(--black);min-height:
 /* IDENTITY LINE */
 .hdr-identity{display:flex;flex-wrap:wrap;align-items:baseline;
   font-size:11px;color:var(--text);opacity:0.6;font-family:var(--fb);
-  padding-bottom:12px;line-height:1.4}
+  padding-top:6px;padding-bottom:12px;line-height:1.4}
 .hi-item{display:inline-flex;align-items:baseline}
 .hi-sep{padding:0 5px;pointer-events:none;user-select:none}
 .hi-ph{cursor:pointer;font-style:italic}
@@ -144,7 +144,7 @@ body{font-family:var(--fb);background:var(--g100);color:var(--black);min-height:
 .call-disp{font-size:18px;font-weight:600;color:var(--pink);
   padding:4px 0;border-bottom:1.5px solid var(--g200);min-height:32px}
 /* CREW IDENTITY BLOCK */
-.crew-id{display:flex;flex-direction:row;gap:16px;padding:6px 0 8px}
+.crew-id{display:flex;flex-direction:row;gap:16px;padding:6px 0 8px;border-bottom:1px solid #e5e5e5}
 .crew-col{display:flex;flex-direction:column;gap:2px;flex:1;min-width:0}
 .crew-label{font-size:10px;font-weight:600;letter-spacing:1px;color:var(--g400);
   text-transform:uppercase;cursor:pointer;line-height:1.2;user-select:none}
