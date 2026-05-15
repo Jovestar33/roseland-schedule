@@ -220,8 +220,25 @@
 /* ── Responsive ───────────────────────────────────────────────────────────── */
 
 @media (max-width: 760px) {
-  .lbt-sched-name { max-width: 140px; }
+  /* Two-line row: grip + name on line 1, action buttons on line 2 */
+  .lbt-sched-row {
+    flex-wrap: wrap;
+    row-gap: 4px;
+  }
+  .lbt-sched-name {
+    flex: 1;
+    max-width: none;
+  }
   .lbt-sched-meta { display: none; }
+  .lbt-sched-acts {
+    width: 100%;
+    padding-left: 28px; /* grip (20px) + gap (8px) — aligns with name above */
+  }
+  .lbt-sched-acts .sitem-copy,
+  .lbt-sched-acts .sitem-del {
+    padding: 4px 10px;
+    font-size: 12px;
+  }
   .lbt-phase .lbt-sched-list .lbt-sched-row { padding-left: 44px; }
   .lbt-prod-direct .lbt-sched-row { padding-left: 28px; }
 }
