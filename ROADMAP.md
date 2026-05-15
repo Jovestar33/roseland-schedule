@@ -11,6 +11,7 @@
    - ✅ Contact icon clipping on grid right edge (portrait mobile) fixed
    - ✅ Mobile toolbar redesign — two-row layout (name+pill / buttons), dropdowns escape overflow via position:fixed, Undo/Redo icon-only on mobile, Close ✕ on mobile
    - ✅ Safari and Chrome favicons confirmed working
+   - ✅ Header polish pass — landscape toolbar breakpoint fixed (max-height:500px captures all iPhones incl. Pro Max, excludes tablets); Close button shows ✕ icon in landscape; weather strip #ebebeb background enforced with !important; crew divider 1.5px var(--g300); meta-grid 12px top margin; TOWN/DATE/CALL TIME labels unified to crew-label style (10px, 1px letter-spacing, var(--g400)); crew block labels PRODUCER/DIRECTOR/CAMERA. Merged to main 2026-05-15.
 4. **PWA manifest** — make app installable on iPad home screen
    - Status: `manifest.ts` built and deployed, iOS meta tags in place, icons generated at 192×192 and 512×512. Remaining: test PWA install on real iPad in Safari (Share → Add to Home Screen) and verify standalone landscape mode launches correctly
 5. **Print font sizes — tablet and mobile** ← ACTIVE, branch: `mobile-and-tablet-print` (cut from main 2026-05-14)
@@ -66,3 +67,6 @@
 - **Next session:** Item 4 (PWA install test on real iPad) + Item 5 (print font sizes — tablet/mobile, `mobile-and-tablet-print` branch)
 - **Then v1 polish:** Items 7–15 grouped by theme
 - **Item 19 (CMS architecture):** Planning conversation before any code
+
+---
+*Last updated: 2026-05-15 — toolbar-redesign branch merged to main*
