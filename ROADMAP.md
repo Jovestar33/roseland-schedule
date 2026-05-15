@@ -8,7 +8,7 @@
 3. **Mobile/iPad layout pass** — largely complete; two items remain:
    - ✅ Library horizontal overflow fixed (mobile-polish → main, 2026-05-13)
    - ✅ iOS Safari Dynamic Island portrait clipping fixed — root cause was CSS `padding:10px !important` shorthand in `mobile.css` overriding all JS and inline padding; fixed with `padding-top:max(70px, env(safe-area-inset-top, 70px)) !important`; login scroll reset also fixed (`scrollTo(0,0)` + 80ms delay before `router.replace`)
-   - ⏳ **Contact icon clipping on grid right edge (portrait mobile)** — partially fixed on `mobile-polish` branch (column width 56→64px, cell padding zeroed on nth-child(10)), NOT yet merged to main. Needs verification before merge.
+   - ✅ **Contact icon clipping on grid right edge (portrait mobile)** — fixed on `mobile-polish` branch (column width 56→64px, cell padding zeroed on nth-child(10)), verified and merged to main.
    - Note: Safari and Chrome favicons confirmed working as of 2026-05-13
 4. **PWA manifest** — make app installable on iPad home screen
    - Status: `manifest.ts` built and deployed, iOS meta tags in place, icons generated at 192×192 and 512×512. Remaining: test PWA install on real iPad in Safari (Share → Add to Home Screen) and verify standalone landscape mode launches correctly
