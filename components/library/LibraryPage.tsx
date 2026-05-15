@@ -5,6 +5,7 @@ import { useAuthStore } from '@/lib/store/authStore';
 import { useCmsStore } from '@/lib/store/cmsStore';
 import { listSchedules, postLoad } from '@/lib/api/load';
 import { postDelete } from '@/lib/api/save';
+import { getLibraryMeta, putLibraryMeta, type LibraryData } from '@/lib/api/library';
 import type { ScheduleData } from '@/lib/types';
 import ScheduleListTab, { type LibrarySchedule } from './ScheduleListTab';
 import TemplatesTab from './TemplatesTab';
@@ -20,8 +21,9 @@ export default function LibraryPage() {
   const logout     = useAuthStore((s) => s.logout);
   const openCmsModal = useCmsStore((s) => s.openModal);
 
-  const [tab, setTab]               = useState<Tab>('schedules');
-  const [schedules, setSchedules]   = useState<LibrarySchedule[]>([]);
+  const [tab, setTab]             = useState<Tab>('schedules');
+  const [schedules, setSchedules] = useState<LibrarySchedule[]>([]);
+  const [libMeta, setLibMeta]     = useState<LibraryData>({ version: 1, folders: [], scheduleFolderMap: {}, updatedAt: 0 });
   const [loadingList, setLoadingList] = useState(true);
 
   useEffect(() => {
@@ -33,7 +35,8 @@ export default function LibraryPage() {
   async function loadLibrary() {
     setLoadingList(true);
     try {
-      const names = await listSchedules(token!);
+      const [names, meta] = await Promise.all([listSchedules(token!), getLibraryMeta(token!)]);
+      setLibMeta(meta);
       const items: LibrarySchedule[] = names.map((name) => ({ name, data: null, loading: true }));
       setSchedules(items);
       setLoadingList(false);
@@ -47,7 +50,7 @@ export default function LibraryPage() {
       );
       setSchedules(fetched);
 
-      // Populate ComboInput caches for the editor identity line
+      // Populate ComboInput caches for editor identity line
       try {
         const projectNames = [...new Set(
           fetched.flatMap((s) => { const n = s.data?.meta?.projectName?.trim(); return n ? [n] : []; })
@@ -63,6 +66,14 @@ export default function LibraryPage() {
     }
   }
 
+  async function updateLibMeta(updated: LibraryData): Promise<void> {
+    setLibMeta(updated);
+    try {
+      const saved = await putLibraryMeta(updated, token!);
+      setLibMeta(saved);
+    } catch { /* best-effort */ }
+  }
+
   async function handleDelete(name: string) {
     if (!confirm(`Delete "${name}" from My Library? This permanently removes the saved schedule.`)) return;
     const deletePassword = (prompt('Enter delete password:') ?? '').trim();
@@ -70,6 +81,16 @@ export default function LibraryPage() {
     try {
       await postDelete(name, token!, deletePassword);
       setSchedules((prev) => prev.filter((s) => s.name !== name));
+      // Clean up phaseOrder for the deleted schedule
+      if (libMeta.phaseOrder) {
+        const po = JSON.parse(JSON.stringify(libMeta.phaseOrder)) as NonNullable<LibraryData['phaseOrder']>;
+        for (const pk of Object.keys(po)) {
+          for (const phk of Object.keys(po[pk])) {
+            po[pk][phk] = po[pk][phk].filter((n) => n !== name);
+          }
+        }
+        updateLibMeta({ ...libMeta, phaseOrder: po, updatedAt: Date.now() });
+      }
     } catch (e) {
       const msg = (e as Error).message ?? '';
       alert(/invalid delete password/i.test(msg)
@@ -121,7 +142,12 @@ export default function LibraryPage() {
       ) : (
         <>
           <div className={`mtab-panel${tab === 'schedules' ? ' active' : ''}`}>
-            <ScheduleListTab schedules={schedules} onDelete={handleDelete} />
+            <ScheduleListTab
+              schedules={schedules}
+              libMeta={libMeta}
+              onDelete={handleDelete}
+              onUpdateLibMeta={updateLibMeta}
+            />
           </div>
           <div className={`mtab-panel${tab === 'templates' ? ' active' : ''}`}>
             <TemplatesTab />

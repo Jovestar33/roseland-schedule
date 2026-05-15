@@ -5,7 +5,7 @@ import { useAuthStore } from '@/lib/store/authStore';
 import { useSaveActions } from '@/lib/hooks/useSaveActions';
 import { fetchWeather } from '@/lib/weather';
 import { AUTO_SNAPSHOT_INTERVAL_MS } from '@/lib/constants';
-import type { ScheduleRow } from '@/lib/types';
+import type { ScheduleRow, ScheduleMeta } from '@/lib/types';
 import ScheduleHeader from './ScheduleHeader';
 import ScheduleGrid from './ScheduleGrid';
 import WxStrip from './WxStrip';
@@ -19,12 +19,14 @@ import { useToast } from '@/components/ui/ToastProvider';
 
 interface Props {
   name: string;
+  initMeta?: { projectName: string; phase: string };
 }
 
-export default function ScheduleEditor({ name }: Props) {
+export default function ScheduleEditor({ name, initMeta }: Props) {
   const scheduleName    = useScheduleStore((s) => s.scheduleName);
   const rows            = useScheduleStore((s) => s.rows);
   const meta            = useScheduleStore((s) => s.meta);
+  const updateMeta      = useScheduleStore((s) => s.updateMeta);
   const dirty           = useScheduleStore((s) => s.dirty);
   const conflictData    = useScheduleStore((s) => s.conflictData);
   const setConflictData = useScheduleStore((s) => s.setConflictData);
@@ -98,6 +100,22 @@ export default function ScheduleEditor({ name }: Props) {
     loadedName.current = name;
     loaderRef.current(name);
   }, [name, hydrated]);
+
+  // Apply pre-populated metadata from contextual + New Schedule in Library
+  const initMetaApplied = useRef(false);
+  useEffect(() => {
+    if (!initMeta) return;
+    if (scheduleName !== name) return;
+    if (initMetaApplied.current) return;
+    initMetaApplied.current = true;
+    if (!meta.projectName && !meta.phase) {
+      const patch: Partial<ScheduleMeta> = {};
+      if (initMeta.projectName) patch.projectName = initMeta.projectName;
+      if (initMeta.phase) patch.phase = initMeta.phase;
+      if (patch.projectName || patch.phase) updateMeta(patch);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [scheduleName, name]);
 
   // Weather — key of the date+lat+lng that was active when the schedule last loaded
   const loadedWxKey = useRef('');

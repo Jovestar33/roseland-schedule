@@ -10,6 +10,15 @@ export interface LibraryData {
   folders: LibraryFolder[];
   scheduleFolderMap: Record<string, string>;
   updatedAt: number;
+  // Manual drag order per phase: phaseOrder[prodKey][phaseKey] = [scheduleName, ...]
+  phaseOrder?: {
+    [productionKey: string]: {
+      [phaseKey: string]: string[];
+    };
+  };
+  // Display name overrides stored as [normalizedKey → displayName]
+  productionDisplayNames?: { [productionKey: string]: string };
+  phaseDisplayNames?: { [productionKey: string]: { [phaseKey: string]: string } };
 }
 
 function defaultLibrary(): LibraryData {

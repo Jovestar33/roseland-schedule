@@ -1,5 +1,6 @@
 'use client';
 import type { ScheduleData } from '@/lib/types';
+import type { LibraryData } from '@/lib/api/library';
 import LibraryTree from './LibraryTree';
 
 export interface LibrarySchedule {
@@ -10,9 +11,18 @@ export interface LibrarySchedule {
 
 interface Props {
   schedules: LibrarySchedule[];
+  libMeta: LibraryData;
   onDelete: (name: string) => void;
+  onUpdateLibMeta: (updated: LibraryData) => Promise<void>;
 }
 
-export default function ScheduleListTab({ schedules, onDelete }: Props) {
-  return <LibraryTree schedules={schedules} onDelete={onDelete} />;
+export default function ScheduleListTab({ schedules, libMeta, onDelete, onUpdateLibMeta }: Props) {
+  return (
+    <LibraryTree
+      schedules={schedules}
+      libMeta={libMeta}
+      onDelete={onDelete}
+      onUpdateLibMeta={onUpdateLibMeta}
+    />
+  );
 }

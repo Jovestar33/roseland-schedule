@@ -1,7 +1,16 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { DragDropContext, Droppable, Draggable, type DropResult } from '@hello-pangea/dnd';
+import { GripVertical, Pencil } from 'lucide-react';
 import type { LibrarySchedule } from './ScheduleListTab';
+import type { LibraryData } from '@/lib/api/library';
+
+// ── Utilities ─────────────────────────────────────────────────────────────────
+
+function titleCase(s: string): string {
+  return s.trim().replace(/\b\w/g, (c) => c.toUpperCase());
+}
 
 // ── Collapse state ────────────────────────────────────────────────────────────
 
@@ -30,7 +39,7 @@ interface ScheduleLeaf {
 }
 
 interface PhaseGroup {
-  phaseKey: string;      // '' for schedules with no phase
+  phaseKey: string;
   phaseDisplay: string;
   schedules: ScheduleLeaf[];
 }
@@ -38,17 +47,16 @@ interface PhaseGroup {
 interface ProductionGroup {
   productionKey: string;
   productionDisplay: string;
-  phases: PhaseGroup[];  // includes phaseKey='' group for unphased schedules
+  phases: PhaseGroup[];
   totalCount: number;
 }
 
-// Pick canonical display name from the most recently saved occurrence
 function canonicalDisplay(items: { val: string; savedAt: number }[], fallbackKey: string): string {
   if (!items.length) return fallbackKey;
   return [...items].sort((a, b) => b.savedAt - a.savedAt)[0].val;
 }
 
-function buildTree(schedules: LibrarySchedule[]): {
+function buildTree(schedules: ScheduleLeaf[]): {
   productions: ProductionGroup[];
   ungrouped: ScheduleLeaf[];
 } {
@@ -97,7 +105,6 @@ function buildTree(schedules: LibrarySchedule[]): {
         : '';
       phases.push({ phaseKey, phaseDisplay, schedules: sorted });
     }
-    // Named phases alphabetically; no-phase group last
     phases.sort((a, b) => {
       if (!a.phaseKey && b.phaseKey) return 1;
       if (a.phaseKey && !b.phaseKey) return -1;
@@ -115,11 +122,25 @@ function buildTree(schedules: LibrarySchedule[]): {
   return { productions, ungrouped };
 }
 
-// ── Schedule row ──────────────────────────────────────────────────────────────
+// Apply manual phaseOrder; items not in the order array fall back to dayNumber/savedAt sort.
+function applyPhaseOrder(schedules: ScheduleLeaf[], order: string[] | undefined): ScheduleLeaf[] {
+  if (!order || order.length === 0) return schedules; // already sorted by buildTree
+  const orderMap = new Map(order.map((name, i) => [name, i]));
+  return [...schedules].sort((a, b) => {
+    const ia = orderMap.has(a.name) ? orderMap.get(a.name)! : Infinity;
+    const ib = orderMap.has(b.name) ? orderMap.get(b.name)! : Infinity;
+    if (ia !== ib) return ia - ib;
+    const da = a.data?.meta?.dayNumber ?? Infinity;
+    const db = b.data?.meta?.dayNumber ?? Infinity;
+    if (da !== db) return da - db;
+    return (b.data?.savedAt ?? 0) - (a.data?.savedAt ?? 0);
+  });
+}
+
+// ── Meta line ─────────────────────────────────────────────────────────────────
 
 function formatMeta(s: ScheduleLeaf): string {
-  if (s.loading) return '';
-  if (!s.data) return '';
+  if (s.loading || !s.data) return '';
   const town = s.data.meta?.town ? s.data.meta.town.split(',')[0].trim() : '';
   const dateStr = s.data.meta?.date
     ? new Date(s.data.meta.date + 'T12:00:00').toLocaleDateString('en-US', {
@@ -129,7 +150,9 @@ function formatMeta(s: ScheduleLeaf): string {
   return [town, dateStr].filter(Boolean).join(' · ');
 }
 
-interface ScheduleRowProps {
+// ── Schedule row content (rendered inside Draggable's div) ────────────────────
+
+interface RowContentProps {
   s: ScheduleLeaf;
   copiedInfo: { name: string; kind: 'team' | 'client' } | null;
   onCopyTeam: (name: string) => void;
@@ -138,10 +161,10 @@ interface ScheduleRowProps {
   onOpen: (name: string) => void;
 }
 
-function ScheduleRow({ s, copiedInfo, onCopyTeam, onCopyClient, onDelete, onOpen }: ScheduleRowProps) {
+function ScheduleRowContent({ s, copiedInfo, onCopyTeam, onCopyClient, onDelete, onOpen }: RowContentProps) {
   const meta = formatMeta(s);
   return (
-    <div className="lbt-sched-row">
+    <>
       <button className="lbt-sched-name" onClick={() => onOpen(s.name)} title={s.name}>
         {s.name}
       </button>
@@ -169,23 +192,46 @@ function ScheduleRow({ s, copiedInfo, onCopyTeam, onCopyClient, onDelete, onOpen
           🗑
         </button>
       </div>
-    </div>
+    </>
   );
+}
+
+// ── Edit modal state ──────────────────────────────────────────────────────────
+
+interface EditModal {
+  type: 'production' | 'phase';
+  productionKey: string;
+  phaseKey?: string;
+  draft: string;
+  saving: boolean;
+  error: string | null;
 }
 
 // ── Main component ────────────────────────────────────────────────────────────
 
 interface Props {
   schedules: LibrarySchedule[];
+  libMeta: LibraryData;
   onDelete: (name: string) => void;
+  onUpdateLibMeta: (updated: LibraryData) => Promise<void>;
 }
 
-export default function LibraryTree({ schedules, onDelete }: Props) {
+export default function LibraryTree({ schedules, libMeta, onDelete, onUpdateLibMeta }: Props) {
   const router = useRouter();
-  const [collapsed, setCollapsed] = useState<Set<string>>(new Set());
-  const [copiedInfo, setCopiedInfo] = useState<{ name: string; kind: 'team' | 'client' } | null>(null);
+  const [collapsed,       setCollapsed]       = useState<Set<string>>(new Set());
+  const [copiedInfo,      setCopiedInfo]       = useState<{ name: string; kind: 'team' | 'client' } | null>(null);
+  const [editModal,       setEditModal]        = useState<EditModal | null>(null);
+  const [creatingProd,    setCreatingProd]     = useState(false);
+  const [newProdDraft,    setNewProdDraft]     = useState('');
+  const [creatingPhaseFor, setCreatingPhaseFor] = useState<string | null>(null);
+  const [newPhaseDraft,   setNewPhaseDraft]    = useState('');
+  // UI-only ephemeral empty containers (cleared on page reload — by design)
+  const [emptyProds,  setEmptyProds]  = useState<Map<string, string>>(new Map());
+  const [emptyPhases, setEmptyPhases] = useState<Map<string, Map<string, string>>>(new Map());
 
   useEffect(() => { setCollapsed(loadCollapsed()); }, []);
+
+  // ── Collapse ────────────────────────────────────────────────────────────────
 
   function toggleNode(id: string) {
     setCollapsed((prev) => {
@@ -197,119 +243,486 @@ export default function LibraryTree({ schedules, onDelete }: Props) {
     });
   }
 
+  function expandNode(id: string) {
+    setCollapsed((prev) => {
+      const next = new Set(prev);
+      next.delete(id);
+      saveCollapsed(next);
+      return next;
+    });
+  }
+
+  // ── Copy links ──────────────────────────────────────────────────────────────
+
   function copyLink(name: string, url: string, kind: 'team' | 'client') {
     navigator.clipboard.writeText(url).catch(() => prompt(`Copy ${kind} link:`, url));
     setCopiedInfo({ name, kind });
     setTimeout(() => setCopiedInfo((c) => c?.name === name && c?.kind === kind ? null : c), 3000);
   }
 
-  function copyTeam(name: string) {
-    copyLink(name, `${window.location.origin}/schedule/${encodeURIComponent(name)}?auth=true`, 'team');
-  }
-
-  function copyClient(name: string) {
-    copyLink(name, `${window.location.origin}/view/${encodeURIComponent(name)}`, 'client');
-  }
-
-  const { productions, ungrouped } = buildTree(schedules);
-
-  if (schedules.length === 0) {
-    return (
-      <div className="lbt-empty-state">
-        <strong>No schedules yet.</strong><br />
-        Create a new schedule, then save it to keep it here.
-      </div>
-    );
-  }
-
-  const rowProps = {
+  const rowProps: Omit<RowContentProps, 's'> = {
     copiedInfo,
-    onCopyTeam: copyTeam,
-    onCopyClient: copyClient,
+    onCopyTeam:   (name) => copyLink(name, `${window.location.origin}/schedule/${encodeURIComponent(name)}?auth=true`, 'team'),
+    onCopyClient: (name) => copyLink(name, `${window.location.origin}/view/${encodeURIComponent(name)}`, 'client'),
     onDelete,
-    onOpen: (name: string) => router.push(`/schedule/${encodeURIComponent(name)}`),
+    onOpen: (name) => router.push(`/schedule/${encodeURIComponent(name)}`),
   };
 
+  // ── Drag & drop ─────────────────────────────────────────────────────────────
+
+  async function handleDragEnd(result: DropResult) {
+    if (!result.destination) return;
+    const { source, destination } = result;
+    if (source.droppableId !== destination.droppableId) return;
+    if (source.index === destination.index) return;
+
+    // droppableId = "phase:<productionKey>:<phaseKey>"
+    const withoutPrefix = destination.droppableId.slice('phase:'.length);
+    const colonIdx = withoutPrefix.indexOf(':');
+    const productionKey = withoutPrefix.slice(0, colonIdx);
+    const phaseKey      = withoutPrefix.slice(colonIdx + 1);
+
+    const { productions } = buildTree(schedules);
+    const prod  = productions.find((p) => p.productionKey === productionKey);
+    const phase = prod?.phases.find((p) => p.phaseKey === phaseKey);
+    if (!phase) return;
+
+    const orderedNames = applyPhaseOrder(
+      phase.schedules,
+      libMeta.phaseOrder?.[productionKey]?.[phaseKey]
+    ).map((s) => s.name);
+
+    const newOrder = [...orderedNames];
+    const [removed] = newOrder.splice(source.index, 1);
+    newOrder.splice(destination.index, 0, removed);
+
+    await onUpdateLibMeta({
+      ...libMeta,
+      phaseOrder: {
+        ...(libMeta.phaseOrder ?? {}),
+        [productionKey]: {
+          ...(libMeta.phaseOrder?.[productionKey] ?? {}),
+          [phaseKey]: newOrder,
+        },
+      },
+      updatedAt: Date.now(),
+    });
+  }
+
+  // ── Inline create ───────────────────────────────────────────────────────────
+
+  function confirmCreateProd() {
+    const name = titleCase(newProdDraft);
+    if (!name) { setCreatingProd(false); return; }
+    const key = name.toLowerCase();
+    setEmptyProds((prev) => new Map(prev).set(key, name));
+    setCreatingProd(false);
+    setNewProdDraft('');
+    expandNode(`prod:${key}`);
+  }
+
+  function confirmCreatePhase(productionKey: string) {
+    const name = titleCase(newPhaseDraft);
+    if (!name) { setCreatingPhaseFor(null); return; }
+    const key = name.toLowerCase();
+    setEmptyPhases((prev) => {
+      const next = new Map(prev);
+      const phases = new Map(next.get(productionKey) ?? []);
+      phases.set(key, name);
+      next.set(productionKey, phases);
+      return next;
+    });
+    setCreatingPhaseFor(null);
+    setNewPhaseDraft('');
+    expandNode(`phase:${productionKey}:${key}`);
+  }
+
+  // ── Contextual new schedule ─────────────────────────────────────────────────
+
+  function handleNewSchedule(projectName: string, phase: string) {
+    const params = new URLSearchParams();
+    if (projectName) params.set('proj', projectName);
+    if (phase)       params.set('ph', phase);
+    router.push(`/schedule/Untitled?${params.toString()}`);
+  }
+
+  // ── Edit modal ──────────────────────────────────────────────────────────────
+
+  function openEditProd(prod: ProductionGroup) {
+    setEditModal({
+      type: 'production',
+      productionKey: prod.productionKey,
+      draft: prod.productionDisplay,
+      saving: false,
+      error: null,
+    });
+  }
+
+  function openEditPhase(prod: ProductionGroup, ph: PhaseGroup) {
+    setEditModal({
+      type: 'phase',
+      productionKey: prod.productionKey,
+      phaseKey: ph.phaseKey,
+      draft: ph.phaseDisplay,
+      saving: false,
+      error: null,
+    });
+  }
+
+  async function handleEditSave() {
+    if (!editModal) return;
+    const newName = titleCase(editModal.draft);
+    if (!newName) return;
+    setEditModal((m) => m ? { ...m, saving: true, error: null } : null);
+    try {
+      let updatedMeta: LibraryData;
+      if (editModal.type === 'production') {
+        updatedMeta = {
+          ...libMeta,
+          productionDisplayNames: {
+            ...(libMeta.productionDisplayNames ?? {}),
+            [editModal.productionKey]: newName,
+          },
+          updatedAt: Date.now(),
+        };
+      } else {
+        updatedMeta = {
+          ...libMeta,
+          phaseDisplayNames: {
+            ...(libMeta.phaseDisplayNames ?? {}),
+            [editModal.productionKey]: {
+              ...(libMeta.phaseDisplayNames?.[editModal.productionKey] ?? {}),
+              [editModal.phaseKey!]: newName,
+            },
+          },
+          updatedAt: Date.now(),
+        };
+      }
+      await onUpdateLibMeta(updatedMeta);
+      setEditModal(null);
+    } catch (err) {
+      setEditModal((m) => m ? { ...m, saving: false, error: (err as Error).message || 'Save failed.' } : null);
+    }
+  }
+
+  // ── Build the display tree ──────────────────────────────────────────────────
+
+  const { productions: schedProductions, ungrouped } = buildTree(schedules);
+
+  // Apply display name overrides from libMeta
+  const overriddenProductions = schedProductions.map((prod) => ({
+    ...prod,
+    productionDisplay: libMeta.productionDisplayNames?.[prod.productionKey] ?? prod.productionDisplay,
+    phases: prod.phases.map((ph) => ({
+      ...ph,
+      phaseDisplay: ph.phaseKey
+        ? (libMeta.phaseDisplayNames?.[prod.productionKey]?.[ph.phaseKey] ?? ph.phaseDisplay)
+        : ph.phaseDisplay,
+    })),
+  }));
+
+  // Merge UI-only empty productions
+  const allProductions = [...overriddenProductions];
+  for (const [prodKey, prodDisplay] of emptyProds) {
+    if (!allProductions.some((p) => p.productionKey === prodKey)) {
+      allProductions.push({ productionKey: prodKey, productionDisplay: prodDisplay, phases: [], totalCount: 0 });
+    }
+  }
+  allProductions.sort((a, b) => a.productionKey.localeCompare(b.productionKey));
+
+  // Merge UI-only empty phases into each production
+  for (const prod of allProductions) {
+    const epMap = emptyPhases.get(prod.productionKey);
+    if (epMap) {
+      for (const [phKey, phDisplay] of epMap) {
+        if (!prod.phases.some((ph) => ph.phaseKey === phKey)) {
+          prod.phases.push({ phaseKey: phKey, phaseDisplay: phDisplay, schedules: [] });
+          prod.phases.sort((a, b) => {
+            if (!a.phaseKey && b.phaseKey) return 1;
+            if (a.phaseKey && !b.phaseKey) return -1;
+            return a.phaseKey.localeCompare(b.phaseKey);
+          });
+        }
+      }
+    }
+  }
+
+  // ── Render ──────────────────────────────────────────────────────────────────
+
   return (
-    <div className="lbt-tree">
-      {productions.map((prod) => {
-        const prodId       = `prod:${prod.productionKey}`;
-        const prodCollapsed = collapsed.has(prodId);
-
-        // Separate unphased leaves from named-phase groups
-        const nophaseGroup = prod.phases.find((ph) => ph.phaseKey === '');
-        const namedPhases  = prod.phases.filter((ph) => ph.phaseKey !== '');
-
-        return (
-          <div key={prodId} className="lbt-prod">
-            {/* Production header */}
-            <div className="lbt-prod-row" onClick={() => toggleNode(prodId)}>
-              <span className="lbt-prod-chevron">{prodCollapsed ? '▶' : '▼'}</span>
-              <span className="lbt-prod-name">{prod.productionDisplay}</span>
-              <span className="lbt-prod-count">
-                {prod.totalCount} schedule{prod.totalCount === 1 ? '' : 's'}
-              </span>
+    <>
+      {/* Edit modal */}
+      {editModal && (
+        <div
+          className="lbt-modal-overlay"
+          onClick={() => !editModal.saving && setEditModal(null)}
+        >
+          <div className="lbt-modal" onClick={(e) => e.stopPropagation()}>
+            <h2 className="lbt-modal-title">
+              {editModal.type === 'production' ? 'Edit Production' : 'Edit Phase'}
+            </h2>
+            <div className="lbt-modal-label">Name</div>
+            <input
+              className="lbt-modal-input"
+              autoFocus
+              value={editModal.draft}
+              onChange={(e) => setEditModal((m) => m ? { ...m, draft: e.target.value } : null)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !editModal.saving) handleEditSave();
+                if (e.key === 'Escape' && !editModal.saving) setEditModal(null);
+              }}
+              disabled={editModal.saving}
+            />
+            {editModal.error && <p className="lbt-modal-error">{editModal.error}</p>}
+            <div className="lbt-modal-actions">
+              <button
+                className="btn btn-light btn-sm"
+                onClick={() => setEditModal(null)}
+                disabled={editModal.saving}
+              >
+                Cancel
+              </button>
+              <button
+                className="btn btn-pink btn-sm"
+                onClick={handleEditSave}
+                disabled={editModal.saving || !editModal.draft.trim()}
+              >
+                {editModal.saving ? 'Saving…' : 'Save'}
+              </button>
             </div>
-
-            {/* Production body */}
-            {!prodCollapsed && (
-              <>
-                {/* Named phase groups */}
-                {namedPhases.map((ph) => {
-                  const phaseId        = `phase:${prod.productionKey}:${ph.phaseKey}`;
-                  const phaseCollapsed = collapsed.has(phaseId);
-                  return (
-                    <div key={phaseId} className="lbt-phase">
-                      <div className="lbt-phase-row" onClick={() => toggleNode(phaseId)}>
-                        <span className="lbt-phase-chevron">{phaseCollapsed ? '▶' : '▼'}</span>
-                        <span className="lbt-phase-name">{ph.phaseDisplay}</span>
-                        <span className="lbt-phase-count">
-                          {ph.schedules.length} schedule{ph.schedules.length === 1 ? '' : 's'}
-                        </span>
-                      </div>
-                      {!phaseCollapsed && (
-                        <div className="lbt-sched-list">
-                          {ph.schedules.map((s) => (
-                            <ScheduleRow key={s.name} s={s} {...rowProps} />
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-
-                {/* Unphased schedules directly under production */}
-                {nophaseGroup && (
-                  <div className="lbt-prod-direct">
-                    <div className="lbt-sched-list">
-                      {nophaseGroup.schedules.map((s) => (
-                        <ScheduleRow key={s.name} s={s} {...rowProps} />
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </>
-            )}
-          </div>
-        );
-      })}
-
-      {/* Ungrouped section — hidden when empty */}
-      {ungrouped.length > 0 && (
-        <div className="lbt-ungrouped">
-          <div className="lbt-ungrouped-hdr">
-            <span className="lbt-ungrouped-name">Ungrouped</span>
-            <span className="lbt-ungrouped-count">
-              {ungrouped.length} schedule{ungrouped.length === 1 ? '' : 's'}
-            </span>
-          </div>
-          <div className="lbt-sched-list">
-            {ungrouped.map((s) => (
-              <ScheduleRow key={s.name} s={s} {...rowProps} />
-            ))}
           </div>
         </div>
       )}
-    </div>
+
+      <DragDropContext onDragEnd={handleDragEnd}>
+        <div className="lbt-tree">
+          {/* Empty state — shown only when no schedules and no empty prods are active */}
+          {allProductions.length === 0 && ungrouped.length === 0 && !creatingProd && (
+            <div className="lbt-empty-state">
+              <strong>No schedules yet.</strong><br />
+              Create a new schedule, then save it to keep it here.
+            </div>
+          )}
+
+          {allProductions.map((prod) => {
+            const prodId        = `prod:${prod.productionKey}`;
+            const prodCollapsed = collapsed.has(prodId);
+            const nophaseGroup  = prod.phases.find((ph) => ph.phaseKey === '');
+            const namedPhases   = prod.phases.filter((ph) => ph.phaseKey !== '');
+
+            return (
+              <div key={prodId} className="lbt-prod">
+                {/* Production header */}
+                <div className="lbt-prod-row" onClick={() => toggleNode(prodId)}>
+                  <span className="lbt-prod-chevron">{prodCollapsed ? '▶' : '▼'}</span>
+                  <span className="lbt-prod-name">{prod.productionDisplay}</span>
+                  <span className="lbt-prod-count">
+                    {prod.totalCount} schedule{prod.totalCount === 1 ? '' : 's'}
+                  </span>
+                  <button
+                    className="lbt-edit-btn"
+                    onClick={(e) => { e.stopPropagation(); openEditProd(prod); }}
+                    title="Rename production"
+                  >
+                    <Pencil size={13} />
+                  </button>
+                </div>
+
+                {/* Production body */}
+                {!prodCollapsed && (
+                  <>
+                    {/* Named phase groups */}
+                    {namedPhases.map((ph) => {
+                      const phaseId        = `phase:${prod.productionKey}:${ph.phaseKey}`;
+                      const phaseCollapsed = collapsed.has(phaseId);
+                      const ordered        = applyPhaseOrder(
+                        ph.schedules,
+                        libMeta.phaseOrder?.[prod.productionKey]?.[ph.phaseKey]
+                      );
+
+                      return (
+                        <div key={phaseId} className="lbt-phase">
+                          {/* Phase header */}
+                          <div className="lbt-phase-row" onClick={() => toggleNode(phaseId)}>
+                            <span className="lbt-phase-chevron">{phaseCollapsed ? '▶' : '▼'}</span>
+                            <span className="lbt-phase-name">{ph.phaseDisplay}</span>
+                            <span className="lbt-phase-count">
+                              {ph.schedules.length} schedule{ph.schedules.length === 1 ? '' : 's'}
+                            </span>
+                            <button
+                              className="lbt-edit-btn"
+                              onClick={(e) => { e.stopPropagation(); openEditPhase(prod, ph); }}
+                              title="Rename phase"
+                            >
+                              <Pencil size={12} />
+                            </button>
+                          </div>
+
+                          {!phaseCollapsed && (
+                            <>
+                              <Droppable droppableId={phaseId}>
+                                {(provided) => (
+                                  <div
+                                    ref={provided.innerRef}
+                                    {...provided.droppableProps}
+                                    className="lbt-sched-list"
+                                  >
+                                    {ordered.map((s, i) => (
+                                      <Draggable key={s.name} draggableId={s.name} index={i}>
+                                        {(provided, snapshot) => (
+                                          <div
+                                            ref={provided.innerRef}
+                                            {...provided.draggableProps}
+                                            className={`lbt-sched-row${snapshot.isDragging ? ' is-dragging' : ''}`}
+                                          >
+                                            <span
+                                              className="lbt-drag-handle"
+                                              {...(provided.dragHandleProps ?? {})}
+                                            >
+                                              <GripVertical size={16} />
+                                            </span>
+                                            <ScheduleRowContent s={s} {...rowProps} />
+                                          </div>
+                                        )}
+                                      </Draggable>
+                                    ))}
+                                    {provided.placeholder}
+                                  </div>
+                                )}
+                              </Droppable>
+
+                              {/* Contextual + New Schedule */}
+                              <button
+                                className="lbt-new-sched-btn"
+                                onClick={() => handleNewSchedule(prod.productionDisplay, ph.phaseDisplay)}
+                              >
+                                + New Schedule
+                              </button>
+                            </>
+                          )}
+                        </div>
+                      );
+                    })}
+
+                    {/* Add Phase — inline create or button */}
+                    {creatingPhaseFor === prod.productionKey ? (
+                      <div className="lbt-inline-create lbt-inline-create--phase">
+                        <input
+                          className="lbt-create-input"
+                          autoFocus
+                          value={newPhaseDraft}
+                          placeholder="Phase name…"
+                          onChange={(e) => setNewPhaseDraft(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') confirmCreatePhase(prod.productionKey);
+                            if (e.key === 'Escape') { setCreatingPhaseFor(null); setNewPhaseDraft(''); }
+                          }}
+                        />
+                        <button className="lbt-create-confirm" onClick={() => confirmCreatePhase(prod.productionKey)}>✓</button>
+                        <button className="lbt-create-cancel" onClick={() => { setCreatingPhaseFor(null); setNewPhaseDraft(''); }}>✕</button>
+                      </div>
+                    ) : (
+                      <button
+                        className="lbt-add-phase-btn"
+                        onClick={() => { setCreatingPhaseFor(prod.productionKey); setNewPhaseDraft(''); }}
+                      >
+                        + Add Phase
+                      </button>
+                    )}
+
+                    {/* Unphased schedules directly under production */}
+                    {nophaseGroup && (
+                      <div className="lbt-prod-direct">
+                        <Droppable droppableId={`phase:${prod.productionKey}:`}>
+                          {(provided) => (
+                            <div
+                              ref={provided.innerRef}
+                              {...provided.droppableProps}
+                              className="lbt-sched-list"
+                            >
+                              {applyPhaseOrder(
+                                nophaseGroup.schedules,
+                                libMeta.phaseOrder?.[prod.productionKey]?.['']
+                              ).map((s, i) => (
+                                <Draggable key={s.name} draggableId={s.name} index={i}>
+                                  {(provided, snapshot) => (
+                                    <div
+                                      ref={provided.innerRef}
+                                      {...provided.draggableProps}
+                                      className={`lbt-sched-row${snapshot.isDragging ? ' is-dragging' : ''}`}
+                                    >
+                                      <span
+                                        className="lbt-drag-handle"
+                                        {...(provided.dragHandleProps ?? {})}
+                                      >
+                                        <GripVertical size={16} />
+                                      </span>
+                                      <ScheduleRowContent s={s} {...rowProps} />
+                                    </div>
+                                  )}
+                                </Draggable>
+                              ))}
+                              {provided.placeholder}
+                            </div>
+                          )}
+                        </Droppable>
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
+            );
+          })}
+
+          {/* + Add Production */}
+          {creatingProd ? (
+            <div className="lbt-inline-create">
+              <input
+                className="lbt-create-input"
+                autoFocus
+                value={newProdDraft}
+                placeholder="Production name…"
+                onChange={(e) => setNewProdDraft(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') confirmCreateProd();
+                  if (e.key === 'Escape') { setCreatingProd(false); setNewProdDraft(''); }
+                }}
+              />
+              <button className="lbt-create-confirm" onClick={confirmCreateProd}>✓</button>
+              <button className="lbt-create-cancel" onClick={() => { setCreatingProd(false); setNewProdDraft(''); }}>✕</button>
+            </div>
+          ) : (
+            <button
+              className="lbt-add-prod-btn"
+              onClick={() => { setCreatingProd(true); setNewProdDraft(''); }}
+            >
+              + Add Production
+            </button>
+          )}
+
+          {/* Ungrouped schedules — no DnD */}
+          {ungrouped.length > 0 && (
+            <div className="lbt-ungrouped">
+              <div className="lbt-ungrouped-hdr">
+                <span className="lbt-ungrouped-name">Ungrouped</span>
+                <span className="lbt-ungrouped-count">
+                  {ungrouped.length} schedule{ungrouped.length === 1 ? '' : 's'}
+                </span>
+              </div>
+              <div className="lbt-sched-list">
+                {ungrouped.map((s) => (
+                  <div key={s.name} className="lbt-sched-row">
+                    <span className="lbt-drag-handle lbt-drag-handle--inert">
+                      <GripVertical size={16} />
+                    </span>
+                    <ScheduleRowContent s={s} {...rowProps} />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </DragDropContext>
+    </>
   );
 }

@@ -1,0 +1,246 @@
+/* Library tree — drag handles, edit buttons, inline create, add buttons, edit modal */
+
+/* ── Drag handle ──────────────────────────────────────────────────────────── */
+
+.lbt-drag-handle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--g300);
+  cursor: grab;
+  flex-shrink: 0;
+  width: 20px;
+  touch-action: none;
+  user-select: none;
+}
+
+.lbt-drag-handle:active { cursor: grabbing; }
+
+.lbt-drag-handle--inert {
+  opacity: 0.25;
+  cursor: default;
+  pointer-events: none;
+}
+
+/* ── Dragging row state ───────────────────────────────────────────────────── */
+
+.lbt-sched-row.is-dragging {
+  background: var(--g50);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.13);
+  border-radius: 8px;
+  z-index: 100;
+}
+
+/* ── Edit (pencil) button on prod/phase rows ──────────────────────────────── */
+
+.lbt-edit-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--g400);
+  padding: 3px 5px;
+  border-radius: 5px;
+  flex-shrink: 0;
+  opacity: 0;
+  transition: opacity 0.12s, color 0.1s, background 0.1s;
+}
+
+.lbt-prod-row:hover .lbt-edit-btn,
+.lbt-phase-row:hover .lbt-edit-btn {
+  opacity: 1;
+}
+
+.lbt-edit-btn:hover {
+  color: var(--ink);
+  background: var(--g100);
+}
+
+/* Always visible on touch devices */
+@media (hover: none) {
+  .lbt-edit-btn { opacity: 1; }
+}
+
+/* ── Inline create row ────────────────────────────────────────────────────── */
+
+.lbt-inline-create {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-top: 1px solid var(--g100);
+}
+
+.lbt-inline-create--phase {
+  padding-left: 36px;
+}
+
+.lbt-create-input {
+  flex: 1;
+  min-width: 0;
+  border: 1px solid var(--g300);
+  border-radius: 7px;
+  padding: 5px 9px;
+  font-family: var(--fb);
+  font-size: 13px;
+  color: var(--ink);
+  background: #fff;
+  outline: none;
+}
+
+.lbt-create-input:focus { border-color: var(--pink); }
+
+.lbt-create-confirm,
+.lbt-create-cancel {
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  padding: 5px 9px;
+  font-size: 12px;
+  font-family: var(--fb);
+  flex-shrink: 0;
+  transition: opacity 0.1s;
+}
+
+.lbt-create-confirm { background: var(--pink); color: #fff; }
+.lbt-create-cancel  { background: var(--g100); color: var(--g600); }
+.lbt-create-confirm:hover { opacity: 0.85; }
+.lbt-create-cancel:hover  { background: var(--g200); }
+
+/* ── Add Production button ────────────────────────────────────────────────── */
+
+.lbt-add-prod-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 14px;
+  font-family: var(--fb);
+  font-size: 13px;
+  color: var(--g500);
+  background: transparent;
+  border: 1px dashed var(--g200);
+  border-radius: 12px;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 4px;
+  transition: background 0.12s, color 0.12s, border-color 0.12s;
+  text-align: left;
+}
+
+.lbt-add-prod-btn:hover {
+  background: var(--g50);
+  color: var(--ink);
+  border-color: var(--g300);
+}
+
+/* ── Add Phase button ─────────────────────────────────────────────────────── */
+
+.lbt-add-phase-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 14px 7px 36px;
+  font-family: var(--fb);
+  font-size: 12px;
+  color: var(--g400);
+  background: transparent;
+  border: none;
+  border-top: 1px solid var(--g100);
+  cursor: pointer;
+  width: 100%;
+  transition: background 0.12s, color 0.12s;
+  text-align: left;
+}
+
+.lbt-add-phase-btn:hover { background: var(--g50); color: var(--ink); }
+
+/* ── Contextual + New Schedule button (inside a phase) ────────────────────── */
+
+.lbt-new-sched-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 14px 5px 60px;
+  font-family: var(--fb);
+  font-size: 12px;
+  color: var(--g400);
+  background: transparent;
+  border: none;
+  border-top: 1px solid var(--g50);
+  cursor: pointer;
+  width: 100%;
+  transition: background 0.12s, color 0.12s;
+  text-align: left;
+}
+
+.lbt-new-sched-btn:hover { background: var(--g50); color: var(--pink); }
+
+@media (max-width: 760px) {
+  .lbt-new-sched-btn { padding-left: 44px; }
+}
+
+/* ── Edit modal ───────────────────────────────────────────────────────────── */
+
+.lbt-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.42);
+  z-index: 3000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.lbt-modal {
+  background: #fff;
+  border-radius: 16px;
+  padding: 24px;
+  width: min(440px, 100%);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
+}
+
+.lbt-modal-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0 0 14px;
+}
+
+.lbt-modal-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--g500);
+  margin-bottom: 6px;
+}
+
+.lbt-modal-input {
+  width: 100%;
+  border: 1px solid var(--g300);
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-family: var(--fb);
+  font-size: 14px;
+  color: var(--ink);
+  outline: none;
+  box-sizing: border-box;
+  margin-bottom: 16px;
+}
+
+.lbt-modal-input:focus { border-color: var(--pink); }
+
+.lbt-modal-error {
+  font-size: 12px;
+  color: #e53e3e;
+  margin-bottom: 12px;
+}
+
+.lbt-modal-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
