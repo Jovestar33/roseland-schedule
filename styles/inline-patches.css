@@ -1098,3 +1098,16 @@ body{overflow-x:hidden;max-width:100dvw}
   .tbar-close{width:36px!important;padding:0!important;justify-content:center!important;}
   .mf input{white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;}
 }
+
+/* ── NOTES column header alignment ─────────────────────────────────────────── */
+/* Shifts "NOTES" header text right to align with the notes textarea, which    */
+/* starts after status-icon-slot (24px desktop / 22px mobile) + 8px flex gap. */
+/* desktop/tablet: td-pad(5) + icon(24) + gap(8) = 37px from cell left border */
+.th-notes { padding-left: 37px !important; }
+#mobile-grid-sticky .th-notes { padding-left: 37px !important; }
+
+/* mobile ≤760px: td-pad(6) + icon(22) + gap(8) = 36px */
+@media (max-width: 760px) {
+  .tbl-wrap thead .th-notes { padding-left: 36px !important; }
+  #mobile-grid-sticky .th-notes { padding-left: 36px !important; }
+}
