@@ -87,6 +87,15 @@ body{font-family:var(--fb);background:var(--g100);color:var(--black);min-height:
 .panel{background:var(--white);border-radius:12px;
   box-shadow:0 1px 4px rgba(0,0,0,.08),0 4px 16px rgba(0,0,0,.04);
   margin:16px;overflow:visible}
+@media screen{
+  .panel{display:flex;flex-direction:column}
+  .toolbar    {order:1}
+  .meta       {order:2}
+  .wx-strip   {order:3}
+  .scroll-hint{order:4}
+  .tbl-wrap   {order:5}
+  .add-area   {order:6}
+}
 
 /* META */
 .meta{padding:20px 24px 16px;border-bottom:1px solid var(--g200)}
