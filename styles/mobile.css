@@ -406,6 +406,12 @@ body.readonly .readonly-bar{display:flex}
     width:auto !important;
     min-width:unset !important;
   }
+  .toolbar-btns::after{
+    content:'' !important;
+    display:block !important;
+    min-width:12px !important;
+    flex-shrink:0 !important;
+  }
   .sync-pill{
     height:36px !important;
     min-height:unset !important;
