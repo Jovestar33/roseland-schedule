@@ -13,7 +13,7 @@ export default function UndoRedoButtons() {
         title="Undo (Ctrl+Z)"
         aria-label="Undo"
       >
-        ↩ Undo
+        ↩<span className="tbar-btn-text"> Undo</span>
       </button>
       <button
         className={`btn btn-light btn-sm${!canRedo ? ' undo-disabled' : ''}`}
@@ -22,7 +22,7 @@ export default function UndoRedoButtons() {
         title="Redo (Ctrl+Y)"
         aria-label="Redo"
       >
-        ↪ Redo
+        ↪<span className="tbar-btn-text"> Redo</span>
       </button>
     </div>
   );

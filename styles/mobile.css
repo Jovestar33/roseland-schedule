@@ -770,6 +770,11 @@ body.readonly .readonly-bar{display:flex}
     font-size:13px !important;
   }
   .tbar-label{display:inline !important;}
+  /* Hide Undo/Redo text and Close text on mobile; show ✕ instead */
+  .tbar-btn-text{display:none !important;}
+  .tbar-close-icon{display:inline !important;}
+  /* Square up the Close button since it's just an icon */
+  .tbar-close{width:36px !important;padding:0 !important;justify-content:center !important;}
   /* Compact uniform touch targets — no full-width expansion */
   .toolbar .btn,
   .tbar-split-main,
