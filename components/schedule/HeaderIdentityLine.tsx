@@ -13,14 +13,14 @@ export default function HeaderIdentityLine({ readOnly = false }: Props) {
   const [draft,   setDraft]   = useState('');
 
   const dayStr = meta.dayNumber !== null
-    ? (meta.totalDays !== null ? `${meta.dayNumber}/${meta.totalDays}` : `${meta.dayNumber}`)
+    ? (meta.totalDays !== null ? `Day ${meta.dayNumber}/${meta.totalDays}` : `Day ${meta.dayNumber}`)
     : '';
 
   const allEmpty = !meta.projectName && !meta.phase && !dayStr;
 
   function startEdit(field: Field) {
     if (readOnly) return;
-    const init = field === 'day'         ? dayStr
+    const init = field === 'day'         ? dayEditStr
                : field === 'projectName' ? meta.projectName
                :                          meta.phase;
     setDraft(init);
@@ -66,10 +66,14 @@ export default function HeaderIdentityLine({ readOnly = false }: Props) {
     );
   }
 
+  const dayEditStr = meta.dayNumber !== null
+    ? (meta.totalDays !== null ? `${meta.dayNumber}/${meta.totalDays}` : `${meta.dayNumber}`)
+    : '';
+
   const FIELDS: { id: Field; val: string; ph: string }[] = [
     { id: 'projectName', val: meta.projectName, ph: 'Project' },
     { id: 'phase',       val: meta.phase,        ph: 'Phase'   },
-    { id: 'day',         val: dayStr,             ph: 'Day'     },
+    { id: 'day',         val: dayStr,             ph: 'Day #/#' },
   ];
 
   // Only render fields that have a value OR are currently being edited.
