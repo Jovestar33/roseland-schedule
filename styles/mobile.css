@@ -361,7 +361,7 @@ body.readonly .readonly-bar{display:flex}
   .hdr-right .btn[onclick="window.print()"]{grid-area:print !important;}
   .hdr-right .btn[onclick="openCms()"]{grid-area:cms !important;}
 
-  /* ── Toolbar: name on own line, buttons scroll row ── */
+  /* ── Toolbar: name+pill row + buttons row on mobile ── */
   .toolbar{
     display:flex !important;
     flex-direction:column !important;
@@ -374,26 +374,42 @@ body.readonly .readonly-bar{display:flex}
     position:static !important;
     overflow:visible !important;
   }
+  .toolbar-head{
+    display:flex !important;
+    flex-direction:row !important;
+    justify-content:space-between !important;
+    align-items:center !important;
+    padding:8px 10px 4px !important;
+    flex-shrink:0 !important;
+    width:100% !important;
+    gap:8px !important;
+  }
   .tbar-name{
     display:block !important;
-    width:100% !important;
-    max-width:100% !important;
-    height:auto !important;
+    flex:1 !important;
+    min-width:0 !important;
     white-space:nowrap !important;
-    overflow:visible !important;
-    text-overflow:clip !important;
-    padding:8px 10px 4px !important;
+    overflow:hidden !important;
+    text-overflow:ellipsis !important;
+    padding:0 !important;
     margin:0 !important;
     font-size:12px !important;
+    flex-shrink:1 !important;
+  }
+  .sync-pill{
+    height:28px !important;
+    min-height:unset !important;
+    padding:0 8px !important;
+    font-size:11px !important;
+    align-self:center !important;
+    width:auto !important;
     flex-shrink:0 !important;
   }
   .toolbar-btns{
     display:flex !important;
     flex-direction:row !important;
     flex-wrap:nowrap !important;
-    overflow-x:auto !important;
-    overflow-y:visible !important;
-    -webkit-overflow-scrolling:touch !important;
+    overflow:visible !important;
     align-items:center !important;
     gap:6px !important;
     padding:4px 8px 6px !important;
@@ -405,20 +421,6 @@ body.readonly .readonly-bar{display:flex}
     min-height:unset !important;
     width:auto !important;
     min-width:unset !important;
-  }
-  .toolbar-btns::after{
-    content:'' !important;
-    display:block !important;
-    min-width:16px !important;
-    flex-shrink:0 !important;
-  }
-  .sync-pill{
-    height:36px !important;
-    min-height:unset !important;
-    padding:0 8px !important;
-    font-size:11px !important;
-    align-self:center !important;
-    width:auto !important;
   }
   .toolbar .btn,
   .tbar-split-main,

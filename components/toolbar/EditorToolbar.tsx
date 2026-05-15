@@ -17,9 +17,11 @@ export default function EditorToolbar({ onSave, onOpenSaveAs, onSnapshot, onClos
 
   return (
     <div className="toolbar">
-      <span className="tbar-name">{scheduleName ?? 'Untitled'}</span>
-      <div className="toolbar-btns">
+      <div className="toolbar-head">
+        <span className="tbar-name">{scheduleName ?? 'Untitled'}</span>
         <SyncStatusPill />
+      </div>
+      <div className="toolbar-btns">
         <SaveDropdown onSave={onSave} onSaveAs={onOpenSaveAs} onSnapshot={onSnapshot} />
         <UndoRedoButtons />
         <ShareDropdown />
