@@ -14,7 +14,7 @@ export default function AppHeader() {
     // Previous JS approaches set a normal inline style, which CSS !important beats.
     if (window.matchMedia('(max-width: 760px)').matches) {
       const hdr = document.querySelector<HTMLElement>('.hdr');
-      hdr?.style.setProperty('padding-top', 'max(70px, env(safe-area-inset-top, 70px))', 'important');
+      hdr?.style.setProperty('padding-top', 'calc(env(safe-area-inset-top, 20px) + 2px)', 'important');
     }
   }, []);
 

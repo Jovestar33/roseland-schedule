@@ -301,7 +301,7 @@ body.readonly .readonly-bar{display:flex}
     max-width:100vw !important;
     overflow:hidden !important;
     box-sizing:border-box !important;
-    padding-top:max(70px, env(safe-area-inset-top, 70px)) !important;
+    padding-top:calc(env(safe-area-inset-top, 20px) + 2px) !important;
     padding-left:10px !important;
     padding-right:10px !important;
     padding-bottom:14px !important;
@@ -453,7 +453,7 @@ body.readonly .readonly-bar{display:flex}
 
 @media (max-width: 480px){
   .hdr{
-    padding-top:max(70px, env(safe-area-inset-top, 70px)) !important;
+    padding-top:calc(env(safe-area-inset-top, 20px) + 2px) !important;
     padding-left:8px !important;
     padding-right:8px !important;
     padding-bottom:12px !important;
