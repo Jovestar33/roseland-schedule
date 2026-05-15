@@ -745,39 +745,47 @@ body.readonly .readonly-bar{display:flex}
 }
 
 
-/* ── Redesigned toolbar: flex row replaces old grid ──────────────────────── */
+/* ── Redesigned toolbar: single compact scrollable flex row ──────────────── */
 @media (max-width: 760px) {
   .toolbar{
     display:flex !important;
-    flex-wrap:wrap !important;
+    flex-wrap:nowrap !important;
+    overflow-x:auto !important;
+    overflow-y:visible !important;
+    -webkit-overflow-scrolling:touch !important;
     align-items:center !important;
-    gap:6px !important;
-    padding:8px 10px !important;
-    overflow:visible !important;
+    gap:5px !important;
+    padding:6px 10px !important;
+    max-height:none !important;
   }
   .tbar-name{
-    flex:1 1 100% !important;
-    min-width:0 !important;
+    flex:0 1 auto !important;
+    flex-shrink:1 !important;
+    min-width:50px !important;
+    max-width:110px !important;
     white-space:nowrap !important;
     overflow:hidden !important;
     text-overflow:ellipsis !important;
-    margin:0 0 2px !important;
+    margin:0 !important;
+    font-size:13px !important;
   }
-  /* Hide text labels on Save and Share; keep icons + chevrons */
-  .tbar-label{display:none !important;}
-  .tbar-icon{margin:0 !important;}
-  /* Uniform touch targets for all toolbar items */
+  .tbar-label{display:inline !important;}
+  /* Compact uniform touch targets — no full-width expansion */
   .toolbar .btn,
   .tbar-split-main,
   .tbar-split-chev{
-    min-height:40px !important;
-    padding:8px 10px !important;
-    font-size:14px !important;
-    border-radius:10px !important;
+    height:36px !important;
+    max-height:36px !important;
+    min-height:0 !important;
+    padding:0 10px !important;
+    font-size:13px !important;
+    white-space:nowrap !important;
     flex-shrink:0 !important;
+    width:auto !important;
+    min-width:0 !important;
   }
   .tbar-split-main{border-radius:10px 0 0 10px !important;}
-  .tbar-split-chev{border-radius:0 10px 10px 0 !important;padding:8px 9px !important;}
+  .tbar-split-chev{border-radius:0 10px 10px 0 !important;padding:0 9px !important;}
   .undo-redo-pair{
     display:flex !important;
     flex-direction:row !important;
@@ -785,18 +793,24 @@ body.readonly .readonly-bar{display:flex}
     flex-shrink:0 !important;
   }
   .undo-redo-pair .btn{
-    min-height:40px !important;
-    min-width:40px !important;
-    padding:8px !important;
-    border-radius:10px !important;
+    width:auto !important;
   }
-  /* Sync pill stays compact */
+  /* Sync pill compact */
   .sync-pill{
     grid-column:unset !important;
     grid-row:unset !important;
-    min-height:40px !important;
-    padding:6px 10px !important;
+    height:36px !important;
+    max-height:36px !important;
+    min-height:0 !important;
+    padding:0 8px !important;
     font-size:11px !important;
     flex-shrink:0 !important;
+    align-self:center !important;
+  }
+  /* Weather strip: keep Refresh/Clear inline, not full-width */
+  .wx-refresh{
+    width:auto !important;
+    display:inline-block !important;
+    margin:4px 0 0 !important;
   }
 }

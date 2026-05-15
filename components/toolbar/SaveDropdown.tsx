@@ -25,8 +25,7 @@ export default function SaveDropdown({ onSave, onSaveAs, onSnapshot }: Props) {
   return (
     <div className="tbar-split" ref={ref}>
       <button className="btn btn-light btn-sm tbar-split-main" onClick={onSave} title="Save">
-        <span className="tbar-icon">💾</span>
-        <span className="tbar-label"> Save</span>
+        Save
       </button>
       <button
         className="btn btn-light btn-sm tbar-split-chev"
