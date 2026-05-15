@@ -280,7 +280,7 @@ body.readonly .readonly-bar{display:flex}
   .scroll-hint{display:flex}
   .wx-strip{flex-direction:column;padding:8px 12px;gap:0}
   .wx-item{padding:4px 0;margin:0;border-right:none!important;flex-direction:row;
-    align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,255,.08)}
+    align-items:center;gap:10px;border-bottom:1px solid var(--g200)}
   .wx-item:last-child{border-bottom:none}
   .wx-label{min-width:90px;margin-bottom:0;flex-shrink:0}
   .wx-refresh-row{display:flex !important;flex-direction:row !important;gap:8px !important;margin-top:6px !important;}
