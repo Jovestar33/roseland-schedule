@@ -453,7 +453,10 @@ body.readonly .readonly-bar{display:flex}
 
 @media (max-width: 480px){
   .hdr{
-    padding:8px 8px 12px !important;
+    padding-top:max(70px, env(safe-area-inset-top, 70px)) !important;
+    padding-left:8px !important;
+    padding-right:8px !important;
+    padding-bottom:12px !important;
   }
   .hdr img{
     max-width:108px !important;
