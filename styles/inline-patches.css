@@ -959,8 +959,8 @@ body{overflow-x:hidden;max-width:100dvw}
   }
 
   .tbl-wrap table{
-    min-width:1328px !important;
-    width:1328px !important;
+    min-width:1341px !important;
+    width:1341px !important;
     table-layout:fixed !important;
     border-collapse:collapse !important;
   }
@@ -974,7 +974,7 @@ body{overflow-x:hidden;max-width:100dvw}
   .tbl-wrap colgroup .c-ti{width:100px !important;}
   .tbl-wrap colgroup .c-du{width:100px !important;}
   .tbl-wrap colgroup .c-to{width:110px !important;}
-  .tbl-wrap colgroup .c-cb{width:51px !important;}
+  .tbl-wrap colgroup .c-cb{width:64px !important;}
   .tbl-wrap colgroup .c-x{width:36px !important;}
 
   .tbl-wrap th,
