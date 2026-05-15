@@ -12,7 +12,7 @@ export default function AppHeader() {
   }, []);
 
   return (
-    <div className="hdr" style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+    <div className="hdr" style={{ position: 'relative', display: 'flex' }}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={logo || '/logo-header.png'}

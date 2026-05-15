@@ -306,7 +306,7 @@ body.readonly .readonly-bar{display:flex}
     padding-right:10px !important;
     padding-bottom:14px !important;
     gap:10px !important;
-    align-items:stretch !important;
+    align-items:flex-start !important;
     justify-content:flex-start !important;
   }
   .hdr-title{
