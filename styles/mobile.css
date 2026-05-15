@@ -409,7 +409,7 @@ body.readonly .readonly-bar{display:flex}
   .toolbar-btns::after{
     content:'' !important;
     display:block !important;
-    min-width:12px !important;
+    min-width:16px !important;
     flex-shrink:0 !important;
   }
   .sync-pill{

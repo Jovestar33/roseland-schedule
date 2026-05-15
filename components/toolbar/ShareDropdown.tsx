@@ -7,16 +7,31 @@ export default function ShareDropdown() {
   const scheduleName    = useScheduleStore((s) => s.scheduleName);
   const getScheduleData = useScheduleStore((s) => s.getScheduleData);
   const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
+  const [dropPos, setDropPos] = useState({ top: 0, right: 0 });
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const btnRef  = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (!open) return;
     function onOutside(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+      if (wrapRef.current && !wrapRef.current.contains(e.target as Node)) setOpen(false);
     }
+    function onScroll() { setOpen(false); }
     document.addEventListener('mousedown', onOutside);
-    return () => document.removeEventListener('mousedown', onOutside);
+    window.addEventListener('scroll', onScroll, true);
+    return () => {
+      document.removeEventListener('mousedown', onOutside);
+      window.removeEventListener('scroll', onScroll, true);
+    };
   }, [open]);
+
+  function toggle() {
+    if (!open && btnRef.current) {
+      const r = btnRef.current.getBoundingClientRect();
+      setDropPos({ top: r.bottom + 4, right: window.innerWidth - r.right });
+    }
+    setOpen(o => !o);
+  }
 
   function close() { setOpen(false); }
 
@@ -40,10 +55,11 @@ export default function ShareDropdown() {
   }
 
   return (
-    <div className="tbar-drop-wrap" ref={ref}>
+    <div className="tbar-drop-wrap" ref={wrapRef}>
       <button
         className="btn btn-light btn-sm"
-        onClick={() => setOpen(o => !o)}
+        ref={btnRef}
+        onClick={toggle}
         title="Share"
       >
         <span className="tbar-icon">⬆</span>
@@ -51,7 +67,10 @@ export default function ShareDropdown() {
         <span className={`tbar-chev${open ? ' open' : ''}`}> ▾</span>
       </button>
       {open && (
-        <div className="tbar-drop tbar-drop-right">
+        <div
+          className="tbar-drop"
+          style={{ position: 'fixed', top: dropPos.top, right: dropPos.right, left: 'auto', zIndex: 9999 }}
+        >
           <button className="tbar-drop-item" onClick={handlePrint}>🖨 Print / PDF</button>
           <button className="tbar-drop-item" onClick={handleExportJson}>⬇ Export JSON</button>
         </div>
