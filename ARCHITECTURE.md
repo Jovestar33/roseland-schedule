@@ -27,7 +27,8 @@ app/
 components/
   schedule/          # ScheduleEditor, ScheduleHeader, ScheduleGrid, row types, modals
   schedule/CrewIdentityBlock.tsx  # Compact PRODUCER/DIRECTOR/CAMERA inline-edit block
-  library/           # LibraryModal, ScheduleListTab, SnapshotsTab, BackupTab
+  schedule/ComboInput.tsx         # Filtered typeahead input with keyboard navigation
+  library/           # LibraryPage, ScheduleListTab, LibraryTree, SnapshotsTab, BackupTab
   cms/               # CmsModal, CmsEditor
   toolbar/           # EditorToolbar, SaveDropdown, ShareDropdown, UndoRedoButtons, SyncStatusPill, ToolsPanel
   view/              # ReadOnlyViewer, PublicViewer, ScheduleReadView
@@ -63,6 +64,8 @@ app/manifest.ts      # PWA manifest, auto-served at /manifest.webmanifest
 | `components/toolbar/SaveDropdown.tsx` | Split Save button; dropdown uses position:fixed to escape overflow |
 | `components/toolbar/ShareDropdown.tsx` | Share/Print/Export dropdown; same fixed-position escape pattern |
 | `components/toolbar/ToolsPanel.tsx` | Slide-over panel (Templates / Backup / Restore tabs); portal to document.body |
+| `components/library/LibraryTree.tsx` | Collapsible production → phase → schedule tree; DnD reorder, inline create, edit modal |
+| `components/schedule/ComboInput.tsx` | Typeahead input with filtered dropdown; used for projectName/phase in identity line |
 
 ## 4. State Management
 
@@ -178,6 +181,18 @@ All functions share the same HMAC auth check. Delete operations require a separa
 
 **Done/Contact cell column width** — The `.c-cb` column contains both a done checkbox and a 24px contact button in a `display:flex; gap:8px` row (`.done-tools`). On mobile the V9 block (`@media (max-width:760px)` in inline-patches.css) sets the column to 64px with `overflow:hidden` on the td. Width formula: 5px-pad + 20px-checkbox + 8px-gap + 24px-button + 7px-pad ≈ 64px. A narrower column clips the contact button on the right.
 
+**Library auto-grouping tree** — `LibraryTree.tsx` derives the production → phase → schedule hierarchy entirely client-side from schedule metadata (`projectName.trim().toLowerCase()` → prodKey, `phase.trim().toLowerCase()` → phaseKey). No server-side folder data required. `buildTree()` returns `{ productions, ungrouped }`. `ScheduleListTab` is a thin wrapper that just renders `LibraryTree`. Empty productions/phases created via inline "+ Add" inputs are held in component state only (not persisted); they become real once a schedule populates them.
+
+**Library phaseOrder** — Manual drag-and-drop order within a phase is stored in `libMeta.phaseOrder[prodKey][phaseKey]` as an array of schedule names. `applyPhaseOrder()` sorts a phase's schedules by this array; names absent from the array fall back to dayNumber/savedAt sort and append to the end. `onDragEnd` uses `@hello-pangea/dnd`; cross-phase drops are rejected (same-droppable-only). After delete, LibraryPage removes the schedule name from all phaseOrder arrays on the same write.
+
+**Library display name overrides** — Renaming a production or phase writes `libMeta.productionDisplayNames[prodKey]` or `libMeta.phaseDisplayNames[prodKey][phaseKey]`. The normalized lowercase key (used for grouping) never changes; only the displayed label changes. Schedule blobs are not touched. The tree applies overrides after `buildTree()`, before merging empty containers.
+
+**ComboInput** — `components/schedule/ComboInput.tsx` is a controlled input with a filtered suggestion dropdown. `onMouseDown + e.preventDefault()` on options prevents blur-before-click. Pressing Enter fires `onBlur?.()` (commit) whether or not a dropdown item is active; pressing Escape fires `onEscape?.()` (revert). `HeaderIdentityLine` uses a `draftRef` alongside `draft` state so `commit()` always reads the latest value synchronously, even when a dropdown option was just selected (React batching would otherwise lag state).
+
+**Library options cache** — After `LibraryPage` parallel-fetches all schedule data, it writes unique projectName/phase values to `localStorage('rp_lib_project_options')` and `localStorage('rp_lib_phase_options')`. `HeaderIdentityLine` reads these on mount to seed ComboInput suggestions — no extra network calls in the editor.
+
+**Contextual new schedule** — The "+ New Schedule" button inside a named phase navigates to `/schedule/Untitled?proj=X&ph=Y`. `app/(app)/schedule/[name]/page.tsx` reads those search params and passes them as `initMeta` to `ScheduleEditor`. `ScheduleEditor` applies them once (guarded by `initMetaApplied` ref) after `scheduleName === name` resolves, and only if the schedule has no existing projectName/phase (i.e., it's a fresh blank schedule).
+
 ## 10. Feature Map
 
 **Schedule editing**: action rows, custom rows, sun rows, notes, call time, location, town, date, weather strip
@@ -188,7 +203,7 @@ All functions share the same HMAC auth check. Delete operations require a separa
 **Conflict detection**: optimistic concurrency via savedAt + content hash, resolution modal (overwrite or reload)
 **Auto-snapshot**: every 5 min while dirty
 **Manual snapshots**: named versions, restore, compare (BackupTab)
-**Library**: folder/project organization, sort by savedAt, move between folders
+**Library**: collapsible production → phase → schedule tree (auto-grouped from metadata); drag-and-drop reorder within phases; inline create production/phase; edit display names; contextual + New Schedule pre-populates identity; Team/Client link copy; delete
 **Sharing**: Team Link (`?auth=true` deep link), Client Link (`/view/[name]` public)
 **Public viewer**: branded read-only view, no auth required
 **CMS**: per-brand colors, fonts, logo, action style overrides — applied via CSS custom properties

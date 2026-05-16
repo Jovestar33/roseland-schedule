@@ -25,7 +25,15 @@
 9. **Export Current JSON** — move to schedule toolbar, remove from Backup tab
 10. ✅ **Tools Panel slide-over** — `ToolsPanel.tsx` renders via `createPortal` to `document.body`; slides from right on desktop/tablet (380px), bottom sheet on mobile (70vh). Three tabs: Templates (save/apply/delete templates from within an open schedule — the context problem is now solved), Backup (Export JSON), Restore (snapshot cards with Preview, Save As New, Restore, Delete). Merged to main 2026-05-15.
 11. **Push notifications for overtime** — alert when action runs over its duration
-12. **Library improvements** — search/filter schedules, sort options, archive instead of hard delete, open recent
+12. **Library improvements**
+    - ✅ **Auto-grouping hierarchy tree** — collapsible production → phase → schedule tree derived from schedule metadata; collapse state persists in localStorage. Merged to main 2026-05-16.
+    - ✅ **Drag-and-drop reorder** — schedules within a phase are manually reorderable; order persists in `libMeta.phaseOrder`. Merged to main 2026-05-16.
+    - ✅ **Inline create Production / Phase** — "+ Add Production" and "+ Add Phase" inline inputs with Enter/Escape; empty containers held in UI state until populated. Merged to main 2026-05-16.
+    - ✅ **Edit production/phase display names** — pencil button opens modal; writes display name override to libMeta (`productionDisplayNames` / `phaseDisplayNames`); schedule blobs untouched. Merged to main 2026-05-16.
+    - ✅ **Contextual + New Schedule** — button inside each named phase navigates to editor pre-populated with projectName and phase via URL search params. Merged to main 2026-05-16.
+    - ✅ **ComboInput typeahead** — projectName and phase fields in the editor identity line show filtered suggestions seeded from library load (localStorage cache). Merged to main 2026-05-16.
+    - ✅ **Mobile two-line row layout** — schedule rows on mobile stack into grip+name / actions two-line format; no truncation. Merged to main 2026-05-16.
+    - ⬜ Search/filter schedules, sort options, archive instead of hard delete, open recent — still pending
 13. **Contact sheet / extract** — generate a shareable contact list URL or exportable sheet from schedule row data; evaluate whether a lightweight contacts DB is needed to support this properly
 14. **Version history UX** — named versions, better restore UX, compare versions, save version as new schedule
 15. **Client read-only view enhancements** — crew contact cards visible in public view
@@ -64,4 +72,4 @@
 - **Item 19 (CMS architecture):** Planning conversation before any code
 
 ---
-*Last updated: 2026-05-15 — Tools Panel (Item 10) merged to main; mobile toolbar/grid polish pass complete*
+*Last updated: 2026-05-16 — Library hierarchy tree + DnD reorder + inline create + edit names + ComboInput + mobile row fix all merged to main (Item 12 major subset complete)*
