@@ -30,6 +30,7 @@ export default function LibraryPage() {
     if (!hydrated) return;
     if (!token) { router.push('/login'); return; }
     loadLibrary();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hydrated, token]);
 
   async function loadLibrary() {

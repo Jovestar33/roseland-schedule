@@ -1015,30 +1015,16 @@ body{overflow-x:hidden;max-width:100dvw}
   }
 }
 
-/* ── LIBRARY FOLDER STYLES (<style id="library-folder-styles">) ── */
-.lib-folder-toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;margin-bottom:12px;padding:10px;border:1px solid var(--g200);border-radius:12px;background:#fafafa}
-.lib-folder-title{font-weight:800;font-size:14px;color:var(--ink)}
-.lib-folder-sub{font-size:12px;color:var(--g600);margin-top:2px}
-.lib-folder-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:flex-end}
-.lib-folder-actions .form-input{min-height:34px;padding:6px 9px;font-size:13px;min-width:190px}
-.folder-list{display:flex;flex-direction:column;gap:6px;margin:0 0 14px;max-height:260px;overflow:auto;border:1px solid var(--g200);border-radius:12px;background:#fff;padding:6px}
-.folder-card{border:1px solid transparent;background:#fff;border-radius:9px;padding:8px 10px;cursor:pointer;transition:.15s ease;min-width:0;display:flex;align-items:center;justify-content:space-between;gap:10px}
-.folder-card:hover{border-color:#d1d5db;background:#fafafa}
-.folder-card.active{border-color:var(--pink);background:#fff5fa;box-shadow:0 0 0 2px rgba(236,72,153,.10)}
-.folder-card-name{font-weight:800;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
-.folder-card-meta{font-size:12px;color:var(--g600);white-space:nowrap;flex:0 0 auto}
 .lib-viewbar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;margin:0 0 10px}
 .lib-viewname{font-weight:800;font-size:14px;color:var(--ink)}
 .lib-viewtools{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
-.sitem-folder-select{border:1px solid var(--g300);border-radius:8px;background:#fff;padding:5px 7px;font-size:12px;max-width:150px;min-height:30px}
-.sitem-folder-tag{display:inline-flex;align-items:center;gap:4px;border:1px solid var(--g200);border-radius:999px;padding:2px 7px;background:#fff;color:var(--g600);font-size:11px;margin-left:4px}
 .ver-schedule-picker-wrap{min-width:300px;max-width:460px;width:100%}
 #ver-schedule-select{min-height:44px;padding:9px 38px 9px 12px;font-size:15px;font-weight:400;border-radius:10px}
 #ver-schedule-select option{font-weight:400}
 .ver-title{font-weight:800;color:var(--ink);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .ver-sub{font-size:12px;color:var(--g600);margin-top:3px}
 .snapshot-badge{display:inline-flex;align-items:center;border:1px solid var(--g200);background:#fff;border-radius:999px;padding:2px 7px;font-size:11px;color:var(--g700);font-weight:600;max-width:520px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-@media (max-width:760px){.lib-folder-toolbar{align-items:stretch}.lib-folder-actions{justify-content:flex-start}.lib-folder-actions .form-input{flex:1 1 100%;min-width:0}.folder-list{max-height:220px}.folder-card{padding:8px}.sitem-folder-select{max-width:100%;width:100%}
+@media (max-width:760px){
   .lib-page{padding-left:16px!important;padding-right:16px!important;overflow-x:hidden!important;max-width:100dvw!important;box-sizing:border-box!important}
   .lib-header{gap:8px!important}
   .ver-schedule-picker-wrap{min-width:0!important}

@@ -87,6 +87,7 @@ export default function ComboInput({
             <button
               key={opt}
               role="option"
+              aria-selected={i === activeIdx}
               className={`combo-option${i === activeIdx ? ' active' : ''}`}
               onMouseDown={(e) => { e.preventDefault(); selectOption(opt); }}
             >

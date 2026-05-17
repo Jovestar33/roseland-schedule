@@ -25,7 +25,7 @@ export default function VersionsTab({ scheduleNames, initialName = '' }: Props) 
     if (scheduleNames.length > 0 && !selectedName) {
       setSelectedName(scheduleNames[0]);
     }
-  }, [scheduleNames]);
+  }, [scheduleNames, selectedName]);
 
   useEffect(() => {
     if (!selectedName || !token) return;
