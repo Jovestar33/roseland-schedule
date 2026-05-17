@@ -19,6 +19,10 @@ export interface LibraryData {
   // Display name overrides stored as [normalizedKey → displayName]
   productionDisplayNames?: { [productionKey: string]: string };
   phaseDisplayNames?: { [productionKey: string]: { [phaseKey: string]: string } };
+  // Archive list and cached schedule metadata (written by save.js on every save)
+  tsarchived?: string[];
+  townCache?: Record<string, string>;
+  dateCache?: Record<string, string>;
 }
 
 function defaultLibrary(): LibraryData {

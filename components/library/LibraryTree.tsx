@@ -1,10 +1,37 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { DragDropContext, Droppable, Draggable, type DropResult } from '@hello-pangea/dnd';
 import { GripVertical, Pencil } from 'lucide-react';
 import type { LibrarySchedule } from './ScheduleListTab';
 import type { LibraryData } from '@/lib/api/library';
+
+// ── Recent schedule localStorage ──────────────────────────────────────────────
+
+const LS_RECENT_KEY = 'rp_recent_schedules';
+const MAX_RECENT = 5;
+
+interface RecentEntry {
+  name: string;
+  projectName: string;
+  phase: string;
+  savedAt: number;
+}
+
+function writeRecent(name: string, schedule: LibrarySchedule | undefined, libMeta: LibraryData) {
+  if (libMeta.tsarchived?.includes(name)) return;
+  try {
+    const prev: RecentEntry[] = JSON.parse(localStorage.getItem(LS_RECENT_KEY) || '[]');
+    const entry: RecentEntry = {
+      name,
+      projectName: schedule?.data?.meta?.projectName ?? '',
+      phase: schedule?.data?.meta?.phase ?? '',
+      savedAt: schedule?.data?.savedAt ?? Date.now(),
+    };
+    const next = [entry, ...prev.filter((r) => r.name !== name)].slice(0, MAX_RECENT);
+    localStorage.setItem(LS_RECENT_KEY, JSON.stringify(next));
+  } catch {}
+}
 
 // ── Utilities ─────────────────────────────────────────────────────────────────
 
@@ -124,7 +151,7 @@ function buildTree(schedules: ScheduleLeaf[]): {
 
 // Apply manual phaseOrder; items not in the order array fall back to dayNumber/savedAt sort.
 function applyPhaseOrder(schedules: ScheduleLeaf[], order: string[] | undefined): ScheduleLeaf[] {
-  if (!order || order.length === 0) return schedules; // already sorted by buildTree
+  if (!order || order.length === 0) return schedules;
   const orderMap = new Map(order.map((name, i) => [name, i]));
   return [...schedules].sort((a, b) => {
     const ia = orderMap.has(a.name) ? orderMap.get(a.name)! : Infinity;
@@ -154,18 +181,30 @@ function formatMeta(s: ScheduleLeaf): string {
 
 interface RowContentProps {
   s: ScheduleLeaf;
+  isArchived: boolean;
   copiedInfo: { name: string; kind: 'team' | 'client' } | null;
   onCopyTeam: (name: string) => void;
   onCopyClient: (name: string) => void;
-  onDelete: (name: string) => void;
+  onArchive: (name: string) => void;
+  onRestore: (name: string) => void;
+  onDeletePermanently: (name: string) => void;
   onOpen: (name: string) => void;
 }
 
-function ScheduleRowContent({ s, copiedInfo, onCopyTeam, onCopyClient, onDelete, onOpen }: RowContentProps) {
+function ScheduleRowContent({
+  s, isArchived, copiedInfo,
+  onCopyTeam, onCopyClient,
+  onArchive, onRestore, onDeletePermanently, onOpen,
+}: RowContentProps) {
   const meta = formatMeta(s);
   return (
     <>
-      <button className="lbt-sched-name" onClick={() => onOpen(s.name)} title={s.name}>
+      <button
+        className="lbt-sched-name"
+        onClick={() => onOpen(s.name)}
+        title={s.name}
+      >
+        {isArchived && <span className="lbt-archived-glyph">⊘ </span>}
         {s.name}
       </button>
       {s.loading ? (
@@ -174,23 +213,54 @@ function ScheduleRowContent({ s, copiedInfo, onCopyTeam, onCopyClient, onDelete,
         <span className="lbt-sched-meta">{meta}</span>
       )}
       <div className="lbt-sched-acts" onClick={(e) => e.stopPropagation()}>
+        {/* Team / Client link copy — hidden on mobile for archived rows */}
         <button
-          className="sitem-copy"
+          className={`sitem-copy${isArchived ? ' lib-acts-desktop-only' : ''}`}
           onClick={() => onCopyTeam(s.name)}
           title="Copy team link (requires PIN)"
         >
           {copiedInfo?.name === s.name && copiedInfo.kind === 'team' ? '✓ Team Link' : 'Team Link'}
         </button>
         <button
-          className="sitem-copy sitem-copy-client"
+          className={`sitem-copy sitem-copy-client${isArchived ? ' lib-acts-desktop-only' : ''}`}
           onClick={() => onCopyClient(s.name)}
           title="Copy public read-only link"
         >
           {copiedInfo?.name === s.name && copiedInfo.kind === 'client' ? '✓ Client Link' : 'Client Link'}
         </button>
-        <button className="sitem-del" onClick={() => onDelete(s.name)} title="Delete schedule">
-          🗑
-        </button>
+
+        {isArchived ? (
+          <>
+            {/* Restore: shows "Restore" on desktop, ↺ on mobile */}
+            <button
+              className="sitem-restore-btn"
+              onClick={() => onRestore(s.name)}
+              title="Restore from archive"
+            >
+              <span className="lib-btn-desktop">Restore</span>
+              <span className="lib-btn-mobile">↺</span>
+            </button>
+            {/* Delete permanently: shows "Delete" on desktop, 🗑 on mobile */}
+            <button
+              className="sitem-del"
+              onClick={() => onDeletePermanently(s.name)}
+              title="Delete permanently"
+            >
+              <span className="lib-btn-desktop">Delete</span>
+              <span className="lib-btn-mobile">🗑</span>
+            </button>
+          </>
+        ) : (
+          /* Archive: shows "Archive" on desktop, 🗑 on mobile */
+          <button
+            className="sitem-del"
+            onClick={() => onArchive(s.name)}
+            title="Archive schedule"
+          >
+            <span className="lib-btn-desktop">Archive</span>
+            <span className="lib-btn-mobile">🗑</span>
+          </button>
+        )}
       </div>
     </>
   );
@@ -212,24 +282,33 @@ interface EditModal {
 interface Props {
   schedules: LibrarySchedule[];
   libMeta: LibraryData;
-  onDelete: (name: string) => void;
+  onArchive: (name: string) => void;
+  onRestore: (name: string) => void;
+  onDeletePermanently: (name: string) => void;
   onUpdateLibMeta: (updated: LibraryData) => Promise<void>;
 }
 
-export default function LibraryTree({ schedules, libMeta, onDelete, onUpdateLibMeta }: Props) {
+export default function LibraryTree({
+  schedules, libMeta,
+  onArchive, onRestore, onDeletePermanently,
+  onUpdateLibMeta,
+}: Props) {
   const router = useRouter();
-  const [collapsed,       setCollapsed]       = useState<Set<string>>(new Set());
-  const [copiedInfo,      setCopiedInfo]       = useState<{ name: string; kind: 'team' | 'client' } | null>(null);
-  const [editModal,       setEditModal]        = useState<EditModal | null>(null);
-  const [creatingProd,    setCreatingProd]     = useState(false);
-  const [newProdDraft,    setNewProdDraft]     = useState('');
-  const [creatingPhaseFor, setCreatingPhaseFor] = useState<string | null>(null);
-  const [newPhaseDraft,   setNewPhaseDraft]    = useState('');
+  const [collapsed,        setCollapsed]        = useState<Set<string>>(new Set());
+  const [copiedInfo,       setCopiedInfo]        = useState<{ name: string; kind: 'team' | 'client' } | null>(null);
+  const [editModal,        setEditModal]         = useState<EditModal | null>(null);
+  const [creatingProd,     setCreatingProd]      = useState(false);
+  const [newProdDraft,     setNewProdDraft]      = useState('');
+  const [creatingPhaseFor, setCreatingPhaseFor]  = useState<string | null>(null);
+  const [newPhaseDraft,    setNewPhaseDraft]     = useState('');
   // UI-only ephemeral empty containers (cleared on page reload — by design)
   const [emptyProds,  setEmptyProds]  = useState<Map<string, string>>(new Map());
   const [emptyPhases, setEmptyPhases] = useState<Map<string, Map<string, string>>>(new Map());
 
   useEffect(() => { setCollapsed(loadCollapsed()); }, []);
+
+  // Index for recent write lookups
+  const scheduleMap = useMemo(() => new Map(schedules.map((s) => [s.name, s])), [schedules]);
 
   // ── Collapse ────────────────────────────────────────────────────────────────
 
@@ -260,12 +339,17 @@ export default function LibraryTree({ schedules, libMeta, onDelete, onUpdateLibM
     setTimeout(() => setCopiedInfo((c) => c?.name === name && c?.kind === kind ? null : c), 3000);
   }
 
-  const rowProps: Omit<RowContentProps, 's'> = {
+  const rowProps: Omit<RowContentProps, 's' | 'isArchived'> = {
     copiedInfo,
     onCopyTeam:   (name) => copyLink(name, `${window.location.origin}/schedule/${encodeURIComponent(name)}?auth=true`, 'team'),
     onCopyClient: (name) => copyLink(name, `${window.location.origin}/view/${encodeURIComponent(name)}`, 'client'),
-    onDelete,
-    onOpen: (name) => router.push(`/schedule/${encodeURIComponent(name)}`),
+    onArchive,
+    onRestore,
+    onDeletePermanently,
+    onOpen: (name) => {
+      writeRecent(name, scheduleMap.get(name), libMeta);
+      router.push(`/schedule/${encodeURIComponent(name)}`);
+    },
   };
 
   // ── Drag & drop ─────────────────────────────────────────────────────────────
@@ -496,7 +580,7 @@ export default function LibraryTree({ schedules, libMeta, onDelete, onUpdateLibM
 
       <DragDropContext onDragEnd={handleDragEnd}>
         <div className="lbt-tree">
-          {/* Empty state — shown only when no schedules and no empty prods are active */}
+          {/* Empty state */}
           {allProductions.length === 0 && ungrouped.length === 0 && !creatingProd && (
             <div className="lbt-empty-state">
               <strong>No schedules yet.</strong><br />
@@ -567,25 +651,32 @@ export default function LibraryTree({ schedules, libMeta, onDelete, onUpdateLibM
                                     {...provided.droppableProps}
                                     className="lbt-sched-list"
                                   >
-                                    {ordered.map((s, i) => (
-                                      <Draggable key={s.name} draggableId={s.name} index={i}>
-                                        {(provided, snapshot) => (
-                                          <div
-                                            ref={provided.innerRef}
-                                            {...provided.draggableProps}
-                                            className={`lbt-sched-row${snapshot.isDragging ? ' is-dragging' : ''}`}
-                                          >
-                                            <span
-                                              className="lbt-drag-handle"
-                                              {...(provided.dragHandleProps ?? {})}
+                                    {ordered.map((s, i) => {
+                                      const isArchived = libMeta.tsarchived?.includes(s.name) ?? false;
+                                      return (
+                                        <Draggable key={s.name} draggableId={s.name} index={i}>
+                                          {(provided, snapshot) => (
+                                            <div
+                                              ref={provided.innerRef}
+                                              {...provided.draggableProps}
+                                              className={`lbt-sched-row${snapshot.isDragging ? ' is-dragging' : ''}${isArchived ? ' lbt-sched-row--archived' : ''}`}
                                             >
-                                              <GripVertical size={16} />
-                                            </span>
-                                            <ScheduleRowContent s={s} {...rowProps} />
-                                          </div>
-                                        )}
-                                      </Draggable>
-                                    ))}
+                                              <span
+                                                className="lbt-drag-handle"
+                                                {...(provided.dragHandleProps ?? {})}
+                                              >
+                                                <GripVertical size={16} />
+                                              </span>
+                                              <ScheduleRowContent
+                                                s={s}
+                                                isArchived={isArchived}
+                                                {...rowProps}
+                                              />
+                                            </div>
+                                          )}
+                                        </Draggable>
+                                      );
+                                    })}
                                     {provided.placeholder}
                                   </div>
                                 )}
@@ -643,25 +734,32 @@ export default function LibraryTree({ schedules, libMeta, onDelete, onUpdateLibM
                               {applyPhaseOrder(
                                 nophaseGroup.schedules,
                                 libMeta.phaseOrder?.[prod.productionKey]?.['']
-                              ).map((s, i) => (
-                                <Draggable key={s.name} draggableId={s.name} index={i}>
-                                  {(provided, snapshot) => (
-                                    <div
-                                      ref={provided.innerRef}
-                                      {...provided.draggableProps}
-                                      className={`lbt-sched-row${snapshot.isDragging ? ' is-dragging' : ''}`}
-                                    >
-                                      <span
-                                        className="lbt-drag-handle"
-                                        {...(provided.dragHandleProps ?? {})}
+                              ).map((s, i) => {
+                                const isArchived = libMeta.tsarchived?.includes(s.name) ?? false;
+                                return (
+                                  <Draggable key={s.name} draggableId={s.name} index={i}>
+                                    {(provided, snapshot) => (
+                                      <div
+                                        ref={provided.innerRef}
+                                        {...provided.draggableProps}
+                                        className={`lbt-sched-row${snapshot.isDragging ? ' is-dragging' : ''}${isArchived ? ' lbt-sched-row--archived' : ''}`}
                                       >
-                                        <GripVertical size={16} />
-                                      </span>
-                                      <ScheduleRowContent s={s} {...rowProps} />
-                                    </div>
-                                  )}
-                                </Draggable>
-                              ))}
+                                        <span
+                                          className="lbt-drag-handle"
+                                          {...(provided.dragHandleProps ?? {})}
+                                        >
+                                          <GripVertical size={16} />
+                                        </span>
+                                        <ScheduleRowContent
+                                          s={s}
+                                          isArchived={isArchived}
+                                          {...rowProps}
+                                        />
+                                      </div>
+                                    )}
+                                  </Draggable>
+                                );
+                              })}
                               {provided.placeholder}
                             </div>
                           )}
@@ -710,14 +808,20 @@ export default function LibraryTree({ schedules, libMeta, onDelete, onUpdateLibM
                 </span>
               </div>
               <div className="lbt-sched-list">
-                {ungrouped.map((s) => (
-                  <div key={s.name} className="lbt-sched-row">
-                    <span className="lbt-drag-handle lbt-drag-handle--inert">
-                      <GripVertical size={16} />
-                    </span>
-                    <ScheduleRowContent s={s} {...rowProps} />
-                  </div>
-                ))}
+                {ungrouped.map((s) => {
+                  const isArchived = libMeta.tsarchived?.includes(s.name) ?? false;
+                  return (
+                    <div
+                      key={s.name}
+                      className={`lbt-sched-row${isArchived ? ' lbt-sched-row--archived' : ''}`}
+                    >
+                      <span className="lbt-drag-handle lbt-drag-handle--inert">
+                        <GripVertical size={16} />
+                      </span>
+                      <ScheduleRowContent s={s} isArchived={isArchived} {...rowProps} />
+                    </div>
+                  );
+                })}
               </div>
             </div>
           )}

@@ -12,16 +12,24 @@ export interface LibrarySchedule {
 interface Props {
   schedules: LibrarySchedule[];
   libMeta: LibraryData;
-  onDelete: (name: string) => void;
+  onArchive: (name: string) => void;
+  onRestore: (name: string) => void;
+  onDeletePermanently: (name: string) => void;
   onUpdateLibMeta: (updated: LibraryData) => Promise<void>;
 }
 
-export default function ScheduleListTab({ schedules, libMeta, onDelete, onUpdateLibMeta }: Props) {
+export default function ScheduleListTab({
+  schedules, libMeta,
+  onArchive, onRestore, onDeletePermanently,
+  onUpdateLibMeta,
+}: Props) {
   return (
     <LibraryTree
       schedules={schedules}
       libMeta={libMeta}
-      onDelete={onDelete}
+      onArchive={onArchive}
+      onRestore={onRestore}
+      onDeletePermanently={onDeletePermanently}
       onUpdateLibMeta={onUpdateLibMeta}
     />
   );

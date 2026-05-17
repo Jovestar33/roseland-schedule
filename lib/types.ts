@@ -77,6 +77,9 @@ export interface LibraryEntry {
 export interface LibraryMeta {
   schedules: LibraryEntry[];
   folders: string[];
+  tsarchived?: string[];
+  townCache?: Record<string, string>;
+  dateCache?: Record<string, string>;
 }
 
 export interface CMSConfig {

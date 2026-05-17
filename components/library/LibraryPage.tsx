@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/lib/store/authStore';
 import { useCmsStore } from '@/lib/store/cmsStore';
@@ -8,11 +8,49 @@ import { postDelete } from '@/lib/api/save';
 import { getLibraryMeta, putLibraryMeta, type LibraryData } from '@/lib/api/library';
 import type { ScheduleData } from '@/lib/types';
 import ScheduleListTab, { type LibrarySchedule } from './ScheduleListTab';
+import LibrarySearch from './LibrarySearch';
 import TemplatesTab from './TemplatesTab';
 import VersionsTab from './VersionsTab';
 import BackupTab from './BackupTab';
 
+// ── Types ──────────────────────────────────────────────────────────────────────
+
 type Tab = 'schedules' | 'templates' | 'backup' | 'versions';
+type FilterStatus = 'active' | 'archived' | 'all';
+type SortMode = 'savedAt' | 'name' | 'dateAsc' | 'dateDesc';
+
+interface RecentEntry {
+  name: string;
+  projectName: string;
+  phase: string;
+  savedAt: number;
+}
+
+const LS_RECENT_KEY = 'rp_recent_schedules';
+const MAX_RECENT = 5;
+
+// ── Helpers ────────────────────────────────────────────────────────────────────
+
+function readRecent(): RecentEntry[] {
+  try { return JSON.parse(localStorage.getItem(LS_RECENT_KEY) || '[]'); }
+  catch { return []; }
+}
+
+function relativeTime(ms: number): string {
+  const diff = Date.now() - ms;
+  const s = Math.floor(diff / 1000);
+  if (s < 60) return 'just now';
+  const m = Math.floor(s / 60);
+  if (m < 60) return `${m}m ago`;
+  const h = Math.floor(m / 60);
+  if (h < 24) return `${h}h ago`;
+  const d = Math.floor(h / 24);
+  if (d === 1) return 'yesterday';
+  if (d < 7) return `${d}d ago`;
+  return new Date(ms).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
+// ── Component ──────────────────────────────────────────────────────────────────
 
 export default function LibraryPage() {
   const router = useRouter();
@@ -26,11 +64,25 @@ export default function LibraryPage() {
   const [libMeta, setLibMeta]     = useState<LibraryData>({ version: 1, folders: [], scheduleFolderMap: {}, updatedAt: 0 });
   const [loadingList, setLoadingList] = useState(true);
 
+  // Search / filter / sort
+  const [searchQuery,    setSearchQuery]    = useState('');
+  const [filterStatus,   setFilterStatus]   = useState<FilterStatus>('active');
+  const [filterProd,     setFilterProd]     = useState('');
+  const [filterDateFrom, setFilterDateFrom] = useState('');
+  const [filterDateTo,   setFilterDateTo]   = useState('');
+  const [showFilterPanel, setShowFilterPanel] = useState(false);
+  const [sortMode,       setSortMode]       = useState<SortMode>('savedAt');
+
+  // Recent
+  const [recent, setRecent] = useState<RecentEntry[]>([]);
+
+  useEffect(() => { setRecent(readRecent()); }, []);
+
   useEffect(() => {
     if (!hydrated) return;
     if (!token) { router.push('/login'); return; }
     loadLibrary();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hydrated, token]);
 
   async function loadLibrary() {
@@ -51,7 +103,6 @@ export default function LibraryPage() {
       );
       setSchedules(fetched);
 
-      // Populate ComboInput caches for editor identity line
       try {
         const projectNames = [...new Set(
           fetched.flatMap((s) => { const n = s.data?.meta?.projectName?.trim(); return n ? [n] : []; })
@@ -75,23 +126,50 @@ export default function LibraryPage() {
     } catch { /* best-effort */ }
   }
 
-  async function handleDelete(name: string) {
-    if (!confirm(`Delete "${name}" from My Library? This permanently removes the saved schedule.`)) return;
+  // ── Archive / Restore / Delete permanently ─────────────────────────────────
+
+  async function handleArchive(name: string) {
+    const archived = [...(libMeta.tsarchived ?? [])];
+    if (!archived.includes(name)) archived.push(name);
+
+    const po: NonNullable<LibraryData['phaseOrder']> = JSON.parse(JSON.stringify(libMeta.phaseOrder ?? {}));
+    for (const pk of Object.keys(po)) {
+      for (const phk of Object.keys(po[pk])) {
+        po[pk][phk] = po[pk][phk].filter((n) => n !== name);
+      }
+    }
+
+    try {
+      const prev = readRecent();
+      const next = prev.filter((r) => r.name !== name);
+      localStorage.setItem(LS_RECENT_KEY, JSON.stringify(next));
+      setRecent(next);
+    } catch {}
+
+    await updateLibMeta({ ...libMeta, tsarchived: archived, phaseOrder: po, updatedAt: Date.now() });
+  }
+
+  async function handleRestore(name: string) {
+    const archived = (libMeta.tsarchived ?? []).filter((n) => n !== name);
+    await updateLibMeta({ ...libMeta, tsarchived: archived, updatedAt: Date.now() });
+  }
+
+  async function handleDeletePermanently(name: string) {
+    if (!confirm(`Permanently delete "${name}"? This cannot be undone.`)) return;
     const deletePassword = (prompt('Enter delete password:') ?? '').trim();
     if (!deletePassword) { alert('Delete cancelled — schedule kept.'); return; }
     try {
       await postDelete(name, token!, deletePassword);
       setSchedules((prev) => prev.filter((s) => s.name !== name));
-      // Clean up phaseOrder for the deleted schedule
-      if (libMeta.phaseOrder) {
-        const po = JSON.parse(JSON.stringify(libMeta.phaseOrder)) as NonNullable<LibraryData['phaseOrder']>;
-        for (const pk of Object.keys(po)) {
-          for (const phk of Object.keys(po[pk])) {
-            po[pk][phk] = po[pk][phk].filter((n) => n !== name);
-          }
+
+      const archived = (libMeta.tsarchived ?? []).filter((n) => n !== name);
+      const po: NonNullable<LibraryData['phaseOrder']> = JSON.parse(JSON.stringify(libMeta.phaseOrder ?? {}));
+      for (const pk of Object.keys(po)) {
+        for (const phk of Object.keys(po[pk])) {
+          po[pk][phk] = po[pk][phk].filter((n) => n !== name);
         }
-        updateLibMeta({ ...libMeta, phaseOrder: po, updatedAt: Date.now() });
       }
+      await updateLibMeta({ ...libMeta, tsarchived: archived, phaseOrder: po, updatedAt: Date.now() });
     } catch (e) {
       const msg = (e as Error).message ?? '';
       alert(/invalid delete password/i.test(msg)
@@ -105,7 +183,81 @@ export default function LibraryPage() {
     router.push('/login');
   }
 
+  // ── Derived data ───────────────────────────────────────────────────────────
+
+  const activeFilterCount = [
+    filterProd !== '',
+    filterDateFrom !== '',
+    filterDateTo !== '',
+    filterStatus !== 'active',
+  ].filter(Boolean).length;
+
+  const allProductionNames = useMemo(() => {
+    return [...new Set(
+      schedules.flatMap((s) => {
+        const n = s.data?.meta?.projectName?.trim();
+        return n ? [n] : [];
+      })
+    )].sort();
+  }, [schedules]);
+
+  // Pre-filter schedules for tree mode
+  const filteredSchedules = useMemo(() => {
+    return schedules.filter((s) => {
+      const isArchived = libMeta.tsarchived?.includes(s.name) ?? false;
+      if (filterStatus === 'active' && isArchived) return false;
+      if (filterStatus === 'archived' && !isArchived) return false;
+      if (filterProd) {
+        const proj = s.data?.meta?.projectName?.trim().toLowerCase() ?? '';
+        if (proj !== filterProd.toLowerCase()) return false;
+      }
+      const dateVal = libMeta.dateCache?.[s.name] ?? s.data?.meta?.date ?? '';
+      if (filterDateFrom && dateVal && dateVal < filterDateFrom) return false;
+      if (filterDateTo && dateVal && dateVal > filterDateTo) return false;
+      return true;
+    });
+  }, [schedules, libMeta, filterStatus, filterProd, filterDateFrom, filterDateTo]);
+
+  // Flat search results (when searchQuery is non-empty)
+  const flatResults = useMemo(() => {
+    if (!searchQuery.trim()) return [];
+    const q = searchQuery.trim().toLowerCase();
+    return filteredSchedules
+      .filter((s) => {
+        const name  = s.name.toLowerCase();
+        const proj  = s.data?.meta?.projectName?.trim().toLowerCase() ?? '';
+        const phase = s.data?.meta?.phase?.trim().toLowerCase() ?? '';
+        const town  = (libMeta.townCache?.[s.name] ?? '').toLowerCase();
+        return name.includes(q) || proj.includes(q) || phase.includes(q) || town.includes(q);
+      })
+      .sort((a, b) => {
+        switch (sortMode) {
+          case 'name': return a.name.localeCompare(b.name);
+          case 'dateAsc': {
+            const da = libMeta.dateCache?.[a.name] || a.data?.meta?.date || '';
+            const db = libMeta.dateCache?.[b.name] || b.data?.meta?.date || '';
+            return da.localeCompare(db);
+          }
+          case 'dateDesc': {
+            const da = libMeta.dateCache?.[a.name] || a.data?.meta?.date || '';
+            const db = libMeta.dateCache?.[b.name] || b.data?.meta?.date || '';
+            return db.localeCompare(da);
+          }
+          default: return (b.data?.savedAt ?? 0) - (a.data?.savedAt ?? 0);
+        }
+      });
+  }, [searchQuery, filteredSchedules, libMeta, sortMode]);
+
+  // Recent (exclude archived)
+  const visibleRecent = useMemo(() => {
+    return recent.filter((r) => !(libMeta.tsarchived?.includes(r.name)));
+  }, [recent, libMeta.tsarchived]);
+
+  const isSearchMode = searchQuery.trim() !== '';
+  const showArchived = filterStatus !== 'active';
   const scheduleNames = schedules.map((s) => s.name);
+
+  // ── Render ─────────────────────────────────────────────────────────────────
 
   return (
     <div className="lib-page">
@@ -115,6 +267,13 @@ export default function LibraryPage() {
         <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
           <button className="btn btn-pink btn-sm" onClick={() => router.push('/schedule/Untitled')}>
             + New Schedule
+          </button>
+          <button
+            className={`btn btn-light btn-sm${showArchived ? ' lib-archived-toggle--on' : ''}`}
+            onClick={() => setFilterStatus(showArchived ? 'active' : 'all')}
+            title={showArchived ? 'Hide archived schedules' : 'Show archived schedules'}
+          >
+            {showArchived ? '⊘ Archived On' : 'Show Archived'}
           </button>
           <button className="btn btn-light btn-sm" onClick={openCmsModal}>&#9881; CMS</button>
           <button className="btn btn-light btn-sm" onClick={handleLogout}>Log Out</button>
@@ -143,13 +302,173 @@ export default function LibraryPage() {
       ) : (
         <>
           <div className={`mtab-panel${tab === 'schedules' ? ' active' : ''}`}>
-            <ScheduleListTab
-              schedules={schedules}
-              libMeta={libMeta}
-              onDelete={handleDelete}
-              onUpdateLibMeta={updateLibMeta}
-            />
+
+            {/* Search + Filter row */}
+            <div className="lib-search-row">
+              <LibrarySearch value={searchQuery} onChange={setSearchQuery} />
+              <div className="lib-search-tools">
+                <button
+                  className={`btn btn-light btn-sm lib-filter-btn${activeFilterCount > 0 ? ' lib-filter-btn--active' : ''}`}
+                  onClick={() => setShowFilterPanel((v) => !v)}
+                >
+                  {activeFilterCount > 0 ? `Filter · ${activeFilterCount}` : 'Filter'}
+                </button>
+                {isSearchMode && (
+                  <select
+                    className="lib-sort-select"
+                    value={sortMode}
+                    onChange={(e) => setSortMode(e.target.value as SortMode)}
+                  >
+                    <option value="savedAt">Last modified</option>
+                    <option value="name">Name A→Z</option>
+                    <option value="dateAsc">Shoot date oldest</option>
+                    <option value="dateDesc">Shoot date newest</option>
+                  </select>
+                )}
+              </div>
+            </div>
+
+            {/* Filter panel */}
+            {showFilterPanel && (
+              <div className="lib-filter-panel">
+                <div className="lib-filter-row">
+                  <label className="lib-filter-label">Production</label>
+                  <select
+                    className="lib-filter-select"
+                    value={filterProd}
+                    onChange={(e) => setFilterProd(e.target.value)}
+                  >
+                    <option value="">All Productions</option>
+                    {allProductionNames.map((n) => (
+                      <option key={n} value={n}>{n}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="lib-filter-row">
+                  <label className="lib-filter-label">Shoot Date</label>
+                  <div className="lib-filter-dates">
+                    <input
+                      type="date"
+                      className="lib-filter-date-input"
+                      value={filterDateFrom}
+                      onChange={(e) => setFilterDateFrom(e.target.value)}
+                    />
+                    <span className="lib-filter-date-sep">→</span>
+                    <input
+                      type="date"
+                      className="lib-filter-date-input"
+                      value={filterDateTo}
+                      onChange={(e) => setFilterDateTo(e.target.value)}
+                    />
+                  </div>
+                </div>
+                <div className="lib-filter-row">
+                  <label className="lib-filter-label">Status</label>
+                  <div className="lib-filter-status">
+                    {(['active', 'archived', 'all'] as FilterStatus[]).map((s) => (
+                      <button
+                        key={s}
+                        className={`lib-filter-status-btn${filterStatus === s ? ' active' : ''}`}
+                        onClick={() => setFilterStatus(s)}
+                      >
+                        {s === 'active' ? 'Active only' : s === 'archived' ? 'Archived only' : 'All'}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                {activeFilterCount > 0 && (
+                  <button
+                    className="lib-filter-clear"
+                    onClick={() => {
+                      setFilterProd('');
+                      setFilterDateFrom('');
+                      setFilterDateTo('');
+                      setFilterStatus('active');
+                    }}
+                  >
+                    Clear filters
+                  </button>
+                )}
+              </div>
+            )}
+
+            {isSearchMode ? (
+              /* ── Flat results mode ─────────────────────────────────────── */
+              <div className="lib-flat-results">
+                <div className="lib-results-count">
+                  {flatResults.length} result{flatResults.length !== 1 ? 's' : ''} for &ldquo;{searchQuery}&rdquo;
+                </div>
+                {flatResults.length === 0 ? (
+                  <div className="empty">No schedules match your search.</div>
+                ) : (
+                  <div className="lib-flat-list">
+                    {flatResults.map((s) => {
+                      const isArchived = libMeta.tsarchived?.includes(s.name) ?? false;
+                      const proj  = s.data?.meta?.projectName?.trim() ?? '';
+                      const phase = s.data?.meta?.phase?.trim() ?? '';
+                      const town  = libMeta.townCache?.[s.name] ?? s.data?.meta?.town ?? '';
+                      const breadcrumb = [proj, phase].filter(Boolean).join(' / ');
+                      return (
+                        <div
+                          key={s.name}
+                          className={`lib-flat-item${isArchived ? ' lib-flat-item--archived' : ''}`}
+                        >
+                          <button
+                            className="lib-flat-name"
+                            onClick={() => router.push(`/schedule/${encodeURIComponent(s.name)}`)}
+                          >
+                            {isArchived && <span className="lbt-archived-glyph">⊘ </span>}
+                            {s.name}
+                          </button>
+                          <div className="lib-flat-meta">
+                            {breadcrumb && <span className="lib-flat-breadcrumb">{breadcrumb}</span>}
+                            {town && <span className="lib-flat-town">{town.split(',')[0].trim()}</span>}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            ) : (
+              /* ── Tree mode ─────────────────────────────────────────────── */
+              <>
+                {/* Recent section */}
+                {visibleRecent.length > 0 && (
+                  <div className="lib-recent">
+                    <div className="lib-recent-label">Recent</div>
+                    {visibleRecent.map((r) => (
+                      <div key={r.name} className="lib-recent-item">
+                        <button
+                          className="lib-recent-name"
+                          onClick={() => router.push(`/schedule/${encodeURIComponent(r.name)}`)}
+                        >
+                          {r.name}
+                        </button>
+                        {[r.projectName, r.phase].filter(Boolean).length > 0 && (
+                          <span className="lib-recent-meta">
+                            {[r.projectName, r.phase].filter(Boolean).join(' / ')}
+                          </span>
+                        )}
+                        <span className="lib-recent-time">{relativeTime(r.savedAt)}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Productions tree */}
+                <ScheduleListTab
+                  schedules={filteredSchedules}
+                  libMeta={libMeta}
+                  onArchive={handleArchive}
+                  onRestore={handleRestore}
+                  onDeletePermanently={handleDeletePermanently}
+                  onUpdateLibMeta={updateLibMeta}
+                />
+              </>
+            )}
           </div>
+
           <div className={`mtab-panel${tab === 'templates' ? ' active' : ''}`}>
             <TemplatesTab />
           </div>
