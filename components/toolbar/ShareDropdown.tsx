@@ -1,9 +1,11 @@
 'use client';
 import { useRef, useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { useScheduleStore } from '@/lib/store/scheduleStore';
 import { printSchedule } from '@/lib/print';
 
 export default function ShareDropdown() {
+  const router          = useRouter();
   const scheduleName    = useScheduleStore((s) => s.scheduleName);
   const getScheduleData = useScheduleStore((s) => s.getScheduleData);
   const [open, setOpen] = useState(false);
@@ -73,6 +75,23 @@ export default function ShareDropdown() {
         >
           <button className="tbar-drop-item" onClick={handlePrint}>🖨 Print / PDF</button>
           <button className="tbar-drop-item" onClick={handleExportJson}>⬇ Export JSON</button>
+          {scheduleName && (
+            <>
+              <div className="tbar-drop-divider" />
+              <button
+                className="tbar-drop-item"
+                onClick={() => { close(); router.push(`/contactsheet/${encodeURIComponent(scheduleName)}`); }}
+              >
+                📋 Contact Sheet
+              </button>
+              <button
+                className="tbar-drop-item"
+                onClick={() => { close(); router.push(`/callsheet/${encodeURIComponent(scheduleName)}`); }}
+              >
+                📞 Call Sheet
+              </button>
+            </>
+          )}
         </div>
       )}
     </div>

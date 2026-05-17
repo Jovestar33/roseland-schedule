@@ -196,6 +196,7 @@ function ScheduleRowContent({
   onCopyTeam, onCopyClient,
   onArchive, onRestore, onDeletePermanently, onOpen,
 }: RowContentProps) {
+  const router = useRouter();
   const meta = formatMeta(s);
   return (
     <>
@@ -228,6 +229,25 @@ function ScheduleRowContent({
         >
           {copiedInfo?.name === s.name && copiedInfo.kind === 'client' ? '✓ Client Link' : 'Client Link'}
         </button>
+        {/* Sheet links — desktop only, hidden for archived */}
+        {!isArchived && (
+          <>
+            <button
+              className="sitem-copy lib-acts-desktop-only"
+              onClick={() => router.push(`/contactsheet/${encodeURIComponent(s.name)}`)}
+              title="Contact Sheet"
+            >
+              Contact Sheet
+            </button>
+            <button
+              className="sitem-copy lib-acts-desktop-only"
+              onClick={() => router.push(`/callsheet/${encodeURIComponent(s.name)}`)}
+              title="Call Sheet"
+            >
+              Call Sheet
+            </button>
+          </>
+        )}
 
         {isArchived ? (
           <>

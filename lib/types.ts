@@ -104,7 +104,45 @@ export interface SyncQueueEntry {
   queuedAt: number;
 }
 
-// SaaS-ready — used as orgId: 'default' in single-tenant mode.
+// ── Sheet types ────────────────────────────────────────────────────────────────
+
+export interface DistributionContact { name: string; email: string }
+export interface ClientRep { name: string; title: string; phone: string; email: string }
+export interface EmergencyContact { name: string; phone: string; backupPhone: string }
+export interface AdditionalCrew { name: string; role: string; phone: string; email: string }
+export interface DietaryRestriction { name: string; notes: string }
+
+export interface SheetMeta {
+  distributionList: DistributionContact[];
+  clientReps: ClientRep[];
+  emergencyContact: EmergencyContact;
+  additionalCrew: AdditionalCrew[];
+  dietaryRestrictions: DietaryRestriction[];
+}
+
+export interface StaggeredCall { name: string; role: string; callTime: string }
+export interface CastCall { name: string; role: string; callTime: string; status: string }
+export interface CrewCall { department: string; name: string; callTime: string; walkieChannel?: string }
+export interface CondensedDayItem { time: string; note: string }
+export interface DepartmentNote { department: string; note: string }
+
+export interface CallSheetData {
+  hospital: { name: string; address: string; phone: string };
+  parking: string;
+  staggeredCalls: StaggeredCall[];
+  castBlock: CastCall[];
+  crewBlock: CrewCall[];
+  condensedDayOverride: CondensedDayItem[] | null;
+  advancedSchedule: string;
+  departmentNotes: DepartmentNote[];
+  generalNotes: string;
+}
+
+export interface ContactSheetData {
+  // Reserved for future unique fields
+}
+
+// ── SaaS-ready — used as orgId: 'default' in single-tenant mode.
 // Extend Netlify function keys to org/{orgId}/... when multi-tenancy is added.
 export interface OrgContext {
   orgId: string;

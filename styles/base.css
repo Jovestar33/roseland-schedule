@@ -227,6 +227,7 @@ body{font-family:var(--fb);background:var(--g100);color:var(--black);min-height:
   border:none;padding:8px 12px;font-family:var(--fb);font-size:13px;
   font-weight:400;color:var(--text);cursor:pointer;border-radius:7px;white-space:nowrap}
 .tbar-drop-item:hover{background:var(--g50)}
+.tbar-drop-divider{height:1px;background:var(--g100);margin:4px 0}
 .tbar-chev{display:inline-block;font-size:10px;transition:transform .15s;line-height:1}
 .tbar-chev.open{transform:rotate(180deg)}
 .tbar-label{display:inline}
