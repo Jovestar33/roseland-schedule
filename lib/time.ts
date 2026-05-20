@@ -11,7 +11,7 @@ export const TIMES: string[] = Array.from({ length: 96 }, (_, i) => {
 
 // Common duration presets for the Duration selector
 export const DURATIONS: string[] = [
-  '00:15', '00:30', '00:45',
+  '00:00', '00:15', '00:30', '00:45',
   '01:00', '01:15', '01:30', '01:45',
   '02:00', '02:30', '03:00', '03:30',
   '04:00', '04:30', '05:00', '06:00',
