@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/lib/store/authStore';
 import { useCmsStore } from '@/lib/store/cmsStore';
@@ -87,47 +87,68 @@ export default function LibraryPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hydrated, token]);
 
-  async function loadLibrary({ manual = false }: { manual?: boolean } = {}) {
-    if (manual) { setIsRefreshing(true); setRefreshError(null); }
-    else setLoadingList(true);
+  // Core data fetcher — fetches everything and updates state. Can throw; callers manage UI state.
+  async function fetchLibraryData(): Promise<void> {
+    const [names, meta] = await Promise.all([listSchedules(token!), getLibraryMeta(token!)]);
+    setLibMeta(meta);
+    setSchedules(names.map((name) => ({ name, data: null, loading: true })));
+
+    const fetched = await Promise.all(
+      names.map((name) =>
+        postLoad(name, token!)
+          .then((data): LibrarySchedule => ({ name, data: data as ScheduleData, loading: false }))
+          .catch((): LibrarySchedule => ({ name, data: null, loading: false }))
+      )
+    );
+    setSchedules(fetched);
+
     try {
-      const [names, meta] = await Promise.all([listSchedules(token!), getLibraryMeta(token!)]);
-      setLibMeta(meta);
-      const items: LibrarySchedule[] = names.map((name) => ({ name, data: null, loading: true }));
-      setSchedules(items);
-      if (!manual) setLoadingList(false);
+      const projectNames = [...new Set(
+        fetched.flatMap((s) => { const n = s.data?.meta?.projectName?.trim(); return n ? [n] : []; })
+      )];
+      const phases = [...new Set(
+        fetched.flatMap((s) => { const p = s.data?.meta?.phase?.trim(); return p ? [p] : []; })
+      )];
+      localStorage.setItem('rp_lib_project_options', JSON.stringify(projectNames));
+      localStorage.setItem('rp_lib_phase_options', JSON.stringify(phases));
+    } catch {}
+  }
 
-      const fetched = await Promise.all(
-        names.map((name) =>
-          postLoad(name, token!)
-            .then((data): LibrarySchedule => ({ name, data: data as ScheduleData, loading: false }))
-            .catch((): LibrarySchedule => ({ name, data: null, loading: false }))
-        )
-      );
-      setSchedules(fetched);
-
-      try {
-        const projectNames = [...new Set(
-          fetched.flatMap((s) => { const n = s.data?.meta?.projectName?.trim(); return n ? [n] : []; })
-        )];
-        const phases = [...new Set(
-          fetched.flatMap((s) => { const p = s.data?.meta?.phase?.trim(); return p ? [p] : []; })
-        )];
-        localStorage.setItem('rp_lib_project_options', JSON.stringify(projectNames));
-        localStorage.setItem('rp_lib_phase_options', JSON.stringify(phases));
-      } catch {}
+  // Initial / automatic load — drives the full-page loading spinner.
+  async function loadLibrary() {
+    setLoadingList(true);
+    try {
+      await fetchLibraryData();
     } catch {
-      if (manual) {
-        setRefreshError('Refresh failed — check your connection and try again.');
-        setIsRefreshing(false);
-      } else {
-        setLoadingList(false);
-      }
+      // silently keep whatever state we have
+    } finally {
+      setLoadingList(false);
     }
   }
 
+  // Manual refresh — drives only the Refresh button state. Ref guards against duplicate clicks.
+  const refreshInProgressRef = useRef(false);
+
   async function handleRefresh() {
-    await loadLibrary({ manual: true });
+    if (refreshInProgressRef.current) return;
+
+    refreshInProgressRef.current = true;
+    setIsRefreshing(true);
+    setRefreshError(null);
+
+    try {
+      console.log('[Library Refresh] started');
+      await fetchLibraryData();
+      console.log('[Library Refresh] cloud fetch completed');
+      console.log('[Library Refresh] render completed');
+    } catch (error) {
+      console.error('[Library Refresh] failed', error);
+      setRefreshError('Could not refresh the Library. Please try again.');
+    } finally {
+      refreshInProgressRef.current = false;
+      setIsRefreshing(false);
+      console.log('[Library Refresh] state reset');
+    }
   }
 
   async function updateLibMeta(updated: LibraryData): Promise<void> {
