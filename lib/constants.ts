@@ -92,4 +92,4 @@ export const LS_TEMPLATES_KEY         = 'rp_tpls';
 
 export const UNDO_LIMIT               = 80;
 export const AUTO_SNAPSHOT_INTERVAL_MS = 5 * 60 * 1000;
-export const DEFAULT_ROW_COUNT        = 15;
+export const DEFAULT_ROW_COUNT        = 10;

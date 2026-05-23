@@ -3,6 +3,7 @@ import { DragDropContext, Droppable, Draggable, type DropResult } from '@hello-p
 import { useScheduleStore } from '@/lib/store/scheduleStore';
 import { useCmsLabel } from '@/lib/store/cmsStore';
 import { useToast } from '@/components/ui/ToastProvider';
+import { durm } from '@/lib/time';
 import ScheduleRow from './ScheduleRow';
 import SunriseSunsetRow from './SunriseSunsetRow';
 
@@ -61,6 +62,9 @@ export default function ScheduleGrid({ onOpenContact, onOpenStatus, onOpenNotes 
     pushUndo();
     reorderRows(from, to);
   }
+
+  const totalMins = rows.reduce((sum, r) => sum + (r.sunLocked ? 0 : durm(r.dur)), 0);
+  const totalLabel = `${String(Math.floor(totalMins / 60)).padStart(2, '0')}:${String(totalMins % 60).padStart(2, '0')}`;
 
   // Assign sequential draggable indices to non-sun rows only.
   let draggableIdx = 0;
@@ -130,6 +134,14 @@ export default function ScheduleGrid({ onOpenContact, onOpenStatus, onOpenNotes 
                 </tbody>
               )}
             </Droppable>
+            <tfoot>
+              <tr>
+                <td colSpan={6} />
+                <td className="tc" style={{textAlign:'right',paddingRight:'6px',fontWeight:600,fontSize:'0.78rem',color:'#555',whiteSpace:'nowrap'}}>Total</td>
+                <td className="tc" style={{textAlign:'center',fontWeight:700,fontSize:'0.85rem'}}>{totalLabel}</td>
+                <td colSpan={3} />
+              </tr>
+            </tfoot>
           </table>
         </DragDropContext>
       </div>
