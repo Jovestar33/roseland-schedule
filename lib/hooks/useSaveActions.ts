@@ -112,6 +112,8 @@ export function useSaveActions() {
       loadSchedule(newName, savedData);
       updateBaseline(result.savedAt);
       setSyncStatus('synced');
+      // Bust the router cache so LibraryPage re-fetches when the user returns
+      router.refresh();
       router.push(`/schedule/${encodeURIComponent(newName)}`);
     } catch {
       setSyncStatus('offline');
@@ -164,6 +166,9 @@ export function useSaveActions() {
     if (dirty) {
       if (!confirm('Close this schedule? Unsaved changes will be lost.')) return;
     }
+    // Bust the Next.js router cache so LibraryPage remounts and re-fetches
+    // rather than being reactivated from the stale client-side cache.
+    router.refresh();
     router.push('/');
   }
 

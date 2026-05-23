@@ -63,6 +63,8 @@ export default function LibraryPage() {
   const [schedules, setSchedules] = useState<LibrarySchedule[]>([]);
   const [libMeta, setLibMeta]     = useState<LibraryData>({ version: 1, folders: [], scheduleFolderMap: {}, updatedAt: 0 });
   const [loadingList, setLoadingList] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [refreshError, setRefreshError] = useState<string | null>(null);
 
   // Search / filter / sort
   const [searchQuery,    setSearchQuery]    = useState('');
@@ -85,14 +87,15 @@ export default function LibraryPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hydrated, token]);
 
-  async function loadLibrary() {
-    setLoadingList(true);
+  async function loadLibrary({ manual = false }: { manual?: boolean } = {}) {
+    if (manual) { setIsRefreshing(true); setRefreshError(null); }
+    else setLoadingList(true);
     try {
       const [names, meta] = await Promise.all([listSchedules(token!), getLibraryMeta(token!)]);
       setLibMeta(meta);
       const items: LibrarySchedule[] = names.map((name) => ({ name, data: null, loading: true }));
       setSchedules(items);
-      setLoadingList(false);
+      if (!manual) setLoadingList(false);
 
       const fetched = await Promise.all(
         names.map((name) =>
@@ -114,8 +117,17 @@ export default function LibraryPage() {
         localStorage.setItem('rp_lib_phase_options', JSON.stringify(phases));
       } catch {}
     } catch {
-      setLoadingList(false);
+      if (manual) {
+        setRefreshError('Refresh failed — check your connection and try again.');
+        setIsRefreshing(false);
+      } else {
+        setLoadingList(false);
+      }
     }
+  }
+
+  async function handleRefresh() {
+    await loadLibrary({ manual: true });
   }
 
   async function updateLibMeta(updated: LibraryData): Promise<void> {
@@ -123,7 +135,16 @@ export default function LibraryPage() {
     try {
       const saved = await putLibraryMeta(updated, token!);
       setLibMeta(saved);
-    } catch { /* best-effort */ }
+    } catch { /* keep optimistic state */ }
+  }
+
+  // Re-fetch libMeta from the authoritative cloud source after any write that
+  // must persist reliably (archive, restore). Confirms the blob write succeeded.
+  async function confirmLibMetaFromCloud(): Promise<void> {
+    try {
+      const confirmed = await getLibraryMeta(token!);
+      setLibMeta(confirmed);
+    } catch { /* keep local state on network failure */ }
   }
 
   // ── Archive / Restore / Delete permanently ─────────────────────────────────
@@ -147,11 +168,15 @@ export default function LibraryPage() {
     } catch {}
 
     await updateLibMeta({ ...libMeta, tsarchived: archived, phaseOrder: po, updatedAt: Date.now() });
+    // Re-fetch from cloud to confirm archive state was actually persisted.
+    await confirmLibMetaFromCloud();
   }
 
   async function handleRestore(name: string) {
     const archived = (libMeta.tsarchived ?? []).filter((n) => n !== name);
     await updateLibMeta({ ...libMeta, tsarchived: archived, updatedAt: Date.now() });
+    // Re-fetch from cloud to confirm restore was persisted.
+    await confirmLibMetaFromCloud();
   }
 
   async function handleDeletePermanently(name: string) {
@@ -170,6 +195,7 @@ export default function LibraryPage() {
         }
       }
       await updateLibMeta({ ...libMeta, tsarchived: archived, phaseOrder: po, updatedAt: Date.now() });
+      await confirmLibMetaFromCloud();
     } catch (e) {
       const msg = (e as Error).message ?? '';
       alert(/invalid delete password/i.test(msg)
@@ -269,6 +295,14 @@ export default function LibraryPage() {
             + New Schedule
           </button>
           <button
+            className="btn btn-light btn-sm"
+            onClick={handleRefresh}
+            disabled={isRefreshing}
+            title="Re-fetch the latest schedules from the cloud"
+          >
+            {isRefreshing ? 'Refreshing…' : '↻ Refresh'}
+          </button>
+          <button
             className={`btn btn-light btn-sm${showArchived ? ' lib-archived-toggle--on' : ''}`}
             onClick={() => setFilterStatus(showArchived ? 'active' : 'all')}
             title={showArchived ? 'Hide archived schedules' : 'Show archived schedules'}
@@ -279,6 +313,12 @@ export default function LibraryPage() {
           <button className="btn btn-light btn-sm" onClick={handleLogout}>Log Out</button>
         </div>
       </div>
+      {refreshError && (
+        <div className="lib-refresh-error" role="alert">
+          {refreshError}
+          <button className="lib-refresh-error-dismiss" onClick={() => setRefreshError(null)}>✕</button>
+        </div>
+      )}
 
       {/* Tabs */}
       <div className="mtabs lib-tabs">
