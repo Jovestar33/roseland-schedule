@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/lib/store/authStore';
 import { useCmsStore } from '@/lib/store/cmsStore';
 import { listSchedules, postLoad } from '@/lib/api/load';
-import { postDelete } from '@/lib/api/save';
+import { postDeleteSchedule } from '@/lib/api/save';
 import { getLibraryMeta, putLibraryMeta, type LibraryData } from '@/lib/api/library';
 import type { ScheduleData } from '@/lib/types';
 import ScheduleListTab, { type LibrarySchedule } from './ScheduleListTab';
@@ -18,6 +18,14 @@ import BackupTab from './BackupTab';
 type Tab = 'schedules' | 'templates' | 'backup' | 'versions';
 type FilterStatus = 'active' | 'archived' | 'all';
 type SortMode = 'savedAt' | 'name' | 'dateAsc' | 'dateDesc';
+
+interface DeleteModalState {
+  name: string;
+  passcode: string;
+  confirmText: string;
+  submitting: boolean;
+  error: string | null;
+}
 
 interface RecentEntry {
   name: string;
@@ -88,6 +96,40 @@ function writePendingPhaseOrder(po: PendingPhaseOrder | null) {
     if (po === null) sessionStorage.removeItem(SS_PHASE_ORDER_KEY);
     else sessionStorage.setItem(SS_PHASE_ORDER_KEY, JSON.stringify(po));
   } catch {}
+}
+
+// ── Pending deletion guard ─────────────────────────────────────────────────────
+// Protects recently deleted schedules from reappearing due to stale blob-list or
+// library-metadata CDN reads during the eventual-consistency propagation window.
+
+const SS_DELETIONS_KEY = 'rp_lib_pending_deletions';
+
+interface PendingDeletion {
+  deletedAt: number;
+}
+
+function readPendingDeletions(): Map<string, PendingDeletion> {
+  try {
+    const raw = sessionStorage.getItem(SS_DELETIONS_KEY);
+    if (!raw) return new Map();
+    return new Map(JSON.parse(raw) as [string, PendingDeletion][]);
+  } catch { return new Map(); }
+}
+
+function writePendingDeletions(m: Map<string, PendingDeletion>) {
+  try { sessionStorage.setItem(SS_DELETIONS_KEY, JSON.stringify([...m.entries()])); } catch {}
+}
+
+function setPendingDeletion(name: string) {
+  const m = readPendingDeletions();
+  m.set(name, { deletedAt: Date.now() });
+  writePendingDeletions(m);
+}
+
+function clearPendingDeletion(name: string) {
+  const m = readPendingDeletions();
+  m.delete(name);
+  writePendingDeletions(m);
 }
 
 // Merges pending archive/restore mutations into freshly-fetched libMeta.
@@ -166,6 +208,7 @@ export default function LibraryPage() {
   const [loadingList, setLoadingList] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [refreshError, setRefreshError] = useState<string | null>(null);
+  const [deleteModal, setDeleteModal] = useState<DeleteModalState | null>(null);
 
   // Search / filter / sort
   const [searchQuery,    setSearchQuery]    = useState('');
@@ -227,10 +270,37 @@ export default function LibraryPage() {
     }
 
     console.log('[Library Refresh] confirmed phaseOrder keys:', Object.keys(resolvedMeta.phaseOrder ?? {}));
+
+    // Apply pending deletions: filter deleted schedules from both the name list and tsarchived
+    // so that a stale CDN blob-list or library-meta read cannot resurrect a just-deleted schedule.
+    let effectiveNames = names;
+    try {
+      const deletions = readPendingDeletions();
+      const now = Date.now();
+      let deletionsChanged = false;
+      for (const [dname, { deletedAt }] of deletions) {
+        if (now - deletedAt > MUTATION_TTL_MS) {
+          deletions.delete(dname);
+          deletionsChanged = true;
+          console.log('[Library Deletion] pending deletion expired:', dname);
+        }
+      }
+      if (deletionsChanged) writePendingDeletions(deletions);
+      if (deletions.size > 0) {
+        const deletedSet = new Set(deletions.keys());
+        effectiveNames = effectiveNames.filter((n) => !deletedSet.has(n));
+        const cleanedTs = resolvedMeta.tsarchived?.filter((n) => !deletedSet.has(n));
+        if (cleanedTs?.length !== (resolvedMeta.tsarchived?.length ?? 0)) {
+          resolvedMeta = { ...resolvedMeta, tsarchived: cleanedTs };
+        }
+        console.log('[Library Deletion] filtered', deletions.size, 'recently deleted schedule(s) from list');
+      }
+    } catch {}
+
     setLibMeta(resolvedMeta);
 
     // Protect a recently saved schedule from vanishing due to a stale list read.
-    let effectiveNames = names;
+    // (effectiveNames may have already been narrowed by the deletions guard above)
     try {
       const raw = sessionStorage.getItem('rp_recently_added_schedule');
       if (raw) {
@@ -434,27 +504,65 @@ export default function LibraryPage() {
     }
   }
 
-  async function handleDeletePermanently(name: string) {
-    if (!confirm(`Permanently delete "${name}"? This cannot be undone.`)) return;
-    const deletePassword = (prompt('Enter delete password:') ?? '').trim();
-    if (!deletePassword) { alert('Delete cancelled — schedule kept.'); return; }
+  function handleDeletePermanently(name: string) {
+    setDeleteModal({ name, passcode: '', confirmText: '', submitting: false, error: null });
+  }
+
+  async function handleDeleteConfirm() {
+    if (!deleteModal) return;
+    const { name, passcode, confirmText } = deleteModal;
+    if (confirmText !== 'DELETE') return;
+
+    setDeleteModal((m) => m ? { ...m, submitting: true, error: null } : null);
+    console.log('[Library Delete] delete requested for:', name);
+
+    // Record locally before the request so Refresh during the CDN propagation window
+    // doesn't resurrect the schedule.
+    setPendingDeletion(name);
+
     try {
-      await postDelete(name, token!, deletePassword);
+      const result = await postDeleteSchedule(name, token!, passcode);
+      console.log('[Library Delete] delete succeeded:', name);
+
+      // Remove from UI immediately
       setSchedules((prev) => prev.filter((s) => s.name !== name));
 
-      const archived = (libMeta.tsarchived ?? []).filter((n) => n !== name);
-      const po: NonNullable<LibraryData['phaseOrder']> = JSON.parse(JSON.stringify(libMeta.phaseOrder ?? {}));
-      for (const pk of Object.keys(po)) {
-        for (const phk of Object.keys(po[pk])) {
-          po[pk][phk] = po[pk][phk].filter((n) => n !== name);
-        }
+      // Apply the cleaned library metadata returned by the backend if available,
+      // otherwise clean it locally.
+      if (result.library) {
+        setLibMeta(result.library);
+      } else {
+        setLibMeta((prev) => {
+          const tsarchived = (prev.tsarchived ?? []).filter((n) => n !== name);
+          const po: NonNullable<LibraryData['phaseOrder']> = JSON.parse(JSON.stringify(prev.phaseOrder ?? {}));
+          for (const pk of Object.keys(po)) {
+            for (const phk of Object.keys(po[pk])) {
+              po[pk][phk] = po[pk][phk].filter((n) => n !== name);
+            }
+          }
+          const sfm = { ...(prev.scheduleFolderMap ?? {}) };
+          delete sfm[name];
+          return { ...prev, tsarchived, phaseOrder: po, scheduleFolderMap: sfm, updatedAt: Date.now() };
+        });
       }
-      await updateLibMeta({ ...libMeta, tsarchived: archived, phaseOrder: po, updatedAt: Date.now() });
+
+      // Remove from recent
+      try {
+        const prev = JSON.parse(localStorage.getItem('rp_recent_schedules') || '[]') as { name: string }[];
+        localStorage.setItem('rp_recent_schedules', JSON.stringify(prev.filter((r) => r.name !== name)));
+        setRecent((r) => r.filter((x) => x.name !== name));
+      } catch {}
+
+      setDeleteModal(null);
     } catch (e) {
       const msg = (e as Error).message ?? '';
-      alert(/invalid delete password/i.test(msg)
-        ? 'Invalid delete password. The schedule was not removed.'
-        : msg || 'Delete did not complete — check your connection.');
+      console.log('[Library Delete] delete failed:', name, msg);
+      // On failure, remove the pending deletion guard — schedule was not deleted.
+      clearPendingDeletion(name);
+      const friendly = /invalid delete password/i.test(msg)
+        ? 'Incorrect passcode — the schedule was not deleted.'
+        : msg || 'Delete did not complete. Check your connection and try again.';
+      setDeleteModal((m) => m ? { ...m, submitting: false, error: friendly } : null);
     }
   }
 
@@ -541,6 +649,78 @@ export default function LibraryPage() {
 
   return (
     <div className="lib-page">
+      {/* Permanent delete modal */}
+      {deleteModal && (
+        <div
+          className="lbt-modal-overlay"
+          onClick={() => !deleteModal.submitting && setDeleteModal(null)}
+        >
+          <div className="lbt-modal lbt-modal--delete" onClick={(e) => e.stopPropagation()}>
+            <h2 className="lbt-modal-title">Permanently Delete Schedule</h2>
+            <p className="lbt-delete-warning">
+              This will permanently delete <strong>{deleteModal.name}</strong> and all its
+              snapshots. <strong>This cannot be undone.</strong>
+            </p>
+
+            <div className="lbt-modal-label">Delete passcode</div>
+            <input
+              className="lbt-modal-input"
+              type="password"
+              autoFocus
+              placeholder="Enter passcode…"
+              value={deleteModal.passcode}
+              disabled={deleteModal.submitting}
+              onChange={(e) => setDeleteModal((m) => m ? { ...m, passcode: e.target.value } : null)}
+              onKeyDown={(e) => {
+                if (e.key === 'Escape' && !deleteModal.submitting) setDeleteModal(null);
+              }}
+            />
+
+            <div className="lbt-modal-label">Type DELETE to confirm</div>
+            <input
+              className="lbt-modal-input"
+              type="text"
+              placeholder="DELETE"
+              value={deleteModal.confirmText}
+              disabled={deleteModal.submitting}
+              onChange={(e) => setDeleteModal((m) => m ? { ...m, confirmText: e.target.value } : null)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !deleteModal.submitting
+                    && deleteModal.passcode.trim() && deleteModal.confirmText === 'DELETE') {
+                  handleDeleteConfirm();
+                }
+                if (e.key === 'Escape' && !deleteModal.submitting) setDeleteModal(null);
+              }}
+            />
+
+            {deleteModal.error && (
+              <p className="lbt-modal-error">{deleteModal.error}</p>
+            )}
+
+            <div className="lbt-modal-actions">
+              <button
+                className="btn btn-light btn-sm"
+                onClick={() => setDeleteModal(null)}
+                disabled={deleteModal.submitting}
+              >
+                Cancel
+              </button>
+              <button
+                className="btn btn-delete btn-sm"
+                onClick={handleDeleteConfirm}
+                disabled={
+                  deleteModal.submitting ||
+                  !deleteModal.passcode.trim() ||
+                  deleteModal.confirmText !== 'DELETE'
+                }
+              >
+                {deleteModal.submitting ? 'Deleting…' : 'Delete Permanently'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <div className="lib-header">
         <h1 className="lib-title">Library</h1>
