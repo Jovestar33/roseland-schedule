@@ -376,6 +376,18 @@ export default function LibraryPage() {
               tsarchived: cloudArchived.map((n) => n === oldName ? newName : n),
             };
           }
+          // Remap phaseOrder position-preservingly — without this, applyPhaseOrder
+          // looks for newName but finds oldName → assigns Infinity index → floats to bottom.
+          if (resolvedMeta.phaseOrder) {
+            const remappedPO: NonNullable<LibraryData['phaseOrder']> = {};
+            for (const [pk, phases] of Object.entries(resolvedMeta.phaseOrder)) {
+              remappedPO[pk] = {};
+              for (const [phk, order] of Object.entries(phases)) {
+                remappedPO[pk][phk] = order.map((n) => n === oldName ? newName : n);
+              }
+            }
+            resolvedMeta = { ...resolvedMeta, phaseOrder: remappedPO };
+          }
           console.log('[Library Rename] stale CDN — applied pending rename:', oldName, '→', newName);
         }
       }
@@ -681,10 +693,18 @@ export default function LibraryPage() {
         setLibMeta((prev) => {
           const sfm = { ...(prev.scheduleFolderMap ?? {}) };
           if (oldName in sfm) { sfm[trimNew] = sfm[oldName]; delete sfm[oldName]; }
+          const po: NonNullable<LibraryData['phaseOrder']> = {};
+          for (const [pk, phases] of Object.entries(prev.phaseOrder ?? {})) {
+            po[pk] = {};
+            for (const [phk, order] of Object.entries(phases)) {
+              po[pk][phk] = order.map((n) => n === oldName ? trimNew : n);
+            }
+          }
           return {
             ...prev,
             tsarchived: prev.tsarchived?.map((n) => n === oldName ? trimNew : n),
             scheduleFolderMap: sfm,
+            phaseOrder: po,
             updatedAt: Date.now(),
           };
         });
