@@ -20,13 +20,47 @@ function defaultLibrary() {
   return { version: 1, folders: [], scheduleFolderMap: {}, updatedAt: Date.now() };
 }
 
-function shapeOf(data) {
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function shapeOf(raw) {
+  const typeofRaw = typeof raw;
+  // Handle string → parse; handle non-plain-object types gracefully
+  let data = raw;
+  if (typeof raw === 'string') {
+    try { data = JSON.parse(raw); } catch { data = null; }
+  }
+  const topKeys = data && typeof data === 'object' && !Array.isArray(data)
+    ? Object.keys(data).sort().join(',')
+    : '(not an object)';
   const rowCount = Array.isArray(data && data.rows) ? data.rows.length : -1;
   const metaKeys = data && data.meta && typeof data.meta === 'object'
     ? Object.keys(data.meta).sort().join(',')
     : '(none)';
   const hasSavedAt = typeof (data && data.savedAt) === 'number';
-  return { rowCount, metaKeys, hasSavedAt };
+  return { typeofRaw, topKeys, rowCount, metaKeys, hasSavedAt, parsed: data };
+}
+
+// Retry readback with increasing delays to tolerate Netlify Blobs CDN propagation lag.
+// store.get() uses the edge URL set by connectLambda, but CDN-layer reads can still
+// return null immediately after a write even within the same Lambda invocation.
+// Attempts: immediate → +250ms → +500ms → +1000ms (total budget ≤ 1.75s)
+async function readWithRetry(store, key, label) {
+  const delays = [0, 250, 500, 1000];
+  for (let i = 0; i < delays.length; i++) {
+    if (delays[i] > 0) {
+      console.log('[Rename] readback', label, '— attempt', i + 1, 'waiting', delays[i], 'ms');
+      await sleep(delays[i]);
+    }
+    const raw = await store.get(key);
+    if (raw !== null && raw !== undefined) {
+      console.log('[Rename] readback', label, '— attempt', i + 1, 'succeeded');
+      return raw;
+    }
+    console.log('[Rename] readback', label, '— attempt', i + 1, 'returned null');
+  }
+  return null;
 }
 
 exports.handler = async (event) => {
@@ -75,12 +109,14 @@ exports.handler = async (event) => {
       console.log('[Rename] old schedule blob not found:', trimOld);
       return { statusCode: 404, headers, body: JSON.stringify({ error: `Schedule "${trimOld}" not found` }) };
     }
-    const oldData = typeof oldRaw === 'string' ? JSON.parse(oldRaw) : oldRaw;
-    const oldShape = shapeOf(oldData);
+    const oldShape = shapeOf(oldRaw);
     console.log('[Rename] old schedule blob read OK:', trimOld,
+      '| typeof raw:', oldShape.typeofRaw,
+      '| top keys:', oldShape.topKeys,
       '| rows:', oldShape.rowCount,
       '| meta keys:', oldShape.metaKeys,
       '| hasSavedAt:', oldShape.hasSavedAt);
+    const oldData = oldShape.parsed;
 
     // Step 2 — Reject if new name already taken
     const existingRaw = await schedStore.get(trimNew);
@@ -90,21 +126,23 @@ exports.handler = async (event) => {
     }
     console.log('[Rename] newName is available:', trimNew);
 
-    // Step 3 — Write new schedule blob
-    // Payload is byte-for-byte identical to the original — the schedule name lives
-    // only as the blob key, not inside the blob content.
+    // Step 3 — Write new schedule blob.
+    // The payload is byte-for-byte identical to the original — the schedule name
+    // lives only as the blob key, not inside the blob content.
     const newPayload = JSON.stringify(oldData);
     await schedStore.set(trimNew, newPayload, { metadata: { savedAt: oldData.savedAt ?? 0 } });
-    console.log('[Rename] new schedule blob written:', trimNew);
+    console.log('[Rename] new schedule blob written:', trimNew, '| payload length:', newPayload.length, 'chars');
 
-    // Step 3b — Readback validation: confirm the new blob is readable and intact.
-    // Reads within the same Lambda invocation hit the same Blobs endpoint as writes
-    // (via connectLambda edgeURL), so this is a reliable consistency check —
-    // not subject to CDN propagation lag.
-    const newRaw = await schedStore.get(trimNew);
+    // Step 3b — Readback validation with retry.
+    // store.get() reads through the Netlify Blobs CDN edge layer. Even within the
+    // same Lambda invocation the CDN can return null immediately after a write while
+    // the write propagates. We retry up to 4 times (0 + 250 + 500 + 1000 ms) before
+    // treating a null as a genuine failure. The old blob is never deleted unless this
+    // validation passes.
+    const newRaw = await readWithRetry(schedStore, trimNew, trimNew);
     if (newRaw === null || newRaw === undefined) {
-      console.error('[Rename] readback returned null for new blob:', trimNew,
-        '— write did not persist; aborting without deleting old blob');
+      console.error('[Rename] readback failed after all retries for:', trimNew,
+        '— write likely did not persist; old schedule preserved');
       try { await schedStore.delete(trimNew); } catch {}
       return {
         statusCode: 500,
@@ -112,9 +150,10 @@ exports.handler = async (event) => {
         body: JSON.stringify({ error: 'Rename failed: new schedule blob not readable after write — old schedule preserved' }),
       };
     }
-    const newData = typeof newRaw === 'string' ? JSON.parse(newRaw) : newRaw;
-    const newShape = shapeOf(newData);
+    const newShape = shapeOf(newRaw);
     console.log('[Rename] new schedule readback OK:', trimNew,
+      '| typeof raw:', newShape.typeofRaw,
+      '| top keys:', newShape.topKeys,
       '| rows:', newShape.rowCount,
       '| meta keys:', newShape.metaKeys,
       '| hasSavedAt:', newShape.hasSavedAt);
@@ -122,7 +161,7 @@ exports.handler = async (event) => {
     // Validate rows count matches (only when old schedule had rows)
     if (oldShape.rowCount > 0 && newShape.rowCount !== oldShape.rowCount) {
       console.error('[Rename] readback rows mismatch — expected:', oldShape.rowCount,
-        'got:', newShape.rowCount, '— aborting without deleting old blob');
+        'got:', newShape.rowCount, '— aborting; old schedule preserved');
       try { await schedStore.delete(trimNew); } catch {}
       return {
         statusCode: 500,
@@ -133,7 +172,7 @@ exports.handler = async (event) => {
     // Validate meta present if old schedule had meta
     if (oldShape.metaKeys !== '(none)' && newShape.metaKeys === '(none)') {
       console.error('[Rename] readback meta missing — old had meta keys:', oldShape.metaKeys,
-        '— aborting without deleting old blob');
+        '— aborting; old schedule preserved');
       try { await schedStore.delete(trimNew); } catch {}
       return {
         statusCode: 500,
@@ -273,7 +312,9 @@ exports.handler = async (event) => {
     }
 
     console.log('[Rename] complete success:', trimOld, '→', trimNew,
-      '| rows preserved:', newShape.rowCount, '| meta keys:', newShape.metaKeys);
+      '| rows preserved:', newShape.rowCount,
+      '| meta keys:', newShape.metaKeys,
+      '| top keys:', newShape.topKeys);
     return { statusCode: 200, headers, body: JSON.stringify({ ok: true, newName: trimNew, library }) };
   } catch (err) {
     console.error('[Rename] handler error:', err.name, err.message);
