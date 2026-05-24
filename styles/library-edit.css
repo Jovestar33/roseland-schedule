@@ -272,3 +272,23 @@
 }
 .btn-delete:hover:not(:disabled) { background: #b91c1c; }
 .btn-delete:disabled { opacity: 0.45; cursor: not-allowed; }
+
+/* ── Move To modal ────────────────────────────────────────────────────────── */
+
+.lbt-modal-sched-name {
+  font-size: 13px;
+  color: var(--g500);
+  margin: -8px 0 16px;
+}
+
+/* Make ComboInput full-width inside the modal */
+.lbt-modal .combo-wrap {
+  display: flex;
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+/* Remove the input's own margin-bottom to avoid double-spacing */
+.lbt-modal .combo-wrap .lbt-modal-input {
+  margin-bottom: 0;
+}

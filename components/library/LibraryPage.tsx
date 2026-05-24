@@ -4,10 +4,11 @@ import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/lib/store/authStore';
 import { useCmsStore } from '@/lib/store/cmsStore';
 import { listSchedules, postLoad } from '@/lib/api/load';
-import { postDeleteSchedule, postRenameSchedule } from '@/lib/api/save';
+import { postDeleteSchedule, postRenameSchedule, postMoveSchedule } from '@/lib/api/save';
 import { getLibraryMeta, putLibraryMeta, type LibraryData } from '@/lib/api/library';
 import type { ScheduleData } from '@/lib/types';
 import ScheduleListTab, { type LibrarySchedule } from './ScheduleListTab';
+import ComboInput from '@/components/schedule/ComboInput';
 import LibrarySearch from './LibrarySearch';
 import TemplatesTab from './TemplatesTab';
 import VersionsTab from './VersionsTab';
@@ -30,6 +31,16 @@ interface DeleteModalState {
 interface RenameModalState {
   name: string;
   draft: string;
+  submitting: boolean;
+  error: string | null;
+}
+
+interface MoveModalState {
+  name: string;
+  currentProd: string;
+  currentPhase: string;
+  draftProd: string;
+  draftPhase: string;
   submitting: boolean;
   error: string | null;
 }
@@ -255,6 +266,37 @@ function isRenameBackAllowed(currentName: string, targetName: string): boolean {
   } catch { return false; }
 }
 
+// ── Pending move guard ─────────────────────────────────────────────────────────
+// Protects a recently moved schedule from appearing in the wrong production/phase
+// after a stale CDN blob read during the eventual-consistency propagation window.
+
+const SS_MOVES_KEY = 'rp_lib_pending_moves';
+const MOVE_TTL_MS  = 60_000;
+
+interface PendingMoveEntry {
+  projectName: string;
+  phase: string;
+  movedAt: number;
+}
+
+function readPendingMoves(): Map<string, PendingMoveEntry> {
+  try {
+    const raw = sessionStorage.getItem(SS_MOVES_KEY);
+    if (!raw) return new Map();
+    return new Map(JSON.parse(raw) as [string, PendingMoveEntry][]);
+  } catch { return new Map(); }
+}
+
+function writePendingMoves(m: Map<string, PendingMoveEntry>) {
+  try { sessionStorage.setItem(SS_MOVES_KEY, JSON.stringify([...m.entries()])); } catch {}
+}
+
+function setPendingMove(scheduleName: string, projectName: string, phase: string) {
+  const m = readPendingMoves();
+  m.set(scheduleName, { projectName, phase, movedAt: Date.now() });
+  writePendingMoves(m);
+}
+
 // Merges pending archive/restore mutations into freshly-fetched libMeta.
 // Reads and writes sessionStorage directly so it works across navigations.
 function applyPendingMutations(meta: LibraryData): LibraryData {
@@ -333,6 +375,7 @@ export default function LibraryPage() {
   const [refreshError, setRefreshError] = useState<string | null>(null);
   const [deleteModal, setDeleteModal] = useState<DeleteModalState | null>(null);
   const [renameModal, setRenameModal] = useState<RenameModalState | null>(null);
+  const [moveModal,   setMoveModal]   = useState<MoveModalState | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   // Post-rename sync guard: maps newName → expiry timestamp (Date.now() + RENAME_SYNC_MS).
   // During this window, opening or re-renaming the schedule is blocked to prevent
@@ -511,6 +554,59 @@ export default function LibraryPage() {
       if (renamesChanged) writePendingRenames(renames);
     } catch {}
 
+    // Apply pending moves: patch stale CDN phaseOrder that still shows the schedule
+    // in its old production/phase after a successful move.
+    try {
+      const moves = readPendingMoves();
+      const now = Date.now();
+      let movesChanged = false;
+      for (const [scheduleName, { projectName, phase, movedAt }] of moves) {
+        if (now - movedAt > MOVE_TTL_MS) {
+          moves.delete(scheduleName);
+          movesChanged = true;
+          console.log('[Library Move] pending move expired:', scheduleName);
+          continue;
+        }
+        const newProdKey  = projectName.trim().toLowerCase();
+        const newPhaseKey = phase.trim().toLowerCase();
+        const oldPO = resolvedMeta.phaseOrder ?? {};
+        const alreadyInDest = oldPO[newProdKey]?.[newPhaseKey]?.includes(scheduleName) ?? false;
+        let foundInOld = false;
+        for (const [pk, phases] of Object.entries(oldPO)) {
+          for (const [phk, order] of Object.entries(phases)) {
+            if ((pk !== newProdKey || phk !== newPhaseKey) && order.includes(scheduleName)) {
+              foundInOld = true;
+            }
+          }
+        }
+        if (alreadyInDest && !foundInOld) {
+          moves.delete(scheduleName);
+          movesChanged = true;
+          console.log('[Library Move] cloud confirmed move:', scheduleName);
+          continue;
+        }
+        // Patch phaseOrder: remove from all old locations, ensure present in destination
+        const newPO: NonNullable<LibraryData['phaseOrder']> = {};
+        for (const [pk, phases] of Object.entries(oldPO)) {
+          newPO[pk] = {};
+          for (const [phk, order] of Object.entries(phases)) {
+            newPO[pk][phk] = (pk !== newProdKey || phk !== newPhaseKey)
+              ? order.filter((n) => n !== scheduleName)
+              : order;
+          }
+        }
+        if (!newPO[newProdKey]) newPO[newProdKey] = {};
+        if (!newPO[newProdKey][newPhaseKey]) newPO[newProdKey][newPhaseKey] = [];
+        if (!newPO[newProdKey][newPhaseKey].includes(scheduleName)) {
+          newPO[newProdKey][newPhaseKey] = [...newPO[newProdKey][newPhaseKey], scheduleName];
+        }
+        resolvedMeta = { ...resolvedMeta, phaseOrder: newPO };
+        console.log('[Library Move] stale CDN — patched phaseOrder for:', scheduleName,
+          '→', projectName, '/', phase);
+      }
+      if (movesChanged) writePendingMoves(moves);
+    } catch {}
+
     setLibMeta(resolvedMeta);
 
     // Protect a recently saved schedule from vanishing due to a stale list read.
@@ -588,14 +684,35 @@ export default function LibraryPage() {
           });
       })
     );
-    setSchedules(fetched);
+    // Apply pending moves to fetched schedule data: patch stale blob reads where
+    // meta.projectName / meta.phase still reflect the old location.
+    let patchedFetched = fetched;
+    try {
+      const moves = readPendingMoves();
+      if (moves.size > 0) {
+        patchedFetched = fetched.map((sched) => {
+          const entry = moves.get(sched.name);
+          if (!entry || !sched.data) return sched;
+          const cur = sched.data;
+          if (cur.meta?.projectName?.trim() === entry.projectName
+              && cur.meta?.phase?.trim() === entry.phase) return sched;
+          console.log('[Library Move] patching stale meta for:', sched.name,
+            '→', entry.projectName, '/', entry.phase);
+          return {
+            ...sched,
+            data: { ...cur, meta: { ...(cur.meta ?? {}), projectName: entry.projectName, phase: entry.phase } },
+          };
+        });
+      }
+    } catch {}
+    setSchedules(patchedFetched);
 
     try {
       const projectNames = [...new Set(
-        fetched.flatMap((s) => { const n = s.data?.meta?.projectName?.trim(); return n ? [n] : []; })
+        patchedFetched.flatMap((s) => { const n = s.data?.meta?.projectName?.trim(); return n ? [n] : []; })
       )];
       const phases = [...new Set(
-        fetched.flatMap((s) => { const p = s.data?.meta?.phase?.trim(); return p ? [p] : []; })
+        patchedFetched.flatMap((s) => { const p = s.data?.meta?.phase?.trim(); return p ? [p] : []; })
       )];
       localStorage.setItem('rp_lib_project_options', JSON.stringify(projectNames));
       localStorage.setItem('rp_lib_phase_options', JSON.stringify(phases));
@@ -857,6 +974,73 @@ export default function LibraryPage() {
     }
   }
 
+  function handleMoveTo(name: string) {
+    const sched = schedules.find((s) => s.name === name);
+    const currentProd  = sched?.data?.meta?.projectName?.trim() ?? '';
+    const currentPhase = sched?.data?.meta?.phase?.trim() ?? '';
+    setMoveModal({ name, currentProd, currentPhase, draftProd: currentProd, draftPhase: currentPhase, submitting: false, error: null });
+  }
+
+  async function handleMoveConfirm() {
+    if (!moveModal) return;
+    const { name, currentProd, currentPhase, draftProd, draftPhase } = moveModal;
+    const trimProd  = draftProd.trim();
+    const trimPhase = draftPhase.trim();
+
+    setMoveModal((m) => m ? { ...m, submitting: true, error: null } : null);
+    console.log('[Library Move] move requested:', name, '→', trimProd, '/', trimPhase);
+
+    setPendingMove(name, trimProd, trimPhase);
+
+    try {
+      const result = await postMoveSchedule(name, trimProd, trimPhase, token!);
+      console.log('[Library Move] move succeeded:', name);
+
+      if (!result.noOp) {
+        setSchedules((prev) => prev.map((s) => {
+          if (s.name !== name || !s.data) return s;
+          return {
+            ...s,
+            data: { ...s.data, meta: { ...(s.data.meta ?? {}), projectName: trimProd, phase: trimPhase } },
+          };
+        }));
+
+        if (result.library) {
+          setLibMeta(result.library);
+        } else {
+          setLibMeta((prev) => {
+            const oldProdKey  = currentProd.toLowerCase();
+            const oldPhaseKey = currentPhase.toLowerCase();
+            const newProdKey  = trimProd.toLowerCase();
+            const newPhaseKey = trimPhase.toLowerCase();
+            const po: NonNullable<LibraryData['phaseOrder']> = JSON.parse(JSON.stringify(prev.phaseOrder ?? {}));
+            if (po[oldProdKey]?.[oldPhaseKey]) {
+              po[oldProdKey][oldPhaseKey] = po[oldProdKey][oldPhaseKey].filter((n) => n !== name);
+            }
+            if (!po[newProdKey]) po[newProdKey] = {};
+            if (!po[newProdKey][newPhaseKey]) po[newProdKey][newPhaseKey] = [];
+            if (!po[newProdKey][newPhaseKey].includes(name)) {
+              po[newProdKey][newPhaseKey] = [...po[newProdKey][newPhaseKey], name];
+            }
+            return { ...prev, phaseOrder: po, updatedAt: Date.now() };
+          });
+        }
+
+        const dest = [trimProd, trimPhase].filter(Boolean).join(' / ') || 'Ungrouped';
+        setSuccessMessage(`Moved to ${dest}.`);
+      }
+
+      setMoveModal(null);
+    } catch (e) {
+      const msg = (e as Error).message ?? '';
+      console.log('[Library Move] move failed:', name, msg);
+      const m = readPendingMoves();
+      m.delete(name);
+      writePendingMoves(m);
+      setMoveModal((prev) => prev ? { ...prev, submitting: false, error: msg || 'Move did not complete. Please try again.' } : null);
+    }
+  }
+
   function handleLogout() {
     logout();
     router.push('/login');
@@ -876,6 +1060,15 @@ export default function LibraryPage() {
       schedules.flatMap((s) => {
         const n = s.data?.meta?.projectName?.trim();
         return n ? [n] : [];
+      })
+    )].sort();
+  }, [schedules]);
+
+  const allPhaseNames = useMemo(() => {
+    return [...new Set(
+      schedules.flatMap((s) => {
+        const p = s.data?.meta?.phase?.trim();
+        return p ? [p] : [];
       })
     )].sort();
   }, [schedules]);
@@ -953,6 +1146,26 @@ export default function LibraryPage() {
     renameModal.draft.trim() !== renameModal.name &&
     !isRenameBackAllowed(renameModal.name, renameModal.draft.trim()) &&
     schedules.some((s) => s.name.trim() === renameModal.draft.trim());
+
+  // Phase suggestions for the Move To modal — filtered to the currently-typed
+  // production so the options are contextually relevant.
+  const moveDraftProd = moveModal?.draftProd ?? '';
+  const movePhaseOptions = useMemo(() => {
+    const draftProdKey = moveDraftProd.trim().toLowerCase();
+    if (!draftProdKey) return allPhaseNames;
+    const filtered = [...new Set(
+      schedules
+        .filter((s) => (s.data?.meta?.projectName?.trim().toLowerCase() ?? '') === draftProdKey)
+        .flatMap((s) => { const p = s.data?.meta?.phase?.trim(); return p ? [p] : []; })
+    )].sort();
+    return filtered.length > 0 ? filtered : allPhaseNames;
+  }, [moveDraftProd, schedules, allPhaseNames]);
+
+  // True when the chosen destination matches the schedule's current location.
+  const isMoveNoOp =
+    moveModal !== null &&
+    moveModal.draftProd.trim() === moveModal.currentProd &&
+    moveModal.draftPhase.trim() === moveModal.currentPhase;
 
   // ── Render ─────────────────────────────────────────────────────────────────
 
@@ -1081,6 +1294,57 @@ export default function LibraryPage() {
                 }
               >
                 {renameModal.submitting ? 'Renaming…' : 'Rename'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Move To modal */}
+      {moveModal && (
+        <div
+          className="lbt-modal-overlay"
+          onClick={() => !moveModal.submitting && setMoveModal(null)}
+        >
+          <div className="lbt-modal" onClick={(e) => e.stopPropagation()}>
+            <h2 className="lbt-modal-title">Move To</h2>
+            <p className="lbt-modal-sched-name">{moveModal.name}</p>
+            <div className="lbt-modal-label">Production</div>
+            <ComboInput
+              value={moveModal.draftProd}
+              onChange={(v) => setMoveModal((m) => m ? { ...m, draftProd: v, error: null } : null)}
+              onEscape={() => !moveModal.submitting && setMoveModal(null)}
+              options={allProductionNames}
+              placeholder="Production name…"
+              className="lbt-modal-input"
+              autoFocus
+            />
+            <div className="lbt-modal-label">Phase</div>
+            <ComboInput
+              value={moveModal.draftPhase}
+              onChange={(v) => setMoveModal((m) => m ? { ...m, draftPhase: v, error: null } : null)}
+              onEscape={() => !moveModal.submitting && setMoveModal(null)}
+              options={movePhaseOptions}
+              placeholder="Phase name…"
+              className="lbt-modal-input"
+            />
+            {moveModal.error && (
+              <p className="lbt-modal-error">{moveModal.error}</p>
+            )}
+            <div className="lbt-modal-actions">
+              <button
+                className="btn btn-light btn-sm"
+                onClick={() => setMoveModal(null)}
+                disabled={moveModal.submitting}
+              >
+                Cancel
+              </button>
+              <button
+                className="btn btn-pink btn-sm"
+                onClick={handleMoveConfirm}
+                disabled={moveModal.submitting || isMoveNoOp}
+              >
+                {moveModal.submitting ? 'Moving…' : 'Move'}
               </button>
             </div>
           </div>
@@ -1310,6 +1574,7 @@ export default function LibraryPage() {
                   onRestore={handleRestore}
                   onDeletePermanently={handleDeletePermanently}
                   onRename={handleRenameSchedule}
+                  onMoveTo={handleMoveTo}
                   onUpdateLibMeta={updateLibMeta}
                   syncingNames={syncingNamesSet}
                 />

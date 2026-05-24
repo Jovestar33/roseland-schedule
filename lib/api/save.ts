@@ -109,3 +109,26 @@ export async function postRenameSchedule(
   }
   return { library: body.library ?? null };
 }
+
+export async function postMoveSchedule(
+  scheduleName: string,
+  newProjectName: string,
+  newPhase: string,
+  editorToken: string,
+): Promise<{ library: import('./library').LibraryData | null; savedAt: number | null; noOp?: boolean }> {
+  const res = await fetch('/.netlify/functions/move-schedule', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ scheduleName, newProjectName, newPhase, editorToken }),
+  });
+  const body = await res.json().catch(() => ({ error: 'Unknown error' })) as {
+    error?: string;
+    library?: import('./library').LibraryData | null;
+    savedAt?: number;
+    noOp?: boolean;
+  };
+  if (!res.ok) {
+    throw new Error(body.error ?? `Move failed: HTTP ${res.status}`);
+  }
+  return { library: body.library ?? null, savedAt: body.savedAt ?? null, noOp: body.noOp };
+}

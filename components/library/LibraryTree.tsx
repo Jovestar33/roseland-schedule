@@ -194,13 +194,14 @@ interface RowContentProps {
   onRestore: (name: string) => void;
   onDeletePermanently: (name: string) => void;
   onRename: (name: string) => void;
+  onMoveTo: (name: string) => void;
   onOpen: (name: string) => void;
 }
 
 function ScheduleRowContent({
   s, isArchived, syncingNames, copiedInfo,
   onCopyTeam, onCopyClient,
-  onArchive, onRestore, onDeletePermanently, onRename, onOpen,
+  onArchive, onRestore, onDeletePermanently, onRename, onMoveTo, onOpen,
 }: RowContentProps) {
   const meta = formatMeta(s);
   const isSyncing = syncingNames.has(s.name);
@@ -313,6 +314,15 @@ function ScheduleRowContent({
           </>
         ) : (
           <>
+            {/* Move To: active schedules only, desktop only; disabled during post-rename CDN sync window */}
+            <button
+              className="sitem-move-btn lib-acts-desktop-only"
+              onClick={() => !isSyncing && onMoveTo(s.name)}
+              disabled={isSyncing}
+              title={isSyncing ? 'Still syncing — please wait a moment' : 'Move to another production or phase'}
+            >
+              Move To
+            </button>
             {/* Rename: active schedules only; disabled during post-rename CDN sync window */}
             <button
               className="sitem-rename-btn lib-acts-desktop-only"
@@ -358,13 +368,14 @@ interface Props {
   onRestore: (name: string) => void;
   onDeletePermanently: (name: string) => void;
   onRename: (name: string) => void;
+  onMoveTo: (name: string) => void;
   onUpdateLibMeta: (updated: LibraryData) => Promise<void>;
   syncingNames?: Set<string>;
 }
 
 export default function LibraryTree({
   schedules, libMeta,
-  onArchive, onRestore, onDeletePermanently, onRename,
+  onArchive, onRestore, onDeletePermanently, onRename, onMoveTo,
   onUpdateLibMeta, syncingNames: syncingNamesProp,
 }: Props) {
   const syncingNames = syncingNamesProp ?? EMPTY_SET;
@@ -430,6 +441,7 @@ export default function LibraryTree({
     onRestore,
     onDeletePermanently,
     onRename,
+    onMoveTo,
     onOpen: (name) => {
       if (syncingNames.has(name)) {
         setDndMessage('Still syncing — please wait a few seconds before opening.');

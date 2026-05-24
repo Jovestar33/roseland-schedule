@@ -16,13 +16,14 @@ interface Props {
   onRestore: (name: string) => void;
   onDeletePermanently: (name: string) => void;
   onRename: (name: string) => void;
+  onMoveTo: (name: string) => void;
   onUpdateLibMeta: (updated: LibraryData) => Promise<void>;
   syncingNames?: Set<string>;
 }
 
 export default function ScheduleListTab({
   schedules, libMeta,
-  onArchive, onRestore, onDeletePermanently, onRename,
+  onArchive, onRestore, onDeletePermanently, onRename, onMoveTo,
   onUpdateLibMeta, syncingNames,
 }: Props) {
   return (
@@ -33,6 +34,7 @@ export default function ScheduleListTab({
       onRestore={onRestore}
       onDeletePermanently={onDeletePermanently}
       onRename={onRename}
+      onMoveTo={onMoveTo}
       onUpdateLibMeta={onUpdateLibMeta}
       syncingNames={syncingNames}
     />
