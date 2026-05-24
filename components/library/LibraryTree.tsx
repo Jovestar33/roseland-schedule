@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
-import { DragDropContext, Droppable, Draggable, type DropResult } from '@hello-pangea/dnd';
+import { DragDropContext, Droppable, Draggable, type DropResult, type DragStart } from '@hello-pangea/dnd';
 import { GripVertical, Pencil } from 'lucide-react';
 import type { LibrarySchedule } from './ScheduleListTab';
 import type { LibraryData } from '@/lib/api/library';
@@ -297,6 +297,7 @@ export default function LibraryTree({
   const [collapsed,        setCollapsed]        = useState<Set<string>>(new Set());
   const [copiedInfo,       setCopiedInfo]        = useState<{ name: string; kind: 'team' | 'client' } | null>(null);
   const [editModal,        setEditModal]         = useState<EditModal | null>(null);
+  const [dndMessage,       setDndMessage]        = useState<string | null>(null);
   const [creatingProd,     setCreatingProd]      = useState(false);
   const [newProdDraft,     setNewProdDraft]      = useState('');
   const [creatingPhaseFor, setCreatingPhaseFor]  = useState<string | null>(null);
@@ -306,6 +307,12 @@ export default function LibraryTree({
   const [emptyPhases, setEmptyPhases] = useState<Map<string, Map<string, string>>>(new Map());
 
   useEffect(() => { setCollapsed(loadCollapsed()); }, []);
+
+  useEffect(() => {
+    if (!dndMessage) return;
+    const t = setTimeout(() => setDndMessage(null), 4000);
+    return () => clearTimeout(t);
+  }, [dndMessage]);
 
   // Index for recent write lookups
   const scheduleMap = useMemo(() => new Map(schedules.map((s) => [s.name, s])), [schedules]);
@@ -354,17 +361,47 @@ export default function LibraryTree({
 
   // ── Drag & drop ─────────────────────────────────────────────────────────────
 
+  function handleDragStart(start: DragStart) {
+    console.log('[DnD] drag started', {
+      draggableId: start.draggableId,
+      source: start.source.droppableId,
+      sourceIndex: start.source.index,
+    });
+  }
+
   async function handleDragEnd(result: DropResult) {
-    if (!result.destination) return;
     const { source, destination } = result;
-    if (source.droppableId !== destination.droppableId) return;
-    if (source.index === destination.index) return;
+    console.log('[DnD] dropped', {
+      draggableId: result.draggableId,
+      source: source?.droppableId,
+      sourceIndex: source?.index,
+      destination: destination?.droppableId ?? null,
+      destinationIndex: destination?.index ?? null,
+    });
+
+    if (!destination) {
+      console.log('[DnD] dropped outside droppable — no-op');
+      return;
+    }
+
+    if (source.droppableId !== destination.droppableId) {
+      console.log('[DnD] cross-section move rejected — source:', source.droppableId, '→ dest:', destination.droppableId);
+      setDndMessage('Moving between sections is not supported yet.');
+      return;
+    }
+
+    if (source.index === destination.index) {
+      console.log('[DnD] same position — no-op');
+      return;
+    }
 
     // droppableId = "phase:<productionKey>:<phaseKey>"
     const withoutPrefix = destination.droppableId.slice('phase:'.length);
     const colonIdx = withoutPrefix.indexOf(':');
     const productionKey = withoutPrefix.slice(0, colonIdx);
     const phaseKey      = withoutPrefix.slice(colonIdx + 1);
+
+    console.log('[DnD] same-section reorder — productionKey:', productionKey, 'phaseKey:', phaseKey);
 
     const { productions } = buildTree(schedules);
     const prod  = productions.find((p) => p.productionKey === productionKey);
@@ -376,21 +413,32 @@ export default function LibraryTree({
       libMeta.phaseOrder?.[productionKey]?.[phaseKey]
     ).map((s) => s.name);
 
+    console.log('[DnD] phaseOrder before:', orderedNames);
+
     const newOrder = [...orderedNames];
     const [removed] = newOrder.splice(source.index, 1);
     newOrder.splice(destination.index, 0, removed);
 
-    await onUpdateLibMeta({
-      ...libMeta,
-      phaseOrder: {
-        ...(libMeta.phaseOrder ?? {}),
-        [productionKey]: {
-          ...(libMeta.phaseOrder?.[productionKey] ?? {}),
-          [phaseKey]: newOrder,
+    console.log('[DnD] phaseOrder after:', newOrder);
+
+    try {
+      await onUpdateLibMeta({
+        ...libMeta,
+        phaseOrder: {
+          ...(libMeta.phaseOrder ?? {}),
+          [productionKey]: {
+            ...(libMeta.phaseOrder?.[productionKey] ?? {}),
+            [phaseKey]: newOrder,
+          },
         },
-      },
-      updatedAt: Date.now(),
-    });
+        updatedAt: Date.now(),
+      });
+      console.log('[DnD] phaseOrder save confirmed — state persisted');
+    } catch {
+      // onUpdateLibMeta (updateLibMeta in LibraryPage) already reverted libMeta
+      // and surfaced the error via the refresh-error banner.
+      console.log('[DnD] phaseOrder save failed — state reverted to previous order');
+    }
   }
 
   // ── Inline create ───────────────────────────────────────────────────────────
@@ -578,7 +626,14 @@ export default function LibraryTree({
         </div>
       )}
 
-      <DragDropContext onDragEnd={handleDragEnd}>
+      {dndMessage && (
+        <div className="lib-refresh-error" role="alert">
+          {dndMessage}
+          <button className="lib-refresh-error-dismiss" onClick={() => setDndMessage(null)}>✕</button>
+        </div>
+      )}
+
+      <DragDropContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
         <div className="lbt-tree">
           {/* Empty state */}
           {allProductions.length === 0 && ungrouped.length === 0 && !creatingProd && (

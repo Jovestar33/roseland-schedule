@@ -227,11 +227,19 @@ export default function LibraryPage() {
   }
 
   async function updateLibMeta(updated: LibraryData): Promise<void> {
+    const prevMeta = libMeta;
     setLibMeta(updated);
+    console.log('[Library] metadata save started');
     try {
       const saved = await putLibraryMeta(updated, token!);
       setLibMeta(saved);
-    } catch { /* keep optimistic state */ }
+      console.log('[Library] metadata save succeeded');
+    } catch (err) {
+      console.error('[Library] metadata save failed', err);
+      setLibMeta(prevMeta);
+      setRefreshError('Could not save library changes. Please try again.');
+      throw err;
+    }
   }
 
   // ── Archive / Restore / Delete permanently ─────────────────────────────────
@@ -257,10 +265,16 @@ export default function LibraryPage() {
       setRecent(next);
     } catch {}
 
-    await updateLibMeta({ ...libMeta, tsarchived: archived, phaseOrder: po, updatedAt: Date.now() });
-    // No follow-up GET: putLibraryMeta's POST response already returns the
-    // confirmed server state. A second read races the blob propagation window
-    // and returns stale pre-archive data, which would revert the UI.
+    try {
+      await updateLibMeta({ ...libMeta, tsarchived: archived, phaseOrder: po, updatedAt: Date.now() });
+      // No follow-up GET: putLibraryMeta's POST response already returns the
+      // confirmed server state. A second read races the blob propagation window
+      // and returns stale pre-archive data, which would revert the UI.
+    } catch {
+      // updateLibMeta already reverted state and set refreshError.
+      // Remove pending mutation so a future Refresh doesn't incorrectly apply the failed archive.
+      pendingMutationsRef.current.delete(name);
+    }
   }
 
   async function handleRestore(name: string) {
@@ -268,8 +282,12 @@ export default function LibraryPage() {
     console.log('[Library Mutation] recorded:', name, 'archived=false');
 
     const archived = (libMeta.tsarchived ?? []).filter((n) => n !== name);
-    await updateLibMeta({ ...libMeta, tsarchived: archived, updatedAt: Date.now() });
-    // Same reason as handleArchive — no follow-up GET needed.
+    try {
+      await updateLibMeta({ ...libMeta, tsarchived: archived, updatedAt: Date.now() });
+      // Same reason as handleArchive — no follow-up GET needed.
+    } catch {
+      pendingMutationsRef.current.delete(name);
+    }
   }
 
   async function handleDeletePermanently(name: string) {

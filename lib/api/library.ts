@@ -43,7 +43,11 @@ export async function putLibraryMeta(meta: LibraryData, editorToken: string): Pr
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ library: meta, editorToken }),
   });
-  if (!res.ok) return meta;
+  if (!res.ok) {
+    let errMsg = `Library save failed (HTTP ${res.status})`;
+    try { const b = await res.json(); if (b?.error) errMsg = b.error; } catch {}
+    throw new Error(errMsg);
+  }
   const body = await res.json() as { library?: LibraryData };
   return body.library ?? meta;
 }
