@@ -20,6 +20,15 @@ function defaultLibrary() {
   return { version: 1, folders: [], scheduleFolderMap: {}, updatedAt: Date.now() };
 }
 
+function shapeOf(data) {
+  const rowCount = Array.isArray(data && data.rows) ? data.rows.length : -1;
+  const metaKeys = data && data.meta && typeof data.meta === 'object'
+    ? Object.keys(data.meta).sort().join(',')
+    : '(none)';
+  const hasSavedAt = typeof (data && data.savedAt) === 'number';
+  return { rowCount, metaKeys, hasSavedAt };
+}
+
 exports.handler = async (event) => {
   const headers = {
     'Content-Type': 'application/json',
@@ -67,7 +76,11 @@ exports.handler = async (event) => {
       return { statusCode: 404, headers, body: JSON.stringify({ error: `Schedule "${trimOld}" not found` }) };
     }
     const oldData = typeof oldRaw === 'string' ? JSON.parse(oldRaw) : oldRaw;
-    console.log('[Rename] old schedule blob read OK:', trimOld);
+    const oldShape = shapeOf(oldData);
+    console.log('[Rename] old schedule blob read OK:', trimOld,
+      '| rows:', oldShape.rowCount,
+      '| meta keys:', oldShape.metaKeys,
+      '| hasSavedAt:', oldShape.hasSavedAt);
 
     // Step 2 — Reject if new name already taken
     const existingRaw = await schedStore.get(trimNew);
@@ -77,9 +90,58 @@ exports.handler = async (event) => {
     }
     console.log('[Rename] newName is available:', trimNew);
 
-    // Step 3 — Write new schedule blob (payload is unchanged; name lives only in the blob key)
-    await schedStore.set(trimNew, JSON.stringify(oldData), { metadata: { savedAt: oldData.savedAt ?? 0 } });
+    // Step 3 — Write new schedule blob
+    // Payload is byte-for-byte identical to the original — the schedule name lives
+    // only as the blob key, not inside the blob content.
+    const newPayload = JSON.stringify(oldData);
+    await schedStore.set(trimNew, newPayload, { metadata: { savedAt: oldData.savedAt ?? 0 } });
     console.log('[Rename] new schedule blob written:', trimNew);
+
+    // Step 3b — Readback validation: confirm the new blob is readable and intact.
+    // Reads within the same Lambda invocation hit the same Blobs endpoint as writes
+    // (via connectLambda edgeURL), so this is a reliable consistency check —
+    // not subject to CDN propagation lag.
+    const newRaw = await schedStore.get(trimNew);
+    if (newRaw === null || newRaw === undefined) {
+      console.error('[Rename] readback returned null for new blob:', trimNew,
+        '— write did not persist; aborting without deleting old blob');
+      try { await schedStore.delete(trimNew); } catch {}
+      return {
+        statusCode: 500,
+        headers,
+        body: JSON.stringify({ error: 'Rename failed: new schedule blob not readable after write — old schedule preserved' }),
+      };
+    }
+    const newData = typeof newRaw === 'string' ? JSON.parse(newRaw) : newRaw;
+    const newShape = shapeOf(newData);
+    console.log('[Rename] new schedule readback OK:', trimNew,
+      '| rows:', newShape.rowCount,
+      '| meta keys:', newShape.metaKeys,
+      '| hasSavedAt:', newShape.hasSavedAt);
+
+    // Validate rows count matches (only when old schedule had rows)
+    if (oldShape.rowCount > 0 && newShape.rowCount !== oldShape.rowCount) {
+      console.error('[Rename] readback rows mismatch — expected:', oldShape.rowCount,
+        'got:', newShape.rowCount, '— aborting without deleting old blob');
+      try { await schedStore.delete(trimNew); } catch {}
+      return {
+        statusCode: 500,
+        headers,
+        body: JSON.stringify({ error: 'Rename failed: row count mismatch after write — old schedule preserved' }),
+      };
+    }
+    // Validate meta present if old schedule had meta
+    if (oldShape.metaKeys !== '(none)' && newShape.metaKeys === '(none)') {
+      console.error('[Rename] readback meta missing — old had meta keys:', oldShape.metaKeys,
+        '— aborting without deleting old blob');
+      try { await schedStore.delete(trimNew); } catch {}
+      return {
+        statusCode: 500,
+        headers,
+        body: JSON.stringify({ error: 'Rename failed: meta missing after write — old schedule preserved' }),
+      };
+    }
+    console.log('[Rename] readback validation passed');
 
     // Step 4 — Migrate snapshot blob: copy from sha256(oldName) to sha256(newName)
     let snapshotMigrated = false;
@@ -90,7 +152,6 @@ exports.handler = async (event) => {
       const snapRaw = await snapStore.get(oldSnapKey);
       if (snapRaw !== null && snapRaw !== undefined) {
         const snapRecord = typeof snapRaw === 'string' ? JSON.parse(snapRaw) : snapRaw;
-        // Update the name field stored inside the snapshot record
         snapRecord.name = trimNew;
         snapRecord.updatedAt = Date.now();
         await snapStore.set(newSnapKey, JSON.stringify(snapRecord), {
@@ -102,7 +163,8 @@ exports.handler = async (event) => {
         console.log('[Rename] no snapshot blob for:', trimOld, '— skipping snapshot migration');
       }
     } catch (snapErr) {
-      // Snapshot migration failed — roll back new schedule blob and abort
+      // Snapshot migration failed — roll back new schedule blob and abort.
+      // Old schedule blob has NOT been deleted yet, so data is fully preserved.
       console.error('[Rename] snapshot migration failed:', snapErr.message, '— rolling back');
       try { await schedStore.delete(trimNew); } catch {}
       return {
@@ -123,7 +185,7 @@ exports.handler = async (event) => {
         : (typeof libRaw === 'string' ? JSON.parse(libRaw) : libRaw);
       console.log('[Rename] library meta read — tsarchived count:', (library.tsarchived || []).length);
     } catch (libReadErr) {
-      // Library read failed — roll back and abort
+      // Library read failed — roll back and abort. Old blob still intact.
       console.error('[Rename] library meta read failed:', libReadErr.message, '— rolling back');
       try { await schedStore.delete(trimNew); } catch {}
       if (snapshotMigrated) { try { await snapStore.delete(newSnapKey); } catch {} }
@@ -134,7 +196,9 @@ exports.handler = async (event) => {
       };
     }
 
-    // Replace all references to oldName with newName in library metadata
+    // Replace all references to oldName with newName in library metadata.
+    // All array replacements use .map() — not filter+push — to preserve position.
+
     if (Array.isArray(library.tsarchived)) {
       library.tsarchived = library.tsarchived.map((n) => (n === trimOld ? trimNew : n));
     }
@@ -177,7 +241,7 @@ exports.handler = async (event) => {
       await libStore.set(libKey, JSON.stringify(library), { metadata: { updatedAt: library.updatedAt } });
       console.log('[Rename] library metadata updated and saved');
     } catch (libWriteErr) {
-      // Library write failed — roll back new blobs and abort
+      // Library write failed — roll back new blobs and abort. Old blob still intact.
       console.error('[Rename] library metadata save failed:', libWriteErr.message, '— rolling back');
       try { await schedStore.delete(trimNew); } catch {}
       if (snapshotMigrated) { try { await snapStore.delete(newSnapKey); } catch {} }
@@ -188,7 +252,9 @@ exports.handler = async (event) => {
       };
     }
 
-    // Step 6 — Delete old schedule blob (best-effort; failure is non-fatal)
+    // Step 6 — Delete old schedule blob.
+    // Only reached after new blob write, readback validation, snapshot migration,
+    // and library metadata update have all succeeded.
     try {
       await schedStore.delete(trimOld);
       console.log('[Rename] old schedule blob deleted:', trimOld);
@@ -196,7 +262,7 @@ exports.handler = async (event) => {
       console.warn('[Rename] old schedule blob delete failed (non-fatal):', delErr.message);
     }
 
-    // Step 7 — Delete old snapshot blob (best-effort; failure is non-fatal)
+    // Step 7 — Delete old snapshot blob (best-effort; non-fatal).
     if (snapshotMigrated) {
       try {
         await snapStore.delete(oldSnapKey);
@@ -206,7 +272,8 @@ exports.handler = async (event) => {
       }
     }
 
-    console.log('[Rename] complete success:', trimOld, '→', trimNew);
+    console.log('[Rename] complete success:', trimOld, '→', trimNew,
+      '| rows preserved:', newShape.rowCount, '| meta keys:', newShape.metaKeys);
     return { statusCode: 200, headers, body: JSON.stringify({ ok: true, newName: trimNew, library }) };
   } catch (err) {
     console.error('[Rename] handler error:', err.name, err.message);
