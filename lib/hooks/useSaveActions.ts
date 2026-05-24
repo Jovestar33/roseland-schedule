@@ -116,7 +116,17 @@ export function useSaveActions() {
       // during the Blob propagation window doesn't hide the new schedule.
       try {
         sessionStorage.setItem('rp_recently_added_schedule', JSON.stringify({ name: newName, addedAt: Date.now() }));
-        console.log('[Library Mutation] recorded recently added:', newName);
+        // Also cache the schedule meta so the Library can group the new schedule
+        // correctly even when postLoad returns 404 due to a stale CDN edge read
+        // (the blob list finds the key, but the get for the new key misses the CDN).
+        sessionStorage.setItem('rp_recently_saved_meta', JSON.stringify({
+          name: newName,
+          meta: data.meta,
+          savedAt: result.savedAt,
+          addedAt: Date.now(),
+        }));
+        console.log('[SaveAs] cached meta for Library grouping:', newName,
+          '— projectName:', data.meta?.projectName, '/ phase:', data.meta?.phase);
       } catch {}
       router.push(`/schedule/${encodeURIComponent(newName)}`);
     } catch {

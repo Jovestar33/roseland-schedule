@@ -249,14 +249,60 @@ export default function LibraryPage() {
       }
     } catch {}
 
+    // Read recently-saved meta to protect against a stale CDN GET for a newly
+    // created schedule blob. store.list uses strong consistency and finds the key,
+    // but store.get for a new key can return 404 until the CDN edge catches up.
+    // Without this fallback the new schedule shows as Ungrouped (null data).
+    type RecentlySavedMeta = { name: string; meta: ScheduleData['meta']; savedAt: number; addedAt: number };
+    let recentlySavedMeta: RecentlySavedMeta | null = null;
+    try {
+      const rsRaw = sessionStorage.getItem('rp_recently_saved_meta');
+      if (rsRaw) {
+        const parsed = JSON.parse(rsRaw) as RecentlySavedMeta;
+        if (parsed && Date.now() - (parsed.addedAt ?? 0) < MUTATION_TTL_MS) {
+          recentlySavedMeta = parsed;
+          console.log('[SaveAs] pending meta found — will protect Library grouping for:', parsed.name);
+        } else {
+          sessionStorage.removeItem('rp_recently_saved_meta');
+        }
+      }
+    } catch {}
+
     setSchedules(effectiveNames.map((name) => ({ name, data: null, loading: true })));
 
+    // Use effectiveNames (not names) so that a recently-added schedule that has not
+    // yet propagated through the Blob CDN list is also fetched and gets the meta
+    // fallback applied. Using `names` here would silently drop it from the fetched array.
     const fetched = await Promise.all(
-      names.map((name) =>
-        postLoad(name, token!)
-          .then((data): LibrarySchedule => ({ name, data: data as ScheduleData, loading: false }))
-          .catch((): LibrarySchedule => ({ name, data: null, loading: false }))
-      )
+      effectiveNames.map((name) => {
+        const fallback = recentlySavedMeta?.name === name
+          ? { rows: [], meta: recentlySavedMeta.meta, savedAt: recentlySavedMeta.savedAt } as ScheduleData
+          : null;
+        return postLoad(name, token!)
+          .then((data): LibrarySchedule => {
+            if (data !== null && recentlySavedMeta?.name === name) {
+              console.log('[SaveAs] CDN confirmed data for:', name, '— clearing cached meta');
+              sessionStorage.removeItem('rp_recently_saved_meta');
+              recentlySavedMeta = null;
+            }
+            if (data === null && fallback) {
+              console.log('[SaveAs] CDN stale — using cached meta for Library grouping:', name,
+                '— projectName:', fallback.meta?.projectName, '/ phase:', fallback.meta?.phase);
+              return { name, data: fallback, loading: false };
+            }
+            if (data === null) {
+              console.log('[Library] postLoad returned null for', name, '— no cached meta, will appear ungrouped');
+            }
+            return { name, data: data as ScheduleData, loading: false };
+          })
+          .catch((): LibrarySchedule => {
+            if (fallback) {
+              console.log('[SaveAs] postLoad threw — using cached meta for Library grouping:', name);
+              return { name, data: fallback, loading: false };
+            }
+            return { name, data: null, loading: false };
+          });
+      })
     );
     setSchedules(fetched);
 
