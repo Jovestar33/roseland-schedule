@@ -139,6 +139,43 @@ function clearPendingDeletion(name: string) {
   writePendingDeletions(m);
 }
 
+// ── Library rename patch ───────────────────────────────────────────────────────
+// Defensively re-applies oldName → newName to all library metadata fields.
+// The backend does this too, but its CDN read of the library may be stale, so
+// we patch client-side to guarantee no oldName survives in the local state.
+function patchLibraryRename(lib: LibraryData, oldName: string, newName: string): LibraryData {
+  let out = { ...lib };
+  if (out.tsarchived?.includes(oldName)) {
+    out = { ...out, tsarchived: out.tsarchived.map((n) => (n === oldName ? newName : n)) };
+  }
+  if (out.scheduleFolderMap && oldName in out.scheduleFolderMap) {
+    const sfm = { ...out.scheduleFolderMap, [newName]: out.scheduleFolderMap[oldName] };
+    delete sfm[oldName];
+    out = { ...out, scheduleFolderMap: sfm };
+  }
+  if (out.townCache && oldName in out.townCache) {
+    const tc = { ...out.townCache, [newName]: out.townCache[oldName] };
+    delete tc[oldName];
+    out = { ...out, townCache: tc };
+  }
+  if (out.dateCache && oldName in out.dateCache) {
+    const dc = { ...out.dateCache, [newName]: out.dateCache[oldName] };
+    delete dc[oldName];
+    out = { ...out, dateCache: dc };
+  }
+  if (out.phaseOrder) {
+    const po: NonNullable<LibraryData['phaseOrder']> = {};
+    for (const [pk, phases] of Object.entries(out.phaseOrder)) {
+      po[pk] = {};
+      for (const [phk, order] of Object.entries(phases)) {
+        po[pk][phk] = order.map((n) => (n === oldName ? newName : n));
+      }
+    }
+    out = { ...out, phaseOrder: po };
+  }
+  return out;
+}
+
 // ── Pending rename guard ───────────────────────────────────────────────────────
 // Prevents a stale blob-list or library-meta CDN read from reverting a confirmed
 // rename back to the old name during the eventual-consistency propagation window.
@@ -689,9 +726,9 @@ export default function LibraryPage() {
     const trimNew = renameModal.draft.trim();
     if (!trimNew || trimNew === renameModal.name) return;
 
-    // Client-side duplicate guard — catches the case before the network round-trip.
-    // The backend also checks, but CDN caching can make that check unreliable.
-    if (schedules.some((s) => s.name === trimNew)) {
+    // Client-side duplicate guard — checks ALL schedules (active + archived) before the
+    // network round-trip. Trims both sides to catch blob keys with hidden whitespace.
+    if (schedules.some((s) => s.name.trim() === trimNew)) {
       setRenameModal((m) => m ? { ...m, error: `A schedule named "${trimNew}" already exists` } : null);
       return;
     }
@@ -708,34 +745,34 @@ export default function LibraryPage() {
       console.log('[Library Rename] rename succeeded:', oldName, '→', trimNew);
 
       setSchedules((prev) => {
-        // Filter out any pre-existing trimNew entry first to prevent a temporary
-        // duplicate (can occur if both blob keys coexist during CDN propagation).
-        // Then replace oldName with trimNew at its original position.
-        const withoutExistingNew = prev.filter((s) => s.name !== trimNew);
-        return withoutExistingNew.map((s) => s.name === oldName ? { ...s, name: trimNew } : s);
+        // Position-preserving rename: find oldName's index, remove both oldName and any
+        // stale trimNew entry, then re-insert trimNew exactly where oldName sat.
+        const idx = prev.findIndex((s) => s.name === oldName);
+        const base = idx !== -1
+          ? prev[idx]
+          : ({ name: trimNew, data: null, loading: false } as (typeof prev)[0]);
+        const withoutBoth = prev.filter((s) => s.name !== oldName && s.name !== trimNew);
+        // Items before oldName's position that survive the filter = correct insert point
+        const insertAt = idx === -1
+          ? withoutBoth.length
+          : prev.slice(0, idx).filter((s) => s.name !== trimNew).length;
+        return [
+          ...withoutBoth.slice(0, insertAt),
+          { ...base, name: trimNew },
+          ...withoutBoth.slice(insertAt),
+        ];
       });
 
       if (result.library) {
-        setLibMeta(result.library);
+        // Patch before applying: backend may have read a stale library from CDN,
+        // so oldName could still appear in phaseOrder/caches despite backend remapping.
+        setLibMeta(patchLibraryRename(result.library, oldName, trimNew));
       } else {
-        setLibMeta((prev) => {
-          const sfm = { ...(prev.scheduleFolderMap ?? {}) };
-          if (oldName in sfm) { sfm[trimNew] = sfm[oldName]; delete sfm[oldName]; }
-          const po: NonNullable<LibraryData['phaseOrder']> = {};
-          for (const [pk, phases] of Object.entries(prev.phaseOrder ?? {})) {
-            po[pk] = {};
-            for (const [phk, order] of Object.entries(phases)) {
-              po[pk][phk] = order.map((n) => n === oldName ? trimNew : n);
-            }
-          }
-          return {
-            ...prev,
-            tsarchived: prev.tsarchived?.map((n) => n === oldName ? trimNew : n),
-            scheduleFolderMap: sfm,
-            phaseOrder: po,
-            updatedAt: Date.now(),
-          };
-        });
+        setLibMeta((prev) => patchLibraryRename(
+          { ...prev, updatedAt: Date.now() },
+          oldName,
+          trimNew,
+        ));
       }
 
       setRenameModal(null);
@@ -831,11 +868,12 @@ export default function LibraryPage() {
 
   // Live duplicate detection for the rename modal — computed on every render so
   // the inline error and disabled state update as the user types.
+  // Checks ALL schedules (active + archived) and trims both sides for robustness.
   const isRenameDuplicate =
     renameModal !== null &&
     renameModal.draft.trim() !== '' &&
     renameModal.draft.trim() !== renameModal.name &&
-    schedules.some((s) => s.name === renameModal.draft.trim());
+    schedules.some((s) => s.name.trim() === renameModal.draft.trim());
 
   // ── Render ─────────────────────────────────────────────────────────────────
 
