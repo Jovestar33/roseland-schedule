@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/lib/store/authStore';
 import { useCmsStore } from '@/lib/store/cmsStore';
 import { listSchedules, postLoad } from '@/lib/api/load';
-import { postDeleteSchedule } from '@/lib/api/save';
+import { postDeleteSchedule, postRenameSchedule } from '@/lib/api/save';
 import { getLibraryMeta, putLibraryMeta, type LibraryData } from '@/lib/api/library';
 import type { ScheduleData } from '@/lib/types';
 import ScheduleListTab, { type LibrarySchedule } from './ScheduleListTab';
@@ -27,6 +27,13 @@ interface DeleteModalState {
   error: string | null;
 }
 
+interface RenameModalState {
+  name: string;
+  draft: string;
+  submitting: boolean;
+  error: string | null;
+}
+
 interface RecentEntry {
   name: string;
   projectName: string;
@@ -36,6 +43,9 @@ interface RecentEntry {
 
 const LS_RECENT_KEY = 'rp_recent_schedules';
 const MAX_RECENT = 5;
+
+// Blob CDN propagation guard: block open/re-rename for this window after a rename.
+const RENAME_SYNC_MS = 15_000;
 
 // ── Local mutation guard ────────────────────────────────────────────────────────
 // Protects recent archive/restore actions from being undone by a stale Blob read
@@ -132,6 +142,119 @@ function clearPendingDeletion(name: string) {
   writePendingDeletions(m);
 }
 
+// ── Library rename patch ───────────────────────────────────────────────────────
+// Defensively re-applies oldName → newName to all library metadata fields.
+// The backend does this too, but its CDN read of the library may be stale, so
+// we patch client-side to guarantee no oldName survives in the local state.
+function patchLibraryRename(lib: LibraryData, oldName: string, newName: string): LibraryData {
+  let out = { ...lib };
+  if (out.tsarchived?.includes(oldName)) {
+    out = { ...out, tsarchived: out.tsarchived.map((n) => (n === oldName ? newName : n)) };
+  }
+  if (out.scheduleFolderMap && oldName in out.scheduleFolderMap) {
+    const sfm = { ...out.scheduleFolderMap, [newName]: out.scheduleFolderMap[oldName] };
+    delete sfm[oldName];
+    out = { ...out, scheduleFolderMap: sfm };
+  }
+  if (out.townCache && oldName in out.townCache) {
+    const tc = { ...out.townCache, [newName]: out.townCache[oldName] };
+    delete tc[oldName];
+    out = { ...out, townCache: tc };
+  }
+  if (out.dateCache && oldName in out.dateCache) {
+    const dc = { ...out.dateCache, [newName]: out.dateCache[oldName] };
+    delete dc[oldName];
+    out = { ...out, dateCache: dc };
+  }
+  if (out.phaseOrder) {
+    const po: NonNullable<LibraryData['phaseOrder']> = {};
+    for (const [pk, phases] of Object.entries(out.phaseOrder)) {
+      po[pk] = {};
+      for (const [phk, order] of Object.entries(phases)) {
+        po[pk][phk] = order.map((n) => (n === oldName ? newName : n));
+      }
+    }
+    out = { ...out, phaseOrder: po };
+  }
+  return out;
+}
+
+// ── Pending rename guard ───────────────────────────────────────────────────────
+// Prevents a stale blob-list or library-meta CDN read from reverting a confirmed
+// rename back to the old name during the eventual-consistency propagation window.
+
+const SS_RENAMES_KEY = 'rp_lib_pending_renames';
+
+interface PendingRename {
+  newName: string;
+  renamedAt: number;
+}
+
+function readPendingRenames(): Map<string, PendingRename> {
+  try {
+    const raw = sessionStorage.getItem(SS_RENAMES_KEY);
+    if (!raw) return new Map();
+    return new Map(JSON.parse(raw) as [string, PendingRename][]);
+  } catch { return new Map(); }
+}
+
+function writePendingRenames(m: Map<string, PendingRename>) {
+  try { sessionStorage.setItem(SS_RENAMES_KEY, JSON.stringify([...m.entries()])); } catch {}
+}
+
+function setPendingRename(oldName: string, newName: string) {
+  const m = readPendingRenames();
+  m.set(oldName, { newName, renamedAt: Date.now() });
+  writePendingRenames(m);
+}
+
+function clearPendingRename(oldName: string) {
+  const m = readPendingRenames();
+  m.delete(oldName);
+  writePendingRenames(m);
+}
+
+// ── Rename-back allowance guard ────────────────────────────────────────────────
+// After rename A→B, records B's immediate predecessor A for 5 minutes.
+// Lets the user rename B back to A even if stale CDN still shows A in the blob list.
+
+const SS_RENAME_PREV_KEY = 'rp_lib_rename_prev';
+const RENAME_PREV_TTL_MS = 5 * 60_000;
+
+interface RenamePrevEntry { prevName: string; renamedAt: number; }
+
+function readRenamePrevMap(): Map<string, RenamePrevEntry> {
+  try {
+    const raw = sessionStorage.getItem(SS_RENAME_PREV_KEY);
+    if (!raw) return new Map();
+    return new Map(JSON.parse(raw) as [string, RenamePrevEntry][]);
+  } catch { return new Map(); }
+}
+
+function writeRenamePrevMap(m: Map<string, RenamePrevEntry>) {
+  try { sessionStorage.setItem(SS_RENAME_PREV_KEY, JSON.stringify([...m.entries()])); } catch {}
+}
+
+function setRenamePrev(currentName: string, prevName: string) {
+  const m = readRenamePrevMap();
+  m.set(currentName, { prevName, renamedAt: Date.now() });
+  writeRenamePrevMap(m);
+}
+
+function isRenameBackAllowed(currentName: string, targetName: string): boolean {
+  try {
+    const m = readRenamePrevMap();
+    const entry = m.get(currentName);
+    if (!entry) return false;
+    if (Date.now() - entry.renamedAt > RENAME_PREV_TTL_MS) {
+      m.delete(currentName);
+      writeRenamePrevMap(m);
+      return false;
+    }
+    return entry.prevName === targetName;
+  } catch { return false; }
+}
+
 // Merges pending archive/restore mutations into freshly-fetched libMeta.
 // Reads and writes sessionStorage directly so it works across navigations.
 function applyPendingMutations(meta: LibraryData): LibraryData {
@@ -209,6 +332,12 @@ export default function LibraryPage() {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [refreshError, setRefreshError] = useState<string | null>(null);
   const [deleteModal, setDeleteModal] = useState<DeleteModalState | null>(null);
+  const [renameModal, setRenameModal] = useState<RenameModalState | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  // Post-rename sync guard: maps newName → expiry timestamp (Date.now() + RENAME_SYNC_MS).
+  // During this window, opening or re-renaming the schedule is blocked to prevent
+  // a blank editor (blob CDN hasn't fully propagated the new key yet).
+  const [syncingRenames, setSyncingRenames] = useState<Map<string, number>>(new Map());
 
   // Search / filter / sort
   const [searchQuery,    setSearchQuery]    = useState('');
@@ -223,6 +352,27 @@ export default function LibraryPage() {
   const [recent, setRecent] = useState<RecentEntry[]>([]);
 
   useEffect(() => { setRecent(readRecent()); }, []);
+
+  useEffect(() => {
+    if (!successMessage) return;
+    const t = setTimeout(() => setSuccessMessage(null), 4000);
+    return () => clearTimeout(t);
+  }, [successMessage]);
+
+  // Auto-expire the post-rename sync guard entries.
+  useEffect(() => {
+    if (syncingRenames.size === 0) return;
+    const minExpiry = Math.min(...syncingRenames.values());
+    const delay = Math.max(50, minExpiry - Date.now());
+    const t = setTimeout(() => {
+      setSyncingRenames((prev) => {
+        const now = Date.now();
+        const next = new Map([...prev].filter(([, exp]) => exp > now));
+        return next.size !== prev.size ? next : prev;
+      });
+    }, delay);
+    return () => clearTimeout(t);
+  }, [syncingRenames]);
 
   useEffect(() => {
     if (!hydrated) return;
@@ -295,6 +445,70 @@ export default function LibraryPage() {
         }
         console.log('[Library Deletion] filtered', deletions.size, 'recently deleted schedule(s) from list');
       }
+    } catch {}
+
+    // Apply pending renames: remap stale oldName → newName in name list and tsarchived
+    try {
+      const renames = readPendingRenames();
+      const now = Date.now();
+      let renamesChanged = false;
+      for (const [oldName, { newName, renamedAt }] of renames) {
+        if (now - renamedAt > MUTATION_TTL_MS) {
+          renames.delete(oldName);
+          renamesChanged = true;
+          console.log('[Library Rename] pending rename expired:', oldName);
+          continue;
+        }
+        const oldPresent = effectiveNames.includes(oldName);
+        const newPresent = effectiveNames.includes(newName);
+        if (!oldPresent && newPresent) {
+          renames.delete(oldName);
+          renamesChanged = true;
+          console.log('[Library Rename] cloud confirmed rename:', oldName, '→', newName);
+          continue;
+        }
+        if (oldPresent && newPresent) {
+          // Both blob keys exist simultaneously (old not yet deleted from CDN list).
+          // Mapping oldName → newName here would produce a duplicate newName entry.
+          // Instead, filter the stale oldName out and strip it from phaseOrder.
+          effectiveNames = effectiveNames.filter((n) => n !== oldName);
+          if (resolvedMeta.phaseOrder) {
+            const fixedPO: NonNullable<LibraryData['phaseOrder']> = {};
+            for (const [pk, phases] of Object.entries(resolvedMeta.phaseOrder)) {
+              fixedPO[pk] = {};
+              for (const [phk, order] of Object.entries(phases)) {
+                fixedPO[pk][phk] = order.filter((n) => n !== oldName);
+              }
+            }
+            resolvedMeta = { ...resolvedMeta, phaseOrder: fixedPO };
+          }
+          console.log('[Library Rename] both names in list — removed stale old name:', oldName);
+        } else if (oldPresent) {
+          // Only oldName present — CDN stale, remap to newName preserving position.
+          effectiveNames = effectiveNames.map((n) => n === oldName ? newName : n);
+          const cloudArchived = resolvedMeta.tsarchived ?? [];
+          if (cloudArchived.includes(oldName)) {
+            resolvedMeta = {
+              ...resolvedMeta,
+              tsarchived: cloudArchived.map((n) => n === oldName ? newName : n),
+            };
+          }
+          // Remap phaseOrder position-preservingly — without this, applyPhaseOrder
+          // looks for newName but finds oldName → assigns Infinity index → floats to bottom.
+          if (resolvedMeta.phaseOrder) {
+            const remappedPO: NonNullable<LibraryData['phaseOrder']> = {};
+            for (const [pk, phases] of Object.entries(resolvedMeta.phaseOrder)) {
+              remappedPO[pk] = {};
+              for (const [phk, order] of Object.entries(phases)) {
+                remappedPO[pk][phk] = order.map((n) => n === oldName ? newName : n);
+              }
+            }
+            resolvedMeta = { ...resolvedMeta, phaseOrder: remappedPO };
+          }
+          console.log('[Library Rename] stale CDN — applied pending rename:', oldName, '→', newName);
+        }
+      }
+      if (renamesChanged) writePendingRenames(renames);
     } catch {}
 
     setLibMeta(resolvedMeta);
@@ -566,6 +780,83 @@ export default function LibraryPage() {
     }
   }
 
+  function handleRenameSchedule(name: string) {
+    setRenameModal({ name, draft: name, submitting: false, error: null });
+  }
+
+  async function handleRenameConfirm() {
+    if (!renameModal) return;
+    const trimNew = renameModal.draft.trim();
+    if (!trimNew || trimNew === renameModal.name) return;
+
+    // Client-side duplicate guard — checks ALL schedules (active + archived) before the
+    // network round-trip. Trims both sides to catch blob keys with hidden whitespace.
+    // Exception: allow rename-back to the immediate predecessor name in this session
+    // (e.g. A→B then B→A), since the stale CDN list may still show A after it was deleted.
+    if (schedules.some((s) => s.name.trim() === trimNew) && !isRenameBackAllowed(renameModal.name, trimNew)) {
+      setRenameModal((m) => m ? { ...m, error: `A schedule named "${trimNew}" already exists` } : null);
+      return;
+    }
+
+    setRenameModal((m) => m ? { ...m, submitting: true, error: null } : null);
+    const oldName = renameModal.name;
+    console.log('[Library Rename] rename requested:', oldName, '→', trimNew);
+
+    // Record before request so Refresh during CDN propagation window doesn't revert
+    setPendingRename(oldName, trimNew);
+
+    try {
+      const result = await postRenameSchedule(oldName, trimNew, token!, isRenameBackAllowed(oldName, trimNew));
+      console.log('[Library Rename] rename succeeded:', oldName, '→', trimNew);
+
+      setSchedules((prev) => {
+        // Position-preserving rename: find oldName's index, remove both oldName and any
+        // stale trimNew entry, then re-insert trimNew exactly where oldName sat.
+        const idx = prev.findIndex((s) => s.name === oldName);
+        const base = idx !== -1
+          ? prev[idx]
+          : ({ name: trimNew, data: null, loading: false } as (typeof prev)[0]);
+        const withoutBoth = prev.filter((s) => s.name !== oldName && s.name !== trimNew);
+        // Items before oldName's position that survive the filter = correct insert point
+        const insertAt = idx === -1
+          ? withoutBoth.length
+          : prev.slice(0, idx).filter((s) => s.name !== trimNew).length;
+        return [
+          ...withoutBoth.slice(0, insertAt),
+          { ...base, name: trimNew },
+          ...withoutBoth.slice(insertAt),
+        ];
+      });
+
+      if (result.library) {
+        // Patch before applying: backend may have read a stale library from CDN,
+        // so oldName could still appear in phaseOrder/caches despite backend remapping.
+        setLibMeta(patchLibraryRename(result.library, oldName, trimNew));
+      } else {
+        setLibMeta((prev) => patchLibraryRename(
+          { ...prev, updatedAt: Date.now() },
+          oldName,
+          trimNew,
+        ));
+      }
+
+      // Record predecessor so rename-back (B→A) isn't blocked by stale CDN blob list.
+      setRenamePrev(trimNew, oldName);
+
+      // Start the CDN sync guard: block open/re-rename for RENAME_SYNC_MS.
+      setSyncingRenames((prev) => new Map(prev).set(trimNew, Date.now() + RENAME_SYNC_MS));
+      setRenameModal(null);
+      setSuccessMessage(`Rename saved. Finalizing cloud sync…`);
+    } catch (e) {
+      const msg = (e as Error).message ?? '';
+      console.log('[Library Rename] rename failed:', oldName, msg);
+      clearPendingRename(oldName);
+      setRenameModal((m) =>
+        m ? { ...m, submitting: false, error: msg || 'Rename did not complete. Please try again.' } : null
+      );
+    }
+  }
+
   function handleLogout() {
     logout();
     router.push('/login');
@@ -645,6 +936,24 @@ export default function LibraryPage() {
   const showArchived = filterStatus !== 'active';
   const scheduleNames = schedules.map((s) => s.name);
 
+  // Derive the current set of syncing names from the Map (filtered to non-expired).
+  // Recomputes whenever syncingRenames changes (i.e. when an entry is added or the
+  // cleanup timeout fires and removes expired entries).
+  const syncingNamesSet = useMemo(() => {
+    const now = Date.now();
+    return new Set([...syncingRenames.entries()].filter(([, exp]) => exp > now).map(([n]) => n));
+  }, [syncingRenames]);
+
+  // Live duplicate detection for the rename modal — computed on every render so
+  // the inline error and disabled state update as the user types.
+  // Checks ALL schedules (active + archived) and trims both sides for robustness.
+  const isRenameDuplicate =
+    renameModal !== null &&
+    renameModal.draft.trim() !== '' &&
+    renameModal.draft.trim() !== renameModal.name &&
+    !isRenameBackAllowed(renameModal.name, renameModal.draft.trim()) &&
+    schedules.some((s) => s.name.trim() === renameModal.draft.trim());
+
   // ── Render ─────────────────────────────────────────────────────────────────
 
   return (
@@ -721,6 +1030,63 @@ export default function LibraryPage() {
         </div>
       )}
 
+      {/* Rename modal */}
+      {renameModal && (
+        <div
+          className="lbt-modal-overlay"
+          onClick={() => !renameModal.submitting && setRenameModal(null)}
+        >
+          <div className="lbt-modal" onClick={(e) => e.stopPropagation()}>
+            <h2 className="lbt-modal-title">Rename Schedule</h2>
+            <div className="lbt-modal-label">New name</div>
+            <input
+              className="lbt-modal-input"
+              type="text"
+              autoFocus
+              value={renameModal.draft}
+              disabled={renameModal.submitting}
+              onChange={(e) => setRenameModal((m) => m ? { ...m, draft: e.target.value, error: null } : null)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !renameModal.submitting && !isRenameDuplicate
+                    && renameModal.draft.trim() && renameModal.draft.trim() !== renameModal.name) {
+                  handleRenameConfirm();
+                }
+                if (e.key === 'Escape' && !renameModal.submitting) setRenameModal(null);
+              }}
+            />
+            {isRenameDuplicate && (
+              <p className="lbt-modal-error">
+                A schedule named &ldquo;{renameModal.draft.trim()}&rdquo; already exists.
+              </p>
+            )}
+            {!isRenameDuplicate && renameModal.error && (
+              <p className="lbt-modal-error">{renameModal.error}</p>
+            )}
+            <div className="lbt-modal-actions">
+              <button
+                className="btn btn-light btn-sm"
+                onClick={() => setRenameModal(null)}
+                disabled={renameModal.submitting}
+              >
+                Cancel
+              </button>
+              <button
+                className="btn btn-pink btn-sm"
+                onClick={handleRenameConfirm}
+                disabled={
+                  renameModal.submitting ||
+                  !renameModal.draft.trim() ||
+                  renameModal.draft.trim() === renameModal.name ||
+                  isRenameDuplicate
+                }
+              >
+                {renameModal.submitting ? 'Renaming…' : 'Rename'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <div className="lib-header">
         <h1 className="lib-title">Library</h1>
@@ -751,6 +1117,12 @@ export default function LibraryPage() {
         <div className="lib-refresh-error" role="alert">
           {refreshError}
           <button className="lib-refresh-error-dismiss" onClick={() => setRefreshError(null)}>✕</button>
+        </div>
+      )}
+      {successMessage && (
+        <div className="lib-success-notice" role="status">
+          {successMessage}
+          <button className="lib-success-notice-dismiss" onClick={() => setSuccessMessage(null)}>✕</button>
         </div>
       )}
 
@@ -937,7 +1309,9 @@ export default function LibraryPage() {
                   onArchive={handleArchive}
                   onRestore={handleRestore}
                   onDeletePermanently={handleDeletePermanently}
+                  onRename={handleRenameSchedule}
                   onUpdateLibMeta={updateLibMeta}
+                  syncingNames={syncingNamesSet}
                 />
               </>
             )}

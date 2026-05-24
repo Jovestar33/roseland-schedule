@@ -9,6 +9,10 @@
 .lib-refresh-error { display: flex; align-items: center; justify-content: space-between; gap: 10px; background: #fff3cd; border: 1px solid #ffc107; border-radius: 8px; padding: 9px 14px; margin-bottom: 12px; font-size: 13px; color: #7a5500; }
 .lib-refresh-error-dismiss { background: none; border: none; cursor: pointer; font-size: 14px; color: #7a5500; padding: 0 2px; line-height: 1; }
 
+/* Success notice */
+.lib-success-notice { display: flex; align-items: center; justify-content: space-between; gap: 10px; background: #d1fae5; border: 1px solid #6ee7b7; border-radius: 8px; padding: 9px 14px; margin-bottom: 12px; font-size: 13px; color: #065f46; }
+.lib-success-notice-dismiss { background: none; border: none; cursor: pointer; font-size: 14px; color: #065f46; padding: 0 2px; line-height: 1; }
+
 /* Tab bar already handled by base.css .mtabs / .mtab — extra overrides */
 .lib-tabs { margin-bottom: 18px; }
 

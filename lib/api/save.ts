@@ -88,3 +88,24 @@ export async function postDeleteSchedule(
   }
   return { library: body.library ?? null };
 }
+
+export async function postRenameSchedule(
+  oldName: string,
+  newName: string,
+  editorToken: string,
+  isRenameBack?: boolean,
+): Promise<{ library: import('./library').LibraryData | null }> {
+  const res = await fetch('/.netlify/functions/rename-schedule', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ oldName, newName, editorToken, isRenameBack }),
+  });
+  const body = await res.json().catch(() => ({ error: 'Unknown error' })) as {
+    error?: string;
+    library?: import('./library').LibraryData | null;
+  };
+  if (!res.ok) {
+    throw new Error(body.error ?? `Rename failed: HTTP ${res.status}`);
+  }
+  return { library: body.library ?? null };
+}
