@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/lib/store/authStore';
 import { useCmsStore } from '@/lib/store/cmsStore';
 import { listSchedules, postLoad } from '@/lib/api/load';
-import { postDeleteSchedule } from '@/lib/api/save';
+import { postDeleteSchedule, postRenameSchedule } from '@/lib/api/save';
 import { getLibraryMeta, putLibraryMeta, type LibraryData } from '@/lib/api/library';
 import type { ScheduleData } from '@/lib/types';
 import ScheduleListTab, { type LibrarySchedule } from './ScheduleListTab';
@@ -23,6 +23,13 @@ interface DeleteModalState {
   name: string;
   passcode: string;
   confirmText: string;
+  submitting: boolean;
+  error: string | null;
+}
+
+interface RenameModalState {
+  name: string;
+  draft: string;
   submitting: boolean;
   error: string | null;
 }
@@ -132,6 +139,41 @@ function clearPendingDeletion(name: string) {
   writePendingDeletions(m);
 }
 
+// ── Pending rename guard ───────────────────────────────────────────────────────
+// Prevents a stale blob-list or library-meta CDN read from reverting a confirmed
+// rename back to the old name during the eventual-consistency propagation window.
+
+const SS_RENAMES_KEY = 'rp_lib_pending_renames';
+
+interface PendingRename {
+  newName: string;
+  renamedAt: number;
+}
+
+function readPendingRenames(): Map<string, PendingRename> {
+  try {
+    const raw = sessionStorage.getItem(SS_RENAMES_KEY);
+    if (!raw) return new Map();
+    return new Map(JSON.parse(raw) as [string, PendingRename][]);
+  } catch { return new Map(); }
+}
+
+function writePendingRenames(m: Map<string, PendingRename>) {
+  try { sessionStorage.setItem(SS_RENAMES_KEY, JSON.stringify([...m.entries()])); } catch {}
+}
+
+function setPendingRename(oldName: string, newName: string) {
+  const m = readPendingRenames();
+  m.set(oldName, { newName, renamedAt: Date.now() });
+  writePendingRenames(m);
+}
+
+function clearPendingRename(oldName: string) {
+  const m = readPendingRenames();
+  m.delete(oldName);
+  writePendingRenames(m);
+}
+
 // Merges pending archive/restore mutations into freshly-fetched libMeta.
 // Reads and writes sessionStorage directly so it works across navigations.
 function applyPendingMutations(meta: LibraryData): LibraryData {
@@ -209,6 +251,8 @@ export default function LibraryPage() {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [refreshError, setRefreshError] = useState<string | null>(null);
   const [deleteModal, setDeleteModal] = useState<DeleteModalState | null>(null);
+  const [renameModal, setRenameModal] = useState<RenameModalState | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   // Search / filter / sort
   const [searchQuery,    setSearchQuery]    = useState('');
@@ -223,6 +267,12 @@ export default function LibraryPage() {
   const [recent, setRecent] = useState<RecentEntry[]>([]);
 
   useEffect(() => { setRecent(readRecent()); }, []);
+
+  useEffect(() => {
+    if (!successMessage) return;
+    const t = setTimeout(() => setSuccessMessage(null), 4000);
+    return () => clearTimeout(t);
+  }, [successMessage]);
 
   useEffect(() => {
     if (!hydrated) return;
@@ -295,6 +345,41 @@ export default function LibraryPage() {
         }
         console.log('[Library Deletion] filtered', deletions.size, 'recently deleted schedule(s) from list');
       }
+    } catch {}
+
+    // Apply pending renames: remap stale oldName → newName in name list and tsarchived
+    try {
+      const renames = readPendingRenames();
+      const now = Date.now();
+      let renamesChanged = false;
+      for (const [oldName, { newName, renamedAt }] of renames) {
+        if (now - renamedAt > MUTATION_TTL_MS) {
+          renames.delete(oldName);
+          renamesChanged = true;
+          console.log('[Library Rename] pending rename expired:', oldName);
+          continue;
+        }
+        const oldPresent = effectiveNames.includes(oldName);
+        const newPresent = effectiveNames.includes(newName);
+        if (!oldPresent && newPresent) {
+          renames.delete(oldName);
+          renamesChanged = true;
+          console.log('[Library Rename] cloud confirmed rename:', oldName, '→', newName);
+          continue;
+        }
+        if (oldPresent) {
+          effectiveNames = effectiveNames.map((n) => n === oldName ? newName : n);
+          const cloudArchived = resolvedMeta.tsarchived ?? [];
+          if (cloudArchived.includes(oldName)) {
+            resolvedMeta = {
+              ...resolvedMeta,
+              tsarchived: cloudArchived.map((n) => n === oldName ? newName : n),
+            };
+          }
+          console.log('[Library Rename] stale CDN — applied pending rename:', oldName, '→', newName);
+        }
+      }
+      if (renamesChanged) writePendingRenames(renames);
     } catch {}
 
     setLibMeta(resolvedMeta);
@@ -566,6 +651,57 @@ export default function LibraryPage() {
     }
   }
 
+  function handleRenameSchedule(name: string) {
+    setRenameModal({ name, draft: name, submitting: false, error: null });
+  }
+
+  async function handleRenameConfirm() {
+    if (!renameModal) return;
+    const trimNew = renameModal.draft.trim();
+    if (!trimNew || trimNew === renameModal.name) return;
+
+    setRenameModal((m) => m ? { ...m, submitting: true, error: null } : null);
+    const oldName = renameModal.name;
+    console.log('[Library Rename] rename requested:', oldName, '→', trimNew);
+
+    // Record before request so Refresh during CDN propagation window doesn't revert
+    setPendingRename(oldName, trimNew);
+
+    try {
+      const result = await postRenameSchedule(oldName, trimNew, token!);
+      console.log('[Library Rename] rename succeeded:', oldName, '→', trimNew);
+
+      setSchedules((prev) =>
+        prev.map((s) => s.name === oldName ? { ...s, name: trimNew } : s)
+      );
+
+      if (result.library) {
+        setLibMeta(result.library);
+      } else {
+        setLibMeta((prev) => {
+          const sfm = { ...(prev.scheduleFolderMap ?? {}) };
+          if (oldName in sfm) { sfm[trimNew] = sfm[oldName]; delete sfm[oldName]; }
+          return {
+            ...prev,
+            tsarchived: prev.tsarchived?.map((n) => n === oldName ? trimNew : n),
+            scheduleFolderMap: sfm,
+            updatedAt: Date.now(),
+          };
+        });
+      }
+
+      setRenameModal(null);
+      setSuccessMessage(`Renamed to "${trimNew}"`);
+    } catch (e) {
+      const msg = (e as Error).message ?? '';
+      console.log('[Library Rename] rename failed:', oldName, msg);
+      clearPendingRename(oldName);
+      setRenameModal((m) =>
+        m ? { ...m, submitting: false, error: msg || 'Rename did not complete. Please try again.' } : null
+      );
+    }
+  }
+
   function handleLogout() {
     logout();
     router.push('/login');
@@ -721,6 +857,57 @@ export default function LibraryPage() {
         </div>
       )}
 
+      {/* Rename modal */}
+      {renameModal && (
+        <div
+          className="lbt-modal-overlay"
+          onClick={() => !renameModal.submitting && setRenameModal(null)}
+        >
+          <div className="lbt-modal" onClick={(e) => e.stopPropagation()}>
+            <h2 className="lbt-modal-title">Rename Schedule</h2>
+            <div className="lbt-modal-label">New name</div>
+            <input
+              className="lbt-modal-input"
+              type="text"
+              autoFocus
+              value={renameModal.draft}
+              disabled={renameModal.submitting}
+              onChange={(e) => setRenameModal((m) => m ? { ...m, draft: e.target.value } : null)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !renameModal.submitting
+                    && renameModal.draft.trim() && renameModal.draft.trim() !== renameModal.name) {
+                  handleRenameConfirm();
+                }
+                if (e.key === 'Escape' && !renameModal.submitting) setRenameModal(null);
+              }}
+            />
+            {renameModal.error && (
+              <p className="lbt-modal-error">{renameModal.error}</p>
+            )}
+            <div className="lbt-modal-actions">
+              <button
+                className="btn btn-light btn-sm"
+                onClick={() => setRenameModal(null)}
+                disabled={renameModal.submitting}
+              >
+                Cancel
+              </button>
+              <button
+                className="btn btn-pink btn-sm"
+                onClick={handleRenameConfirm}
+                disabled={
+                  renameModal.submitting ||
+                  !renameModal.draft.trim() ||
+                  renameModal.draft.trim() === renameModal.name
+                }
+              >
+                {renameModal.submitting ? 'Renaming…' : 'Rename'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <div className="lib-header">
         <h1 className="lib-title">Library</h1>
@@ -751,6 +938,12 @@ export default function LibraryPage() {
         <div className="lib-refresh-error" role="alert">
           {refreshError}
           <button className="lib-refresh-error-dismiss" onClick={() => setRefreshError(null)}>✕</button>
+        </div>
+      )}
+      {successMessage && (
+        <div className="lib-success-notice" role="status">
+          {successMessage}
+          <button className="lib-success-notice-dismiss" onClick={() => setSuccessMessage(null)}>✕</button>
         </div>
       )}
 
@@ -937,6 +1130,7 @@ export default function LibraryPage() {
                   onArchive={handleArchive}
                   onRestore={handleRestore}
                   onDeletePermanently={handleDeletePermanently}
+                  onRename={handleRenameSchedule}
                   onUpdateLibMeta={updateLibMeta}
                 />
               </>

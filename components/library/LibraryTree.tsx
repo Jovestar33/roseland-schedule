@@ -188,13 +188,14 @@ interface RowContentProps {
   onArchive: (name: string) => void;
   onRestore: (name: string) => void;
   onDeletePermanently: (name: string) => void;
+  onRename: (name: string) => void;
   onOpen: (name: string) => void;
 }
 
 function ScheduleRowContent({
   s, isArchived, copiedInfo,
   onCopyTeam, onCopyClient,
-  onArchive, onRestore, onDeletePermanently, onOpen,
+  onArchive, onRestore, onDeletePermanently, onRename, onOpen,
 }: RowContentProps) {
   const meta = formatMeta(s);
   return (
@@ -251,15 +252,25 @@ function ScheduleRowContent({
             </button>
           </>
         ) : (
-          /* Archive: shows "Archive" on desktop, 🗑 on mobile */
-          <button
-            className="sitem-del"
-            onClick={() => onArchive(s.name)}
-            title="Archive schedule"
-          >
-            <span className="lib-btn-desktop">Archive</span>
-            <span className="lib-btn-mobile">🗑</span>
-          </button>
+          <>
+            {/* Rename: active schedules only */}
+            <button
+              className="sitem-rename-btn lib-acts-desktop-only"
+              onClick={() => onRename(s.name)}
+              title="Rename schedule"
+            >
+              Rename
+            </button>
+            {/* Archive: shows "Archive" on desktop, 🗑 on mobile */}
+            <button
+              className="sitem-del"
+              onClick={() => onArchive(s.name)}
+              title="Archive schedule"
+            >
+              <span className="lib-btn-desktop">Archive</span>
+              <span className="lib-btn-mobile">🗑</span>
+            </button>
+          </>
         )}
       </div>
     </>
@@ -285,12 +296,13 @@ interface Props {
   onArchive: (name: string) => void;
   onRestore: (name: string) => void;
   onDeletePermanently: (name: string) => void;
+  onRename: (name: string) => void;
   onUpdateLibMeta: (updated: LibraryData) => Promise<void>;
 }
 
 export default function LibraryTree({
   schedules, libMeta,
-  onArchive, onRestore, onDeletePermanently,
+  onArchive, onRestore, onDeletePermanently, onRename,
   onUpdateLibMeta,
 }: Props) {
   const router = useRouter();
@@ -353,6 +365,7 @@ export default function LibraryTree({
     onArchive,
     onRestore,
     onDeletePermanently,
+    onRename,
     onOpen: (name) => {
       writeRecent(name, scheduleMap.get(name), libMeta);
       router.push(`/schedule/${encodeURIComponent(name)}`);
