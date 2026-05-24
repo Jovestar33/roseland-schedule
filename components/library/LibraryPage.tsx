@@ -367,7 +367,24 @@ export default function LibraryPage() {
           console.log('[Library Rename] cloud confirmed rename:', oldName, '→', newName);
           continue;
         }
-        if (oldPresent) {
+        if (oldPresent && newPresent) {
+          // Both blob keys exist simultaneously (old not yet deleted from CDN list).
+          // Mapping oldName → newName here would produce a duplicate newName entry.
+          // Instead, filter the stale oldName out and strip it from phaseOrder.
+          effectiveNames = effectiveNames.filter((n) => n !== oldName);
+          if (resolvedMeta.phaseOrder) {
+            const fixedPO: NonNullable<LibraryData['phaseOrder']> = {};
+            for (const [pk, phases] of Object.entries(resolvedMeta.phaseOrder)) {
+              fixedPO[pk] = {};
+              for (const [phk, order] of Object.entries(phases)) {
+                fixedPO[pk][phk] = order.filter((n) => n !== oldName);
+              }
+            }
+            resolvedMeta = { ...resolvedMeta, phaseOrder: fixedPO };
+          }
+          console.log('[Library Rename] both names in list — removed stale old name:', oldName);
+        } else if (oldPresent) {
+          // Only oldName present — CDN stale, remap to newName preserving position.
           effectiveNames = effectiveNames.map((n) => n === oldName ? newName : n);
           const cloudArchived = resolvedMeta.tsarchived ?? [];
           if (cloudArchived.includes(oldName)) {
@@ -672,6 +689,13 @@ export default function LibraryPage() {
     const trimNew = renameModal.draft.trim();
     if (!trimNew || trimNew === renameModal.name) return;
 
+    // Client-side duplicate guard — catches the case before the network round-trip.
+    // The backend also checks, but CDN caching can make that check unreliable.
+    if (schedules.some((s) => s.name === trimNew)) {
+      setRenameModal((m) => m ? { ...m, error: `A schedule named "${trimNew}" already exists` } : null);
+      return;
+    }
+
     setRenameModal((m) => m ? { ...m, submitting: true, error: null } : null);
     const oldName = renameModal.name;
     console.log('[Library Rename] rename requested:', oldName, '→', trimNew);
@@ -683,9 +707,13 @@ export default function LibraryPage() {
       const result = await postRenameSchedule(oldName, trimNew, token!);
       console.log('[Library Rename] rename succeeded:', oldName, '→', trimNew);
 
-      setSchedules((prev) =>
-        prev.map((s) => s.name === oldName ? { ...s, name: trimNew } : s)
-      );
+      setSchedules((prev) => {
+        // Filter out any pre-existing trimNew entry first to prevent a temporary
+        // duplicate (can occur if both blob keys coexist during CDN propagation).
+        // Then replace oldName with trimNew at its original position.
+        const withoutExistingNew = prev.filter((s) => s.name !== trimNew);
+        return withoutExistingNew.map((s) => s.name === oldName ? { ...s, name: trimNew } : s);
+      });
 
       if (result.library) {
         setLibMeta(result.library);
@@ -801,6 +829,14 @@ export default function LibraryPage() {
   const showArchived = filterStatus !== 'active';
   const scheduleNames = schedules.map((s) => s.name);
 
+  // Live duplicate detection for the rename modal — computed on every render so
+  // the inline error and disabled state update as the user types.
+  const isRenameDuplicate =
+    renameModal !== null &&
+    renameModal.draft.trim() !== '' &&
+    renameModal.draft.trim() !== renameModal.name &&
+    schedules.some((s) => s.name === renameModal.draft.trim());
+
   // ── Render ─────────────────────────────────────────────────────────────────
 
   return (
@@ -892,16 +928,21 @@ export default function LibraryPage() {
               autoFocus
               value={renameModal.draft}
               disabled={renameModal.submitting}
-              onChange={(e) => setRenameModal((m) => m ? { ...m, draft: e.target.value } : null)}
+              onChange={(e) => setRenameModal((m) => m ? { ...m, draft: e.target.value, error: null } : null)}
               onKeyDown={(e) => {
-                if (e.key === 'Enter' && !renameModal.submitting
+                if (e.key === 'Enter' && !renameModal.submitting && !isRenameDuplicate
                     && renameModal.draft.trim() && renameModal.draft.trim() !== renameModal.name) {
                   handleRenameConfirm();
                 }
                 if (e.key === 'Escape' && !renameModal.submitting) setRenameModal(null);
               }}
             />
-            {renameModal.error && (
+            {isRenameDuplicate && (
+              <p className="lbt-modal-error">
+                A schedule named &ldquo;{renameModal.draft.trim()}&rdquo; already exists.
+              </p>
+            )}
+            {!isRenameDuplicate && renameModal.error && (
               <p className="lbt-modal-error">{renameModal.error}</p>
             )}
             <div className="lbt-modal-actions">
@@ -918,7 +959,8 @@ export default function LibraryPage() {
                 disabled={
                   renameModal.submitting ||
                   !renameModal.draft.trim() ||
-                  renameModal.draft.trim() === renameModal.name
+                  renameModal.draft.trim() === renameModal.name ||
+                  isRenameDuplicate
                 }
               >
                 {renameModal.submitting ? 'Renaming…' : 'Rename'}
