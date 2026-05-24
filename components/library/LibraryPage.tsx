@@ -159,15 +159,6 @@ export default function LibraryPage() {
     } catch { /* keep optimistic state */ }
   }
 
-  // Re-fetch libMeta from the authoritative cloud source after any write that
-  // must persist reliably (archive, restore). Confirms the blob write succeeded.
-  async function confirmLibMetaFromCloud(): Promise<void> {
-    try {
-      const confirmed = await getLibraryMeta(token!);
-      setLibMeta(confirmed);
-    } catch { /* keep local state on network failure */ }
-  }
-
   // ── Archive / Restore / Delete permanently ─────────────────────────────────
 
   async function handleArchive(name: string) {
@@ -189,15 +180,15 @@ export default function LibraryPage() {
     } catch {}
 
     await updateLibMeta({ ...libMeta, tsarchived: archived, phaseOrder: po, updatedAt: Date.now() });
-    // Re-fetch from cloud to confirm archive state was actually persisted.
-    await confirmLibMetaFromCloud();
+    // No follow-up GET: putLibraryMeta's POST response already returns the
+    // confirmed server state. A second read races the blob propagation window
+    // and returns stale pre-archive data, which would revert the UI.
   }
 
   async function handleRestore(name: string) {
     const archived = (libMeta.tsarchived ?? []).filter((n) => n !== name);
     await updateLibMeta({ ...libMeta, tsarchived: archived, updatedAt: Date.now() });
-    // Re-fetch from cloud to confirm restore was persisted.
-    await confirmLibMetaFromCloud();
+    // Same reason as handleArchive — no follow-up GET needed.
   }
 
   async function handleDeletePermanently(name: string) {
@@ -216,7 +207,6 @@ export default function LibraryPage() {
         }
       }
       await updateLibMeta({ ...libMeta, tsarchived: archived, phaseOrder: po, updatedAt: Date.now() });
-      await confirmLibMetaFromCloud();
     } catch (e) {
       const msg = (e as Error).message ?? '';
       alert(/invalid delete password/i.test(msg)
