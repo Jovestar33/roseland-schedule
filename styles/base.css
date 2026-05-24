@@ -378,6 +378,7 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
 .cms-tab:focus-visible,
 .sitem-copy:focus-visible,
 .sitem-del:focus-visible,
+.sitem-links-btn:focus-visible,
 .del-btn:focus-visible,
 .move-btn:focus-visible,
 .time-lock-btn:focus-visible,
@@ -1112,6 +1113,60 @@ thead th{
 }
 
 .sitem-rename-btn:hover { background: var(--g50); border-color: var(--g400); color: var(--ink); }
+
+/* Links dropdown trigger + portal menu */
+.sitem-links-wrap {
+  position: relative;
+  display: inline-flex;
+}
+.sitem-links-btn {
+  min-height: 30px;
+  padding: 5px 10px;
+  border-radius: 8px;
+  font-family: var(--fb);
+  font-size: 12px;
+  font-weight: 700;
+  border: 1px solid var(--g300);
+  background: #fff;
+  cursor: pointer;
+  color: var(--g600);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.12s, border-color 0.12s, color 0.12s;
+}
+.sitem-links-btn:hover { background: var(--g50); border-color: var(--g400); color: var(--ink); }
+
+/* Portal menu — rendered at document.body with position:fixed */
+.sitem-links-menu {
+  position: fixed;
+  background: #fff;
+  border: 1px solid var(--g200);
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.13);
+  z-index: 1200;
+  min-width: 156px;
+  padding: 4px;
+  display: flex;
+  flex-direction: column;
+}
+.sitem-links-item {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 7px 12px;
+  text-align: left;
+  font-size: 12px;
+  font-family: var(--fb);
+  font-weight: 600;
+  color: var(--ink);
+  border-radius: 7px;
+  white-space: nowrap;
+  display: block;
+  width: 100%;
+  line-height: 1.4;
+}
+.sitem-links-item:hover { background: var(--g50); }
 
 /* Desktop vs mobile label toggle for action buttons */
 .lib-btn-mobile  { display: none; }

@@ -1,5 +1,6 @@
 'use client';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { useRouter } from 'next/navigation';
 import { DragDropContext, Droppable, Draggable, type DropResult, type DragStart } from '@hello-pangea/dnd';
 import { GripVertical, Pencil } from 'lucide-react';
@@ -203,6 +204,44 @@ function ScheduleRowContent({
 }: RowContentProps) {
   const meta = formatMeta(s);
   const isSyncing = syncingNames.has(s.name);
+
+  // Links dropdown state — portal-based to escape overflow:hidden on .lbt-prod / .lbt-ungrouped
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [menuStyle, setMenuStyle] = useState<React.CSSProperties>({});
+  const wrapRef  = useRef<HTMLDivElement>(null);
+  const menuRef  = useRef<HTMLDivElement>(null);
+
+  function toggleMenu() {
+    if (menuOpen) { setMenuOpen(false); return; }
+    if (wrapRef.current) {
+      const r = wrapRef.current.getBoundingClientRect();
+      // Right-align the dropdown with the trigger, anchored to viewport (position:fixed)
+      setMenuStyle({ top: r.bottom + 4, right: window.innerWidth - r.right });
+    }
+    setMenuOpen(true);
+  }
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    function onDown(e: MouseEvent) {
+      const t = e.target as Node;
+      if (wrapRef.current?.contains(t) || menuRef.current?.contains(t)) return;
+      setMenuOpen(false);
+    }
+    function onKey(e: KeyboardEvent) { if (e.key === 'Escape') setMenuOpen(false); }
+    function onScroll() { setMenuOpen(false); }
+    document.addEventListener('mousedown', onDown);
+    document.addEventListener('keydown', onKey);
+    document.addEventListener('scroll', onScroll, true);
+    return () => {
+      document.removeEventListener('mousedown', onDown);
+      document.removeEventListener('keydown', onKey);
+      document.removeEventListener('scroll', onScroll, true);
+    };
+  }, [menuOpen]);
+
+  const anyCopied = copiedInfo?.name === s.name;
+
   return (
     <>
       <button
@@ -219,21 +258,37 @@ function ScheduleRowContent({
         <span className="lbt-sched-meta">{meta}</span>
       )}
       <div className="lbt-sched-acts" onClick={(e) => e.stopPropagation()}>
-        {/* Team / Client link copy — hidden on mobile for archived rows */}
-        <button
-          className={`sitem-copy${isArchived ? ' lib-acts-desktop-only' : ''}`}
-          onClick={() => onCopyTeam(s.name)}
-          title="Copy team link (requires PIN)"
+
+        {/* ── Links dropdown — replaces separate Team Link / Client Link buttons ── */}
+        <div
+          ref={wrapRef}
+          className={`sitem-links-wrap${isArchived ? ' lib-acts-desktop-only' : ''}`}
         >
-          {copiedInfo?.name === s.name && copiedInfo.kind === 'team' ? '✓ Team Link' : 'Team Link'}
-        </button>
-        <button
-          className={`sitem-copy sitem-copy-client${isArchived ? ' lib-acts-desktop-only' : ''}`}
-          onClick={() => onCopyClient(s.name)}
-          title="Copy public read-only link"
-        >
-          {copiedInfo?.name === s.name && copiedInfo.kind === 'client' ? '✓ Client Link' : 'Client Link'}
-        </button>
+          <button
+            className="sitem-links-btn"
+            onClick={toggleMenu}
+            title="Copy schedule links"
+          >
+            {anyCopied ? '✓ Copied' : 'Links'}
+          </button>
+          {menuOpen && createPortal(
+            <div ref={menuRef} className="sitem-links-menu" style={menuStyle}>
+              <button
+                className="sitem-links-item"
+                onClick={() => { onCopyTeam(s.name); setMenuOpen(false); }}
+              >
+                Copy Team Link
+              </button>
+              <button
+                className="sitem-links-item"
+                onClick={() => { onCopyClient(s.name); setMenuOpen(false); }}
+              >
+                Copy Client Link
+              </button>
+            </div>,
+            document.body
+          )}
+        </div>
 
         {isArchived ? (
           <>
