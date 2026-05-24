@@ -214,6 +214,47 @@ function clearPendingRename(oldName: string) {
   writePendingRenames(m);
 }
 
+// ── Rename-back allowance guard ────────────────────────────────────────────────
+// After rename A→B, records B's immediate predecessor A for 5 minutes.
+// Lets the user rename B back to A even if stale CDN still shows A in the blob list.
+
+const SS_RENAME_PREV_KEY = 'rp_lib_rename_prev';
+const RENAME_PREV_TTL_MS = 5 * 60_000;
+
+interface RenamePrevEntry { prevName: string; renamedAt: number; }
+
+function readRenamePrevMap(): Map<string, RenamePrevEntry> {
+  try {
+    const raw = sessionStorage.getItem(SS_RENAME_PREV_KEY);
+    if (!raw) return new Map();
+    return new Map(JSON.parse(raw) as [string, RenamePrevEntry][]);
+  } catch { return new Map(); }
+}
+
+function writeRenamePrevMap(m: Map<string, RenamePrevEntry>) {
+  try { sessionStorage.setItem(SS_RENAME_PREV_KEY, JSON.stringify([...m.entries()])); } catch {}
+}
+
+function setRenamePrev(currentName: string, prevName: string) {
+  const m = readRenamePrevMap();
+  m.set(currentName, { prevName, renamedAt: Date.now() });
+  writeRenamePrevMap(m);
+}
+
+function isRenameBackAllowed(currentName: string, targetName: string): boolean {
+  try {
+    const m = readRenamePrevMap();
+    const entry = m.get(currentName);
+    if (!entry) return false;
+    if (Date.now() - entry.renamedAt > RENAME_PREV_TTL_MS) {
+      m.delete(currentName);
+      writeRenamePrevMap(m);
+      return false;
+    }
+    return entry.prevName === targetName;
+  } catch { return false; }
+}
+
 // Merges pending archive/restore mutations into freshly-fetched libMeta.
 // Reads and writes sessionStorage directly so it works across navigations.
 function applyPendingMutations(meta: LibraryData): LibraryData {
@@ -750,7 +791,9 @@ export default function LibraryPage() {
 
     // Client-side duplicate guard — checks ALL schedules (active + archived) before the
     // network round-trip. Trims both sides to catch blob keys with hidden whitespace.
-    if (schedules.some((s) => s.name.trim() === trimNew)) {
+    // Exception: allow rename-back to the immediate predecessor name in this session
+    // (e.g. A→B then B→A), since the stale CDN list may still show A after it was deleted.
+    if (schedules.some((s) => s.name.trim() === trimNew) && !isRenameBackAllowed(renameModal.name, trimNew)) {
       setRenameModal((m) => m ? { ...m, error: `A schedule named "${trimNew}" already exists` } : null);
       return;
     }
@@ -796,6 +839,9 @@ export default function LibraryPage() {
           trimNew,
         ));
       }
+
+      // Record predecessor so rename-back (B→A) isn't blocked by stale CDN blob list.
+      setRenamePrev(trimNew, oldName);
 
       // Start the CDN sync guard: block open/re-rename for RENAME_SYNC_MS.
       setSyncingRenames((prev) => new Map(prev).set(trimNew, Date.now() + RENAME_SYNC_MS));
@@ -905,6 +951,7 @@ export default function LibraryPage() {
     renameModal !== null &&
     renameModal.draft.trim() !== '' &&
     renameModal.draft.trim() !== renameModal.name &&
+    !isRenameBackAllowed(renameModal.name, renameModal.draft.trim()) &&
     schedules.some((s) => s.name.trim() === renameModal.draft.trim());
 
   // ── Render ─────────────────────────────────────────────────────────────────
