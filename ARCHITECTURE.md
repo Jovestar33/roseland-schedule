@@ -121,13 +121,14 @@ Public client links (`/view/[name]`) bypass auth entirely — no token needed, l
 |---|---|
 | `save.js` | Write schedule; conflict detection via savedAt + stableStringify hash |
 | `load.js` | Read schedule; supports `public=1` for unauthenticated reads |
-| `snapshots.js` | Read/write named snapshots per schedule |
-| `library.js` | Folder metadata + schedule→folder mapping (separate blob key) |
+| `snapshots.js` | Read/write named snapshots per schedule (store: schedule-snapshots) |
+| `library.js` | Read/write library metadata blob (phaseOrder, tsarchived, display name overrides, folder map, town/date caches) |
+| `delete-schedule.js` | Permanent delete of archived schedules; validates editorToken + delete passcode; deletes schedule blob, snapshot blob (best-effort), and cleans all library metadata references atomically |
 | `cms.js` | Read/write CMS branding config |
 | `templates.js` | Read/write reusable schedule templates (store: schedule-templates) |
 | `places.js` | Google Places API proxy (forwards Referer, adds API key) |
 
-All functions share the same HMAC auth check. Delete operations require a separate `SCHEDULE_DELETE_PASSWORD` env var.
+All functions share the same HMAC auth check (`SCHEDULE_APP_PASSWORD` + `SCHEDULE_AUTH_SECRET`). `delete-schedule.js` additionally requires `SCHEDULE_DELETE_PASSWORD`; it is the sole server-side entry point for permanent schedule deletion.
 
 ## 8. Public Routes
 
@@ -183,9 +184,13 @@ All functions share the same HMAC auth check. Delete operations require a separa
 
 **Library auto-grouping tree** — `LibraryTree.tsx` derives the production → phase → schedule hierarchy entirely client-side from schedule metadata (`projectName.trim().toLowerCase()` → prodKey, `phase.trim().toLowerCase()` → phaseKey). No server-side folder data required. `buildTree()` returns `{ productions, ungrouped }`. `ScheduleListTab` is a thin wrapper that just renders `LibraryTree`. Empty productions/phases created via inline "+ Add" inputs are held in component state only (not persisted); they become real once a schedule populates them.
 
-**Library phaseOrder** — Manual drag-and-drop order within a phase is stored in `libMeta.phaseOrder[prodKey][phaseKey]` as an array of schedule names. `applyPhaseOrder()` sorts a phase's schedules by this array; names absent from the array fall back to dayNumber/savedAt sort and append to the end. `onDragEnd` uses `@hello-pangea/dnd`; cross-phase drops are rejected (same-droppable-only). After delete, LibraryPage removes the schedule name from all phaseOrder arrays on the same write.
+**Library phaseOrder** — Manual drag-and-drop order within a phase is stored in `libMeta.phaseOrder[prodKey][phaseKey]` as an array of schedule names. `applyPhaseOrder()` sorts a phase's schedules by this array; names absent from the array fall back to dayNumber/savedAt sort and append to the end. `onDragEnd` uses `@hello-pangea/dnd`; only same-section (same droppable) reorders are supported — cross-phase and cross-production drops are explicitly rejected with a visible error message. Cross-production/cross-phase schedule movement is not yet implemented; the intended future approach is an explicit "Move To" modal that updates the schedule's `projectName`/`phase` metadata and library metadata together in one operation. After permanent delete, `delete-schedule.js` removes the schedule from all phaseOrder arrays server-side.
 
 **Library display name overrides** — Renaming a production or phase writes `libMeta.productionDisplayNames[prodKey]` or `libMeta.phaseDisplayNames[prodKey][phaseKey]`. The normalized lowercase key (used for grouping) never changes; only the displayed label changes. Schedule blobs are not touched. The tree applies overrides after `buildTree()`, before merging empty containers.
+
+**Library archive and permanent delete** — `libMeta.tsarchived` is a string array of archived schedule names. Archiving removes the name from active `phaseOrder` entries and from the recent-schedules list. Restoring removes it from `tsarchived`. Permanent delete is only available for archived schedules (active schedules must be archived first). `delete-schedule.js` handles deletion atomically: deletes the schedule blob from the `schedules` store, deletes the associated snapshot blob from `schedule-snapshots` (keyed by `sha256(name)`; best-effort, non-fatal if absent), then reads and rewrites the library metadata blob with the schedule removed from `tsarchived`, `phaseOrder`, `scheduleFolderMap`, `townCache`, and `dateCache`. The two-step confirmation UI (passcode + type "DELETE") lives in `LibraryPage.tsx`. The server validates the delete password independently of the editor token.
+
+**Netlify Blobs eventual consistency and client-side mutation guards** — Netlify Blobs CDN reads can return pre-write state for up to ~15 seconds after a write. `LibraryPage` guards against stale reads silently rolling back confirmed actions using sessionStorage-based pending mutation maps (60-second TTL): `rp_lib_pending_mutations` (archive/restore), `rp_lib_pending_phase_order` (DnD reorder), `rp_lib_pending_deletions` (permanent delete). On each Library fetch, `applyPendingMutations()` overlays pending state onto cloud state; if the cloud has caught up (confirms the mutation), the pending entry is cleared automatically. Guards are stored in sessionStorage rather than `useRef` so they survive in-session navigation (component unmount resets refs). Library metadata saves that fail now revert local state and surface an error banner rather than silently accepting the failure.
 
 **ComboInput** — `components/schedule/ComboInput.tsx` is a controlled input with a filtered suggestion dropdown. `onMouseDown + e.preventDefault()` on options prevents blur-before-click. Pressing Enter fires `onBlur?.()` (commit) whether or not a dropdown item is active; pressing Escape fires `onEscape?.()` (revert). `HeaderIdentityLine` uses a `draftRef` alongside `draft` state so `commit()` always reads the latest value synchronously, even when a dropdown option was just selected (React batching would otherwise lag state).
 
@@ -203,7 +208,7 @@ All functions share the same HMAC auth check. Delete operations require a separa
 **Conflict detection**: optimistic concurrency via savedAt + content hash, resolution modal (overwrite or reload)
 **Auto-snapshot**: every 5 min while dirty
 **Manual snapshots**: named versions, restore, compare (BackupTab)
-**Library**: collapsible production → phase → schedule tree (auto-grouped from metadata); drag-and-drop reorder within phases; inline create production/phase; edit display names; contextual + New Schedule pre-populates identity; Team/Client link copy; delete
+**Library**: collapsible production → phase → schedule tree (auto-grouped from metadata); same-section drag-and-drop reorder within a phase (cross-section movement not yet implemented); inline create production/phase; edit display names; contextual + New Schedule pre-populates identity; Team/Client link copy; archive/restore; permanent delete for archived schedules only (two-step confirmation, passcode-protected server-side); stale-read protection for recent Library mutations (sessionStorage pending-mutation guards)
 **Sharing**: Team Link (`?auth=true` deep link), Client Link (`/view/[name]` public)
 **Public viewer**: branded read-only view, no auth required
 **CMS**: per-brand colors, fonts, logo, action style overrides — applied via CSS custom properties
