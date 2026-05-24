@@ -29,6 +29,54 @@ interface RecentEntry {
 const LS_RECENT_KEY = 'rp_recent_schedules';
 const MAX_RECENT = 5;
 
+// ── Local mutation guard ────────────────────────────────────────────────────────
+// Protects recent archive/restore actions from being undone by a stale Blob read
+// during the Netlify Blobs eventual-consistency propagation window (~0–15 s).
+
+const MUTATION_TTL_MS = 60_000; // 60 s — well past the observed ~15 s window
+
+interface LibraryMutation {
+  archived: boolean; // true = archived, false = active/restored
+  changedAt: number;
+}
+
+// Merges pending mutations into freshly-fetched libMeta before setting state.
+// Removes mutations that the cloud has confirmed or that have expired.
+function applyPendingMutations(
+  meta: LibraryData,
+  mutations: Map<string, LibraryMutation>,
+): LibraryData {
+  if (mutations.size === 0) return meta;
+  const now = Date.now();
+  let tsarchived = meta.tsarchived ? [...meta.tsarchived] : [];
+  let changed = false;
+
+  for (const [name, mut] of mutations) {
+    if (now - mut.changedAt > MUTATION_TTL_MS) {
+      console.log('[Library Mutation] expired:', name);
+      mutations.delete(name);
+      continue;
+    }
+    const cloudArchived = tsarchived.includes(name);
+    if (cloudArchived === mut.archived) {
+      console.log('[Library Mutation] confirmed by cloud:', name, 'archived=', mut.archived);
+      mutations.delete(name);
+      continue;
+    }
+    // Cloud returned stale pre-mutation state — keep the local confirmed value.
+    console.log('[Library Mutation] stale cloud ignored for', name,
+      '— cloud archived=', cloudArchived, '→ keeping local archived=', mut.archived);
+    if (mut.archived) {
+      tsarchived = [...tsarchived, name];
+    } else {
+      tsarchived = tsarchived.filter((n) => n !== name);
+    }
+    changed = true;
+  }
+
+  return changed ? { ...meta, tsarchived } : meta;
+}
+
 // ── Helpers ────────────────────────────────────────────────────────────────────
 
 function readRecent(): RecentEntry[] {
@@ -90,8 +138,32 @@ export default function LibraryPage() {
   // Core data fetcher — fetches everything and updates state. Can throw; callers manage UI state.
   async function fetchLibraryData(): Promise<void> {
     const [names, meta] = await Promise.all([listSchedules(token!), getLibraryMeta(token!)]);
-    setLibMeta(meta);
-    setSchedules(names.map((name) => ({ name, data: null, loading: true })));
+
+    // Apply any pending local mutations before committing cloud state to React,
+    // so a stale Blob read during the propagation window doesn't revert an archive.
+    setLibMeta(applyPendingMutations(meta, pendingMutationsRef.current));
+
+    // Protect a recently saved schedule from vanishing due to a stale list read.
+    let effectiveNames = names;
+    try {
+      const raw = sessionStorage.getItem('rp_recently_added_schedule');
+      if (raw) {
+        const { name: addedName, addedAt } = JSON.parse(raw) as { name: string; addedAt: number };
+        if (Date.now() - addedAt < MUTATION_TTL_MS) {
+          if (!effectiveNames.includes(addedName)) {
+            console.log('[Library Mutation] stale list missing recently added:', addedName, '— keeping visible');
+            effectiveNames = [...effectiveNames, addedName];
+          } else {
+            console.log('[Library Mutation] recently added schedule confirmed in list:', addedName);
+            sessionStorage.removeItem('rp_recently_added_schedule');
+          }
+        } else {
+          sessionStorage.removeItem('rp_recently_added_schedule');
+        }
+      }
+    } catch {}
+
+    setSchedules(effectiveNames.map((name) => ({ name, data: null, loading: true })));
 
     const fetched = await Promise.all(
       names.map((name) =>
@@ -125,6 +197,9 @@ export default function LibraryPage() {
       setLoadingList(false);
     }
   }
+
+  // Pending archive/restore mutations — guards against stale Blob reads reverting them.
+  const pendingMutationsRef = useRef<Map<string, LibraryMutation>>(new Map());
 
   // Manual refresh — drives only the Refresh button state. Ref guards against duplicate clicks.
   const refreshInProgressRef = useRef(false);
@@ -162,6 +237,9 @@ export default function LibraryPage() {
   // ── Archive / Restore / Delete permanently ─────────────────────────────────
 
   async function handleArchive(name: string) {
+    pendingMutationsRef.current.set(name, { archived: true, changedAt: Date.now() });
+    console.log('[Library Mutation] recorded:', name, 'archived=true');
+
     const archived = [...(libMeta.tsarchived ?? [])];
     if (!archived.includes(name)) archived.push(name);
 
@@ -186,6 +264,9 @@ export default function LibraryPage() {
   }
 
   async function handleRestore(name: string) {
+    pendingMutationsRef.current.set(name, { archived: false, changedAt: Date.now() });
+    console.log('[Library Mutation] recorded:', name, 'archived=false');
+
     const archived = (libMeta.tsarchived ?? []).filter((n) => n !== name);
     await updateLibMeta({ ...libMeta, tsarchived: archived, updatedAt: Date.now() });
     // Same reason as handleArchive — no follow-up GET needed.

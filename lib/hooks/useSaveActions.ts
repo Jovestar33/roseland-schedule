@@ -112,8 +112,12 @@ export function useSaveActions() {
       loadSchedule(newName, savedData);
       updateBaseline(result.savedAt);
       setSyncStatus('synced');
-      // Bust the router cache so LibraryPage re-fetches when the user returns
-      router.refresh();
+      // Tell the Library that this name was just saved so a stale list read
+      // during the Blob propagation window doesn't hide the new schedule.
+      try {
+        sessionStorage.setItem('rp_recently_added_schedule', JSON.stringify({ name: newName, addedAt: Date.now() }));
+        console.log('[Library Mutation] recorded recently added:', newName);
+      } catch {}
       router.push(`/schedule/${encodeURIComponent(newName)}`);
     } catch {
       setSyncStatus('offline');

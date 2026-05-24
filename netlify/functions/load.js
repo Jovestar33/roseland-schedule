@@ -46,7 +46,8 @@ exports.handler = async (event) => {
       if (!isAuthorizedEditor(editorToken)) {
         return { statusCode: 403, headers, body: JSON.stringify({ error: 'Unauthorized editor access' }) };
       }
-      const { blobs } = await store.list();
+      // Strong consistency so a schedule saved via Save As appears in the list immediately.
+      const { blobs } = await store.list({ consistency: 'strong' });
       return { statusCode: 200, headers, body: JSON.stringify({ schedules: blobs.map((b) => b.key) }) };
     }
 

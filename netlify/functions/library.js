@@ -64,7 +64,9 @@ exports.handler = async (event) => {
       return { statusCode: 403, headers, body: JSON.stringify({ error: 'Unauthorized editor access' }) };
     }
 
-    const store = getStore('schedule-library');
+    // Strong consistency ensures the GET always reflects the latest PUT,
+    // preventing stale CDN-edge reads from returning pre-archive state.
+    const store = getStore({ name: 'schedule-library', consistency: 'strong' });
     const key = 'rp_library_index_v1';
 
     if (event.httpMethod === 'GET') {
