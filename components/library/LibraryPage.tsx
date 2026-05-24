@@ -32,6 +32,10 @@ const MAX_RECENT = 5;
 // ── Local mutation guard ────────────────────────────────────────────────────────
 // Protects recent archive/restore actions from being undone by a stale Blob read
 // during the Netlify Blobs eventual-consistency propagation window (~0–15 s).
+//
+// State is kept in sessionStorage (not useRef) so it survives in-session
+// navigation: archiving then immediately opening a schedule and returning to
+// the Library would otherwise reset the ref and lose the guard.
 
 const MUTATION_TTL_MS = 60_000; // 60 s — well past the observed ~15 s window
 
@@ -40,27 +44,75 @@ interface LibraryMutation {
   changedAt: number;
 }
 
-// Merges pending mutations into freshly-fetched libMeta before setting state.
-// Removes mutations that the cloud has confirmed or that have expired.
-function applyPendingMutations(
-  meta: LibraryData,
-  mutations: Map<string, LibraryMutation>,
-): LibraryData {
+type PendingPhaseOrder = {
+  phaseOrder: NonNullable<LibraryData['phaseOrder']>;
+  changedAt: number;
+};
+
+const SS_MUTATIONS_KEY   = 'rp_lib_pending_mutations';
+const SS_PHASE_ORDER_KEY = 'rp_lib_pending_phase_order';
+
+function readPendingMutations(): Map<string, LibraryMutation> {
+  try {
+    const raw = sessionStorage.getItem(SS_MUTATIONS_KEY);
+    if (!raw) return new Map();
+    return new Map(JSON.parse(raw) as [string, LibraryMutation][]);
+  } catch { return new Map(); }
+}
+
+function writePendingMutations(m: Map<string, LibraryMutation>) {
+  try { sessionStorage.setItem(SS_MUTATIONS_KEY, JSON.stringify([...m.entries()])); } catch {}
+}
+
+function setPendingMutation(name: string, mut: LibraryMutation) {
+  const m = readPendingMutations();
+  m.set(name, mut);
+  writePendingMutations(m);
+}
+
+function deletePendingMutation(name: string) {
+  const m = readPendingMutations();
+  m.delete(name);
+  writePendingMutations(m);
+}
+
+function readPendingPhaseOrder(): PendingPhaseOrder | null {
+  try {
+    const raw = sessionStorage.getItem(SS_PHASE_ORDER_KEY);
+    return raw ? (JSON.parse(raw) as PendingPhaseOrder) : null;
+  } catch { return null; }
+}
+
+function writePendingPhaseOrder(po: PendingPhaseOrder | null) {
+  try {
+    if (po === null) sessionStorage.removeItem(SS_PHASE_ORDER_KEY);
+    else sessionStorage.setItem(SS_PHASE_ORDER_KEY, JSON.stringify(po));
+  } catch {}
+}
+
+// Merges pending archive/restore mutations into freshly-fetched libMeta.
+// Reads and writes sessionStorage directly so it works across navigations.
+function applyPendingMutations(meta: LibraryData): LibraryData {
+  const mutations = readPendingMutations();
   if (mutations.size === 0) return meta;
+
   const now = Date.now();
   let tsarchived = meta.tsarchived ? [...meta.tsarchived] : [];
   let changed = false;
+  let mutationsChanged = false;
 
   for (const [name, mut] of mutations) {
     if (now - mut.changedAt > MUTATION_TTL_MS) {
       console.log('[Library Mutation] expired:', name);
       mutations.delete(name);
+      mutationsChanged = true;
       continue;
     }
     const cloudArchived = tsarchived.includes(name);
     if (cloudArchived === mut.archived) {
       console.log('[Library Mutation] confirmed by cloud:', name, 'archived=', mut.archived);
       mutations.delete(name);
+      mutationsChanged = true;
       continue;
     }
     // Cloud returned stale pre-mutation state — keep the local confirmed value.
@@ -74,6 +126,7 @@ function applyPendingMutations(
     changed = true;
   }
 
+  if (mutationsChanged) writePendingMutations(mutations);
   return changed ? { ...meta, tsarchived } : meta;
 }
 
@@ -139,16 +192,18 @@ export default function LibraryPage() {
   async function fetchLibraryData(): Promise<void> {
     const [names, meta] = await Promise.all([listSchedules(token!), getLibraryMeta(token!)]);
 
-    // Apply any pending local mutations before committing cloud state to React,
-    // so a stale Blob read during the propagation window doesn't revert an archive.
-    let resolvedMeta = applyPendingMutations(meta, pendingMutationsRef.current);
+    // Apply any pending archive/restore mutations before committing cloud state
+    // to React, so a stale Blob read during the propagation window doesn't
+    // revert a confirmed archive/restore. Reads/writes sessionStorage internally
+    // so the guard survives in-session navigation (ref would be lost on unmount).
+    let resolvedMeta = applyPendingMutations(meta);
 
     // Apply pending DnD phaseOrder, same rationale.
-    const pendingPO = pendingPhaseOrderRef.current;
+    const pendingPO = readPendingPhaseOrder();
     if (pendingPO) {
       if (Date.now() - pendingPO.changedAt > MUTATION_TTL_MS) {
         console.log('[Library PhaseOrder] pending phaseOrder expired');
-        pendingPhaseOrderRef.current = null;
+        writePendingPhaseOrder(null);
       } else {
         // Deep-merge: pending wins for any (prodKey, phaseKey) it covers.
         const merged = { ...(resolvedMeta.phaseOrder ?? {}) };
@@ -163,7 +218,7 @@ export default function LibraryPage() {
         );
         if (cloudCaughtUp) {
           console.log('[Library PhaseOrder] cloud confirmed phaseOrder — clearing pending');
-          pendingPhaseOrderRef.current = null;
+          writePendingPhaseOrder(null);
         } else {
           console.log('[Library PhaseOrder] stale CDN read — applying pending phaseOrder');
           resolvedMeta = { ...resolvedMeta, phaseOrder: merged };
@@ -229,13 +284,6 @@ export default function LibraryPage() {
     }
   }
 
-  // Pending archive/restore mutations — guards against stale Blob reads reverting them.
-  const pendingMutationsRef = useRef<Map<string, LibraryMutation>>(new Map());
-
-  // Pending phaseOrder — guards DnD reorders from being reset by stale CDN reads
-  // during the Netlify Blobs eventual-consistency propagation window (~0–15 s).
-  const pendingPhaseOrderRef = useRef<{ phaseOrder: NonNullable<LibraryData['phaseOrder']>; changedAt: number } | null>(null);
-
   // Manual refresh — drives only the Refresh button state. Ref guards against duplicate clicks.
   const refreshInProgressRef = useRef(false);
 
@@ -271,11 +319,9 @@ export default function LibraryPage() {
       console.log('[Library] metadata save succeeded');
 
       // If phaseOrder changed, protect it against stale CDN reads during the propagation window.
+      // Written to sessionStorage so the guard survives in-session navigation.
       if (JSON.stringify(updated.phaseOrder) !== JSON.stringify(prevMeta.phaseOrder)) {
-        pendingPhaseOrderRef.current = {
-          phaseOrder: updated.phaseOrder ?? {},
-          changedAt: Date.now(),
-        };
+        writePendingPhaseOrder({ phaseOrder: updated.phaseOrder ?? {}, changedAt: Date.now() });
         console.log('[Library PhaseOrder] pending phaseOrder recorded');
       }
     } catch (err) {
@@ -289,8 +335,10 @@ export default function LibraryPage() {
   // ── Archive / Restore / Delete permanently ─────────────────────────────────
 
   async function handleArchive(name: string) {
-    pendingMutationsRef.current.set(name, { archived: true, changedAt: Date.now() });
-    console.log('[Library Mutation] recorded:', name, 'archived=true');
+    // Record in sessionStorage before the save so the guard survives in-session
+    // navigation (e.g. user archives then immediately opens another schedule).
+    setPendingMutation(name, { archived: true, changedAt: Date.now() });
+    console.log('[Library Archive] local mutation recorded:', name);
 
     const archived = [...(libMeta.tsarchived ?? [])];
     if (!archived.includes(name)) archived.push(name);
@@ -309,28 +357,34 @@ export default function LibraryPage() {
       setRecent(next);
     } catch {}
 
+    console.log('[Library Archive] save started:', name);
     try {
       await updateLibMeta({ ...libMeta, tsarchived: archived, phaseOrder: po, updatedAt: Date.now() });
+      console.log('[Library Archive] save succeeded:', name);
       // No follow-up GET: putLibraryMeta's POST response already returns the
       // confirmed server state. A second read races the blob propagation window
       // and returns stale pre-archive data, which would revert the UI.
     } catch {
       // updateLibMeta already reverted state and set refreshError.
       // Remove pending mutation so a future Refresh doesn't incorrectly apply the failed archive.
-      pendingMutationsRef.current.delete(name);
+      deletePendingMutation(name);
+      console.log('[Library Archive] save failed — pending mutation cleared:', name);
     }
   }
 
   async function handleRestore(name: string) {
-    pendingMutationsRef.current.set(name, { archived: false, changedAt: Date.now() });
-    console.log('[Library Mutation] recorded:', name, 'archived=false');
+    setPendingMutation(name, { archived: false, changedAt: Date.now() });
+    console.log('[Library Restore] local mutation recorded:', name);
 
     const archived = (libMeta.tsarchived ?? []).filter((n) => n !== name);
+    console.log('[Library Restore] save started:', name);
     try {
       await updateLibMeta({ ...libMeta, tsarchived: archived, updatedAt: Date.now() });
+      console.log('[Library Restore] save succeeded:', name);
       // Same reason as handleArchive — no follow-up GET needed.
     } catch {
-      pendingMutationsRef.current.delete(name);
+      deletePendingMutation(name);
+      console.log('[Library Restore] save failed — pending mutation cleared:', name);
     }
   }
 
