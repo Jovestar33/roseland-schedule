@@ -42,13 +42,17 @@
     - ⬜ **Sort options** — sort beyond manual phase order (by name, save date, shoot date); pending.
     - ⬜ **Open recent** — quick access to recently opened schedules on Library load; pending.
     - ⬜ **Cross-section schedule movement** — moving a schedule between productions or phases is not a drag-and-drop feature; cross-section DnD is deliberately rejected. Future implementation should use an explicit Move To workflow (see item 13 below).
-13. **Phase 2 — Safe schedule title rename / schedule identity**
-    - Allow renaming a schedule without Save As.
-    - Medium-risk: the schedule name / blob key is the durable identity referenced in Library phaseOrder, tsarchived, snapshots, public/client links, team links, and local recent-entry caches.
-    - Preferred long-term approach: introduce a permanent `scheduleId` field that is distinct from the user-visible title. Blob key and all Library references use `scheduleId`; the display title is stored in schedule metadata and editable freely.
-    - Acceptable interim approach: a careful rename-with-redirect flow — copy blob to new key, update all Library references (phaseOrder, tsarchived, scheduleFolderMap, caches), delete old key only after all writes confirm, redirect old URL to new one.
-    - Do not implement as a simple title-field edit without accounting for all reference sites. Cross-link integrity is the core risk.
-14. **Move To workflow — cross-production/cross-phase schedule movement**
+13. ✅ **Phase 2 — Safe schedule title rename** — Completed and tested 2026-05-24. Branch `phase-2-safe-schedule-rename`, merged to `main` 2026-05-24.
+    - Schedules can be renamed from the Library without using Save As.
+    - Rename is Library-only; in-editor rename is not implemented (possible later enhancement).
+    - Uses an interim key-migration approach: backend copies the schedule blob to the new key, migrates the snapshot blob (keyed by sha256 of name), updates all Library metadata references (phaseOrder, tsarchived, scheduleFolderMap, townCache, dateCache), then deletes old blobs best-effort. Backend endpoint: `netlify/functions/rename-schedule.js`.
+    - Rename preserves schedule data, snapshots, phase order, and Library grouping.
+    - Blocks genuine duplicate names. Rename-back (A→B→A) works correctly after the sync window — backend cross-checks Library metadata when `isRenameBack` flag is set, avoiding a false 409 from stale CDN blob reads.
+    - Old Team/Client links using the old schedule name break after rename; users must copy new links from the Library row.
+    - Post-rename sync guard (15 s React state) prevents opening or re-renaming during the Blob propagation window. Pending rename guard (sessionStorage, 60 s TTL) prevents stale CDN blob-list reads from reverting the rename on Library Refresh.
+    - Netlify Blobs `{ consistency: 'strong' }` is not used; this environment does not expose `uncachedEdgeURL`. All staleness is handled at the app level.
+    - **Future (not current work):** Full `scheduleId` migration — introduce a permanent `scheduleId` field separate from the display title so the blob key never needs to change on rename. In-editor rename (rename without opening the Library) is also a future enhancement.
+14. **Move To workflow — cross-production/cross-phase schedule movement** ← *next active phase*
     - Explicit modal or dropdown to move a schedule from one production/phase to another.
     - Must update the schedule's `projectName`/`phase` metadata (requires a schedule write) and Library metadata (phaseOrder, scheduleFolderMap) together atomically or in a safe sequence.
     - Cross-section DnD may be added later as a secondary trigger only after the explicit Move To workflow is stable and well-tested.
@@ -88,9 +92,10 @@
 ## Session Order
 - **Also pending:** Item 4 (PWA install test on real iPad — manual test only)
 - **Phase 1 / 1A complete:** Library Refresh reliability, Save As grouping fix, Archive/Restore persistence, Same-section DnD hardening, Permanent Delete for archived schedules. All passed testing 2026-05-24. Branch: `library-refresh-archive-fix`.
-- **Next phase:** Item 13 (safe schedule title rename / schedule identity) — deliberate planning required before any code.
-- **Next v1 polish:** Items 7, 9, 11, 14–17 grouped by theme.
+- **Phase 2 complete:** Safe schedule title rename. Passed testing 2026-05-24. Branch: `phase-2-safe-schedule-rename`, merged to `main` 2026-05-24.
+- **Next active phase:** Item 14 — Move To workflow (cross-production/cross-phase schedule movement).
+- **Next v1 polish:** Items 7, 9, 11, 15–17 grouped by theme.
 - **Item 22 (CMS architecture):** Planning conversation before any code.
 
 ---
-*Last updated: 2026-05-24 — Phase 1/1A Library reliability work (Refresh, Save As grouping, Archive/Restore persistence, DnD hardening, Permanent Delete) passed testing. Next: Phase 2 safe schedule rename (Item 13).*
+*Last updated: 2026-05-24 — Phase 2 safe schedule title rename passed testing and merged to main. Next: Move To workflow (Item 14).*

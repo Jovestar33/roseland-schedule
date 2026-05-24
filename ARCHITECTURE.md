@@ -42,7 +42,7 @@ lib/
   constants.ts       # ACTIONS, CMS_COLORS, limits, intervals
   templates.ts       # Template type + LS_TEMPLATES_KEY (kept for migration helper)
   types.ts           # All shared TypeScript types
-netlify/functions/   # Serverless: save, load, snapshots, library, cms, templates, places
+netlify/functions/   # Serverless: save, load, snapshots, library, rename-schedule, cms, templates, places
 middleware.ts        # Auth gate + ?next= redirect preservation
 app/favicon.ico      # Served as Next.js metadata route — bypasses middleware entirely
 app/manifest.ts      # PWA manifest, auto-served at /manifest.webmanifest
@@ -123,6 +123,7 @@ Public client links (`/view/[name]`) bypass auth entirely — no token needed, l
 | `load.js` | Read schedule; supports `public=1` for unauthenticated reads |
 | `snapshots.js` | Read/write named snapshots per schedule (store: schedule-snapshots) |
 | `library.js` | Read/write library metadata blob (phaseOrder, tsarchived, display name overrides, folder map, town/date caches) |
+| `rename-schedule.js` | Rename a schedule; copies blob to new key, migrates snapshot, updates all Library metadata references, deletes old blobs best-effort; cross-checks Library metadata on rename-back to avoid false 409 from stale CDN reads |
 | `delete-schedule.js` | Permanent delete of archived schedules; validates editorToken + delete passcode; deletes schedule blob, snapshot blob (best-effort), and cleans all library metadata references atomically |
 | `cms.js` | Read/write CMS branding config |
 | `templates.js` | Read/write reusable schedule templates (store: schedule-templates) |
@@ -190,6 +191,10 @@ All functions share the same HMAC auth check (`SCHEDULE_APP_PASSWORD` + `SCHEDUL
 
 **Library archive and permanent delete** — `libMeta.tsarchived` is a string array of archived schedule names. Archiving removes the name from active `phaseOrder` entries and from the recent-schedules list. Restoring removes it from `tsarchived`. Permanent delete is only available for archived schedules (active schedules must be archived first). `delete-schedule.js` handles deletion atomically: deletes the schedule blob from the `schedules` store, deletes the associated snapshot blob from `schedule-snapshots` (keyed by `sha256(name)`; best-effort, non-fatal if absent), then reads and rewrites the library metadata blob with the schedule removed from `tsarchived`, `phaseOrder`, `scheduleFolderMap`, `townCache`, and `dateCache`. The two-step confirmation UI (passcode + type "DELETE") lives in `LibraryPage.tsx`. The server validates the delete password independently of the editor token.
 
+**Library rename — key-migration approach** — Renaming a schedule from the Library copies the schedule blob to the new blob key, migrates the snapshot blob (keyed by `sha256(name)`), updates all Library metadata references (phaseOrder, tsarchived, scheduleFolderMap, townCache, dateCache), then deletes the old blobs best-effort. This is the backend flow in `netlify/functions/rename-schedule.js`. The schedule name is both the blob key and the URL segment (`/schedule/[name]`, `/view/[name]`), so rename is not a free metadata-only change — it is a full key migration. Existing Team Links and Client Links using the old name break after rename; users must copy new links. In-editor rename is not implemented; rename is Library-only. A future `scheduleId` architecture (permanent opaque ID separate from the display title) would eliminate the key-migration requirement entirely, but that is not current work.
+
+**Library rename — CDN consistency and client guards** — Netlify Blobs CDN reads use eventual consistency (no `uncachedEdgeURL` configured in this environment; `{ consistency: 'strong' }` is therefore not available). After a rename, the CDN may still serve the old blob key for minutes. Two guards protect against this: (1) a 15-second React-state sync guard (`syncingRenames`) disables opening or re-renaming the schedule immediately after a rename completes; (2) a sessionStorage pending rename map (`SS_RENAMES_KEY`, 60 s TTL) prevents stale blob-list reads from reverting the rename during Library Refresh — if the CDN still shows the old key, `applyPendingRenames` remaps it to the new name or filters it out. Rename-back (A→B→A) has an additional guard: `SS_RENAME_PREV_KEY` (5-min TTL) records each rename's predecessor; `isRenameBackAllowed()` exempts the predecessor from the client-side duplicate check. On the backend, when the `isRenameBack` flag is set and `store.get(newName)` returns a result (stale CDN blob), the backend reads Library metadata as a second authority: if Library no longer references the target name, the blob is a CDN artifact and the rename proceeds; if Library also references the name (genuine conflict or stale Library), a soft "still finalizing" 409 is returned instead of a hard "already exists" error.
+
 **Netlify Blobs eventual consistency and client-side mutation guards** — Netlify Blobs CDN reads can return pre-write state for up to ~15 seconds after a write. `LibraryPage` guards against stale reads silently rolling back confirmed actions using sessionStorage-based pending mutation maps (60-second TTL): `rp_lib_pending_mutations` (archive/restore), `rp_lib_pending_phase_order` (DnD reorder), `rp_lib_pending_deletions` (permanent delete). On each Library fetch, `applyPendingMutations()` overlays pending state onto cloud state; if the cloud has caught up (confirms the mutation), the pending entry is cleared automatically. Guards are stored in sessionStorage rather than `useRef` so they survive in-session navigation (component unmount resets refs). Library metadata saves that fail now revert local state and surface an error banner rather than silently accepting the failure.
 
 **ComboInput** — `components/schedule/ComboInput.tsx` is a controlled input with a filtered suggestion dropdown. `onMouseDown + e.preventDefault()` on options prevents blur-before-click. Pressing Enter fires `onBlur?.()` (commit) whether or not a dropdown item is active; pressing Escape fires `onEscape?.()` (revert). `HeaderIdentityLine` uses a `draftRef` alongside `draft` state so `commit()` always reads the latest value synchronously, even when a dropdown option was just selected (React batching would otherwise lag state).
@@ -208,7 +213,7 @@ All functions share the same HMAC auth check (`SCHEDULE_APP_PASSWORD` + `SCHEDUL
 **Conflict detection**: optimistic concurrency via savedAt + content hash, resolution modal (overwrite or reload)
 **Auto-snapshot**: every 5 min while dirty
 **Manual snapshots**: named versions, restore, compare (BackupTab)
-**Library**: collapsible production → phase → schedule tree (auto-grouped from metadata); same-section drag-and-drop reorder within a phase (cross-section movement not yet implemented); inline create production/phase; edit display names; contextual + New Schedule pre-populates identity; Team/Client link copy; archive/restore; permanent delete for archived schedules only (two-step confirmation, passcode-protected server-side); stale-read protection for recent Library mutations (sessionStorage pending-mutation guards)
+**Library**: collapsible production → phase → schedule tree (auto-grouped from metadata); same-section drag-and-drop reorder within a phase (cross-section movement not yet implemented); inline create production/phase; edit display names; contextual + New Schedule pre-populates identity; Links dropdown (Team Link + Client Link); archive/restore; permanent delete for archived schedules only (two-step confirmation, passcode-protected server-side); stale-read protection for recent Library mutations (sessionStorage pending-mutation guards); **rename** — Library-only key-migration rename with duplicate protection, rename-back support, and post-rename CDN sync guard
 **Sharing**: Team Link (`?auth=true` deep link), Client Link (`/view/[name]` public)
 **Public viewer**: branded read-only view, no auth required
 **CMS**: per-brand colors, fonts, logo, action style overrides — applied via CSS custom properties
@@ -219,3 +224,6 @@ All functions share the same HMAC auth check (`SCHEDULE_APP_PASSWORD` + `SCHEDUL
 **Tools Panel**: slide-over drawer (Templates / Backup / Restore) accessible from the editor toolbar without closing the schedule
 **Print/PDF**: landscape default via `@page`; filename `"[name] – [YYYY-MM-DD]"` set on `document.title` before print
 **PWA**: installable via Safari Add to Home Screen; manifest at `/manifest.webmanifest`
+
+---
+*Last updated: 2026-05-24 — Added Library rename (Phase 2): rename-schedule.js function, key-migration flow, CDN consistency guards, rename-back handling.*
