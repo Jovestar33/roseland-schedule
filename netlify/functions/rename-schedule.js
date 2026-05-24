@@ -84,8 +84,9 @@ exports.handler = async (event) => {
     // Step 1 — Read and validate old schedule blob.
     // We validate shape here, before any write. This is the primary data-integrity
     // gate: if the old blob is unreadable or has an unexpected shape we abort immediately,
-    // before touching anything.
-    const oldRaw = await schedStore.get(trimOld);
+    // before touching anything. Strong consistency ensures we read the true current state
+    // rather than a potentially stale CDN-cached copy.
+    const oldRaw = await schedStore.get(trimOld, { consistency: 'strong' });
     if (oldRaw === null || oldRaw === undefined) {
       console.log('[Rename] old schedule blob not found — key:', JSON.stringify(trimOld));
       return { statusCode: 404, headers, body: JSON.stringify({ error: `Schedule "${trimOld}" not found` }) };
@@ -111,7 +112,9 @@ exports.handler = async (event) => {
     }
 
     // Step 2 — Reject if new name already taken.
-    const existingRaw = await schedStore.get(trimNew);
+    // Use strong consistency to bypass CDN cache: eventual reads can return a stale
+    // blob for a recently-deleted key, producing a false 409 on rename-back (A→B→A).
+    const existingRaw = await schedStore.get(trimNew, { consistency: 'strong' });
     if (existingRaw !== null && existingRaw !== undefined) {
       console.log('[Rename] newName already exists:', JSON.stringify(trimNew));
       return { statusCode: 409, headers, body: JSON.stringify({ error: `A schedule named "${trimNew}" already exists` }) };
