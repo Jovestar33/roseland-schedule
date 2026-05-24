@@ -33,43 +33,64 @@
     - ✅ **Contextual + New Schedule** — button inside each named phase navigates to editor pre-populated with projectName and phase via URL search params. Merged to main 2026-05-16.
     - ✅ **ComboInput typeahead** — projectName and phase fields in the editor identity line show filtered suggestions seeded from library load (localStorage cache). Merged to main 2026-05-16.
     - ✅ **Mobile two-line row layout** — schedule rows on mobile stack into grip+name / actions two-line format; no truncation. Merged to main 2026-05-16.
-    - ⬜ Search/filter schedules, sort options, archive instead of hard delete, open recent — still pending
-13. **Contact sheet / extract** — generate a shareable contact list URL or exportable sheet from schedule row data; evaluate whether a lightweight contacts DB is needed to support this properly
-14. **Version history UX** — named versions, better restore UX, compare versions, save version as new schedule
-15. **Client read-only view enhancements** — crew contact cards visible in public view
+    - ✅ **Library Refresh reliability** — Refresh button re-fetches current Library data without getting stuck; stale CDN reads during the Netlify Blobs propagation window (~0–15s) cannot roll back recently confirmed archive/restore, DnD reorder, or delete mutations (sessionStorage pending-mutation guards, 60s TTL). Passed testing 2026-05-24.
+    - ✅ **Save As Library grouping fix** — schedules created via Save As appear in the correct production/phase group rather than Ungrouped, even when the CDN edge has not yet propagated the new blob (fallback meta cached in sessionStorage). Passed testing 2026-05-24.
+    - ✅ **Archive / Restore** — reversible cleanup layer; archived schedules are hidden from the default Library view and can be restored. Persists after Refresh, browser reload, and in-session navigation back to the Library. Passed testing 2026-05-24.
+    - ✅ **Permanent Delete (archived only)** — two-step confirmation modal (passcode + type "DELETE"); passcode verified server-side via `SCHEDULE_DELETE_PASSWORD`; active schedules must be archived first. Server atomically deletes the schedule blob, associated snapshots, and all Library metadata references. Deleted schedules do not reappear after Refresh or reload. Passed testing 2026-05-24.
+    - ✅ **Same-section DnD persistence hardening** — DnD reorder save failures surface an error banner and revert the UI rather than silently pretending the move saved. Passed testing 2026-05-24.
+    - ⬜ **Search/filter schedules** — by name, production, phase, date range; pending.
+    - ⬜ **Sort options** — sort beyond manual phase order (by name, save date, shoot date); pending.
+    - ⬜ **Open recent** — quick access to recently opened schedules on Library load; pending.
+    - ⬜ **Cross-section schedule movement** — moving a schedule between productions or phases is not a drag-and-drop feature; cross-section DnD is deliberately rejected. Future implementation should use an explicit Move To workflow (see item 13 below).
+13. **Phase 2 — Safe schedule title rename / schedule identity**
+    - Allow renaming a schedule without Save As.
+    - Medium-risk: the schedule name / blob key is the durable identity referenced in Library phaseOrder, tsarchived, snapshots, public/client links, team links, and local recent-entry caches.
+    - Preferred long-term approach: introduce a permanent `scheduleId` field that is distinct from the user-visible title. Blob key and all Library references use `scheduleId`; the display title is stored in schedule metadata and editable freely.
+    - Acceptable interim approach: a careful rename-with-redirect flow — copy blob to new key, update all Library references (phaseOrder, tsarchived, scheduleFolderMap, caches), delete old key only after all writes confirm, redirect old URL to new one.
+    - Do not implement as a simple title-field edit without accounting for all reference sites. Cross-link integrity is the core risk.
+14. **Move To workflow — cross-production/cross-phase schedule movement**
+    - Explicit modal or dropdown to move a schedule from one production/phase to another.
+    - Must update the schedule's `projectName`/`phase` metadata (requires a schedule write) and Library metadata (phaseOrder, scheduleFolderMap) together atomically or in a safe sequence.
+    - Cross-section DnD may be added later as a secondary trigger only after the explicit Move To workflow is stable and well-tested.
+15. **Contact sheet / extract** — generate a shareable contact list URL or exportable sheet from schedule row data; evaluate whether a lightweight contacts DB is needed to support this properly
+16. **Version history UX (optional enhancement)** — improve restore UX, compare versions side-by-side, save a snapshot as a new schedule. Refers to improving the existing per-schedule snapshot system; does not imply implementing a new autosave or version-restore system.
+17. **Client read-only view enhancements** — crew contact cards visible in public view
 
 ## 🟡 Medium-Term (v2 — next major development cycle)
 *New feature categories that expand scope significantly*
 
-16. **Call sheets** — generate from schedule, pull weather/locations/contacts/rows, add parking/safety notes, export PDF
-17. **Multi-day projects** — master schedule containing multiple daily schedules, duplicate day, move rows between days
-18. **Production management** — booking/permit/release/vendor/location status tracking, crew/gear/travel notes — film-specific not generic PM
-19. **CMS branding architecture** — per-schedule templates, multi-brand support (Roseland/Saluki/neutral SaaS shell) — needs dedicated planning session before any code
+18. **Location details / sub-locations** — additive `locationDetails` structure in schedule data model (name, address, Google Maps URL/pin, notes per location). Plain-text `meta.town` / `meta.location` fields are preserved unchanged for backward compatibility and print. Sub-location data lives in the editor, not the Library.
+19. **Call sheets** — generate from schedule, pull weather/locations/contacts/rows, add parking/safety notes, export PDF
+20. **Multi-day projects** — master schedule containing multiple daily schedules, duplicate day, move rows between days
+21. **Production management** — booking/permit/release/vendor/location status tracking, crew/gear/travel notes — film-specific not generic PM
+22. **CMS branding architecture** — per-schedule templates, multi-brand support (Roseland/Saluki/neutral SaaS shell) — needs dedicated planning session before any code
 
 ## 🟢 Longer-Term (SaaS layer)
 *Architectural shift — plan carefully before starting*
 
-20. **User accounts** — replace shared PIN with real auth (Clerk recommended); migrate storage from Netlify Blobs to a database with true atomic writes (PlanetScale or Supabase) — Netlify Blobs has ~15 second eventual consistency which is acceptable for single-PIN use but insufficient for real multi-user collaboration
-21. **Roles** — Admin / Producer / Editor / Read-only / Client / Vendor
-22. **Multi-org** — each company gets own data, branding, CMS config; aligns with CMS branding architecture above
-23. **Billing** — Stripe, seat-based or per-org subscription
-24. **Collaboration** — presence indicators, conflict prevention, eventually live shared editing
-25. **PWA/App Store** — installable PWA first, App Store packaging later
+23. **User accounts** — replace shared PIN with real auth (Clerk recommended); migrate storage from Netlify Blobs to a database with true atomic writes (PlanetScale or Supabase) — Netlify Blobs has ~15 second eventual consistency which is acceptable for single-PIN use but insufficient for real multi-user collaboration
+24. **Roles** — Admin / Producer / Editor / Read-only / Client / Vendor
+25. **Multi-org** — each company gets own data, branding, CMS config; aligns with CMS branding architecture above
+26. **Billing** — Stripe, seat-based or per-org subscription
+27. **Collaboration** — presence indicators, conflict prevention, eventually live shared editing
+28. **PWA/App Store** — installable PWA first, App Store packaging later
 
 ## 🔵 Vision (longer horizon)
 *Where this becomes a platform*
 
-26. **Budgeting integration** — connect schedule (shoot days, crew, gear, locations) to budget rollups
-27. **Saluki Media version** — AED currency, VAT, Arabic market branding
-28. **Master Schedule** — birds-eye view across all active productions
-29. **AI production tools** — shot tracking, prompt/reference tracking, generated shot status, rights/licensing
+29. **Budgeting integration** — connect schedule (shoot days, crew, gear, locations) to budget rollups
+30. **Saluki Media version** — AED currency, VAT, Arabic market branding
+31. **Master Schedule** — birds-eye view across all active productions
+32. **AI production tools** — shot tracking, prompt/reference tracking, generated shot status, rights/licensing
 
 ---
 
 ## Session Order
 - **Also pending:** Item 4 (PWA install test on real iPad — manual test only)
-- **Next v1 polish:** Items 7, 9, 11–15 grouped by theme
-- **Item 19 (CMS architecture):** Planning conversation before any code
+- **Phase 1 / 1A complete:** Library Refresh reliability, Save As grouping fix, Archive/Restore persistence, Same-section DnD hardening, Permanent Delete for archived schedules. All passed testing 2026-05-24. Branch: `library-refresh-archive-fix`.
+- **Next phase:** Item 13 (safe schedule title rename / schedule identity) — deliberate planning required before any code.
+- **Next v1 polish:** Items 7, 9, 11, 14–17 grouped by theme.
+- **Item 22 (CMS architecture):** Planning conversation before any code.
 
 ---
-*Last updated: 2026-05-16 — Library hierarchy tree + DnD reorder + inline create + edit names + ComboInput + mobile row fix all merged to main (Item 12 major subset complete)*
+*Last updated: 2026-05-24 — Phase 1/1A Library reliability work (Refresh, Save As grouping, Archive/Restore persistence, DnD hardening, Permanent Delete) passed testing. Next: Phase 2 safe schedule rename (Item 13).*

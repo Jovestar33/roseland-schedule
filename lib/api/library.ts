@@ -38,12 +38,29 @@ export async function getLibraryMeta(editorToken: string): Promise<LibraryData> 
 }
 
 export async function putLibraryMeta(meta: LibraryData, editorToken: string): Promise<LibraryData> {
+  console.log('[putLibraryMeta] sending — phaseOrder keys:', Object.keys(meta.phaseOrder ?? {}),
+    'tsarchived count:', (meta.tsarchived ?? []).length,
+    'hasToken:', !!editorToken);
+
   const res = await fetch('/.netlify/functions/library', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ library: meta, editorToken }),
   });
-  if (!res.ok) return meta;
+
+  console.log('[putLibraryMeta] response status:', res.status);
+
+  if (!res.ok) {
+    let errMsg = `Library save failed (HTTP ${res.status})`;
+    try {
+      const b = await res.json();
+      console.error('[putLibraryMeta] error body:', b);
+      if (b?.error) errMsg = b.error;
+    } catch {}
+    throw new Error(errMsg);
+  }
+
   const body = await res.json() as { library?: LibraryData };
+  console.log('[putLibraryMeta] success — saved phaseOrder keys:', Object.keys(body.library?.phaseOrder ?? {}));
   return body.library ?? meta;
 }

@@ -68,3 +68,23 @@ export async function postDelete(
     throw new Error(body.error ?? `Delete failed: HTTP ${res.status}`);
   }
 }
+
+export async function postDeleteSchedule(
+  name: string,
+  editorToken: string,
+  deletePassword: string,
+): Promise<{ library: import('./library').LibraryData | null }> {
+  const res = await fetch('/.netlify/functions/delete-schedule', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name, editorToken, deletePassword }),
+  });
+  const body = await res.json().catch(() => ({ error: 'Unknown error' })) as {
+    error?: string;
+    library?: import('./library').LibraryData | null;
+  };
+  if (!res.ok) {
+    throw new Error(body.error ?? `Delete failed: HTTP ${res.status}`);
+  }
+  return { library: body.library ?? null };
+}

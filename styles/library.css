@@ -5,6 +5,10 @@
 .lib-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
 .lib-title { font-family: var(--fd); font-size: 26px; letter-spacing: 3px; color: var(--ink); }
 
+/* Refresh error banner */
+.lib-refresh-error { display: flex; align-items: center; justify-content: space-between; gap: 10px; background: #fff3cd; border: 1px solid #ffc107; border-radius: 8px; padding: 9px 14px; margin-bottom: 12px; font-size: 13px; color: #7a5500; }
+.lib-refresh-error-dismiss { background: none; border: none; cursor: pointer; font-size: 14px; color: #7a5500; padding: 0 2px; line-height: 1; }
+
 /* Tab bar already handled by base.css .mtabs / .mtab — extra overrides */
 .lib-tabs { margin-bottom: 18px; }
 

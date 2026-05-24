@@ -98,21 +98,10 @@ exports.handler = async (event) => {
     const payload = { ...(data || {}), savedAt };
     await store.set(name, JSON.stringify(payload), { metadata: { savedAt } });
 
-    // Update libMeta town/date caches — best-effort, non-fatal
-    try {
-      const libStore = getStore('schedule-library');
-      const libKey = 'rp_library_index_v1';
-      const libRaw = await libStore.get(libKey);
-      const libMeta = libRaw
-        ? (typeof libRaw === 'string' ? JSON.parse(libRaw) : libRaw)
-        : {};
-      if (!libMeta.townCache || typeof libMeta.townCache !== 'object') libMeta.townCache = {};
-      if (!libMeta.dateCache || typeof libMeta.dateCache !== 'object') libMeta.dateCache = {};
-      libMeta.townCache[name] = data && data.meta && data.meta.town != null ? String(data.meta.town) : '';
-      libMeta.dateCache[name] = data && data.meta && data.meta.date != null ? String(data.meta.date) : '';
-      libMeta.updatedAt = Date.now();
-      await libStore.set(libKey, JSON.stringify(libMeta), { metadata: { updatedAt: libMeta.updatedAt } });
-    } catch (_) {}
+    // townCache / dateCache are populated lazily by LibraryPage (which falls back
+    // to the loaded schedule data). We no longer write them here because doing a
+    // read-modify-write on rp_library_index_v1 in the same Lambda as an archive
+    // PUT can race and silently clobber tsarchived / phaseOrder fields.
 
     return { statusCode: 200, headers, body: JSON.stringify({ ok: true, name, savedAt, hash: scheduleHash(payload) }) };
   } catch (err) {

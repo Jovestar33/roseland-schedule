@@ -1,10 +1,10 @@
 'use client';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/lib/store/authStore';
 import { useCmsStore } from '@/lib/store/cmsStore';
 import { listSchedules, postLoad } from '@/lib/api/load';
-import { postDelete } from '@/lib/api/save';
+import { postDeleteSchedule } from '@/lib/api/save';
 import { getLibraryMeta, putLibraryMeta, type LibraryData } from '@/lib/api/library';
 import type { ScheduleData } from '@/lib/types';
 import ScheduleListTab, { type LibrarySchedule } from './ScheduleListTab';
@@ -19,6 +19,14 @@ type Tab = 'schedules' | 'templates' | 'backup' | 'versions';
 type FilterStatus = 'active' | 'archived' | 'all';
 type SortMode = 'savedAt' | 'name' | 'dateAsc' | 'dateDesc';
 
+interface DeleteModalState {
+  name: string;
+  passcode: string;
+  confirmText: string;
+  submitting: boolean;
+  error: string | null;
+}
+
 interface RecentEntry {
   name: string;
   projectName: string;
@@ -28,6 +36,141 @@ interface RecentEntry {
 
 const LS_RECENT_KEY = 'rp_recent_schedules';
 const MAX_RECENT = 5;
+
+// ── Local mutation guard ────────────────────────────────────────────────────────
+// Protects recent archive/restore actions from being undone by a stale Blob read
+// during the Netlify Blobs eventual-consistency propagation window (~0–15 s).
+//
+// State is kept in sessionStorage (not useRef) so it survives in-session
+// navigation: archiving then immediately opening a schedule and returning to
+// the Library would otherwise reset the ref and lose the guard.
+
+const MUTATION_TTL_MS = 60_000; // 60 s — well past the observed ~15 s window
+
+interface LibraryMutation {
+  archived: boolean; // true = archived, false = active/restored
+  changedAt: number;
+}
+
+type PendingPhaseOrder = {
+  phaseOrder: NonNullable<LibraryData['phaseOrder']>;
+  changedAt: number;
+};
+
+const SS_MUTATIONS_KEY   = 'rp_lib_pending_mutations';
+const SS_PHASE_ORDER_KEY = 'rp_lib_pending_phase_order';
+
+function readPendingMutations(): Map<string, LibraryMutation> {
+  try {
+    const raw = sessionStorage.getItem(SS_MUTATIONS_KEY);
+    if (!raw) return new Map();
+    return new Map(JSON.parse(raw) as [string, LibraryMutation][]);
+  } catch { return new Map(); }
+}
+
+function writePendingMutations(m: Map<string, LibraryMutation>) {
+  try { sessionStorage.setItem(SS_MUTATIONS_KEY, JSON.stringify([...m.entries()])); } catch {}
+}
+
+function setPendingMutation(name: string, mut: LibraryMutation) {
+  const m = readPendingMutations();
+  m.set(name, mut);
+  writePendingMutations(m);
+}
+
+function deletePendingMutation(name: string) {
+  const m = readPendingMutations();
+  m.delete(name);
+  writePendingMutations(m);
+}
+
+function readPendingPhaseOrder(): PendingPhaseOrder | null {
+  try {
+    const raw = sessionStorage.getItem(SS_PHASE_ORDER_KEY);
+    return raw ? (JSON.parse(raw) as PendingPhaseOrder) : null;
+  } catch { return null; }
+}
+
+function writePendingPhaseOrder(po: PendingPhaseOrder | null) {
+  try {
+    if (po === null) sessionStorage.removeItem(SS_PHASE_ORDER_KEY);
+    else sessionStorage.setItem(SS_PHASE_ORDER_KEY, JSON.stringify(po));
+  } catch {}
+}
+
+// ── Pending deletion guard ─────────────────────────────────────────────────────
+// Protects recently deleted schedules from reappearing due to stale blob-list or
+// library-metadata CDN reads during the eventual-consistency propagation window.
+
+const SS_DELETIONS_KEY = 'rp_lib_pending_deletions';
+
+interface PendingDeletion {
+  deletedAt: number;
+}
+
+function readPendingDeletions(): Map<string, PendingDeletion> {
+  try {
+    const raw = sessionStorage.getItem(SS_DELETIONS_KEY);
+    if (!raw) return new Map();
+    return new Map(JSON.parse(raw) as [string, PendingDeletion][]);
+  } catch { return new Map(); }
+}
+
+function writePendingDeletions(m: Map<string, PendingDeletion>) {
+  try { sessionStorage.setItem(SS_DELETIONS_KEY, JSON.stringify([...m.entries()])); } catch {}
+}
+
+function setPendingDeletion(name: string) {
+  const m = readPendingDeletions();
+  m.set(name, { deletedAt: Date.now() });
+  writePendingDeletions(m);
+}
+
+function clearPendingDeletion(name: string) {
+  const m = readPendingDeletions();
+  m.delete(name);
+  writePendingDeletions(m);
+}
+
+// Merges pending archive/restore mutations into freshly-fetched libMeta.
+// Reads and writes sessionStorage directly so it works across navigations.
+function applyPendingMutations(meta: LibraryData): LibraryData {
+  const mutations = readPendingMutations();
+  if (mutations.size === 0) return meta;
+
+  const now = Date.now();
+  let tsarchived = meta.tsarchived ? [...meta.tsarchived] : [];
+  let changed = false;
+  let mutationsChanged = false;
+
+  for (const [name, mut] of mutations) {
+    if (now - mut.changedAt > MUTATION_TTL_MS) {
+      console.log('[Library Mutation] expired:', name);
+      mutations.delete(name);
+      mutationsChanged = true;
+      continue;
+    }
+    const cloudArchived = tsarchived.includes(name);
+    if (cloudArchived === mut.archived) {
+      console.log('[Library Mutation] confirmed by cloud:', name, 'archived=', mut.archived);
+      mutations.delete(name);
+      mutationsChanged = true;
+      continue;
+    }
+    // Cloud returned stale pre-mutation state — keep the local confirmed value.
+    console.log('[Library Mutation] stale cloud ignored for', name,
+      '— cloud archived=', cloudArchived, '→ keeping local archived=', mut.archived);
+    if (mut.archived) {
+      tsarchived = [...tsarchived, name];
+    } else {
+      tsarchived = tsarchived.filter((n) => n !== name);
+    }
+    changed = true;
+  }
+
+  if (mutationsChanged) writePendingMutations(mutations);
+  return changed ? { ...meta, tsarchived } : meta;
+}
 
 // ── Helpers ────────────────────────────────────────────────────────────────────
 
@@ -63,6 +206,9 @@ export default function LibraryPage() {
   const [schedules, setSchedules] = useState<LibrarySchedule[]>([]);
   const [libMeta, setLibMeta]     = useState<LibraryData>({ version: 1, folders: [], scheduleFolderMap: {}, updatedAt: 0 });
   const [loadingList, setLoadingList] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [refreshError, setRefreshError] = useState<string | null>(null);
+  const [deleteModal, setDeleteModal] = useState<DeleteModalState | null>(null);
 
   // Search / filter / sort
   const [searchQuery,    setSearchQuery]    = useState('');
@@ -85,50 +231,231 @@ export default function LibraryPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hydrated, token]);
 
+  // Core data fetcher — fetches everything and updates state. Can throw; callers manage UI state.
+  async function fetchLibraryData(): Promise<void> {
+    const [names, meta] = await Promise.all([listSchedules(token!), getLibraryMeta(token!)]);
+
+    // Apply any pending archive/restore mutations before committing cloud state
+    // to React, so a stale Blob read during the propagation window doesn't
+    // revert a confirmed archive/restore. Reads/writes sessionStorage internally
+    // so the guard survives in-session navigation (ref would be lost on unmount).
+    let resolvedMeta = applyPendingMutations(meta);
+
+    // Apply pending DnD phaseOrder, same rationale.
+    const pendingPO = readPendingPhaseOrder();
+    if (pendingPO) {
+      if (Date.now() - pendingPO.changedAt > MUTATION_TTL_MS) {
+        console.log('[Library PhaseOrder] pending phaseOrder expired');
+        writePendingPhaseOrder(null);
+      } else {
+        // Deep-merge: pending wins for any (prodKey, phaseKey) it covers.
+        const merged = { ...(resolvedMeta.phaseOrder ?? {}) };
+        for (const [pk, phases] of Object.entries(pendingPO.phaseOrder)) {
+          merged[pk] = { ...(merged[pk] ?? {}), ...phases };
+        }
+        // If cloud has caught up (its phaseOrder already matches pending), clear it.
+        const cloudCaughtUp = Object.entries(pendingPO.phaseOrder).every(([pk, phases]) =>
+          Object.entries(phases).every(([phk, order]) =>
+            JSON.stringify(resolvedMeta.phaseOrder?.[pk]?.[phk]) === JSON.stringify(order)
+          )
+        );
+        if (cloudCaughtUp) {
+          console.log('[Library PhaseOrder] cloud confirmed phaseOrder — clearing pending');
+          writePendingPhaseOrder(null);
+        } else {
+          console.log('[Library PhaseOrder] stale CDN read — applying pending phaseOrder');
+          resolvedMeta = { ...resolvedMeta, phaseOrder: merged };
+        }
+      }
+    }
+
+    console.log('[Library Refresh] confirmed phaseOrder keys:', Object.keys(resolvedMeta.phaseOrder ?? {}));
+
+    // Apply pending deletions: filter deleted schedules from both the name list and tsarchived
+    // so that a stale CDN blob-list or library-meta read cannot resurrect a just-deleted schedule.
+    let effectiveNames = names;
+    try {
+      const deletions = readPendingDeletions();
+      const now = Date.now();
+      let deletionsChanged = false;
+      for (const [dname, { deletedAt }] of deletions) {
+        if (now - deletedAt > MUTATION_TTL_MS) {
+          deletions.delete(dname);
+          deletionsChanged = true;
+          console.log('[Library Deletion] pending deletion expired:', dname);
+        }
+      }
+      if (deletionsChanged) writePendingDeletions(deletions);
+      if (deletions.size > 0) {
+        const deletedSet = new Set(deletions.keys());
+        effectiveNames = effectiveNames.filter((n) => !deletedSet.has(n));
+        const cleanedTs = resolvedMeta.tsarchived?.filter((n) => !deletedSet.has(n));
+        if (cleanedTs?.length !== (resolvedMeta.tsarchived?.length ?? 0)) {
+          resolvedMeta = { ...resolvedMeta, tsarchived: cleanedTs };
+        }
+        console.log('[Library Deletion] filtered', deletions.size, 'recently deleted schedule(s) from list');
+      }
+    } catch {}
+
+    setLibMeta(resolvedMeta);
+
+    // Protect a recently saved schedule from vanishing due to a stale list read.
+    // (effectiveNames may have already been narrowed by the deletions guard above)
+    try {
+      const raw = sessionStorage.getItem('rp_recently_added_schedule');
+      if (raw) {
+        const { name: addedName, addedAt } = JSON.parse(raw) as { name: string; addedAt: number };
+        if (Date.now() - addedAt < MUTATION_TTL_MS) {
+          if (!effectiveNames.includes(addedName)) {
+            console.log('[Library Mutation] stale list missing recently added:', addedName, '— keeping visible');
+            effectiveNames = [...effectiveNames, addedName];
+          } else {
+            console.log('[Library Mutation] recently added schedule confirmed in list:', addedName);
+            sessionStorage.removeItem('rp_recently_added_schedule');
+          }
+        } else {
+          sessionStorage.removeItem('rp_recently_added_schedule');
+        }
+      }
+    } catch {}
+
+    // Read recently-saved meta to protect against a stale CDN GET for a newly
+    // created schedule blob. store.list uses strong consistency and finds the key,
+    // but store.get for a new key can return 404 until the CDN edge catches up.
+    // Without this fallback the new schedule shows as Ungrouped (null data).
+    type RecentlySavedMeta = { name: string; meta: ScheduleData['meta']; savedAt: number; addedAt: number };
+    let recentlySavedMeta: RecentlySavedMeta | null = null;
+    try {
+      const rsRaw = sessionStorage.getItem('rp_recently_saved_meta');
+      if (rsRaw) {
+        const parsed = JSON.parse(rsRaw) as RecentlySavedMeta;
+        if (parsed && Date.now() - (parsed.addedAt ?? 0) < MUTATION_TTL_MS) {
+          recentlySavedMeta = parsed;
+          console.log('[SaveAs] pending meta found — will protect Library grouping for:', parsed.name);
+        } else {
+          sessionStorage.removeItem('rp_recently_saved_meta');
+        }
+      }
+    } catch {}
+
+    setSchedules(effectiveNames.map((name) => ({ name, data: null, loading: true })));
+
+    // Use effectiveNames (not names) so that a recently-added schedule that has not
+    // yet propagated through the Blob CDN list is also fetched and gets the meta
+    // fallback applied. Using `names` here would silently drop it from the fetched array.
+    const fetched = await Promise.all(
+      effectiveNames.map((name) => {
+        const fallback = recentlySavedMeta?.name === name
+          ? { rows: [], meta: recentlySavedMeta.meta, savedAt: recentlySavedMeta.savedAt } as ScheduleData
+          : null;
+        return postLoad(name, token!)
+          .then((data): LibrarySchedule => {
+            if (data !== null && recentlySavedMeta?.name === name) {
+              console.log('[SaveAs] CDN confirmed data for:', name, '— clearing cached meta');
+              sessionStorage.removeItem('rp_recently_saved_meta');
+              recentlySavedMeta = null;
+            }
+            if (data === null && fallback) {
+              console.log('[SaveAs] CDN stale — using cached meta for Library grouping:', name,
+                '— projectName:', fallback.meta?.projectName, '/ phase:', fallback.meta?.phase);
+              return { name, data: fallback, loading: false };
+            }
+            if (data === null) {
+              console.log('[Library] postLoad returned null for', name, '— no cached meta, will appear ungrouped');
+            }
+            return { name, data: data as ScheduleData, loading: false };
+          })
+          .catch((): LibrarySchedule => {
+            if (fallback) {
+              console.log('[SaveAs] postLoad threw — using cached meta for Library grouping:', name);
+              return { name, data: fallback, loading: false };
+            }
+            return { name, data: null, loading: false };
+          });
+      })
+    );
+    setSchedules(fetched);
+
+    try {
+      const projectNames = [...new Set(
+        fetched.flatMap((s) => { const n = s.data?.meta?.projectName?.trim(); return n ? [n] : []; })
+      )];
+      const phases = [...new Set(
+        fetched.flatMap((s) => { const p = s.data?.meta?.phase?.trim(); return p ? [p] : []; })
+      )];
+      localStorage.setItem('rp_lib_project_options', JSON.stringify(projectNames));
+      localStorage.setItem('rp_lib_phase_options', JSON.stringify(phases));
+    } catch {}
+  }
+
+  // Initial / automatic load — drives the full-page loading spinner.
   async function loadLibrary() {
     setLoadingList(true);
     try {
-      const [names, meta] = await Promise.all([listSchedules(token!), getLibraryMeta(token!)]);
-      setLibMeta(meta);
-      const items: LibrarySchedule[] = names.map((name) => ({ name, data: null, loading: true }));
-      setSchedules(items);
-      setLoadingList(false);
-
-      const fetched = await Promise.all(
-        names.map((name) =>
-          postLoad(name, token!)
-            .then((data): LibrarySchedule => ({ name, data: data as ScheduleData, loading: false }))
-            .catch((): LibrarySchedule => ({ name, data: null, loading: false }))
-        )
-      );
-      setSchedules(fetched);
-
-      try {
-        const projectNames = [...new Set(
-          fetched.flatMap((s) => { const n = s.data?.meta?.projectName?.trim(); return n ? [n] : []; })
-        )];
-        const phases = [...new Set(
-          fetched.flatMap((s) => { const p = s.data?.meta?.phase?.trim(); return p ? [p] : []; })
-        )];
-        localStorage.setItem('rp_lib_project_options', JSON.stringify(projectNames));
-        localStorage.setItem('rp_lib_phase_options', JSON.stringify(phases));
-      } catch {}
+      await fetchLibraryData();
     } catch {
+      // silently keep whatever state we have
+    } finally {
       setLoadingList(false);
     }
   }
 
+  // Manual refresh — drives only the Refresh button state. Ref guards against duplicate clicks.
+  const refreshInProgressRef = useRef(false);
+
+  async function handleRefresh() {
+    if (refreshInProgressRef.current) return;
+
+    refreshInProgressRef.current = true;
+    setIsRefreshing(true);
+    setRefreshError(null);
+
+    try {
+      console.log('[Library Refresh] started');
+      await fetchLibraryData();
+      console.log('[Library Refresh] cloud fetch completed');
+      console.log('[Library Refresh] render completed');
+    } catch (error) {
+      console.error('[Library Refresh] failed', error);
+      setRefreshError('Could not refresh the Library. Please try again.');
+    } finally {
+      refreshInProgressRef.current = false;
+      setIsRefreshing(false);
+      console.log('[Library Refresh] state reset');
+    }
+  }
+
   async function updateLibMeta(updated: LibraryData): Promise<void> {
+    const prevMeta = libMeta;
     setLibMeta(updated);
+    console.log('[Library] metadata save started');
     try {
       const saved = await putLibraryMeta(updated, token!);
       setLibMeta(saved);
-    } catch { /* best-effort */ }
+      console.log('[Library] metadata save succeeded');
+
+      // If phaseOrder changed, protect it against stale CDN reads during the propagation window.
+      // Written to sessionStorage so the guard survives in-session navigation.
+      if (JSON.stringify(updated.phaseOrder) !== JSON.stringify(prevMeta.phaseOrder)) {
+        writePendingPhaseOrder({ phaseOrder: updated.phaseOrder ?? {}, changedAt: Date.now() });
+        console.log('[Library PhaseOrder] pending phaseOrder recorded');
+      }
+    } catch (err) {
+      console.error('[Library] metadata save failed', err);
+      setLibMeta(prevMeta);
+      setRefreshError(`Library save failed: ${(err as Error).message ?? 'unknown error'}`);
+      throw err;
+    }
   }
 
   // ── Archive / Restore / Delete permanently ─────────────────────────────────
 
   async function handleArchive(name: string) {
+    // Record in sessionStorage before the save so the guard survives in-session
+    // navigation (e.g. user archives then immediately opens another schedule).
+    setPendingMutation(name, { archived: true, changedAt: Date.now() });
+    console.log('[Library Archive] local mutation recorded:', name);
+
     const archived = [...(libMeta.tsarchived ?? [])];
     if (!archived.includes(name)) archived.push(name);
 
@@ -146,35 +473,96 @@ export default function LibraryPage() {
       setRecent(next);
     } catch {}
 
-    await updateLibMeta({ ...libMeta, tsarchived: archived, phaseOrder: po, updatedAt: Date.now() });
+    console.log('[Library Archive] save started:', name);
+    try {
+      await updateLibMeta({ ...libMeta, tsarchived: archived, phaseOrder: po, updatedAt: Date.now() });
+      console.log('[Library Archive] save succeeded:', name);
+      // No follow-up GET: putLibraryMeta's POST response already returns the
+      // confirmed server state. A second read races the blob propagation window
+      // and returns stale pre-archive data, which would revert the UI.
+    } catch {
+      // updateLibMeta already reverted state and set refreshError.
+      // Remove pending mutation so a future Refresh doesn't incorrectly apply the failed archive.
+      deletePendingMutation(name);
+      console.log('[Library Archive] save failed — pending mutation cleared:', name);
+    }
   }
 
   async function handleRestore(name: string) {
+    setPendingMutation(name, { archived: false, changedAt: Date.now() });
+    console.log('[Library Restore] local mutation recorded:', name);
+
     const archived = (libMeta.tsarchived ?? []).filter((n) => n !== name);
-    await updateLibMeta({ ...libMeta, tsarchived: archived, updatedAt: Date.now() });
+    console.log('[Library Restore] save started:', name);
+    try {
+      await updateLibMeta({ ...libMeta, tsarchived: archived, updatedAt: Date.now() });
+      console.log('[Library Restore] save succeeded:', name);
+      // Same reason as handleArchive — no follow-up GET needed.
+    } catch {
+      deletePendingMutation(name);
+      console.log('[Library Restore] save failed — pending mutation cleared:', name);
+    }
   }
 
-  async function handleDeletePermanently(name: string) {
-    if (!confirm(`Permanently delete "${name}"? This cannot be undone.`)) return;
-    const deletePassword = (prompt('Enter delete password:') ?? '').trim();
-    if (!deletePassword) { alert('Delete cancelled — schedule kept.'); return; }
+  function handleDeletePermanently(name: string) {
+    setDeleteModal({ name, passcode: '', confirmText: '', submitting: false, error: null });
+  }
+
+  async function handleDeleteConfirm() {
+    if (!deleteModal) return;
+    const { name, passcode, confirmText } = deleteModal;
+    if (confirmText !== 'DELETE') return;
+
+    setDeleteModal((m) => m ? { ...m, submitting: true, error: null } : null);
+    console.log('[Library Delete] delete requested for:', name);
+
+    // Record locally before the request so Refresh during the CDN propagation window
+    // doesn't resurrect the schedule.
+    setPendingDeletion(name);
+
     try {
-      await postDelete(name, token!, deletePassword);
+      const result = await postDeleteSchedule(name, token!, passcode);
+      console.log('[Library Delete] delete succeeded:', name);
+
+      // Remove from UI immediately
       setSchedules((prev) => prev.filter((s) => s.name !== name));
 
-      const archived = (libMeta.tsarchived ?? []).filter((n) => n !== name);
-      const po: NonNullable<LibraryData['phaseOrder']> = JSON.parse(JSON.stringify(libMeta.phaseOrder ?? {}));
-      for (const pk of Object.keys(po)) {
-        for (const phk of Object.keys(po[pk])) {
-          po[pk][phk] = po[pk][phk].filter((n) => n !== name);
-        }
+      // Apply the cleaned library metadata returned by the backend if available,
+      // otherwise clean it locally.
+      if (result.library) {
+        setLibMeta(result.library);
+      } else {
+        setLibMeta((prev) => {
+          const tsarchived = (prev.tsarchived ?? []).filter((n) => n !== name);
+          const po: NonNullable<LibraryData['phaseOrder']> = JSON.parse(JSON.stringify(prev.phaseOrder ?? {}));
+          for (const pk of Object.keys(po)) {
+            for (const phk of Object.keys(po[pk])) {
+              po[pk][phk] = po[pk][phk].filter((n) => n !== name);
+            }
+          }
+          const sfm = { ...(prev.scheduleFolderMap ?? {}) };
+          delete sfm[name];
+          return { ...prev, tsarchived, phaseOrder: po, scheduleFolderMap: sfm, updatedAt: Date.now() };
+        });
       }
-      await updateLibMeta({ ...libMeta, tsarchived: archived, phaseOrder: po, updatedAt: Date.now() });
+
+      // Remove from recent
+      try {
+        const prev = JSON.parse(localStorage.getItem('rp_recent_schedules') || '[]') as { name: string }[];
+        localStorage.setItem('rp_recent_schedules', JSON.stringify(prev.filter((r) => r.name !== name)));
+        setRecent((r) => r.filter((x) => x.name !== name));
+      } catch {}
+
+      setDeleteModal(null);
     } catch (e) {
       const msg = (e as Error).message ?? '';
-      alert(/invalid delete password/i.test(msg)
-        ? 'Invalid delete password. The schedule was not removed.'
-        : msg || 'Delete did not complete — check your connection.');
+      console.log('[Library Delete] delete failed:', name, msg);
+      // On failure, remove the pending deletion guard — schedule was not deleted.
+      clearPendingDeletion(name);
+      const friendly = /invalid delete password/i.test(msg)
+        ? 'Incorrect passcode — the schedule was not deleted.'
+        : msg || 'Delete did not complete. Check your connection and try again.';
+      setDeleteModal((m) => m ? { ...m, submitting: false, error: friendly } : null);
     }
   }
 
@@ -261,12 +649,92 @@ export default function LibraryPage() {
 
   return (
     <div className="lib-page">
+      {/* Permanent delete modal */}
+      {deleteModal && (
+        <div
+          className="lbt-modal-overlay"
+          onClick={() => !deleteModal.submitting && setDeleteModal(null)}
+        >
+          <div className="lbt-modal lbt-modal--delete" onClick={(e) => e.stopPropagation()}>
+            <h2 className="lbt-modal-title">Permanently Delete Schedule</h2>
+            <p className="lbt-delete-warning">
+              This will permanently delete <strong>{deleteModal.name}</strong> and all its
+              snapshots. <strong>This cannot be undone.</strong>
+            </p>
+
+            <div className="lbt-modal-label">Delete passcode</div>
+            <input
+              className="lbt-modal-input"
+              type="password"
+              autoFocus
+              placeholder="Enter passcode…"
+              value={deleteModal.passcode}
+              disabled={deleteModal.submitting}
+              onChange={(e) => setDeleteModal((m) => m ? { ...m, passcode: e.target.value } : null)}
+              onKeyDown={(e) => {
+                if (e.key === 'Escape' && !deleteModal.submitting) setDeleteModal(null);
+              }}
+            />
+
+            <div className="lbt-modal-label">Type DELETE to confirm</div>
+            <input
+              className="lbt-modal-input"
+              type="text"
+              placeholder="DELETE"
+              value={deleteModal.confirmText}
+              disabled={deleteModal.submitting}
+              onChange={(e) => setDeleteModal((m) => m ? { ...m, confirmText: e.target.value } : null)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !deleteModal.submitting
+                    && deleteModal.passcode.trim() && deleteModal.confirmText === 'DELETE') {
+                  handleDeleteConfirm();
+                }
+                if (e.key === 'Escape' && !deleteModal.submitting) setDeleteModal(null);
+              }}
+            />
+
+            {deleteModal.error && (
+              <p className="lbt-modal-error">{deleteModal.error}</p>
+            )}
+
+            <div className="lbt-modal-actions">
+              <button
+                className="btn btn-light btn-sm"
+                onClick={() => setDeleteModal(null)}
+                disabled={deleteModal.submitting}
+              >
+                Cancel
+              </button>
+              <button
+                className="btn btn-delete btn-sm"
+                onClick={handleDeleteConfirm}
+                disabled={
+                  deleteModal.submitting ||
+                  !deleteModal.passcode.trim() ||
+                  deleteModal.confirmText !== 'DELETE'
+                }
+              >
+                {deleteModal.submitting ? 'Deleting…' : 'Delete Permanently'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <div className="lib-header">
         <h1 className="lib-title">Library</h1>
         <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
           <button className="btn btn-pink btn-sm" onClick={() => router.push('/schedule/Untitled')}>
             + New Schedule
+          </button>
+          <button
+            className="btn btn-light btn-sm"
+            onClick={handleRefresh}
+            disabled={isRefreshing}
+            title="Re-fetch the latest schedules from the cloud"
+          >
+            {isRefreshing ? 'Refreshing…' : '↻ Refresh'}
           </button>
           <button
             className={`btn btn-light btn-sm${showArchived ? ' lib-archived-toggle--on' : ''}`}
@@ -279,6 +747,12 @@ export default function LibraryPage() {
           <button className="btn btn-light btn-sm" onClick={handleLogout}>Log Out</button>
         </div>
       </div>
+      {refreshError && (
+        <div className="lib-refresh-error" role="alert">
+          {refreshError}
+          <button className="lib-refresh-error-dismiss" onClick={() => setRefreshError(null)}>✕</button>
+        </div>
+      )}
 
       {/* Tabs */}
       <div className="mtabs lib-tabs">
