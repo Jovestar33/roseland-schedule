@@ -64,23 +64,34 @@ exports.handler = async (event) => {
       return { statusCode: 403, headers, body: JSON.stringify({ error: 'Unauthorized editor access' }) };
     }
 
-    // Strong consistency ensures the GET always reflects the latest PUT,
-    // preventing stale CDN-edge reads from returning pre-archive state.
-    const store = getStore({ name: 'schedule-library', consistency: 'strong' });
+    // Do NOT use consistency:'strong' here — connectLambda does not supply
+    // uncachedEdgeURL, so @netlify/blobs v8 throws BlobsConsistencyError on
+    // every read AND write when strong consistency is requested.
+    // Archive/phaseOrder stale-read protection is handled client-side via
+    // pendingMutationsRef and pendingPhaseOrderRef in LibraryPage.
+    const store = getStore('schedule-library');
     const key = 'rp_library_index_v1';
 
     if (event.httpMethod === 'GET') {
       const raw = await store.get(key);
       const library = raw === null || raw === undefined ? defaultLibrary() : cleanLibrary(typeof raw === 'string' ? JSON.parse(raw) : raw);
+      console.log('[Library GET] ok — phaseOrder keys:', Object.keys(library.phaseOrder || {}), 'tsarchived count:', (library.tsarchived || []).length);
       return { statusCode: 200, headers, body: JSON.stringify({ ok: true, library }) };
     }
 
     const body = JSON.parse(event.body || '{}');
-    const library = cleanLibrary({ ...(body.library || {}), updatedAt: Date.now() });
+    const incoming = body.library || {};
+    console.log('[Library POST] received — phaseOrder keys:', Object.keys(incoming.phaseOrder || {}),
+      'tsarchived count:', (incoming.tsarchived || []).length,
+      'folders:', (incoming.folders || []).length,
+      'hasToken:', !!body.editorToken);
+    const library = cleanLibrary({ ...incoming, updatedAt: Date.now() });
+    console.log('[Library POST] cleaned — phaseOrder keys:', Object.keys(library.phaseOrder || {}));
     await store.set(key, JSON.stringify(library), { metadata: { updatedAt: library.updatedAt } });
+    console.log('[Library POST] blob write succeeded');
     return { statusCode: 200, headers, body: JSON.stringify({ ok: true, library }) };
   } catch (err) {
-    console.error('Library error:', err);
+    console.error('[Library] handler error:', err.name, err.message, err.code || '', err.status || '');
     return {
       statusCode: 500,
       headers,

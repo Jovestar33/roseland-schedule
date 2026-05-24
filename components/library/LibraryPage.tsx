@@ -141,7 +141,38 @@ export default function LibraryPage() {
 
     // Apply any pending local mutations before committing cloud state to React,
     // so a stale Blob read during the propagation window doesn't revert an archive.
-    setLibMeta(applyPendingMutations(meta, pendingMutationsRef.current));
+    let resolvedMeta = applyPendingMutations(meta, pendingMutationsRef.current);
+
+    // Apply pending DnD phaseOrder, same rationale.
+    const pendingPO = pendingPhaseOrderRef.current;
+    if (pendingPO) {
+      if (Date.now() - pendingPO.changedAt > MUTATION_TTL_MS) {
+        console.log('[Library PhaseOrder] pending phaseOrder expired');
+        pendingPhaseOrderRef.current = null;
+      } else {
+        // Deep-merge: pending wins for any (prodKey, phaseKey) it covers.
+        const merged = { ...(resolvedMeta.phaseOrder ?? {}) };
+        for (const [pk, phases] of Object.entries(pendingPO.phaseOrder)) {
+          merged[pk] = { ...(merged[pk] ?? {}), ...phases };
+        }
+        // If cloud has caught up (its phaseOrder already matches pending), clear it.
+        const cloudCaughtUp = Object.entries(pendingPO.phaseOrder).every(([pk, phases]) =>
+          Object.entries(phases).every(([phk, order]) =>
+            JSON.stringify(resolvedMeta.phaseOrder?.[pk]?.[phk]) === JSON.stringify(order)
+          )
+        );
+        if (cloudCaughtUp) {
+          console.log('[Library PhaseOrder] cloud confirmed phaseOrder — clearing pending');
+          pendingPhaseOrderRef.current = null;
+        } else {
+          console.log('[Library PhaseOrder] stale CDN read — applying pending phaseOrder');
+          resolvedMeta = { ...resolvedMeta, phaseOrder: merged };
+        }
+      }
+    }
+
+    console.log('[Library Refresh] confirmed phaseOrder keys:', Object.keys(resolvedMeta.phaseOrder ?? {}));
+    setLibMeta(resolvedMeta);
 
     // Protect a recently saved schedule from vanishing due to a stale list read.
     let effectiveNames = names;
@@ -201,6 +232,10 @@ export default function LibraryPage() {
   // Pending archive/restore mutations — guards against stale Blob reads reverting them.
   const pendingMutationsRef = useRef<Map<string, LibraryMutation>>(new Map());
 
+  // Pending phaseOrder — guards DnD reorders from being reset by stale CDN reads
+  // during the Netlify Blobs eventual-consistency propagation window (~0–15 s).
+  const pendingPhaseOrderRef = useRef<{ phaseOrder: NonNullable<LibraryData['phaseOrder']>; changedAt: number } | null>(null);
+
   // Manual refresh — drives only the Refresh button state. Ref guards against duplicate clicks.
   const refreshInProgressRef = useRef(false);
 
@@ -234,10 +269,19 @@ export default function LibraryPage() {
       const saved = await putLibraryMeta(updated, token!);
       setLibMeta(saved);
       console.log('[Library] metadata save succeeded');
+
+      // If phaseOrder changed, protect it against stale CDN reads during the propagation window.
+      if (JSON.stringify(updated.phaseOrder) !== JSON.stringify(prevMeta.phaseOrder)) {
+        pendingPhaseOrderRef.current = {
+          phaseOrder: updated.phaseOrder ?? {},
+          changedAt: Date.now(),
+        };
+        console.log('[Library PhaseOrder] pending phaseOrder recorded');
+      }
     } catch (err) {
       console.error('[Library] metadata save failed', err);
       setLibMeta(prevMeta);
-      setRefreshError('Could not save library changes. Please try again.');
+      setRefreshError(`Library save failed: ${(err as Error).message ?? 'unknown error'}`);
       throw err;
     }
   }
