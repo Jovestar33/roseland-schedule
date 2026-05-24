@@ -6,6 +6,9 @@ import { GripVertical, Pencil } from 'lucide-react';
 import type { LibrarySchedule } from './ScheduleListTab';
 import type { LibraryData } from '@/lib/api/library';
 
+// Stable empty set used as default for syncingNames to avoid prop identity churn.
+const EMPTY_SET = new Set<string>();
+
 // ── Recent schedule localStorage ──────────────────────────────────────────────
 
 const LS_RECENT_KEY = 'rp_recent_schedules';
@@ -182,6 +185,7 @@ function formatMeta(s: ScheduleLeaf): string {
 interface RowContentProps {
   s: ScheduleLeaf;
   isArchived: boolean;
+  syncingNames: Set<string>;
   copiedInfo: { name: string; kind: 'team' | 'client' } | null;
   onCopyTeam: (name: string) => void;
   onCopyClient: (name: string) => void;
@@ -193,17 +197,18 @@ interface RowContentProps {
 }
 
 function ScheduleRowContent({
-  s, isArchived, copiedInfo,
+  s, isArchived, syncingNames, copiedInfo,
   onCopyTeam, onCopyClient,
   onArchive, onRestore, onDeletePermanently, onRename, onOpen,
 }: RowContentProps) {
   const meta = formatMeta(s);
+  const isSyncing = syncingNames.has(s.name);
   return (
     <>
       <button
         className="lbt-sched-name"
         onClick={() => onOpen(s.name)}
-        title={s.name}
+        title={isSyncing ? 'Still syncing — please wait a moment' : s.name}
       >
         {isArchived && <span className="lbt-archived-glyph">⊘ </span>}
         {s.name}
@@ -253,13 +258,14 @@ function ScheduleRowContent({
           </>
         ) : (
           <>
-            {/* Rename: active schedules only */}
+            {/* Rename: active schedules only; disabled during post-rename CDN sync window */}
             <button
               className="sitem-rename-btn lib-acts-desktop-only"
-              onClick={() => onRename(s.name)}
-              title="Rename schedule"
+              onClick={() => !isSyncing && onRename(s.name)}
+              disabled={isSyncing}
+              title={isSyncing ? 'Still syncing — please wait a moment' : 'Rename schedule'}
             >
-              Rename
+              {isSyncing ? 'Syncing…' : 'Rename'}
             </button>
             {/* Archive: shows "Archive" on desktop, 🗑 on mobile */}
             <button
@@ -298,13 +304,15 @@ interface Props {
   onDeletePermanently: (name: string) => void;
   onRename: (name: string) => void;
   onUpdateLibMeta: (updated: LibraryData) => Promise<void>;
+  syncingNames?: Set<string>;
 }
 
 export default function LibraryTree({
   schedules, libMeta,
   onArchive, onRestore, onDeletePermanently, onRename,
-  onUpdateLibMeta,
+  onUpdateLibMeta, syncingNames: syncingNamesProp,
 }: Props) {
+  const syncingNames = syncingNamesProp ?? EMPTY_SET;
   const router = useRouter();
   const [collapsed,        setCollapsed]        = useState<Set<string>>(new Set());
   const [copiedInfo,       setCopiedInfo]        = useState<{ name: string; kind: 'team' | 'client' } | null>(null);
@@ -359,6 +367,7 @@ export default function LibraryTree({
   }
 
   const rowProps: Omit<RowContentProps, 's' | 'isArchived'> = {
+    syncingNames,
     copiedInfo,
     onCopyTeam:   (name) => copyLink(name, `${window.location.origin}/schedule/${encodeURIComponent(name)}?auth=true`, 'team'),
     onCopyClient: (name) => copyLink(name, `${window.location.origin}/view/${encodeURIComponent(name)}`, 'client'),
@@ -367,6 +376,10 @@ export default function LibraryTree({
     onDeletePermanently,
     onRename,
     onOpen: (name) => {
+      if (syncingNames.has(name)) {
+        setDndMessage('Still syncing — please wait a few seconds before opening.');
+        return;
+      }
       writeRecent(name, scheduleMap.get(name), libMeta);
       router.push(`/schedule/${encodeURIComponent(name)}`);
     },

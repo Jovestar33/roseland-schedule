@@ -17,12 +17,13 @@ interface Props {
   onDeletePermanently: (name: string) => void;
   onRename: (name: string) => void;
   onUpdateLibMeta: (updated: LibraryData) => Promise<void>;
+  syncingNames?: Set<string>;
 }
 
 export default function ScheduleListTab({
   schedules, libMeta,
   onArchive, onRestore, onDeletePermanently, onRename,
-  onUpdateLibMeta,
+  onUpdateLibMeta, syncingNames,
 }: Props) {
   return (
     <LibraryTree
@@ -33,6 +34,7 @@ export default function ScheduleListTab({
       onDeletePermanently={onDeletePermanently}
       onRename={onRename}
       onUpdateLibMeta={onUpdateLibMeta}
+      syncingNames={syncingNames}
     />
   );
 }

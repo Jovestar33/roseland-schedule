@@ -44,6 +44,9 @@ interface RecentEntry {
 const LS_RECENT_KEY = 'rp_recent_schedules';
 const MAX_RECENT = 5;
 
+// Blob CDN propagation guard: block open/re-rename for this window after a rename.
+const RENAME_SYNC_MS = 15_000;
+
 // ── Local mutation guard ────────────────────────────────────────────────────────
 // Protects recent archive/restore actions from being undone by a stale Blob read
 // during the Netlify Blobs eventual-consistency propagation window (~0–15 s).
@@ -290,6 +293,10 @@ export default function LibraryPage() {
   const [deleteModal, setDeleteModal] = useState<DeleteModalState | null>(null);
   const [renameModal, setRenameModal] = useState<RenameModalState | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  // Post-rename sync guard: maps newName → expiry timestamp (Date.now() + RENAME_SYNC_MS).
+  // During this window, opening or re-renaming the schedule is blocked to prevent
+  // a blank editor (blob CDN hasn't fully propagated the new key yet).
+  const [syncingRenames, setSyncingRenames] = useState<Map<string, number>>(new Map());
 
   // Search / filter / sort
   const [searchQuery,    setSearchQuery]    = useState('');
@@ -310,6 +317,21 @@ export default function LibraryPage() {
     const t = setTimeout(() => setSuccessMessage(null), 4000);
     return () => clearTimeout(t);
   }, [successMessage]);
+
+  // Auto-expire the post-rename sync guard entries.
+  useEffect(() => {
+    if (syncingRenames.size === 0) return;
+    const minExpiry = Math.min(...syncingRenames.values());
+    const delay = Math.max(50, minExpiry - Date.now());
+    const t = setTimeout(() => {
+      setSyncingRenames((prev) => {
+        const now = Date.now();
+        const next = new Map([...prev].filter(([, exp]) => exp > now));
+        return next.size !== prev.size ? next : prev;
+      });
+    }, delay);
+    return () => clearTimeout(t);
+  }, [syncingRenames]);
 
   useEffect(() => {
     if (!hydrated) return;
@@ -775,8 +797,10 @@ export default function LibraryPage() {
         ));
       }
 
+      // Start the CDN sync guard: block open/re-rename for RENAME_SYNC_MS.
+      setSyncingRenames((prev) => new Map(prev).set(trimNew, Date.now() + RENAME_SYNC_MS));
       setRenameModal(null);
-      setSuccessMessage(`Renamed to "${trimNew}"`);
+      setSuccessMessage(`Rename saved. Finalizing cloud sync…`);
     } catch (e) {
       const msg = (e as Error).message ?? '';
       console.log('[Library Rename] rename failed:', oldName, msg);
@@ -865,6 +889,14 @@ export default function LibraryPage() {
   const isSearchMode = searchQuery.trim() !== '';
   const showArchived = filterStatus !== 'active';
   const scheduleNames = schedules.map((s) => s.name);
+
+  // Derive the current set of syncing names from the Map (filtered to non-expired).
+  // Recomputes whenever syncingRenames changes (i.e. when an entry is added or the
+  // cleanup timeout fires and removes expired entries).
+  const syncingNamesSet = useMemo(() => {
+    const now = Date.now();
+    return new Set([...syncingRenames.entries()].filter(([, exp]) => exp > now).map(([n]) => n));
+  }, [syncingRenames]);
 
   // Live duplicate detection for the rename modal — computed on every render so
   // the inline error and disabled state update as the user types.
@@ -1232,6 +1264,7 @@ export default function LibraryPage() {
                   onDeletePermanently={handleDeletePermanently}
                   onRename={handleRenameSchedule}
                   onUpdateLibMeta={updateLibMeta}
+                  syncingNames={syncingNamesSet}
                 />
               </>
             )}
