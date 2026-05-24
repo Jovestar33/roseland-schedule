@@ -93,11 +93,12 @@ export async function postRenameSchedule(
   oldName: string,
   newName: string,
   editorToken: string,
+  isRenameBack?: boolean,
 ): Promise<{ library: import('./library').LibraryData | null }> {
   const res = await fetch('/.netlify/functions/rename-schedule', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ oldName, newName, editorToken }),
+    body: JSON.stringify({ oldName, newName, editorToken, isRenameBack }),
   });
   const body = await res.json().catch(() => ({ error: 'Unknown error' })) as {
     error?: string;

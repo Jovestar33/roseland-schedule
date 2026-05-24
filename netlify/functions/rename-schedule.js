@@ -12,6 +12,31 @@ function isAuthorizedEditor(token) {
   return token === makeEditorToken(APP_PASSWORD, AUTH_SECRET);
 }
 
+// Returns true if `name` is referenced anywhere in Library metadata.
+// Used to cross-check a stale CDN blob hit: if the blob exists but Library
+// no longer references the name, the blob is a CDN artifact from a recent deletion.
+function nameReferencedInLibrary(lib, name) {
+  if (!lib || typeof lib !== 'object') return false;
+  if (Array.isArray(lib.tsarchived) && lib.tsarchived.includes(name)) return true;
+  if (lib.scheduleFolderMap && typeof lib.scheduleFolderMap === 'object'
+      && Object.prototype.hasOwnProperty.call(lib.scheduleFolderMap, name)) return true;
+  if (lib.townCache && typeof lib.townCache === 'object'
+      && Object.prototype.hasOwnProperty.call(lib.townCache, name)) return true;
+  if (lib.dateCache && typeof lib.dateCache === 'object'
+      && Object.prototype.hasOwnProperty.call(lib.dateCache, name)) return true;
+  if (lib.phaseOrder && typeof lib.phaseOrder === 'object') {
+    for (const pk of Object.keys(lib.phaseOrder)) {
+      const phases = lib.phaseOrder[pk];
+      if (phases && typeof phases === 'object') {
+        for (const phk of Object.keys(phases)) {
+          if (Array.isArray(phases[phk]) && phases[phk].includes(name)) return true;
+        }
+      }
+    }
+  }
+  return false;
+}
+
 function snapshotKeyForName(name) {
   return 'snapshots_' + crypto.createHash('sha256').update(String(name || '')).digest('hex');
 }
@@ -52,7 +77,7 @@ exports.handler = async (event) => {
 
   try {
     connectLambda(event);
-    const { oldName, newName, editorToken } = JSON.parse(event.body || '{}');
+    const { oldName, newName, editorToken, isRenameBack } = JSON.parse(event.body || '{}');
 
     console.log('[Rename] request — oldName:', JSON.stringify(oldName),
       'newName:', JSON.stringify(newName), 'hasToken:', !!editorToken);
@@ -84,9 +109,8 @@ exports.handler = async (event) => {
     // Step 1 — Read and validate old schedule blob.
     // We validate shape here, before any write. This is the primary data-integrity
     // gate: if the old blob is unreadable or has an unexpected shape we abort immediately,
-    // before touching anything. Strong consistency ensures we read the true current state
-    // rather than a potentially stale CDN-cached copy.
-    const oldRaw = await schedStore.get(trimOld, { consistency: 'strong' });
+    // before touching anything.
+    const oldRaw = await schedStore.get(trimOld);
     if (oldRaw === null || oldRaw === undefined) {
       console.log('[Rename] old schedule blob not found — key:', JSON.stringify(trimOld));
       return { statusCode: 404, headers, body: JSON.stringify({ error: `Schedule "${trimOld}" not found` }) };
@@ -112,14 +136,55 @@ exports.handler = async (event) => {
     }
 
     // Step 2 — Reject if new name already taken.
-    // Use strong consistency to bypass CDN cache: eventual reads can return a stale
-    // blob for a recently-deleted key, producing a false 409 on rename-back (A→B→A).
-    const existingRaw = await schedStore.get(trimNew, { consistency: 'strong' });
+    //
+    // We use an eventual-consistency (CDN-cached) read here. For rename-back scenarios
+    // (e.g. A→B then B→A), the CDN may still serve the deleted A blob for minutes,
+    // producing a false conflict. When the frontend signals `isRenameBack`, we cross-
+    // check Library metadata — which is updated atomically during rename — to distinguish
+    // a stale CDN artifact from a genuinely occupied name.
+    const existingRaw = await schedStore.get(trimNew);
     if (existingRaw !== null && existingRaw !== undefined) {
-      console.log('[Rename] newName already exists:', JSON.stringify(trimNew));
-      return { statusCode: 409, headers, body: JSON.stringify({ error: `A schedule named "${trimNew}" already exists` }) };
+      if (isRenameBack) {
+        // The frontend has a session-level record that trimNew was recently renamed away.
+        // Read Library metadata (also CDN-cached) to verify whether trimNew is still
+        // referenced at the application level.
+        const libStore = getStore('schedule-library');
+        const libKey = 'rp_library_index_v1';
+        let lib = null;
+        try {
+          const libRaw = await libStore.get(libKey);
+          lib = libRaw === null || libRaw === undefined
+            ? null
+            : (typeof libRaw === 'string' ? JSON.parse(libRaw) : libRaw);
+        } catch (libCheckErr) {
+          console.log('[Rename] rename-back library check failed:', libCheckErr.message,
+            '— returning soft pending error');
+          return {
+            statusCode: 409, headers,
+            body: JSON.stringify({ error: 'Previous rename is still finalizing — please wait a few more seconds', pendingSync: true }),
+          };
+        }
+
+        if (nameReferencedInLibrary(lib, trimNew)) {
+          // Library also shows the name — either a genuine conflict, or Library CDN is
+          // also stale. Either way we cannot safely proceed; return a soft error.
+          console.log('[Rename] rename-back: Library references target name "%s" — soft conflict', trimNew);
+          return {
+            statusCode: 409, headers,
+            body: JSON.stringify({ error: 'Previous rename is still finalizing — please wait a few more seconds', pendingSync: true }),
+          };
+        }
+
+        // Library no longer references trimNew: the blob is a stale CDN artifact from
+        // the recent deletion. Proceed with the rename.
+        console.log('[Rename] rename-back: Library confirms "%s" was renamed away — CDN blob is stale, proceeding', trimNew);
+      } else {
+        console.log('[Rename] newName already exists:', JSON.stringify(trimNew));
+        return { statusCode: 409, headers, body: JSON.stringify({ error: `A schedule named "${trimNew}" already exists` }) };
+      }
+    } else {
+      console.log('[Rename] newName is available:', JSON.stringify(trimNew));
     }
-    console.log('[Rename] newName is available:', JSON.stringify(trimNew));
 
     // Step 3 — Write new schedule blob.
     //

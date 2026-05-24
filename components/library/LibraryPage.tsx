@@ -806,7 +806,7 @@ export default function LibraryPage() {
     setPendingRename(oldName, trimNew);
 
     try {
-      const result = await postRenameSchedule(oldName, trimNew, token!);
+      const result = await postRenameSchedule(oldName, trimNew, token!, isRenameBackAllowed(oldName, trimNew));
       console.log('[Library Rename] rename succeeded:', oldName, '→', trimNew);
 
       setSchedules((prev) => {
