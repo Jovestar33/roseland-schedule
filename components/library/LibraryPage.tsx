@@ -8,7 +8,6 @@ import { postDeleteSchedule, postRenameSchedule, postMoveSchedule } from '@/lib/
 import { getLibraryMeta, putLibraryMeta, type LibraryData } from '@/lib/api/library';
 import type { ScheduleData } from '@/lib/types';
 import ScheduleListTab, { type LibrarySchedule } from './ScheduleListTab';
-import ComboInput from '@/components/schedule/ComboInput';
 import LibrarySearch from './LibrarySearch';
 import TemplatesTab from './TemplatesTab';
 import VersionsTab from './VersionsTab';
@@ -39,8 +38,12 @@ interface MoveModalState {
   name: string;
   currentProd: string;
   currentPhase: string;
-  draftProd: string;
-  draftPhase: string;
+  // selectedProd: an existing production name, '' for Ungrouped, or '__new__' for custom entry
+  selectedProd: string;
+  customProdText: string;
+  // selectedPhase: an existing phase name, '' for no phase, or '__new__' for custom entry
+  selectedPhase: string;
+  customPhaseText: string;
   submitting: boolean;
   error: string | null;
 }
@@ -978,14 +981,23 @@ export default function LibraryPage() {
     const sched = schedules.find((s) => s.name === name);
     const currentProd  = sched?.data?.meta?.projectName?.trim() ?? '';
     const currentPhase = sched?.data?.meta?.phase?.trim() ?? '';
-    setMoveModal({ name, currentProd, currentPhase, draftProd: currentProd, draftPhase: currentPhase, submitting: false, error: null });
+    const prodKnown  = currentProd  === '' || allProductionNames.includes(currentProd);
+    const phaseKnown = currentPhase === '' || allPhaseNames.includes(currentPhase);
+    setMoveModal({
+      name, currentProd, currentPhase,
+      selectedProd:    prodKnown  ? currentProd  : '__new__',
+      customProdText:  prodKnown  ? ''           : currentProd,
+      selectedPhase:   phaseKnown ? currentPhase : '__new__',
+      customPhaseText: phaseKnown ? ''           : currentPhase,
+      submitting: false, error: null,
+    });
   }
 
   async function handleMoveConfirm() {
     if (!moveModal) return;
-    const { name, currentProd, currentPhase, draftProd, draftPhase } = moveModal;
-    const trimProd  = draftProd.trim();
-    const trimPhase = draftPhase.trim();
+    const { name, currentProd, currentPhase, selectedProd, customProdText, selectedPhase, customPhaseText } = moveModal;
+    const trimProd  = selectedProd  === '__new__' ? customProdText.trim()  : selectedProd;
+    const trimPhase = selectedPhase === '__new__' ? customPhaseText.trim() : selectedPhase;
 
     setMoveModal((m) => m ? { ...m, submitting: true, error: null } : null);
     console.log('[Library Move] move requested:', name, '→', trimProd, '/', trimPhase);
@@ -1147,25 +1159,35 @@ export default function LibraryPage() {
     !isRenameBackAllowed(renameModal.name, renameModal.draft.trim()) &&
     schedules.some((s) => s.name.trim() === renameModal.draft.trim());
 
-  // Phase suggestions for the Move To modal — filtered to the currently-typed
-  // production so the options are contextually relevant.
-  const moveDraftProd = moveModal?.draftProd ?? '';
-  const movePhaseOptions = useMemo(() => {
-    const draftProdKey = moveDraftProd.trim().toLowerCase();
-    if (!draftProdKey) return allPhaseNames;
-    const filtered = [...new Set(
+  // Phases that already exist under the currently-selected production (for the
+  // Move To modal phase dropdown — shown first as contextually relevant options).
+  const moveSelProd  = moveModal?.selectedProd  ?? '';
+  const moveSelPhase = moveModal?.selectedPhase ?? '';
+
+  const movePhasesForProd = useMemo(() => {
+    if (!moveSelProd || moveSelProd === '__new__') return [];
+    const prodKey = moveSelProd.toLowerCase();
+    return [...new Set(
       schedules
-        .filter((s) => (s.data?.meta?.projectName?.trim().toLowerCase() ?? '') === draftProdKey)
+        .filter((s) => (s.data?.meta?.projectName?.trim().toLowerCase() ?? '') === prodKey)
         .flatMap((s) => { const p = s.data?.meta?.phase?.trim(); return p ? [p] : []; })
     )].sort();
-    return filtered.length > 0 ? filtered : allPhaseNames;
-  }, [moveDraftProd, schedules, allPhaseNames]);
+  }, [moveSelProd, schedules]);
+
+  const moveOtherPhases = useMemo(() => {
+    const inProd = new Set(movePhasesForProd);
+    return allPhaseNames.filter((p) => !inProd.has(p));
+  }, [allPhaseNames, movePhasesForProd]);
+
+  // Effective values that will be written on confirm — resolved from the select + custom text.
+  const effectiveMoveProd  = moveSelProd  === '__new__' ? (moveModal?.customProdText  ?? '').trim() : moveSelProd;
+  const effectiveMovePhase = moveSelPhase === '__new__' ? (moveModal?.customPhaseText ?? '').trim() : moveSelPhase;
 
   // True when the chosen destination matches the schedule's current location.
   const isMoveNoOp =
     moveModal !== null &&
-    moveModal.draftProd.trim() === moveModal.currentProd &&
-    moveModal.draftPhase.trim() === moveModal.currentPhase;
+    effectiveMoveProd  === moveModal.currentProd &&
+    effectiveMovePhase === moveModal.currentPhase;
 
   // ── Render ─────────────────────────────────────────────────────────────────
 
@@ -1309,25 +1331,106 @@ export default function LibraryPage() {
           <div className="lbt-modal" onClick={(e) => e.stopPropagation()}>
             <h2 className="lbt-modal-title">Move To</h2>
             <p className="lbt-modal-sched-name">{moveModal.name}</p>
+
+            {/* ── Production ── */}
             <div className="lbt-modal-label">Production</div>
-            <ComboInput
-              value={moveModal.draftProd}
-              onChange={(v) => setMoveModal((m) => m ? { ...m, draftProd: v, error: null } : null)}
-              onEscape={() => !moveModal.submitting && setMoveModal(null)}
-              options={allProductionNames}
-              placeholder="Production name…"
-              className="lbt-modal-input"
+            <select
+              className="lbt-modal-select"
+              value={moveModal.selectedProd}
+              disabled={moveModal.submitting}
               autoFocus
-            />
+              onChange={(e) => {
+                const newProd = e.target.value;
+                setMoveModal((m) => {
+                  if (!m) return m;
+                  // Keep current phase only if it exists in the new production
+                  const newProdKey = newProd === '__new__' ? '' : newProd.toLowerCase();
+                  const phasesForNewProd = !newProdKey ? [] : [...new Set(
+                    schedules
+                      .filter((s) => (s.data?.meta?.projectName?.trim().toLowerCase() ?? '') === newProdKey)
+                      .flatMap((s) => { const p = s.data?.meta?.phase?.trim(); return p ? [p] : []; })
+                  )];
+                  const keepPhase = m.selectedPhase !== '__new__' && phasesForNewProd.includes(m.selectedPhase);
+                  return {
+                    ...m,
+                    selectedProd: newProd,
+                    customProdText: '',
+                    selectedPhase: keepPhase ? m.selectedPhase : '',
+                    customPhaseText: '',
+                    error: null,
+                  };
+                });
+              }}
+            >
+              <option value="">— Ungrouped —</option>
+              {allProductionNames.map((p) => (
+                <option key={p} value={p}>{p}</option>
+              ))}
+              <option value="__new__">+ New production…</option>
+            </select>
+            {moveModal.selectedProd === '__new__' && (
+              <>
+                <div className="lbt-modal-label">New production name</div>
+                <input
+                  className="lbt-modal-input"
+                  type="text"
+                  autoFocus
+                  placeholder="Enter production name…"
+                  value={moveModal.customProdText}
+                  disabled={moveModal.submitting}
+                  onChange={(e) => setMoveModal((m) => m ? { ...m, customProdText: e.target.value, error: null } : null)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Escape' && !moveModal.submitting) setMoveModal(null);
+                  }}
+                />
+              </>
+            )}
+
+            {/* ── Phase ── */}
             <div className="lbt-modal-label">Phase</div>
-            <ComboInput
-              value={moveModal.draftPhase}
-              onChange={(v) => setMoveModal((m) => m ? { ...m, draftPhase: v, error: null } : null)}
-              onEscape={() => !moveModal.submitting && setMoveModal(null)}
-              options={movePhaseOptions}
-              placeholder="Phase name…"
-              className="lbt-modal-input"
-            />
+            <select
+              className="lbt-modal-select"
+              value={moveModal.selectedPhase}
+              disabled={moveModal.submitting}
+              onChange={(e) => setMoveModal((m) => m ? {
+                ...m, selectedPhase: e.target.value, customPhaseText: '', error: null,
+              } : null)}
+            >
+              <option value="">— No phase —</option>
+              {movePhasesForProd.length > 0 ? (
+                <>
+                  <optgroup label="This production">
+                    {movePhasesForProd.map((p) => <option key={p} value={p}>{p}</option>)}
+                  </optgroup>
+                  {moveOtherPhases.length > 0 && (
+                    <optgroup label="Other phases">
+                      {moveOtherPhases.map((p) => <option key={p} value={p}>{p}</option>)}
+                    </optgroup>
+                  )}
+                </>
+              ) : (
+                allPhaseNames.map((p) => <option key={p} value={p}>{p}</option>)
+              )}
+              <option value="__new__">+ New phase…</option>
+            </select>
+            {moveModal.selectedPhase === '__new__' && (
+              <>
+                <div className="lbt-modal-label">New phase name</div>
+                <input
+                  className="lbt-modal-input"
+                  type="text"
+                  autoFocus={moveModal.selectedProd !== '__new__'}
+                  placeholder="Enter phase name…"
+                  value={moveModal.customPhaseText}
+                  disabled={moveModal.submitting}
+                  onChange={(e) => setMoveModal((m) => m ? { ...m, customPhaseText: e.target.value, error: null } : null)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Escape' && !moveModal.submitting) setMoveModal(null);
+                  }}
+                />
+              </>
+            )}
+
             {moveModal.error && (
               <p className="lbt-modal-error">{moveModal.error}</p>
             )}

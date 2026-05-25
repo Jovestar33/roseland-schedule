@@ -281,14 +281,19 @@
   margin: -8px 0 16px;
 }
 
-/* Make ComboInput full-width inside the modal */
-.lbt-modal .combo-wrap {
-  display: flex;
+.lbt-modal-select {
   width: 100%;
+  border: 1px solid var(--g300);
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-family: var(--fb);
+  font-size: 14px;
+  color: var(--ink);
+  background: #fff;
+  outline: none;
+  box-sizing: border-box;
   margin-bottom: 16px;
+  cursor: pointer;
 }
 
-/* Remove the input's own margin-bottom to avoid double-spacing */
-.lbt-modal .combo-wrap .lbt-modal-input {
-  margin-bottom: 0;
-}
+.lbt-modal-select:focus { border-color: var(--pink); }
