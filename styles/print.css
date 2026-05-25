@@ -53,6 +53,9 @@
     visibility:hidden!important;
   }
 
+  /* Sub-location description: ensure full content is visible */
+  .loc-subloc-desc { height: auto !important; overflow: visible !important; }
+
   /* Hide empty rows and non-print columns */
   tbody tr.inactive{display:none!important;}
   colgroup .c-cb,

@@ -8,6 +8,8 @@ export interface SubLocation {
   loc: string;
   locLat?: number | null;
   locLng?: number | null;
+  done?: boolean;
+  desc?: string;
 }
 
 export interface ScheduleRow {

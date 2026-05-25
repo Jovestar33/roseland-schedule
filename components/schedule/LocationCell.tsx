@@ -1,4 +1,5 @@
 'use client';
+import { useRef, useEffect } from 'react';
 import { useScheduleStore } from '@/lib/store/scheduleStore';
 import type { ScheduleRow, SubLocation } from '@/lib/types';
 import PlacesAutocomplete from './PlacesAutocomplete';
@@ -11,6 +12,32 @@ interface Props {
 
 function newId(): string {
   return Math.random().toString(36).slice(2, 8);
+}
+
+function DescTextarea({ value, onChange, onFocus }: {
+  value: string;
+  onChange: (v: string) => void;
+  onFocus: () => void;
+}) {
+  const ref = useRef<HTMLTextAreaElement>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    el.style.height = 'auto';
+    el.style.height = `${el.scrollHeight}px`;
+  }, [value]);
+  return (
+    <textarea
+      ref={ref}
+      className="loc-subloc-desc"
+      value={value}
+      placeholder="Description…"
+      rows={1}
+      style={{ resize: 'none', overflow: 'hidden' }}
+      onChange={(e) => onChange(e.target.value)}
+      onFocus={onFocus}
+    />
+  );
 }
 
 export default function LocationCell({ index, row }: Props) {
@@ -85,27 +112,43 @@ export default function LocationCell({ index, row }: Props) {
       {/* Sub-locations */}
       {subLocs.map((sl, i) => (
         <div key={sl.id} className="loc-subloc-row">
-          <span className="loc-subloc-bullet">•</span>
-          <div className="loc-subloc-input-wrap">
-            <PlacesAutocomplete
-              className="ci-ta loc-subloc-ta"
-              value={sl.loc}
-              onChange={(loc) => patchSubLoc(i, { loc, locLat: null, locLng: null })}
-              onSelect={(loc, geo) => patchSubLoc(i, { loc, locLat: geo?.lat ?? null, locLng: geo?.lng ?? null })}
+          <div className="loc-subloc-main">
+            <input
+              type="checkbox"
+              className="loc-subloc-cb"
+              checked={sl.done ?? false}
+              onChange={(e) => patchSubLoc(i, { done: e.target.checked })}
+              title="Mark done"
+            />
+            <span className="loc-subloc-bullet">•</span>
+            <div className="loc-subloc-input-wrap">
+              <PlacesAutocomplete
+                className="ci-ta loc-subloc-ta"
+                value={sl.loc}
+                onChange={(loc) => patchSubLoc(i, { loc, locLat: null, locLng: null })}
+                onSelect={(loc, geo) => patchSubLoc(i, { loc, locLat: geo?.lat ?? null, locLng: geo?.lng ?? null })}
+                onFocus={pushUndo}
+                placeholder="Sub-location…"
+                dropdownClass="loc-ac"
+                multiline
+              />
+            </div>
+            {sl.locLat && (
+              <button className="loc-subloc-pin" onClick={() => openSubMap(sl)} title="Get directions">
+                &#128205;
+              </button>
+            )}
+            <button className="loc-subloc-remove" onClick={() => removeSubLoc(i)} title="Remove sub-location">
+              &#215;
+            </button>
+          </div>
+          <div className="loc-subloc-desc-wrap">
+            <DescTextarea
+              value={sl.desc ?? ''}
+              onChange={(desc) => patchSubLoc(i, { desc })}
               onFocus={pushUndo}
-              placeholder="Sub-location…"
-              dropdownClass="loc-ac"
-              multiline
             />
           </div>
-          {sl.locLat && (
-            <button className="loc-subloc-pin" onClick={() => openSubMap(sl)} title="Get directions">
-              &#128205;
-            </button>
-          )}
-          <button className="loc-subloc-remove" onClick={() => removeSubLoc(i)} title="Remove sub-location">
-            &#215;
-          </button>
         </div>
       ))}
 
