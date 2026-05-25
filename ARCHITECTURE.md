@@ -182,6 +182,8 @@ All functions share the same HMAC auth check (`SCHEDULE_APP_PASSWORD` + `SCHEDUL
 
 **NOTES column header alignment** — The notes cell (`NotesCell.tsx`) has a `notes-status-wrap` flex row: `status-icon-slot` (24px desktop / 22px mobile ≤760px) + 8px gap + notes textarea. The `<th className="th-notes">` uses `padding-left:37px` (desktop: 5px td-pad + 24px icon + 8px gap) or `36px` (mobile: 6px td-pad + 22px icon + 8px gap) so the header text aligns with the textarea content. Applied to both the actual thead and the `#mobile-grid-sticky` sticky overlay.
 
+**Stacked sub-locations (Phase 4)** — Each `ScheduleRow` has an optional `subLocations?: SubLocation[]` field. Each `SubLocation` carries `{ id, loc, locLat, locLng, done, desc }`. Sub-locations render inline inside the Location cell, stacked below the main location — no modal is used. `LocationCell.tsx` wraps the main location in a `.loc-main-row` container (`position: relative`) so the main map-pin button anchors to that row only, not the full cell including sub-location rows below. Each sub-location has its own `PlacesAutocomplete` instance (same `places.js` proxy) for Google-assisted address entry. The `DescTextarea` helper (private to `LocationCell.tsx`) auto-resizes via `useRef` + `useEffect` on value change. Sub-location edits write directly to the store via `updateRow` on every change — no buffering. The existing row-level contact button (`.done-tools` column) is separate and unrelated to sub-locations; contact-within-sub-location integration is deferred to Phase 4B. Old schedules without `subLocations` work unchanged — the field is absent from `makeRow()` defaults and preserved via `...overrides` spread in `normalizeRow()`. Sub-location data is row-level, not Library data; Library, rename, Move To, archive, delete, Save As, and DnD are unaffected. In print: sub-location `loc` text and `desc` text render; pin, remove, and add controls are hidden (`display: none !important`); `loc-subloc-desc` textareas get `height: auto !important; overflow: visible !important` so full description text is visible.
+
 **Done/Contact cell column width** — The `.c-cb` column contains both a done checkbox and a 24px contact button in a `display:flex; gap:8px` row (`.done-tools`). On mobile the V9 block (`@media (max-width:760px)` in inline-patches.css) sets the column to 64px with `overflow:hidden` on the td. Width formula: 5px-pad + 20px-checkbox + 8px-gap + 24px-button + 7px-pad ≈ 64px. A narrower column clips the contact button on the right.
 
 **Library auto-grouping tree** — `LibraryTree.tsx` derives the production → phase → schedule hierarchy entirely client-side from schedule metadata (`projectName.trim().toLowerCase()` → prodKey, `phase.trim().toLowerCase()` → phaseKey). No server-side folder data required. `buildTree()` returns `{ productions, ungrouped }`. `ScheduleListTab` is a thin wrapper that just renders `LibraryTree`. Empty productions/phases created via inline "+ Add" inputs are held in component state only (not persisted); they become real once a schedule populates them.
@@ -216,7 +218,7 @@ If the Library metadata write fails after the blob write succeeds, the schedule 
 
 ## 10. Feature Map
 
-**Schedule editing**: action rows, custom rows, sun rows, notes, call time, location, town, date, weather strip
+**Schedule editing**: action rows, custom rows, sun rows, notes, call time, location (main location + optional stacked sub-locations: Google Places autocomplete, map pin, status checkbox, description), town, date, weather strip
 **Schedule header**: identity line (project/route/day), compact crew block (PRODUCER/DIRECTOR/CAMERA inline edit), Town/Location, Date, Call Time
 **Time cascade**: automatic timeOut recalc on any duration/order change
 **Drag & drop**: row reorder (row 0 protected), DnD via @hello-pangea/dnd
@@ -229,7 +231,7 @@ If the Library metadata write fails after the blob write succeeds, the schedule 
 **Public viewer**: branded read-only view, no auth required
 **CMS**: per-brand colors, fonts, logo, action style overrides — applied via CSS custom properties
 **Backup**: export current schedule JSON, export all schedules ZIP
-**Google Places**: location autocomplete via proxied Places API
+**Google Places**: location autocomplete via proxied `places.js` function; shared by main location and sub-location address search
 **Weather**: Open-Meteo integration; weather strip sits between Call Time field and schedule grid (screen); light grey background (#ebebeb) with design-system text colors
 **Templates**: reusable row sets stored in Netlify Blobs, synced across devices; accessible from within the editor via Tools Panel
 **Tools Panel**: slide-over drawer (Templates / Backup / Restore) accessible from the editor toolbar without closing the schedule
@@ -237,4 +239,4 @@ If the Library metadata write fails after the blob write succeeds, the schedule 
 **PWA**: installable via Safari Add to Home Screen; manifest at `/manifest.webmanifest`
 
 ---
-*Last updated: 2026-05-24 — Added Library Move To (Phase 3): move-schedule.js function, coordinated two-write flow, controlled select modal, CDN consistency guard (SS_MOVES_KEY), optimistic local update.*
+*Last updated: 2026-05-25 — Phase 4 Location Details / Sub-locations: stacked inline sub-locations in the Location cell (no modal), SubLocation data model `{ id, loc, locLat, locLng, done, desc }`, Google Places reuse for sub-location address search, print-safe controls, Phase 4B contact integration deferred.*

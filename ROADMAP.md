@@ -68,7 +68,17 @@
 ## 🟡 Medium-Term (v2 — next major development cycle)
 *New feature categories that expand scope significantly*
 
-18. **Location details / sub-locations** — additive `locationDetails` structure in schedule data model (name, address, Google Maps URL/pin, notes per location). Plain-text `meta.town` / `meta.location` fields are preserved unchanged for backward compatibility and print. Sub-location data lives in the editor, not the Library.
+18. ✅ **Phase 4 — Location details / sub-locations** — Completed and tested 2026-05-25. Branch `phase-4-location-details`, merged to `main` 2026-05-25.
+    - Sub-locations render inline within the Location cell, stacked below the main location — no modal is used.
+    - Main location behavior (text, Google Places autocomplete, map pin, wrapping) is unchanged.
+    - Main and sub-location text wraps cleanly across desktop, tablet, mobile, and print; long addresses do not clip or overflow.
+    - Each sub-location: `loc` with Google Places autocomplete, `locLat`/`locLng` with individual map pin, optional `desc` text (auto-resizing textarea), `done` status checkbox.
+    - Sub-locations save/load with the schedule. Old schedules without `subLocations` work unchanged.
+    - Print: sub-location `loc` and `desc` text print below the main location; pin, remove, and add controls are hidden.
+    - Mobile: tested and working.
+    - Data model: `ScheduleRow.subLocations?: Array<{ id, loc, locLat, locLng, done, desc }>`. Existing `loc`, `locLat`, `locLng` on the row are unchanged.
+    - Sub-location data is row-level, not Library data. Library, rename, Move To, archive, delete, Save As, and DnD are all unaffected.
+    - **Phase 4B (deferred — not yet started):** Evaluate contact-per-sub-location integration. The existing row-level contact button (`.done-tools` column) was not moved. Options: (a) attach a contact to individual sub-locations, (b) broader row/contact redesign, or (c) let the Contact Sheet feature (item 15) absorb this need. Evaluate after item 15 is implemented.
 19. **Call sheets** — generate from schedule, pull weather/locations/contacts/rows, add parking/safety notes, export PDF
 20. **Multi-day projects** — master schedule containing multiple daily schedules, duplicate day, move rows between days
 21. **Production management** — booking/permit/release/vendor/location status tracking, crew/gear/travel notes — film-specific not generic PM
@@ -99,9 +109,11 @@
 - **Phase 1 / 1A complete:** Library Refresh reliability, Save As grouping fix, Archive/Restore persistence, Same-section DnD hardening, Permanent Delete for archived schedules. All passed testing 2026-05-24. Branch: `library-refresh-archive-fix`.
 - **Phase 2 complete:** Safe schedule title rename. Passed testing 2026-05-24. Branch: `phase-2-safe-schedule-rename`, merged to `main` 2026-05-24.
 - **Phase 3 complete:** Move To workflow (cross-production/cross-phase schedule movement). Passed testing 2026-05-24. Branch: `phase-3-move-to-workflow`, merged to `main` 2026-05-24.
-- **Next active phase:** Item 18 — Location Details / Sub-locations.
-- **Next v1 polish:** Items 7, 9, 11, 15–17 grouped by theme.
+- **Phase 4 complete:** Location Details / Sub-locations (stacked inline, no modal). Passed testing 2026-05-25. Branch: `phase-4-location-details`, merged to `main` 2026-05-25.
+- **Phase 4B (deferred):** Contact button evaluation — contact-per-sub-location integration or broader row/contact redesign. Not yet started; revisit after item 15.
+- **Next active phase:** Item 15 — Contact Sheet / Contact Extract.
+- **Near-term polish:** Items 7, 9, 11, 16–17 grouped by theme.
 - **Item 22 (CMS architecture):** Planning conversation before any code.
 
 ---
-*Last updated: 2026-05-24 — Phase 3 Move To workflow passed testing and merged to main. Next: Location Details / Sub-locations (Item 18).*
+*Last updated: 2026-05-25 — Phase 4 Location Details / Sub-locations passed testing and merged to main. Phase 4B contact integration deferred. Next: Contact Sheet / Contact Extract (Item 15).*
