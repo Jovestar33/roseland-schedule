@@ -79,6 +79,9 @@
     - Data model: `ScheduleRow.subLocations?: Array<{ id, loc, locLat, locLng, done, desc }>`. Existing `loc`, `locLat`, `locLng` on the row are unchanged.
     - Sub-location data is row-level, not Library data. Library, rename, Move To, archive, delete, Save As, and DnD are all unaffected.
     - **Phase 4B (deferred — not yet started):** Evaluate contact-per-sub-location integration. The existing row-level contact button (`.done-tools` column) was not moved. Options: (a) attach a contact to individual sub-locations, (b) broader row/contact redesign, or (c) let the Contact Sheet feature (item 15) absorb this need. Evaluate after item 15 is implemented.
+    - **Post-Phase-4 bug fixes (merged to `main` 2026-05-25):**
+      - DnD regression from Phase 4: `DescTextarea` auto-resize changed from `useEffect` to `useLayoutEffect` (synchronous, does not fire during drop animation); all buttons in `LocationCell.tsx` given `type="button"`; CSS transition removed from `.loc-add-subloc`.
+      - `"00:00"` duration regression: all four `!r.dur` falsy guards replaced with `r.dur === ''` (explicit blank check) in `hasOpenRows`, `guardReorder`, `nextFixedAnchorMin`, and `isLocked`. `computeTimeOut` guard changed from `durMins <= 0` to `row.dur === ''` — a row with Time In and duration "00:00" now correctly shows Time Out equal to Time In.
 19. **Call sheets** — generate from schedule, pull weather/locations/contacts/rows, add parking/safety notes, export PDF
 20. **Multi-day projects** — master schedule containing multiple daily schedules, duplicate day, move rows between days
 21. **Production management** — booking/permit/release/vendor/location status tracking, crew/gear/travel notes — film-specific not generic PM
@@ -110,10 +113,11 @@
 - **Phase 2 complete:** Safe schedule title rename. Passed testing 2026-05-24. Branch: `phase-2-safe-schedule-rename`, merged to `main` 2026-05-24.
 - **Phase 3 complete:** Move To workflow (cross-production/cross-phase schedule movement). Passed testing 2026-05-24. Branch: `phase-3-move-to-workflow`, merged to `main` 2026-05-24.
 - **Phase 4 complete:** Location Details / Sub-locations (stacked inline, no modal). Passed testing 2026-05-25. Branch: `phase-4-location-details`, merged to `main` 2026-05-25.
+- **Phase 4 post-release fixes (merged to `main` 2026-05-25):** DnD regression (`useLayoutEffect`, `type="button"`, CSS transition removal in `LocationCell.tsx`); `"00:00"` duration/Time Out regression (`r.dur === ''` guards throughout; `computeTimeOut` now returns Time In for zero-duration rows). Branch: `fix/dnd-regression`.
 - **Phase 4B (deferred):** Contact button evaluation — contact-per-sub-location integration or broader row/contact redesign. Not yet started; revisit after item 15.
 - **Next active phase:** Item 15 — Contact Sheet / Contact Extract.
 - **Near-term polish:** Items 7, 9, 11, 16–17 grouped by theme.
 - **Item 22 (CMS architecture):** Planning conversation before any code.
 
 ---
-*Last updated: 2026-05-25 — Phase 4 Location Details / Sub-locations passed testing and merged to main. Phase 4B contact integration deferred. Next: Contact Sheet / Contact Extract (Item 15).*
+*Last updated: 2026-05-25 — Phase 4 Location Details / Sub-locations complete and tested; post-Phase-4 DnD and "00:00" duration fixes merged. Phase 4B contact integration deferred. Next: Contact Sheet / Contact Extract (Item 15).*
