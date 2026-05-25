@@ -61,7 +61,16 @@
     - If Library metadata write fails after the blob write, the schedule blob remains authoritative for grouping and self-corrects on the next Refresh. Acceptable degraded state.
     - Cross-section drag-and-drop remains intentionally blocked. Cross-section DnD may be added later as a secondary trigger only after Move To has proven stable in production.
     - No changes to print, schedule editor layout, rename, archive/restore, permanent delete, or same-section DnD behavior.
-15. **Contact sheet / extract** — generate a shareable contact list URL or exportable sheet from schedule row data; evaluate whether a lightweight contacts DB is needed to support this properly
+15. ✅ **Phase 5 — Contact Sheet / Contact Extract** — Completed and tested 2026-05-25. Branch `phase-5-contact-sheet`, merged to `main` 2026-05-25.
+    - Share dropdown now includes "📋 Contact Sheet".
+    - Opens a modal that extracts contacts from the current schedule's existing row-level contact fields (`contactName`, `contactTitle`, `contactPhone`, `contactEmail`).
+    - Rows with no contact data are excluded; empty state shown when no contacts exist on the schedule.
+    - Contacts deduplicated by exact `contactName.trim() + contactPhone.trim()`; merged cards list all associated row-context lines (time, action, location, description).
+    - CSV download: 8-column headers, one row per contact × row-context pair.
+    - Print: uses a `cs-print-only` portal rendered directly on `document.body` — outside the `.overlay`/`.modal` tree that `print.css` suppresses — so contact sheet prints correctly. Normal schedule Print/PDF is unaffected.
+    - Contact button (`DoneContactCell`) and `ContactModal` entry point are unchanged.
+    - Contacts remain editor-only; public/client view contacts not included in Phase 5.
+    - **Limitations (deferred):** one contact per row; no contacts database; no public view contacts (item 17); no sub-location contacts (Phase 4B).
 16. **Version history UX (optional enhancement)** — improve restore UX, compare versions side-by-side, save a snapshot as a new schedule. Refers to improving the existing per-schedule snapshot system; does not imply implementing a new autosave or version-restore system.
 17. **Client read-only view enhancements** — crew contact cards visible in public view
 
@@ -114,10 +123,11 @@
 - **Phase 3 complete:** Move To workflow (cross-production/cross-phase schedule movement). Passed testing 2026-05-24. Branch: `phase-3-move-to-workflow`, merged to `main` 2026-05-24.
 - **Phase 4 complete:** Location Details / Sub-locations (stacked inline, no modal). Passed testing 2026-05-25. Branch: `phase-4-location-details`, merged to `main` 2026-05-25.
 - **Phase 4 post-release fixes (merged to `main` 2026-05-25):** DnD regression (`useLayoutEffect`, `type="button"`, CSS transition removal in `LocationCell.tsx`); `"00:00"` duration/Time Out regression (`r.dur === ''` guards throughout; `computeTimeOut` now returns Time In for zero-duration rows). Branch: `fix/dnd-regression`.
-- **Phase 4B (deferred):** Contact button evaluation — contact-per-sub-location integration or broader row/contact redesign. Not yet started; revisit after item 15.
-- **Next active phase:** Item 15 — Contact Sheet / Contact Extract.
+- **Phase 4B (deferred):** Contact button evaluation — contact-per-sub-location integration or broader row/contact redesign. Not yet started; revisit after item 17 (public view contacts).
+- **Phase 5 complete:** Contact Sheet / Contact Extract. Passed testing 2026-05-25. Branch: `phase-5-contact-sheet`, merged to `main` 2026-05-25.
+- **Next active phase:** Item 17 — Client read-only view enhancements (crew contact cards in public view). Directly builds on Phase 5 contact work. Item 16 (Snapshot UX polish) is also near-term and lower-risk if 17 needs more planning.
 - **Near-term polish:** Items 7, 9, 11, 16–17 grouped by theme.
 - **Item 22 (CMS architecture):** Planning conversation before any code.
 
 ---
-*Last updated: 2026-05-25 — Phase 4 Location Details / Sub-locations complete and tested; post-Phase-4 DnD and "00:00" duration fixes merged. Phase 4B contact integration deferred. Next: Contact Sheet / Contact Extract (Item 15).*
+*Last updated: 2026-05-25 — Phase 5 Contact Sheet / Contact Extract complete and tested; merged to main. Next: Item 17 — Client read-only view enhancements (contact cards in public view), or Item 16 — Snapshot UX polish.*
