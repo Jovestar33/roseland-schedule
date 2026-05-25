@@ -1,17 +1,13 @@
 // Wire-compatible with original app's makeRow() and getMeta() data model.
 // These shapes are stored in Netlify Blobs and must not change without a migration.
 
-// Optional structured sub-location attached to a row. The plain-text `loc` field
-// on the row remains the primary location for display and print; locationDetails
-// is supplementary. Old schedules without this field behave exactly as before.
+// Optional sub-location attached to a row. Old schedules without this field
+// behave exactly as before.
 export interface SubLocation {
-  id: string;        // short random ID — stable React key, not a blob key
-  name: string;
-  address: string;   // formatted address from geocodePlace()
-  lat: number | null;
-  lng: number | null;
-  mapsUrl: string;   // Google Maps direction URL constructed from lat/lng
-  notes: string;
+  id: string;
+  loc: string;
+  locLat?: number | null;
+  locLng?: number | null;
 }
 
 export interface ScheduleRow {
@@ -34,7 +30,7 @@ export interface ScheduleRow {
   fixedIn: boolean;
   fixedOut: boolean;
   fixedOutTime: string;
-  locationDetails?: SubLocation[]; // absent on old schedules — treated as undefined
+  subLocations?: SubLocation[]; // absent on old schedules — treated as undefined
 }
 
 export interface WeatherData {
