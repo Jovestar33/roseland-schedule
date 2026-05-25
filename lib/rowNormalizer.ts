@@ -22,6 +22,8 @@ export function makeRow(overrides: Partial<ScheduleRow> = {}): ScheduleRow {
     fixedIn: false,
     fixedOut: false,
     fixedOutTime: '',
+    // locationDetails is optional — omitted from defaults so old schedules remain unchanged;
+    // present in overrides spread when loaded from JSON that contains the field.
     ...overrides,
   };
 }

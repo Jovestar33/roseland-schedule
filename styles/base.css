@@ -383,6 +383,7 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
 .move-btn:focus-visible,
 .time-lock-btn:focus-visible,
 .loc-map-btn:focus-visible,
+.loc-detail-badge:focus-visible,
 .map-pin:focus-visible,
 .done-cb:focus-visible,
 input:focus-visible,
