@@ -1,5 +1,5 @@
 'use client';
-import { useRef, useEffect } from 'react';
+import { useRef, useLayoutEffect } from 'react';
 import { useScheduleStore } from '@/lib/store/scheduleStore';
 import type { ScheduleRow, SubLocation } from '@/lib/types';
 import PlacesAutocomplete from './PlacesAutocomplete';
@@ -20,7 +20,7 @@ function DescTextarea({ value, onChange, onFocus }: {
   onFocus: () => void;
 }) {
   const ref = useRef<HTMLTextAreaElement>(null);
-  useEffect(() => {
+  useLayoutEffect(() => {
     const el = ref.current;
     if (!el) return;
     el.style.height = 'auto';
@@ -103,7 +103,7 @@ export default function LocationCell({ index, row }: Props) {
           multiline
         />
         {row.locLat && (
-          <button className="loc-map-btn" onClick={openMainMap} title="Get directions">
+          <button type="button" className="loc-map-btn" onClick={openMainMap} title="Get directions">
             &#128205;
           </button>
         )}
@@ -134,11 +134,11 @@ export default function LocationCell({ index, row }: Props) {
               />
             </div>
             {sl.locLat && (
-              <button className="loc-subloc-pin" onClick={() => openSubMap(sl)} title="Get directions">
+              <button type="button" className="loc-subloc-pin" onClick={() => openSubMap(sl)} title="Get directions">
                 &#128205;
               </button>
             )}
-            <button className="loc-subloc-remove" onClick={() => removeSubLoc(i)} title="Remove sub-location">
+            <button type="button" className="loc-subloc-remove" onClick={() => removeSubLoc(i)} title="Remove sub-location">
               &#215;
             </button>
           </div>
@@ -152,7 +152,7 @@ export default function LocationCell({ index, row }: Props) {
         </div>
       ))}
 
-      <button className="loc-add-subloc" onClick={addSubLoc}>
+      <button type="button" className="loc-add-subloc" onClick={addSubLoc}>
         + sub-location
       </button>
     </div>
