@@ -272,3 +272,28 @@
 }
 .btn-delete:hover:not(:disabled) { background: #b91c1c; }
 .btn-delete:disabled { opacity: 0.45; cursor: not-allowed; }
+
+/* ── Move To modal ────────────────────────────────────────────────────────── */
+
+.lbt-modal-sched-name {
+  font-size: 13px;
+  color: var(--g500);
+  margin: -8px 0 16px;
+}
+
+.lbt-modal-select {
+  width: 100%;
+  border: 1px solid var(--g300);
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-family: var(--fb);
+  font-size: 14px;
+  color: var(--ink);
+  background: #fff;
+  outline: none;
+  box-sizing: border-box;
+  margin-bottom: 16px;
+  cursor: pointer;
+}
+
+.lbt-modal-select:focus { border-color: var(--pink); }

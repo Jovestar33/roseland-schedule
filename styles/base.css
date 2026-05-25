@@ -1114,6 +1114,26 @@ thead th{
 
 .sitem-rename-btn:hover { background: var(--g50); border-color: var(--g400); color: var(--ink); }
 
+/* Move action button */
+.sitem-move-btn {
+  min-height: 30px;
+  padding: 5px 10px;
+  border-radius: 8px;
+  font-family: var(--fb);
+  font-size: 12px;
+  font-weight: 600;
+  border: 1px solid var(--g300);
+  background: #fff;
+  cursor: pointer;
+  color: var(--g600);
+  transition: background 0.12s, border-color 0.12s, color 0.12s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sitem-move-btn:hover { background: var(--g50); border-color: var(--g400); color: var(--ink); }
+
 /* Links dropdown trigger + portal menu */
 .sitem-links-wrap {
   position: relative;

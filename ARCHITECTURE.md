@@ -42,7 +42,7 @@ lib/
   constants.ts       # ACTIONS, CMS_COLORS, limits, intervals
   templates.ts       # Template type + LS_TEMPLATES_KEY (kept for migration helper)
   types.ts           # All shared TypeScript types
-netlify/functions/   # Serverless: save, load, snapshots, library, rename-schedule, cms, templates, places
+netlify/functions/   # Serverless: save, load, snapshots, library, rename-schedule, move-schedule, delete-schedule, cms, templates, places
 middleware.ts        # Auth gate + ?next= redirect preservation
 app/favicon.ico      # Served as Next.js metadata route — bypasses middleware entirely
 app/manifest.ts      # PWA manifest, auto-served at /manifest.webmanifest
@@ -124,6 +124,7 @@ Public client links (`/view/[name]`) bypass auth entirely — no token needed, l
 | `snapshots.js` | Read/write named snapshots per schedule (store: schedule-snapshots) |
 | `library.js` | Read/write library metadata blob (phaseOrder, tsarchived, display name overrides, folder map, town/date caches) |
 | `rename-schedule.js` | Rename a schedule; copies blob to new key, migrates snapshot, updates all Library metadata references, deletes old blobs best-effort; cross-checks Library metadata on rename-back to avoid false 409 from stale CDN reads |
+| `move-schedule.js` | Move a schedule between productions/phases; coordinated two-write operation (not atomic): writes updated `meta.projectName`/`meta.phase` to schedule blob first, then updates `phaseOrder` in Library metadata; schedule name, snapshots, and links are preserved |
 | `delete-schedule.js` | Permanent delete of archived schedules; validates editorToken + delete passcode; deletes schedule blob, snapshot blob (best-effort), and cleans all library metadata references atomically |
 | `cms.js` | Read/write CMS branding config |
 | `templates.js` | Read/write reusable schedule templates (store: schedule-templates) |
@@ -185,7 +186,17 @@ All functions share the same HMAC auth check (`SCHEDULE_APP_PASSWORD` + `SCHEDUL
 
 **Library auto-grouping tree** — `LibraryTree.tsx` derives the production → phase → schedule hierarchy entirely client-side from schedule metadata (`projectName.trim().toLowerCase()` → prodKey, `phase.trim().toLowerCase()` → phaseKey). No server-side folder data required. `buildTree()` returns `{ productions, ungrouped }`. `ScheduleListTab` is a thin wrapper that just renders `LibraryTree`. Empty productions/phases created via inline "+ Add" inputs are held in component state only (not persisted); they become real once a schedule populates them.
 
-**Library phaseOrder** — Manual drag-and-drop order within a phase is stored in `libMeta.phaseOrder[prodKey][phaseKey]` as an array of schedule names. `applyPhaseOrder()` sorts a phase's schedules by this array; names absent from the array fall back to dayNumber/savedAt sort and append to the end. `onDragEnd` uses `@hello-pangea/dnd`; only same-section (same droppable) reorders are supported — cross-phase and cross-production drops are explicitly rejected with a visible error message. Cross-production/cross-phase schedule movement is not yet implemented; the intended future approach is an explicit "Move To" modal that updates the schedule's `projectName`/`phase` metadata and library metadata together in one operation. After permanent delete, `delete-schedule.js` removes the schedule from all phaseOrder arrays server-side.
+**Library phaseOrder** — Manual drag-and-drop order within a phase is stored in `libMeta.phaseOrder[prodKey][phaseKey]` as an array of schedule names. `applyPhaseOrder()` sorts a phase's schedules by this array; names absent from the array fall back to dayNumber/savedAt sort and append to the end. `onDragEnd` uses `@hello-pangea/dnd`; only same-section (same droppable) reorders are supported — cross-phase and cross-production drops are explicitly rejected with a visible error message. Cross-section drag-and-drop remains intentionally blocked; cross-production/cross-phase movement is instead handled by the explicit Move To workflow (see Library Move To below). After permanent delete, `delete-schedule.js` removes the schedule from all phaseOrder arrays server-side.
+
+**Library Move To** — Moving a schedule between productions or phases is done through an explicit Move To modal, not by drag-and-drop. The Move To button appears in each active schedule row (desktop-only, hidden on mobile alongside the Rename button) and opens a modal with controlled select-style dropdowns for Production and Phase. All existing productions and phases are immediately visible as selectable options; "— Ungrouped —" and "— No phase —" are always available. Choosing "+ New production…" or "+ New phase…" reveals a text input for a custom name. The Phase dropdown uses `<optgroup>` to show phases already used in the selected production first ("This production"), then all other known phases. The modal pre-selects the schedule's current production and phase; the Move button is disabled until the destination actually differs.
+
+The backend operation (`netlify/functions/move-schedule.js`) performs two writes in sequence — this is a **coordinated operation, not a true atomic transaction**:
+1. The schedule blob is updated: `meta.projectName` and `meta.phase` are set to the new values; a fresh `savedAt` is written. Schedule data, snapshots, Team Links, and Client Links are all preserved — the schedule name (blob key) does not change.
+2. Library metadata is updated: the schedule name is removed from `phaseOrder[oldProdKey][oldPhaseKey]` and appended to the bottom of `phaseOrder[newProdKey][newPhaseKey]`.
+
+If the Library metadata write fails after the blob write succeeds, the schedule blob is the authoritative source for `buildTree()` grouping — the schedule appears in the correct production/phase group on the next Refresh. The phaseOrder position may temporarily float to the bottom of the destination phase until the Library metadata write succeeds; this is the accepted degraded state.
+
+`LibraryPage` applies an optimistic local update immediately on a successful response (patches `schedules` state and `libMeta.phaseOrder`) so no manual Refresh is needed. CDN consistency guard: `SS_MOVES_KEY` (60 s TTL in sessionStorage) is written after a confirmed move; `fetchLibraryData` uses it to patch stale CDN reads — adjusting `phaseOrder` if the schedule still appears in the old location and patching `meta.projectName`/`meta.phase` on fetched blobs that reflect pre-move metadata.
 
 **Library display name overrides** — Renaming a production or phase writes `libMeta.productionDisplayNames[prodKey]` or `libMeta.phaseDisplayNames[prodKey][phaseKey]`. The normalized lowercase key (used for grouping) never changes; only the displayed label changes. Schedule blobs are not touched. The tree applies overrides after `buildTree()`, before merging empty containers.
 
@@ -213,7 +224,7 @@ All functions share the same HMAC auth check (`SCHEDULE_APP_PASSWORD` + `SCHEDUL
 **Conflict detection**: optimistic concurrency via savedAt + content hash, resolution modal (overwrite or reload)
 **Auto-snapshot**: every 5 min while dirty
 **Manual snapshots**: named versions, restore, compare (BackupTab)
-**Library**: collapsible production → phase → schedule tree (auto-grouped from metadata); same-section drag-and-drop reorder within a phase (cross-section movement not yet implemented); inline create production/phase; edit display names; contextual + New Schedule pre-populates identity; Links dropdown (Team Link + Client Link); archive/restore; permanent delete for archived schedules only (two-step confirmation, passcode-protected server-side); stale-read protection for recent Library mutations (sessionStorage pending-mutation guards); **rename** — Library-only key-migration rename with duplicate protection, rename-back support, and post-rename CDN sync guard
+**Library**: collapsible production → phase → schedule tree (auto-grouped from metadata); same-section drag-and-drop reorder within a phase (cross-section DnD intentionally blocked); **Move To** — explicit modal workflow for moving a schedule between productions/phases without cross-section DnD, using controlled select dropdowns with custom/new entry support, preserving schedule name/data/snapshots/links; inline create production/phase; edit display names; contextual + New Schedule pre-populates identity; Links dropdown (Team Link + Client Link); archive/restore; permanent delete for archived schedules only (two-step confirmation, passcode-protected server-side); stale-read protection for recent Library mutations (sessionStorage pending-mutation guards); **rename** — Library-only key-migration rename with duplicate protection, rename-back support, and post-rename CDN sync guard
 **Sharing**: Team Link (`?auth=true` deep link), Client Link (`/view/[name]` public)
 **Public viewer**: branded read-only view, no auth required
 **CMS**: per-brand colors, fonts, logo, action style overrides — applied via CSS custom properties
@@ -226,4 +237,4 @@ All functions share the same HMAC auth check (`SCHEDULE_APP_PASSWORD` + `SCHEDUL
 **PWA**: installable via Safari Add to Home Screen; manifest at `/manifest.webmanifest`
 
 ---
-*Last updated: 2026-05-24 — Added Library rename (Phase 2): rename-schedule.js function, key-migration flow, CDN consistency guards, rename-back handling.*
+*Last updated: 2026-05-24 — Added Library Move To (Phase 3): move-schedule.js function, coordinated two-write flow, controlled select modal, CDN consistency guard (SS_MOVES_KEY), optimistic local update.*
