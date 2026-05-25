@@ -96,12 +96,18 @@
   .cs-modal .mfoot .btn { flex: 1 1 120px; }
 }
 
+/* ── Print-only clone (screen) ───────────────────────────────────────
+   .cs-print-only is a portal div rendered directly on document.body,
+   completely outside the modal/overlay that print.css hides.
+   It is invisible at all times on screen.
+─────────────────────────────────────────────────────────────────────── */
+.cs-print-only   { display: none; }
+.cs-print-header { display: none; }
+
 /* ── Contact Sheet Print ─────────────────────────────────────────────
-   body.cs-printing is toggled by handlePrint() in ContactSheetModal.
-   These rules override print.css's blanket .overlay / .modal hide so
-   the contact sheet is the only thing that prints.
-   Specificity is intentionally higher than print.css's rules so they
-   win even when both declarations carry !important.
+   body.cs-printing is set by handlePrint() before window.print() and
+   cleared by the afterprint event. The modal/overlay remain hidden per
+   print.css (no override needed). Only .cs-print-only is shown.
 ─────────────────────────────────────────────────────────────────────── */
 @media print {
   body.cs-printing .panel,
@@ -110,36 +116,38 @@
   body.cs-printing .wx-strip,
   body.cs-printing .add-area { display: none !important; }
 
-  /* Un-hide the overlay container that print.css suppresses */
-  body.cs-printing .overlay {
+  body.cs-printing .cs-print-only {
     display: block !important;
-    visibility: visible !important;
-    position: static !important;
-    background: transparent !important;
-    padding: 0 !important;
+    padding: 0 16px;
   }
 
-  /* Un-hide the modal itself (overrides .modal { display:none } in print.css) */
-  body.cs-printing .modal.cs-modal {
+  body.cs-printing .cs-print-header {
     display: block !important;
-    visibility: visible !important;
-    box-shadow: none !important;
-    border-radius: 0 !important;
-    max-width: 100% !important;
-    width: 100% !important;
-    margin: 0 !important;
+    margin-bottom: 18px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #111;
   }
 
-  /* Remove scroll cap so the full list prints */
-  body.cs-printing .cs-modal .mbody {
-    max-height: none !important;
-    overflow: visible !important;
+  body.cs-printing .cs-print-sched-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: #111;
   }
 
-  /* Hide interactive chrome during print */
-  body.cs-printing .cs-modal .mfoot,
-  body.cs-printing .mclose {
-    display: none !important;
-    visibility: hidden !important;
+  body.cs-printing .cs-print-date {
+    font-size: 12px;
+    color: #555;
+    margin-bottom: 4px;
   }
+
+  body.cs-printing .cs-print-title {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #111;
+    margin: 4px 0 0;
+  }
+
+  /* Suppress link URL display that some browsers append in print */
+  body.cs-printing .cs-print-only a::after { content: '' !important; }
 }
