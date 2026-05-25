@@ -20,7 +20,7 @@ export default function RowControls({ index, dragHandleProps }: Props) {
   const firstReorderable = firstNonSun === -1 ? 0 : Math.min(firstNonSun + 1, Math.max(total - 1, 0));
 
   function guardReorder(): boolean {
-    if (rows.some(r => !r.sunLocked && r.action !== '' && !r.dur)) {
+    if (rows.some(r => !r.sunLocked && r.action !== '' && r.dur === '')) {
       addToast('Fill in Duration on all actions before reordering', 'info');
       return true;
     }

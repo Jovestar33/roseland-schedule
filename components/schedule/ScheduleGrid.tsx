@@ -15,7 +15,7 @@ interface Props {
 
 // Check whether any non-sun row has an action but no duration (cascade cannot proceed).
 function hasOpenRows(rows: ReturnType<typeof useScheduleStore.getState>['rows']): boolean {
-  return rows.some(r => !r.sunLocked && r.action !== '' && !r.dur);
+  return rows.some(r => !r.sunLocked && r.action !== '' && r.dur === '');
 }
 
 export default function ScheduleGrid({ onOpenContact, onOpenStatus, onOpenNotes }: Props) {
