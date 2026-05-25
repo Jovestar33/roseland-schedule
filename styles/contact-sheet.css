@@ -1,0 +1,145 @@
+/* ── Contact Sheet Modal ──────────────────────────────────────────── */
+
+.cs-modal { max-width: 620px; }
+
+.cs-modal .mbody {
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+/* Subtitle line: schedule name · date · count */
+.cs-subtitle {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 6px;
+  font-size: 12px;
+  color: var(--g500);
+  margin-bottom: 16px;
+}
+.cs-sched-name { font-weight: 600; color: var(--g700); }
+
+.cs-empty { margin-top: 8px; }
+
+/* ── Contact cards ── */
+.cs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cs-card {
+  border: 1px solid var(--g200);
+  border-radius: 10px;
+  padding: 12px 14px;
+}
+
+.cs-card-head {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 5px;
+}
+.cs-name { font-size: 15px; font-weight: 600; color: var(--g800); }
+.cs-title { font-size: 12px; color: var(--g500); }
+
+.cs-contact-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  margin-bottom: 8px;
+}
+.cs-phone,
+.cs-email {
+  font-size: 13px;
+  color: var(--g700);
+  text-decoration: none;
+}
+.cs-phone:hover,
+.cs-email:hover { color: var(--pink); }
+
+/* Row-context lines (time / action / location / desc) */
+.cs-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  border-top: 1px solid var(--g100);
+  padding-top: 7px;
+  margin-top: 4px;
+}
+.cs-row-ctx {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 8px;
+  align-items: baseline;
+  font-size: 12px;
+  color: var(--g500);
+}
+.cs-row-time   { font-weight: 600; color: var(--g700); white-space: nowrap; }
+.cs-row-action { color: var(--g700); }
+.cs-row-loc    { color: var(--g500); }
+.cs-row-desc   { color: var(--g400); font-style: italic; }
+
+/* Footer */
+.cs-modal .mfoot {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ── Mobile ─────────────────────────────────────────────────────────── */
+@media (max-width: 760px) {
+  .cs-modal { max-width: 94vw !important; }
+  .cs-modal .mbody { max-height: 65vh; }
+  .cs-modal .mfoot { flex-wrap: wrap; justify-content: center; }
+  .cs-modal .mfoot .btn { flex: 1 1 120px; }
+}
+
+/* ── Contact Sheet Print ─────────────────────────────────────────────
+   body.cs-printing is toggled by handlePrint() in ContactSheetModal.
+   These rules override print.css's blanket .overlay / .modal hide so
+   the contact sheet is the only thing that prints.
+   Specificity is intentionally higher than print.css's rules so they
+   win even when both declarations carry !important.
+─────────────────────────────────────────────────────────────────────── */
+@media print {
+  body.cs-printing .panel,
+  body.cs-printing .hdr,
+  body.cs-printing .toolbar,
+  body.cs-printing .wx-strip,
+  body.cs-printing .add-area { display: none !important; }
+
+  /* Un-hide the overlay container that print.css suppresses */
+  body.cs-printing .overlay {
+    display: block !important;
+    visibility: visible !important;
+    position: static !important;
+    background: transparent !important;
+    padding: 0 !important;
+  }
+
+  /* Un-hide the modal itself (overrides .modal { display:none } in print.css) */
+  body.cs-printing .modal.cs-modal {
+    display: block !important;
+    visibility: visible !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    margin: 0 !important;
+  }
+
+  /* Remove scroll cap so the full list prints */
+  body.cs-printing .cs-modal .mbody {
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  /* Hide interactive chrome during print */
+  body.cs-printing .cs-modal .mfoot,
+  body.cs-printing .mclose {
+    display: none !important;
+    visibility: hidden !important;
+  }
+}
