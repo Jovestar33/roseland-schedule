@@ -52,10 +52,15 @@
     - Post-rename sync guard (15 s React state) prevents opening or re-renaming during the Blob propagation window. Pending rename guard (sessionStorage, 60 s TTL) prevents stale CDN blob-list reads from reverting the rename on Library Refresh.
     - Netlify Blobs `{ consistency: 'strong' }` is not used; this environment does not expose `uncachedEdgeURL`. All staleness is handled at the app level.
     - **Future (not current work):** Full `scheduleId` migration — introduce a permanent `scheduleId` field separate from the display title so the blob key never needs to change on rename. In-editor rename (rename without opening the Library) is also a future enhancement.
-14. **Move To workflow — cross-production/cross-phase schedule movement** ← *next active phase*
-    - Explicit modal or dropdown to move a schedule from one production/phase to another.
-    - Must update the schedule's `projectName`/`phase` metadata (requires a schedule write) and Library metadata (phaseOrder, scheduleFolderMap) together atomically or in a safe sequence.
-    - Cross-section DnD may be added later as a secondary trigger only after the explicit Move To workflow is stable and well-tested.
+14. ✅ **Move To workflow — cross-production/cross-phase schedule movement** — Completed and tested 2026-05-24. Branch `phase-3-move-to-workflow`, merged to `main` 2026-05-24.
+    - Move To button in each active schedule row (desktop-only) opens a modal with controlled select-style dropdowns for Production and Phase.
+    - Existing productions and phases are immediately visible as selectable options. Custom/new entry supported via reveal-on-select text inputs (no need to delete pre-filled text to see options).
+    - Phase dropdown prioritizes phases already used in the selected production ("This production" optgroup), then lists other known phases.
+    - Backend endpoint: `netlify/functions/move-schedule.js`. Coordinated two-write operation, not a true atomic transaction: writes updated `meta.projectName`/`meta.phase` to the schedule blob first, then updates `phaseOrder` in Library metadata.
+    - Move To preserves schedule name, data, snapshots, Team Links, and Client Links. The schedule is appended to the bottom of the destination phase order.
+    - If Library metadata write fails after the blob write, the schedule blob remains authoritative for grouping and self-corrects on the next Refresh. Acceptable degraded state.
+    - Cross-section drag-and-drop remains intentionally blocked. Cross-section DnD may be added later as a secondary trigger only after Move To has proven stable in production.
+    - No changes to print, schedule editor layout, rename, archive/restore, permanent delete, or same-section DnD behavior.
 15. **Contact sheet / extract** — generate a shareable contact list URL or exportable sheet from schedule row data; evaluate whether a lightweight contacts DB is needed to support this properly
 16. **Version history UX (optional enhancement)** — improve restore UX, compare versions side-by-side, save a snapshot as a new schedule. Refers to improving the existing per-schedule snapshot system; does not imply implementing a new autosave or version-restore system.
 17. **Client read-only view enhancements** — crew contact cards visible in public view
@@ -93,9 +98,10 @@
 - **Also pending:** Item 4 (PWA install test on real iPad — manual test only)
 - **Phase 1 / 1A complete:** Library Refresh reliability, Save As grouping fix, Archive/Restore persistence, Same-section DnD hardening, Permanent Delete for archived schedules. All passed testing 2026-05-24. Branch: `library-refresh-archive-fix`.
 - **Phase 2 complete:** Safe schedule title rename. Passed testing 2026-05-24. Branch: `phase-2-safe-schedule-rename`, merged to `main` 2026-05-24.
-- **Next active phase:** Item 14 — Move To workflow (cross-production/cross-phase schedule movement).
+- **Phase 3 complete:** Move To workflow (cross-production/cross-phase schedule movement). Passed testing 2026-05-24. Branch: `phase-3-move-to-workflow`, merged to `main` 2026-05-24.
+- **Next active phase:** Item 18 — Location Details / Sub-locations.
 - **Next v1 polish:** Items 7, 9, 11, 15–17 grouped by theme.
 - **Item 22 (CMS architecture):** Planning conversation before any code.
 
 ---
-*Last updated: 2026-05-24 — Phase 2 safe schedule title rename passed testing and merged to main. Next: Move To workflow (Item 14).*
+*Last updated: 2026-05-24 — Phase 3 Move To workflow passed testing and merged to main. Next: Location Details / Sub-locations (Item 18).*
