@@ -62,7 +62,7 @@ export function computeTimeOut(row: ScheduleRow): string {
   if (row.fixedOut && row.fixedOutTime) return row.fixedOutTime;
   const timeInMins = t12m(row.timeIn);
   const durMins = durm(row.dur);
-  if (timeInMins < 0 || durMins <= 0) return '';
+  if (timeInMins < 0 || row.dur === '') return '';
   return m12(timeInMins + durMins);
 }
 
