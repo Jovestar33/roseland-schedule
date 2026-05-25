@@ -82,7 +82,7 @@ export function nextFixedAnchorMin(
       const min = t12m(rows[j].fixedOutTime);
       if (min >= 0) return { idx: j, type: 'out', min };
     }
-    if (!rows[j].dur) break;
+    if (rows[j].dur === '') break;
   }
   return null;
 }
@@ -179,7 +179,7 @@ export function isLocked(rows: ScheduleRow[], i: number): boolean {
   if (i === firstNonSun) return false;
   for (let j = i - 1; j >= 0; j--) {
     if (rows[j].sunLocked) continue;
-    return !rows[j].dur;
+    return rows[j].dur === '';
   }
   return false;
 }
