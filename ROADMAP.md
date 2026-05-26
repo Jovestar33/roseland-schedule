@@ -20,7 +20,16 @@
 *Quality of life improvements before wider use*
 
 6. ✅ **Compact crew block** — Producer / Director / Camera replaced with `CrewIdentityBlock`: two-row display (labels + values), inline edit on tap, sits between identity line and Town/Location. Merged to main 2026-05-15.
-7. **Schedule header fields** — add Project Name, Phase, Day Out of Days above Town/Location (crew block already done; these three fields remain)
+7. ✅ **Schedule header fields — Phase 9 complete** — Passed testing 2026-05-26. Branch: `phase-9-schedule-header-identity`, merged to `main` 2026-05-26.
+   - Schedule header now presents a two-row identity block: Project/Production name on row 1 (18px bold), Phase · Day on row 2 (12px muted).
+   - Project and Phase retain `meta.projectName` and `meta.phase` — the same fields used by Library grouping, Move To, and the read-only view. No metadata schema changes.
+   - Project and Phase editing shows all existing options immediately on open (no pre-filtering), consistent with Move To selector UX. Custom values can still be entered.
+   - Day is edited via a single slash-notation input (`1/5` = Day 1 of 5; `1` or `1/` = Day 1, totalDays null). Values stored as `meta.dayNumber` and `meta.totalDays` (unchanged).
+   - Day input enforces digits-and-slash only at keystroke level. Invalid input (day = 0, day exceeds total, `/5` with no day number) keeps the editor open with a visible inline error — metadata is never corrupted by invalid input.
+   - Escape reverts the Day field to the pre-edit snapshot value and closes without writing.
+   - Town / Location, Date, Call Time, Producer, Director, Camera, save/load, Library, Move To, print, mobile layout, and read-only view all preserved.
+   - **Architecture note:** This is a step toward future call-sheet and Production Command architecture, but is not a call sheet. The schedule editor header remains intentionally clean. Heavy call-sheet-only fields (full crew list, parking, safety notes, permits) belong in a dedicated Call Sheet layer (Item 19), not in the schedule header.
+   - **Future (not Phase 9):** Full call sheet generation (Item 19), multi-day master schedule (Item 20), Production Info Panel / Production Command.
 8. ✅ **Move CMS to Library** — CMS button removed from schedule toolbar, now in Library header
 9. **Export Current JSON** — move to schedule toolbar, remove from Backup tab
 10. ✅ **Tools Panel slide-over** — `ToolsPanel.tsx` renders via `createPortal` to `document.body`; slides from right on desktop/tablet (380px), bottom sheet on mobile (70vh). Three tabs: Templates (save/apply/delete templates from within an open schedule — the context problem is now solved), Backup (Export JSON), Restore (snapshot cards with Preview, Save As New, Restore, Delete). Merged to main 2026-05-15.
@@ -167,9 +176,10 @@
 - **Phase 6 complete:** Library Declutter / Mobile Polish. Passed testing 2026-05-25. Branch: `phase-6-library-declutter`, merged to `main` 2026-05-25.
 - **Phase 7 complete:** Read-only Link Experience / Client View Polish. Passed testing 2026-05-25. Branch: `phase-7-readonly-view-polish`, merged to `main` 2026-05-25.
 - **Phase 8 complete:** Snapshot UX Polish. Passed testing 2026-05-25. Branch: `phase-8-snapshot-ux-polish`, merged to `main` 2026-05-25.
-- **Next recommended phase:** Item 7 — Schedule header fields (Project Name, Phase, Day Out of Days above Town/Location). Continues the header/identity work already established with `CrewIdentityBlock` and the identity line. Item 16 remaining scope (side-by-side compare, full autosave redesign, snapshot rename) deferred. Item 17 remaining work (public contact cards, contact visibility toggle, separate vendor/crew link type) deferred — requires explicit privacy design before implementation.
-- **Near-term polish:** Items 7, 9, 11 grouped by theme.
+- **Phase 9 complete:** Schedule Header Identity Fields. Passed testing 2026-05-26. Branch: `phase-9-schedule-header-identity`, merged to `main` 2026-05-26.
+- **Next recommended phase:** Item 9 — Export Current JSON (move to schedule toolbar, small self-contained polish). After that, Item 19 (Call Sheets) and Item 20 (Multi-day / Master Schedule) are the natural next steps toward Production Command architecture — both warrant a planning conversation before implementation. Item 16 remaining scope (side-by-side compare, full autosave redesign, snapshot rename) deferred. Item 17 remaining work (public contact cards, contact visibility toggle, separate vendor/crew link type) deferred — requires explicit privacy design before implementation.
+- **Near-term polish:** Items 9, 11 (Export JSON, overtime push notifications).
 - **Item 22 (CMS architecture):** Planning conversation before any code.
 
 ---
-*Last updated: 2026-05-25 — Phase 8 Snapshot UX Polish complete and tested; merged to main. Next: Item 7 — Schedule header fields (Project Name, Phase, Day Out of Days).*
+*Last updated: 2026-05-26 — Phase 9 Schedule Header Identity Fields complete and tested; merged to main. Item 7 marked complete. Next: Item 9 (Export JSON to toolbar), then Items 19/20 (Call Sheets, Multi-day) for Production Command direction.*
