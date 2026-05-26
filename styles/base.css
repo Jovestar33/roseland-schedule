@@ -1195,16 +1195,22 @@ thead th{
 .lib-btn-mobile  { display: none; }
 .lib-btn-desktop { display: inline; }
 
-/* Team/Client links hidden on mobile for archived rows */
+/* Visibility helpers for breakpoint-specific row actions */
 .lib-acts-desktop-only { }
+/* Hidden on desktop, shown on mobile */
+.lib-acts-mobile-only { display: none !important; }
 
 @media (max-width: 760px) {
   .lib-btn-mobile  { display: inline; }
   .lib-btn-desktop { display: none; }
   .lib-acts-desktop-only { display: none !important; }
+  .lib-acts-mobile-only  { display: inline-flex !important; }
 
   .lib-search-row { flex-wrap: wrap; }
   .lib-search-tools { flex: 1; justify-content: flex-end; }
+
+  /* Search input: tighten so placeholder fits on narrow screens */
+  .lib-search-input { font-size: 11px; padding: 6px 24px 6px 24px; }
 
   .lib-filter-row { flex-direction: column; align-items: flex-start; gap: 6px; }
   .lib-filter-label { min-width: 0; }

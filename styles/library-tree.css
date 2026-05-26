@@ -137,25 +137,76 @@
   font-size: 13px;
   color: var(--pink);
   cursor: pointer;
-  flex-shrink: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 280px;
-  text-decoration: none;
-}
-
-.lbt-sched-name:hover { text-decoration: underline; }
-
-.lbt-sched-meta {
-  font-size: 12px;
-  color: var(--g500);
   flex: 1;
   min-width: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  text-decoration: none;
+  text-align: left;
+  background: none;
+  border: none;
+  padding: 0;
 }
+
+.lbt-sched-name:hover { text-decoration: underline; }
+
+/* ── ⋯ context menu trigger ── */
+.lbt-ctx-btn {
+  min-height: 30px;
+  min-width: 30px;
+  padding: 0 8px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  border: 1px solid var(--g300);
+  background: #fff;
+  cursor: pointer;
+  color: var(--g600);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.12s, border-color 0.12s, color 0.12s;
+  letter-spacing: 1px;
+  line-height: 1;
+}
+.lbt-ctx-btn:hover { background: var(--g50); border-color: var(--g400); color: var(--ink); }
+
+/* ── ⋯ portal menu ── */
+.lbt-ctx-menu {
+  position: fixed;
+  background: #fff;
+  border: 1px solid var(--g200);
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.13);
+  z-index: 1200;
+  min-width: 160px;
+  padding: 4px;
+  display: flex;
+  flex-direction: column;
+}
+.lbt-ctx-item {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px 12px;
+  text-align: left;
+  font-size: 13px;
+  font-family: var(--fb);
+  font-weight: 600;
+  color: var(--ink);
+  border-radius: 7px;
+  white-space: nowrap;
+  display: block;
+  width: 100%;
+  line-height: 1.4;
+}
+.lbt-ctx-item:hover { background: var(--g50); }
+.lbt-ctx-item:disabled { opacity: 0.5; cursor: default; }
+.lbt-ctx-item--danger { color: #dc2626; }
+.lbt-ctx-item--danger:hover { background: #fef2f2; }
+/* Move To in ⋯ menu: visible on mobile only (desktop has its own button) */
+.lbt-ctx-item--mobile-only { display: none; }
 
 .lbt-sched-acts {
   display: flex;
@@ -225,21 +276,19 @@
     flex-wrap: wrap;
     row-gap: 4px;
   }
-  .lbt-sched-name {
-    flex: 1;
-    max-width: none;
-  }
-  .lbt-sched-meta { display: none; }
   .lbt-sched-acts {
     width: 100%;
     padding-left: 28px; /* grip (20px) + gap (8px) — aligns with name above */
   }
-  .lbt-sched-acts .sitem-copy,
-  .lbt-sched-acts .sitem-del,
-  .lbt-sched-acts .sitem-links-btn {
+  .lbt-sched-acts .sitem-links-btn,
+  .lbt-sched-acts .sitem-move-btn,
+  .lbt-sched-acts .sitem-restore-btn,
+  .lbt-sched-acts .sitem-del {
     padding: 4px 10px;
     font-size: 12px;
   }
+  /* Larger tap target for ⋯ button on mobile */
+  .lbt-ctx-btn { min-width: 38px; min-height: 34px; }
   .lbt-phase .lbt-sched-list .lbt-sched-row { padding-left: 44px; }
   .lbt-prod-direct .lbt-sched-row { padding-left: 28px; }
 }

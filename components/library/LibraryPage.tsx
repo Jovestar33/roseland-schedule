@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect, useMemo, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/lib/store/authStore';
 import { useCmsStore } from '@/lib/store/cmsStore';
@@ -384,6 +385,12 @@ export default function LibraryPage() {
   // During this window, opening or re-renaming the schedule is blocked to prevent
   // a blank editor (blob CDN hasn't fully propagated the new key yet).
   const [syncingRenames, setSyncingRenames] = useState<Map<string, number>>(new Map());
+
+  // More menu (header dropdown)
+  const [moreOpen, setMoreOpen] = useState(false);
+  const [moreMenuStyle, setMoreMenuStyle] = useState<React.CSSProperties>({});
+  const moreBtnRef  = useRef<HTMLButtonElement>(null);
+  const moreMenuRef = useRef<HTMLDivElement>(null);
 
   // Search / filter / sort
   const [searchQuery,    setSearchQuery]    = useState('');
@@ -1058,6 +1065,36 @@ export default function LibraryPage() {
     router.push('/login');
   }
 
+  // ── More menu ──────────────────────────────────────────────────────────────
+
+  function toggleMore() {
+    if (moreOpen) { setMoreOpen(false); return; }
+    if (moreBtnRef.current) {
+      const r = moreBtnRef.current.getBoundingClientRect();
+      setMoreMenuStyle({ top: r.bottom + 4, right: window.innerWidth - r.right });
+    }
+    setMoreOpen(true);
+  }
+
+  useEffect(() => {
+    if (!moreOpen) return;
+    function onDown(e: MouseEvent) {
+      const t = e.target as Node;
+      if (moreBtnRef.current?.contains(t) || moreMenuRef.current?.contains(t)) return;
+      setMoreOpen(false);
+    }
+    function onKey(e: KeyboardEvent) { if (e.key === 'Escape') setMoreOpen(false); }
+    function onScroll() { setMoreOpen(false); }
+    document.addEventListener('mousedown', onDown);
+    document.addEventListener('keydown', onKey);
+    document.addEventListener('scroll', onScroll, true);
+    return () => {
+      document.removeEventListener('mousedown', onDown);
+      document.removeEventListener('keydown', onKey);
+      document.removeEventListener('scroll', onScroll, true);
+    };
+  }, [moreOpen]);
+
   // ── Derived data ───────────────────────────────────────────────────────────
 
   const activeFilterCount = [
@@ -1459,7 +1496,8 @@ export default function LibraryPage() {
         <h1 className="lib-title">Library</h1>
         <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
           <button className="btn btn-pink btn-sm" onClick={() => router.push('/schedule/Untitled')}>
-            + New Schedule
+            <span className="lib-btn-desktop">+ New Schedule</span>
+            <span className="lib-btn-mobile">+ New</span>
           </button>
           <button
             className="btn btn-light btn-sm"
@@ -1474,10 +1512,39 @@ export default function LibraryPage() {
             onClick={() => setFilterStatus(showArchived ? 'active' : 'all')}
             title={showArchived ? 'Hide archived schedules' : 'Show archived schedules'}
           >
-            {showArchived ? '⊘ Archived On' : 'Show Archived'}
+            {showArchived
+              ? <><span className="lib-btn-desktop">⊘ Archived On</span><span className="lib-btn-mobile">⊘ On</span></>
+              : <><span className="lib-btn-desktop">Show Archived</span><span className="lib-btn-mobile">Archived</span></>
+            }
           </button>
-          <button className="btn btn-light btn-sm" onClick={openCmsModal}>&#9881; CMS</button>
-          <button className="btn btn-light btn-sm" onClick={handleLogout}>Log Out</button>
+          <button
+            ref={moreBtnRef}
+            className="btn btn-light btn-sm"
+            onClick={toggleMore}
+            title="More options"
+          >
+            <span className="lib-btn-desktop">More ▾</span>
+            <span className="lib-btn-mobile">⋯</span>
+          </button>
+          {moreOpen && typeof document !== 'undefined' && createPortal(
+            <div ref={moreMenuRef} className="lib-more-menu" style={moreMenuStyle}>
+              <button
+                type="button"
+                className="lib-more-item"
+                onClick={() => { openCmsModal(); setMoreOpen(false); }}
+              >
+                ⚙ CMS
+              </button>
+              <button
+                type="button"
+                className="lib-more-item"
+                onClick={handleLogout}
+              >
+                Log Out
+              </button>
+            </div>,
+            document.body
+          )}
         </div>
       </div>
       {refreshError && (
