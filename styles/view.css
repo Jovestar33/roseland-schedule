@@ -7,10 +7,11 @@
   background: #fff;
 }
 
-.rv-identity-title {
+/* Schedule name — top of hierarchy (e.g. "Rocky Mount – Apr 24") */
+.rv-identity-name {
   font-family: var(--fd);
-  font-size: 20px;
-  letter-spacing: 2px;
+  font-size: 24px;
+  letter-spacing: 2.5px;
   color: var(--ink);
   line-height: 1.1;
   white-space: nowrap;
@@ -18,6 +19,20 @@
   text-overflow: ellipsis;
 }
 
+/* Project/production name — below schedule name (e.g. "Main To Main Trail") */
+.rv-identity-title {
+  font-family: var(--fd);
+  font-size: 16px;
+  letter-spacing: 1.5px;
+  color: var(--g600);
+  line-height: 1.2;
+  margin-top: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Phase / day info (e.g. "Drive In / Drive Out · Day 1 of 1") */
 .rv-identity-meta {
   margin-top: 4px;
   font-size: 12px;
@@ -99,11 +114,24 @@ a.rv-subloc-loc:hover {
     background: #fff !important;
   }
 
-  .rv-identity-title {
-    font-size: 11px !important;
-    letter-spacing: 1.5px !important;
+  /* Schedule name: most prominent printed title */
+  .rv-identity-name {
+    font-size: 14px !important;
+    letter-spacing: 2.5px !important;
     color: #111 !important;
     font-weight: 400 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  /* Project/production name */
+  .rv-identity-title {
+    font-size: 9px !important;
+    letter-spacing: 1px !important;
+    color: #444 !important;
+    font-weight: 400 !important;
+    margin-top: 2px !important;
     white-space: nowrap !important;
     overflow: hidden !important;
     text-overflow: ellipsis !important;
@@ -113,6 +141,23 @@ a.rv-subloc-loc:hover {
     font-size: 7.5px !important;
     color: #71717a !important;
     margin-top: 2px !important;
+  }
+
+  /* ── Time Out fix ─────────────────────────────────────────────────────────
+     print.css hides th:last-child / td:last-child to suppress the editor's
+     delete-button column (column 11). The read view has only 9 columns so
+     Time Out is the last child and gets incorrectly hidden.
+     Higher-specificity rule scoped to .rv-panel overrides that without
+     touching the editor's print layout. */
+  html body .rv-panel .tbl-wrap table thead tr th:last-child,
+  html body .rv-panel .tbl-wrap table tbody tr td:last-child {
+    display: table-cell !important;
+    visibility: visible !important;
+    width: auto !important;
+    max-width: none !important;
+    padding: 3.4px 5px !important;
+    border: 0 !important;
+    overflow: visible !important;
   }
 
   /* Action pills: keep color backgrounds, tighten for print density */

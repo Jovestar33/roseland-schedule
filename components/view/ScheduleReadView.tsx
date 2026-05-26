@@ -63,7 +63,8 @@ export default function ScheduleReadView({ data, name }: Props) {
   const visibleRows = rows.filter(r => r.action || r.timeIn);
   const callTime = rows.find(r => !r.sunLocked)?.timeIn || '';
 
-  const displayTitle = meta.projectName || name || '';
+  const scheduleName = name || '';
+  const projectName = meta.projectName || '';
   const dayInfo = meta.dayNumber != null
     ? `Day ${meta.dayNumber}${meta.totalDays ? ` of ${meta.totalDays}` : ''}`
     : '';
@@ -108,10 +109,11 @@ export default function ScheduleReadView({ data, name }: Props) {
         </div>
       )}
 
-      <div className="panel">
-        {displayTitle && (
+      <div className="panel rv-panel">
+        {(scheduleName || projectName) && (
           <div className="rv-identity">
-            <div className="rv-identity-title">{displayTitle}</div>
+            {scheduleName && <div className="rv-identity-name">{scheduleName}</div>}
+            {projectName && <div className="rv-identity-title">{projectName}</div>}
             {subInfo && <div className="rv-identity-meta">{subInfo}</div>}
           </div>
         )}
