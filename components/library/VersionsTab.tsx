@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/lib/store/authStore';
+import { useScheduleStore } from '@/lib/store/scheduleStore';
 import { getSnapshots, deleteSnapshot } from '@/lib/api/snapshots';
 import { postSave } from '@/lib/api/save';
 import { computeTimeOut } from '@/lib/time';
@@ -13,8 +14,11 @@ interface Props {
 }
 
 export default function VersionsTab({ scheduleNames, initialName = '' }: Props) {
-  const router = useRouter();
-  const token = useAuthStore((s) => s.token);
+  const router            = useRouter();
+  const token             = useAuthStore((s) => s.token);
+  const loadSchedule      = useScheduleStore((s) => s.loadSchedule);
+  const setRemoteBaseline = useScheduleStore((s) => s.setRemoteBaseline);
+  const setSyncStatus     = useScheduleStore((s) => s.setSyncStatus);
 
   const [selectedName, setSelectedName] = useState(initialName || scheduleNames[0] || '');
   const [snapshots, setSnapshots] = useState<Snapshot[]>([]);
@@ -53,7 +57,18 @@ export default function VersionsTab({ scheduleNames, initialName = '' }: Props) 
     const newName = prompt('Save as new schedule — enter a name:', `${selectedName} copy`)?.trim();
     if (!newName) return;
     try {
-      await postSave(newName, snap.data, token, {});
+      const result = await postSave(newName, snap.data, token, {});
+      // Pre-load the store so the editor skips the cloud fetch on mount
+      // (avoids blank schedule due to Blob propagation delay).
+      loadSchedule(newName, { ...snap.data, savedAt: result.savedAt });
+      setRemoteBaseline(result.savedAt, '');
+      setSyncStatus('synced');
+      try {
+        sessionStorage.setItem('rp_recently_added_schedule', JSON.stringify({ name: newName, addedAt: Date.now() }));
+        sessionStorage.setItem('rp_recently_saved_meta', JSON.stringify({
+          name: newName, meta: snap.data.meta, savedAt: result.savedAt, addedAt: Date.now(),
+        }));
+      } catch {}
       router.push(`/schedule/${encodeURIComponent(newName)}`);
     } catch {
       alert('Save failed — check your connection and try again.');
@@ -94,8 +109,8 @@ export default function VersionsTab({ scheduleNames, initialName = '' }: Props) 
 
       {!loading && selectedName && (
         <div className="tp-snap-cap">
-          {snapshots.length} / 10 snapshots
-          {snapshots.length >= 10 && (
+          {snapshots.length} / 25 snapshots
+          {snapshots.length >= 25 && (
             <span className="tp-snap-cap-note"> · New snapshots replace the oldest.</span>
           )}
         </div>
@@ -120,11 +135,8 @@ export default function VersionsTab({ scheduleNames, initialName = '' }: Props) 
             return (
               <div key={snap.id} className="ver-item">
                 <div className="ver-meta">
-                  <div className="ver-title">
-                    {time}
-                    <span className="snapshot-badge">{snap.label || 'Snapshot'}</span>
-                  </div>
-                  <div className="ver-sub">{actCount} action{actCount === 1 ? '' : 's'}</div>
+                  <div className="ver-title">{snap.label || 'Snapshot'}</div>
+                  <div className="ver-sub">{time} · {actCount} action{actCount === 1 ? '' : 's'}</div>
                 </div>
                 <div className="ver-acts">
                   <button className="btn btn-light btn-sm" onClick={() => setPreview(snap)}>Preview</button>
