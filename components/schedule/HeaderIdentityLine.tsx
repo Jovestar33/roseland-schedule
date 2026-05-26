@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useScheduleStore } from '@/lib/store/scheduleStore';
 import ComboInput from './ComboInput';
 
-type Field = 'projectName' | 'phase' | 'day';
+type Field = 'projectName' | 'phase' | 'dayNumber' | 'totalDays';
 
 interface Props { readOnly?: boolean; }
 
@@ -37,19 +37,13 @@ export default function HeaderIdentityLine({ readOnly = false }: Props) {
     _setDraft(v);
   }
 
-  const dayStr = meta.dayNumber !== null
-    ? (meta.totalDays !== null ? `Day ${meta.dayNumber}/${meta.totalDays}` : `Day ${meta.dayNumber}`)
-    : '';
-
-  const dayEditStr = meta.dayNumber !== null
-    ? (meta.totalDays !== null ? `${meta.dayNumber}/${meta.totalDays}` : `${meta.dayNumber}`)
-    : '';
-
   function startEdit(field: Field) {
     if (readOnly) return;
-    const init = field === 'day'         ? dayEditStr
-               : field === 'projectName' ? meta.projectName
-               :                          meta.phase;
+    const init =
+      field === 'projectName' ? meta.projectName :
+      field === 'phase'       ? meta.phase :
+      field === 'dayNumber'   ? (meta.dayNumber  != null ? String(meta.dayNumber)  : '') :
+                                (meta.totalDays != null ? String(meta.totalDays) : '');
     setDraft(init);
     setEditing(field);
   }
@@ -61,100 +55,154 @@ export default function HeaderIdentityLine({ readOnly = false }: Props) {
       updateMeta({ projectName: titleCase(val) });
     } else if (editing === 'phase') {
       updateMeta({ phase: titleCase(val) });
+    } else if (editing === 'dayNumber') {
+      const n = parseInt(val.trim(), 10);
+      updateMeta({ dayNumber: n > 0 ? n : null });
     } else {
-      const t = val.trim();
-      if (!t) {
-        updateMeta({ dayNumber: null, totalDays: null });
-      } else {
-        const [a, b] = t.split('/');
-        const n   = parseInt(a, 10);
-        const tot = b !== undefined ? parseInt(b, 10) : null;
-        if (n > 0) updateMeta({ dayNumber: n, totalDays: tot && tot > 0 ? tot : null });
-        else       updateMeta({ dayNumber: null, totalDays: null });
-      }
+      const n = parseInt(val.trim(), 10);
+      updateMeta({ totalDays: n > 0 ? n : null });
     }
     setEditing(null);
   }
 
   function revert() { setEditing(null); }
 
-  function onKey(e: React.KeyboardEvent<HTMLInputElement>) {
+  function onNumKey(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === 'Enter')  { e.preventDefault(); commit(); }
     if (e.key === 'Escape') { e.preventDefault(); revert(); }
   }
 
-  // Read-only: show only non-empty values, omit empties and their separators.
+  // Read-only: two-row display, no edit controls
   if (readOnly) {
-    const parts = [meta.projectName, meta.phase, dayStr].filter(Boolean);
-    if (!parts.length) return null;
+    const dayStr = meta.dayNumber != null
+      ? (meta.totalDays != null ? `Day ${meta.dayNumber} of ${meta.totalDays}` : `Day ${meta.dayNumber}`)
+      : '';
+    const row2Parts = [meta.phase, dayStr].filter(Boolean);
+    if (!meta.projectName && !row2Parts.length) return null;
     return (
-      <div className="hdr-identity">
-        {parts.map((p, i) => (
-          <span key={i} className="hi-item">
-            {i > 0 && <span className="hi-sep"> · </span>}
-            <span className="hi-val">{p}</span>
-          </span>
-        ))}
+      <div className="hdr-id-block">
+        {meta.projectName && (
+          <div className="hdr-id-row1">
+            <span className="hi-project">{meta.projectName}</span>
+          </div>
+        )}
+        {row2Parts.length > 0 && (
+          <div className="hdr-id-row2">
+            {row2Parts.map((p, i) => (
+              <span key={i} className="hi-item">
+                {i > 0 && <span className="hi-sep"> · </span>}
+                <span className="hi-val">{p}</span>
+              </span>
+            ))}
+          </div>
+        )}
       </div>
     );
   }
 
-  const FIELDS: { id: Field; val: string; ph: string }[] = [
-    { id: 'projectName', val: meta.projectName, ph: 'Project'  },
-    { id: 'phase',       val: meta.phase,        ph: 'Phase'    },
-    { id: 'day',         val: dayStr,             ph: 'Day #/#'  },
-  ];
-
   return (
-    <div className="hdr-identity">
-      {FIELDS.map((f, i) => (
-        <span key={f.id} className="hi-item">
-          {i > 0 && <span className="hi-sep"> · </span>}
-          {editing === f.id ? (
-            f.id === 'projectName' ? (
-              <ComboInput
-                className="hi-field"
-                value={draft}
-                onChange={setDraft}
-                onBlur={commit}
-                onEscape={revert}
-                options={projectOptions}
-                placeholder={f.ph}
-                autoFocus
-              />
-            ) : f.id === 'phase' ? (
-              <ComboInput
-                className="hi-field"
-                value={draft}
-                onChange={setDraft}
-                onBlur={commit}
-                onEscape={revert}
-                options={phaseOptions}
-                placeholder={f.ph}
-                autoFocus
-              />
-            ) : (
-              <input
-                className="hi-field"
-                autoFocus
-                value={draft}
-                placeholder={f.ph}
-                onChange={(e) => setDraft(e.target.value)}
-                onBlur={commit}
-                onKeyDown={onKey}
-                style={{ width: `${Math.max((draft || f.ph).length, 2)}ch` }}
-              />
-            )
+    <div className="hdr-id-block">
+      {/* Row 1: Project / Production Name */}
+      <div className="hdr-id-row1">
+        {editing === 'projectName' ? (
+          <ComboInput
+            className="hi-field"
+            value={draft}
+            onChange={setDraft}
+            onBlur={commit}
+            onEscape={revert}
+            options={projectOptions}
+            placeholder="Project name"
+            autoFocus
+          />
+        ) : (
+          <span
+            className={`hi-project${meta.projectName ? '' : ' hi-project-empty'}`}
+            onClick={() => startEdit('projectName')}
+          >
+            {meta.projectName || 'Project name'}
+          </span>
+        )}
+      </div>
+
+      {/* Row 2: Phase · Day X of Y */}
+      <div className="hdr-id-row2">
+        {/* Phase */}
+        {editing === 'phase' ? (
+          <ComboInput
+            className="hi-field"
+            value={draft}
+            onChange={setDraft}
+            onBlur={commit}
+            onEscape={revert}
+            options={phaseOptions}
+            placeholder="Phase"
+            autoFocus
+          />
+        ) : (
+          <span
+            className={meta.phase ? 'hi-val' : 'hi-empty'}
+            onClick={() => startEdit('phase')}
+          >
+            {meta.phase || 'Phase'}
+          </span>
+        )}
+
+        <span className="hi-sep"> · </span>
+
+        {/* Day number and optional total */}
+        <span className="hi-day-wrap">
+          <span className="hi-day-lbl">Day </span>
+          {editing === 'dayNumber' ? (
+            <input
+              className="hi-field"
+              autoFocus
+              type="text"
+              inputMode="numeric"
+              value={draft}
+              placeholder="—"
+              onChange={(e) => setDraft(e.target.value)}
+              onBlur={commit}
+              onKeyDown={onNumKey}
+              style={{ width: `${Math.max((draft || '—').length, 2)}ch` }}
+            />
           ) : (
             <span
-              className={f.val ? 'hi-val' : 'hi-empty'}
-              onClick={() => startEdit(f.id)}
+              className={meta.dayNumber != null ? 'hi-val' : 'hi-empty'}
+              onClick={() => startEdit('dayNumber')}
             >
-              {f.val || f.ph}
+              {meta.dayNumber ?? '—'}
             </span>
           )}
+          {/* Show "of [total]" when dayNumber is set or when editing totalDays */}
+          {(meta.dayNumber != null || editing === 'totalDays') && (
+            <>
+              <span className="hi-day-of"> of </span>
+              {editing === 'totalDays' ? (
+                <input
+                  className="hi-field"
+                  autoFocus
+                  type="text"
+                  inputMode="numeric"
+                  value={draft}
+                  placeholder="—"
+                  onChange={(e) => setDraft(e.target.value)}
+                  onBlur={commit}
+                  onKeyDown={onNumKey}
+                  style={{ width: `${Math.max((draft || '—').length, 2)}ch` }}
+                />
+              ) : (
+                <span
+                  className={meta.totalDays != null ? 'hi-val' : 'hi-empty'}
+                  onClick={() => startEdit('totalDays')}
+                >
+                  {meta.totalDays ?? '—'}
+                </span>
+              )}
+            </>
+          )}
         </span>
-      ))}
+      </div>
     </div>
   );
 }
