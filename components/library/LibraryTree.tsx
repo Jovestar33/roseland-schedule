@@ -306,7 +306,7 @@ function ScheduleRowContent({
         </div>
 
         {/* ── Active: Move To (always) + Rename/Archive (desktop) + ⋯ (mobile only)
-             ── Archived: ⋯ always ── */}
+             ── Archived: Restore + Delete directly (no ⋯) ── */}
         {!isArchived ? (
           <>
             <button
@@ -348,57 +348,46 @@ function ScheduleRowContent({
             </button>
           </>
         ) : (
-          <button
-            ref={ctxBtnRef}
-            type="button"
-            className="lbt-ctx-btn"
-            onClick={toggleCtx}
-            title="More actions"
-            aria-haspopup="true"
-          >
-            ⋯
-          </button>
+          /* Archived: direct Restore + Delete buttons, no ⋯ menu */
+          <>
+            <button
+              type="button"
+              className="sitem-restore-btn"
+              onClick={() => onRestore(s.name)}
+              title="Restore from archive"
+            >
+              Restore
+            </button>
+            <button
+              type="button"
+              className="sitem-del"
+              onClick={() => onDeletePermanently(s.name)}
+              title="Delete permanently"
+            >
+              <span className="lib-btn-desktop">Delete Permanently</span>
+              <span className="lib-btn-mobile">Delete</span>
+            </button>
+          </>
         )}
 
-        {/* ── ⋯ portal menu ── */}
+        {/* ── ⋯ portal menu — active rows on mobile only ── */}
         {ctxOpen && createPortal(
           <div ref={ctxMenuRef} className="lbt-ctx-menu" style={ctxStyle}>
-            {isArchived ? (
-              <>
-                <button
-                  type="button"
-                  className="lbt-ctx-item"
-                  onClick={() => { onRestore(s.name); setCtxOpen(false); }}
-                >
-                  Restore
-                </button>
-                <button
-                  type="button"
-                  className="lbt-ctx-item lbt-ctx-item--danger"
-                  onClick={() => { onDeletePermanently(s.name); setCtxOpen(false); }}
-                >
-                  Delete Permanently
-                </button>
-              </>
-            ) : (
-              <>
-                <button
-                  type="button"
-                  className="lbt-ctx-item"
-                  onClick={() => { if (!isSyncing) { onRename(s.name); setCtxOpen(false); } }}
-                  disabled={isSyncing}
-                >
-                  {isSyncing ? 'Syncing…' : 'Rename'}
-                </button>
-                <button
-                  type="button"
-                  className="lbt-ctx-item"
-                  onClick={() => { onArchive(s.name); setCtxOpen(false); }}
-                >
-                  Archive
-                </button>
-              </>
-            )}
+            <button
+              type="button"
+              className="lbt-ctx-item"
+              onClick={() => { if (!isSyncing) { onRename(s.name); setCtxOpen(false); } }}
+              disabled={isSyncing}
+            >
+              {isSyncing ? 'Syncing…' : 'Rename'}
+            </button>
+            <button
+              type="button"
+              className="lbt-ctx-item"
+              onClick={() => { onArchive(s.name); setCtxOpen(false); }}
+            >
+              Archive
+            </button>
           </div>,
           document.body
         )}

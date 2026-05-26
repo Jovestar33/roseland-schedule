@@ -281,7 +281,9 @@
     padding-left: 28px; /* grip (20px) + gap (8px) — aligns with name above */
   }
   .lbt-sched-acts .sitem-links-btn,
-  .lbt-sched-acts .sitem-move-btn {
+  .lbt-sched-acts .sitem-move-btn,
+  .lbt-sched-acts .sitem-restore-btn,
+  .lbt-sched-acts .sitem-del {
     padding: 4px 10px;
     font-size: 12px;
   }
