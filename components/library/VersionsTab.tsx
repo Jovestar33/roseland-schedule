@@ -92,8 +92,13 @@ export default function VersionsTab({ scheduleNames, initialName = '' }: Props) 
         </div>
       </div>
 
-      {selectedName && (
-        <div className="lib-meta" style={{ marginBottom: '10px' }}>Selected: {selectedName}</div>
+      {!loading && selectedName && (
+        <div className="tp-snap-cap">
+          {snapshots.length} / 10 snapshots
+          {snapshots.length >= 10 && (
+            <span className="tp-snap-cap-note"> · New snapshots replace the oldest.</span>
+          )}
+        </div>
       )}
 
       {loading && <div className="ver-empty">Loading snapshots…</div>}
@@ -123,9 +128,9 @@ export default function VersionsTab({ scheduleNames, initialName = '' }: Props) 
                 </div>
                 <div className="ver-acts">
                   <button className="btn btn-light btn-sm" onClick={() => setPreview(snap)}>Preview</button>
-                  <button className="btn btn-light btn-sm" onClick={() => handleSaveAsNew(snap)}>Save As New Schedule</button>
-                  <button className="btn btn-pink btn-sm" onClick={() => handleRestore(snap)}>Restore Current</button>
-                  <button className="btn btn-light btn-sm" onClick={() => handleDelete(snap)}>Delete</button>
+                  <button className="btn btn-light btn-sm" onClick={() => handleSaveAsNew(snap)}>Save As New</button>
+                  <button className="btn btn-pink btn-sm"  onClick={() => handleRestore(snap)}>Restore</button>
+                  <button className="tp-snap-del"          onClick={() => handleDelete(snap)}>Delete</button>
                 </div>
               </div>
             );
@@ -183,8 +188,8 @@ export default function VersionsTab({ scheduleNames, initialName = '' }: Props) 
                 );
               })()}
               <div className="ver-acts" style={{ justifyContent: 'flex-start', gap: '10px', flexWrap: 'wrap', marginTop: '14px' }}>
-                <button className="btn btn-light btn-sm" onClick={() => handleSaveAsNew(preview)}>Save As New Schedule</button>
-                <button className="btn btn-pink btn-sm" onClick={() => { handleRestore(preview); setPreview(null); }}>Restore Current Schedule</button>
+                <button className="btn btn-light btn-sm" onClick={() => handleSaveAsNew(preview)}>Save As New</button>
+                <button className="btn btn-pink btn-sm" onClick={() => { handleRestore(preview); setPreview(null); }}>Restore</button>
                 <button className="btn btn-light btn-sm" onClick={() => setPreview(null)}>Close Preview</button>
               </div>
             </div>

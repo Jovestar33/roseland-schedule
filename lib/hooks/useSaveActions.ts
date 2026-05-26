@@ -134,13 +134,14 @@ export function useSaveActions() {
     }
   }
 
-  async function takeSnapshot(label = 'Manual snapshot') {
-    if (!scheduleName || !token) return;
+  async function takeSnapshot(label = 'Manual snapshot'): Promise<boolean> {
+    if (!scheduleName || !token) return false;
     const data = getScheduleData();
     try {
       await postAddSnapshot(scheduleName, data, label, token);
+      return true;
     } catch {
-      // best-effort
+      return false;
     }
   }
 

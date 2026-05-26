@@ -23,9 +23,7 @@ export async function postAddSnapshot(
   });
   if (!res.ok) {
     const text = await res.text().catch(() => '');
-    console.error('[Snapshot] Save failed — HTTP', res.status, text);
-  } else {
-    console.log('[Snapshot] Saved OK —', label, 'for', name);
+    throw new Error(`Snapshot save failed — HTTP ${res.status}${text ? `: ${text}` : ''}`);
   }
 }
 

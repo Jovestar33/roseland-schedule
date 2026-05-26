@@ -241,6 +241,15 @@ function RestoreTabPanel() {
         </div>
       )}
 
+      {!loading && scheduleName && (
+        <div className="tp-snap-cap">
+          {snapshots.length} / 10 snapshots
+          {snapshots.length >= 10 && (
+            <span className="tp-snap-cap-note"> · New snapshots replace the oldest.</span>
+          )}
+        </div>
+      )}
+
       {!loading && snapshots.length > 0 && (
         <div>
           {snapshots.map((snap) => {
@@ -327,8 +336,8 @@ function RestoreTabPanel() {
                 );
               })()}
               <div className="ver-acts" style={{ justifyContent: 'flex-start', gap: '10px', flexWrap: 'wrap', marginTop: '14px' }}>
-                <button className="btn btn-light btn-sm" onClick={() => handleSaveAsNew(preview)}>Save As New Schedule</button>
-                <button className="btn btn-pink btn-sm" onClick={() => { handleRestore(preview); setPreview(null); }}>Restore Current</button>
+                <button className="btn btn-light btn-sm" onClick={() => handleSaveAsNew(preview)}>Save As New</button>
+                <button className="btn btn-pink btn-sm" onClick={() => { handleRestore(preview); setPreview(null); }}>Restore</button>
                 <button className="btn btn-light btn-sm" onClick={() => setPreview(null)}>Close Preview</button>
               </div>
             </div>
