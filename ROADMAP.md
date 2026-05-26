@@ -81,7 +81,20 @@
     - Contact button (`DoneContactCell`) and `ContactModal` entry point are unchanged.
     - Contacts remain editor-only; public/client view contacts not included in Phase 5.
     - **Limitations (deferred):** one contact per row; no contacts database; no public view contacts (item 17); no sub-location contacts (Phase 4B).
-16. **Version history UX (optional enhancement)** — improve restore UX, compare versions side-by-side, save a snapshot as a new schedule. Refers to improving the existing per-schedule snapshot system; does not imply implementing a new autosave or version-restore system.
+16. **Version history UX**
+    - ✅ **Phase 8 — Snapshot UX Polish** — Completed and tested 2026-05-25. Branch `phase-8-snapshot-ux-polish`, merged to `main` 2026-05-25.
+      - Manual snapshots now prompt for a custom label; blank/cancel falls back to "Manual snapshot."
+      - Snapshot cards show label as the main title; timestamp and action count appear as secondary metadata.
+      - Auto snapshots and conflict snapshots continue to display their labels clearly.
+      - Snapshot count badge shows X / 25 in both ToolsPanel Restore tab and Library Versions tab.
+      - Snapshot cap increased from 10 to 25 per schedule (server-side `normalizeSnapshots` and UI).
+      - Capacity note appears at 25 / 25: "New snapshots replace the oldest."
+      - Snapshot creation failure no longer shows a false success toast — an error toast is surfaced instead.
+      - Button labels and delete button styling unified between ToolsPanel Restore tab and Library Versions tab (Preview / Save As New / Restore / Delete).
+      - Redundant "Selected: [name]" line removed from Library Versions tab.
+      - Save As New from snapshot pre-loads known snapshot data into the store before navigation so the new schedule opens populated immediately, avoiding blank-schedule flash from Blob propagation lag.
+      - Existing Preview, Restore, Delete, auto-snapshot, and conflict snapshot behavior intact.
+    - ⬜ **Remaining / future (not Phase 8):** full autosave/version history redesign; snapshot rename/editing; styled confirmation modal replacement for `confirm()` / `prompt()` dialogs; side-by-side version compare.
 17. **Client read-only view enhancements**
     - ✅ **Phase 7 — Read-only Link Experience / Client View Polish** — UI-only pass; no data model, storage, or server-side function changes. Passed testing 2026-05-25.
       - Public/client view now shows a designed schedule identity block: schedule name, production/project name, phase, and day number / total days where available.
@@ -153,9 +166,10 @@
 - **Phase 5 complete:** Contact Sheet / Contact Extract. Passed testing 2026-05-25. Branch: `phase-5-contact-sheet`, merged to `main` 2026-05-25.
 - **Phase 6 complete:** Library Declutter / Mobile Polish. Passed testing 2026-05-25. Branch: `phase-6-library-declutter`, merged to `main` 2026-05-25.
 - **Phase 7 complete:** Read-only Link Experience / Client View Polish. Passed testing 2026-05-25. Branch: `phase-7-readonly-view-polish`, merged to `main` 2026-05-25.
-- **Next active phase:** Item 16 — Snapshot UX polish (improve restore UX, side-by-side compare, save snapshot as new schedule). Lower risk, self-contained. Item 17's remaining work (public contact cards, contact visibility toggle, separate vendor/crew link type) is deferred — requires explicit privacy design before implementation.
-- **Near-term polish:** Items 7, 9, 11, 16 grouped by theme.
+- **Phase 8 complete:** Snapshot UX Polish. Passed testing 2026-05-25. Branch: `phase-8-snapshot-ux-polish`, merged to `main` 2026-05-25.
+- **Next recommended phase:** Item 7 — Schedule header fields (Project Name, Phase, Day Out of Days above Town/Location). Continues the header/identity work already established with `CrewIdentityBlock` and the identity line. Item 16 remaining scope (side-by-side compare, full autosave redesign, snapshot rename) deferred. Item 17 remaining work (public contact cards, contact visibility toggle, separate vendor/crew link type) deferred — requires explicit privacy design before implementation.
+- **Near-term polish:** Items 7, 9, 11 grouped by theme.
 - **Item 22 (CMS architecture):** Planning conversation before any code.
 
 ---
-*Last updated: 2026-05-25 — Phase 7 Read-only Link Experience / Client View Polish complete and tested; merged to main. Next: Item 16 — Snapshot UX polish, or continue with Item 17 remaining work (contact visibility in public view — requires privacy design first).*
+*Last updated: 2026-05-25 — Phase 8 Snapshot UX Polish complete and tested; merged to main. Next: Item 7 — Schedule header fields (Project Name, Phase, Day Out of Days).*

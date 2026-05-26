@@ -108,6 +108,16 @@
   margin-bottom: 10px;
 }
 
+/* Snapshot capacity line — X / 10, used in RestoreTabPanel and VersionsTab */
+.tp-snap-cap {
+  font-size: 12px;
+  color: var(--g500);
+  margin-bottom: 10px;
+}
+.tp-snap-cap-note {
+  color: #b45309;
+}
+
 /* ── Restore tab: snapshot cards ─────────────────────────────────────────── */
 
 .tp-snap-card {

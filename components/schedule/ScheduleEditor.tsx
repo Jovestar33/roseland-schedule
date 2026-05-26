@@ -183,8 +183,9 @@ export default function ScheduleEditor({ name, initMeta }: Props) {
 
   // Bug 3: Snapshot button passes a click Event as the label argument; wrap to ignore it.
   async function handleSnapshot() {
-    await takeSnapshot();
-    addToast('Snapshot saved', 'success');
+    const label = prompt('Label this snapshot (optional):', '')?.trim() || 'Manual snapshot';
+    const ok = await takeSnapshot(label);
+    addToast(ok ? 'Snapshot saved' : 'Snapshot failed — check your connection.', ok ? 'success' : 'error');
   }
 
   function getSaveAsDefault(): string {

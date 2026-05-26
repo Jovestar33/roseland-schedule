@@ -26,7 +26,7 @@ function normalizeSnapshots(snaps) {
       data: s.data,
     }))
     .sort((a, b) => (b.savedAt || 0) - (a.savedAt || 0))
-    .slice(0, 10);
+    .slice(0, 25);
 }
 
 exports.handler = async (event) => {
