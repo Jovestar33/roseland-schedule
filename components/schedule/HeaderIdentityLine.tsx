@@ -29,12 +29,10 @@ export default function HeaderIdentityLine({ readOnly = false }: Props) {
   const [projectOptions, setProjectOptions] = useState<string[]>([]);
   const [phaseOptions,   setPhaseOptions]   = useState<string[]>([]);
 
-  // Snapshot of day values captured at edit-start; showValidation restores to this
+  // Pre-edit snapshot — used only by Escape to revert to the last valid value
   const daySnapshot = useRef<{ dayNumber: number | null; totalDays: number | null }>({
     dayNumber: null, totalDays: null,
   });
-  // Blocks the spurious second commitDay call triggered by unmount-blur after close
-  const dayCommitted = useRef(false);
 
   useEffect(() => {
     setProjectOptions(readOptions('rp_lib_project_options'));
@@ -56,21 +54,12 @@ export default function HeaderIdentityLine({ readOnly = false }: Props) {
       init = meta.phase;
     } else {
       daySnapshot.current = { dayNumber: meta.dayNumber, totalDays: meta.totalDays };
-      dayCommitted.current = false;
       if (meta.dayNumber != null) {
         init = meta.totalDays != null ? `${meta.dayNumber}/${meta.totalDays}` : String(meta.dayNumber);
       }
     }
     setDraft(init);
     setEditing(field);
-  }
-
-  function showValidation(msg: string) {
-    setValidationMsg(msg);
-    setEditing(null);
-    // Restore the pre-edit snapshot — guards against double-blur or any intermediate commit
-    updateMeta({ dayNumber: daySnapshot.current.dayNumber, totalDays: daySnapshot.current.totalDays });
-    setTimeout(() => setValidationMsg(''), 2500);
   }
 
   // Enforced slash-format input handler — only digits and one slash accepted
@@ -89,10 +78,12 @@ export default function HeaderIdentityLine({ readOnly = false }: Props) {
     let result = parts[0].slice(0, 3);
     if (parts.length > 1) result += '/' + parts[1].slice(0, 3);
 
-    // Auto-insert slash when typing (not deleting) and no slash present yet;
-    // cursor is positioned after the slash so the next keystroke fills totalDays
+    // Auto-insert slash when typing (not deleting) and no slash present yet
     const autoSlash = !isDeleting && !result.includes('/') && result.length > 0;
     if (autoSlash) result += '/';
+
+    // Clear any standing validation error as the user types a correction
+    if (validationMsg) setValidationMsg('');
 
     setDraft(result);
 
@@ -102,11 +93,9 @@ export default function HeaderIdentityLine({ readOnly = false }: Props) {
   }
 
   function commitDay(raw: string) {
-    if (dayCommitted.current) return; // unmount-blur guard
-    dayCommitted.current = true;
-
     const trimmed = raw.trim().replace(/\/$/, '');
     if (!trimmed) {
+      setValidationMsg('');
       updateMeta({ dayNumber: null, totalDays: null });
       setEditing(null);
       return;
@@ -115,18 +104,31 @@ export default function HeaderIdentityLine({ readOnly = false }: Props) {
     const dayStr = slashIdx === -1 ? trimmed : trimmed.slice(0, slashIdx).trim();
     const totStr = slashIdx === -1 ? '' : trimmed.slice(slashIdx + 1).trim();
 
-    if (!dayStr) { showValidation('Day number required (e.g. 1 or 1/5)'); return; }
+    if (!dayStr) {
+      setValidationMsg('Day number required (e.g. 1 or 1/5)');
+      return; // keep editor open
+    }
     const n = parseInt(dayStr, 10);
-    if (isNaN(n) || n <= 0) { showValidation('Day must be a positive number'); return; }
+    if (isNaN(n) || n <= 0) {
+      setValidationMsg('Day must be a positive number');
+      return; // keep editor open
+    }
 
     let total: number | null = null;
     if (totStr) {
       const t = parseInt(totStr, 10);
-      if (isNaN(t) || t <= 0) { showValidation('Total must be a positive number'); return; }
-      if (n > t) { showValidation(`Day ${n} exceeds total ${t}`); return; }
+      if (isNaN(t) || t <= 0) {
+        setValidationMsg('Total must be a positive number');
+        return; // keep editor open
+      }
+      if (n > t) {
+        setValidationMsg(`Day ${n} cannot exceed total ${t}`);
+        return; // keep editor open
+      }
       total = t;
     }
 
+    setValidationMsg('');
     updateMeta({ dayNumber: n, totalDays: total });
     setEditing(null);
   }
@@ -146,7 +148,11 @@ export default function HeaderIdentityLine({ readOnly = false }: Props) {
   }
 
   function revert() {
-    dayCommitted.current = true; // prevent unmount-blur from committing after escape
+    // For day: restore the pre-edit snapshot so Escape is always a clean undo
+    if (editing === 'day') {
+      updateMeta({ dayNumber: daySnapshot.current.dayNumber, totalDays: daySnapshot.current.totalDays });
+    }
+    setValidationMsg('');
     setEditing(null);
   }
 
@@ -248,7 +254,7 @@ export default function HeaderIdentityLine({ readOnly = false }: Props) {
           {editing === 'day' ? (
             <input
               ref={dayInputRef}
-              className="hi-field"
+              className={`hi-field${validationMsg ? ' hi-field-err' : ''}`}
               autoFocus
               type="text"
               inputMode="text"
@@ -270,7 +276,7 @@ export default function HeaderIdentityLine({ readOnly = false }: Props) {
         </span>
       </div>
 
-      {/* Inline validation feedback */}
+      {/* Inline validation feedback — persists until user corrects or escapes */}
       {validationMsg && (
         <div className="hi-day-err">{validationMsg}</div>
       )}
