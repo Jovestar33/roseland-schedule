@@ -29,6 +29,13 @@ export default function HeaderIdentityLine({ readOnly = false }: Props) {
   const [projectOptions, setProjectOptions] = useState<string[]>([]);
   const [phaseOptions,   setPhaseOptions]   = useState<string[]>([]);
 
+  // Snapshot of day values captured at edit-start; showValidation restores to this
+  const daySnapshot = useRef<{ dayNumber: number | null; totalDays: number | null }>({
+    dayNumber: null, totalDays: null,
+  });
+  // Blocks the spurious second commitDay call triggered by unmount-blur after close
+  const dayCommitted = useRef(false);
+
   useEffect(() => {
     setProjectOptions(readOptions('rp_lib_project_options'));
     setPhaseOptions(readOptions('rp_lib_phase_options'));
@@ -48,7 +55,8 @@ export default function HeaderIdentityLine({ readOnly = false }: Props) {
     } else if (field === 'phase') {
       init = meta.phase;
     } else {
-      // day: encode as slash notation for editing
+      daySnapshot.current = { dayNumber: meta.dayNumber, totalDays: meta.totalDays };
+      dayCommitted.current = false;
       if (meta.dayNumber != null) {
         init = meta.totalDays != null ? `${meta.dayNumber}/${meta.totalDays}` : String(meta.dayNumber);
       }
@@ -60,43 +68,43 @@ export default function HeaderIdentityLine({ readOnly = false }: Props) {
   function showValidation(msg: string) {
     setValidationMsg(msg);
     setEditing(null);
+    // Restore the pre-edit snapshot — guards against double-blur or any intermediate commit
+    updateMeta({ dayNumber: daySnapshot.current.dayNumber, totalDays: daySnapshot.current.totalDays });
     setTimeout(() => setValidationMsg(''), 2500);
   }
 
-  // Enforced slash-format input handler
+  // Enforced slash-format input handler — only digits and one slash accepted
   function handleDayChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const newRaw  = e.target.value;
-    const prevVal = draftRef.current;
+    const newRaw     = e.target.value;
+    const prevVal    = draftRef.current;
     const isDeleting = newRaw.length < prevVal.length;
 
-    // Strip everything except digits and slash
     let filtered = newRaw.replace(/[^\d/]/g, '');
-    // Remove leading slash
     if (filtered.startsWith('/')) filtered = filtered.slice(1);
-    // Keep only the first slash
     const si = filtered.indexOf('/');
     if (si !== -1) {
       filtered = filtered.slice(0, si + 1) + filtered.slice(si + 1).replace(/\//g, '');
     }
-    // Limit each segment to 3 digits
     const parts = filtered.split('/');
     let result = parts[0].slice(0, 3);
     if (parts.length > 1) result += '/' + parts[1].slice(0, 3);
 
-    // Auto-insert slash when typing (not deleting) and no slash present yet
+    // Auto-insert slash when typing (not deleting) and no slash present yet;
+    // cursor is positioned after the slash so the next keystroke fills totalDays
     const autoSlash = !isDeleting && !result.includes('/') && result.length > 0;
     if (autoSlash) result += '/';
 
     setDraft(result);
 
     if (autoSlash) {
-      // Position cursor after the slash so next keystrokes fill totalDays
       setTimeout(() => dayInputRef.current?.setSelectionRange(result.length, result.length), 0);
     }
   }
 
   function commitDay(raw: string) {
-    // Strip trailing slash before parsing
+    if (dayCommitted.current) return; // unmount-blur guard
+    dayCommitted.current = true;
+
     const trimmed = raw.trim().replace(/\/$/, '');
     if (!trimmed) {
       updateMeta({ dayNumber: null, totalDays: null });
@@ -137,7 +145,10 @@ export default function HeaderIdentityLine({ readOnly = false }: Props) {
     }
   }
 
-  function revert() { setEditing(null); }
+  function revert() {
+    dayCommitted.current = true; // prevent unmount-blur from committing after escape
+    setEditing(null);
+  }
 
   function onDayKey(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === 'Enter')  { e.preventDefault(); commitDay(draftRef.current); }
