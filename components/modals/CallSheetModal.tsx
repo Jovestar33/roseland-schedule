@@ -159,33 +159,64 @@ function Notes({ label, fieldKey, value, onCommit }: {
 // ---- Print-only document ----
 
 interface PrintDocProps {
-  scheduleName: string; formattedDate: string; dayStr: string;
-  prod: string; dir: string; dp: string; town: string; weather: string;
-  generalCall: string; lines: SchedLine[]; cs: CallSheetData;
-  contacts: Contact[]; showContacts: boolean;
+  scheduleName: string;
+  formattedDate: string;
+  dayStr: string;
+  projectName: string;
+  phase: string;
+  prod: string;
+  dir: string;
+  dp: string;
+  town: string;
+  weather: string;
+  generalCall: string;
+  lines: SchedLine[];
+  cs: CallSheetData;
+  contacts: Contact[];
+  showContacts: boolean;
 }
 
-function PrintDoc({ scheduleName, formattedDate, dayStr, prod, dir, dp, town, weather, generalCall, lines, cs, contacts, showContacts }: PrintDocProps) {
+function PrintDoc({
+  scheduleName, formattedDate, dayStr, projectName, phase,
+  prod, dir, dp, town, weather, generalCall,
+  lines, cs, contacts, showContacts,
+}: PrintDocProps) {
   const hasKeyInfo = cs.basecamp || cs.parking || cs.hospital || cs.emergency ||
                      cs.mealNotes || cs.safetyNotes || cs.specialInstructions || cs.notes;
+  const projectLine = [projectName, phase, dayStr].filter(Boolean).join(' · ');
+
   return (
     <div className="csh-pdoc">
-      <div className="csh-pdoc-head">
-        <div className="csh-pdoc-title">Call Sheet</div>
-        {scheduleName && <div className="csh-pdoc-subhead">{scheduleName}</div>}
+      {/* Branded header bar */}
+      <div className="csh-pdoc-brand">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/logo-header.png" className="csh-pdoc-logo" alt="Roseland Pictures" />
+        <span className="csh-pdoc-brand-title">Call Sheet</span>
       </div>
 
-      <table className="csh-pdoc-meta">
-        <tbody>
-          {prod          && <tr><td className="csh-pdoc-lbl">Production</td><td>{prod}</td></tr>}
-          {dir           && <tr><td className="csh-pdoc-lbl">Director</td><td>{dir}</td></tr>}
-          {dp            && <tr><td className="csh-pdoc-lbl">DP</td><td>{dp}</td></tr>}
-          {formattedDate && <tr><td className="csh-pdoc-lbl">Date</td><td>{formattedDate}{dayStr ? ` · ${dayStr}` : ''}</td></tr>}
-          {town          && <tr><td className="csh-pdoc-lbl">Location</td><td>{town}</td></tr>}
-          {weather       && <tr><td className="csh-pdoc-lbl">Weather</td><td>{weather}</td></tr>}
-        </tbody>
-      </table>
+      {/* Sub-brand: schedule name + project info */}
+      {(scheduleName || projectLine) && (
+        <div className="csh-pdoc-subbrand">
+          {scheduleName && <span className="csh-pdoc-sname">{scheduleName}</span>}
+          {projectLine  && <span className="csh-pdoc-pinfo">{projectLine}</span>}
+        </div>
+      )}
 
+      {/* Production details — only rows with values render */}
+      {(prod || dir || dp || formattedDate || town || weather) && (
+        <table className="csh-pdoc-meta">
+          <tbody>
+            {prod          && <tr><td className="csh-pdoc-lbl">Producer</td><td>{prod}</td></tr>}
+            {dir           && <tr><td className="csh-pdoc-lbl">Director</td><td>{dir}</td></tr>}
+            {dp            && <tr><td className="csh-pdoc-lbl">Camera</td><td>{dp}</td></tr>}
+            {formattedDate && <tr><td className="csh-pdoc-lbl">Date</td><td>{formattedDate}</td></tr>}
+            {town          && <tr><td className="csh-pdoc-lbl">Location</td><td>{town}</td></tr>}
+            {weather       && <tr><td className="csh-pdoc-lbl">Weather</td><td>{weather}</td></tr>}
+          </tbody>
+        </table>
+      )}
+
+      {/* General call */}
       {generalCall && (
         <div className="csh-pdoc-callbox">
           <span className="csh-pdoc-call-lbl">General Call</span>
@@ -193,6 +224,7 @@ function PrintDoc({ scheduleName, formattedDate, dayStr, prod, dir, dp, town, we
         </div>
       )}
 
+      {/* Schedule */}
       {lines.length > 0 && (
         <div className="csh-pdoc-section">
           <div className="csh-pdoc-sh">Schedule</div>
@@ -202,7 +234,7 @@ function PrintDoc({ scheduleName, formattedDate, dayStr, prod, dir, dp, town, we
                 <tr key={i} className={l.isSun ? 'csh-pdoc-sun' : ''}>
                   <td className="csh-pdoc-td-t">{l.timeIn}</td>
                   <td className="csh-pdoc-td-a">{l.action}</td>
-                  <td className="csh-pdoc-td-l">{l.loc}</td>
+                  <td>{l.loc}</td>
                 </tr>
               ))}
             </tbody>
@@ -210,24 +242,26 @@ function PrintDoc({ scheduleName, formattedDate, dayStr, prod, dir, dp, town, we
         </div>
       )}
 
+      {/* Key information — section only renders if at least one field has a value */}
       {hasKeyInfo && (
         <div className="csh-pdoc-section">
           <div className="csh-pdoc-sh">Key Information</div>
           <table className="csh-pdoc-info">
             <tbody>
-              {cs.basecamp           && <tr><td className="csh-pdoc-lbl">Basecamp</td><td>{cs.basecamp}</td></tr>}
-              {cs.parking            && <tr><td className="csh-pdoc-lbl">Crew Parking</td><td>{cs.parking}</td></tr>}
-              {cs.hospital           && <tr><td className="csh-pdoc-lbl">Nearest Hospital</td><td>{cs.hospital}</td></tr>}
-              {cs.emergency          && <tr><td className="csh-pdoc-lbl">Emergency Contact</td><td>{cs.emergency}</td></tr>}
-              {cs.mealNotes          && <tr><td className="csh-pdoc-lbl">Meal Notes</td><td style={{ whiteSpace: 'pre-wrap' }}>{cs.mealNotes}</td></tr>}
-              {cs.safetyNotes        && <tr><td className="csh-pdoc-lbl">Safety Notes</td><td style={{ whiteSpace: 'pre-wrap' }}>{cs.safetyNotes}</td></tr>}
+              {cs.basecamp            && <tr><td className="csh-pdoc-lbl">Basecamp</td><td>{cs.basecamp}</td></tr>}
+              {cs.parking             && <tr><td className="csh-pdoc-lbl">Crew Parking</td><td>{cs.parking}</td></tr>}
+              {cs.hospital            && <tr><td className="csh-pdoc-lbl">Nearest Hospital</td><td>{cs.hospital}</td></tr>}
+              {cs.emergency           && <tr><td className="csh-pdoc-lbl">Emergency Contact</td><td>{cs.emergency}</td></tr>}
+              {cs.mealNotes           && <tr><td className="csh-pdoc-lbl">Meal Notes</td><td style={{ whiteSpace: 'pre-wrap' }}>{cs.mealNotes}</td></tr>}
+              {cs.safetyNotes         && <tr><td className="csh-pdoc-lbl">Safety Notes</td><td style={{ whiteSpace: 'pre-wrap' }}>{cs.safetyNotes}</td></tr>}
               {cs.specialInstructions && <tr><td className="csh-pdoc-lbl">Special Instructions</td><td style={{ whiteSpace: 'pre-wrap' }}>{cs.specialInstructions}</td></tr>}
-              {cs.notes              && <tr><td className="csh-pdoc-lbl">General Notes</td><td style={{ whiteSpace: 'pre-wrap' }}>{cs.notes}</td></tr>}
+              {cs.notes               && <tr><td className="csh-pdoc-lbl">General Notes</td><td style={{ whiteSpace: 'pre-wrap' }}>{cs.notes}</td></tr>}
             </tbody>
           </table>
         </div>
       )}
 
+      {/* Contacts */}
       {showContacts && contacts.length > 0 && (
         <div className="csh-pdoc-section">
           <div className="csh-pdoc-sh">Contacts</div>
@@ -276,6 +310,7 @@ export default function CallSheetModal({ open, onClose }: Props) {
         weekday: 'long', month: 'long', day: 'numeric', year: 'numeric',
       })
     : '';
+  const projectLine = [meta.projectName, meta.phase, dayStr].filter(Boolean).join(' · ');
 
   function commit(key: CSKey, val: string) {
     updateMeta({ callsheet: { ...(meta.callsheet ?? {}), [key]: val } as CallSheetData });
@@ -309,19 +344,28 @@ export default function CallSheetModal({ open, onClose }: Props) {
         }
       >
         {/* Production header */}
-        {(meta.prod || meta.dir || meta.dp || formattedDate || meta.town || weather) && (
+        {(projectLine || meta.prod || meta.dir || meta.dp || formattedDate || meta.town || weather) && (
           <div className="csh-header">
-            {(meta.prod || meta.dir || meta.dp) && (
-              <div className="csh-meta-row">
-                {meta.prod && <span className="csh-meta-item"><span className="csh-mi-lbl">Production</span> <span className="csh-mi-val">{meta.prod}</span></span>}
-                {meta.dir  && <span className="csh-meta-item"><span className="csh-mi-lbl">Director</span> <span className="csh-mi-val">{meta.dir}</span></span>}
-                {meta.dp   && <span className="csh-meta-item"><span className="csh-mi-lbl">DP</span> <span className="csh-mi-val">{meta.dp}</span></span>}
+            {/* Project / Phase / Day */}
+            {projectLine && (
+              <div className="csh-meta-row" style={{ marginBottom: 4 }}>
+                <span className="csh-meta-item">
+                  <span className="csh-mi-val" style={{ fontWeight: 600 }}>{projectLine}</span>
+                </span>
               </div>
             )}
-            {(formattedDate || meta.town || dayStr) && (
+            {/* Producer / Director / Camera */}
+            {(meta.prod || meta.dir || meta.dp) && (
+              <div className="csh-meta-row">
+                {meta.prod && <span className="csh-meta-item"><span className="csh-mi-lbl">Producer</span> <span className="csh-mi-val">{meta.prod}</span></span>}
+                {meta.dir  && <span className="csh-meta-item"><span className="csh-mi-lbl">Director</span> <span className="csh-mi-val">{meta.dir}</span></span>}
+                {meta.dp   && <span className="csh-meta-item"><span className="csh-mi-lbl">Camera</span> <span className="csh-mi-val">{meta.dp}</span></span>}
+              </div>
+            )}
+            {/* Date / Location */}
+            {(formattedDate || meta.town) && (
               <div className="csh-meta-row">
                 {formattedDate && <span className="csh-meta-item"><span className="csh-mi-val">{formattedDate}</span></span>}
-                {dayStr        && <span className="csh-meta-item"><span className="csh-mi-val">{dayStr}</span></span>}
                 {meta.town     && <span className="csh-meta-item"><span className="csh-mi-lbl">Location</span> <span className="csh-mi-val">{meta.town}</span></span>}
               </div>
             )}
@@ -363,10 +407,10 @@ export default function CallSheetModal({ open, onClose }: Props) {
         <div className="csh-section">
           <div className="csh-sh">Key Information</div>
           <div className="csh-fields">
-            <Field label="Basecamp"             fieldKey="basecamp"  value={cs.basecamp  ?? ''} onCommit={commit} />
-            <Field label="Crew Parking"         fieldKey="parking"   value={cs.parking   ?? ''} onCommit={commit} />
-            <Field label="Nearest Hospital"     fieldKey="hospital"  value={cs.hospital  ?? ''} onCommit={commit} />
-            <Field label="Emergency Contact"    fieldKey="emergency" value={cs.emergency ?? ''} onCommit={commit} />
+            <Field label="Basecamp"             fieldKey="basecamp"           value={cs.basecamp           ?? ''} onCommit={commit} />
+            <Field label="Crew Parking"         fieldKey="parking"            value={cs.parking            ?? ''} onCommit={commit} />
+            <Field label="Nearest Hospital"     fieldKey="hospital"           value={cs.hospital           ?? ''} onCommit={commit} />
+            <Field label="Emergency Contact"    fieldKey="emergency"          value={cs.emergency          ?? ''} onCommit={commit} />
             <Notes label="Meal Notes"           fieldKey="mealNotes"          value={cs.mealNotes          ?? ''} onCommit={commit} />
             <Notes label="Safety Notes"         fieldKey="safetyNotes"        value={cs.safetyNotes        ?? ''} onCommit={commit} />
             <Notes label="Special Instructions" fieldKey="specialInstructions" value={cs.specialInstructions ?? ''} onCommit={commit} />
@@ -403,6 +447,8 @@ export default function CallSheetModal({ open, onClose }: Props) {
             scheduleName={scheduleName}
             formattedDate={formattedDate}
             dayStr={dayStr}
+            projectName={meta.projectName}
+            phase={meta.phase}
             prod={meta.prod}
             dir={meta.dir}
             dp={meta.dp}

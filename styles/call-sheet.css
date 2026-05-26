@@ -157,9 +157,10 @@
 
 /* ──────────────────────────────────────────────────────────────────────────
    Print styles
-   body.callsheet-printing hides all app chrome and shows only the print doc
+   body.callsheet-printing hides app chrome and shows only the print portal
    ────────────────────────────────────────────────────────────────────────── */
 @media print {
+  /* ── Show / hide ── */
   body.callsheet-printing .panel,
   body.callsheet-printing .hdr,
   body.callsheet-printing .toolbar,
@@ -168,57 +169,82 @@
   body.callsheet-printing .tbar,
   body.callsheet-printing .overlay { display: none !important; }
 
-  body.callsheet-printing .callsheet-print-only {
-    display: block !important;
-  }
+  body.callsheet-printing .callsheet-print-only { display: block !important; }
 
+  /* ── Document root ── */
   .csh-pdoc {
     font-family: Georgia, 'Times New Roman', serif;
-    font-size: 11pt;
-    color: #000;
-    max-width: 7.5in;
-    margin: 0 auto;
-  }
-
-  .csh-pdoc-head {
-    text-align: center;
-    border-bottom: 2px solid #000;
-    padding-bottom: 8pt;
-    margin-bottom: 10pt;
-  }
-  .csh-pdoc-title {
-    font-size: 20pt;
-    font-weight: bold;
-    letter-spacing: .05em;
-    text-transform: uppercase;
-  }
-  .csh-pdoc-subhead { font-size: 12pt; color: #333; margin-top: 3pt; }
-
-  .csh-pdoc-meta {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 10pt;
     font-size: 10pt;
+    color: #000;
   }
-  .csh-pdoc-meta td { padding: 2pt 6pt; }
+
+  /* ── Brand header bar: logo + "Call Sheet" ── */
+  .csh-pdoc-brand {
+    display: flex;
+    align-items: center;
+    gap: 12pt;
+    background: #000;
+    padding: 3pt 10pt 5pt;
+    border-bottom: 2pt solid #e91e8c;
+    margin-bottom: 0;
+  }
+  .csh-pdoc-logo {
+    height: 40pt;
+    width: auto;
+    object-fit: contain;
+    flex-shrink: 0;
+  }
+  .csh-pdoc-brand-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20pt;
+    letter-spacing: 3px;
+    color: #fff;
+    line-height: 1;
+  }
+
+  /* ── Sub-brand bar: schedule name + project/phase/day ── */
+  .csh-pdoc-subbrand {
+    background: #1a1a2e;
+    padding: 3pt 10pt;
+    margin-bottom: 8pt;
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 3pt 10pt;
+  }
+  .csh-pdoc-sname {
+    font-family: Georgia, serif;
+    font-size: 11pt;
+    color: #eee;
+  }
+  .csh-pdoc-pinfo {
+    font-family: Georgia, serif;
+    font-size: 9pt;
+    color: #aaa;
+    font-style: italic;
+  }
+
+  /* ── Production details table ── */
   .csh-pdoc-lbl {
     font-weight: bold;
-    width: 1.8in;
-    color: #333;
+    width: 1.4in;
+    color: #444;
     text-transform: uppercase;
-    font-size: 8pt;
-    letter-spacing: .04em;
+    font-size: 7.5pt;
+    letter-spacing: .05em;
+    white-space: nowrap;
   }
 
+  /* ── General call box ── */
   .csh-pdoc-callbox {
     display: flex;
     align-items: center;
     gap: 12pt;
     background: #1a1a2e;
     color: #fff;
-    padding: 8pt 14pt;
-    margin-bottom: 12pt;
-    border-radius: 4pt;
+    padding: 7pt 12pt;
+    margin-bottom: 10pt;
+    border-radius: 3pt;
   }
   .csh-pdoc-call-lbl {
     font-size: 8pt;
@@ -227,37 +253,98 @@
     text-transform: uppercase;
     opacity: .75;
   }
-  .csh-pdoc-call-time { font-size: 18pt; font-weight: bold; }
+  .csh-pdoc-call-time { font-size: 17pt; font-weight: bold; }
 
-  .csh-pdoc-section { margin-bottom: 12pt; }
+  /* ── Content sections ── */
+  .csh-pdoc-section { margin-bottom: 10pt; }
   .csh-pdoc-sh {
-    font-size: 9pt;
+    font-size: 8pt;
     font-weight: bold;
-    letter-spacing: .06em;
+    letter-spacing: .07em;
     text-transform: uppercase;
+    color: #333;
     border-bottom: 1pt solid #000;
-    padding-bottom: 3pt;
-    margin-bottom: 5pt;
+    padding-bottom: 2pt;
+    margin-bottom: 4pt;
   }
 
-  .csh-pdoc-sched,
-  .csh-pdoc-info,
-  .csh-pdoc-contacts {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 10pt;
-  }
-  .csh-pdoc-sched td,
-  .csh-pdoc-info td,
-  .csh-pdoc-contacts td { padding: 3pt 4pt; }
-
-  .csh-pdoc-sun td { font-style: italic; color: #555; font-size: 9pt; }
-  .csh-pdoc-td-t { width: 64pt; font-variant-numeric: tabular-nums; }
+  /* ── Schedule table column roles ── */
+  .csh-pdoc-td-t { width: 56pt; font-variant-numeric: tabular-nums; }
   .csh-pdoc-td-a { font-weight: 500; }
-  .csh-pdoc-td-l { color: #444; padding-left: 8pt; }
 
-  .csh-pdoc-info .csh-pdoc-lbl { width: 1.6in; }
+  /* ── Sun rows ── */
+  .csh-pdoc-sun td { font-style: italic !important; color: #666 !important; font-size: 9pt !important; }
 
-  .csh-pdoc-contacts tr:not(:last-child) td { border-bottom: 0.5pt solid #ddd; }
-  .csh-pdoc-contacts td:first-child { width: 2.4in; }
+  /* ── Contacts table dividers ── */
+  .csh-pdoc-contacts td { border-bottom: 0.5pt solid #ddd !important; }
+  .csh-pdoc-contacts tr:last-child td { border-bottom: none !important; }
+  .csh-pdoc-contacts td:first-child { width: 2.2in; }
+
+  /* ────────────────────────────────────────────────────────────────────────────
+     Fix print.css interference — all overrides use higher specificity so they
+     beat print.css's !important rules regardless of stylesheet import order.
+
+     Root cause: print.css `td:last-child { display:none !important }` (spec 0,1,1)
+     hides the value cell in every 2-column row. Additional conflicts:
+       • td:nth-child(2) { overflow:hidden }
+       • table { table-layout:fixed }
+       • tbody tr:nth-child(even):not(.sun-row) { background:#fdf4f9 }
+       • tbody tr { border-bottom: 0.5px solid #e4e4e7 }
+     ────────────────────────────────────────────────────────────────────────── */
+
+  /* table: auto layout so columns size to content; collapse borders cleanly */
+  .callsheet-print-only table {
+    table-layout: auto !important;
+    border-collapse: collapse !important;
+    width: 100% !important;
+    border-spacing: 0 !important;
+  }
+
+  /* All td cells: restore display, visibility, and call-sheet typography.
+     The combined selector covers both the general case and :last-child.
+     Specificity: .callsheet-print-only td = (0,1,1)
+                  .callsheet-print-only td:last-child = (0,2,1)
+     Both beat print.css td:last-child = (0,1,1). */
+  .callsheet-print-only td,
+  .callsheet-print-only td:last-child {
+    display: table-cell !important;
+    visibility: visible !important;
+    width: auto !important;
+    max-width: none !important;
+    font-family: Georgia, 'Times New Roman', serif !important;
+    font-size: 10pt !important;
+    color: #000 !important;
+    padding: 3pt 5pt !important;
+    border: none !important;
+    border-bottom: 0.5pt solid #eee !important;
+    vertical-align: top !important;
+    overflow: visible !important;
+  }
+
+  /* Second column: undo print.css overflow:hidden on td:nth-child(2).
+     Specificity (0,2,1) beats print.css (0,1,1). */
+  .callsheet-print-only td:nth-child(2) {
+    overflow: visible !important;
+    padding-right: 5pt !important;
+  }
+
+  /* Row backgrounds: remove alternating pink from schedule grid.
+     Specificity (0,3,2) beats print.css tbody tr:nth-child(even):not(.sun-row) = (0,2,2). */
+  .callsheet-print-only .csh-pdoc tbody tr:nth-child(even),
+  .callsheet-print-only .csh-pdoc tbody tr:nth-child(even):not(.csh-pdoc-sun) {
+    background: transparent !important;
+    background-color: transparent !important;
+  }
+
+  /* Row borders: remove the tr-level border set by print.css on tbody tr.
+     Specificity (0,1,2) beats (0,0,2). */
+  .callsheet-print-only tbody tr {
+    border-bottom: none !important;
+  }
+
+  /* Meta table cells get tighter padding than section tables */
+  .csh-pdoc-meta td {
+    padding: 2pt 5pt !important;
+    border-bottom: none !important;
+  }
 }
