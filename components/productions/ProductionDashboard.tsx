@@ -17,7 +17,11 @@ interface Props {
 export default function ProductionDashboard({ prodKey }: Props) {
   const router  = useRouter();
   const token   = useAuthStore((s) => s.token);
-  const { productions, loading, loaded, load, getByProdKey } = useProductionStore();
+  const loading       = useProductionStore((s) => s.loading);
+  const loaded        = useProductionStore((s) => s.loaded);
+  const error         = useProductionStore((s) => s.error);
+  const load          = useProductionStore((s) => s.load);
+  const getByProdKey  = useProductionStore((s) => s.getByProdKey);
 
   const [tab,           setTab]           = useState<Tab>('days');
   const [scheduleNames, setScheduleNames] = useState<string[]>([]);
@@ -39,7 +43,7 @@ export default function ProductionDashboard({ prodKey }: Props) {
     }).catch(() => {});
   }, [token, prodKey]);
 
-  if (loading && !loaded) {
+  if (!loaded && !error) {
     return <div className="pc-page"><p className="pc-loading">Loading…</p></div>;
   }
 

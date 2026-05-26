@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { useProductionStore } from '@/lib/store/productionStore';
 import DayFormModal from './DayFormModal';
@@ -33,7 +33,19 @@ interface Props {
 
 export default function DayList({ production, scheduleNames = [] }: Props) {
   const router = useRouter();
-  const days       = useProductionStore((s) => s.getDaysFor(production.id));
+  const allDays    = useProductionStore((s) => s.days);
+  const days       = useMemo(
+    () =>
+      allDays
+        .filter((d) => d.productionId === production.id)
+        .sort((a, b) => {
+          if (a.date && b.date) return a.date.localeCompare(b.date);
+          if (a.date) return -1;
+          if (b.date) return 1;
+          return a.sortOrder - b.sortOrder;
+        }),
+    [allDays, production.id],
+  );
   const upsertDay  = useProductionStore((s) => s.upsertDay);
   const removeDay  = useProductionStore((s) => s.removeDay);
 
