@@ -1,7 +1,22 @@
 'use client';
 import { wxIcon } from '@/lib/weather';
 import { computeTimeOut } from '@/lib/time';
-import type { ScheduleData } from '@/lib/types';
+import type { ScheduleData, SubLocation } from '@/lib/types';
+
+const ACTION_CLASSES: Record<string, string> = {
+  'Shoot':     'aShoot',
+  'Lunch':     'aLunch',
+  'Dinner':    'aDinner',
+  'Wrap':      'aWrap',
+  'Day Off':   'aDayOff',
+  'Drive':     'aDrive',
+  'Move':      'aMove',
+  'Crew Call': 'aCrewCall',
+  'Breakfast': 'aBreakfast',
+  'Break':     'aBreak',
+  'Setup':     'aSetup',
+  'Other':     'aOther',
+};
 
 function metaDate(dateStr: string): string {
   if (!dateStr) return '';
@@ -10,15 +25,49 @@ function metaDate(dateStr: string): string {
   });
 }
 
-interface Props {
-  data: ScheduleData;
+function SubLocList({ subLocations }: { subLocations: SubLocation[] }) {
+  return (
+    <div className="rv-sublocs">
+      {subLocations.map((sl, i) => (
+        <div key={sl.id || String(i)} className="rv-subloc">
+          <span className="rv-subloc-bullet">↳</span>
+          <div className="rv-subloc-body">
+            {sl.locLat && sl.locLng ? (
+              <a
+                href={`https://www.google.com/maps/dir/?api=1&destination=${sl.locLat},${sl.locLng}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rv-subloc-loc"
+              >
+                {sl.loc}
+              </a>
+            ) : (
+              <span className="rv-subloc-loc">{sl.loc}</span>
+            )}
+            {sl.desc && <div className="rv-subloc-desc">{sl.desc}</div>}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
 }
 
-export default function ScheduleReadView({ data }: Props) {
+interface Props {
+  data: ScheduleData;
+  name?: string;
+}
+
+export default function ScheduleReadView({ data, name }: Props) {
   const { meta, rows } = data;
   const wx = meta.wx;
   const visibleRows = rows.filter(r => r.action || r.timeIn);
   const callTime = rows.find(r => !r.sunLocked)?.timeIn || '';
+
+  const displayTitle = meta.projectName || name || '';
+  const dayInfo = meta.dayNumber != null
+    ? `Day ${meta.dayNumber}${meta.totalDays ? ` of ${meta.totalDays}` : ''}`
+    : '';
+  const subInfo = [meta.phase, dayInfo].filter(Boolean).join('  ·  ');
 
   return (
     <>
@@ -60,6 +109,13 @@ export default function ScheduleReadView({ data }: Props) {
       )}
 
       <div className="panel">
+        {displayTitle && (
+          <div className="rv-identity">
+            <div className="rv-identity-title">{displayTitle}</div>
+            {subInfo && <div className="rv-identity-meta">{subInfo}</div>}
+          </div>
+        )}
+
         <div className="meta">
           <div className="meta-grid">
             <div className="mf">
@@ -88,6 +144,8 @@ export default function ScheduleReadView({ data }: Props) {
             </div>
           </div>
         </div>
+
+        <div className="scroll-hint" aria-hidden="true">← Scroll to view time columns →</div>
 
         <div className="tbl-wrap">
           <table className="sched">
@@ -132,10 +190,15 @@ export default function ScheduleReadView({ data }: Props) {
                     </tr>
                   );
                 }
+                const actionCls = ACTION_CLASSES[row.action];
                 return (
-                  <tr key={i} className={row.done ? 'completed' : undefined}>
+                  <tr key={i}>
                     <td className="rn">{i + 1}</td>
-                    <td>{row.action === 'Other' ? row.otherText || 'Other' : row.action}</td>
+                    <td>
+                      <span className={`rv-action${actionCls ? ` ${actionCls}` : ''}`}>
+                        {row.action === 'Other' ? row.otherText || 'Other' : row.action}
+                      </span>
+                    </td>
                     <td>
                       {row.locLat && row.locLng ? (
                         <a
@@ -147,6 +210,9 @@ export default function ScheduleReadView({ data }: Props) {
                           {row.loc}
                         </a>
                       ) : row.loc || ''}
+                      {row.subLocations && row.subLocations.length > 0 && (
+                        <SubLocList subLocations={row.subLocations} />
+                      )}
                     </td>
                     <td>{row.desc}</td>
                     <td>{row.notes}</td>

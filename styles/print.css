@@ -48,7 +48,8 @@
   .status-icon-slot,
   .mclose,
   .modal,
-  .overlay.show{
+  .overlay.show,
+  .pub-view-hdr{
     display:none!important;
     visibility:hidden!important;
   }
@@ -497,6 +498,7 @@
   html body .scroll-hint,
   html body .notif-banner,
   html body .readonly-bar,
+  html body .pub-view-hdr,
   html body #mobile-grid-sticky{
     display:none!important;
     height:0!important;

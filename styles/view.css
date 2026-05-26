@@ -1,0 +1,146 @@
+/* ── Schedule read-only view ─────────────────────────────────────────────── */
+
+/* Schedule identity block (above meta grid, inside .panel) */
+.rv-identity {
+  padding: 14px 20px 12px;
+  border-bottom: 1px solid var(--g100);
+  background: #fff;
+}
+
+.rv-identity-title {
+  font-family: var(--fd);
+  font-size: 20px;
+  letter-spacing: 2px;
+  color: var(--ink);
+  line-height: 1.1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rv-identity-meta {
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--g500);
+  font-weight: 500;
+  letter-spacing: 0.03em;
+}
+
+/* Action color pills in read-only table rows.
+   Color classes (aShoot, aLunch, etc.) are defined in base.css and apply here. */
+.rv-action {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 5px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+/* ── Sub-locations ────────────────────────────────────────────────────────── */
+
+.rv-sublocs {
+  margin-top: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.rv-subloc {
+  display: flex;
+  align-items: flex-start;
+  gap: 5px;
+}
+
+.rv-subloc-bullet {
+  flex-shrink: 0;
+  color: var(--g400);
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.rv-subloc-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.rv-subloc-loc {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--g700);
+  display: block;
+}
+
+a.rv-subloc-loc {
+  color: inherit;
+  text-decoration: underline dotted;
+}
+
+a.rv-subloc-loc:hover {
+  text-decoration: underline;
+}
+
+.rv-subloc-desc {
+  font-size: 11px;
+  color: var(--g500);
+  line-height: 1.4;
+  margin-top: 1px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* ── Print ────────────────────────────────────────────────────────────────── */
+
+@media print {
+  /* Identity block: compact print header above meta */
+  .rv-identity {
+    padding: 0 0 4px 0 !important;
+    margin: 0 0 4px 0 !important;
+    border-bottom: 1px solid #e4e4e7 !important;
+    background: #fff !important;
+  }
+
+  .rv-identity-title {
+    font-size: 11px !important;
+    letter-spacing: 1.5px !important;
+    color: #111 !important;
+    font-weight: 400 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  .rv-identity-meta {
+    font-size: 7.5px !important;
+    color: #71717a !important;
+    margin-top: 2px !important;
+  }
+
+  /* Action pills: keep color backgrounds, tighten for print density */
+  .rv-action {
+    display: inline !important;
+    padding: 1px 3px !important;
+    border-radius: 3px !important;
+    font-size: 7.8px !important;
+  }
+
+  /* Sub-locations in print */
+  .rv-sublocs {
+    margin-top: 2px !important;
+    gap: 2px !important;
+  }
+
+  .rv-subloc-bullet {
+    font-size: 8px !important;
+    line-height: 1.4 !important;
+  }
+
+  .rv-subloc-loc {
+    font-size: 7.5px !important;
+  }
+
+  .rv-subloc-desc {
+    font-size: 7px !important;
+    line-height: 1.2 !important;
+    margin-top: 0 !important;
+  }
+}
