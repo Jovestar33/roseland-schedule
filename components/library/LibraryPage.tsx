@@ -1496,7 +1496,8 @@ export default function LibraryPage() {
         <h1 className="lib-title">Library</h1>
         <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
           <button className="btn btn-pink btn-sm" onClick={() => router.push('/schedule/Untitled')}>
-            + New Schedule
+            <span className="lib-btn-desktop">+ New Schedule</span>
+            <span className="lib-btn-mobile">+ New</span>
           </button>
           <button
             className="btn btn-light btn-sm"
@@ -1504,14 +1505,20 @@ export default function LibraryPage() {
             disabled={isRefreshing}
             title="Re-fetch the latest schedules from the cloud"
           >
-            {isRefreshing ? 'Refreshing…' : '↻ Refresh'}
+            {isRefreshing
+              ? <><span className="lib-btn-desktop">Refreshing…</span><span className="lib-btn-mobile">…</span></>
+              : <><span className="lib-btn-desktop">↻ Refresh</span><span className="lib-btn-mobile">↻</span></>
+            }
           </button>
           <button
             className={`btn btn-light btn-sm${showArchived ? ' lib-archived-toggle--on' : ''}`}
             onClick={() => setFilterStatus(showArchived ? 'active' : 'all')}
             title={showArchived ? 'Hide archived schedules' : 'Show archived schedules'}
           >
-            {showArchived ? '⊘ Archived On' : 'Show Archived'}
+            {showArchived
+              ? <><span className="lib-btn-desktop">⊘ Archived On</span><span className="lib-btn-mobile">⊘ On</span></>
+              : <><span className="lib-btn-desktop">Show Archived</span><span className="lib-btn-mobile">Archived</span></>
+            }
           </button>
           <button
             ref={moreBtnRef}
@@ -1519,32 +1526,11 @@ export default function LibraryPage() {
             onClick={toggleMore}
             title="More options"
           >
-            More ▾
+            <span className="lib-btn-desktop">More ▾</span>
+            <span className="lib-btn-mobile">⋯</span>
           </button>
           {moreOpen && typeof document !== 'undefined' && createPortal(
             <div ref={moreMenuRef} className="lib-more-menu" style={moreMenuStyle}>
-              <button
-                type="button"
-                className="lib-more-item"
-                onClick={() => { setTab('templates'); setMoreOpen(false); }}
-              >
-                ★ Templates
-              </button>
-              <button
-                type="button"
-                className="lib-more-item"
-                onClick={() => { setTab('backup'); setMoreOpen(false); }}
-              >
-                🔗 Backup
-              </button>
-              <button
-                type="button"
-                className="lib-more-item"
-                onClick={() => { setTab('versions'); setMoreOpen(false); }}
-              >
-                🕐 Restore
-              </button>
-              <div className="lib-more-sep" />
               <button
                 type="button"
                 className="lib-more-item"
@@ -1577,14 +1563,20 @@ export default function LibraryPage() {
         </div>
       )}
 
-      {/* Tabs — Library always visible; Templates/Backup/Restore accessed via More menu */}
+      {/* Tabs */}
       <div className="mtabs lib-tabs">
         <button className={`mtab${tab === 'schedules' ? ' active' : ''}`} onClick={() => setTab('schedules')}>
           📁 Library
         </button>
-        {tab === 'templates' && <span className="mtab active">★ Templates</span>}
-        {tab === 'backup'    && <span className="mtab active">🔗 Backup</span>}
-        {tab === 'versions'  && <span className="mtab active">🕐 Restore</span>}
+        <button className={`mtab${tab === 'templates' ? ' active' : ''}`} onClick={() => setTab('templates')}>
+          ★ Templates
+        </button>
+        <button className={`mtab${tab === 'backup' ? ' active' : ''}`} onClick={() => setTab('backup')}>
+          &#128279; Backup
+        </button>
+        <button className={`mtab${tab === 'versions' ? ' active' : ''}`} onClick={() => setTab('versions')}>
+          🕐 Restore
+        </button>
       </div>
 
       {/* Tab content */}

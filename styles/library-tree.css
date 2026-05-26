@@ -143,6 +143,10 @@
   overflow: hidden;
   text-overflow: ellipsis;
   text-decoration: none;
+  text-align: left;
+  background: none;
+  border: none;
+  padding: 0;
 }
 
 .lbt-sched-name:hover { text-decoration: underline; }

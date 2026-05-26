@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useScheduleStore } from '@/lib/store/scheduleStore';
 import { useAuthStore } from '@/lib/store/authStore';
-import { loadTemplates, saveTemplateRemote, deleteTemplateRemote, migrateTemplates } from '@/lib/api/templates';
+import { loadTemplates, deleteTemplateRemote, migrateTemplates } from '@/lib/api/templates';
 import { getTemplates } from '@/lib/templates';
 import { LS_TEMPLATES_KEY } from '@/lib/constants';
 import { normalizeRows } from '@/lib/rowNormalizer';
@@ -13,14 +13,12 @@ import type { TemplateMap } from '@/lib/templates';
 export default function TemplatesTab() {
   const router = useRouter();
   const token        = useAuthStore((s) => s.token);
-  const rows         = useScheduleStore((s) => s.rows);
   const dirty        = useScheduleStore((s) => s.dirty);
   const loadSchedule = useScheduleStore((s) => s.loadSchedule);
   const meta         = useScheduleStore((s) => s.meta);
 
-  const [templates, setTemplates]     = useState<TemplateMap>({});
-  const [saveNameInput, setSaveNameInput] = useState('');
-  const [status, setStatus]           = useState<'loading' | 'ready' | 'error'>('loading');
+  const [templates, setTemplates] = useState<TemplateMap>({});
+  const [status, setStatus]       = useState<'loading' | 'ready' | 'error'>('loading');
 
   useEffect(() => {
     if (!token) return;
@@ -43,13 +41,6 @@ export default function TemplatesTab() {
       .catch(() => setStatus('error'));
   }, [token]);
 
-  async function handleSave() {
-    const name = saveNameInput.trim();
-    if (!name || !token) return;
-    const updated = await saveTemplateRemote(name, rows, token).catch(() => null);
-    if (updated) { setTemplates(updated); setSaveNameInput(''); }
-  }
-
   function handleLoad(name: string) {
     const tpl = templates[name];
     if (!tpl) return;
@@ -69,21 +60,6 @@ export default function TemplatesTab() {
 
   return (
     <>
-      <div style={{ marginBottom: '12px', display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'flex-end' }}>
-        <input
-          className="form-input"
-          type="text"
-          placeholder="Template name…"
-          value={saveNameInput}
-          onChange={(e) => setSaveNameInput(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && handleSave()}
-          style={{ flex: '1 1 180px', minHeight: '34px', fontSize: '13px' }}
-        />
-        <button className="btn btn-pink btn-sm" onClick={handleSave} disabled={!saveNameInput.trim() || status !== 'ready'}>
-          + Save Current as Template
-        </button>
-      </div>
-
       {status === 'loading' ? (
         <div className="empty">Loading templates…</div>
       ) : status === 'error' ? (
@@ -91,7 +67,7 @@ export default function TemplatesTab() {
       ) : keys.length === 0 ? (
         <div className="empty">
           <strong>No templates saved yet.</strong><br />
-          Build a schedule setup, then choose <b>+ Save Current as Template</b> to reuse it later.
+          Open a schedule and use the <b>Tools</b> panel to save it as a template.
         </div>
       ) : (
         <div className="slist">
