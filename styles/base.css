@@ -111,21 +111,38 @@ body{font-family:var(--fb);background:var(--g100);color:var(--black);min-height:
 
 /* META */
 .meta{padding:20px 24px 16px;border-bottom:1px solid var(--g200)}
-/* IDENTITY LINE */
-.hdr-identity{display:flex;flex-wrap:wrap;align-items:baseline;
-  font-size:11px;color:var(--text);opacity:0.6;font-family:var(--fb);
-  padding-top:6px;padding-bottom:12px;line-height:1.4}
+/* IDENTITY BLOCK (two-row) */
+.hdr-id-block{padding-top:6px;padding-bottom:12px}
+/* Row 1 — project name */
+.hdr-id-row1{
+  font-size:18px;font-weight:600;color:var(--ink);font-family:var(--fb);
+  line-height:1.2;margin-bottom:4px}
+.hi-project{cursor:pointer}
+.hi-project:hover{text-decoration:underline;text-decoration-style:dotted}
+.hi-project-empty{
+  font-size:15px;font-weight:400;font-style:italic;
+  opacity:0.4;color:var(--g400);cursor:pointer}
+.hi-project-empty:hover{opacity:0.6;text-decoration:underline;text-decoration-style:dotted}
+/* Row 2 — phase · day */
+.hdr-id-row2{
+  display:flex;align-items:baseline;flex-wrap:wrap;
+  font-size:12px;color:var(--g500);font-family:var(--fb);line-height:1.6}
+.hi-day-wrap{display:inline-flex;align-items:baseline}
+.hi-day-lbl{pointer-events:none;user-select:none}
+.hi-day-of{pointer-events:none;user-select:none;margin:0 1px}
+/* Shared interactive element styles */
 .hi-item{display:inline-flex;align-items:baseline}
 .hi-sep{padding:0 5px;pointer-events:none;user-select:none}
-.hi-ph{cursor:pointer;font-style:italic}
-.hi-ph:hover{text-decoration:underline;text-decoration-style:dotted}
 .hi-val{cursor:pointer}
 .hi-val:hover{text-decoration:underline;text-decoration-style:dotted}
 .hi-empty{cursor:pointer;font-style:italic;opacity:0.55}
 .hi-empty:hover{text-decoration:underline;text-decoration-style:dotted;opacity:0.75}
-.hi-field{background:transparent;border:none;border-bottom:1px dashed currentColor;
+.hi-field{
+  background:transparent;border:none;border-bottom:1px dashed currentColor;
   outline:none;font:inherit;color:inherit;padding:0 1px;min-width:2ch;
   box-sizing:content-box}
+.hi-day-err{font-size:11px;color:#c0392b;margin-top:3px;font-style:italic}
+.hi-field-err{border-bottom-color:#c0392b!important;color:#c0392b!important}
 .meta-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px 24px;margin-top:12px}
 .mf{position:relative}
 .mf label{display:block;font-size:10px;font-weight:600;text-transform:uppercase;

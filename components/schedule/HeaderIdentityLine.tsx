@@ -21,11 +21,18 @@ function readOptions(key: string): string[] {
 export default function HeaderIdentityLine({ readOnly = false }: Props) {
   const meta       = useScheduleStore((s) => s.meta);
   const updateMeta = useScheduleStore((s) => s.updateMeta);
-  const [editing, setEditing] = useState<Field | null>(null);
-  const [draft,   _setDraft]  = useState('');
-  const draftRef              = useRef('');
+  const [editing,       setEditing]       = useState<Field | null>(null);
+  const [draft,         _setDraft]        = useState('');
+  const draftRef                          = useRef('');
+  const dayInputRef                       = useRef<HTMLInputElement>(null);
+  const [validationMsg, setValidationMsg] = useState('');
   const [projectOptions, setProjectOptions] = useState<string[]>([]);
   const [phaseOptions,   setPhaseOptions]   = useState<string[]>([]);
+
+  // Pre-edit snapshot — used only by Escape to revert to the last valid value
+  const daySnapshot = useRef<{ dayNumber: number | null; totalDays: number | null }>({
+    dayNumber: null, totalDays: null,
+  });
 
   useEffect(() => {
     setProjectOptions(readOptions('rp_lib_project_options'));
@@ -37,21 +44,93 @@ export default function HeaderIdentityLine({ readOnly = false }: Props) {
     _setDraft(v);
   }
 
-  const dayStr = meta.dayNumber !== null
-    ? (meta.totalDays !== null ? `Day ${meta.dayNumber}/${meta.totalDays}` : `Day ${meta.dayNumber}`)
-    : '';
-
-  const dayEditStr = meta.dayNumber !== null
-    ? (meta.totalDays !== null ? `${meta.dayNumber}/${meta.totalDays}` : `${meta.dayNumber}`)
-    : '';
-
   function startEdit(field: Field) {
     if (readOnly) return;
-    const init = field === 'day'         ? dayEditStr
-               : field === 'projectName' ? meta.projectName
-               :                          meta.phase;
+    setValidationMsg('');
+    let init = '';
+    if (field === 'projectName') {
+      init = meta.projectName;
+    } else if (field === 'phase') {
+      init = meta.phase;
+    } else {
+      daySnapshot.current = { dayNumber: meta.dayNumber, totalDays: meta.totalDays };
+      if (meta.dayNumber != null) {
+        init = meta.totalDays != null ? `${meta.dayNumber}/${meta.totalDays}` : String(meta.dayNumber);
+      }
+    }
     setDraft(init);
     setEditing(field);
+  }
+
+  // Enforced slash-format input handler — only digits and one slash accepted
+  function handleDayChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const newRaw     = e.target.value;
+    const prevVal    = draftRef.current;
+    const isDeleting = newRaw.length < prevVal.length;
+
+    let filtered = newRaw.replace(/[^\d/]/g, '');
+    if (filtered.startsWith('/')) filtered = filtered.slice(1);
+    const si = filtered.indexOf('/');
+    if (si !== -1) {
+      filtered = filtered.slice(0, si + 1) + filtered.slice(si + 1).replace(/\//g, '');
+    }
+    const parts = filtered.split('/');
+    let result = parts[0].slice(0, 3);
+    if (parts.length > 1) result += '/' + parts[1].slice(0, 3);
+
+    // Auto-insert slash when typing (not deleting) and no slash present yet
+    const autoSlash = !isDeleting && !result.includes('/') && result.length > 0;
+    if (autoSlash) result += '/';
+
+    // Clear any standing validation error as the user types a correction
+    if (validationMsg) setValidationMsg('');
+
+    setDraft(result);
+
+    if (autoSlash) {
+      setTimeout(() => dayInputRef.current?.setSelectionRange(result.length, result.length), 0);
+    }
+  }
+
+  function commitDay(raw: string) {
+    const trimmed = raw.trim().replace(/\/$/, '');
+    if (!trimmed) {
+      setValidationMsg('');
+      updateMeta({ dayNumber: null, totalDays: null });
+      setEditing(null);
+      return;
+    }
+    const slashIdx = trimmed.indexOf('/');
+    const dayStr = slashIdx === -1 ? trimmed : trimmed.slice(0, slashIdx).trim();
+    const totStr = slashIdx === -1 ? '' : trimmed.slice(slashIdx + 1).trim();
+
+    if (!dayStr) {
+      setValidationMsg('Day number required (e.g. 1 or 1/5)');
+      return; // keep editor open
+    }
+    const n = parseInt(dayStr, 10);
+    if (isNaN(n) || n <= 0) {
+      setValidationMsg('Day must be a positive number');
+      return; // keep editor open
+    }
+
+    let total: number | null = null;
+    if (totStr) {
+      const t = parseInt(totStr, 10);
+      if (isNaN(t) || t <= 0) {
+        setValidationMsg('Total must be a positive number');
+        return; // keep editor open
+      }
+      if (n > t) {
+        setValidationMsg(`Day ${n} cannot exceed total ${t}`);
+        return; // keep editor open
+      }
+      total = t;
+    }
+
+    setValidationMsg('');
+    updateMeta({ dayNumber: n, totalDays: total });
+    setEditing(null);
   }
 
   function commit() {
@@ -59,102 +138,148 @@ export default function HeaderIdentityLine({ readOnly = false }: Props) {
     const val = draftRef.current;
     if (editing === 'projectName') {
       updateMeta({ projectName: titleCase(val) });
+      setEditing(null);
     } else if (editing === 'phase') {
       updateMeta({ phase: titleCase(val) });
+      setEditing(null);
     } else {
-      const t = val.trim();
-      if (!t) {
-        updateMeta({ dayNumber: null, totalDays: null });
-      } else {
-        const [a, b] = t.split('/');
-        const n   = parseInt(a, 10);
-        const tot = b !== undefined ? parseInt(b, 10) : null;
-        if (n > 0) updateMeta({ dayNumber: n, totalDays: tot && tot > 0 ? tot : null });
-        else       updateMeta({ dayNumber: null, totalDays: null });
-      }
+      commitDay(val);
     }
+  }
+
+  function revert() {
+    // For day: restore the pre-edit snapshot so Escape is always a clean undo
+    if (editing === 'day') {
+      updateMeta({ dayNumber: daySnapshot.current.dayNumber, totalDays: daySnapshot.current.totalDays });
+    }
+    setValidationMsg('');
     setEditing(null);
   }
 
-  function revert() { setEditing(null); }
-
-  function onKey(e: React.KeyboardEvent<HTMLInputElement>) {
-    if (e.key === 'Enter')  { e.preventDefault(); commit(); }
+  function onDayKey(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key === 'Enter')  { e.preventDefault(); commitDay(draftRef.current); }
     if (e.key === 'Escape') { e.preventDefault(); revert(); }
   }
 
-  // Read-only: show only non-empty values, omit empties and their separators.
+  // Build display strings
+  const dayDisplayStr = meta.dayNumber != null
+    ? (meta.totalDays != null
+        ? `${meta.dayNumber} of ${meta.totalDays}`
+        : String(meta.dayNumber))
+    : '—';
+
+  // Read-only: two-row display, no edit controls
   if (readOnly) {
-    const parts = [meta.projectName, meta.phase, dayStr].filter(Boolean);
-    if (!parts.length) return null;
+    const dayStr = meta.dayNumber != null
+      ? (meta.totalDays != null ? `Day ${meta.dayNumber} of ${meta.totalDays}` : `Day ${meta.dayNumber}`)
+      : '';
+    const row2Parts = [meta.phase, dayStr].filter(Boolean);
+    if (!meta.projectName && !row2Parts.length) return null;
     return (
-      <div className="hdr-identity">
-        {parts.map((p, i) => (
-          <span key={i} className="hi-item">
-            {i > 0 && <span className="hi-sep"> · </span>}
-            <span className="hi-val">{p}</span>
-          </span>
-        ))}
+      <div className="hdr-id-block">
+        {meta.projectName && (
+          <div className="hdr-id-row1">
+            <span className="hi-project">{meta.projectName}</span>
+          </div>
+        )}
+        {row2Parts.length > 0 && (
+          <div className="hdr-id-row2">
+            {row2Parts.map((p, i) => (
+              <span key={i} className="hi-item">
+                {i > 0 && <span className="hi-sep"> · </span>}
+                <span className="hi-val">{p}</span>
+              </span>
+            ))}
+          </div>
+        )}
       </div>
     );
   }
 
-  const FIELDS: { id: Field; val: string; ph: string }[] = [
-    { id: 'projectName', val: meta.projectName, ph: 'Project'  },
-    { id: 'phase',       val: meta.phase,        ph: 'Phase'    },
-    { id: 'day',         val: dayStr,             ph: 'Day #/#'  },
-  ];
-
   return (
-    <div className="hdr-identity">
-      {FIELDS.map((f, i) => (
-        <span key={f.id} className="hi-item">
-          {i > 0 && <span className="hi-sep"> · </span>}
-          {editing === f.id ? (
-            f.id === 'projectName' ? (
-              <ComboInput
-                className="hi-field"
-                value={draft}
-                onChange={setDraft}
-                onBlur={commit}
-                onEscape={revert}
-                options={projectOptions}
-                placeholder={f.ph}
-                autoFocus
-              />
-            ) : f.id === 'phase' ? (
-              <ComboInput
-                className="hi-field"
-                value={draft}
-                onChange={setDraft}
-                onBlur={commit}
-                onEscape={revert}
-                options={phaseOptions}
-                placeholder={f.ph}
-                autoFocus
-              />
-            ) : (
-              <input
-                className="hi-field"
-                autoFocus
-                value={draft}
-                placeholder={f.ph}
-                onChange={(e) => setDraft(e.target.value)}
-                onBlur={commit}
-                onKeyDown={onKey}
-                style={{ width: `${Math.max((draft || f.ph).length, 2)}ch` }}
-              />
-            )
+    <div className="hdr-id-block">
+      {/* Row 1: Project / Production Name */}
+      <div className="hdr-id-row1">
+        {editing === 'projectName' ? (
+          <ComboInput
+            className="hi-field"
+            value={draft}
+            onChange={setDraft}
+            onBlur={commit}
+            onEscape={revert}
+            options={projectOptions}
+            placeholder="Project name"
+            showAllOnOpen
+            autoFocus
+          />
+        ) : (
+          <span
+            className={`hi-project${meta.projectName ? '' : ' hi-project-empty'}`}
+            onClick={() => startEdit('projectName')}
+          >
+            {meta.projectName || 'Project name'}
+          </span>
+        )}
+      </div>
+
+      {/* Row 2: Phase · Day X of Y */}
+      <div className="hdr-id-row2">
+        {/* Phase */}
+        {editing === 'phase' ? (
+          <ComboInput
+            className="hi-field"
+            value={draft}
+            onChange={setDraft}
+            onBlur={commit}
+            onEscape={revert}
+            options={phaseOptions}
+            placeholder="Phase"
+            showAllOnOpen
+            autoFocus
+          />
+        ) : (
+          <span
+            className={meta.phase ? 'hi-val' : 'hi-empty'}
+            onClick={() => startEdit('phase')}
+          >
+            {meta.phase || 'Phase'}
+          </span>
+        )}
+
+        <span className="hi-sep"> · </span>
+
+        {/* Day — single slash-notation field */}
+        <span className="hi-day-wrap">
+          <span className="hi-day-lbl">Day </span>
+          {editing === 'day' ? (
+            <input
+              ref={dayInputRef}
+              className={`hi-field${validationMsg ? ' hi-field-err' : ''}`}
+              autoFocus
+              type="text"
+              inputMode="text"
+              value={draft}
+              placeholder="1/5"
+              onChange={handleDayChange}
+              onBlur={() => commitDay(draftRef.current)}
+              onKeyDown={onDayKey}
+              style={{ width: `${Math.max((draft || '1/5').length, 3)}ch` }}
+            />
           ) : (
             <span
-              className={f.val ? 'hi-val' : 'hi-empty'}
-              onClick={() => startEdit(f.id)}
+              className={meta.dayNumber != null ? 'hi-val' : 'hi-empty'}
+              onClick={() => startEdit('day')}
             >
-              {f.val || f.ph}
+              {dayDisplayStr}
             </span>
           )}
         </span>
-      ))}
+      </div>
+
+      {/* Inline validation feedback — persists until user corrects or escapes */}
+      {validationMsg && (
+        <div className="hi-day-err">{validationMsg}</div>
+      )}
     </div>
   );
 }
