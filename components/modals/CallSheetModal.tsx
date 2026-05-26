@@ -1,8 +1,9 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { useScheduleStore } from '@/lib/store/scheduleStore';
 import Modal from './Modal';
+import PlacesAutocomplete from '@/components/schedule/PlacesAutocomplete';
 import type { ScheduleRow, WeatherData, CallSheetData } from '@/lib/types';
 
 // ---- Derived-data helpers ----
@@ -110,6 +111,75 @@ function Field({
         <span className={value ? 'csh-fv' : 'csh-fv csh-fv-empty'} onClick={start}>
           {value || placeholder}
         </span>
+      )}
+    </div>
+  );
+}
+
+// ---- Inline editable location field (single-line + Places autocomplete + map pin) ----
+
+function LocationField({
+  label, fieldKey, value, placeholder = '—', onCommit,
+}: {
+  label: string; fieldKey: CSKey; value: string; placeholder?: string;
+  onCommit: (key: CSKey, val: string) => void;
+}) {
+  const [editing, setEditing] = useState(false);
+  const [draft,   setDraft  ] = useState('');
+  const wrapRef = useRef<HTMLDivElement>(null);
+
+  function start() { setDraft(value); setEditing(true); }
+  function finish(val: string) { onCommit(fieldKey, val.trim()); setEditing(false); }
+
+  // Focus the autocomplete input when edit mode opens
+  useEffect(() => {
+    if (editing && wrapRef.current) {
+      (wrapRef.current.querySelector('input') as HTMLInputElement | null)?.focus();
+    }
+  }, [editing]);
+
+  function handleWrapBlur(e: React.FocusEvent<HTMLDivElement>) {
+    if (!e.currentTarget.contains(e.relatedTarget as Node)) finish(draft);
+  }
+
+  function handleKeyDown(e: React.KeyboardEvent) {
+    if (e.key === 'Escape') { e.preventDefault(); setEditing(false); }
+  }
+
+  const mapUrl = value
+    ? `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(value)}`
+    : '';
+
+  return (
+    <div className="csh-field">
+      <span className="csh-fl">{label}</span>
+      {editing ? (
+        <div ref={wrapRef} className="csh-loc-wrap" onBlur={handleWrapBlur} onKeyDown={handleKeyDown}>
+          <PlacesAutocomplete
+            className="csh-fi"
+            value={draft}
+            onChange={setDraft}
+            onSelect={(addr) => { setDraft(addr); finish(addr); }}
+            placeholder={placeholder}
+          />
+        </div>
+      ) : (
+        <>
+          <span className={value ? 'csh-fv' : 'csh-fv csh-fv-empty'} onClick={start}>
+            {value || placeholder}
+          </span>
+          {mapUrl && (
+            <a
+              href={mapUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="csh-loc-pin"
+              aria-label="Open in Maps"
+            >
+              📍
+            </a>
+          )}
+        </>
       )}
     </div>
   );
@@ -407,9 +477,9 @@ export default function CallSheetModal({ open, onClose }: Props) {
         <div className="csh-section">
           <div className="csh-sh">Key Information</div>
           <div className="csh-fields">
-            <Field label="Basecamp"             fieldKey="basecamp"           value={cs.basecamp           ?? ''} onCommit={commit} />
-            <Field label="Crew Parking"         fieldKey="parking"            value={cs.parking            ?? ''} onCommit={commit} />
-            <Field label="Nearest Hospital"     fieldKey="hospital"           value={cs.hospital           ?? ''} onCommit={commit} />
+            <LocationField label="Basecamp"         fieldKey="basecamp"  value={cs.basecamp  ?? ''} onCommit={commit} />
+            <LocationField label="Crew Parking"     fieldKey="parking"   value={cs.parking   ?? ''} onCommit={commit} />
+            <LocationField label="Nearest Hospital" fieldKey="hospital"  value={cs.hospital  ?? ''} onCommit={commit} />
             <Field label="Emergency Contact"    fieldKey="emergency"          value={cs.emergency          ?? ''} onCommit={commit} />
             <Notes label="Meal Notes"           fieldKey="mealNotes"          value={cs.mealNotes          ?? ''} onCommit={commit} />
             <Notes label="Safety Notes"         fieldKey="safetyNotes"        value={cs.safetyNotes        ?? ''} onCommit={commit} />
