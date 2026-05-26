@@ -62,7 +62,7 @@ app/manifest.ts      # PWA manifest, auto-served at /manifest.webmanifest
 | `components/schedule/ScheduleEditor.tsx` | Main editor mount; auto-snapshot watcher; storeReady guard |
 | `components/schedule/CrewIdentityBlock.tsx` | Inline-edit crew display between identity line and meta-grid |
 | `components/toolbar/SaveDropdown.tsx` | Split Save button; dropdown uses position:fixed to escape overflow |
-| `components/toolbar/ShareDropdown.tsx` | Share/Print/Export dropdown; same fixed-position escape pattern |
+| `components/toolbar/ShareDropdown.tsx` | Share/Print/Export dropdown; includes JSON export of the current schedule, Print/PDF, Contact Sheet, and Team/Client link options; same fixed-position escape pattern |
 | `components/toolbar/ToolsPanel.tsx` | Slide-over panel (Templates / Backup / Restore tabs); portal to document.body |
 | `components/library/LibraryTree.tsx` | Collapsible production → phase → schedule tree; DnD reorder, inline create, edit modal |
 | `components/schedule/ComboInput.tsx` | Typeahead input with filtered dropdown; used for projectName/phase in identity line |
@@ -256,7 +256,7 @@ If the Library metadata write fails after the blob write succeeds, the schedule 
 **Sharing**: Team Link (`?auth=true` deep link), Client Link (`/view/[name]` public), token-gated view (`/view?v=name&vt=token`)
 **Public viewer**: branded read-only view; two routes (`/view/[name]` unauthenticated, `/view?v=name&vt=token` token-gated) share `ScheduleReadView`; renders schedule identity block (name / projectName / phase / day info), weather, meta grid, action color pills, stacked sub-locations with map links; completed rows not faded; mobile scroll hint; contact fields loaded but intentionally not rendered; `pub-view-hdr` hides public chrome from print; `rv-panel` restores Time Out column in read-only print (scoped override of editor's global last-child hide rule)
 **CMS**: per-brand colors, fonts, logo, action style overrides — applied via CSS custom properties
-**Backup**: export current schedule JSON, export all schedules ZIP
+**Backup**: export all schedules ZIP (Backup tab in Tools Panel); single-schedule JSON export is available via the Share menu (`ShareDropdown`) — no separate toolbar export phase planned
 **Google Places**: location autocomplete via proxied `places.js` function; shared by main location and sub-location address search
 **Weather**: Open-Meteo integration; weather strip sits between Call Time field and schedule grid (screen); light grey background (#ebebeb) with design-system text colors
 **Templates**: reusable row sets stored in Netlify Blobs, synced across devices; accessible from within the editor via Tools Panel

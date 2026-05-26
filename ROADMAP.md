@@ -31,7 +31,7 @@
    - **Architecture note:** This is a step toward future call-sheet and Production Command architecture, but is not a call sheet. The schedule editor header remains intentionally clean. Heavy call-sheet-only fields (full crew list, parking, safety notes, permits) belong in a dedicated Call Sheet layer (Item 19), not in the schedule header.
    - **Future (not Phase 9):** Full call sheet generation (Item 19), multi-day master schedule (Item 20), Production Info Panel / Production Command.
 8. ✅ **Move CMS to Library** — CMS button removed from schedule toolbar, now in Library header
-9. **Export Current JSON** — move to schedule toolbar, remove from Backup tab
+9. ~~**Export Current JSON to toolbar**~~ — **Skipped / already satisfied.** The Share menu (`ShareDropdown`) already provides JSON export of the current schedule. This is sufficient for current usage; no standalone development phase is needed. Can be revisited only if the Share menu export proves insufficient in practice.
 10. ✅ **Tools Panel slide-over** — `ToolsPanel.tsx` renders via `createPortal` to `document.body`; slides from right on desktop/tablet (380px), bottom sheet on mobile (70vh). Three tabs: Templates (save/apply/delete templates from within an open schedule — the context problem is now solved), Backup (Export JSON), Restore (snapshot cards with Preview, Save As New, Restore, Delete). Merged to main 2026-05-15.
 11. **Push notifications for overtime** — alert when action runs over its duration
 12. **Library improvements**
@@ -177,9 +177,9 @@
 - **Phase 7 complete:** Read-only Link Experience / Client View Polish. Passed testing 2026-05-25. Branch: `phase-7-readonly-view-polish`, merged to `main` 2026-05-25.
 - **Phase 8 complete:** Snapshot UX Polish. Passed testing 2026-05-25. Branch: `phase-8-snapshot-ux-polish`, merged to `main` 2026-05-25.
 - **Phase 9 complete:** Schedule Header Identity Fields. Passed testing 2026-05-26. Branch: `phase-9-schedule-header-identity`, merged to `main` 2026-05-26.
-- **Next recommended phase:** Item 9 — Export Current JSON (move to schedule toolbar, small self-contained polish). After that, Item 19 (Call Sheets) and Item 20 (Multi-day / Master Schedule) are the natural next steps toward Production Command architecture — both warrant a planning conversation before implementation. Item 16 remaining scope (side-by-side compare, full autosave redesign, snapshot rename) deferred. Item 17 remaining work (public contact cards, contact visibility toggle, separate vendor/crew link type) deferred — requires explicit privacy design before implementation.
-- **Near-term polish:** Items 9, 11 (Export JSON, overtime push notifications).
+- **Next recommended phase:** Planning conversation for Item 19 (Call Sheets / Production Command) and Item 20 (Multi-day / Master Schedule). Both are the natural next meaningful priorities and warrant a design discussion before any code. Item 11 (push notifications for overtime) remains a self-contained short-term polish item. Item 16 remaining scope (side-by-side compare, full autosave redesign, snapshot rename) deferred. Item 17 remaining work (public contact cards, contact visibility toggle, separate vendor/crew link type) deferred — requires explicit privacy design before implementation.
+- **Near-term polish:** Item 11 (overtime push notifications).
 - **Item 22 (CMS architecture):** Planning conversation before any code.
 
 ---
-*Last updated: 2026-05-26 — Phase 9 Schedule Header Identity Fields complete and tested; merged to main. Item 7 marked complete. Next: Item 9 (Export JSON to toolbar), then Items 19/20 (Call Sheets, Multi-day) for Production Command direction.*
+*Last updated: 2026-05-26 — Roadmap cleanup: Item 9 (Export JSON to toolbar) skipped — Share menu export already sufficient. Next: planning conversation for Items 19/20 (Call Sheets, Multi-day / Production Command).*
