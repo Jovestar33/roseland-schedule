@@ -57,7 +57,7 @@ export default function ReadOnlyViewer({ name, viewToken }: Props) {
         <span>🔒 Read-only view — shared by Roseland Pictures</span>
         <button className="btn btn-light btn-sm" onClick={() => printSchedule(name)}>🖨 Print / Save PDF</button>
       </div>
-      <ScheduleReadView data={data} />
+      <ScheduleReadView data={data} name={name} />
     </div>
   );
 }

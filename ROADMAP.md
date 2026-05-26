@@ -82,7 +82,23 @@
     - Contacts remain editor-only; public/client view contacts not included in Phase 5.
     - **Limitations (deferred):** one contact per row; no contacts database; no public view contacts (item 17); no sub-location contacts (Phase 4B).
 16. **Version history UX (optional enhancement)** — improve restore UX, compare versions side-by-side, save a snapshot as a new schedule. Refers to improving the existing per-schedule snapshot system; does not imply implementing a new autosave or version-restore system.
-17. **Client read-only view enhancements** — crew contact cards visible in public view
+17. **Client read-only view enhancements**
+    - ✅ **Phase 7 — Read-only Link Experience / Client View Polish** — UI-only pass; no data model, storage, or server-side function changes. Passed testing 2026-05-25.
+      - Public/client view now shows a designed schedule identity block: schedule name, production/project name, phase, and day number / total days where available.
+      - Schedule name appears as part of the designed printed document, not only in the browser/PDF title bar.
+      - Read-only table preserves Time Out in print/PDF. (Root cause: global `print.css` rule `th:last-child / td:last-child` suppressed editor delete column but also hit Time Out in the 9-column read view; fix scoped to `.rv-panel` class.)
+      - Sub-locations render underneath main locations with descriptions and Google Maps links where lat/lng exists.
+      - Standard action types use action color styling (matching the editor and PDF).
+      - Completed rows are no longer faded — clients see all rows at full opacity.
+      - Mobile/narrow view includes a horizontal scroll hint above the schedule table.
+      - Public view print hides the dark branded header and Print/Save PDF button.
+      - Both `/view/[name]` (unauthenticated) and `/view?v=name&vt=token` (token-gated) benefit from all improvements via shared `ScheduleReadView`.
+      - Contact fields are not rendered publicly. No contacts were exposed.
+      - Normal editor behavior and print/PDF were not changed.
+      - **Note:** Browser "Headers and Footers" (URL / date / page number in PDF margins) are browser-controlled and not app behavior.
+    - ⬜ **Public/client contact cards** — opt-in contact name/title/phone/email visible in public view; requires explicit per-schedule contact visibility control; deferred.
+    - ⬜ **Contact visibility toggle** — per-schedule or per-link toggle to enable showing contacts publicly; deferred.
+    - ⬜ **Separate vendor/crew read-only link** — distinct link type with richer contact/crew info for internal use; deferred.
 
 ## 🟡 Medium-Term (v2 — next major development cycle)
 *New feature categories that expand scope significantly*
@@ -136,9 +152,10 @@
 - **Phase 4B (deferred):** Contact button evaluation — contact-per-sub-location integration or broader row/contact redesign. Not yet started; revisit after item 17 (public view contacts).
 - **Phase 5 complete:** Contact Sheet / Contact Extract. Passed testing 2026-05-25. Branch: `phase-5-contact-sheet`, merged to `main` 2026-05-25.
 - **Phase 6 complete:** Library Declutter / Mobile Polish. Passed testing 2026-05-25. Branch: `phase-6-library-declutter`, merged to `main` 2026-05-25.
-- **Next active phase:** Item 17 — Client read-only view enhancements (crew contact cards in public view). Directly builds on Phase 5 contact work. Item 16 (Snapshot UX polish) is also near-term and lower-risk if 17 needs more planning.
-- **Near-term polish:** Items 7, 9, 11, 16–17 grouped by theme.
+- **Phase 7 complete:** Read-only Link Experience / Client View Polish. Passed testing 2026-05-25. Branch: `phase-7-readonly-view-polish`, merged to `main` 2026-05-25.
+- **Next active phase:** Item 16 — Snapshot UX polish (improve restore UX, side-by-side compare, save snapshot as new schedule). Lower risk, self-contained. Item 17's remaining work (public contact cards, contact visibility toggle, separate vendor/crew link type) is deferred — requires explicit privacy design before implementation.
+- **Near-term polish:** Items 7, 9, 11, 16 grouped by theme.
 - **Item 22 (CMS architecture):** Planning conversation before any code.
 
 ---
-*Last updated: 2026-05-25 — Phase 6 Library Declutter / Mobile Polish complete and tested; merged to main. Next: Item 17 — Client read-only view enhancements (contact cards in public view), or Item 16 — Snapshot UX polish.*
+*Last updated: 2026-05-25 — Phase 7 Read-only Link Experience / Client View Polish complete and tested; merged to main. Next: Item 16 — Snapshot UX polish, or continue with Item 17 remaining work (contact visibility in public view — requires privacy design first).*

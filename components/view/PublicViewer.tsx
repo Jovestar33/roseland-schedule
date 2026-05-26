@@ -49,28 +49,31 @@ export default function PublicViewer({ name }: Props) {
 
   return (
     <div>
-      {/* Branded header */}
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: '10px 24px',
-        background: '#0a0a0f',
-        borderBottom: '1px solid rgba(255,255,255,.1)',
-        gap: '12px',
-      }}>
+      {/* Branded header — hidden on print via .pub-view-hdr */}
+      <div
+        className="pub-view-hdr"
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: '10px 24px',
+          background: '#0a0a0f',
+          borderBottom: '1px solid rgba(255,255,255,.1)',
+          gap: '12px',
+        }}
+      >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="/logo-header.png"
           alt="Roseland Pictures"
-          style={{ height: '78px', width: 'auto', objectFit: 'contain' }}
+          style={{ height: '78px', width: 'auto', objectFit: 'contain', flexShrink: 0 }}
         />
         <button className="btn btn-light btn-sm" onClick={() => printSchedule(name)}>
           🖨 Print / Save PDF
         </button>
       </div>
 
-      <ScheduleReadView data={data} />
+      <ScheduleReadView data={data} name={name} />
     </div>
   );
 }
