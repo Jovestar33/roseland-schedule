@@ -38,6 +38,16 @@
     - ✅ **Archive / Restore** — reversible cleanup layer; archived schedules are hidden from the default Library view and can be restored. Persists after Refresh, browser reload, and in-session navigation back to the Library. Passed testing 2026-05-24.
     - ✅ **Permanent Delete (archived only)** — two-step confirmation modal (passcode + type "DELETE"); passcode verified server-side via `SCHEDULE_DELETE_PASSWORD`; active schedules must be archived first. Server atomically deletes the schedule blob, associated snapshots, and all Library metadata references. Deleted schedules do not reappear after Refresh or reload. Passed testing 2026-05-24.
     - ✅ **Same-section DnD persistence hardening** — DnD reorder save failures surface an error banner and revert the UI rather than silently pretending the move saved. Passed testing 2026-05-24.
+    - ✅ **Library UI Declutter / Mobile Polish (Phase 6)** — UI-only pass; no Library data model or storage behavior changed. Passed testing 2026-05-25.
+      - Redundant Town · Date secondary metadata line removed from all Library rows; schedule names left-aligned.
+      - Active desktop rows: Links | Move To | Rename | Archive (all visible buttons).
+      - Active mobile rows: Links | Move To | ⋯; ⋯ menu shows Rename and Archive.
+      - Archived rows (all breakpoints): Restore | Delete Permanently (desktop) / Delete (mobile) — direct visible buttons, no ⋯ menu.
+      - Top toolbar simplified: + New Schedule | Refresh | Archived | More; mobile uses shorter labels (+ New / Refresh / Archived / ⋯). More menu contains only CMS and Log Out.
+      - All four Library tabs remain visible in the tab bar (Library / Templates / Backup / Restore).
+      - Templates tab: removed useless "Save Current as Template" input/button row; templates are saved from the Tools Panel inside an open schedule.
+      - Mobile search placeholder no longer clipped.
+      - New `lib-acts-mobile-only` CSS helper (inverse of `lib-acts-desktop-only`) for elements visible only on mobile.
     - ⬜ **Search/filter schedules** — by name, production, phase, date range; pending.
     - ⬜ **Sort options** — sort beyond manual phase order (by name, save date, shoot date); pending.
     - ⬜ **Open recent** — quick access to recently opened schedules on Library load; pending.
@@ -125,9 +135,10 @@
 - **Phase 4 post-release fixes (merged to `main` 2026-05-25):** DnD regression (`useLayoutEffect`, `type="button"`, CSS transition removal in `LocationCell.tsx`); `"00:00"` duration/Time Out regression (`r.dur === ''` guards throughout; `computeTimeOut` now returns Time In for zero-duration rows). Branch: `fix/dnd-regression`.
 - **Phase 4B (deferred):** Contact button evaluation — contact-per-sub-location integration or broader row/contact redesign. Not yet started; revisit after item 17 (public view contacts).
 - **Phase 5 complete:** Contact Sheet / Contact Extract. Passed testing 2026-05-25. Branch: `phase-5-contact-sheet`, merged to `main` 2026-05-25.
+- **Phase 6 complete:** Library Declutter / Mobile Polish. Passed testing 2026-05-25. Branch: `phase-6-library-declutter`, merged to `main` 2026-05-25.
 - **Next active phase:** Item 17 — Client read-only view enhancements (crew contact cards in public view). Directly builds on Phase 5 contact work. Item 16 (Snapshot UX polish) is also near-term and lower-risk if 17 needs more planning.
 - **Near-term polish:** Items 7, 9, 11, 16–17 grouped by theme.
 - **Item 22 (CMS architecture):** Planning conversation before any code.
 
 ---
-*Last updated: 2026-05-25 — Phase 5 Contact Sheet / Contact Extract complete and tested; merged to main. Next: Item 17 — Client read-only view enhancements (contact cards in public view), or Item 16 — Snapshot UX polish.*
+*Last updated: 2026-05-25 — Phase 6 Library Declutter / Mobile Polish complete and tested; merged to main. Next: Item 17 — Client read-only view enhancements (contact cards in public view), or Item 16 — Snapshot UX polish.*
