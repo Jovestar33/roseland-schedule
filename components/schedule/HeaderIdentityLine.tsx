@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useScheduleStore } from '@/lib/store/scheduleStore';
 import ComboInput from './ComboInput';
 
-type Field = 'projectName' | 'phase' | 'dayNumber' | 'totalDays';
+type Field = 'projectName' | 'phase' | 'day';
 
 interface Props { readOnly?: boolean; }
 
@@ -21,9 +21,10 @@ function readOptions(key: string): string[] {
 export default function HeaderIdentityLine({ readOnly = false }: Props) {
   const meta       = useScheduleStore((s) => s.meta);
   const updateMeta = useScheduleStore((s) => s.updateMeta);
-  const [editing, setEditing] = useState<Field | null>(null);
-  const [draft,   _setDraft]  = useState('');
-  const draftRef              = useRef('');
+  const [editing,       setEditing]       = useState<Field | null>(null);
+  const [draft,         _setDraft]        = useState('');
+  const draftRef                          = useRef('');
+  const [validationMsg, setValidationMsg] = useState('');
   const [projectOptions, setProjectOptions] = useState<string[]>([]);
   const [phaseOptions,   setPhaseOptions]   = useState<string[]>([]);
 
@@ -39,13 +40,53 @@ export default function HeaderIdentityLine({ readOnly = false }: Props) {
 
   function startEdit(field: Field) {
     if (readOnly) return;
-    const init =
-      field === 'projectName' ? meta.projectName :
-      field === 'phase'       ? meta.phase :
-      field === 'dayNumber'   ? (meta.dayNumber  != null ? String(meta.dayNumber)  : '') :
-                                (meta.totalDays != null ? String(meta.totalDays) : '');
+    setValidationMsg('');
+    let init = '';
+    if (field === 'projectName') {
+      init = meta.projectName;
+    } else if (field === 'phase') {
+      init = meta.phase;
+    } else {
+      // day: encode as slash notation for editing
+      if (meta.dayNumber != null) {
+        init = meta.totalDays != null ? `${meta.dayNumber}/${meta.totalDays}` : String(meta.dayNumber);
+      }
+    }
     setDraft(init);
     setEditing(field);
+  }
+
+  function showValidation(msg: string) {
+    setValidationMsg(msg);
+    setEditing(null);
+    setTimeout(() => setValidationMsg(''), 2500);
+  }
+
+  function commitDay(raw: string) {
+    const trimmed = raw.trim();
+    if (!trimmed) {
+      updateMeta({ dayNumber: null, totalDays: null });
+      setEditing(null);
+      return;
+    }
+    const slashIdx = trimmed.indexOf('/');
+    const dayStr = slashIdx === -1 ? trimmed : trimmed.slice(0, slashIdx).trim();
+    const totStr = slashIdx === -1 ? '' : trimmed.slice(slashIdx + 1).trim();
+
+    if (!dayStr) { showValidation('Day number required (e.g. 1 or 1/5)'); return; }
+    const n = parseInt(dayStr, 10);
+    if (isNaN(n) || n <= 0) { showValidation('Day must be a positive number'); return; }
+
+    let total: number | null = null;
+    if (totStr) {
+      const t = parseInt(totStr, 10);
+      if (isNaN(t) || t <= 0) { showValidation('Total must be a positive number'); return; }
+      if (n > t) { showValidation(`Day ${n} can't exceed total ${t}`); return; }
+      total = t;
+    }
+
+    updateMeta({ dayNumber: n, totalDays: total });
+    setEditing(null);
   }
 
   function commit() {
@@ -53,24 +94,28 @@ export default function HeaderIdentityLine({ readOnly = false }: Props) {
     const val = draftRef.current;
     if (editing === 'projectName') {
       updateMeta({ projectName: titleCase(val) });
+      setEditing(null);
     } else if (editing === 'phase') {
       updateMeta({ phase: titleCase(val) });
-    } else if (editing === 'dayNumber') {
-      const n = parseInt(val.trim(), 10);
-      updateMeta({ dayNumber: n > 0 ? n : null });
+      setEditing(null);
     } else {
-      const n = parseInt(val.trim(), 10);
-      updateMeta({ totalDays: n > 0 ? n : null });
+      commitDay(val);
     }
-    setEditing(null);
   }
 
   function revert() { setEditing(null); }
 
-  function onNumKey(e: React.KeyboardEvent<HTMLInputElement>) {
-    if (e.key === 'Enter')  { e.preventDefault(); commit(); }
+  function onDayKey(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key === 'Enter')  { e.preventDefault(); commitDay(draftRef.current); }
     if (e.key === 'Escape') { e.preventDefault(); revert(); }
   }
+
+  // Build display strings
+  const dayDisplayStr = meta.dayNumber != null
+    ? (meta.totalDays != null
+        ? `${meta.dayNumber} of ${meta.totalDays}`
+        : String(meta.dayNumber))
+    : '—';
 
   // Read-only: two-row display, no edit controls
   if (readOnly) {
@@ -113,6 +158,7 @@ export default function HeaderIdentityLine({ readOnly = false }: Props) {
             onEscape={revert}
             options={projectOptions}
             placeholder="Project name"
+            showAllOnOpen
             autoFocus
           />
         ) : (
@@ -137,6 +183,7 @@ export default function HeaderIdentityLine({ readOnly = false }: Props) {
             onEscape={revert}
             options={phaseOptions}
             placeholder="Phase"
+            showAllOnOpen
             autoFocus
           />
         ) : (
@@ -150,59 +197,37 @@ export default function HeaderIdentityLine({ readOnly = false }: Props) {
 
         <span className="hi-sep"> · </span>
 
-        {/* Day number and optional total */}
+        {/* Day — single slash-notation field */}
         <span className="hi-day-wrap">
           <span className="hi-day-lbl">Day </span>
-          {editing === 'dayNumber' ? (
+          {editing === 'day' ? (
             <input
               className="hi-field"
               autoFocus
               type="text"
               inputMode="numeric"
               value={draft}
-              placeholder="—"
+              placeholder="#/# or #"
               onChange={(e) => setDraft(e.target.value)}
-              onBlur={commit}
-              onKeyDown={onNumKey}
-              style={{ width: `${Math.max((draft || '—').length, 2)}ch` }}
+              onBlur={() => commitDay(draftRef.current)}
+              onKeyDown={onDayKey}
+              style={{ width: `${Math.max((draft || '#/#').length, 4)}ch` }}
             />
           ) : (
             <span
               className={meta.dayNumber != null ? 'hi-val' : 'hi-empty'}
-              onClick={() => startEdit('dayNumber')}
+              onClick={() => startEdit('day')}
             >
-              {meta.dayNumber ?? '—'}
+              {dayDisplayStr}
             </span>
-          )}
-          {/* Show "of [total]" when dayNumber is set or when editing totalDays */}
-          {(meta.dayNumber != null || editing === 'totalDays') && (
-            <>
-              <span className="hi-day-of"> of </span>
-              {editing === 'totalDays' ? (
-                <input
-                  className="hi-field"
-                  autoFocus
-                  type="text"
-                  inputMode="numeric"
-                  value={draft}
-                  placeholder="—"
-                  onChange={(e) => setDraft(e.target.value)}
-                  onBlur={commit}
-                  onKeyDown={onNumKey}
-                  style={{ width: `${Math.max((draft || '—').length, 2)}ch` }}
-                />
-              ) : (
-                <span
-                  className={meta.totalDays != null ? 'hi-val' : 'hi-empty'}
-                  onClick={() => startEdit('totalDays')}
-                >
-                  {meta.totalDays ?? '—'}
-                </span>
-              )}
-            </>
           )}
         </span>
       </div>
+
+      {/* Inline validation feedback */}
+      {validationMsg && (
+        <div className="hi-day-err">{validationMsg}</div>
+      )}
     </div>
   );
 }

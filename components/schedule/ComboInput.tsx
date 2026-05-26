@@ -10,6 +10,7 @@ export interface ComboInputProps {
   placeholder?: string;
   className?: string;
   autoFocus?: boolean;
+  showAllOnOpen?: boolean;
 }
 
 function titleCase(s: string): string {
@@ -18,12 +19,18 @@ function titleCase(s: string): string {
 
 export default function ComboInput({
   value, onChange, onBlur, onEscape, options, placeholder, className, autoFocus,
+  showAllOnOpen = false,
 }: ComboInputProps) {
   const [open,      setOpen]      = useState(false);
   const [activeIdx, setActiveIdx] = useState(-1);
+  const [typed,     setTyped]     = useState(false);
 
   const filtered = [...options]
-    .filter((o) => !value || o.toLowerCase().includes(value.toLowerCase()))
+    .filter((o) => {
+      if (!value) return true;
+      if (showAllOnOpen && !typed) return true;
+      return o.toLowerCase().includes(value.toLowerCase());
+    })
     .sort((a, b) => a.localeCompare(b));
 
   const showDropdown = open && filtered.length > 0;
@@ -76,8 +83,8 @@ export default function ComboInput({
         placeholder={placeholder}
         autoFocus={autoFocus}
         autoComplete="off"
-        onChange={(e) => { onChange(e.target.value); setActiveIdx(-1); }}
-        onFocus={() => setOpen(true)}
+        onChange={(e) => { onChange(e.target.value); setTyped(true); setActiveIdx(-1); }}
+        onFocus={() => { setOpen(true); setTyped(false); }}
         onBlur={handleBlur}
         onKeyDown={handleKeyDown}
       />
