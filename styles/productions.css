@@ -1,0 +1,288 @@
+/* ── Production Command ───────────────────────────────────────────────────── */
+
+/* ── Page shell ── */
+.pc-page {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 20px 16px 80px;
+  font-family: var(--fb, system-ui, sans-serif);
+}
+
+.pc-nav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.pc-nav-back {
+  font-size: 13px;
+  color: var(--g500, #71717a);
+  text-decoration: none;
+  flex-shrink: 0;
+}
+.pc-nav-back:hover { color: var(--ink, #111); }
+
+.pc-page-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--ink, #111);
+  margin: 0;
+  line-height: 1.2;
+}
+
+.pc-loading { color: var(--g500, #71717a); font-size: 14px; }
+.pc-empty   { color: var(--g500, #71717a); font-size: 14px; padding: 24px 0; }
+
+/* ── Section ── */
+.pc-section        { margin-bottom: 24px; }
+.pc-section-label  {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--g400, #a1a1aa);
+  margin-bottom: 8px;
+}
+
+/* ── Production cards (list) ── */
+.pc-prod-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--g200, #e4e4e7);
+  border-radius: 10px;
+  margin-bottom: 8px;
+  background: #fff;
+  text-decoration: none;
+  color: inherit;
+  transition: box-shadow .12s, border-color .12s;
+  cursor: pointer;
+}
+.pc-prod-card:hover { border-color: var(--g300, #d4d4d8); box-shadow: 0 2px 8px rgba(0,0,0,.07); }
+
+.pc-prod-info   { flex: 1; min-width: 0; }
+.pc-prod-title  { font-size: 15px; font-weight: 600; color: var(--ink, #111); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pc-prod-client { font-size: 12px; color: var(--g500, #71717a); margin-top: 2px; }
+.pc-prod-meta   { display: flex; align-items: center; gap: 8px; margin-top: 4px; flex-wrap: wrap; }
+.pc-prod-stat   { font-size: 12px; color: var(--g500, #71717a); }
+
+.pc-prod-unclaimed { border-style: dashed; }
+.pc-claim-btn      { flex-shrink: 0; }
+
+/* ── New production form ── */
+.pc-new-form  { display: flex; align-items: center; gap: 8px; margin-top: 4px; flex-wrap: wrap; }
+.pc-new-input {
+  flex: 1;
+  min-width: 160px;
+  font-size: 14px;
+  padding: 6px 10px;
+  border: 1px solid var(--g300, #d4d4d8);
+  border-radius: 8px;
+  outline: none;
+  background: #fff;
+  color: var(--ink, #111);
+}
+.pc-new-input:focus { border-color: var(--pink, #e91e8c); }
+.pc-add-btn { margin-top: 4px; }
+
+/* ── Dashboard header ── */
+.pc-dash-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.pc-dash-title  {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--ink, #111);
+  margin: 0;
+  line-height: 1.2;
+}
+.pc-dash-client { font-size: 13px; color: var(--g500, #71717a); margin-top: 3px; }
+.pc-dash-meta   { flex: 1; min-width: 0; }
+
+/* ── Tabs ── */
+.pc-dash-tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 2px solid var(--g200, #e4e4e7);
+  margin-bottom: 20px;
+}
+.pc-tab-btn {
+  font-size: 13px;
+  font-weight: 500;
+  padding: 7px 14px;
+  border: none;
+  background: none;
+  color: var(--g500, #71717a);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  border-radius: 0;
+  transition: color .1s, border-color .1s;
+}
+.pc-tab-btn:hover { color: var(--ink, #111); }
+.pc-tab-btn.active { color: var(--pink, #e91e8c); border-bottom-color: var(--pink, #e91e8c); font-weight: 600; }
+
+/* ── Day list ── */
+.pc-day-list     { display: flex; flex-direction: column; gap: 0; }
+.pc-day-add-row  { padding: 10px 0 0; }
+
+.pc-day-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--g200, #e4e4e7);
+  border-radius: 8px;
+  margin-bottom: 6px;
+  background: #fff;
+  min-width: 0;
+}
+.pc-day-row.cancelled { opacity: 0.55; }
+.pc-day-row.completed { opacity: 0.7; }
+
+.pc-day-date {
+  flex: 0 0 88px;
+  font-size: 12px;
+  color: var(--g500, #71717a);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.pc-day-type-wrap  { flex-shrink: 0; }
+.pc-day-body       { flex: 1; min-width: 0; }
+.pc-day-title      { font-size: 13px; font-weight: 500; color: var(--ink, #111); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pc-day-schedule   { font-size: 12px; color: var(--g500, #71717a); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pc-day-loc        { font-size: 11px; color: var(--g400, #a1a1aa); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pc-day-status-col { flex-shrink: 0; }
+.pc-day-actions    { display: flex; gap: 4px; flex-shrink: 0; flex-wrap: wrap; }
+
+/* ── Type badge ── */
+.pc-type-badge {
+  display: inline-block;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: 4px;
+  color: #fff;
+  white-space: nowrap;
+}
+.pc-type-shoot    { background: #c53030; }
+.pc-type-prep     { background: #2b6cb0; }
+.pc-type-travel   { background: #553c9a; }
+.pc-type-hold     { background: #718096; }
+.pc-type-wrap     { background: #2c7a7b; }
+.pc-type-edit     { background: #c05621; }
+.pc-type-delivery { background: #276749; }
+.pc-type-custom   { background: #4a5568; }
+
+/* ── Status text ── */
+.pc-status-text { font-size: 11px; font-weight: 600; white-space: nowrap; }
+.pc-status-text.confirmed  { color: #276749; }
+.pc-status-text.tentative  { color: #b7791f; }
+.pc-status-text.tbc        { color: var(--g400, #a1a1aa); }
+.pc-status-text.cancelled  { color: var(--g400, #a1a1aa); text-decoration: line-through; }
+.pc-status-text.completed  { color: var(--g500, #71717a); }
+
+/* Status pill (for production cards) */
+.pc-status-pill {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 20px;
+  border: 1px solid currentColor;
+  white-space: nowrap;
+}
+.pc-status-pill.development   { color: #805ad5; }
+.pc-status-pill.pre-production { color: #2b6cb0; }
+.pc-status-pill.in-production  { color: #276749; }
+.pc-status-pill.post           { color: #c05621; }
+.pc-status-pill.delivered      { color: var(--g400, #a1a1aa); }
+.pc-status-pill.archived       { color: var(--g400, #a1a1aa); }
+
+/* ── Day form modal ── */
+.pc-form        { display: flex; flex-direction: column; gap: 12px; }
+.pc-form-row    { display: flex; flex-direction: column; gap: 4px; }
+.pc-form-label  { font-size: 11px; font-weight: 600; color: var(--g500, #71717a); text-transform: uppercase; letter-spacing: .05em; }
+.pc-form-input,
+.pc-form-select,
+.pc-form-ta     {
+  font-size: 13px;
+  padding: 7px 10px;
+  border: 1px solid var(--g300, #d4d4d8);
+  border-radius: 8px;
+  outline: none;
+  background: #fff;
+  color: var(--ink, #111);
+  font-family: inherit;
+  width: 100%;
+  box-sizing: border-box;
+}
+.pc-form-input:focus,
+.pc-form-select:focus,
+.pc-form-ta:focus { border-color: var(--pink, #e91e8c); }
+.pc-form-ta { resize: vertical; min-height: 60px; line-height: 1.4; }
+
+.pc-form-row-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+/* ── Settings ── */
+.pc-settings      { display: flex; flex-direction: column; gap: 14px; max-width: 520px; }
+.pc-settings-sh   {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--g400, #a1a1aa);
+  border-bottom: 1px solid var(--g200, #e4e4e7);
+  padding-bottom: 4px;
+  margin-bottom: 2px;
+}
+.pc-settings-save { margin-top: 8px; }
+
+/* ── Action buttons in day rows ── */
+.pc-day-btn {
+  font-size: 11px;
+  padding: 3px 8px;
+  border: 1px solid var(--g200, #e4e4e7);
+  border-radius: 6px;
+  background: #fff;
+  color: var(--g500, #71717a);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background .1s, color .1s;
+}
+.pc-day-btn:hover { background: var(--g100, #f4f4f5); color: var(--ink, #111); }
+.pc-day-btn-open  { color: var(--pink, #e91e8c); border-color: var(--pink, #e91e8c); }
+.pc-day-btn-open:hover { background: #fff0f7; }
+.pc-day-btn-del   { color: #c53030; }
+.pc-day-btn-del:hover { background: #fff5f5; border-color: #c53030; }
+
+/* ── Empty day list ── */
+.pc-day-empty { color: var(--g500, #71717a); font-size: 13px; padding: 16px 0; }
+
+/* ── Claim / auto-create production ── */
+.pc-claim-card {
+  background: #f8f9fa;
+  border: 1px dashed var(--g300, #d4d4d8);
+  border-radius: 10px;
+  padding: 24px;
+  text-align: center;
+  max-width: 420px;
+  margin: 40px auto 0;
+}
+.pc-claim-card p { font-size: 14px; color: var(--g500, #71717a); margin: 0 0 14px; }
+
+@media (max-width: 600px) {
+  .pc-day-row     { flex-wrap: wrap; }
+  .pc-day-date    { flex-basis: 100%; }
+  .pc-day-actions { width: 100%; justify-content: flex-end; margin-top: 4px; }
+  .pc-form-row-2col { grid-template-columns: 1fr; }
+}

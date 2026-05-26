@@ -318,6 +318,37 @@ exports.handler = async (event) => {
       };
     }
 
+    // Step 5.5 — Patch Production index: update linkedScheduleName references (best-effort; non-fatal).
+    try {
+      const prodStore = getStore('production-index');
+      const prodKey   = 'rp_production_v1';
+      const prodRaw   = await prodStore.get(prodKey);
+      if (prodRaw !== null && prodRaw !== undefined) {
+        const prodIndex = typeof prodRaw === 'string' ? JSON.parse(prodRaw) : prodRaw;
+        let changed = false;
+        if (Array.isArray(prodIndex.days)) {
+          prodIndex.days = prodIndex.days.map((d) => {
+            if (d.linkedScheduleName === trimOld) {
+              changed = true;
+              return { ...d, linkedScheduleName: trimNew };
+            }
+            return d;
+          });
+        }
+        if (changed) {
+          prodIndex.updatedAt = Date.now();
+          await prodStore.set(prodKey, JSON.stringify(prodIndex), { metadata: { updatedAt: prodIndex.updatedAt } });
+          console.log('[Rename] production index patched — linkedScheduleName updated');
+        } else {
+          console.log('[Rename] production index — no linkedScheduleName references found for old name');
+        }
+      } else {
+        console.log('[Rename] production index not found — skipping patch');
+      }
+    } catch (prodPatchErr) {
+      console.warn('[Rename] production index patch failed (non-fatal):', prodPatchErr.message);
+    }
+
     // Step 6 — Delete old schedule blob.
     // Only reached after: new blob written, snapshot migrated, library updated.
     // Best-effort: failure here is non-fatal (stale orphan blob, not data loss).

@@ -128,6 +128,75 @@ export interface SyncQueueEntry {
   queuedAt: number;
 }
 
+// ── Production Command types ──────────────────────────────────────────────────
+
+export type ProductionStatus =
+  | 'development'
+  | 'pre-production'
+  | 'in-production'
+  | 'post'
+  | 'delivered'
+  | 'archived';
+
+export type ProductionDayType =
+  | 'shoot'
+  | 'prep'
+  | 'travel'
+  | 'hold'
+  | 'wrap'
+  | 'edit'
+  | 'delivery'
+  | 'custom';
+
+export type ProductionDayStatus =
+  | 'tbc'
+  | 'confirmed'
+  | 'tentative'
+  | 'cancelled'
+  | 'completed';
+
+export interface CallSheetDefaults {
+  hospital?: string;
+  parking?: string;
+  basecamp?: string;
+  emergency?: string;
+}
+
+export interface Production {
+  id: string;              // stable UUID — never changes
+  prodKey: string;         // normalized projectName key (toLowerCase)
+  title: string;
+  clientName?: string;
+  notes?: string;
+  status?: ProductionStatus;
+  callSheetDefaults?: CallSheetDefaults;
+  createdAt: number;
+  updatedAt: number;
+}
+
+export interface ProductionDay {
+  id: string;              // stable UUID
+  productionId: string;
+  date?: string;           // YYYY-MM-DD
+  type: ProductionDayType;
+  typeLabel?: string;      // custom label when type = 'custom'
+  title?: string;
+  phaseKey?: string;
+  linkedScheduleName?: string;   // schedule blob key; patched by rename-schedule.js
+  status: ProductionDayStatus;
+  locationSummary?: string;
+  callSheetStatus?: 'not-started' | 'draft' | 'issued';
+  notes?: string;
+  sortOrder: number;
+}
+
+export interface ProductionIndex {
+  version: 1;
+  productions: Production[];
+  days: ProductionDay[];
+  updatedAt: number;
+}
+
 // SaaS-ready — used as orgId: 'default' in single-tenant mode.
 // Extend Netlify function keys to org/{orgId}/... when multi-tenancy is added.
 export interface OrgContext {

@@ -16,6 +16,18 @@ export default function ShareDropdown() {
   const btnRef  = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
+    if (!scheduleName) return;
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('openCallSheet') === '1') {
+      setCallSheetOpen(true);
+      // Remove the param from the URL without triggering a navigation
+      const url = new URL(window.location.href);
+      url.searchParams.delete('openCallSheet');
+      window.history.replaceState(null, '', url.toString());
+    }
+  }, [scheduleName]);
+
+  useEffect(() => {
     if (!open) return;
     function onOutside(e: MouseEvent) {
       if (wrapRef.current && !wrapRef.current.contains(e.target as Node)) setOpen(false);

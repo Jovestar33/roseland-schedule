@@ -1538,6 +1538,13 @@ export default function LibraryPage() {
               <button
                 type="button"
                 className="lib-more-item"
+                onClick={() => { setMoreOpen(false); router.push('/productions'); }}
+              >
+                🎬 Productions
+              </button>
+              <button
+                type="button"
+                className="lib-more-item"
                 onClick={handleLogout}
               >
                 Log Out
