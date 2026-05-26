@@ -305,28 +305,60 @@ function ScheduleRowContent({
           )}
         </div>
 
-        {/* ── Active: Move To (desktop only) + ⋯ / Archived: ⋯ only ── */}
-        {!isArchived && (
+        {/* ── Active: Move To (always) + Rename/Archive (desktop) + ⋯ (mobile only)
+             ── Archived: ⋯ always ── */}
+        {!isArchived ? (
+          <>
+            <button
+              type="button"
+              className="sitem-move-btn"
+              onClick={() => !isSyncing && onMoveTo(s.name)}
+              disabled={isSyncing}
+              title={isSyncing ? 'Still syncing — please wait a moment' : 'Move to another production or phase'}
+            >
+              Move To
+            </button>
+            <button
+              type="button"
+              className="sitem-rename-btn lib-acts-desktop-only"
+              onClick={() => !isSyncing && onRename(s.name)}
+              disabled={isSyncing}
+              title={isSyncing ? 'Still syncing — please wait a moment' : 'Rename schedule'}
+            >
+              {isSyncing ? 'Syncing…' : 'Rename'}
+            </button>
+            <button
+              type="button"
+              className="sitem-del lib-acts-desktop-only"
+              onClick={() => onArchive(s.name)}
+              title="Archive schedule"
+            >
+              Archive
+            </button>
+            {/* ⋯ button: mobile only — shows Rename + Archive */}
+            <button
+              ref={ctxBtnRef}
+              type="button"
+              className="lbt-ctx-btn lib-acts-mobile-only"
+              onClick={toggleCtx}
+              title="More actions"
+              aria-haspopup="true"
+            >
+              ⋯
+            </button>
+          </>
+        ) : (
           <button
+            ref={ctxBtnRef}
             type="button"
-            className="sitem-move-btn lib-acts-desktop-only"
-            onClick={() => !isSyncing && onMoveTo(s.name)}
-            disabled={isSyncing}
-            title={isSyncing ? 'Still syncing — please wait a moment' : 'Move to another production or phase'}
+            className="lbt-ctx-btn"
+            onClick={toggleCtx}
+            title="More actions"
+            aria-haspopup="true"
           >
-            Move To
+            ⋯
           </button>
         )}
-        <button
-          ref={ctxBtnRef}
-          type="button"
-          className="lbt-ctx-btn"
-          onClick={toggleCtx}
-          title="More actions"
-          aria-haspopup="true"
-        >
-          ⋯
-        </button>
 
         {/* ── ⋯ portal menu ── */}
         {ctxOpen && createPortal(
@@ -350,15 +382,6 @@ function ScheduleRowContent({
               </>
             ) : (
               <>
-                {/* Move To only in ⋯ menu on mobile (desktop has its own button) */}
-                <button
-                  type="button"
-                  className="lbt-ctx-item lbt-ctx-item--mobile-only"
-                  onClick={() => { if (!isSyncing) { onMoveTo(s.name); setCtxOpen(false); } }}
-                  disabled={isSyncing}
-                >
-                  {isSyncing ? 'Syncing…' : 'Move To'}
-                </button>
                 <button
                   type="button"
                   className="lbt-ctx-item"

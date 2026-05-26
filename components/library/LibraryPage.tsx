@@ -1505,10 +1505,7 @@ export default function LibraryPage() {
             disabled={isRefreshing}
             title="Re-fetch the latest schedules from the cloud"
           >
-            {isRefreshing
-              ? <><span className="lib-btn-desktop">Refreshing…</span><span className="lib-btn-mobile">…</span></>
-              : <><span className="lib-btn-desktop">↻ Refresh</span><span className="lib-btn-mobile">↻</span></>
-            }
+            {isRefreshing ? 'Refreshing…' : '↻ Refresh'}
           </button>
           <button
             className={`btn btn-light btn-sm${showArchived ? ' lib-archived-toggle--on' : ''}`}

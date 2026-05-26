@@ -280,14 +280,13 @@
     width: 100%;
     padding-left: 28px; /* grip (20px) + gap (8px) — aligns with name above */
   }
-  .lbt-sched-acts .sitem-links-btn {
+  .lbt-sched-acts .sitem-links-btn,
+  .lbt-sched-acts .sitem-move-btn {
     padding: 4px 10px;
     font-size: 12px;
   }
   /* Larger tap target for ⋯ button on mobile */
   .lbt-ctx-btn { min-width: 38px; min-height: 34px; }
-  /* Move To item shown only in ⋯ menu on mobile */
-  .lbt-ctx-item--mobile-only { display: block; }
   .lbt-phase .lbt-sched-list .lbt-sched-row { padding-left: 44px; }
   .lbt-prod-direct .lbt-sched-row { padding-left: 28px; }
 }
