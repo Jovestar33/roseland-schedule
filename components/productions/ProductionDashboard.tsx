@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/lib/store/authStore';
 import { useProductionStore } from '@/lib/store/productionStore';
@@ -48,7 +49,7 @@ export default function ProductionDashboard({ prodKey }: Props) {
     return (
       <div className="pc-page">
         <nav className="pc-nav">
-          <a href="/productions" className="pc-nav-back">← Productions</a>
+          <Link href="/productions" className="pc-nav-back">← Productions</Link>
         </nav>
         <div className="pc-claim-card">
           <p>No production found for <strong>{prodKey}</strong>.</p>
@@ -63,7 +64,7 @@ export default function ProductionDashboard({ prodKey }: Props) {
   return (
     <div className="pc-page">
       <nav className="pc-nav">
-        <a href="/productions" className="pc-nav-back">← Productions</a>
+        <Link href="/productions" className="pc-nav-back">← Productions</Link>
         <div className="pc-dash-meta">
           <h1 className="pc-dash-title">{production.title}</h1>
           {production.clientName && (

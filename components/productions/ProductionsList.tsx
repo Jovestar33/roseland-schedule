@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/lib/store/authStore';
 import { useProductionStore } from '@/lib/store/productionStore';
@@ -101,7 +102,7 @@ export default function ProductionsList() {
   return (
     <div className="pc-page">
       <nav className="pc-nav">
-        <a href="/library" className="pc-nav-back">← Library</a>
+        <Link href="/library" className="pc-nav-back">← Library</Link>
         <h1 className="pc-page-title">Productions</h1>
       </nav>
 
