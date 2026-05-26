@@ -51,6 +51,17 @@ export interface WeatherData {
   noForecast?: boolean;
 }
 
+export interface CallSheetData {
+  basecamp?: string;
+  parking?: string;
+  hospital?: string;
+  emergency?: string;
+  mealNotes?: string;
+  safetyNotes?: string;
+  specialInstructions?: string;
+  notes?: string;
+}
+
 export interface ScheduleMeta {
   town: string;
   date: string;
@@ -64,6 +75,7 @@ export interface ScheduleMeta {
   phase: string;
   dayNumber: number | null;
   totalDays: number | null;
+  callsheet?: CallSheetData;
 }
 
 // Wire format stored in Netlify Blobs — must stay compatible with save.js / load.js

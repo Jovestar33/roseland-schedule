@@ -3,12 +3,14 @@ import { useRef, useState, useEffect } from 'react';
 import { useScheduleStore } from '@/lib/store/scheduleStore';
 import { printSchedule } from '@/lib/print';
 import ContactSheetModal from '@/components/modals/ContactSheetModal';
+import CallSheetModal from '@/components/modals/CallSheetModal';
 
 export default function ShareDropdown() {
   const scheduleName    = useScheduleStore((s) => s.scheduleName);
   const getScheduleData = useScheduleStore((s) => s.getScheduleData);
   const [open, setOpen] = useState(false);
   const [contactSheetOpen, setContactSheetOpen] = useState(false);
+  const [callSheetOpen,    setCallSheetOpen   ] = useState(false);
   const [dropPos, setDropPos] = useState({ top: 0, right: 0 });
   const wrapRef = useRef<HTMLDivElement>(null);
   const btnRef  = useRef<HTMLButtonElement>(null);
@@ -47,6 +49,11 @@ export default function ShareDropdown() {
     setContactSheetOpen(true);
   }
 
+  function handleCallSheet() {
+    close();
+    setCallSheetOpen(true);
+  }
+
   function handleExportJson() {
     close();
     const data  = getScheduleData();
@@ -82,6 +89,7 @@ export default function ShareDropdown() {
           <button className="tbar-drop-item" onClick={handlePrint}>🖨 Print / PDF</button>
           <button className="tbar-drop-item" onClick={handleExportJson}>⬇ Export JSON</button>
           <button className="tbar-drop-item" onClick={handleContactSheet}>📋 Contact Sheet</button>
+          <button className="tbar-drop-item" onClick={handleCallSheet}>📄 Call Sheet</button>
         </div>
       )}
     </div>
@@ -89,6 +97,10 @@ export default function ShareDropdown() {
       open={contactSheetOpen}
       onClose={() => setContactSheetOpen(false)}
     />
-    </>
+    <CallSheetModal
+      open={callSheetOpen}
+      onClose={() => setCallSheetOpen(false)}
+    />
+</>
   );
 }

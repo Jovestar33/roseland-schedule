@@ -1,0 +1,403 @@
+/* ── Call Sheet modal + print ─────────────────────────────────────────────── */
+
+/* Hide print-only block on screen */
+.callsheet-print-only { display: none; }
+
+/* Modal sizing */
+.csh-modal { max-width: 680px; }
+
+/* ── Modal: production header ── */
+.csh-header {
+  background: #f5f6f8;
+  border-radius: 6px;
+  padding: 10px 14px;
+  margin-bottom: 12px;
+}
+.csh-meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 20px;
+  line-height: 1.5;
+}
+.csh-mi-lbl {
+  font-size: 11px;
+  font-weight: 600;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  margin-right: 4px;
+}
+.csh-mi-val { font-size: 13px; color: #222; }
+
+/* ── Modal: general call badge ── */
+.csh-callbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #1a1a2e;
+  color: #fff;
+  border-radius: 6px;
+  padding: 10px 16px;
+  margin-bottom: 14px;
+}
+.csh-call-lbl {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  opacity: .7;
+}
+.csh-call-time {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: .02em;
+}
+
+/* ── Modal: sections ── */
+.csh-section { margin-bottom: 14px; }
+.csh-sh {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: #999;
+  margin-bottom: 6px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #e8e8e8;
+}
+
+/* ── Modal: schedule table ── */
+.csh-sched-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.csh-sched-row td { padding: 3px 4px; }
+.csh-sun-row td {
+  padding: 3px 4px;
+  font-style: italic;
+  color: #e07b00;
+  font-size: 12px;
+}
+.csh-td-t { width: 72px; color: #444; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.csh-td-a { font-weight: 500; }
+.csh-td-l { color: #666; padding-left: 8px; overflow-wrap: anywhere; word-break: break-word; }
+
+/* ── Modal: editable fields ── */
+.csh-fields { display: flex; flex-direction: column; gap: 2px; }
+.csh-field {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 3px 0;
+  font-size: 13px;
+}
+.csh-field-notes { align-items: flex-start; }
+.csh-fl {
+  flex: 0 0 170px;
+  font-size: 12px;
+  color: #777;
+  text-align: right;
+}
+.csh-fv {
+  flex: 1;
+  cursor: pointer;
+  border-bottom: 1px dashed transparent;
+  padding: 1px 2px;
+  border-radius: 2px;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  min-width: 0;
+}
+.csh-fv:hover { background: #f0f4ff; border-bottom-color: #99b; }
+.csh-fv-empty { color: #bbb; font-style: italic; }
+.csh-fi {
+  flex: 1;
+  font-size: 13px;
+  border: none;
+  border-bottom: 1px solid #5a7fd6;
+  outline: none;
+  padding: 1px 2px;
+  background: transparent;
+  color: #111;
+}
+.csh-notes-ta {
+  resize: vertical;
+  min-height: 56px;
+  border: 1px solid #5a7fd6;
+  border-radius: 4px;
+  padding: 4px 6px;
+  font-family: inherit;
+  line-height: 1.4;
+}
+
+/* ── Modal: location field (editing wrapper + map pin) ── */
+.csh-loc-wrap {
+  flex: 1;
+  display: flex;
+  min-width: 0;
+}
+.csh-loc-wrap .csh-fi {
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+}
+.csh-loc-pin {
+  flex-shrink: 0;
+  font-size: 13px;
+  line-height: 1;
+  text-decoration: none;
+  opacity: 0.45;
+  margin-left: 4px;
+  cursor: pointer;
+  align-self: center;
+}
+.csh-loc-pin:hover { opacity: 0.85; }
+
+/* ── Modal: contacts section ── */
+.csh-empty { color: #999; font-style: italic; font-size: 13px; margin: 0; }
+.csh-contacts-list { display: flex; flex-direction: column; gap: 4px; }
+.csh-contact-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  font-size: 13px;
+  padding: 3px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+.csh-cn { font-weight: 600; }
+.csh-ct { color: #666; }
+.csh-cp, .csh-ce { color: #444; font-size: 12px; }
+
+/* ── Modal: footer contacts toggle ── */
+.csh-contacts-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #555;
+  cursor: pointer;
+  margin-right: auto;
+}
+.csh-contacts-toggle input { cursor: pointer; }
+
+/* ──────────────────────────────────────────────────────────────────────────
+   Print styles
+   body.callsheet-printing hides app chrome and shows only the print portal
+   ────────────────────────────────────────────────────────────────────────── */
+@media print {
+  /* Map pins are screen-only */
+  .csh-loc-pin { display: none !important; }
+
+  /* Zero out mobile safe-area padding that print.css never resets */
+  body.callsheet-printing {
+    padding-bottom: 0 !important;
+    margin-bottom: 0 !important;
+  }
+  body.callsheet-printing .tbl-wrap {
+    padding-bottom: 0 !important;
+  }
+
+  /* ── Show / hide ── */
+  body.callsheet-printing .panel,
+  body.callsheet-printing .hdr,
+  body.callsheet-printing .toolbar,
+  body.callsheet-printing .wx-strip,
+  body.callsheet-printing .add-area,
+  body.callsheet-printing .tbar,
+  body.callsheet-printing .overlay { display: none !important; }
+
+  body.callsheet-printing .callsheet-print-only { display: block !important; }
+
+  /* ── Document root ── */
+  .csh-pdoc {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 9pt;
+    color: #000;
+  }
+
+  /* ── Brand header bar: logo + "Call Sheet" ── */
+  .csh-pdoc-brand {
+    display: flex;
+    align-items: center;
+    gap: 10pt;
+    background: #000;
+    padding: 2pt 10pt 4pt;
+    border-bottom: 2pt solid #e91e8c;
+    margin-bottom: 0;
+  }
+  .csh-pdoc-logo {
+    height: 32pt;
+    width: auto;
+    object-fit: contain;
+    flex-shrink: 0;
+  }
+  .csh-pdoc-brand-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18pt;
+    letter-spacing: 3px;
+    color: #fff;
+    line-height: 1;
+  }
+
+  /* ── Sub-brand bar: schedule name + project/phase/day ── */
+  .csh-pdoc-subbrand {
+    background: #1a1a2e;
+    padding: 2pt 10pt;
+    margin-bottom: 6pt;
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 2pt 10pt;
+  }
+  .csh-pdoc-sname {
+    font-family: Georgia, serif;
+    font-size: 10pt;
+    color: #eee;
+  }
+  .csh-pdoc-pinfo {
+    font-family: Georgia, serif;
+    font-size: 8.5pt;
+    color: #aaa;
+    font-style: italic;
+  }
+
+  /* ── Production details table ── */
+  .csh-pdoc-lbl {
+    font-weight: bold;
+    width: 1.4in;
+    color: #444;
+    text-transform: uppercase;
+    font-size: 7pt;
+    letter-spacing: .05em;
+    white-space: nowrap;
+  }
+
+  /* ── General call box ── */
+  .csh-pdoc-callbox {
+    display: flex;
+    align-items: center;
+    gap: 10pt;
+    background: #1a1a2e;
+    color: #fff;
+    padding: 5pt 10pt;
+    margin-bottom: 6pt;
+    border-radius: 3pt;
+  }
+  .csh-pdoc-call-lbl {
+    font-size: 7.5pt;
+    font-weight: bold;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    opacity: .75;
+  }
+  .csh-pdoc-call-time { font-size: 15pt; font-weight: bold; }
+
+  /* ── Content sections ── */
+  .csh-pdoc-section {
+    margin-bottom: 7pt;
+  }
+  /* Short sections (Key Information, Contacts) try to stay on one page.
+     Schedule deliberately omits this so long timelines can break normally. */
+  .csh-pdoc-section-fixed {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+  .csh-pdoc-sh {
+    font-size: 7.5pt;
+    font-weight: bold;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    color: #333;
+    border-bottom: 1pt solid #000;
+    padding-bottom: 2pt;
+    margin-bottom: 3pt;
+    /* Prevent the heading from being orphaned at the bottom of a page */
+    page-break-after: avoid;
+    break-after: avoid;
+  }
+
+  /* ── Schedule table: time column must not wrap ── */
+  .csh-pdoc-td-t {
+    width: 62pt;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .csh-pdoc-td-a { font-weight: 500; }
+
+  /* ── Sun rows ── */
+  .csh-pdoc-sun td { font-style: italic !important; color: #666 !important; font-size: 8.5pt !important; }
+
+  /* ── Contacts table dividers ── */
+  .csh-pdoc-contacts td { border-bottom: 0.5pt solid #ddd !important; }
+  .csh-pdoc-contacts tr:last-child td { border-bottom: none !important; }
+  .csh-pdoc-contacts td:first-child { width: 2.2in; }
+
+  /* ── Meta table: tighter padding, no cell borders ── */
+  .csh-pdoc-meta td {
+    padding: 1.5pt 5pt !important;
+    border-bottom: none !important;
+  }
+
+  /* ────────────────────────────────────────────────────────────────────────────
+     Fix print.css interference — high-specificity overrides beat print.css
+     !important rules regardless of stylesheet import order.
+
+     Root cause: print.css `td:last-child { display:none !important }` (0,1,1)
+     hides the value cell in every 2-column row. Also conflicts:
+       • td:nth-child(2) { overflow:hidden }
+       • table { table-layout:fixed }
+       • tbody tr:nth-child(even):not(.sun-row) { background:#fdf4f9 }
+       • tbody tr { border-bottom:0.5px solid #e4e4e7 }
+     ────────────────────────────────────────────────────────────────────────── */
+
+  /* Auto layout so columns size to content; clean border model */
+  .callsheet-print-only table {
+    table-layout: auto !important;
+    border-collapse: collapse !important;
+    width: 100% !important;
+    border-spacing: 0 !important;
+  }
+
+  /* Restore all cells: display, visibility, and call-sheet typography.
+     Combined selector covers both the general case and :last-child.
+     Specificity: .callsheet-print-only td        = (0,1,1)
+                  .callsheet-print-only td:last-child = (0,2,1)
+     Both beat print.css td:last-child             = (0,1,1).        */
+  .callsheet-print-only td,
+  .callsheet-print-only td:last-child {
+    display: table-cell !important;
+    visibility: visible !important;
+    width: auto !important;
+    max-width: none !important;
+    font-family: Georgia, 'Times New Roman', serif !important;
+    font-size: 9pt !important;
+    color: #000 !important;
+    padding: 2pt 4pt !important;
+    border: none !important;
+    border-bottom: 0.5pt solid #eee !important;
+    vertical-align: top !important;
+    overflow: visible !important;
+    overflow-wrap: anywhere !important;
+    word-break: break-word !important;
+  }
+
+  /* Undo print.css overflow:hidden on td:nth-child(2). (0,2,1) > (0,1,1). */
+  .callsheet-print-only td:nth-child(2) {
+    overflow: visible !important;
+    padding-right: 4pt !important;
+  }
+
+  /* Remove alternating pink rows from schedule grid.
+     (0,3,2) beats print.css tbody tr:nth-child(even):not(.sun-row) = (0,2,2). */
+  .callsheet-print-only .csh-pdoc tbody tr:nth-child(even),
+  .callsheet-print-only .csh-pdoc tbody tr:nth-child(even):not(.csh-pdoc-sun) {
+    background: transparent !important;
+    background-color: transparent !important;
+  }
+
+  /* Remove tr-level border set by print.css on tbody tr. (0,1,2) > (0,0,2). */
+  .callsheet-print-only tbody tr {
+    border-bottom: none !important;
+  }
+}
