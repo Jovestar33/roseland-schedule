@@ -226,7 +226,7 @@ function PrintDoc({
 
       {/* Key information — section only renders if at least one field has a value */}
       {hasKeyInfo && (
-        <div className="csh-pdoc-section">
+        <div className="csh-pdoc-section csh-pdoc-section-fixed">
           <div className="csh-pdoc-sh">Key Information</div>
           <table className="csh-pdoc-info">
             <tbody>
@@ -245,7 +245,7 @@ function PrintDoc({
 
       {/* Contacts */}
       {showContacts && contacts.length > 0 && (
-        <div className="csh-pdoc-section">
+        <div className="csh-pdoc-section csh-pdoc-section-fixed">
           <div className="csh-pdoc-sh">Contacts</div>
           <table className="csh-pdoc-contacts">
             <tbody>

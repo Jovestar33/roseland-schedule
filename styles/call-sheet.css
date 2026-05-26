@@ -258,7 +258,10 @@
   /* ── Content sections ── */
   .csh-pdoc-section {
     margin-bottom: 7pt;
-    /* Keep section together; falls back gracefully if section is longer than a page */
+  }
+  /* Short sections (Key Information, Contacts) try to stay on one page.
+     Schedule deliberately omits this so long timelines can break normally. */
+  .csh-pdoc-section-fixed {
     page-break-inside: avoid;
     break-inside: avoid;
   }
