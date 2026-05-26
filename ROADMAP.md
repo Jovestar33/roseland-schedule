@@ -139,7 +139,27 @@
     - **Post-Phase-4 bug fixes (merged to `main` 2026-05-25):**
       - DnD regression from Phase 4: `DescTextarea` auto-resize changed from `useEffect` to `useLayoutEffect` (synchronous, does not fire during drop animation); all buttons in `LocationCell.tsx` given `type="button"`; CSS transition removed from `.loc-add-subloc`.
       - `"00:00"` duration regression: all four `!r.dur` falsy guards replaced with `r.dur === ''` (explicit blank check) in `hasOpenRows`, `guardReorder`, `nextFixedAnchorMin`, and `isLocked`. `computeTimeOut` guard changed from `durMins <= 0` to `row.dur === ''` — a row with Time In and duration "00:00" now correctly shows Time Out equal to Time In.
-19. **Call sheets** — generate from schedule, pull weather/locations/contacts/rows, add parking/safety notes, export PDF
+19. ✅ **Phase 10 — Call Sheet Foundation** — Completed and deployed 2026-05-26. Branch `phase-10-call-sheet-planning`, merged to `main` 2026-05-26.
+    - Share dropdown now includes "📄 Call Sheet".
+    - Call Sheet opens as a separate modal/document from the current schedule. The schedule editor header and grid are unchanged — no call-sheet-only fields were added to the schedule.
+    - Call Sheet pulls existing schedule data: schedule name, project/production name, phase, Day X of Y, date, town/location, producer, director, camera, weather (condition + temp range where available), and a simplified schedule timeline (time + action + location per non-blank row).
+    - General call is derived automatically from the first non-sun row. Staggered/group call times are deferred to a future structured call-sheet extension.
+    - Call-sheet-specific fields are stored under `meta.callsheet: CallSheetData` (additive optional field on `ScheduleMeta`; old schedules with no `callsheet` field work unchanged): `basecamp`, `parking`, `hospital`, `emergency`, `mealNotes`, `safetyNotes`, `specialInstructions`, `notes`.
+    - Blank fields are hidden in both the digital call sheet display and all print/PDF output.
+    - Basecamp, Crew Parking, and Nearest Hospital use `LocationField`: Google Places autocomplete when editing (same infrastructure as the main schedule editor); `📍` map-pin link (Google Maps directions) in display mode; map pin hidden in print.
+    - Contacts can be included with a toggle but default OFF each time the modal opens.
+    - Call Sheet print is fully isolated: `callsheet-print-only` portal on `document.body` + `body.callsheet-printing` class; includes Roseland branding/logo, branded header bar, General Call box, Key Information (before Schedule), Contacts (toggle-gated), and schedule summary. Normal schedule Print/PDF, Contact Sheet print, Library, snapshots, and read-only view are unaffected.
+    - Print: Key Information and Contacts avoid interior page breaks; headings avoid orphaning; time column stays on one line; long location text wraps cleanly; no blank trailing page.
+    - **Design principle:** The schedule stays clean. The Call Sheet is a separate document that shares data with the schedule. This is a foundation for future Production Command / multi-day call-sheet workflows.
+    - **Deferred (not Phase 10):**
+      - Shareable call-sheet URL (currently editor-only modal/print/PDF)
+      - Vendor/crew-specific call sheet views
+      - Staggered/group call times
+      - Distribution lists
+      - Production-level office/coordinator fields
+      - Advance schedule / next-day preview
+      - Role-specific call sheets
+      - Server-side PDF generation
 20. **Multi-day projects** — master schedule containing multiple daily schedules, duplicate day, move rows between days
 21. **Production management** — booking/permit/release/vendor/location status tracking, crew/gear/travel notes — film-specific not generic PM
 22. **CMS branding architecture** — per-schedule templates, multi-brand support (Roseland/Saluki/neutral SaaS shell) — needs dedicated planning session before any code
@@ -177,9 +197,10 @@
 - **Phase 7 complete:** Read-only Link Experience / Client View Polish. Passed testing 2026-05-25. Branch: `phase-7-readonly-view-polish`, merged to `main` 2026-05-25.
 - **Phase 8 complete:** Snapshot UX Polish. Passed testing 2026-05-25. Branch: `phase-8-snapshot-ux-polish`, merged to `main` 2026-05-25.
 - **Phase 9 complete:** Schedule Header Identity Fields. Passed testing 2026-05-26. Branch: `phase-9-schedule-header-identity`, merged to `main` 2026-05-26.
-- **Next recommended phase:** Planning conversation for Item 19 (Call Sheets / Production Command) and Item 20 (Multi-day / Master Schedule). Both are the natural next meaningful priorities and warrant a design discussion before any code. Item 11 (push notifications for overtime) remains a self-contained short-term polish item. Item 16 remaining scope (side-by-side compare, full autosave redesign, snapshot rename) deferred. Item 17 remaining work (public contact cards, contact visibility toggle, separate vendor/crew link type) deferred — requires explicit privacy design before implementation.
+- **Phase 10 complete:** Call Sheet Foundation. Completed and deployed 2026-05-26. Branch: `phase-10-call-sheet-planning`, merged to `main` 2026-05-26. Includes full Call Sheet modal, print portal, Google Places location assistance for location-style fields, map-pin links, print layout polish, and blank-page fix.
+- **Next recommended phase:** Planning conversation for Item 20 (Multi-day / Master Schedule) and the future structured Call Sheet extension (staggered call times, distribution, shareable URL). Item 11 (push notifications for overtime) remains a self-contained short-term polish item. Item 16 remaining scope (side-by-side compare, full autosave redesign, snapshot rename) deferred. Item 17 remaining work (public contact cards, contact visibility toggle, separate vendor/crew link type) deferred — requires explicit privacy design before implementation.
 - **Near-term polish:** Item 11 (overtime push notifications).
 - **Item 22 (CMS architecture):** Planning conversation before any code.
 
 ---
-*Last updated: 2026-05-26 — Roadmap cleanup: Item 9 (Export JSON to toolbar) skipped — Share menu export already sufficient. Next: planning conversation for Items 19/20 (Call Sheets, Multi-day / Production Command).*
+*Last updated: 2026-05-26 — Phase 10 Call Sheet Foundation complete and deployed. Item 19 marked complete. Session Order updated. Next: planning conversation for Item 20 (Multi-day / Master Schedule) and future structured Call Sheet extension (staggered calls, distribution, shareable URL).*
