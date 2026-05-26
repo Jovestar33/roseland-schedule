@@ -160,6 +160,15 @@
    body.callsheet-printing hides app chrome and shows only the print portal
    ────────────────────────────────────────────────────────────────────────── */
 @media print {
+  /* Zero out mobile safe-area padding that print.css never resets */
+  body.callsheet-printing {
+    padding-bottom: 0 !important;
+    margin-bottom: 0 !important;
+  }
+  body.callsheet-printing .tbl-wrap {
+    padding-bottom: 0 !important;
+  }
+
   /* ── Show / hide ── */
   body.callsheet-printing .panel,
   body.callsheet-printing .hdr,
