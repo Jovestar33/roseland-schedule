@@ -168,19 +168,6 @@ function applyPhaseOrder(schedules: ScheduleLeaf[], order: string[] | undefined)
   });
 }
 
-// ── Meta line ─────────────────────────────────────────────────────────────────
-
-function formatMeta(s: ScheduleLeaf): string {
-  if (s.loading || !s.data) return '';
-  const town = s.data.meta?.town ? s.data.meta.town.split(',')[0].trim() : '';
-  const dateStr = s.data.meta?.date
-    ? new Date(s.data.meta.date + 'T12:00:00').toLocaleDateString('en-US', {
-        month: 'short', day: 'numeric', year: 'numeric',
-      })
-    : '';
-  return [town, dateStr].filter(Boolean).join(' · ');
-}
-
 // ── Schedule row content (rendered inside Draggable's div) ────────────────────
 
 interface RowContentProps {
@@ -203,23 +190,36 @@ function ScheduleRowContent({
   onCopyTeam, onCopyClient,
   onArchive, onRestore, onDeletePermanently, onRename, onMoveTo, onOpen,
 }: RowContentProps) {
-  const meta = formatMeta(s);
   const isSyncing = syncingNames.has(s.name);
 
-  // Links dropdown state — portal-based to escape overflow:hidden on .lbt-prod / .lbt-ungrouped
+  // Links dropdown — portal-based to escape overflow:hidden on .lbt-prod / .lbt-ungrouped
   const [menuOpen, setMenuOpen] = useState(false);
   const [menuStyle, setMenuStyle] = useState<React.CSSProperties>({});
-  const wrapRef  = useRef<HTMLDivElement>(null);
-  const menuRef  = useRef<HTMLDivElement>(null);
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  // ⋯ context menu — same portal pattern
+  const [ctxOpen, setCtxOpen] = useState(false);
+  const [ctxStyle, setCtxStyle] = useState<React.CSSProperties>({});
+  const ctxBtnRef = useRef<HTMLButtonElement>(null);
+  const ctxMenuRef = useRef<HTMLDivElement>(null);
 
   function toggleMenu() {
     if (menuOpen) { setMenuOpen(false); return; }
     if (wrapRef.current) {
       const r = wrapRef.current.getBoundingClientRect();
-      // Right-align the dropdown with the trigger, anchored to viewport (position:fixed)
       setMenuStyle({ top: r.bottom + 4, right: window.innerWidth - r.right });
     }
     setMenuOpen(true);
+  }
+
+  function toggleCtx() {
+    if (ctxOpen) { setCtxOpen(false); return; }
+    if (ctxBtnRef.current) {
+      const r = ctxBtnRef.current.getBoundingClientRect();
+      setCtxStyle({ top: r.bottom + 4, right: window.innerWidth - r.right });
+    }
+    setCtxOpen(true);
   }
 
   useEffect(() => {
@@ -241,6 +241,25 @@ function ScheduleRowContent({
     };
   }, [menuOpen]);
 
+  useEffect(() => {
+    if (!ctxOpen) return;
+    function onDown(e: MouseEvent) {
+      const t = e.target as Node;
+      if (ctxBtnRef.current?.contains(t) || ctxMenuRef.current?.contains(t)) return;
+      setCtxOpen(false);
+    }
+    function onKey(e: KeyboardEvent) { if (e.key === 'Escape') setCtxOpen(false); }
+    function onScroll() { setCtxOpen(false); }
+    document.addEventListener('mousedown', onDown);
+    document.addEventListener('keydown', onKey);
+    document.addEventListener('scroll', onScroll, true);
+    return () => {
+      document.removeEventListener('mousedown', onDown);
+      document.removeEventListener('keydown', onKey);
+      document.removeEventListener('scroll', onScroll, true);
+    };
+  }, [ctxOpen]);
+
   const anyCopied = copiedInfo?.name === s.name;
 
   return (
@@ -253,14 +272,9 @@ function ScheduleRowContent({
         {isArchived && <span className="lbt-archived-glyph">⊘ </span>}
         {s.name}
       </button>
-      {s.loading ? (
-        <span className="lbt-sched-loading">Loading…</span>
-      ) : (
-        <span className="lbt-sched-meta">{meta}</span>
-      )}
       <div className="lbt-sched-acts" onClick={(e) => e.stopPropagation()}>
 
-        {/* ── Links dropdown — replaces separate Team Link / Client Link buttons ── */}
+        {/* ── Links dropdown ── */}
         <div
           ref={wrapRef}
           className={`sitem-links-wrap${isArchived ? ' lib-acts-desktop-only' : ''}`}
@@ -291,57 +305,79 @@ function ScheduleRowContent({
           )}
         </div>
 
-        {isArchived ? (
-          <>
-            {/* Restore: shows "Restore" on desktop, ↺ on mobile */}
-            <button
-              className="sitem-restore-btn"
-              onClick={() => onRestore(s.name)}
-              title="Restore from archive"
-            >
-              <span className="lib-btn-desktop">Restore</span>
-              <span className="lib-btn-mobile">↺</span>
-            </button>
-            {/* Delete permanently: shows "Delete" on desktop, 🗑 on mobile */}
-            <button
-              className="sitem-del"
-              onClick={() => onDeletePermanently(s.name)}
-              title="Delete permanently"
-            >
-              <span className="lib-btn-desktop">Delete</span>
-              <span className="lib-btn-mobile">🗑</span>
-            </button>
-          </>
-        ) : (
-          <>
-            {/* Move To: active schedules only, desktop only; disabled during post-rename CDN sync window */}
-            <button
-              className="sitem-move-btn lib-acts-desktop-only"
-              onClick={() => !isSyncing && onMoveTo(s.name)}
-              disabled={isSyncing}
-              title={isSyncing ? 'Still syncing — please wait a moment' : 'Move to another production or phase'}
-            >
-              Move To
-            </button>
-            {/* Rename: active schedules only; disabled during post-rename CDN sync window */}
-            <button
-              className="sitem-rename-btn lib-acts-desktop-only"
-              onClick={() => !isSyncing && onRename(s.name)}
-              disabled={isSyncing}
-              title={isSyncing ? 'Still syncing — please wait a moment' : 'Rename schedule'}
-            >
-              {isSyncing ? 'Syncing…' : 'Rename'}
-            </button>
-            {/* Archive: shows "Archive" on desktop, 🗑 on mobile */}
-            <button
-              className="sitem-del"
-              onClick={() => onArchive(s.name)}
-              title="Archive schedule"
-            >
-              <span className="lib-btn-desktop">Archive</span>
-              <span className="lib-btn-mobile">🗑</span>
-            </button>
-          </>
+        {/* ── Active: Move To (desktop only) + ⋯ / Archived: ⋯ only ── */}
+        {!isArchived && (
+          <button
+            type="button"
+            className="sitem-move-btn lib-acts-desktop-only"
+            onClick={() => !isSyncing && onMoveTo(s.name)}
+            disabled={isSyncing}
+            title={isSyncing ? 'Still syncing — please wait a moment' : 'Move to another production or phase'}
+          >
+            Move To
+          </button>
+        )}
+        <button
+          ref={ctxBtnRef}
+          type="button"
+          className="lbt-ctx-btn"
+          onClick={toggleCtx}
+          title="More actions"
+          aria-haspopup="true"
+        >
+          ⋯
+        </button>
+
+        {/* ── ⋯ portal menu ── */}
+        {ctxOpen && createPortal(
+          <div ref={ctxMenuRef} className="lbt-ctx-menu" style={ctxStyle}>
+            {isArchived ? (
+              <>
+                <button
+                  type="button"
+                  className="lbt-ctx-item"
+                  onClick={() => { onRestore(s.name); setCtxOpen(false); }}
+                >
+                  Restore
+                </button>
+                <button
+                  type="button"
+                  className="lbt-ctx-item lbt-ctx-item--danger"
+                  onClick={() => { onDeletePermanently(s.name); setCtxOpen(false); }}
+                >
+                  Delete Permanently
+                </button>
+              </>
+            ) : (
+              <>
+                {/* Move To only in ⋯ menu on mobile (desktop has its own button) */}
+                <button
+                  type="button"
+                  className="lbt-ctx-item lbt-ctx-item--mobile-only"
+                  onClick={() => { if (!isSyncing) { onMoveTo(s.name); setCtxOpen(false); } }}
+                  disabled={isSyncing}
+                >
+                  {isSyncing ? 'Syncing…' : 'Move To'}
+                </button>
+                <button
+                  type="button"
+                  className="lbt-ctx-item"
+                  onClick={() => { if (!isSyncing) { onRename(s.name); setCtxOpen(false); } }}
+                  disabled={isSyncing}
+                >
+                  {isSyncing ? 'Syncing…' : 'Rename'}
+                </button>
+                <button
+                  type="button"
+                  className="lbt-ctx-item"
+                  onClick={() => { onArchive(s.name); setCtxOpen(false); }}
+                >
+                  Archive
+                </button>
+              </>
+            )}
+          </div>,
+          document.body
         )}
       </div>
     </>

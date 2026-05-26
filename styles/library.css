@@ -44,6 +44,42 @@
 .snapshot-preview-table tr:nth-child(even) td { background: #fafafa; }
 .snapshot-preview-empty { color: var(--g600); font-size: 13px; padding: 14px; border: 1px dashed var(--g300); border-radius: 12px; background: #fafafa; }
 
+/* ── More menu (header portal dropdown) ── */
+.lib-more-menu {
+  position: fixed;
+  background: #fff;
+  border: 1px solid var(--g200);
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.13);
+  z-index: 1200;
+  min-width: 160px;
+  padding: 4px;
+  display: flex;
+  flex-direction: column;
+}
+.lib-more-item {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px 14px;
+  text-align: left;
+  font-size: 13px;
+  font-family: var(--fb);
+  font-weight: 600;
+  color: var(--ink);
+  border-radius: 7px;
+  white-space: nowrap;
+  display: block;
+  width: 100%;
+  line-height: 1.4;
+}
+.lib-more-item:hover { background: var(--g50); }
+.lib-more-sep {
+  height: 1px;
+  background: var(--g200);
+  margin: 3px 4px;
+}
+
 /* Responsive */
 @media (max-width: 760px) {
   .lib-page { padding: 16px 12px; }
