@@ -24,6 +24,7 @@ export default function HeaderIdentityLine({ readOnly = false }: Props) {
   const [editing,       setEditing]       = useState<Field | null>(null);
   const [draft,         _setDraft]        = useState('');
   const draftRef                          = useRef('');
+  const dayInputRef                       = useRef<HTMLInputElement>(null);
   const [validationMsg, setValidationMsg] = useState('');
   const [projectOptions, setProjectOptions] = useState<string[]>([]);
   const [phaseOptions,   setPhaseOptions]   = useState<string[]>([]);
@@ -62,8 +63,41 @@ export default function HeaderIdentityLine({ readOnly = false }: Props) {
     setTimeout(() => setValidationMsg(''), 2500);
   }
 
+  // Enforced slash-format input handler
+  function handleDayChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const newRaw  = e.target.value;
+    const prevVal = draftRef.current;
+    const isDeleting = newRaw.length < prevVal.length;
+
+    // Strip everything except digits and slash
+    let filtered = newRaw.replace(/[^\d/]/g, '');
+    // Remove leading slash
+    if (filtered.startsWith('/')) filtered = filtered.slice(1);
+    // Keep only the first slash
+    const si = filtered.indexOf('/');
+    if (si !== -1) {
+      filtered = filtered.slice(0, si + 1) + filtered.slice(si + 1).replace(/\//g, '');
+    }
+    // Limit each segment to 3 digits
+    const parts = filtered.split('/');
+    let result = parts[0].slice(0, 3);
+    if (parts.length > 1) result += '/' + parts[1].slice(0, 3);
+
+    // Auto-insert slash when typing (not deleting) and no slash present yet
+    const autoSlash = !isDeleting && !result.includes('/') && result.length > 0;
+    if (autoSlash) result += '/';
+
+    setDraft(result);
+
+    if (autoSlash) {
+      // Position cursor after the slash so next keystrokes fill totalDays
+      setTimeout(() => dayInputRef.current?.setSelectionRange(result.length, result.length), 0);
+    }
+  }
+
   function commitDay(raw: string) {
-    const trimmed = raw.trim();
+    // Strip trailing slash before parsing
+    const trimmed = raw.trim().replace(/\/$/, '');
     if (!trimmed) {
       updateMeta({ dayNumber: null, totalDays: null });
       setEditing(null);
@@ -81,7 +115,7 @@ export default function HeaderIdentityLine({ readOnly = false }: Props) {
     if (totStr) {
       const t = parseInt(totStr, 10);
       if (isNaN(t) || t <= 0) { showValidation('Total must be a positive number'); return; }
-      if (n > t) { showValidation(`Day ${n} can't exceed total ${t}`); return; }
+      if (n > t) { showValidation(`Day ${n} exceeds total ${t}`); return; }
       total = t;
     }
 
@@ -202,16 +236,17 @@ export default function HeaderIdentityLine({ readOnly = false }: Props) {
           <span className="hi-day-lbl">Day </span>
           {editing === 'day' ? (
             <input
+              ref={dayInputRef}
               className="hi-field"
               autoFocus
               type="text"
-              inputMode="numeric"
+              inputMode="text"
               value={draft}
-              placeholder="#/# or #"
-              onChange={(e) => setDraft(e.target.value)}
+              placeholder="1/5"
+              onChange={handleDayChange}
               onBlur={() => commitDay(draftRef.current)}
               onKeyDown={onDayKey}
-              style={{ width: `${Math.max((draft || '#/#').length, 4)}ch` }}
+              style={{ width: `${Math.max((draft || '1/5').length, 3)}ch` }}
             />
           ) : (
             <span
