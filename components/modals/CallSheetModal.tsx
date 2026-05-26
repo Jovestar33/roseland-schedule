@@ -224,24 +224,6 @@ function PrintDoc({
         </div>
       )}
 
-      {/* Schedule */}
-      {lines.length > 0 && (
-        <div className="csh-pdoc-section">
-          <div className="csh-pdoc-sh">Schedule</div>
-          <table className="csh-pdoc-sched">
-            <tbody>
-              {lines.map((l, i) => (
-                <tr key={i} className={l.isSun ? 'csh-pdoc-sun' : ''}>
-                  <td className="csh-pdoc-td-t">{l.timeIn}</td>
-                  <td className="csh-pdoc-td-a">{l.action}</td>
-                  <td>{l.loc}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-
       {/* Key information — section only renders if at least one field has a value */}
       {hasKeyInfo && (
         <div className="csh-pdoc-section">
@@ -272,6 +254,24 @@ function PrintDoc({
                   <td><strong>{c.name || '—'}</strong>{c.title ? ` · ${c.title}` : ''}</td>
                   <td>{c.phone}</td>
                   <td>{c.email}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {/* Schedule — last, after key info */}
+      {lines.length > 0 && (
+        <div className="csh-pdoc-section">
+          <div className="csh-pdoc-sh">Schedule</div>
+          <table className="csh-pdoc-sched">
+            <tbody>
+              {lines.map((l, i) => (
+                <tr key={i} className={l.isSun ? 'csh-pdoc-sun' : ''}>
+                  <td className="csh-pdoc-td-t">{l.timeIn}</td>
+                  <td className="csh-pdoc-td-a">{l.action}</td>
+                  <td>{l.loc}</td>
                 </tr>
               ))}
             </tbody>

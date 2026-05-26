@@ -174,7 +174,7 @@
   /* ── Document root ── */
   .csh-pdoc {
     font-family: Georgia, 'Times New Roman', serif;
-    font-size: 10pt;
+    font-size: 9pt;
     color: #000;
   }
 
@@ -182,21 +182,21 @@
   .csh-pdoc-brand {
     display: flex;
     align-items: center;
-    gap: 12pt;
+    gap: 10pt;
     background: #000;
-    padding: 3pt 10pt 5pt;
+    padding: 2pt 10pt 4pt;
     border-bottom: 2pt solid #e91e8c;
     margin-bottom: 0;
   }
   .csh-pdoc-logo {
-    height: 40pt;
+    height: 32pt;
     width: auto;
     object-fit: contain;
     flex-shrink: 0;
   }
   .csh-pdoc-brand-title {
     font-family: 'Bebas Neue', sans-serif;
-    font-size: 20pt;
+    font-size: 18pt;
     letter-spacing: 3px;
     color: #fff;
     line-height: 1;
@@ -205,21 +205,21 @@
   /* ── Sub-brand bar: schedule name + project/phase/day ── */
   .csh-pdoc-subbrand {
     background: #1a1a2e;
-    padding: 3pt 10pt;
-    margin-bottom: 8pt;
+    padding: 2pt 10pt;
+    margin-bottom: 6pt;
     display: flex;
     align-items: baseline;
     flex-wrap: wrap;
-    gap: 3pt 10pt;
+    gap: 2pt 10pt;
   }
   .csh-pdoc-sname {
     font-family: Georgia, serif;
-    font-size: 11pt;
+    font-size: 10pt;
     color: #eee;
   }
   .csh-pdoc-pinfo {
     font-family: Georgia, serif;
-    font-size: 9pt;
+    font-size: 8.5pt;
     color: #aaa;
     font-style: italic;
   }
@@ -230,7 +230,7 @@
     width: 1.4in;
     color: #444;
     text-transform: uppercase;
-    font-size: 7.5pt;
+    font-size: 7pt;
     letter-spacing: .05em;
     white-space: nowrap;
   }
@@ -239,60 +239,78 @@
   .csh-pdoc-callbox {
     display: flex;
     align-items: center;
-    gap: 12pt;
+    gap: 10pt;
     background: #1a1a2e;
     color: #fff;
-    padding: 7pt 12pt;
-    margin-bottom: 10pt;
+    padding: 5pt 10pt;
+    margin-bottom: 6pt;
     border-radius: 3pt;
   }
   .csh-pdoc-call-lbl {
-    font-size: 8pt;
+    font-size: 7.5pt;
     font-weight: bold;
     letter-spacing: .1em;
     text-transform: uppercase;
     opacity: .75;
   }
-  .csh-pdoc-call-time { font-size: 17pt; font-weight: bold; }
+  .csh-pdoc-call-time { font-size: 15pt; font-weight: bold; }
 
   /* ── Content sections ── */
-  .csh-pdoc-section { margin-bottom: 10pt; }
+  .csh-pdoc-section {
+    margin-bottom: 7pt;
+    /* Keep section together; falls back gracefully if section is longer than a page */
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
   .csh-pdoc-sh {
-    font-size: 8pt;
+    font-size: 7.5pt;
     font-weight: bold;
     letter-spacing: .07em;
     text-transform: uppercase;
     color: #333;
     border-bottom: 1pt solid #000;
     padding-bottom: 2pt;
-    margin-bottom: 4pt;
+    margin-bottom: 3pt;
+    /* Prevent the heading from being orphaned at the bottom of a page */
+    page-break-after: avoid;
+    break-after: avoid;
   }
 
-  /* ── Schedule table column roles ── */
-  .csh-pdoc-td-t { width: 56pt; font-variant-numeric: tabular-nums; }
+  /* ── Schedule table: time column must not wrap ── */
+  .csh-pdoc-td-t {
+    width: 62pt;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
   .csh-pdoc-td-a { font-weight: 500; }
 
   /* ── Sun rows ── */
-  .csh-pdoc-sun td { font-style: italic !important; color: #666 !important; font-size: 9pt !important; }
+  .csh-pdoc-sun td { font-style: italic !important; color: #666 !important; font-size: 8.5pt !important; }
 
   /* ── Contacts table dividers ── */
   .csh-pdoc-contacts td { border-bottom: 0.5pt solid #ddd !important; }
   .csh-pdoc-contacts tr:last-child td { border-bottom: none !important; }
   .csh-pdoc-contacts td:first-child { width: 2.2in; }
 
-  /* ────────────────────────────────────────────────────────────────────────────
-     Fix print.css interference — all overrides use higher specificity so they
-     beat print.css's !important rules regardless of stylesheet import order.
+  /* ── Meta table: tighter padding, no cell borders ── */
+  .csh-pdoc-meta td {
+    padding: 1.5pt 5pt !important;
+    border-bottom: none !important;
+  }
 
-     Root cause: print.css `td:last-child { display:none !important }` (spec 0,1,1)
-     hides the value cell in every 2-column row. Additional conflicts:
+  /* ────────────────────────────────────────────────────────────────────────────
+     Fix print.css interference — high-specificity overrides beat print.css
+     !important rules regardless of stylesheet import order.
+
+     Root cause: print.css `td:last-child { display:none !important }` (0,1,1)
+     hides the value cell in every 2-column row. Also conflicts:
        • td:nth-child(2) { overflow:hidden }
        • table { table-layout:fixed }
        • tbody tr:nth-child(even):not(.sun-row) { background:#fdf4f9 }
-       • tbody tr { border-bottom: 0.5px solid #e4e4e7 }
+       • tbody tr { border-bottom:0.5px solid #e4e4e7 }
      ────────────────────────────────────────────────────────────────────────── */
 
-  /* table: auto layout so columns size to content; collapse borders cleanly */
+  /* Auto layout so columns size to content; clean border model */
   .callsheet-print-only table {
     table-layout: auto !important;
     border-collapse: collapse !important;
@@ -300,11 +318,11 @@
     border-spacing: 0 !important;
   }
 
-  /* All td cells: restore display, visibility, and call-sheet typography.
-     The combined selector covers both the general case and :last-child.
-     Specificity: .callsheet-print-only td = (0,1,1)
+  /* Restore all cells: display, visibility, and call-sheet typography.
+     Combined selector covers both the general case and :last-child.
+     Specificity: .callsheet-print-only td        = (0,1,1)
                   .callsheet-print-only td:last-child = (0,2,1)
-     Both beat print.css td:last-child = (0,1,1). */
+     Both beat print.css td:last-child             = (0,1,1).        */
   .callsheet-print-only td,
   .callsheet-print-only td:last-child {
     display: table-cell !important;
@@ -312,39 +330,31 @@
     width: auto !important;
     max-width: none !important;
     font-family: Georgia, 'Times New Roman', serif !important;
-    font-size: 10pt !important;
+    font-size: 9pt !important;
     color: #000 !important;
-    padding: 3pt 5pt !important;
+    padding: 2pt 4pt !important;
     border: none !important;
     border-bottom: 0.5pt solid #eee !important;
     vertical-align: top !important;
     overflow: visible !important;
   }
 
-  /* Second column: undo print.css overflow:hidden on td:nth-child(2).
-     Specificity (0,2,1) beats print.css (0,1,1). */
+  /* Undo print.css overflow:hidden on td:nth-child(2). (0,2,1) > (0,1,1). */
   .callsheet-print-only td:nth-child(2) {
     overflow: visible !important;
-    padding-right: 5pt !important;
+    padding-right: 4pt !important;
   }
 
-  /* Row backgrounds: remove alternating pink from schedule grid.
-     Specificity (0,3,2) beats print.css tbody tr:nth-child(even):not(.sun-row) = (0,2,2). */
+  /* Remove alternating pink rows from schedule grid.
+     (0,3,2) beats print.css tbody tr:nth-child(even):not(.sun-row) = (0,2,2). */
   .callsheet-print-only .csh-pdoc tbody tr:nth-child(even),
   .callsheet-print-only .csh-pdoc tbody tr:nth-child(even):not(.csh-pdoc-sun) {
     background: transparent !important;
     background-color: transparent !important;
   }
 
-  /* Row borders: remove the tr-level border set by print.css on tbody tr.
-     Specificity (0,1,2) beats (0,0,2). */
+  /* Remove tr-level border set by print.css on tbody tr. (0,1,2) > (0,0,2). */
   .callsheet-print-only tbody tr {
-    border-bottom: none !important;
-  }
-
-  /* Meta table cells get tighter padding than section tables */
-  .csh-pdoc-meta td {
-    padding: 2pt 5pt !important;
     border-bottom: none !important;
   }
 }
