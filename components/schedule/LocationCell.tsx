@@ -46,13 +46,10 @@ export default function LocationCell({ index, row }: Props) {
 
   const subLocs = row.subLocations ?? [];
 
-  // Collapsible address rows — auto-open when address is already populated
-  const [addrOpen, setAddrOpen] = useState(() => !!(row.locAddress));
-  const [subAddrOpen, setSubAddrOpen] = useState<Record<string, boolean>>(() => {
-    const r: Record<string, boolean> = {};
-    (row.subLocations ?? []).forEach(sl => { if (sl.address) r[sl.id] = true; });
-    return r;
-  });
+  // Collapsible address rows — existing saved addresses start collapsed so the
+  // schedule stays compact; selecting/adding an address opens the row in-session.
+  const [addrOpen, setAddrOpen] = useState(false);
+  const [subAddrOpen, setSubAddrOpen] = useState<Record<string, boolean>>({});
 
   // Display value: locName takes precedence; falls back to loc for legacy rows
   const mainNameValue = row.locName !== undefined ? row.locName : row.loc;
@@ -150,9 +147,11 @@ export default function LocationCell({ index, row }: Props) {
           type="button"
           className={`loc-addr-toggle${addrOpen ? ' open' : ''}`}
           onClick={() => setAddrOpen(v => !v)}
+          aria-expanded={addrOpen}
+          aria-label={addrOpen ? 'Hide full address' : 'Show full address'}
           title={addrOpen ? 'Hide address' : 'Show / add full address'}
         >
-          {addrOpen ? '▴' : '▾'}
+          {addrOpen ? '▾' : '▸'}
         </button>
       </div>
 
@@ -214,9 +213,11 @@ export default function LocationCell({ index, row }: Props) {
                 type="button"
                 className={`loc-addr-toggle${subAddrIsOpen ? ' open' : ''}`}
                 onClick={() => setSubAddrOpen(prev => ({ ...prev, [sl.id]: !prev[sl.id] }))}
+                aria-expanded={subAddrIsOpen}
+                aria-label={subAddrIsOpen ? 'Hide full address' : 'Show full address'}
                 title={subAddrIsOpen ? 'Hide address' : 'Show / add full address'}
               >
-                {subAddrIsOpen ? '▴' : '▾'}
+                {subAddrIsOpen ? '▾' : '▸'}
               </button>
               <button type="button" className="loc-subloc-remove" onClick={() => removeSubLoc(i)} title="Remove sub-location">
                 &#215;
