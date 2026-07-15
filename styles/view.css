@@ -51,6 +51,38 @@
   white-space: nowrap;
 }
 
+/* ── Main location (name + optional address) ─────────────────────────────── */
+
+.rv-loc {
+  display: block;
+}
+
+.rv-loc-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--g700);
+  display: block;
+  word-break: break-word;
+}
+
+.rv-loc-link {
+  color: inherit;
+  text-decoration: underline dotted;
+}
+
+.rv-loc-link:hover {
+  text-decoration: underline;
+}
+
+.rv-loc-addr {
+  font-size: 11px;
+  color: var(--g500);
+  line-height: 1.35;
+  margin-top: 2px;
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+
 /* ── Sub-locations ────────────────────────────────────────────────────────── */
 
 .rv-sublocs {
@@ -92,6 +124,15 @@ a.rv-subloc-loc {
 
 a.rv-subloc-loc:hover {
   text-decoration: underline;
+}
+
+.rv-subloc-addr {
+  font-size: 11px;
+  color: var(--g500);
+  line-height: 1.35;
+  margin-top: 1px;
+  word-break: break-word;
+  white-space: pre-wrap;
 }
 
 .rv-subloc-desc {

@@ -21,7 +21,7 @@ function buildLines(rows: ScheduleRow[]): SchedLine[] {
     out.push({
       timeIn: row.timeIn,
       action: row.action === 'Other' ? (row.otherText || 'Other') : row.action,
-      loc: row.loc,
+      loc: row.locName || row.loc,
       isSun: false,
     });
   }
