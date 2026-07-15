@@ -143,17 +143,18 @@ export default function LocationCell({ index, row }: Props) {
             &#128205;
           </button>
         )}
-        <button
-          type="button"
-          className={`loc-addr-toggle${addrOpen ? ' open' : ''}`}
-          onClick={() => setAddrOpen(v => !v)}
-          aria-expanded={addrOpen}
-          aria-label={addrOpen ? 'Hide full address' : 'Show full address'}
-          title={addrOpen ? 'Hide address' : 'Show / add full address'}
-        >
-          {addrOpen ? '▾' : '▸'}
-        </button>
       </div>
+      <button
+        type="button"
+        className={`loc-addr-disclosure${addrOpen ? ' open' : ''}`}
+        onClick={() => setAddrOpen(v => !v)}
+        aria-expanded={addrOpen}
+        aria-label={addrOpen ? 'Hide full address' : 'Show full address'}
+        title={addrOpen ? 'Hide address' : 'Show / add full address'}
+      >
+        <span className="loc-addr-disclosure-icon">{addrOpen ? '▾' : '▸'}</span>
+        <span>{row.locAddress ? 'Address' : 'Add address'}</span>
+      </button>
 
       {/* Main location — collapsible address row */}
       {addrOpen && (
@@ -209,18 +210,21 @@ export default function LocationCell({ index, row }: Props) {
                   &#128205;
                 </button>
               )}
+              <button type="button" className="loc-subloc-remove" onClick={() => removeSubLoc(i)} title="Remove sub-location">
+                &#215;
+              </button>
+            </div>
+            <div className="loc-subloc-disclosure-wrap">
               <button
                 type="button"
-                className={`loc-addr-toggle${subAddrIsOpen ? ' open' : ''}`}
+                className={`loc-addr-disclosure${subAddrIsOpen ? ' open' : ''}`}
                 onClick={() => setSubAddrOpen(prev => ({ ...prev, [sl.id]: !prev[sl.id] }))}
                 aria-expanded={subAddrIsOpen}
                 aria-label={subAddrIsOpen ? 'Hide full address' : 'Show full address'}
                 title={subAddrIsOpen ? 'Hide address' : 'Show / add full address'}
               >
-                {subAddrIsOpen ? '▾' : '▸'}
-              </button>
-              <button type="button" className="loc-subloc-remove" onClick={() => removeSubLoc(i)} title="Remove sub-location">
-                &#215;
+                <span className="loc-addr-disclosure-icon">{subAddrIsOpen ? '▾' : '▸'}</span>
+                <span>{sl.address ? 'Address' : 'Add address'}</span>
               </button>
             </div>
             {subAddrIsOpen && (
