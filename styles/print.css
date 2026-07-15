@@ -34,6 +34,7 @@
   .loc-subloc-pin,
   .loc-subloc-remove,
   .loc-add-subloc,
+  .loc-addr-toggle,
   .drag-handle,
   .move-btns,
   .move-btn,
@@ -54,8 +55,22 @@
     visibility:hidden!important;
   }
 
+  /* Hide address toggle buttons — address rows print as-is */
+  .loc-addr-toggle { display: none !important; }
+
   /* Sub-location description: ensure full content is visible */
   .loc-subloc-desc { height: auto !important; overflow: visible !important; }
+
+  /* Address rows: always show in print (user may have them collapsed on screen) */
+  .loc-addr-row { display: block !important; }
+
+  /* Address text: smaller, muted, wrapping */
+  .rv-loc-addr, .rv-subloc-addr {
+    font-size: 10px !important;
+    color: #64748b !important;
+    word-break: break-word !important;
+    white-space: pre-wrap !important;
+  }
 
   /* Hide empty rows and non-print columns */
   tbody tr.inactive{display:none!important;}

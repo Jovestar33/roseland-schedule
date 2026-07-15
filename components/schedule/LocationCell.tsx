@@ -1,5 +1,5 @@
 'use client';
-import { useRef, useLayoutEffect } from 'react';
+import { useState, useRef, useLayoutEffect } from 'react';
 import { useScheduleStore } from '@/lib/store/scheduleStore';
 import type { ScheduleRow, SubLocation } from '@/lib/types';
 import PlacesAutocomplete from './PlacesAutocomplete';
@@ -46,9 +46,25 @@ export default function LocationCell({ index, row }: Props) {
 
   const subLocs = row.subLocations ?? [];
 
-  function handleMainSelect(address: string, geo: GeoResult | null) {
+  // Collapsible address rows — auto-open when address is already populated
+  const [addrOpen, setAddrOpen] = useState(() => !!(row.locAddress));
+  const [subAddrOpen, setSubAddrOpen] = useState<Record<string, boolean>>(() => {
+    const r: Record<string, boolean> = {};
+    (row.subLocations ?? []).forEach(sl => { if (sl.address) r[sl.id] = true; });
+    return r;
+  });
+
+  // Display value: locName takes precedence; falls back to loc for legacy rows
+  const mainNameValue = row.locName !== undefined ? row.locName : row.loc;
+
+  function handleNameChange(v: string) {
+    // Keep loc in sync for backward compat with consumers that only read loc
+    updateRow(index, { locName: v, loc: v });
+  }
+
+  function handleAddrSelect(addr: string, geo: GeoResult | null) {
     updateRow(index, {
-      loc:    address,
+      locAddress: addr,
       locLat: geo?.lat ?? null,
       locLng: geo?.lng ?? null,
     });
@@ -57,9 +73,15 @@ export default function LocationCell({ index, row }: Props) {
   function openMainMap() {
     const url = row.locLat && row.locLng
       ? `https://www.google.com/maps/dir/?api=1&destination=${row.locLat},${row.locLng}`
-      : `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(row.loc)}`;
-    window.open(url, '_blank', 'noopener');
+      : row.locAddress
+      ? `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(row.locAddress)}`
+      : row.loc
+      ? `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(row.loc)}`
+      : null;
+    if (url) window.open(url, '_blank', 'noopener');
   }
+
+  const hasMainMap = !!(row.locLat && row.locLng) || !!(row.locAddress) || !!(row.loc);
 
   function patchSubLoc(i: number, patch: Partial<SubLocation>) {
     const next = subLocs.map((sl, j) => j === i ? { ...sl, ...patch } : sl);
@@ -80,77 +102,131 @@ export default function LocationCell({ index, row }: Props) {
   }
 
   function openSubMap(sl: SubLocation) {
-    if (sl.locLat && sl.locLng) {
-      window.open(
-        `https://www.google.com/maps/dir/?api=1&destination=${sl.locLat},${sl.locLng}`,
-        '_blank', 'noopener'
-      );
-    }
+    const url = sl.locLat && sl.locLng
+      ? `https://www.google.com/maps/dir/?api=1&destination=${sl.locLat},${sl.locLng}`
+      : sl.address
+      ? `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(sl.address)}`
+      : sl.loc
+      ? `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(sl.loc)}`
+      : null;
+    if (url) window.open(url, '_blank', 'noopener');
   }
 
   return (
     <div className="loc-wrap">
-      {/* Main location */}
-      <div className="loc-main-row">
-        <PlacesAutocomplete
-          className="ci-ta"
-          value={row.loc}
-          onChange={(loc) => updateRow(index, { loc, locLat: null, locLng: null })}
-          onSelect={handleMainSelect}
-          onFocus={pushUndo}
+      {/* Main location — name line */}
+      <div className="loc-name-row">
+        <input
+          className="ci loc-name-input"
+          value={mainNameValue}
           placeholder="Location…"
-          dropdownClass="loc-ac"
-          multiline
+          onChange={(e) => handleNameChange(e.target.value)}
+          onFocus={pushUndo}
         />
-        {row.locLat && (
+        {hasMainMap && (
           <button type="button" className="loc-map-btn" onClick={openMainMap} title="Get directions">
             &#128205;
           </button>
         )}
+        <button
+          type="button"
+          className={`loc-addr-toggle${addrOpen ? ' open' : ''}`}
+          onClick={() => setAddrOpen(v => !v)}
+          title={addrOpen ? 'Hide address' : 'Show / add full address'}
+        >
+          {addrOpen ? '▴' : '▾'}
+        </button>
       </div>
 
+      {/* Main location — collapsible address row */}
+      {addrOpen && (
+        <div className="loc-addr-row">
+          <PlacesAutocomplete
+            className="ci-ta loc-addr-input"
+            value={row.locAddress ?? ''}
+            onChange={(v) => updateRow(index, { locAddress: v, locLat: null, locLng: null })}
+            onSelect={handleAddrSelect}
+            onFocus={pushUndo}
+            placeholder="Full address…"
+            dropdownClass="loc-ac"
+            multiline
+          />
+        </div>
+      )}
+
       {/* Sub-locations */}
-      {subLocs.map((sl, i) => (
-        <div key={sl.id} className="loc-subloc-row">
-          <div className="loc-subloc-main">
-            <input
-              type="checkbox"
-              className="loc-subloc-cb"
-              checked={sl.done ?? false}
-              onChange={(e) => patchSubLoc(i, { done: e.target.checked })}
-              title="Mark done"
-            />
-            <span className="loc-subloc-bullet">•</span>
-            <div className="loc-subloc-input-wrap">
-              <PlacesAutocomplete
-                className="ci-ta loc-subloc-ta"
-                value={sl.loc}
-                onChange={(loc) => patchSubLoc(i, { loc, locLat: null, locLng: null })}
-                onSelect={(loc, geo) => patchSubLoc(i, { loc, locLat: geo?.lat ?? null, locLng: geo?.lng ?? null })}
+      {subLocs.map((sl, i) => {
+        const subNameValue = sl.name !== undefined ? sl.name : sl.loc;
+        const subAddrIsOpen = !!(subAddrOpen[sl.id]);
+        const hasSubMap = !!(sl.locLat && sl.locLng) || !!(sl.address) || !!(sl.loc);
+        return (
+          <div key={sl.id} className="loc-subloc-row">
+            <div className="loc-subloc-main">
+              <input
+                type="checkbox"
+                className="loc-subloc-cb"
+                checked={sl.done ?? false}
+                onChange={(e) => patchSubLoc(i, { done: e.target.checked })}
+                title="Mark done"
+              />
+              <span className="loc-subloc-bullet">•</span>
+              <div className="loc-subloc-input-wrap">
+                <input
+                  className="ci loc-subloc-name-input"
+                  value={subNameValue}
+                  placeholder="Sub-location…"
+                  onChange={(e) => {
+                    const v = e.target.value;
+                    patchSubLoc(i, { name: v, loc: v });
+                  }}
+                  onFocus={pushUndo}
+                />
+              </div>
+              {hasSubMap && (
+                <button type="button" className="loc-subloc-pin" onClick={() => openSubMap(sl)} title="Get directions">
+                  &#128205;
+                </button>
+              )}
+              <button
+                type="button"
+                className={`loc-addr-toggle${subAddrIsOpen ? ' open' : ''}`}
+                onClick={() => setSubAddrOpen(prev => ({ ...prev, [sl.id]: !prev[sl.id] }))}
+                title={subAddrIsOpen ? 'Hide address' : 'Show / add full address'}
+              >
+                {subAddrIsOpen ? '▴' : '▾'}
+              </button>
+              <button type="button" className="loc-subloc-remove" onClick={() => removeSubLoc(i)} title="Remove sub-location">
+                &#215;
+              </button>
+            </div>
+            {subAddrIsOpen && (
+              <div className="loc-addr-row loc-subloc-addr-row">
+                <PlacesAutocomplete
+                  className="ci-ta loc-addr-input"
+                  value={sl.address ?? ''}
+                  onChange={(v) => patchSubLoc(i, { address: v, locLat: null, locLng: null })}
+                  onSelect={(addr, geo) => patchSubLoc(i, {
+                    address: addr,
+                    locLat: geo?.lat ?? null,
+                    locLng: geo?.lng ?? null,
+                  })}
+                  onFocus={pushUndo}
+                  placeholder="Full address…"
+                  dropdownClass="loc-ac"
+                  multiline
+                />
+              </div>
+            )}
+            <div className="loc-subloc-desc-wrap">
+              <DescTextarea
+                value={sl.desc ?? ''}
+                onChange={(desc) => patchSubLoc(i, { desc })}
                 onFocus={pushUndo}
-                placeholder="Sub-location…"
-                dropdownClass="loc-ac"
-                multiline
               />
             </div>
-            {sl.locLat && (
-              <button type="button" className="loc-subloc-pin" onClick={() => openSubMap(sl)} title="Get directions">
-                &#128205;
-              </button>
-            )}
-            <button type="button" className="loc-subloc-remove" onClick={() => removeSubLoc(i)} title="Remove sub-location">
-              &#215;
-            </button>
           </div>
-          <div className="loc-subloc-desc-wrap">
-            <DescTextarea
-              value={sl.desc ?? ''}
-              onChange={(desc) => patchSubLoc(i, { desc })}
-              onFocus={pushUndo}
-            />
-          </div>
-        </div>
-      ))}
+        );
+      })}
 
       <button type="button" className="loc-add-subloc" onClick={addSubLoc}>
         + sub-location

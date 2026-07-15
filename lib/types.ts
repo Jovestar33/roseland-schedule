@@ -10,6 +10,8 @@ export interface SubLocation {
   locLng?: number | null;
   done?: boolean;
   desc?: string;
+  name?: string;    // short display name — absent on old schedules
+  address?: string; // full address — absent on old schedules
 }
 
 export interface ScheduleRow {
@@ -19,6 +21,8 @@ export interface ScheduleRow {
   loc: string;
   locLat: number | null;
   locLng: number | null;
+  locName?: string;    // short display name — absent on old schedules
+  locAddress?: string; // full address — absent on old schedules
   notes: string;
   status: string;
   contactName: string;

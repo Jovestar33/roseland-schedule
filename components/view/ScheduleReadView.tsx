@@ -28,26 +28,30 @@ function metaDate(dateStr: string): string {
 function SubLocList({ subLocations }: { subLocations: SubLocation[] }) {
   return (
     <div className="rv-sublocs">
-      {subLocations.map((sl, i) => (
-        <div key={sl.id || String(i)} className="rv-subloc">
-          <span className="rv-subloc-bullet">↳</span>
-          <div className="rv-subloc-body">
-            {sl.locLat && sl.locLng ? (
-              <a
-                href={`https://www.google.com/maps/dir/?api=1&destination=${sl.locLat},${sl.locLng}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="rv-subloc-loc"
-              >
-                {sl.loc}
-              </a>
-            ) : (
-              <span className="rv-subloc-loc">{sl.loc}</span>
-            )}
-            {sl.desc && <div className="rv-subloc-desc">{sl.desc}</div>}
+      {subLocations.map((sl, i) => {
+        const displayName = sl.name || sl.loc;
+        const mapHref = sl.locLat && sl.locLng
+          ? `https://www.google.com/maps/dir/?api=1&destination=${sl.locLat},${sl.locLng}`
+          : sl.address
+          ? `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(sl.address)}`
+          : null;
+        return (
+          <div key={sl.id || String(i)} className="rv-subloc">
+            <span className="rv-subloc-bullet">↳</span>
+            <div className="rv-subloc-body">
+              {mapHref ? (
+                <a href={mapHref} target="_blank" rel="noopener noreferrer" className="rv-subloc-loc">
+                  {displayName}
+                </a>
+              ) : (
+                <span className="rv-subloc-loc">{displayName}</span>
+              )}
+              {sl.address && <div className="rv-subloc-addr">{sl.address}</div>}
+              {sl.desc && <div className="rv-subloc-desc">{sl.desc}</div>}
+            </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }
@@ -202,16 +206,30 @@ export default function ScheduleReadView({ data, name }: Props) {
                       </span>
                     </td>
                     <td>
-                      {row.locLat && row.locLng ? (
-                        <a
-                          href={`https://www.google.com/maps/dir/?api=1&destination=${row.locLat},${row.locLng}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          style={{ color: 'inherit', textDecoration: 'underline dotted' }}
-                        >
-                          {row.loc}
-                        </a>
-                      ) : row.loc || ''}
+                      <div className="rv-loc">
+                        {(() => {
+                          const displayName = row.locName || row.loc;
+                          const mapHref = row.locLat && row.locLng
+                            ? `https://www.google.com/maps/dir/?api=1&destination=${row.locLat},${row.locLng}`
+                            : row.locAddress
+                            ? `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(row.locAddress)}`
+                            : null;
+                          return (
+                            <>
+                              {mapHref ? (
+                                <a href={mapHref} target="_blank" rel="noopener noreferrer" className="rv-loc-name rv-loc-link">
+                                  {displayName}
+                                </a>
+                              ) : (
+                                displayName ? <span className="rv-loc-name">{displayName}</span> : null
+                              )}
+                              {row.locAddress && (
+                                <div className="rv-loc-addr">{row.locAddress}</div>
+                              )}
+                            </>
+                          );
+                        })()}
+                      </div>
                       {row.subLocations && row.subLocations.length > 0 && (
                         <SubLocList subLocations={row.subLocations} />
                       )}
