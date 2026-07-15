@@ -58,8 +58,22 @@ export default function LocationCell({ index, row }: Props) {
   const mainNameValue = row.locName !== undefined ? row.locName : row.loc;
 
   function handleNameChange(v: string) {
-    // Keep loc in sync for backward compat with consumers that only read loc
+    // Keep loc in sync for backward compat with consumers that only read loc.
+    // PlacesAutocomplete calls onChange(s.main) on selection — the short place
+    // name — so the name field always receives the concise label, not the address.
     updateRow(index, { locName: v, loc: v });
+  }
+
+  function handleNameSelect(addr: string, geo: GeoResult | null) {
+    // Places onSelect fires AFTER onChange(s.main), so locName is already the
+    // short name. Here we capture the full formatted address and coordinates,
+    // and auto-open the address row so the user can see / edit it.
+    updateRow(index, {
+      locAddress: addr,
+      locLat: geo?.lat ?? null,
+      locLng: geo?.lng ?? null,
+    });
+    setAddrOpen(true);
   }
 
   function handleAddrSelect(addr: string, geo: GeoResult | null) {
@@ -114,14 +128,18 @@ export default function LocationCell({ index, row }: Props) {
 
   return (
     <div className="loc-wrap">
-      {/* Main location — name line */}
+      {/* Main location — name line (Places autocomplete fills name on select;
+           onSelect captures full address + coords into the address row) */}
       <div className="loc-name-row">
-        <input
-          className="ci loc-name-input"
+        <PlacesAutocomplete
+          className="ci-ta loc-name-input"
           value={mainNameValue}
-          placeholder="Location…"
-          onChange={(e) => handleNameChange(e.target.value)}
+          onChange={handleNameChange}
+          onSelect={handleNameSelect}
           onFocus={pushUndo}
+          placeholder="Location…"
+          dropdownClass="loc-ac"
+          multiline
         />
         {hasMainMap && (
           <button type="button" className="loc-map-btn" onClick={openMainMap} title="Get directions">
@@ -171,15 +189,20 @@ export default function LocationCell({ index, row }: Props) {
               />
               <span className="loc-subloc-bullet">•</span>
               <div className="loc-subloc-input-wrap">
-                <input
-                  className="ci loc-subloc-name-input"
+                <PlacesAutocomplete
+                  className="ci-ta loc-subloc-name-input"
                   value={subNameValue}
-                  placeholder="Sub-location…"
-                  onChange={(e) => {
-                    const v = e.target.value;
-                    patchSubLoc(i, { name: v, loc: v });
+                  onChange={(v) => patchSubLoc(i, { name: v, loc: v })}
+                  onSelect={(addr, geo) => {
+                    // onChange already set the short name; capture address + coords
+                    // and auto-open the sub-location address row
+                    patchSubLoc(i, { address: addr, locLat: geo?.lat ?? null, locLng: geo?.lng ?? null });
+                    setSubAddrOpen(prev => ({ ...prev, [sl.id]: true }));
                   }}
                   onFocus={pushUndo}
+                  placeholder="Sub-location…"
+                  dropdownClass="loc-ac"
+                  multiline
                 />
               </div>
               {hasSubMap && (

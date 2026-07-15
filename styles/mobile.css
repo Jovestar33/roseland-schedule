@@ -101,7 +101,8 @@ tbody td:nth-child(11){min-width:34px}
 .loc-ac.open{display:block}
 /* Name line — flex row containing name input, optional map pin, and address toggle */
 .loc-name-row{display:flex;align-items:flex-start;gap:2px}
-.loc-name-input{flex:1;min-width:0}
+.loc-name-row .ci-ta{flex:1;min-width:0}
+.loc-subloc-name-input{font-size:12px!important;padding:4px!important}
 /* map button inside loc-name-row is inline (not absolute) */
 .loc-name-row .loc-map-btn{position:static;flex-shrink:0;padding:5px 2px 0}
 /* loc-map-btn used elsewhere (e.g. ScheduleHeader ac-wrap) keeps absolute positioning */
@@ -126,7 +127,6 @@ tbody td:nth-child(11){min-width:34px}
 .loc-subloc-cb{flex-shrink:0;width:13px;height:13px;margin-top:7px;cursor:pointer;accent-color:var(--pink)}
 .loc-subloc-bullet{flex-shrink:0;color:var(--g400);font-size:12px;padding:6px 1px 0;line-height:1}
 .loc-subloc-input-wrap{flex:1;min-width:0}
-.loc-subloc-name-input{width:100%;box-sizing:border-box;font-size:12px!important;padding:4px!important}
 .loc-subloc-pin{background:none;border:none;cursor:pointer;font-size:13px;
   padding:4px 1px 0;opacity:.5;transition:opacity .15s;flex-shrink:0}
 .loc-subloc-pin:hover{opacity:1}
