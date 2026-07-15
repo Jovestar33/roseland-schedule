@@ -33,6 +33,11 @@ export default function NotesCell({ index, row, onOpenStatus, onOpenNotes }: Pro
           onFocus={pushUndo}
           placeholder="Notes…"
         />
+        {row.notes && (
+          <div className="print-field-text" aria-hidden="true">
+            {row.notes}
+          </div>
+        )}
       </div>
     </div>
   );

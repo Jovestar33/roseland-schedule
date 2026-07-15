@@ -139,6 +139,7 @@
     - **Post-Phase-4 bug fixes (merged to `main` 2026-05-25):**
       - DnD regression from Phase 4: `DescTextarea` auto-resize changed from `useEffect` to `useLayoutEffect` (synchronous, does not fire during drop animation); all buttons in `LocationCell.tsx` given `type="button"`; CSS transition removed from `.loc-add-subloc`.
       - `"00:00"` duration regression: all four `!r.dur` falsy guards replaced with `r.dur === ''` (explicit blank check) in `hasOpenRows`, `guardReorder`, `nextFixedAnchorMin`, and `isLocked`. `computeTimeOut` guard changed from `durMins <= 0` to `row.dur === ''` — a row with Time In and duration "00:00" now correctly shows Time Out equal to Time In.
+    - **Location / address compression (merged to `main` 2026-07-15):** Branch `test/location-address-compression`; build passed and user testing confirmed it works well. Main locations and sub-locations now support a short editable name plus a collapsible full address beneath it. Backward compatibility is preserved for old schedules that only have `loc`; print, read-only view, map links, and Call Sheet location summaries use the richer name/address data where present.
 19. ✅ **Phase 10 — Call Sheet Foundation** — Completed and deployed 2026-05-26. Branch `phase-10-call-sheet-planning`, merged to `main` 2026-05-26.
     - Share dropdown now includes "📄 Call Sheet".
     - Call Sheet opens as a separate modal/document from the current schedule. The schedule editor header and grid are unchanged — no call-sheet-only fields were added to the schedule.
@@ -191,6 +192,7 @@
 - **Phase 3 complete:** Move To workflow (cross-production/cross-phase schedule movement). Passed testing 2026-05-24. Branch: `phase-3-move-to-workflow`, merged to `main` 2026-05-24.
 - **Phase 4 complete:** Location Details / Sub-locations (stacked inline, no modal). Passed testing 2026-05-25. Branch: `phase-4-location-details`, merged to `main` 2026-05-25.
 - **Phase 4 post-release fixes (merged to `main` 2026-05-25):** DnD regression (`useLayoutEffect`, `type="button"`, CSS transition removal in `LocationCell.tsx`); `"00:00"` duration/Time Out regression (`r.dur === ''` guards throughout; `computeTimeOut` now returns Time In for zero-duration rows). Branch: `fix/dnd-regression`.
+- **Location/address compression complete:** Passed build and user testing 2026-07-15. Branch: `test/location-address-compression`, merged to `main`. Adds short display names plus collapsible full addresses for main locations and sub-locations; old `loc`-only schedules remain compatible.
 - **Phase 4B (deferred):** Contact button evaluation — contact-per-sub-location integration or broader row/contact redesign. Not yet started; revisit after item 17 (public view contacts).
 - **Phase 5 complete:** Contact Sheet / Contact Extract. Passed testing 2026-05-25. Branch: `phase-5-contact-sheet`, merged to `main` 2026-05-25.
 - **Phase 6 complete:** Library Declutter / Mobile Polish. Passed testing 2026-05-25. Branch: `phase-6-library-declutter`, merged to `main` 2026-05-25.
@@ -203,4 +205,4 @@
 - **Item 22 (CMS architecture):** Planning conversation before any code.
 
 ---
-*Last updated: 2026-05-26 — Phase 10 Call Sheet Foundation complete and deployed. Item 19 marked complete. Session Order updated. Next: planning conversation for Item 20 (Multi-day / Master Schedule) and future structured Call Sheet extension (staggered calls, distribution, shareable URL).*
+*Last updated: 2026-07-15 — Location/address compression completed, merged to `main`, build passed, and user-tested successfully. Next: continue pre-architecture polish before larger user/account, Production Command, and SaaS foundation work.*

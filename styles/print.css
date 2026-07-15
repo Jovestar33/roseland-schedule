@@ -1737,3 +1737,55 @@
   .sun-note{font-size:8px!important;}
   .sun-label{font-size:9px!important;}
 }
+
+/* V15: print full Description / Notes content.
+   Browser print engines can clip textarea contents even when height:auto is set.
+   DescriptionCell and NotesCell render a normal text copy for print so long user
+   content wraps and expands naturally in the PDF/printed table. */
+.print-field-text{
+  display:none;
+}
+
+@media print{
+  html body .panel .tbl-wrap td:nth-child(4),
+  html body .panel .tbl-wrap td:nth-child(5){
+    overflow:visible!important;
+    white-space:normal!important;
+    vertical-align:top!important;
+    height:auto!important;
+    max-height:none!important;
+  }
+
+  html body .panel .tbl-wrap td:nth-child(4) .ci-ta,
+  html body .panel .tbl-wrap td:nth-child(4) textarea,
+  html body .panel .tbl-wrap td:nth-child(5) .ci-ta,
+  html body .panel .tbl-wrap td:nth-child(5) textarea{
+    display:none!important;
+  }
+
+  html body .panel .tbl-wrap td:nth-child(4) .print-field-text,
+  html body .panel .tbl-wrap td:nth-child(5) .print-field-text{
+    display:block!important;
+    width:100%!important;
+    max-width:100%!important;
+    min-height:0!important;
+    height:auto!important;
+    max-height:none!important;
+    margin:0!important;
+    padding:0!important;
+    overflow:visible!important;
+    white-space:pre-wrap!important;
+    overflow-wrap:anywhere!important;
+    word-break:normal!important;
+    hyphens:none!important;
+    color:#111!important;
+    font-family:'DM Sans',sans-serif!important;
+    font-size:inherit!important;
+    line-height:1.22!important;
+  }
+
+  html body .panel .tbl-wrap tr{
+    height:auto!important;
+    max-height:none!important;
+  }
+}

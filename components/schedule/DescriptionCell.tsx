@@ -13,12 +13,19 @@ export default function DescriptionCell({ index, row }: Props) {
   const pushUndo  = useScheduleStore((s) => s.pushUndo);
 
   return (
-    <AutoResizeTextarea
-      className="ci-ta"
-      value={row.desc}
-      onChange={(desc) => updateRow(index, { desc })}
-      onFocus={pushUndo}
-      placeholder="Description…"
-    />
+    <>
+      <AutoResizeTextarea
+        className="ci-ta"
+        value={row.desc}
+        onChange={(desc) => updateRow(index, { desc })}
+        onFocus={pushUndo}
+        placeholder="Description…"
+      />
+      {row.desc && (
+        <div className="print-field-text" aria-hidden="true">
+          {row.desc}
+        </div>
+      )}
+    </>
   );
 }
