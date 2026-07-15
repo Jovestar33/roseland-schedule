@@ -71,6 +71,14 @@ tbody td:nth-child(2) .cs{min-width:170px}
 tbody td:nth-child(8) .tdsp,tbody td:nth-child(9) .tdsp,tbody td:nth-child(10) .tdsp{white-space:nowrap}
 tbody td:nth-child(11){min-width:34px}
 .cs.locked{opacity:.3;pointer-events:none}
+.action-select-wrap{position:relative;display:inline-block;max-width:100%;min-width:0}
+.action-select-wrap::after{content:'▾';position:absolute;right:7px;top:50%;transform:translateY(-50%);
+  pointer-events:none;color:currentColor;font-size:10px;line-height:1;opacity:.75}
+.action-select-wrap .action-select{
+  display:inline-block;width:auto;max-width:100%;min-width:0;
+  padding-right:20px!important;
+  -webkit-appearance:none;appearance:none;
+}
 .lock-hint{font-size:10px;color:var(--g400);font-style:italic;padding:1px 5px}
 .ci-ta{font-family:var(--fb);font-size:13px;width:100%;
   border:1px solid transparent;background:transparent;
@@ -109,20 +117,17 @@ tbody td:nth-child(11){min-width:34px}
 .loc-map-btn{position:absolute;right:2px;top:6px;background:none;border:none;
   cursor:pointer;font-size:15px;padding:0 2px;opacity:.5;transition:opacity .15s;z-index:2}
 .loc-map-btn:hover{opacity:1}
-/* Address disclosure sits under the name, so it does not read as the Action dropdown. */
-.loc-addr-disclosure{display:inline-flex;align-items:center;gap:3px;background:none;border:0;border-radius:5px;
-  cursor:pointer;font-family:var(--fb);font-size:10px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;
-  color:var(--g400);padding:1px 5px;margin:0 0 1px 1px;line-height:1.2;user-select:none;
-  transition:color .12s,background .12s}
-.loc-addr-disclosure:hover,.loc-addr-disclosure.open{color:var(--pink);background:#fdf4f9}
-.loc-addr-disclosure-icon{font-size:10px;line-height:1;display:inline-block;width:8px;text-align:center}
+/* Address chevron lives inside the location-control cluster, before the map pin. */
+.loc-addr-toggle{background:none;border:1px solid transparent;border-radius:5px;cursor:pointer;font-size:12px;
+  color:var(--g500);padding:4px 4px 2px;flex-shrink:0;line-height:1;
+  transition:color .12s,background .12s,border-color .12s;user-select:none;font-family:var(--fb)}
+.loc-addr-toggle:hover,.loc-addr-toggle.open{color:var(--pink);background:#fdf4f9;border-color:#fbcfe8}
 /* Collapsible address row */
 .loc-addr-row{padding:1px 0 0 0}
 .loc-addr-row .ci-ta,.loc-addr-input{font-size:12px!important;padding:3px 5px!important;
   color:var(--g600)!important;min-height:24px!important}
 /* Sub-location address row indented to align with name text */
 .loc-subloc-addr-row{padding-left:28px}
-.loc-subloc-disclosure-wrap{padding-left:28px;margin-top:-1px}
 
 /* SUB-LOCATIONS */
 .loc-subloc-row{display:flex;flex-direction:column;padding:2px 0 0;gap:1px}

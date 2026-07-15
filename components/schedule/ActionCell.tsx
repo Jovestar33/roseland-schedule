@@ -51,15 +51,17 @@ export default function ActionCell({ index, row }: Props) {
 
   return (
     <>
-      <select
-        className={`cs${colorClass ? ` ${colorClass}` : ''}${locked ? ' locked' : ''}`}
-        value={row.action}
-        onChange={(e) => handleSelectChange(e.target.value)}
-      >
-        {actions.map((a) => (
-          <option key={a} value={a}>{a || '—'}</option>
-        ))}
-      </select>
+      <div className="action-select-wrap">
+        <select
+          className={`cs action-select${colorClass ? ` ${colorClass}` : ''}${locked ? ' locked' : ''}`}
+          value={row.action}
+          onChange={(e) => handleSelectChange(e.target.value)}
+        >
+          {actions.map((a) => (
+            <option key={a} value={a}>{a || '—'}</option>
+          ))}
+        </select>
+      </div>
       {showHint && <div className="lock-hint">⏱ Set duration above</div>}
     </>
   );

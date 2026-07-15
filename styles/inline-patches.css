@@ -1005,6 +1005,22 @@ body{overflow-x:hidden;max-width:100dvw}
     max-width:100% !important;
   }
 
+  .tbl-wrap td:first-of-type + td .action-select-wrap{
+    display:inline-block !important;
+    width:auto !important;
+    max-width:100% !important;
+    min-width:0 !important;
+  }
+
+  .tbl-wrap td:first-of-type + td .action-select-wrap .action-select{
+    width:auto !important;
+    max-width:100% !important;
+    min-width:0 !important;
+    padding-right:20px !important;
+    -webkit-appearance:none !important;
+    appearance:none !important;
+  }
+
   .tbl-wrap .ci-ta{
     width:100% !important;
     min-width:0 !important;
