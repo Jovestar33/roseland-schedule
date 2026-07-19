@@ -12,7 +12,7 @@ Status: Phase 0 procedure. No step authorizes production mutation by itself. Exa
 
 ## Stage 1 — prepare
 
-1. Confirm the approved baseline: US Supabase region, global availability, production-specific membership, RPO 24 hours, RTO 4 hours, 12-month legacy URL compatibility, and 30-day rollback stability window.
+1. Confirm the approved baseline: East US (North Virginia), AWS `us-east-1` Supabase region; global availability; production-specific membership; RPO 24 hours; RTO 4 hours; 12-month legacy URL compatibility; and 30-day rollback stability window.
 2. Assign migration lead, security approver, product validator, rollback authority, and incident channel.
 3. Provision isolated Supabase development/preview/production and protected Vercel preview environments.
 4. Apply reviewed migrations with RLS and seed synthetic tenants/users.

@@ -55,7 +55,7 @@ Index tenant and foreign-key columns, active memberships, production/date orderi
 
 ## Approved platform assumptions
 
-- Initial Supabase region: United States; application availability: global.
+- Initial Supabase region: East US (North Virginia), AWS `us-east-1`; application availability: global.
 - Every user has organization membership. Non-admin production access additionally requires active production membership.
 - Add organization and production preferences for IANA timezone, locale, country, currency, and week start. Store instants in UTC, but store production calendar dates as local dates with an explicit production timezone.
 - International addresses and phone numbers are not constrained to US formats; phone storage should support E.164 where a number can be normalized without discarding the entered display value.

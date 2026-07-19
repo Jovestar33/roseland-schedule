@@ -29,7 +29,7 @@
 | Hosting | Introduce Vercel as a parallel Next.js environment; keep Netlify live during migration and rollback window |
 | Legacy storage | Netlify Blobs remains authoritative until cutover, then read-only until retirement is explicitly approved |
 
-Approved Phase 0 assumptions: initial Supabase hosting in the United States with global application availability; broad international-transfer disclosures; email/password, recovery, and invitation login flows; required production-specific memberships; 12-month legacy URL compatibility; a planned 1–2 hour cutover window; 30-day read-only rollback stability period; and initial RPO/RTO targets of 24/4 hours.
+Approved Phase 0 assumptions: initial Supabase hosting in East US (North Virginia), AWS `us-east-1`, with global application availability; broad international-transfer disclosures; email/password, recovery, and invitation login flows; required production-specific memberships; 12-month legacy URL compatibility; a planned 1–2 hour cutover window; 30-day read-only rollback stability period; and initial RPO/RTO targets of 24/4 hours.
 
 ## 🔴 Now — Phase 0: architecture, security, and migration specification
 
