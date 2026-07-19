@@ -364,7 +364,7 @@ No Supabase project creation, production credential changes, production export, 
 
 ## 13. Phase 0 decisions and operating defaults
 
-- Host the initial Supabase project in a United States region. This is a storage location, not a geographic restriction on users.
+- Host the initial Supabase project in East US (North Virginia), AWS `us-east-1`. This is a storage location, not a geographic restriction on users.
 - Support global use from day one. Avoid US-only assumptions in dates, timezones, addresses, phone numbers, currency, or production locations.
 - Use email/password login, email password recovery, and email invitations initially. Defer magic-link-only and social login. Make MFA available and require it for owners/admins before unrelated external users are onboarded.
 - Every user belongs to an organization. Production membership is required initially for non-admin access; invitations identify organization role and initial production access.

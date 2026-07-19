@@ -1,0 +1,2 @@
+-- Synthetic development fixtures will be added deliberately in a later migration slice.
+-- Never place production exports or personal data in this version-controlled seed file.
