@@ -29,22 +29,26 @@
 | Hosting | Introduce Vercel as a parallel Next.js environment; keep Netlify live during migration and rollback window |
 | Legacy storage | Netlify Blobs remains authoritative until cutover, then read-only until retirement is explicitly approved |
 
+Approved Phase 0 assumptions: initial Supabase hosting in the United States with global application availability; broad international-transfer disclosures; email/password, recovery, and invitation login flows; required production-specific memberships; 12-month legacy URL compatibility; a planned 1–2 hour cutover window; 30-day read-only rollback stability period; and initial RPO/RTO targets of 24/4 hours.
+
 ## 🔴 Now — Phase 0: architecture, security, and migration specification
 
-**Status:** next approved work. Planning and documentation first; no production data mutation.
+**Status:** draft specification complete; awaiting review/approval. No production data was mutated.
 
-- [ ] Inventory every Netlify Blob store, function/API endpoint, data shape, environment variable, public URL, cache, and local/session storage key.
-- [ ] Define the relational schema and stable-ID strategy.
-- [ ] Define organizations, memberships, roles, permissions, and public-link boundaries.
-- [ ] Classify stored data and document where personal or sensitive production data flows.
-- [ ] Produce a threat model covering tenant isolation, public links, file access, paid APIs, and administrative actions.
-- [ ] Define Row Level Security policies for every exposed table and storage bucket.
-- [ ] Define server-side validation and database-constraint rules.
-- [ ] Define secrets, logging, error-redaction, rate-limit, and security-header standards.
-- [ ] Define retention, export, deletion, backup, restore, incident-response, privacy-policy, and terms requirements.
-- [ ] Define migration dry run, reconciliation, cutover, rollback, and legacy URL compatibility.
-- [ ] Turn the current feature set into a regression suite and explicit “do not break” list.
-- [ ] Mark the unmerged `phase-11-production-command-planning` branch as reference/prototype work, not the future data foundation.
+Phase 0 documents: [`CURRENT_DATA_INVENTORY.md`](./CURRENT_DATA_INVENTORY.md), [`TARGET_SCHEMA.md`](./TARGET_SCHEMA.md), [`AUTHORIZATION_MODEL.md`](./AUTHORIZATION_MODEL.md), [`THREAT_MODEL.md`](./THREAT_MODEL.md), [`SECURITY_BASELINE.md`](./SECURITY_BASELINE.md), [`MIGRATION_RUNBOOK.md`](./MIGRATION_RUNBOOK.md), and [`REGRESSION_MATRIX.md`](./REGRESSION_MATRIX.md).
+
+- [x] Inventory every Netlify Blob store, function/API endpoint, data shape, environment variable, public URL, cache, and local/session storage key.
+- [x] Define the relational schema and stable-ID strategy.
+- [x] Define organizations, memberships, roles, permissions, and public-link boundaries.
+- [x] Classify stored data and document where personal or sensitive production data flows.
+- [x] Produce a threat model covering tenant isolation, public links, file access, paid APIs, and administrative actions.
+- [x] Define Row Level Security policies for every exposed table and storage bucket.
+- [x] Define server-side validation and database-constraint rules.
+- [x] Define secrets, logging, error-redaction, rate-limit, and security-header standards.
+- [x] Define retention, export, deletion, backup, restore, incident-response, privacy-policy, and terms requirements.
+- [x] Define migration dry run, reconciliation, cutover, rollback, and legacy URL compatibility.
+- [x] Turn the current feature set into a regression suite and explicit “do not break” list.
+- [x] Mark the unmerged `phase-11-production-command-planning` branch as reference/prototype work, not the future data foundation.
 
 **Exit gate:** schema, authorization model, threat model, migration procedure, rollback procedure, and regression matrix reviewed and approved before implementation.
 
@@ -224,4 +228,4 @@ Completed implementation history remains documented in Git history and [`ARCHITE
 
 ---
 
-*Last updated: 2026-07-19 — migration-first, security-gated multi-user roadmap approved and documented. Next: Phase 0 architecture, security, and migration specification.*
+*Last updated: 2026-07-19 — Phase 0 draft specification completed. Next: review decisions and approve the Phase 1 implementation gate.*

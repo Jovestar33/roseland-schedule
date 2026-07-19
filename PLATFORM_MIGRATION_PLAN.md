@@ -1,6 +1,6 @@
 # Roseland Schedule — Multi-User Platform Migration Plan
 
-> **Status:** Approved direction; Phase 0 specification is next. No production migration has begun.
+> **Status:** Phase 0 specification completed 2026-07-19; Phase 1 awaits implementation approval. No production migration has begun.
 >
 > **Date:** 2026-07-19
 >
@@ -150,7 +150,7 @@ The exact schema is a Phase 0 deliverable. The conceptual hierarchy is:
 Organization
 ├── OrganizationMembership
 ├── Production
-│   ├── ProductionMembership (only if production-specific access is needed)
+│   ├── ProductionMembership (required for initial release)
 │   ├── Phase
 │   ├── ProductionDay
 │   │   ├── DailySchedule
@@ -197,7 +197,7 @@ Keep the first model small:
 
 Client, Vendor, Crew, Scheduler, Billing, and other specialized roles wait until their exact data projections and privacy boundaries are designed.
 
-Prefer permission checks (`schedule:update`, `member:manage`) over scattered role-name comparisons. Keep organization membership authoritative; add production-specific membership only if real use cases require it.
+Prefer permission checks (`schedule:update`, `member:manage`) over scattered role-name comparisons. Organization membership establishes the tenant relationship; production membership is required initially and limits non-admin users to explicitly assigned productions. Organization owners/admins retain organization-wide administration.
 
 ## 7. Migration mechanics
 
@@ -362,18 +362,18 @@ The next implementation task is still documentation and inspection:
 
 No Supabase project creation, production credential changes, production export, deployment switch, or application code migration should occur until these documents are reviewed and approved.
 
-## 13. Open decisions for Phase 0
+## 13. Phase 0 decisions and operating defaults
 
-- Confirm Supabase regions and data-residency needs.
-- Decide password, magic-link, and social-login methods for initial launch.
-- Decide whether all users must belong to an organization.
-- Confirm the initial roles and whether production-specific membership is needed.
-- Choose the hybrid versus fully normalized schedule payload design.
-- Define the legacy URL lifetime and public-link migration rules.
-- Define the read-only maintenance window and stability period.
-- Decide when the custom domain moves from Netlify to Vercel.
-- Define legal jurisdictions and intended initial customer geography.
-- Define recovery point and recovery time objectives.
+- Host the initial Supabase project in a United States region. This is a storage location, not a geographic restriction on users.
+- Support global use from day one. Avoid US-only assumptions in dates, timezones, addresses, phone numbers, currency, or production locations.
+- Use email/password login, email password recovery, and email invitations initially. Defer magic-link-only and social login. Make MFA available and require it for owners/admins before unrelated external users are onboarded.
+- Every user belongs to an organization. Production membership is required initially for non-admin access; invitations identify organization role and initial production access.
+- Use the hybrid schedule design: relational tenancy/metadata with a validated, versioned JSONB schedule document during migration.
+- Preserve legacy schedule/view URL resolution for at least 12 months after cutover. New public shares are scoped, revocable, omit internal/contact data by default, and expire after 30 days unless deliberately extended. Unsafe legacy tokens are replaced rather than copied.
+- Plan a 1–2 hour read-only cutover window and retain Netlify/Blobs intact and read-only for a 30-day stability period.
+- Move the custom domain only after the protected Vercel pilot, regression suite, security gates, backup restoration, and rollback rehearsal pass.
+- Design for worldwide availability with US hosting and broadly applicable international/cross-border transfer disclosures. Use jurisdiction-neutral core terms plus required regional supplements; do not claim universal legal compliance without qualified review.
+- Initial recovery objectives are RPO 24 hours and RTO 4 hours. Phase 1 must verify that provider configuration and operating procedures can meet or improve them before production cutover.
 
 ---
 
