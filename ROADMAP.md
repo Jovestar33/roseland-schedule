@@ -31,9 +31,9 @@
 
 Approved Phase 0 assumptions: initial Supabase hosting in East US (North Virginia), AWS `us-east-1`, with global application availability; broad international-transfer disclosures; email/password, recovery, and invitation login flows; required production-specific memberships; 12-month legacy URL compatibility; a planned 1–2 hour cutover window; 30-day read-only rollback stability period; and initial RPO/RTO targets of 24/4 hours.
 
-## 🔴 Now — Phase 0: architecture, security, and migration specification
+## ✅ Phase 0: architecture, security, and migration specification
 
-**Status:** draft specification complete; awaiting review/approval. No production data was mutated.
+**Status:** completed, reviewed, and approved. No production data was mutated during Phase 0.
 
 Phase 0 documents: [`CURRENT_DATA_INVENTORY.md`](./CURRENT_DATA_INVENTORY.md), [`TARGET_SCHEMA.md`](./TARGET_SCHEMA.md), [`AUTHORIZATION_MODEL.md`](./AUTHORIZATION_MODEL.md), [`THREAT_MODEL.md`](./THREAT_MODEL.md), [`SECURITY_BASELINE.md`](./SECURITY_BASELINE.md), [`MIGRATION_RUNBOOK.md`](./MIGRATION_RUNBOOK.md), and [`REGRESSION_MATRIX.md`](./REGRESSION_MATRIX.md).
 
@@ -54,15 +54,17 @@ Phase 0 documents: [`CURRENT_DATA_INVENTORY.md`](./CURRENT_DATA_INVENTORY.md), [
 
 ## 🟠 Phase 1: secure Supabase foundation
 
+**Status:** in progress. The first tenant-foundation migration is merged to `main` and applied only to `roseland-schedule-dev`. Organizations, organization memberships, productions, and production memberships have default-deny RLS; 22 local/remote authorization tests and GitHub CI pass. The live app still uses Netlify Auth/Blobs.
+
 - [ ] Create isolated development, preview, and production Supabase environments.
-- [ ] Commit database migrations to GitHub.
+- [x] Commit database migrations to GitHub.
 - [ ] Create the initial tenant-aware schema: organizations, memberships, productions, phases, production days, schedules, rows, sub-locations, versions, contacts, locations, call sheets, share links, and audit events.
 - [ ] Add UUID primary keys, foreign keys, indexes, timestamps, actor attribution, optimistic version fields, and recovery-friendly deletion behavior.
 - [ ] Enable RLS in the same migration that creates every exposed table.
 - [ ] Implement default-deny, least-privilege policies for SELECT/INSERT/UPDATE/DELETE.
 - [ ] Align Storage policies with organization/production membership.
 - [ ] Keep secret/service-role credentials server-only; use only the publishable key in browser code.
-- [ ] Add automated cross-tenant and role-boundary tests.
+- [x] Add automated cross-tenant and role-boundary tests; extend the matrix whenever an exposed table, role, storage policy, or realtime channel is added.
 - [ ] Add security-advisor, dependency, and secret-scan checks.
 
 **Exit gate:** User A cannot access Organization B through UI, direct API calls, guessed UUIDs, realtime channels, or storage URLs.
@@ -93,6 +95,25 @@ Phase 0 documents: [`CURRENT_DATA_INVENTORY.md`](./CURRENT_DATA_INVENTORY.md), [
 - [ ] Support MFA for owners/admins before external organizations are onboarded.
 
 **Exit gate:** the full authentication failure-path suite and permission matrix pass.
+
+## 🟠 Phase 3A: neutral platform design and organization theming
+
+This phase follows authentication and organization context and must finish before pilot migration or unrelated organizations are invited. It is intentionally earlier than the broader SaaS customization work.
+
+- [ ] Extract the current visual configuration into a versioned `Roseland Pictures` preset; do not discard or silently restyle it.
+- [ ] Create a polished, neutral platform preset as the default for newly created organizations.
+- [ ] Resolve the active app theme from authenticated organization context, with safe fallbacks while sessions hydrate.
+- [ ] Separate app chrome, generated-document branding, and operational templates so organizations can configure them independently.
+- [ ] Add validated organization tokens for name, logo, primary/accent colors, neutral surfaces, typography preset, and schedule-action colors.
+- [ ] Allow deliberately limited production overrides such as production logo, title treatment, and accent color.
+- [ ] Store system presets as versioned, immutable definitions; organization customizations reference or safely copy a known version.
+- [ ] Migrate the existing global CMS configuration into the Roseland organization preset without changing the current live appearance.
+- [ ] Use private managed assets and allowlisted design tokens; do not accept arbitrary CSS, HTML, scripts, or uploaded fonts.
+- [ ] Enforce contrast, accessibility, asset type/size, and safe color/font validation on the server as well as in the UI.
+- [ ] Test neutral and Roseland presets across desktop, mobile, iPad, read-only views, schedules, call sheets, contact sheets, print, and PDF.
+- [ ] Keep the live Netlify app visually unchanged until both presets pass the preview regression matrix.
+
+**Exit gate:** the neutral platform is the default for a new organization, Roseland renders as an explicit versioned preset with no regressions, customization cannot inject executable content, and both app and document themes pass accessibility/mobile/print review.
 
 ## 🟠 Phase 4: parallel deployment and pilot migration
 
@@ -160,7 +181,7 @@ Production Command v1 should be a useful operating surface:
 ## 🟡 Phase 9: generated operational documents
 
 - [ ] Generate call sheets from structured production/day data rather than hand-entering every field.
-- [ ] Roseland visual style plus production-grade information density: compact dashboard, boxed sections, tight schedule table, and structured department/contact blocks.
+- [ ] Organization-selected document themes—including the Roseland preset—plus production-grade information density: compact dashboard, boxed sections, tight schedule table, and structured department/contact blocks.
 - [ ] Staggered/group/department/talent/vendor call times.
 - [ ] Contact sheets, client/vendor views, advance schedules, and daily production reports.
 - [ ] Distribution, delivery/open/confirmation tracking, revisions, and version history.
@@ -179,7 +200,7 @@ Production Command v1 should be a useful operating surface:
 ## 🟢 Later SaaS and platform phases
 
 - [ ] Billing and subscription plans.
-- [ ] Additional organizations and organization-specific branding/templates.
+- [ ] Additional-organization onboarding, preset management, and reusable organization setup templates.
 - [ ] Specialized Client, Vendor, Crew, and Read-only roles.
 - [ ] Production templates and onboarding/import assistance.
 - [ ] Budget and expense integration.
@@ -228,4 +249,4 @@ Completed implementation history remains documented in Git history and [`ARCHITE
 
 ---
 
-*Last updated: 2026-07-19 — Phase 0 draft specification completed. Next: review decisions and approve the Phase 1 implementation gate.*
+*Last updated: 2026-07-19 — Phase 1 tenant foundation merged and protected by CI; neutral platform and organization theming moved forward to immediately follow accounts/organization context. Next session: continue Phase 1 authentication and secure Roseland bootstrap.*
