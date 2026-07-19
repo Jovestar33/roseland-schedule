@@ -1,208 +1,227 @@
 # Roseland Schedule — Master Roadmap
 
-## 🔴 Immediate (current session / next 1-2 days)
-*App is deployed with real data — these must be done before team use*
+> **Current direction (approved 2026-07-19):** migrate the working single-PIN app to a secure multi-user platform before resuming Production Command feature development.
+>
+> **Detailed plan:** see [`PLATFORM_MIGRATION_PLAN.md`](./PLATFORM_MIGRATION_PLAN.md).
+>
+> **Historical Next.js migration:** [`MIGRATION_PLAN.md`](./MIGRATION_PLAN.md) records the completed HTML-to-Next.js migration and is retained as an archive.
 
-1. ✅ **Save overwrite warning audit** — conflict detection rebuilt with pure savedAt comparison; Netlify Blobs eventual-consistency stale-read handled correctly
-2. ✅ **Print/PDF verification** — landscape default set via `@page { size: landscape }`; filename format `"[scheduleName] – [YYYY-MM-DD]"` working
-3. ✅ **Mobile/iPad layout pass** — complete
-   - ✅ Library horizontal overflow fixed (mobile-polish → main, 2026-05-13)
-   - ✅ iOS Safari Dynamic Island portrait clipping fixed
-   - ✅ Contact icon clipping on grid right edge (portrait mobile) fixed
-   - ✅ Mobile toolbar redesign — two-row layout (name+pill / buttons), dropdowns escape overflow via position:fixed, Undo/Redo icon-only on mobile, Close ✕ on mobile
-   - ✅ Safari and Chrome favicons confirmed working
-   - ✅ Header polish pass — landscape toolbar breakpoint fixed (max-height:500px captures all iPhones incl. Pro Max, excludes tablets); Close button shows ✕ icon in landscape; weather strip #ebebeb background enforced with !important; crew divider 1.5px var(--g300); meta-grid 12px top margin; TOWN/DATE/CALL TIME labels unified to crew-label style (10px, 1px letter-spacing, var(--g400)); crew block labels PRODUCER/DIRECTOR/CAMERA. Merged to main 2026-05-15.
-4. **PWA manifest** — make app installable on iPad home screen
-   - Status: `manifest.ts` built and deployed, iOS meta tags in place, icons generated at 192×192 and 512×512. Remaining: test PWA install on real iPad in Safari (Share → Add to Home Screen) and verify standalone landscape mode launches correctly
-5. ✅ **Print font sizes — tablet and mobile** — resolved and merged to main 2026-05-15. Branch `mobile-and-tablet-print` closed.
+## Product principles
 
-## 🟠 Short-Term Polish (v1 — next 2-4 sessions)
-*Quality of life improvements before wider use*
+1. Preserve the working daily schedule editor. Do not rewrite its grid, time cascade, mobile layout, print/PDF, snapshots, call sheet, contact sheet, or read-only views during the platform migration.
+2. Production Command manages the production. Daily Schedule manages one day. Call Sheet communicates one day.
+3. Security, privacy, tenant isolation, backup, and recovery are release gates in every phase—not end-of-project polish.
+4. Migrate through parallel environments with a tested rollback path. Netlify data is not destructively removed during cutover.
+5. Use stable internal IDs. Display names must not serve as permanent database identity.
+6. Prefer a strong production-specific list/timeline before building a complex calendar or Gantt.
 
-6. ✅ **Compact crew block** — Producer / Director / Camera replaced with `CrewIdentityBlock`: two-row display (labels + values), inline edit on tap, sits between identity line and Town/Location. Merged to main 2026-05-15.
-7. ✅ **Schedule header fields — Phase 9 complete** — Passed testing 2026-05-26. Branch: `phase-9-schedule-header-identity`, merged to `main` 2026-05-26.
-   - Schedule header now presents a two-row identity block: Project/Production name on row 1 (18px bold), Phase · Day on row 2 (12px muted).
-   - Project and Phase retain `meta.projectName` and `meta.phase` — the same fields used by Library grouping, Move To, and the read-only view. No metadata schema changes.
-   - Project and Phase editing shows all existing options immediately on open (no pre-filtering), consistent with Move To selector UX. Custom values can still be entered.
-   - Day is edited via a single slash-notation input (`1/5` = Day 1 of 5; `1` or `1/` = Day 1, totalDays null). Values stored as `meta.dayNumber` and `meta.totalDays` (unchanged).
-   - Day input enforces digits-and-slash only at keystroke level. Invalid input (day = 0, day exceeds total, `/5` with no day number) keeps the editor open with a visible inline error — metadata is never corrupted by invalid input.
-   - Escape reverts the Day field to the pre-edit snapshot value and closes without writing.
-   - Town / Location, Date, Call Time, Producer, Director, Camera, save/load, Library, Move To, print, mobile layout, and read-only view all preserved.
-   - **Architecture note:** This is a step toward future call-sheet and Production Command architecture, but is not a call sheet. The schedule editor header remains intentionally clean. Heavy call-sheet-only fields (full crew list, parking, safety notes, permits) belong in a dedicated Call Sheet layer (Item 19), not in the schedule header.
-   - **Future (not Phase 9):** Full call sheet generation (Item 19), multi-day master schedule (Item 20), Production Info Panel / Production Command.
-8. ✅ **Move CMS to Library** — CMS button removed from schedule toolbar, now in Library header
-9. ~~**Export Current JSON to toolbar**~~ — **Skipped / already satisfied.** The Share menu (`ShareDropdown`) already provides JSON export of the current schedule. This is sufficient for current usage; no standalone development phase is needed. Can be revisited only if the Share menu export proves insufficient in practice.
-10. ✅ **Tools Panel slide-over** — `ToolsPanel.tsx` renders via `createPortal` to `document.body`; slides from right on desktop/tablet (380px), bottom sheet on mobile (70vh). Three tabs: Templates (save/apply/delete templates from within an open schedule — the context problem is now solved), Backup (Export JSON), Restore (snapshot cards with Preview, Save As New, Restore, Delete). Merged to main 2026-05-15.
-11. **Push notifications for overtime** — alert when action runs over its duration
-12. **Library improvements**
-    - ✅ **Auto-grouping hierarchy tree** — collapsible production → phase → schedule tree derived from schedule metadata; collapse state persists in localStorage. Merged to main 2026-05-16.
-    - ✅ **Drag-and-drop reorder** — schedules within a phase are manually reorderable; order persists in `libMeta.phaseOrder`. Merged to main 2026-05-16.
-    - ✅ **Inline create Production / Phase** — "+ Add Production" and "+ Add Phase" inline inputs with Enter/Escape; empty containers held in UI state until populated. Merged to main 2026-05-16.
-    - ✅ **Edit production/phase display names** — pencil button opens modal; writes display name override to libMeta (`productionDisplayNames` / `phaseDisplayNames`); schedule blobs untouched. Merged to main 2026-05-16.
-    - ✅ **Contextual + New Schedule** — button inside each named phase navigates to editor pre-populated with projectName and phase via URL search params. Merged to main 2026-05-16.
-    - ✅ **ComboInput typeahead** — projectName and phase fields in the editor identity line show filtered suggestions seeded from library load (localStorage cache). Merged to main 2026-05-16.
-    - ✅ **Mobile two-line row layout** — schedule rows on mobile stack into grip+name / actions two-line format; no truncation. Merged to main 2026-05-16.
-    - ✅ **Library Refresh reliability** — Refresh button re-fetches current Library data without getting stuck; stale CDN reads during the Netlify Blobs propagation window (~0–15s) cannot roll back recently confirmed archive/restore, DnD reorder, or delete mutations (sessionStorage pending-mutation guards, 60s TTL). Passed testing 2026-05-24.
-    - ✅ **Save As Library grouping fix** — schedules created via Save As appear in the correct production/phase group rather than Ungrouped, even when the CDN edge has not yet propagated the new blob (fallback meta cached in sessionStorage). Passed testing 2026-05-24.
-    - ✅ **Archive / Restore** — reversible cleanup layer; archived schedules are hidden from the default Library view and can be restored. Persists after Refresh, browser reload, and in-session navigation back to the Library. Passed testing 2026-05-24.
-    - ✅ **Permanent Delete (archived only)** — two-step confirmation modal (passcode + type "DELETE"); passcode verified server-side via `SCHEDULE_DELETE_PASSWORD`; active schedules must be archived first. Server atomically deletes the schedule blob, associated snapshots, and all Library metadata references. Deleted schedules do not reappear after Refresh or reload. Passed testing 2026-05-24.
-    - ✅ **Same-section DnD persistence hardening** — DnD reorder save failures surface an error banner and revert the UI rather than silently pretending the move saved. Passed testing 2026-05-24.
-    - ✅ **Library UI Declutter / Mobile Polish (Phase 6)** — UI-only pass; no Library data model or storage behavior changed. Passed testing 2026-05-25.
-      - Redundant Town · Date secondary metadata line removed from all Library rows; schedule names left-aligned.
-      - Active desktop rows: Links | Move To | Rename | Archive (all visible buttons).
-      - Active mobile rows: Links | Move To | ⋯; ⋯ menu shows Rename and Archive.
-      - Archived rows (all breakpoints): Restore | Delete Permanently (desktop) / Delete (mobile) — direct visible buttons, no ⋯ menu.
-      - Top toolbar simplified: + New Schedule | Refresh | Archived | More; mobile uses shorter labels (+ New / Refresh / Archived / ⋯). More menu contains only CMS and Log Out.
-      - All four Library tabs remain visible in the tab bar (Library / Templates / Backup / Restore).
-      - Templates tab: removed useless "Save Current as Template" input/button row; templates are saved from the Tools Panel inside an open schedule.
-      - Mobile search placeholder no longer clipped.
-      - New `lib-acts-mobile-only` CSS helper (inverse of `lib-acts-desktop-only`) for elements visible only on mobile.
-    - ⬜ **Search/filter schedules** — by name, production, phase, date range; pending.
-    - ⬜ **Sort options** — sort beyond manual phase order (by name, save date, shoot date); pending.
-    - ⬜ **Open recent** — quick access to recently opened schedules on Library load; pending.
-    - ⬜ **Cross-section schedule movement** — moving a schedule between productions or phases is not a drag-and-drop feature; cross-section DnD is deliberately rejected. Future implementation should use an explicit Move To workflow (see item 13 below).
-13. ✅ **Phase 2 — Safe schedule title rename** — Completed and tested 2026-05-24. Branch `phase-2-safe-schedule-rename`, merged to `main` 2026-05-24.
-    - Schedules can be renamed from the Library without using Save As.
-    - Rename is Library-only; in-editor rename is not implemented (possible later enhancement).
-    - Uses an interim key-migration approach: backend copies the schedule blob to the new key, migrates the snapshot blob (keyed by sha256 of name), updates all Library metadata references (phaseOrder, tsarchived, scheduleFolderMap, townCache, dateCache), then deletes old blobs best-effort. Backend endpoint: `netlify/functions/rename-schedule.js`.
-    - Rename preserves schedule data, snapshots, phase order, and Library grouping.
-    - Blocks genuine duplicate names. Rename-back (A→B→A) works correctly after the sync window — backend cross-checks Library metadata when `isRenameBack` flag is set, avoiding a false 409 from stale CDN blob reads.
-    - Old Team/Client links using the old schedule name break after rename; users must copy new links from the Library row.
-    - Post-rename sync guard (15 s React state) prevents opening or re-renaming during the Blob propagation window. Pending rename guard (sessionStorage, 60 s TTL) prevents stale CDN blob-list reads from reverting the rename on Library Refresh.
-    - Netlify Blobs `{ consistency: 'strong' }` is not used; this environment does not expose `uncachedEdgeURL`. All staleness is handled at the app level.
-    - **Future (not current work):** Full `scheduleId` migration — introduce a permanent `scheduleId` field separate from the display title so the blob key never needs to change on rename. In-editor rename (rename without opening the Library) is also a future enhancement.
-14. ✅ **Move To workflow — cross-production/cross-phase schedule movement** — Completed and tested 2026-05-24. Branch `phase-3-move-to-workflow`, merged to `main` 2026-05-24.
-    - Move To button in each active schedule row (desktop-only) opens a modal with controlled select-style dropdowns for Production and Phase.
-    - Existing productions and phases are immediately visible as selectable options. Custom/new entry supported via reveal-on-select text inputs (no need to delete pre-filled text to see options).
-    - Phase dropdown prioritizes phases already used in the selected production ("This production" optgroup), then lists other known phases.
-    - Backend endpoint: `netlify/functions/move-schedule.js`. Coordinated two-write operation, not a true atomic transaction: writes updated `meta.projectName`/`meta.phase` to the schedule blob first, then updates `phaseOrder` in Library metadata.
-    - Move To preserves schedule name, data, snapshots, Team Links, and Client Links. The schedule is appended to the bottom of the destination phase order.
-    - If Library metadata write fails after the blob write, the schedule blob remains authoritative for grouping and self-corrects on the next Refresh. Acceptable degraded state.
-    - Cross-section drag-and-drop remains intentionally blocked. Cross-section DnD may be added later as a secondary trigger only after Move To has proven stable in production.
-    - No changes to print, schedule editor layout, rename, archive/restore, permanent delete, or same-section DnD behavior.
-15. ✅ **Phase 5 — Contact Sheet / Contact Extract** — Completed and tested 2026-05-25. Branch `phase-5-contact-sheet`, merged to `main` 2026-05-25.
-    - Share dropdown now includes "📋 Contact Sheet".
-    - Opens a modal that extracts contacts from the current schedule's existing row-level contact fields (`contactName`, `contactTitle`, `contactPhone`, `contactEmail`).
-    - Rows with no contact data are excluded; empty state shown when no contacts exist on the schedule.
-    - Contacts deduplicated by exact `contactName.trim() + contactPhone.trim()`; merged cards list all associated row-context lines (time, action, location, description).
-    - CSV download: 8-column headers, one row per contact × row-context pair.
-    - Print: uses a `cs-print-only` portal rendered directly on `document.body` — outside the `.overlay`/`.modal` tree that `print.css` suppresses — so contact sheet prints correctly. Normal schedule Print/PDF is unaffected.
-    - Contact button (`DoneContactCell`) and `ContactModal` entry point are unchanged.
-    - Contacts remain editor-only; public/client view contacts not included in Phase 5.
-    - **Limitations (deferred):** one contact per row; no contacts database; no public view contacts (item 17); no sub-location contacts (Phase 4B).
-16. **Version history UX**
-    - ✅ **Phase 8 — Snapshot UX Polish** — Completed and tested 2026-05-25. Branch `phase-8-snapshot-ux-polish`, merged to `main` 2026-05-25.
-      - Manual snapshots now prompt for a custom label; blank/cancel falls back to "Manual snapshot."
-      - Snapshot cards show label as the main title; timestamp and action count appear as secondary metadata.
-      - Auto snapshots and conflict snapshots continue to display their labels clearly.
-      - Snapshot count badge shows X / 25 in both ToolsPanel Restore tab and Library Versions tab.
-      - Snapshot cap increased from 10 to 25 per schedule (server-side `normalizeSnapshots` and UI).
-      - Capacity note appears at 25 / 25: "New snapshots replace the oldest."
-      - Snapshot creation failure no longer shows a false success toast — an error toast is surfaced instead.
-      - Button labels and delete button styling unified between ToolsPanel Restore tab and Library Versions tab (Preview / Save As New / Restore / Delete).
-      - Redundant "Selected: [name]" line removed from Library Versions tab.
-      - Save As New from snapshot pre-loads known snapshot data into the store before navigation so the new schedule opens populated immediately, avoiding blank-schedule flash from Blob propagation lag.
-      - Existing Preview, Restore, Delete, auto-snapshot, and conflict snapshot behavior intact.
-    - ⬜ **Remaining / future (not Phase 8):** full autosave/version history redesign; snapshot rename/editing; styled confirmation modal replacement for `confirm()` / `prompt()` dialogs; side-by-side version compare.
-17. **Client read-only view enhancements**
-    - ✅ **Phase 7 — Read-only Link Experience / Client View Polish** — UI-only pass; no data model, storage, or server-side function changes. Passed testing 2026-05-25.
-      - Public/client view now shows a designed schedule identity block: schedule name, production/project name, phase, and day number / total days where available.
-      - Schedule name appears as part of the designed printed document, not only in the browser/PDF title bar.
-      - Read-only table preserves Time Out in print/PDF. (Root cause: global `print.css` rule `th:last-child / td:last-child` suppressed editor delete column but also hit Time Out in the 9-column read view; fix scoped to `.rv-panel` class.)
-      - Sub-locations render underneath main locations with descriptions and Google Maps links where lat/lng exists.
-      - Standard action types use action color styling (matching the editor and PDF).
-      - Completed rows are no longer faded — clients see all rows at full opacity.
-      - Mobile/narrow view includes a horizontal scroll hint above the schedule table.
-      - Public view print hides the dark branded header and Print/Save PDF button.
-      - Both `/view/[name]` (unauthenticated) and `/view?v=name&vt=token` (token-gated) benefit from all improvements via shared `ScheduleReadView`.
-      - Contact fields are not rendered publicly. No contacts were exposed.
-      - Normal editor behavior and print/PDF were not changed.
-      - **Note:** Browser "Headers and Footers" (URL / date / page number in PDF margins) are browser-controlled and not app behavior.
-    - ⬜ **Public/client contact cards** — opt-in contact name/title/phone/email visible in public view; requires explicit per-schedule contact visibility control; deferred.
-    - ⬜ **Contact visibility toggle** — per-schedule or per-link toggle to enable showing contacts publicly; deferred.
-    - ⬜ **Separate vendor/crew read-only link** — distinct link type with richer contact/crew info for internal use; deferred.
+## Approved target architecture
 
-## 🟡 Medium-Term (v2 — next major development cycle)
-*New feature categories that expand scope significantly*
+| Concern | Direction |
+|---|---|
+| Source control | GitHub remains the canonical repository and feature-branch workflow |
+| Application database | Supabase-managed PostgreSQL |
+| Authentication | Supabase Auth |
+| Authorization | PostgreSQL Row Level Security plus server-side permission checks |
+| Tenant model | Organizations/workspaces with memberships and production-level access |
+| File/object storage | Supabase Storage for generated documents and attachments |
+| Realtime | Supabase Realtime available later for presence/collaboration; not required for initial cutover |
+| Hosting | Introduce Vercel as a parallel Next.js environment; keep Netlify live during migration and rollback window |
+| Legacy storage | Netlify Blobs remains authoritative until cutover, then read-only until retirement is explicitly approved |
 
-18. ✅ **Phase 4 — Location details / sub-locations** — Completed and tested 2026-05-25. Branch `phase-4-location-details`, merged to `main` 2026-05-25.
-    - Sub-locations render inline within the Location cell, stacked below the main location — no modal is used.
-    - Main location behavior (text, Google Places autocomplete, map pin, wrapping) is unchanged.
-    - Main and sub-location text wraps cleanly across desktop, tablet, mobile, and print; long addresses do not clip or overflow.
-    - Each sub-location: `loc` with Google Places autocomplete, `locLat`/`locLng` with individual map pin, optional `desc` text (auto-resizing textarea), `done` status checkbox.
-    - Sub-locations save/load with the schedule. Old schedules without `subLocations` work unchanged.
-    - Print: sub-location `loc` and `desc` text print below the main location; pin, remove, and add controls are hidden.
-    - Mobile: tested and working.
-    - Data model: `ScheduleRow.subLocations?: Array<{ id, loc, locLat, locLng, done, desc }>`. Existing `loc`, `locLat`, `locLng` on the row are unchanged.
-    - Sub-location data is row-level, not Library data. Library, rename, Move To, archive, delete, Save As, and DnD are all unaffected.
-    - **Phase 4B (deferred — not yet started):** Evaluate contact-per-sub-location integration. The existing row-level contact button (`.done-tools` column) was not moved. Options: (a) attach a contact to individual sub-locations, (b) broader row/contact redesign, or (c) let the Contact Sheet feature (item 15) absorb this need. Evaluate after item 15 is implemented.
-    - **Post-Phase-4 bug fixes (merged to `main` 2026-05-25):**
-      - DnD regression from Phase 4: `DescTextarea` auto-resize changed from `useEffect` to `useLayoutEffect` (synchronous, does not fire during drop animation); all buttons in `LocationCell.tsx` given `type="button"`; CSS transition removed from `.loc-add-subloc`.
-      - `"00:00"` duration regression: all four `!r.dur` falsy guards replaced with `r.dur === ''` (explicit blank check) in `hasOpenRows`, `guardReorder`, `nextFixedAnchorMin`, and `isLocked`. `computeTimeOut` guard changed from `durMins <= 0` to `row.dur === ''` — a row with Time In and duration "00:00" now correctly shows Time Out equal to Time In.
-    - **Location / address compression (merged to `main` 2026-07-15):** Branch `test/location-address-compression`; build passed and user testing confirmed it works well. Main locations and sub-locations now support a short editable name plus a collapsible full address beneath it. Backward compatibility is preserved for old schedules that only have `loc`; print, read-only view, map links, and Call Sheet location summaries use the richer name/address data where present.
-19. ✅ **Phase 10 — Call Sheet Foundation** — Completed and deployed 2026-05-26. Branch `phase-10-call-sheet-planning`, merged to `main` 2026-05-26.
-    - Share dropdown now includes "📄 Call Sheet".
-    - Call Sheet opens as a separate modal/document from the current schedule. The schedule editor header and grid are unchanged — no call-sheet-only fields were added to the schedule.
-    - Call Sheet pulls existing schedule data: schedule name, project/production name, phase, Day X of Y, date, town/location, producer, director, camera, weather (condition + temp range where available), and a simplified schedule timeline (time + action + location per non-blank row).
-    - General call is derived automatically from the first non-sun row. Staggered/group call times are deferred to a future structured call-sheet extension.
-    - Call-sheet-specific fields are stored under `meta.callsheet: CallSheetData` (additive optional field on `ScheduleMeta`; old schedules with no `callsheet` field work unchanged): `basecamp`, `parking`, `hospital`, `emergency`, `mealNotes`, `safetyNotes`, `specialInstructions`, `notes`.
-    - Blank fields are hidden in both the digital call sheet display and all print/PDF output.
-    - Basecamp, Crew Parking, and Nearest Hospital use `LocationField`: Google Places autocomplete when editing (same infrastructure as the main schedule editor); `📍` map-pin link (Google Maps directions) in display mode; map pin hidden in print.
-    - Contacts can be included with a toggle but default OFF each time the modal opens.
-    - Call Sheet print is fully isolated: `callsheet-print-only` portal on `document.body` + `body.callsheet-printing` class; includes Roseland branding/logo, branded header bar, General Call box, Key Information (before Schedule), Contacts (toggle-gated), and schedule summary. Normal schedule Print/PDF, Contact Sheet print, Library, snapshots, and read-only view are unaffected.
-    - Print: Key Information and Contacts avoid interior page breaks; headings avoid orphaning; time column stays on one line; long location text wraps cleanly; no blank trailing page.
-    - **Design principle:** The schedule stays clean. The Call Sheet is a separate document that shares data with the schedule. This is a foundation for future Production Command / multi-day call-sheet workflows.
-    - **Deferred (not Phase 10):**
-      - Shareable call-sheet URL (currently editor-only modal/print/PDF)
-      - Vendor/crew-specific call sheet views
-      - Staggered/group call times
-      - Distribution lists
-      - Production-level office/coordinator fields
-      - Advance schedule / next-day preview
-      - Role-specific call sheets
-      - Server-side PDF generation
-20. **Multi-day projects** — master schedule containing multiple daily schedules, duplicate day, move rows between days
-21. **Production management** — booking/permit/release/vendor/location status tracking, crew/gear/travel notes — film-specific not generic PM
-22. **CMS branding architecture** — per-schedule templates, multi-brand support (Roseland/Saluki/neutral SaaS shell) — needs dedicated planning session before any code
+## 🔴 Now — Phase 0: architecture, security, and migration specification
 
-## 🟢 Longer-Term (SaaS layer)
-*Architectural shift — plan carefully before starting*
+**Status:** next approved work. Planning and documentation first; no production data mutation.
 
-23. **User accounts** — replace shared PIN with real auth (Clerk recommended); migrate storage from Netlify Blobs to a database with true atomic writes (PlanetScale or Supabase) — Netlify Blobs has ~15 second eventual consistency which is acceptable for single-PIN use but insufficient for real multi-user collaboration
-24. **Roles** — Admin / Producer / Editor / Read-only / Client / Vendor
-25. **Multi-org** — each company gets own data, branding, CMS config; aligns with CMS branding architecture above
-26. **Billing** — Stripe, seat-based or per-org subscription
-27. **Collaboration** — presence indicators, conflict prevention, eventually live shared editing
-28. **PWA/App Store** — installable PWA first, App Store packaging later
+- [ ] Inventory every Netlify Blob store, function/API endpoint, data shape, environment variable, public URL, cache, and local/session storage key.
+- [ ] Define the relational schema and stable-ID strategy.
+- [ ] Define organizations, memberships, roles, permissions, and public-link boundaries.
+- [ ] Classify stored data and document where personal or sensitive production data flows.
+- [ ] Produce a threat model covering tenant isolation, public links, file access, paid APIs, and administrative actions.
+- [ ] Define Row Level Security policies for every exposed table and storage bucket.
+- [ ] Define server-side validation and database-constraint rules.
+- [ ] Define secrets, logging, error-redaction, rate-limit, and security-header standards.
+- [ ] Define retention, export, deletion, backup, restore, incident-response, privacy-policy, and terms requirements.
+- [ ] Define migration dry run, reconciliation, cutover, rollback, and legacy URL compatibility.
+- [ ] Turn the current feature set into a regression suite and explicit “do not break” list.
+- [ ] Mark the unmerged `phase-11-production-command-planning` branch as reference/prototype work, not the future data foundation.
 
-## 🔵 Vision (longer horizon)
-*Where this becomes a platform*
+**Exit gate:** schema, authorization model, threat model, migration procedure, rollback procedure, and regression matrix reviewed and approved before implementation.
 
-29. **Budgeting integration** — connect schedule (shoot days, crew, gear, locations) to budget rollups
-30. **Saluki Media version** — AED currency, VAT, Arabic market branding
-31. **Master Schedule** — birds-eye view across all active productions
-32. **AI production tools** — shot tracking, prompt/reference tracking, generated shot status, rights/licensing
+## 🟠 Phase 1: secure Supabase foundation
+
+- [ ] Create isolated development, preview, and production Supabase environments.
+- [ ] Commit database migrations to GitHub.
+- [ ] Create the initial tenant-aware schema: organizations, memberships, productions, phases, production days, schedules, rows, sub-locations, versions, contacts, locations, call sheets, share links, and audit events.
+- [ ] Add UUID primary keys, foreign keys, indexes, timestamps, actor attribution, optimistic version fields, and recovery-friendly deletion behavior.
+- [ ] Enable RLS in the same migration that creates every exposed table.
+- [ ] Implement default-deny, least-privilege policies for SELECT/INSERT/UPDATE/DELETE.
+- [ ] Align Storage policies with organization/production membership.
+- [ ] Keep secret/service-role credentials server-only; use only the publishable key in browser code.
+- [ ] Add automated cross-tenant and role-boundary tests.
+- [ ] Add security-advisor, dependency, and secret-scan checks.
+
+**Exit gate:** User A cannot access Organization B through UI, direct API calls, guessed UUIDs, realtime channels, or storage URLs.
+
+## 🟠 Phase 2: compatibility data layer and migration tooling
+
+- [ ] Introduce repository/service interfaces so UI components no longer depend directly on Netlify functions.
+- [ ] Provide a legacy Netlify Blob adapter and a Supabase adapter.
+- [ ] Build a repeatable, non-destructive Blob export.
+- [ ] Build an idempotent Blob-to-Postgres importer with dry-run mode.
+- [ ] Map legacy schedule names to stable schedule IDs while preserving display names and legacy routes.
+- [ ] Detect duplicates, malformed records, missing references, and orphaned snapshots.
+- [ ] Produce record-count, relationship, and checksum reconciliation reports.
+- [ ] Verify importer reruns do not duplicate or corrupt data.
+
+**Exit gate:** all current data can be imported repeatedly into a disposable environment and reconciled without changing production.
+
+## 🟠 Phase 3: accounts, organizations, and permissions
+
+- [ ] Replace the shared PIN with Supabase Auth in the migration environment.
+- [ ] Create the initial Roseland organization and membership flow.
+- [ ] Implement Owner/Admin, Producer/Editor, and Viewer permissions; defer specialized external roles until their data views are designed.
+- [ ] Add invitations, membership removal, session expiration, account recovery, and organization switching where required.
+- [ ] Add account and organization export/deletion workflows.
+- [ ] Add audit events for login/security changes, invitations, role changes, destructive actions, sharing, and imports.
+- [ ] Test wrong-password, duplicate-signup, nonexistent reset, expired/reused link, removed-member, invitation replay, and network-failure paths.
+- [ ] Prevent account enumeration and rate-limit authentication abuse.
+- [ ] Support MFA for owners/admins before external organizations are onboarded.
+
+**Exit gate:** the full authentication failure-path suite and permission matrix pass.
+
+## 🟠 Phase 4: parallel deployment and pilot migration
+
+- [ ] Deploy the Supabase-backed app to a protected Vercel preview environment.
+- [ ] Keep the current Netlify production app unchanged.
+- [ ] Use synthetic data by default in previews; import one approved test production for migration QA.
+- [ ] Configure and test CSP, HSTS, content-type, referrer, permissions, framing, cookie, and authenticated-cache policies.
+- [ ] Add structured redacted logging, generic client errors, request IDs, monitoring, provider budget alerts, and risk-based rate limits.
+- [ ] Protect public/anonymous abuse surfaces with Cloudflare Turnstile where warranted and validate tokens server-side.
+- [ ] Run the complete regression matrix on desktop, mobile, iPad, print, and read-only surfaces.
+- [ ] Run a backup restoration drill and rehearse rollback.
+
+**Exit gate:** a migrated production survives editing, saving, conflict checks, snapshots, restore, print/PDF, call/contact sheets, sharing, mobile use, and a complete backup/restore exercise.
+
+## 🟠 Phase 5: controlled schedule-system cutover
+
+1. Take and verify a final Blob backup.
+2. Run the final importer dry run and reconciliation.
+3. Announce a short maintenance/read-only window.
+4. Import all production records.
+5. Validate counts, relationships, snapshots, links, and representative schedules.
+6. Switch application traffic only after the cutover gate passes.
+7. Preserve resolvers for legacy schedule and view URLs.
+8. Monitor authentication, authorization, writes, paid APIs, and errors.
+9. Keep Netlify available as a read-only rollback system through an agreed stability window.
+10. Retire Blob writes only after explicit approval; do not automatically delete legacy data.
+
+**Cutover gate:** RLS, authorization, auth failure, secret scan, OWASP/ASVS, migration reconciliation, backup restore, and rollback rehearsal all pass. Privacy/terms and incident ownership must be ready before unrelated external users are invited.
+
+## 🟡 Phase 6: multi-user reliability
+
+- [ ] Optimistic concurrency and stale-edit warnings using database versions.
+- [ ] Save attribution and activity/audit history.
+- [ ] Safe conflict resolution and recovery workflows.
+- [ ] Version comparison and durable snapshots.
+- [ ] Presence indicators after authorization boundaries are proven.
+- [ ] Expiring, revocable, scoped share links.
+- [ ] Separate public/client/vendor projections; never expose full internal records by default.
+- [ ] Realtime collaborative editing remains deferred until safe simultaneous editing is proven.
+
+## 🟡 Phase 7: Production Command redesign
+
+**The unmerged Blob-based v1 is a prototype/reference, not the merge target.** Reuse sound UI/workflow ideas only after the relational foundation exists.
+
+Production Command v1 should be a useful operating surface:
+
+- [ ] Production landing page and production switcher.
+- [ ] Phase/day master schedule with prep, shoot, travel, hold, wrap, edit, delivery, and custom day types.
+- [ ] Day status, schedule status, call-sheet status, location summary, date, call time, wrap time, and responsible owner.
+- [ ] Create, duplicate, move, reorder, and open production days.
+- [ ] Open the linked Daily Schedule and Call Sheet.
+- [ ] Shared production information with controlled day-level overrides.
+- [ ] Attention dashboard: upcoming days, unconfirmed locations, missing contacts, missing schedules, call sheets not ready, open tasks, and recent changes.
+- [ ] List/timeline first; calendar/Gantt later.
+
+## 🟡 Phase 8: structured production databases
+
+- [ ] People, crew, departments, clients, talent/cast, contributors, and vendors.
+- [ ] Locations, hotels, parking, basecamps, hospitals, airports, permits, access/load-in notes, and contacts.
+- [ ] Department, group, and individual call times.
+- [ ] Tasks, milestones, deliverables, documents, permits, releases, vehicles, and gear in deliberate sub-phases.
+- [ ] Assign reusable records to productions, days, schedules, rows, itinerary stops, and call sheets.
+- [ ] Production-level defaults feed outputs; day-specific data overrides them.
+
+## 🟡 Phase 9: generated operational documents
+
+- [ ] Generate call sheets from structured production/day data rather than hand-entering every field.
+- [ ] Roseland visual style plus production-grade information density: compact dashboard, boxed sections, tight schedule table, and structured department/contact blocks.
+- [ ] Staggered/group/department/talent/vendor call times.
+- [ ] Contact sheets, client/vendor views, advance schedules, and daily production reports.
+- [ ] Distribution, delivery/open/confirmation tracking, revisions, and version history.
+- [ ] Server-generated PDFs only when the data and document model are stable.
+
+## 🟡 Phase 10: project itinerary and dynamic map
+
+- [ ] Roadtrippers-style production-level stop list and map.
+- [ ] Multi-day routing across shoot locations, hotels, airports, meals, parking, fuel, basecamps, meetings, and travel days.
+- [ ] Arrival/departure/duration, route order, mileage, drive time, status, and notes.
+- [ ] Filters by day, phase, type, and status.
+- [ ] Unrealistic travel-gap and missing-coordinate warnings.
+- [ ] Optional itinerary-stop → schedule-row and schedule-row → itinerary-stop bridges.
+- [ ] Keep the existing daily map lightweight; the strategic itinerary belongs to the production.
+
+## 🟢 Later SaaS and platform phases
+
+- [ ] Billing and subscription plans.
+- [ ] Additional organizations and organization-specific branding/templates.
+- [ ] Specialized Client, Vendor, Crew, and Read-only roles.
+- [ ] Production templates and onboarding/import assistance.
+- [ ] Budget and expense integration.
+- [ ] Documents and production reports expansion.
+- [ ] Realtime shared editing after conflict prevention is proven.
+- [ ] PWA/App Store packaging improvements.
+- [ ] AI-production workflows: prompt packs, shotboards, assets, consistency references, model/version notes, render tasks, edit milestones, and rights/licensing.
+- [ ] Saluki Media/international branding, currency, tax, and localization.
+
+## Commercial-release security gate
+
+Before onboarding unrelated organizations or charging customers:
+
+- [ ] Independent security review.
+- [ ] Legal review of privacy, terms, subprocessors, and processing practices.
+- [ ] OWASP ASVS-based verification completed and recorded.
+- [ ] Cross-tenant access and authorization review.
+- [ ] Account, organization, and data export/deletion validation.
+- [ ] Secret, dependency, credential-leak, API-response, and log-redaction scans.
+- [ ] File-upload and object-storage review.
+- [ ] Rate-limit, abuse, and cost-control load tests.
+- [ ] Backup recovery and incident-response exercises.
+- [ ] Monitoring, alerting, and named response ownership verified.
+
+## Working baseline that must remain protected
+
+The deployed app already provides a mature daily schedule workflow:
+
+- Next.js/React/TypeScript schedule editor with time cascade, fixed anchors, DnD, undo/redo, weather, sunrise/sunset, and zero-duration support.
+- Library hierarchy, Move To, rename, archive/restore/delete, templates, backup, and snapshots.
+- Mobile/iPad editor and print/PDF layouts.
+- Google Places-assisted locations, sub-locations, short names, collapsible addresses, and map links.
+- Row contacts, Contact Sheet, and CSV export.
+- Client/team read-only links and polished public print view.
+- Call Sheet foundation with key information, contacts, schedule summary, and isolated print/PDF output.
+- Save conflict detection and Netlify eventual-consistency guards.
+
+Completed implementation history remains documented in Git history and [`ARCHITECTURE.md`](./ARCHITECTURE.md). The roadmap no longer treats additional Blob-based polish as the default next step unless it is a critical production fix.
+
+## Deferred and superseded work
+
+- `phase-11-production-command-planning` contains a functional Blob-based Production Command prototype plus planning. Do not merge it into `main`; inspect and salvage selectively after Phase 6.
+- Overtime notifications, Library search/sort/recent, public contact cards, snapshot compare/rename, contact-per-sub-location, and standalone PWA testing are deferred behind the platform migration unless required for current production use.
+- Clerk was previously preferred for future auth. The approved direction now uses Supabase Auth to keep identity, RLS, storage, and realtime authorization within one platform.
+- The old plan to build the Mother App on additional Netlify Blob stores before migrating is superseded.
 
 ---
 
-## Session Order
-- **Also pending:** Item 4 (PWA install test on real iPad — manual test only)
-- **Phase 1 / 1A complete:** Library Refresh reliability, Save As grouping fix, Archive/Restore persistence, Same-section DnD hardening, Permanent Delete for archived schedules. All passed testing 2026-05-24. Branch: `library-refresh-archive-fix`.
-- **Phase 2 complete:** Safe schedule title rename. Passed testing 2026-05-24. Branch: `phase-2-safe-schedule-rename`, merged to `main` 2026-05-24.
-- **Phase 3 complete:** Move To workflow (cross-production/cross-phase schedule movement). Passed testing 2026-05-24. Branch: `phase-3-move-to-workflow`, merged to `main` 2026-05-24.
-- **Phase 4 complete:** Location Details / Sub-locations (stacked inline, no modal). Passed testing 2026-05-25. Branch: `phase-4-location-details`, merged to `main` 2026-05-25.
-- **Phase 4 post-release fixes (merged to `main` 2026-05-25):** DnD regression (`useLayoutEffect`, `type="button"`, CSS transition removal in `LocationCell.tsx`); `"00:00"` duration/Time Out regression (`r.dur === ''` guards throughout; `computeTimeOut` now returns Time In for zero-duration rows). Branch: `fix/dnd-regression`.
-- **Location/address compression complete:** Passed build and user testing 2026-07-15. Branch: `test/location-address-compression`, merged to `main`. Adds short display names plus collapsible full addresses for main locations and sub-locations; old `loc`-only schedules remain compatible.
-- **Phase 4B (deferred):** Contact button evaluation — contact-per-sub-location integration or broader row/contact redesign. Not yet started; revisit after item 17 (public view contacts).
-- **Phase 5 complete:** Contact Sheet / Contact Extract. Passed testing 2026-05-25. Branch: `phase-5-contact-sheet`, merged to `main` 2026-05-25.
-- **Phase 6 complete:** Library Declutter / Mobile Polish. Passed testing 2026-05-25. Branch: `phase-6-library-declutter`, merged to `main` 2026-05-25.
-- **Phase 7 complete:** Read-only Link Experience / Client View Polish. Passed testing 2026-05-25. Branch: `phase-7-readonly-view-polish`, merged to `main` 2026-05-25.
-- **Phase 8 complete:** Snapshot UX Polish. Passed testing 2026-05-25. Branch: `phase-8-snapshot-ux-polish`, merged to `main` 2026-05-25.
-- **Phase 9 complete:** Schedule Header Identity Fields. Passed testing 2026-05-26. Branch: `phase-9-schedule-header-identity`, merged to `main` 2026-05-26.
-- **Phase 10 complete:** Call Sheet Foundation. Completed and deployed 2026-05-26. Branch: `phase-10-call-sheet-planning`, merged to `main` 2026-05-26. Includes full Call Sheet modal, print portal, Google Places location assistance for location-style fields, map-pin links, print layout polish, and blank-page fix.
-- **Next recommended phase:** Planning conversation for Item 20 (Multi-day / Master Schedule) and the future structured Call Sheet extension (staggered call times, distribution, shareable URL). Item 11 (push notifications for overtime) remains a self-contained short-term polish item. Item 16 remaining scope (side-by-side compare, full autosave redesign, snapshot rename) deferred. Item 17 remaining work (public contact cards, contact visibility toggle, separate vendor/crew link type) deferred — requires explicit privacy design before implementation.
-- **Near-term polish:** Item 11 (overtime push notifications).
-- **Item 22 (CMS architecture):** Planning conversation before any code.
-
----
-*Last updated: 2026-07-15 — Location/address compression completed, merged to `main`, build passed, and user-tested successfully. Next: continue pre-architecture polish before larger user/account, Production Command, and SaaS foundation work.*
+*Last updated: 2026-07-19 — migration-first, security-gated multi-user roadmap approved and documented. Next: Phase 0 architecture, security, and migration specification.*
