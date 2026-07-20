@@ -54,7 +54,9 @@ Phase 0 documents: [`CURRENT_DATA_INVENTORY.md`](./CURRENT_DATA_INVENTORY.md), [
 
 ## 🟠 Phase 1: secure Supabase foundation
 
-**Status:** in progress. The first tenant-foundation migration is merged to `main` and applied only to `roseland-schedule-dev`. Organizations, organization memberships, productions, and production memberships have default-deny RLS; 22 local/remote authorization tests and GitHub CI pass. The live app still uses Netlify Auth/Blobs.
+**Status:** in progress. The tenant-foundation migration is merged to `main`; the draft auth/bootstrap and server-workflow foundations remain on PR #5. All are applied only to `roseland-schedule-dev`. Organizations, production memberships, profiles, invitations, audit events, restricted platform operators, and service-only mutations use default-deny RLS and explicit privileges; 93 local/remote database tests and 11 server-contract tests pass. The server routes remain disabled and the live app still uses Netlify Auth/Blobs.
+
+**Production stability freeze:** [`PRODUCTION_STABILITY_POLICY.md`](./PRODUCTION_STABILITY_POLICY.md) is active during the heavy-usage period. Migration/auth/theming work remains on feature branches and `roseland-schedule-dev`; it is not merged into `main` until the user explicitly ends the freeze.
 
 - [ ] Create isolated development, preview, and production Supabase environments.
 - [x] Commit database migrations to GitHub.
@@ -64,6 +66,8 @@ Phase 0 documents: [`CURRENT_DATA_INVENTORY.md`](./CURRENT_DATA_INVENTORY.md), [
 - [ ] Implement default-deny, least-privilege policies for SELECT/INSERT/UPDATE/DELETE.
 - [ ] Align Storage policies with organization/production membership.
 - [ ] Keep secret/service-role credentials server-only; use only the publishable key in browser code.
+- [ ] Implement the initial Roseland Owner plus restricted, audited platform-operator bootstrap without browser-level RLS bypass.
+- [x] Implement disabled-by-default, server-controlled organization provisioning and invitation creation/revocation with MFA, recent-auth, idempotency, rate, role, tenant, and audit checks.
 - [x] Add automated cross-tenant and role-boundary tests; extend the matrix whenever an exposed table, role, storage policy, or realtime channel is added.
 - [ ] Add security-advisor, dependency, and secret-scan checks.
 
@@ -199,8 +203,21 @@ Production Command v1 should be a useful operating surface:
 
 ## 🟢 Later SaaS and platform phases
 
-- [ ] Billing and subscription plans.
-- [ ] Additional-organization onboarding, preset management, and reusable organization setup templates.
+### Commercial layer
+
+- [ ] Build repeatable customer-organization signup and provisioning, separate from the one-time Roseland bootstrap.
+- [ ] Define plans and the full subscription lifecycle: trials, activation, plan changes, cancellation, expiration, and reactivation.
+- [ ] Integrate a billing provider through server-only APIs plus signed, idempotent, replay-safe webhooks and reconciliation jobs.
+- [ ] Model feature entitlements and enforce plan limits on the server and in the database, not only in the interface.
+- [ ] Support the selected combination of seat, production, storage, and metered-usage limits without coupling authorization to billing-provider records.
+- [ ] Add billing-owner permissions separately from production and organization-content permissions.
+- [ ] Define failed-payment, grace-period, suspension/read-only, recovery, and account-reactivation rules that do not destroy customer data.
+- [ ] Support applicable sales tax/VAT, invoices, credits, refunds, and a secure customer billing portal for international customers.
+- [ ] Complete account and organization export and deletion workflows, including subscription termination, retention, audit, and legal-hold handling.
+- [ ] Add additional-organization onboarding, preset management, and reusable organization setup templates.
+
+### Product expansion
+
 - [ ] Specialized Client, Vendor, Crew, and Read-only roles.
 - [ ] Production templates and onboarding/import assistance.
 - [ ] Budget and expense integration.
@@ -249,4 +266,4 @@ Completed implementation history remains documented in Git history and [`ARCHITE
 
 ---
 
-*Last updated: 2026-07-19 — Phase 1 tenant foundation merged and protected by CI; neutral platform and organization theming moved forward to immediately follow accounts/organization context. Next session: continue Phase 1 authentication and secure Roseland bootstrap.*
+*Last updated: 2026-07-19 — Phase 1 tenant foundation merged and protected by CI; neutral platform theming and the future commercial-layer requirements are recorded. Next session: continue Phase 1 authentication and secure Roseland bootstrap.*

@@ -2,6 +2,18 @@
 
 Status: Phase 0 design. Default deny applies to database tables, storage objects, server endpoints, realtime channels, and share-link projections.
 
+## Authority planes
+
+Administrative control is deliberately separated:
+
+- Infrastructure owner: controls GitHub, hosting, Supabase projects, migrations, environment configuration, and incident recovery. This is not an application login or tenant role.
+- Organization owner: the highest ordinary application role. The initial app account owns the Roseland Pictures organization and administers all of its productions.
+- Platform operator: a restricted internal designation for platform bootstrap, migration, and exceptional support. Operator records live outside exposed application schemas and do not grant a normal browser session blanket tenant access.
+
+Platform operations run through dedicated server-only actions, verify an active operator record, require MFA/recent authentication where interactive, require a reason for sensitive access, and create an audit event. Normal operator activity still uses ordinary organization/production RLS.
+
+Supabase secret/service-role credentials are infrastructure credentials, not “superadmin accounts.” They remain server-only, use separate clients from user sessions, and never enter browser code, URLs, logs, screenshots, or chat.
+
 ## Roles
 
 - Owner/Admin: organization settings, members, productions, all content, export/deletion initiation, and security-sensitive actions.
@@ -12,6 +24,20 @@ Status: Phase 0 design. Default deny applies to database tables, storage objects
 Every authenticated user belongs to an organization. Non-admin users also require active membership in each production they can access. Organization owners/admins administer all productions; editors and viewers see only explicitly assigned productions. Removing either membership promptly removes database, API, realtime, and storage access.
 
 Specialized client, vendor, crew, and talent roles are deferred until their projections are designed.
+
+## Initial Roseland bootstrap
+
+The first bootstrap is a one-time server-only transaction:
+
+1. Create or invite the initial Supabase Auth user through an authorized administrative path.
+2. Create the Roseland Pictures organization.
+3. Add that user as active organization Owner.
+4. Add the restricted platform-operator designation.
+5. Record the bootstrap audit event.
+6. Verify the transaction cannot be replayed after any organization exists.
+7. Require MFA before the operator performs later platform-sensitive actions.
+
+No public signup or ordinary authenticated user can claim the first organization. Bootstrap code remains incapable of creating a second “first” organization.
 
 ## Permission matrix
 
@@ -69,6 +95,8 @@ Legacy view URLs map to stable schedule IDs for at least 12 months after cutover
 ## Server checks
 
 RLS is the final database boundary, not the only check. Server actions validate authentication, permission, resource relationship, payload schema, concurrency version, abuse limits, and output projection. Administrative and destructive actions require recent authentication where appropriate and produce audit events.
+
+The first implemented server boundary is documented in [`PLATFORM_SERVER_WORKFLOWS.md`](./PLATFORM_SERVER_WORKFLOWS.md). Its organization provisioning and invitation mutation functions are service-role-only, recheck the actor in the database, require MFA/recent-auth evidence, and are disabled at the application layer unless an explicit environment flag is enabled.
 
 ## Required automated tests
 
