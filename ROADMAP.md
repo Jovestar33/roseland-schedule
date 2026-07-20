@@ -202,8 +202,21 @@ Production Command v1 should be a useful operating surface:
 
 ## 🟢 Later SaaS and platform phases
 
-- [ ] Billing and subscription plans.
-- [ ] Additional-organization onboarding, preset management, and reusable organization setup templates.
+### Commercial layer
+
+- [ ] Build repeatable customer-organization signup and provisioning, separate from the one-time Roseland bootstrap.
+- [ ] Define plans and the full subscription lifecycle: trials, activation, plan changes, cancellation, expiration, and reactivation.
+- [ ] Integrate a billing provider through server-only APIs plus signed, idempotent, replay-safe webhooks and reconciliation jobs.
+- [ ] Model feature entitlements and enforce plan limits on the server and in the database, not only in the interface.
+- [ ] Support the selected combination of seat, production, storage, and metered-usage limits without coupling authorization to billing-provider records.
+- [ ] Add billing-owner permissions separately from production and organization-content permissions.
+- [ ] Define failed-payment, grace-period, suspension/read-only, recovery, and account-reactivation rules that do not destroy customer data.
+- [ ] Support applicable sales tax/VAT, invoices, credits, refunds, and a secure customer billing portal for international customers.
+- [ ] Complete account and organization export and deletion workflows, including subscription termination, retention, audit, and legal-hold handling.
+- [ ] Add additional-organization onboarding, preset management, and reusable organization setup templates.
+
+### Product expansion
+
 - [ ] Specialized Client, Vendor, Crew, and Read-only roles.
 - [ ] Production templates and onboarding/import assistance.
 - [ ] Budget and expense integration.
@@ -252,4 +265,4 @@ Completed implementation history remains documented in Git history and [`ARCHITE
 
 ---
 
-*Last updated: 2026-07-19 — Phase 1 tenant foundation merged and protected by CI; neutral platform and organization theming moved forward to immediately follow accounts/organization context. Next session: continue Phase 1 authentication and secure Roseland bootstrap.*
+*Last updated: 2026-07-19 — Phase 1 tenant foundation merged and protected by CI; neutral platform theming and the future commercial-layer requirements are recorded. Next session: continue Phase 1 authentication and secure Roseland bootstrap.*
