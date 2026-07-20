@@ -54,7 +54,7 @@ Phase 0 documents: [`CURRENT_DATA_INVENTORY.md`](./CURRENT_DATA_INVENTORY.md), [
 
 ## 🟠 Phase 1: secure Supabase foundation
 
-**Status:** in progress. The first tenant-foundation migration is merged to `main` and applied only to `roseland-schedule-dev`. Organizations, organization memberships, productions, and production memberships have default-deny RLS; 22 local/remote authorization tests and GitHub CI pass. The live app still uses Netlify Auth/Blobs.
+**Status:** in progress. The tenant-foundation migration is merged to `main`; the draft auth/bootstrap foundation remains on PR #5. Both are applied only to `roseland-schedule-dev`. Organizations, production memberships, profiles, invitations, audit events, and restricted platform operators use default-deny RLS and explicit privileges; 57 local/remote authorization tests pass. The live app still uses Netlify Auth/Blobs.
 
 **Production stability freeze:** [`PRODUCTION_STABILITY_POLICY.md`](./PRODUCTION_STABILITY_POLICY.md) is active during the heavy-usage period. Migration/auth/theming work remains on feature branches and `roseland-schedule-dev`; it is not merged into `main` until the user explicitly ends the freeze.
 

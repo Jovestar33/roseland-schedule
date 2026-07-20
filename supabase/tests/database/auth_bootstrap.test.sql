@@ -3,7 +3,7 @@ begin;
 set local role postgres;
 create extension if not exists pgtap with schema extensions;
 set local search_path = public, auth, extensions, pgtap;
-select extensions.plan(31);
+select extensions.plan(35);
 
 select extensions.ok((select relrowsecurity from pg_class where oid = 'public.profiles'::regclass), 'profiles has RLS enabled');
 select extensions.ok((select relrowsecurity from pg_class where oid = 'private.platform_operators'::regclass), 'platform_operators has RLS enabled');
@@ -30,6 +30,20 @@ select extensions.ok(
 select extensions.ok(
   has_function_privilege('authenticated', 'public.accept_organization_invitation(uuid)', 'EXECUTE'),
   'authenticated can execute invitation acceptance'
+);
+select extensions.is(
+  has_function_privilege(
+    'anon',
+    'public.bootstrap_first_organization(uuid,text,text,text,text,text,text)',
+    'EXECUTE'
+  ),
+  false,
+  'anonymous users cannot execute platform bootstrap'
+);
+select extensions.is(
+  has_function_privilege('anon', 'public.accept_organization_invitation(uuid)', 'EXECUTE'),
+  false,
+  'anonymous users cannot execute invitation acceptance'
 );
 
 insert into auth.users (id, email, role, aud, encrypted_password, email_confirmed_at, raw_app_meta_data, raw_user_meta_data)
@@ -241,6 +255,17 @@ select extensions.is(
   has_table_privilege('authenticated', 'public.audit_events', 'INSERT'),
   false,
   'authenticated cannot insert audit events directly'
+);
+select extensions.is(
+  has_table_privilege('authenticated', 'public.profiles', 'INSERT'),
+  false,
+  'authenticated cannot insert profiles directly'
+);
+select extensions.ok(
+  not has_table_privilege('anon', 'public.profiles', 'SELECT')
+    and not has_table_privilege('anon', 'public.organization_invitations', 'SELECT')
+    and not has_table_privilege('anon', 'public.audit_events', 'SELECT'),
+  'anonymous users cannot read auth foundation tables'
 );
 
 set local role postgres;
