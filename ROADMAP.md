@@ -56,6 +56,8 @@ Phase 0 documents: [`CURRENT_DATA_INVENTORY.md`](./CURRENT_DATA_INVENTORY.md), [
 
 **Status:** in progress. The first tenant-foundation migration is merged to `main` and applied only to `roseland-schedule-dev`. Organizations, organization memberships, productions, and production memberships have default-deny RLS; 22 local/remote authorization tests and GitHub CI pass. The live app still uses Netlify Auth/Blobs.
 
+**Production stability freeze:** [`PRODUCTION_STABILITY_POLICY.md`](./PRODUCTION_STABILITY_POLICY.md) is active during the heavy-usage period. Migration/auth/theming work remains on feature branches and `roseland-schedule-dev`; it is not merged into `main` until the user explicitly ends the freeze.
+
 - [ ] Create isolated development, preview, and production Supabase environments.
 - [x] Commit database migrations to GitHub.
 - [ ] Create the initial tenant-aware schema: organizations, memberships, productions, phases, production days, schedules, rows, sub-locations, versions, contacts, locations, call sheets, share links, and audit events.
@@ -64,6 +66,7 @@ Phase 0 documents: [`CURRENT_DATA_INVENTORY.md`](./CURRENT_DATA_INVENTORY.md), [
 - [ ] Implement default-deny, least-privilege policies for SELECT/INSERT/UPDATE/DELETE.
 - [ ] Align Storage policies with organization/production membership.
 - [ ] Keep secret/service-role credentials server-only; use only the publishable key in browser code.
+- [ ] Implement the initial Roseland Owner plus restricted, audited platform-operator bootstrap without browser-level RLS bypass.
 - [x] Add automated cross-tenant and role-boundary tests; extend the matrix whenever an exposed table, role, storage policy, or realtime channel is added.
 - [ ] Add security-advisor, dependency, and secret-scan checks.
 
