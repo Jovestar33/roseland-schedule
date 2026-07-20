@@ -42,6 +42,9 @@ jobs:
       - name: Lint application
         run: npm run lint
 
+      - name: Test platform request contracts
+        run: npm run test:platform
+
       - name: Build application
         run: npm run build
 

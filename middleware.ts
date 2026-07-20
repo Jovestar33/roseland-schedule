@@ -6,7 +6,11 @@ import type { NextRequest } from 'next/server';
 const AUTH_COOKIE = 'rp_auth_flag';
 
 function isPublicPath(pathname: string): boolean {
-  return pathname === '/login' || pathname.startsWith('/view');
+  return pathname === '/login'
+    || pathname.startsWith('/view')
+    // Platform APIs authenticate their own Supabase bearer token. They are
+    // disabled unless the explicit server-only workflow flag is enabled.
+    || pathname.startsWith('/api/platform/');
 }
 
 function redirect(request: NextRequest, pathname: string): NextResponse {

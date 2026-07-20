@@ -54,7 +54,7 @@ Phase 0 documents: [`CURRENT_DATA_INVENTORY.md`](./CURRENT_DATA_INVENTORY.md), [
 
 ## 🟠 Phase 1: secure Supabase foundation
 
-**Status:** in progress. The tenant-foundation migration is merged to `main`; the draft auth/bootstrap foundation remains on PR #5. Both are applied only to `roseland-schedule-dev`. Organizations, production memberships, profiles, invitations, audit events, and restricted platform operators use default-deny RLS and explicit privileges; 57 local/remote authorization tests pass. The live app still uses Netlify Auth/Blobs.
+**Status:** in progress. The tenant-foundation migration is merged to `main`; the draft auth/bootstrap and server-workflow foundations remain on PR #5. All are applied only to `roseland-schedule-dev`. Organizations, production memberships, profiles, invitations, audit events, restricted platform operators, and service-only mutations use default-deny RLS and explicit privileges; 93 local/remote database tests and 11 server-contract tests pass. The server routes remain disabled and the live app still uses Netlify Auth/Blobs.
 
 **Production stability freeze:** [`PRODUCTION_STABILITY_POLICY.md`](./PRODUCTION_STABILITY_POLICY.md) is active during the heavy-usage period. Migration/auth/theming work remains on feature branches and `roseland-schedule-dev`; it is not merged into `main` until the user explicitly ends the freeze.
 
@@ -67,6 +67,7 @@ Phase 0 documents: [`CURRENT_DATA_INVENTORY.md`](./CURRENT_DATA_INVENTORY.md), [
 - [ ] Align Storage policies with organization/production membership.
 - [ ] Keep secret/service-role credentials server-only; use only the publishable key in browser code.
 - [ ] Implement the initial Roseland Owner plus restricted, audited platform-operator bootstrap without browser-level RLS bypass.
+- [x] Implement disabled-by-default, server-controlled organization provisioning and invitation creation/revocation with MFA, recent-auth, idempotency, rate, role, tenant, and audit checks.
 - [x] Add automated cross-tenant and role-boundary tests; extend the matrix whenever an exposed table, role, storage policy, or realtime channel is added.
 - [ ] Add security-advisor, dependency, and secret-scan checks.
 

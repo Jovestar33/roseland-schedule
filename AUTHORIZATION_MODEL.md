@@ -96,6 +96,8 @@ Legacy view URLs map to stable schedule IDs for at least 12 months after cutover
 
 RLS is the final database boundary, not the only check. Server actions validate authentication, permission, resource relationship, payload schema, concurrency version, abuse limits, and output projection. Administrative and destructive actions require recent authentication where appropriate and produce audit events.
 
+The first implemented server boundary is documented in [`PLATFORM_SERVER_WORKFLOWS.md`](./PLATFORM_SERVER_WORKFLOWS.md). Its organization provisioning and invitation mutation functions are service-role-only, recheck the actor in the database, require MFA/recent-auth evidence, and are disabled at the application layer unless an explicit environment flag is enabled.
+
 ## Required automated tests
 
 For each table and operation, test owner, editor, viewer, removed member, anonymous user, expired share link, and a user in another organization. Include guessed UUIDs, changed tenant IDs, nested-parent substitution, bulk operations, realtime subscriptions, storage paths, and service endpoints. The release gate is that cross-tenant access returns no data and causes no mutation.
