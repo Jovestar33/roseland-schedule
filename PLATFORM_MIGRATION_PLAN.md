@@ -1,6 +1,6 @@
 # Roseland Schedule — Multi-User Platform Migration Plan
 
-> **Status:** Phase 0 specification completed 2026-07-19; Phase 1 awaits implementation approval. No production migration has begun.
+> **Status:** Phase 0 specification completed 2026-07-19. Phase 1 is in progress only on draft PR #5 and `roseland-schedule-dev`; development MFA and the one-time Roseland Owner/platform-superadmin bootstrap are complete. The production stability freeze remains active, and no production migration has begun.
 >
 > **Date:** 2026-07-19
 >
