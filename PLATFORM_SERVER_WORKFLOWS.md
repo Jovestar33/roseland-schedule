@@ -1,6 +1,6 @@
 # Platform Server Workflows
 
-Status: implemented on draft PR #5 and migrated only to `roseland-schedule-dev`. The routes are disabled by default and have no user interface.
+Status: implemented on draft PR #5 and migrated only to `roseland-schedule-dev`. The organization/invitation routes are disabled by default and have no administration interface. The separate development Auth/MFA setup page is also disabled by default.
 
 ## Purpose
 
@@ -53,12 +53,18 @@ The expected project ref must match the HTTPS Supabase hostname. Only a modern `
 
 After the account reaches AAL2, the initial Roseland organization, Owner membership, and restricted platform-operator designation must still be created through the existing one-time server-only bootstrap transaction. The setup page cannot perform or claim that bootstrap.
 
+### Completed development bootstrap
+
+On 2026-07-26, the initial development Auth identity enrolled and verified one TOTP factor. The server-only bootstrap transaction then created exactly one Roseland Pictures organization with an active Owner membership, an active MFA-required platform `superadmin` designation, and one `platform.bootstrap.completed` audit event.
+
+Post-transaction verification confirmed that anonymous and authenticated roles cannot execute the bootstrap function, the service role retains the intended permission, and a replay attempt is rejected without creating duplicate records. The browser setup session was signed out and its local server stopped afterward. This state exists only in `roseland-schedule-dev`; it does not affect the live Netlify application.
+
 ## Validation evidence
 
 - 93 database authorization/workflow tests pass locally and against `roseland-schedule-dev`.
-- 11 application contract tests cover validation, international preferences, roles, idempotency keys, JWT claim binding, MFA, and stale authentication.
+- 15 application contract tests cover setup fail-closed configuration, secret-key rejection, validation, international preferences, roles, idempotency keys, JWT claim binding, MFA, and stale authentication.
 - Local and hosted project-schema lint report no warnings.
 - Application lint and production build pass.
 - A built-app request confirms the routes return `404` while the feature flag is disabled.
 
-Synthetic workflow records are rolled back after each database test. No real organization, account, membership, or invitation has been created by this implementation.
+Synthetic workflow records are rolled back after each database test. Separately, the explicitly authorized development bootstrap created the initial development account state, Roseland Pictures organization, Owner membership, restricted operator designation, and audit event described above. No customer organization, invitation, production data, or live application data was created or changed.

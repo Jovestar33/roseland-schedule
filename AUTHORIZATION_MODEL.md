@@ -39,6 +39,8 @@ The first bootstrap is a one-time server-only transaction:
 
 No public signup or ordinary authenticated user can claim the first organization. Bootstrap code remains incapable of creating a second “first” organization.
 
+Development status (2026-07-26): this transaction has run once in `roseland-schedule-dev` after TOTP verification. It created the Roseland Pictures organization, active Owner membership, active MFA-required platform `superadmin`, and bootstrap audit event. A controlled replay test was rejected and left all four record counts at one. The live Netlify application and its production data remain unchanged.
+
 ## Permission matrix
 
 | Capability | Owner/Admin | Producer/Editor | Viewer | Share recipient |
