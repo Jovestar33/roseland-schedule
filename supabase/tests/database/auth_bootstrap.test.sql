@@ -5,6 +5,20 @@ create extension if not exists pgtap with schema extensions;
 set local search_path = public, auth, extensions, pgtap;
 select extensions.plan(35);
 
+-- The linked development database may already contain the completed real
+-- bootstrap. Clear application state only inside this test transaction so the
+-- one-time path remains testable; rollback restores every pre-existing row.
+delete from private.workflow_requests;
+delete from public.audit_events;
+delete from public.organization_invitations;
+delete from public.production_memberships;
+delete from public.productions;
+delete from public.organization_memberships;
+delete from public.organizations;
+delete from private.platform_operators;
+delete from public.profiles;
+delete from auth.users;
+
 select extensions.ok((select relrowsecurity from pg_class where oid = 'public.profiles'::regclass), 'profiles has RLS enabled');
 select extensions.ok((select relrowsecurity from pg_class where oid = 'private.platform_operators'::regclass), 'platform_operators has RLS enabled');
 select extensions.ok((select relrowsecurity from pg_class where oid = 'public.organization_invitations'::regclass), 'organization_invitations has RLS enabled');

@@ -10,6 +10,12 @@ Status: Phase 0 baseline, 2026-07-19. This is a read-only inventory; no producti
 - Google Places is proxied by `app/api/places/route.ts`. The code accepts server-only `GOOGLE_PLACES_KEY` but can fall back to `NEXT_PUBLIC_GOOGLE_PLACES_KEY`.
 - Browser, Netlify Functions, Netlify Blobs, Google Places, weather services, and public-link recipients are separate trust boundaries.
 
+Phase 1 update, 2026-07-26: GitHub secret scanning confirmed two historical
+Google API-key exposures. Draft PR #5 removes the browser/hardcoded fallback and
+requires server-only `GOOGLE_PLACES_KEY`; production still reflects this
+inventory until provider-side rotation, preview verification, and an explicitly
+approved merge.
+
 ## Blob stores and records
 
 | Store | Key | Value | Writers |
@@ -98,4 +104,3 @@ No secret value was read during this inventory. Phase 1 must eliminate the publi
 - Full JSON responses can expose more fields than a recipient needs.
 - Only `X-Frame-Options` is configured globally today; the security-header baseline is incomplete.
 - Production data may remain in browser storage, generated files, logs, exports, backups, and received share links after the primary record changes.
-

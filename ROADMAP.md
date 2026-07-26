@@ -54,7 +54,7 @@ Phase 0 documents: [`CURRENT_DATA_INVENTORY.md`](./CURRENT_DATA_INVENTORY.md), [
 
 ## 🟠 Phase 1: secure Supabase foundation
 
-**Status:** in progress. The tenant-foundation migration is merged to `main`; the draft auth/bootstrap and server-workflow foundations remain on PR #5. All are applied only to `roseland-schedule-dev`. Organizations, production memberships, profiles, invitations, audit events, restricted platform operators, and service-only mutations use default-deny RLS and explicit privileges; 93 local/remote database tests and the application contract suite pass. The development Auth identity has verified TOTP MFA, and the one-time transaction created the Roseland Pictures organization, active Owner membership, restricted MFA-required platform `superadmin`, and bootstrap audit event. Replay protection is verified. The setup page and server routes remain disabled, and the live app still uses Netlify Auth/Blobs.
+**Status:** in progress. The tenant-foundation migration is merged to `main`; the draft auth/bootstrap, server-workflow, and security-automation foundations remain on PR #5. All database changes are applied only to `roseland-schedule-dev`. Organizations, production memberships, profiles, invitations, audit events, restricted platform operators, and service-only mutations use default-deny RLS and explicit privileges; 114 transaction-isolated local/linked database tests and 24 application contract/security tests pass. The local and linked security-advisor gates pass with only reviewed hosted warnings. The development Auth identity has verified TOTP MFA, and the one-time transaction created the Roseland Pictures organization, active Owner membership, restricted MFA-required platform `superadmin`, and bootstrap audit event. Replay protection is verified. GitHub secret scanning, push protection, Dependabot alerts/security updates, PR dependency review, Gitleaks, pinned CI actions, and a resilient runtime dependency audit are active. Two historical Google API keys must still be rotated provider-side before this draft can merge. The setup page and server routes remain disabled, and the live app still uses Netlify Auth/Blobs.
 
 **Production stability freeze:** [`PRODUCTION_STABILITY_POLICY.md`](./PRODUCTION_STABILITY_POLICY.md) is active during the heavy-usage period. Migration/auth/theming work remains on feature branches and `roseland-schedule-dev`; it is not merged into `main` until the user explicitly ends the freeze.
 
@@ -71,7 +71,7 @@ Phase 0 documents: [`CURRENT_DATA_INVENTORY.md`](./CURRENT_DATA_INVENTORY.md), [
 - [x] Implement and execute the initial Roseland Owner plus restricted, audited platform-operator bootstrap without browser-level RLS bypass.
 - [x] Implement disabled-by-default, server-controlled organization provisioning and invitation creation/revocation with MFA, recent-auth, idempotency, rate, role, tenant, and audit checks.
 - [x] Add automated cross-tenant and role-boundary tests; extend the matrix whenever an exposed table, role, storage policy, or realtime channel is added.
-- [ ] Add security-advisor, dependency, and secret-scan checks.
+- [x] Add security-advisor, dependency, and secret-scan checks; track reviewed findings and credential rotation in [`SECURITY_AUTOMATION.md`](./SECURITY_AUTOMATION.md).
 
 **Exit gate:** User A cannot access Organization B through UI, direct API calls, guessed UUIDs, realtime channels, or storage URLs.
 

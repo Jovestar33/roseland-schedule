@@ -8,18 +8,21 @@
     "start": "next start",
     "lint": "next lint",
     "test:platform": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types --test tests/platform/*.test.ts",
+    "security:audit": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types scripts/security/npm-audit.ts",
     "db:start": "supabase start",
     "db:stop": "supabase stop",
     "db:reset": "supabase db reset",
     "db:test": "supabase test db",
-    "db:lint": "supabase db lint --local --level warning"
+    "db:lint": "supabase db lint --local --level warning",
+    "db:advisors:security": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types scripts/security/supabase-advisor.ts --local",
+    "db:advisors:security:linked": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types scripts/security/supabase-advisor.ts --linked"
   },
   "dependencies": {
     "@hello-pangea/dnd": "^18.0.1",
     "@netlify/blobs": "8.1.0",
     "@supabase/supabase-js": "^2.110.8",
     "lucide-react": "^0.441.0",
-    "next": "^15.3.2",
+    "next": "^15.5.21",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "zustand": "^5.0.0"
@@ -30,8 +33,20 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "^15.3.2",
+    "eslint-config-next": "^15.5.21",
     "supabase": "^2.109.1",
     "typescript": "^5"
+  },
+  "overrides": {
+    "minimatch@3.1.5": {
+      "brace-expansion": "1.1.16"
+    },
+    "minimatch@10.2.5": {
+      "brace-expansion": "5.0.8"
+    },
+    "next": {
+      "postcss": "8.5.18",
+      "sharp": "0.35.0"
+    }
   }
 }

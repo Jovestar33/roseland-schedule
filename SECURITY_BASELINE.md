@@ -1,6 +1,8 @@
 # Security Baseline
 
-Status: Phase 0 requirements. Controls become release gates as the migrated environment is implemented.
+Status: Phase 0 requirements with Phase 1 automation in progress. See
+[`SECURITY_AUTOMATION.md`](./SECURITY_AUTOMATION.md) for implemented gates,
+reviewed findings, and the open Google credential-rotation requirement.
 
 ## Identity and authorization
 
@@ -27,6 +29,8 @@ Status: Phase 0 requirements. Controls become release gates as the migrated envi
 - Separate development, preview, and production projects, credentials, data, and deployment access.
 - Never place credentials in source, client bundles, generated files, URLs, analytics, logs, or migration reports.
 - Run secret and credential-leak scans in CI and before cutover.
+- Repository secret scanning and push protection remain enabled; provider alerts
+  are not closed until rotation or revocation is independently confirmed.
 
 ## Browser and transport headers
 
@@ -47,7 +51,10 @@ Set and verify per route:
 - Parameterize SQL and avoid dynamic identifiers from requests.
 - Validate outbound URLs/protocols and defend server fetches against SSRF if URL fetching is added.
 - Use safe spreadsheet export handling for cells beginning with formula characters.
-- Review dependencies and Next.js/Supabase advisories continuously; patch critical issues before release.
+- Review dependencies and Next.js/Supabase advisories continuously; patch
+  critical issues before release. High/critical runtime findings block CI;
+  development-only exceptions require written scope, compensating controls, and
+  an upstream-remediation owner.
 
 ## Logging and errors
 
