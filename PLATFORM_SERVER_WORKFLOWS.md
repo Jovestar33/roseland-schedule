@@ -38,6 +38,21 @@ Required server-only settings are documented in `.env.example`:
 
 The feature flag defaults off. Do not add these settings to Netlify production or deploy previews during the active stability freeze. Future Supabase/Vercel development configuration must use development-project values only.
 
+## Development Auth and MFA setup
+
+The isolated `/platform/setup` page supports the first development account's email/password sign-in, TOTP authenticator enrollment, and AAL2 session verification. It is not a replacement for the live login and does not read or change schedule data.
+
+The page is fail-closed behind a separate server-only switch:
+
+- `SUPABASE_AUTH_SETUP_ENABLED=true`
+- `SUPABASE_AUTH_SETUP_PROJECT_REF`
+- `SUPABASE_URL`
+- `SUPABASE_PUBLISHABLE_KEY`
+
+The expected project ref must match the HTTPS Supabase hostname. Only a modern `sb_publishable_…` key is accepted; secret and service-role keys are rejected before rendering. The publishable key is intentionally the only credential passed to browser code. Keep the switch absent/false on Netlify and every production environment.
+
+After the account reaches AAL2, the initial Roseland organization, Owner membership, and restricted platform-operator designation must still be created through the existing one-time server-only bootstrap transaction. The setup page cannot perform or claim that bootstrap.
+
 ## Validation evidence
 
 - 93 database authorization/workflow tests pass locally and against `roseland-schedule-dev`.

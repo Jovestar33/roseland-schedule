@@ -8,6 +8,9 @@ const AUTH_COOKIE = 'rp_auth_flag';
 function isPublicPath(pathname: string): boolean {
   return pathname === '/login'
     || pathname.startsWith('/view')
+    // This page has its own server-only kill switch and returns 404 unless
+    // explicitly enabled for an isolated Supabase development environment.
+    || pathname === '/platform/setup'
     // Platform APIs authenticate their own Supabase bearer token. They are
     // disabled unless the explicit server-only workflow flag is enabled.
     || pathname.startsWith('/api/platform/');
