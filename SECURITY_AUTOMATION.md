@@ -16,6 +16,9 @@ active.
 - Pull-request commits run Gitleaks. GitHub secret scanning and push protection
   are also enabled at repository level.
 - GitHub Actions are pinned to immutable commit SHAs.
+- `main` branch protection requires the Application, Database and RLS, and
+  Dependency and secret review checks; it applies to the repository owner,
+  blocks force-push/deletion, and requires PR conversations to be resolved.
 - The database job runs the local Supabase security advisor after rebuilding and
   testing migrations. Any warning or error fails the local gate.
 - The linked-development advisor command fails on every unreviewed warning or
