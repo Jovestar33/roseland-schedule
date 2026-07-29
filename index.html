@@ -1654,16 +1654,13 @@ function launchRowContactCall(){
    GOOGLE PLACES (NEW) API
    Declare callback BEFORE loading script
 ───────────────────────────────────────────── */
-const GKEY='AIzaSyCW5tTOZLTvsjrV0XpE_-RcCL-pT7k0HHE';
-
-// Places API (New) — supports browser CORS directly
+// Places calls stay same-origin; the server keeps provider credentials private.
 async function googlePlacesSearch(q){
   try{
-    const res=await fetch('https://places.googleapis.com/v1/places:autocomplete',{
+    const res=await fetch('/api/places',{
       method:'POST',
       headers:{
-        'Content-Type':'application/json',
-        'X-Goog-Api-Key':GKEY
+        'Content-Type':'application/json'
       },
       body:JSON.stringify({input:q,languageCode:'en'})
     });
@@ -1702,7 +1699,7 @@ function formatGoogleAddress(details, fallbackName=''){
 
 async function googleGeocode(placeId, fallbackName=''){
   try{
-    const res=await fetch(`https://places.googleapis.com/v1/places/${placeId}?fields=location,formattedAddress,addressComponents&key=${GKEY}`);
+    const res=await fetch(`/api/places?placeId=${encodeURIComponent(placeId)}`);
     const data=await res.json();
     if(data.location){
       return {
