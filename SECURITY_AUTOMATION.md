@@ -59,23 +59,28 @@ Anonymous execution of the authorization helpers and all Data API execution of
 the automatic-RLS infrastructure function are revoked. New and existing
 function privileges have transaction-isolated local and linked tests.
 
-## Open credential incident
+## Resolved credential incident
 
 GitHub secret scanning identified two Google API keys committed in repository
-history, including a key still present on `main`. Draft PR #5 removes the
-hardcoded/browser copies and permits only server-side `GOOGLE_PLACES_KEY`.
+history, including a key still present on `main`. This incident was resolved on
+2026-07-29 through isolated security hotfix PR #7:
 
-Before this change can merge:
-
-1. Rotate or revoke both flagged credentials in Google Cloud.
-2. Store the replacement only as the server-side Netlify environment variable
+1. The browser and hardcoded Google Places calls were replaced with the
+   same-origin `/api/places` proxy, which accepts only server-side
    `GOOGLE_PLACES_KEY`.
-3. Restrict the key to the required Places APIs and appropriate server-side
-   controls; set quotas and billing alerts.
-4. Verify autocomplete and geocoding in a safe preview, without production
-   writes.
-5. Resolve the GitHub secret-scanning alerts as revoked only after provider-side
-   rotation is confirmed.
+2. A replacement key restricted to Places API (New) was stored as a secret for
+   Netlify production, deploy-preview, branch-deploy, and preview-server/agent
+   contexts. The non-secret Local CLI context contains no Google credential.
+3. The preview passed credential-leak, application, build, database/RLS,
+   dependency, Gitleaks, and live Places checks without production writes.
+4. PR #7 merged to `main` as commit
+   `62eb261c897b3a5c4e03857e59fee8071d520b88` and Netlify production deploy
+   `6a69a1941a16950008ce757e` published successfully.
+5. Production login, redirect, sanitized-error, autocomplete, and place-details
+   smoke tests passed. Autocomplete was verified again after revocation.
+6. Both historical Google credentials were deleted provider-side and remain
+   restorable in Google Cloud for 30 days. GitHub secret-scanning alerts #1 and
+   #2 were resolved as `revoked`; zero open alerts remained.
 
 Do not rewrite public Git history during the production stability freeze.
 Rotation removes the credential's value even though the old string remains in

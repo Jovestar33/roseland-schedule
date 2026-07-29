@@ -7,14 +7,15 @@ Status: Phase 0 baseline, 2026-07-19. This is a read-only inventory; no producti
 - Next.js 15 / React 19 browser application hosted on Netlify.
 - Netlify Functions are the current server boundary; Netlify Blobs is authoritative storage.
 - A shared password produces an HMAC editor token. The token is stored in `sessionStorage`; a non-secret `rp_auth_flag` cookie only controls middleware redirects.
-- Google Places is proxied by `app/api/places/route.ts`. The code accepts server-only `GOOGLE_PLACES_KEY` but can fall back to `NEXT_PUBLIC_GOOGLE_PLACES_KEY`.
+- Google Places is proxied by `app/api/places/route.ts`. The production code accepts only server-side `GOOGLE_PLACES_KEY`; browser code calls the same-origin proxy and receives no provider credential.
 - Browser, Netlify Functions, Netlify Blobs, Google Places, weather services, and public-link recipients are separate trust boundaries.
 
-Phase 1 update, 2026-07-26: GitHub secret scanning confirmed two historical
-Google API-key exposures. Draft PR #5 removes the browser/hardcoded fallback and
-requires server-only `GOOGLE_PLACES_KEY`; production still reflects this
-inventory until provider-side rotation, preview verification, and an explicitly
-approved merge.
+Security update, 2026-07-29: isolated hotfix PR #7 removed the
+browser/hardcoded Google Places keys and requires server-only
+`GOOGLE_PLACES_KEY`. The replacement restricted key is active in Netlify, the
+two historical provider keys are revoked, production checks passed before and
+after revocation, and both GitHub alerts are resolved. Historical strings remain
+in Git history but no longer authorize API calls.
 
 ## Blob stores and records
 
@@ -83,10 +84,12 @@ Browser caches are compatibility/convenience data, not a future authorization bo
 | `SCHEDULE_APP_PASSWORD` | secret | shared login and token verification |
 | `SCHEDULE_AUTH_SECRET` | secret | HMAC editor/view tokens |
 | `SCHEDULE_DELETE_PASSWORD` | secret | destructive operations and CMS save |
-| `GOOGLE_PLACES_KEY` | secret | preferred Places server credential |
-| `NEXT_PUBLIC_GOOGLE_PLACES_KEY` | browser-visible | current compatibility fallback |
+| `GOOGLE_PLACES_KEY` | secret | required Places server credential |
+| `NEXT_PUBLIC_GOOGLE_PLACES_KEY` | retired/browser-visible | no production code path; historical values are revoked |
 
-No secret value was read during this inventory. Phase 1 must eliminate the public Places fallback and rotate any credential ever exposed to a browser.
+No secret value was read during the original Phase 0 inventory. The public
+Places fallback has since been eliminated and every credential exposed to a
+browser has been revoked.
 
 ## Data classification
 
