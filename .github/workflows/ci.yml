@@ -39,6 +39,9 @@ jobs:
       - name: Audit high-severity dependencies
         run: npm audit --audit-level=high
 
+      - name: Verify Google Places credentials stay server-only
+        run: npm run test:credential-leaks
+
       - name: Lint application
         run: npm run lint
 
