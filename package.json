@@ -9,6 +9,7 @@
     "lint": "next lint",
     "test:platform": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types --test tests/platform/*.test.ts",
     "security:audit": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types scripts/security/npm-audit.ts",
+    "test:credential-leaks": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types --test tests/platform/credential-leaks.test.ts",
     "db:start": "supabase start",
     "db:stop": "supabase stop",
     "db:reset": "supabase db reset",
@@ -39,7 +40,7 @@
   },
   "overrides": {
     "minimatch@3.1.5": {
-      "brace-expansion": "1.1.16"
+      "brace-expansion": "5.0.8"
     },
     "minimatch@10.2.5": {
       "brace-expansion": "5.0.8"
