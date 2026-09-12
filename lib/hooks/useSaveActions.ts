@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useRef } from 'react';
+import { useDocumentRequest } from './useDocumentRequest';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '../store/authStore';
 import { useScheduleStore } from '../store/scheduleStore';
@@ -22,27 +22,7 @@ export function useSaveActions(routeName: string) {
   const setRemoteBaseline = useScheduleStore((s) => s.setRemoteBaseline);
   const setConflictData   = useScheduleStore((s) => s.setConflictData);
 
-  // Invalidate pending operations when the editor unmounts or its route changes.
-  // A session also changes on load/new, including reopening the same name.
-  const requestSequence = useRef(0);
-  useEffect(() => () => { requestSequence.current += 1; }, [routeName]);
-
-  function beginRequest() {
-    const state = useScheduleStore.getState();
-    return {
-      sequence: ++requestSequence.current,
-      session: state.documentSession,
-      revision: state.editRevision,
-      name: state.scheduleName,
-    };
-  }
-
-  function isCurrent(request: ReturnType<typeof beginRequest>) {
-    const state = useScheduleStore.getState();
-    return request.sequence === requestSequence.current
-      && request.session === state.documentSession
-      && request.name === state.scheduleName;
-  }
+  const { beginRequest, isCurrent, invalidate } = useDocumentRequest(routeName);
 
   function updateBaseline(savedAt: number) {
     // Zustand updates synchronously. Read the store again for each request.
@@ -126,7 +106,7 @@ export function useSaveActions(routeName: string) {
     setSyncStatus('syncing');
     const data = getScheduleData();
     try {
-      const result = await postSave(newName, data, token, {});
+      const result = await postSave(newName, data, token, { createOnly: true });
       if (!isCurrent(request)) return;
       const changed = request.revision !== useScheduleStore.getState().editRevision;
       // Keep edits made during Save As in the new document, still unsaved.
@@ -151,8 +131,11 @@ export function useSaveActions(routeName: string) {
           '— projectName:', data.meta?.projectName, '/ phase:', data.meta?.phase);
       } catch {}
       router.push(`/schedule/${encodeURIComponent(newName)}`);
-    } catch {
-      if (isCurrent(request)) setSyncStatus('offline');
+    } catch (error) {
+      if (!isCurrent(request)) return;
+      const state = useScheduleStore.getState();
+      setSyncStatus((error as SaveError).nameExists ? (state.dirty ? 'pending' : 'synced') : 'offline');
+      throw error;
     }
   }
 
@@ -208,7 +191,7 @@ export function useSaveActions(routeName: string) {
     }
     // Bust the Next.js router cache so LibraryPage remounts and re-fetches
     // rather than being reactivated from the stale client-side cache.
-    requestSequence.current += 1;
+    invalidate();
     router.refresh();
     router.push('/');
   }

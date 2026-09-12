@@ -47,7 +47,8 @@ exports.handler = async (event) => {
       deletePassword,
       expectedSavedAt = 0,
       expectedHash = '',
-      force = false
+      force = false,
+      createOnly = false
     } = JSON.parse(event.body || '{}');
 
     if (!name) return { statusCode: 400, headers, body: JSON.stringify({ error: 'Missing name' }) };
@@ -55,7 +56,18 @@ exports.handler = async (event) => {
       return { statusCode: 403, headers, body: JSON.stringify({ error: 'Unauthorized editor access' }) };
     }
 
-    const store = getStore('schedules');
+    const store = getStore({
+      name: 'schedules',
+      // SDK 10 conditional writes misreport non-412 errors as successful writes.
+      // Reject failed PUTs at the transport boundary until upstream #741 is fixed.
+      fetch: async (url, options) => {
+        const response = await fetch(url, options);
+        if (options?.method?.toUpperCase() === 'PUT' && !response.ok && response.status !== 412) {
+          throw new Error(`Schedule storage write failed: HTTP ${response.status}`);
+        }
+        return response;
+      },
+    });
 
     if (deleted || data === null) {
       const DELETE_PASSWORD = process.env.SCHEDULE_DELETE_PASSWORD;
@@ -66,7 +78,7 @@ exports.handler = async (event) => {
       return { statusCode: 200, headers, body: JSON.stringify({ ok: true, name, deleted: true, savedAt: Date.now() }) };
     }
 
-    const currentRaw = await store.get(name);
+    const currentRaw = createOnly ? null : await store.get(name);
     let currentData = null;
     if (currentRaw !== null && currentRaw !== undefined) {
       currentData = typeof currentRaw === 'string' ? JSON.parse(currentRaw) : currentRaw;
@@ -96,7 +108,15 @@ exports.handler = async (event) => {
 
     const savedAt = Date.now();
     const payload = { ...(data || {}), savedAt };
-    await store.set(name, JSON.stringify(payload), { metadata: { savedAt } });
+    const written = await store.set(name, JSON.stringify(payload), {
+      metadata: { savedAt },
+      ...(createOnly ? { onlyIfNew: true } : {}),
+    });
+    if (createOnly && !written.modified) {
+      return { statusCode: 409, headers, body: JSON.stringify({
+        code: 'NAME_EXISTS', error: 'A schedule with that name already exists. Choose a different name.',
+      }) };
+    }
 
     // townCache / dateCache are populated lazily by LibraryPage (which falls back
     // to the loaded schedule data). We no longer write them here because doing a

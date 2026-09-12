@@ -25,7 +25,8 @@ function setup() {
   store.getState().setRemoteBaseline(10, '');
   store.getState().updateMeta({ town: 'Before' });
   const actions = load('lib/hooks/useSaveActions.ts').useSaveActions('A');
-  return { store, actions, requests, loads, snapshots, routes, unmount: () => cleanups.forEach(f => f?.()) };
+  const snapshotActions = load('lib/hooks/useSnapshotActions.ts').useSnapshotActions();
+  return { store, actions, snapshotActions, requests, loads, snapshots, routes, unmount: () => cleanups.forEach(f => f?.()) };
 }
 for (const method of ['save', 'saveForce']) {
   test(`${method}: acknowledges the submitted revision and reads the new baseline on the next save`, async () => {
@@ -107,4 +108,79 @@ test('row edits, undo and redo advance revisions without persisting request guar
   }
   assert.equal('editRevision' in state().getScheduleData(), false);
   assert.equal('documentSession' in state().getScheduleData(), false);
+});
+
+test('Save As requires creation and reports an existing name without losing edits', async () => {
+  const h = setup(); const saving = h.actions.saveAs('Existing');
+  assert.equal(h.requests[0].args[3].createOnly, true);
+  h.requests[0].reject(Object.assign(new Error('Choose a different name'), { nameExists: true }));
+  await assert.rejects(saving, /different name/);
+  assert.equal(h.store.getState().scheduleName, 'A');
+  assert.equal(h.store.getState().meta.town, 'Before');
+  assert.equal(h.store.getState().dirty, true);
+  assert.equal(h.store.getState().remoteBaseline.savedAt, 10);
+  assert.equal(h.store.getState().syncStatus, 'pending');
+  assert.deepEqual(h.routes, []);
+});
+function snapshot(h) {
+  const data = h.store.getState().getScheduleData();
+  return { id: 'test', savedAt: 1, data: { ...data, meta: { ...data.meta, town: 'Snapshot' } } };
+}
+for (const copy of [false, true]) {
+  function start(h) { return copy ? h.snapshotActions.saveAsNew(snapshot(h), 'B') : h.snapshotActions.restore(snapshot(h)); }
+  test(`${copy ? 'snapshot copy' : 'restore'} applies only when the submitted document is unchanged`, async () => {
+    const h = setup(); const pending = start(h);
+    assert.equal(h.requests[0].args[3][copy ? 'createOnly' : 'force'], true);
+    h.requests[0].resolve({ savedAt: 20 }); await pending;
+    assert.equal(h.store.getState().meta.town, 'Snapshot');
+    assert.equal(h.store.getState().scheduleName, copy ? 'B' : 'A');
+    assert.equal(h.store.getState().remoteBaseline.savedAt, 20);
+    assert.equal(h.store.getState().dirty, false);
+  });
+  test(`${copy ? 'snapshot copy' : 'restore'} preserves edits made during the request`, async () => {
+    const h = setup(); const pending = start(h);
+    h.store.getState().updateMeta({ town: 'Newer edits' });
+    h.requests[0].resolve({ savedAt: 20 }); const message = await pending;
+    assert.match(message, /newer edits/i);
+    assert.equal(h.store.getState().meta.town, 'Newer edits');
+    assert.equal(h.store.getState().dirty, true);
+    assert.equal(h.store.getState().scheduleName, 'A');
+    assert.equal(h.store.getState().remoteBaseline.savedAt, copy ? 10 : 20);
+    assert.deepEqual(h.routes, []);
+  });
+  for (const change of ['switch', 'reopen', 'unmount', 'later save']) {
+    test(`${copy ? 'snapshot copy' : 'restore'} ignores a late response after ${change}`, async () => {
+      const h = setup(); const pending = start(h);
+      if (change === 'switch') h.store.getState().newSchedule('C');
+      if (change === 'reopen') h.store.getState().newSchedule('A');
+      if (change === 'unmount') h.unmount();
+      if (change === 'later save') {
+        const save = h.actions.save(); h.requests[1].resolve({ savedAt: 30 }); await save;
+      }
+      const before = h.store.getState();
+      h.requests[0].resolve({ savedAt: 20 }); assert.equal(await pending, null);
+      assert.equal(h.store.getState(), before);
+      assert.deepEqual(h.routes, []);
+    });
+  }
+}
+test('an older toolbar save cannot acknowledge edits after restore starts', async () => {
+  const h = setup(); const saving = h.actions.save();
+  const restoring = h.snapshotActions.restore(snapshot(h));
+  const before = h.store.getState();
+  h.requests[0].resolve({ savedAt: 20 }); await saving;
+  assert.equal(h.store.getState(), before);
+  h.requests[1].resolve({ savedAt: 30 }); await restoring;
+  assert.equal(h.store.getState().meta.town, 'Snapshot');
+  assert.equal(h.store.getState().remoteBaseline.savedAt, 30);
+});
+test('snapshot copy name collision leaves the source unchanged and can be retried', async () => {
+  const h = setup(); const before = h.store.getState();
+  const copying = h.snapshotActions.saveAsNew(snapshot(h), 'Existing');
+  h.requests[0].reject(Object.assign(new Error('Choose another name'), { nameExists: true }));
+  await assert.rejects(copying, /another name/);
+  assert.equal(h.store.getState(), before);
+  const retry = h.snapshotActions.saveAsNew(snapshot(h), 'Unused');
+  h.requests[1].resolve({ savedAt: 20 }); await retry;
+  assert.equal(h.store.getState().scheduleName, 'Unused');
 });
