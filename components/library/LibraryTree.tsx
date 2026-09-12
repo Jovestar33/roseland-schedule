@@ -1,4 +1,6 @@
 'use client';
+import { useAuthStore } from '@/lib/store/authStore';
+import { getViewLink } from '@/lib/api/viewLink';
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { useRouter } from 'next/navigation';
@@ -484,7 +486,12 @@ export default function LibraryTree({
     syncingNames,
     copiedInfo,
     onCopyTeam:   (name) => copyLink(name, `${window.location.origin}/schedule/${encodeURIComponent(name)}?auth=true`, 'team'),
-    onCopyClient: (name) => copyLink(name, `${window.location.origin}/view/${encodeURIComponent(name)}`, 'client'),
+    onCopyClient: async (name) => {
+      const token = useAuthStore.getState().token;
+      if (!token) { setDndMessage('Sign in to create a client link.'); return; }
+      try { copyLink(name, await getViewLink(name, token), 'client'); }
+      catch { setDndMessage('Could not create a client link. Please try again.'); }
+    },
     onArchive,
     onRestore,
     onDeletePermanently,

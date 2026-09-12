@@ -13,3 +13,4 @@
   for = "/*"
   [headers.values]
     X-Frame-Options = "SAMEORIGIN"
+    Referrer-Policy = "no-referrer"

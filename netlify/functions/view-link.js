@@ -1,11 +1,8 @@
+const { makeViewToken } = require('../lib/public-view');
 const crypto = require('crypto');
 
 function makeEditorToken(password, secret) {
   return crypto.createHmac('sha256', secret).update(`editor:${password}`).digest('hex');
-}
-
-function makeViewToken(name, secret) {
-  return crypto.createHmac('sha256', secret).update(`view:${name}`).digest('hex');
 }
 
 function isAuthorizedEditor(token) {
@@ -18,6 +15,7 @@ function isAuthorizedEditor(token) {
 exports.handler = async (event) => {
   const headers = {
     'Content-Type': 'application/json',
+    'Cache-Control': 'no-store',
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Headers': 'Content-Type',
     'Access-Control-Allow-Methods': 'GET, OPTIONS'

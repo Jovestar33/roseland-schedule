@@ -4,9 +4,7 @@ import { createPortal } from 'react-dom';
 import { PanelRight, X } from 'lucide-react';
 import { useScheduleStore } from '@/lib/store/scheduleStore';
 import { useAuthStore } from '@/lib/store/authStore';
-import { loadTemplates, saveTemplateRemote, deleteTemplateRemote, migrateTemplates } from '@/lib/api/templates';
-import { getTemplates } from '@/lib/templates';
-import { LS_TEMPLATES_KEY } from '@/lib/constants';
+import { loadTemplatesWithRecovery, saveTemplateRemote, deleteTemplateRemote } from '@/lib/api/templates';
 import { normalizeRows } from '@/lib/rowNormalizer';
 import { recalcRows } from '@/lib/time';
 import { getSnapshots, deleteSnapshot } from '@/lib/api/snapshots';
@@ -33,21 +31,8 @@ function TemplatesTabPanel() {
 
   useEffect(() => {
     if (!token) return;
-    loadTemplates(token)
-      .then(async (remote) => {
-        if (Object.keys(remote).length === 0) {
-          const local = getTemplates();
-          if (Object.keys(local).length > 0) {
-            const migrated = await migrateTemplates(local, token).catch(() => local);
-            localStorage.removeItem(LS_TEMPLATES_KEY);
-            setTemplates(migrated);
-            setStatus('ready');
-            return;
-          }
-        }
-        setTemplates(remote);
-        setStatus('ready');
-      })
+    loadTemplatesWithRecovery(token)
+      .then((templates) => { setTemplates(templates); setStatus('ready'); })
       .catch(() => setStatus('error'));
   }, [token]);
 

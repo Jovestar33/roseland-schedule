@@ -8,6 +8,7 @@ export async function postLoadView(
   const res = await fetch(`/.netlify/functions/load?${params}`, { cache: 'no-store' });
   if (res.status === 404) return null;
   if (res.status === 403) throw new Error('Invalid or expired link');
+  if (res.status === 403) throw new Error('This link is invalid or expired. Ask the schedule owner for a new client link.');
   if (!res.ok) throw new Error(`Load failed: HTTP ${res.status}`);
   return res.json() as Promise<ScheduleData>;
 }
@@ -19,14 +20,16 @@ export async function postLoad(
   const params = new URLSearchParams({ name, editorToken, _: String(Date.now()) });
   const res = await fetch(`/.netlify/functions/load?${params}`, { cache: 'no-store' });
   if (res.status === 404) return null;
+  if (res.status === 403) throw new Error('This link is invalid or expired. Ask the schedule owner for a new client link.');
   if (!res.ok) throw new Error(`Load failed: HTTP ${res.status}`);
   return res.json() as Promise<ScheduleData>;
 }
 
-export async function postLoadPublic(name: string): Promise<ScheduleData | null> {
-  const params = new URLSearchParams({ name, public: '1', _: String(Date.now()) });
+export async function postLoadPublic(name: string, viewToken: string = ''): Promise<ScheduleData | null> {
+  const params = new URLSearchParams({ name, viewToken, _: String(Date.now()) });
   const res = await fetch(`/.netlify/functions/load?${params}`, { cache: 'no-store' });
   if (res.status === 404) return null;
+  if (res.status === 403) throw new Error('This link is invalid or expired. Ask the schedule owner for a new client link.');
   if (!res.ok) throw new Error(`Load failed: HTTP ${res.status}`);
   return res.json() as Promise<ScheduleData>;
 }

@@ -78,41 +78,31 @@ exports.handler = async (event) => {
       return { statusCode: 200, headers, body: JSON.stringify({ ok: true, name, deleted: true, savedAt: Date.now() }) };
     }
 
-    const currentRaw = createOnly ? null : await store.get(name);
-    let currentData = null;
-    if (currentRaw !== null && currentRaw !== undefined) {
-      currentData = typeof currentRaw === 'string' ? JSON.parse(currentRaw) : currentRaw;
-    }
-
-    if (!force && currentData) {
-      const currentSavedAt = Number(currentData.savedAt || 0);
-      const expectedSavedAtNum = Number(expectedSavedAt || 0);
-      // Three-way savedAt comparison — hash dropped because Netlify Blobs eventual
-      // consistency makes hash comparison unreliable across rapid successive reads.
-      //   currentSavedAt > expectedSavedAt → real concurrent change → 409
-      //   currentSavedAt <= expectedSavedAt → stale read or no change → allow write
-      if (expectedSavedAtNum > 0 && currentSavedAt > expectedSavedAtNum) {
-        return {
-          statusCode: 409,
-          headers,
-          body: JSON.stringify({
-            error: 'Remote schedule changed since this copy was opened',
-            conflict: true,
-            name,
-            remoteSavedAt: currentSavedAt,
-            remoteData: currentData
-          })
-        };
+    const current = createOnly ? null : await store.getWithMetadata(name, { type: 'json', consistency: 'strong' });
+    const currentData = current?.data ?? null;
+    const conflict = async () => {
+      const remote = await store.get(name, { type: 'json', consistency: 'strong' });
+      return { statusCode: 409, headers, body: JSON.stringify({
+        error: 'The saved schedule changed. Review the latest version before saving.',
+        conflict: true, name, remoteSavedAt: remote?.savedAt ?? 0, remoteData: remote,
+      }) };
+    };
+    if (!force && !createOnly) {
+      // Missing baselines may only create a new name. Never blindly replace an
+      // existing document, even if this client has never loaded it.
+      if (currentData ? Number(expectedSavedAt) !== Number(currentData.savedAt) || !Number(expectedSavedAt) : Number(expectedSavedAt) > 0) {
+        return await conflict();
       }
     }
-
-    const savedAt = Date.now();
+    if (current && !current.etag) throw new Error('Storage did not supply a schedule version');
+    const savedAt = Math.max(Date.now(), Number(currentData?.savedAt || 0) + 1);
     const payload = { ...(data || {}), savedAt };
     const written = await store.set(name, JSON.stringify(payload), {
       metadata: { savedAt },
-      ...(createOnly ? { onlyIfNew: true } : {}),
+      ...(current ? { onlyIfMatch: current.etag } : { onlyIfNew: true }),
     });
-    if (createOnly && !written.modified) {
+    if (!written.modified) {
+      if (!createOnly) return await conflict();
       return { statusCode: 409, headers, body: JSON.stringify({
         code: 'NAME_EXISTS', error: 'A schedule with that name already exists. Choose a different name.',
       }) };
