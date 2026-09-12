@@ -35,7 +35,7 @@ function setup({ failWrite = false } = {}) {
       return new Response(null, { status: 200, headers: { etag: etags.get(key) } });
     },
   };
-  vm.runInNewContext(fs.readFileSync('netlify/functions/save.js', 'utf8'), context);
+  vm.runInNewContext(fs.readFileSync('netlify/lib/save-handler.cjs', 'utf8'), context);
   const save = (args = {}) => context.exports.handler({ httpMethod: 'POST', body: JSON.stringify({
     name: 'Schedule', data: { meta: { town: 'Original' }, rows: [] }, editorToken, ...args,
   }) });

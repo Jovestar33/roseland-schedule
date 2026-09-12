@@ -12,9 +12,9 @@ const data = { meta: { town: 'Town', callsheet: { emergency: 'PRIVATE' }, wx: { 
 function handler() {
   const context = { exports: {}, console, process: { env: { SCHEDULE_APP_PASSWORD: 'synthetic-password', SCHEDULE_AUTH_SECRET: secret } },
     require: name => name === '@netlify/blobs' ? { connectLambda() {}, getStore: () => ({ get: async () => data }) }
-      : name === '../lib/public-view' ? view : require(name),
+      : name === './public-view' ? view : require(name),
   };
-  vm.runInNewContext(fs.readFileSync('netlify/functions/load.js', 'utf8'), context);
+  vm.runInNewContext(fs.readFileSync('netlify/lib/load-handler.cjs', 'utf8'), context);
   return query => context.exports.handler({ httpMethod: 'GET', queryStringParameters: { name: 'A', ...query } });
 }
 test('name-only and public=1 requests cannot bypass sharing authorization', async () => {

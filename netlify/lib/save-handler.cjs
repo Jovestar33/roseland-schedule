@@ -1,4 +1,4 @@
-const { connectLambda, getStore } = require('@netlify/blobs');
+const { getStore } = require('@netlify/blobs');
 const crypto = require('crypto');
 
 function makeEditorToken(password, secret) {
@@ -38,7 +38,6 @@ exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') return { statusCode: 405, headers, body: 'Method not allowed' };
 
   try {
-    connectLambda(event);
     const {
       name,
       data,

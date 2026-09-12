@@ -59,8 +59,8 @@ app/manifest.ts      # PWA manifest, auto-served at /manifest.webmanifest
 | `lib/time.ts` | Time cascade — recomputes all row times from call time + durations |
 | `lib/rowNormalizer.ts` | Upgrades loaded JSON to current row schema |
 | `lib/constants.ts` | ACTIONS list, color maps, UNDO_LIMIT=80, AUTO_SNAPSHOT_INTERVAL_MS=5min |
-| `netlify/functions/save.js` | Timestamp conflict check (expectedSavedAt); non-atomic Blob write |
-| `netlify/functions/load.js` | Auth-gated load; `public=1` param for unauthenticated client view |
+| `netlify/functions/save.mjs` | Native runtime adapter; handler uses strong reads and atomic version/create preconditions |
+| `netlify/functions/load.mjs` | Native runtime adapter; editor auth or signed expiring client link, with public field projection |
 | `components/schedule/ScheduleEditor.tsx` | Main editor mount; auto-snapshot watcher; storeReady guard |
 | `components/schedule/CrewIdentityBlock.tsx` | Inline-edit crew display between identity line and meta-grid |
 | `components/toolbar/SaveDropdown.tsx` | Split Save button; dropdown uses position:fixed to escape overflow |

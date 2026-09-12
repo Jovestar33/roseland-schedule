@@ -4,6 +4,16 @@ Reviewed September 11, 2026 (America/New_York; command timestamps cross into Sep
 
 **The heavy-usage freeze ended September 11 by explicit user instruction. The follow-up authorizes isolated dependency/CI and two reproduced reliability fixes, local permission lifecycle hardening, disposable local database checks, and resuming only the existing development Supabase project with compatible transaction-isolated verification. No merge, deployment, new hosted migration/import, production configuration change, purchase, or hosted workflow activation is authorized.** Netlify Functions/Blobs and shared-PIN authentication remain the live application path. Ending the freeze does not authorize cutover.
 
+## September 12: isolated staging and native storage runtime
+
+The user subsequently authorized pushing the tested development branch and creating **roseland-schedule-staging**, a separate Netlify project backed by that branch. Production remains on main; no Supabase migration is authorized. Staging has its own login secrets and site-scoped Blob storage. Secrets are kept in ignored `.env.staging.local` and Netlify, not this document or Git.
+
+The first staging deployment built successfully and authentication passed, but the first authenticated schedule read failed: the classic Lambda `connectLambda` helper in the installed Blobs SDK discards the uncached endpoint required for strong reads. Earlier handler tests provided their own SDK context, so they missed this runtime integration failure. No schedules had been written when this was detected.
+
+Save, load and templates now use native Request/Response entrypoints, retaining Netlify's complete automatic Blobs context. Existing handler contracts and authorization remain unchanged. A new integration regression imports all three actual entrypoints and uses the real SDK with synthetic native context; it exercises create, read, update, stale-version rejection, duplicate-name rejection and template persistence, asserting that every read uses the uncached endpoint and the runtime context remains intact.
+
+**Local validation:** 53 editor/server/API/recovery tests plus 24 platform tests pass (77 total); build, TypeScript and integrated lint pass. Hosted validation of this correction is pending staging redeployment. Do not treat a successful build alone as functional sign-off.
+
 ## September 12: sharing, concurrent saves, template recovery and imports
 
 The user explicitly deferred staging and production until these four reliability/security issues were fixed. This follow-up changes local development code only; neither Netlify project settings nor hosted Supabase were changed.

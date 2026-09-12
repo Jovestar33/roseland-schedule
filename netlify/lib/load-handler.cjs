@@ -1,5 +1,5 @@
-const { isAuthorizedView, publicSchedule } = require('../lib/public-view');
-const { connectLambda, getStore } = require('@netlify/blobs');
+const { isAuthorizedView, publicSchedule } = require('./public-view');
+const { getStore } = require('@netlify/blobs');
 const crypto = require('crypto');
 
 function makeEditorToken(password, secret) {
@@ -26,7 +26,6 @@ exports.handler = async (event) => {
   if (event.httpMethod !== 'GET') return { statusCode: 405, headers, body: 'Method not allowed' };
 
   try {
-    connectLambda(event);
     const store = getStore('schedules');
 
     const name = event.queryStringParameters?.name;
