@@ -1,12 +1,8 @@
-const { connectLambda, getStore } = require('@netlify/blobs');
+const { isAuthorizedView, publicSchedule } = require('./public-view');
 const crypto = require('crypto');
 
 function makeEditorToken(password, secret) {
   return crypto.createHmac('sha256', secret).update(`editor:${password}`).digest('hex');
-}
-
-function makeViewToken(name, secret) {
-  return crypto.createHmac('sha256', secret).update(`view:${name}`).digest('hex');
 }
 
 function isAuthorizedEditor(token) {
@@ -16,13 +12,7 @@ function isAuthorizedEditor(token) {
   return token === makeEditorToken(APP_PASSWORD, AUTH_SECRET);
 }
 
-function isAuthorizedView(name, token) {
-  const AUTH_SECRET = process.env.SCHEDULE_AUTH_SECRET;
-  if (!AUTH_SECRET || !name || !token) return false;
-  return token === makeViewToken(name, AUTH_SECRET);
-}
-
-exports.handler = async (event) => {
+exports.createHandler = (getStore) => async (event) => {
   const headers = {
     'Content-Type': 'application/json',
     'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
@@ -35,8 +25,8 @@ exports.handler = async (event) => {
   if (event.httpMethod !== 'GET') return { statusCode: 405, headers, body: 'Method not allowed' };
 
   try {
-    connectLambda(event);
-    const store = getStore('schedules');
+    // list() uses the store-level consistency setting; a per-list option is ignored.
+    const store = getStore({ name: 'schedules', consistency: 'strong' });
 
     const name = event.queryStringParameters?.name;
     const editorToken = event.queryStringParameters?.editorToken;
@@ -47,22 +37,22 @@ exports.handler = async (event) => {
         return { statusCode: 403, headers, body: JSON.stringify({ error: 'Unauthorized editor access' }) };
       }
       // Strong consistency so a schedule saved via Save As appears in the list immediately.
-      const { blobs } = await store.list({ consistency: 'strong' });
+      const { blobs } = await store.list();
       return { statusCode: 200, headers, body: JSON.stringify({ schedules: blobs.map((b) => b.key) }) };
     }
 
-    const isPublicRead = event.queryStringParameters?.public === '1';
-    if (!isPublicRead && !isAuthorizedEditor(editorToken) && !isAuthorizedView(name, viewToken)) {
+    const editor = isAuthorizedEditor(editorToken);
+    if (!editor && !isAuthorizedView(name, viewToken, process.env.SCHEDULE_AUTH_SECRET)) {
       return { statusCode: 403, headers, body: JSON.stringify({ error: 'Unauthorized access' }) };
     }
 
-    const raw = await store.get(name);
+    const raw = await store.get(name, { consistency: 'strong' });
     if (raw === null || raw === undefined) {
       return { statusCode: 404, headers, body: JSON.stringify({ error: 'Not found' }) };
     }
 
     const data = typeof raw === 'string' ? JSON.parse(raw) : raw;
-    return { statusCode: 200, headers, body: JSON.stringify(data) };
+    return { statusCode: 200, headers, body: JSON.stringify(editor ? data : publicSchedule(data)) };
   } catch (err) {
     console.error('Load error:', err);
     return {

@@ -7,9 +7,10 @@ import type { ScheduleData } from '@/lib/types';
 
 interface Props {
   name: string;
+  viewToken: string;
 }
 
-export default function PublicViewer({ name }: Props) {
+export default function PublicViewer({ name, viewToken }: Props) {
   const [data, setData] = useState<ScheduleData | null>(null);
   const [status, setStatus] = useState<'loading' | 'error' | 'ok'>('loading');
   const [errorMsg, setErrorMsg] = useState('');
@@ -20,7 +21,7 @@ export default function PublicViewer({ name }: Props) {
       setErrorMsg('Missing schedule name.');
       return;
     }
-    postLoadPublic(name)
+    postLoadPublic(name, viewToken)
       .then(d => {
         if (!d) { setStatus('error'); setErrorMsg('Schedule not found.'); return; }
         setData(d);
@@ -30,7 +31,7 @@ export default function PublicViewer({ name }: Props) {
         setStatus('error');
         setErrorMsg((e as Error).message || 'Could not load schedule.');
       });
-  }, [name]);
+  }, [name, viewToken]);
 
   if (status === 'loading') {
     return <div className="empty" style={{ padding: '40px', textAlign: 'center' }}>Loading…</div>;

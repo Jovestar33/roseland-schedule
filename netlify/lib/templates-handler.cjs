@@ -1,4 +1,3 @@
-const { connectLambda, getStore } = require('@netlify/blobs');
 const crypto = require('crypto');
 
 function makeEditorToken(password, secret) {
@@ -12,7 +11,7 @@ function isAuthorizedEditor(token) {
   return token === makeEditorToken(APP_PASSWORD, AUTH_SECRET);
 }
 
-exports.handler = async (event) => {
+exports.createHandler = (getStore) => async (event) => {
   const headers = {
     'Content-Type': 'application/json',
     'Access-Control-Allow-Origin': '*',
@@ -25,7 +24,6 @@ exports.handler = async (event) => {
   if (!['GET', 'POST'].includes(event.httpMethod)) return { statusCode: 405, headers, body: 'Method not allowed' };
 
   try {
-    connectLambda(event);
     const body = event.httpMethod === 'POST' ? JSON.parse(event.body || '{}') : {};
     const editorToken = event.httpMethod === 'GET' ? event.queryStringParameters?.editorToken : body.editorToken;
 
@@ -33,8 +31,13 @@ exports.handler = async (event) => {
       return { statusCode: 403, headers, body: JSON.stringify({ error: 'Unauthorized' }) };
     }
 
-    const store = getStore('schedule-templates');
-    const raw = await store.get('templates');
+    const store = getStore({ name: 'schedule-templates', fetch: async (url, options) => {
+      const response = await fetch(url, options);
+      if (options?.method?.toUpperCase() === 'PUT' && !response.ok && response.status !== 412) throw new Error('Template storage write failed');
+      return response;
+    } });
+    const current = await store.getWithMetadata('templates', { type: 'json', consistency: 'strong' });
+    const raw = current?.data;
     let templates = raw === null || raw === undefined
       ? {}
       : (typeof raw === 'string' ? JSON.parse(raw) : raw);
@@ -53,12 +56,22 @@ exports.handler = async (event) => {
       delete templates[name];
     } else if (action === 'replace') {
       // Used for one-time localStorage migration
-      templates = body.templates || {};
+      const before = JSON.stringify(templates);
+      for (const [localName, value] of Object.entries(body.templates || {})) {
+        let recoveredName = localName, suffix = 1;
+        while (Object.hasOwn(templates, recoveredName) && JSON.stringify(templates[recoveredName].rows) !== JSON.stringify(value.rows)) {
+          recoveredName = `${localName} (recovered ${suffix++})`;
+        }
+        if (!Object.hasOwn(templates, recoveredName)) Object.defineProperty(templates, recoveredName, { value, enumerable: true, writable: true, configurable: true });
+      }
+      if (JSON.stringify(templates) === before) return { statusCode: 200, headers, body: JSON.stringify({ ok: true, templates }) };
     } else {
       return { statusCode: 400, headers, body: JSON.stringify({ error: 'Unknown action' }) };
     }
 
-    await store.set('templates', JSON.stringify(templates));
+    if (current && !current.etag) throw new Error('Template version unavailable');
+    const written = await store.set('templates', JSON.stringify(templates), current ? { onlyIfMatch: current.etag } : { onlyIfNew: true });
+    if (!written.modified) return { statusCode: 409, headers, body: JSON.stringify({ error: 'Templates changed. Reload and try again. Local recovery copies are retained.' }) };
     return { statusCode: 200, headers, body: JSON.stringify({ ok: true, templates }) };
   } catch (err) {
     console.error('Templates error:', err);

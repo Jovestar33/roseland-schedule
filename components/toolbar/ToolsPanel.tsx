@@ -1,17 +1,15 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import { createPortal } from 'react-dom';
 import { PanelRight, X } from 'lucide-react';
 import { useScheduleStore } from '@/lib/store/scheduleStore';
 import { useAuthStore } from '@/lib/store/authStore';
-import { loadTemplates, saveTemplateRemote, deleteTemplateRemote, migrateTemplates } from '@/lib/api/templates';
-import { getTemplates } from '@/lib/templates';
-import { LS_TEMPLATES_KEY } from '@/lib/constants';
+import { loadTemplatesWithRecovery, saveTemplateRemote, deleteTemplateRemote } from '@/lib/api/templates';
 import { normalizeRows } from '@/lib/rowNormalizer';
 import { recalcRows } from '@/lib/time';
 import { getSnapshots, deleteSnapshot } from '@/lib/api/snapshots';
-import { postSave } from '@/lib/api/save';
+import { useSnapshotActions } from '@/lib/hooks/useSnapshotActions';
+import SaveAsModal from '@/components/modals/SaveAsModal';
 import { computeTimeOut } from '@/lib/time';
 import type { TemplateMap } from '@/lib/templates';
 import type { Snapshot } from '@/lib/types';
@@ -33,21 +31,8 @@ function TemplatesTabPanel() {
 
   useEffect(() => {
     if (!token) return;
-    loadTemplates(token)
-      .then(async (remote) => {
-        if (Object.keys(remote).length === 0) {
-          const local = getTemplates();
-          if (Object.keys(local).length > 0) {
-            const migrated = await migrateTemplates(local, token).catch(() => local);
-            localStorage.removeItem(LS_TEMPLATES_KEY);
-            setTemplates(migrated);
-            setStatus('ready');
-            return;
-          }
-        }
-        setTemplates(remote);
-        setStatus('ready');
-      })
+    loadTemplatesWithRecovery(token)
+      .then((templates) => { setTemplates(templates); setStatus('ready'); })
       .catch(() => setStatus('error'));
   }, [token]);
 
@@ -166,71 +151,55 @@ function BackupTabPanel() {
 // ─── Restore ─────────────────────────────────────────────────────────────────
 
 function RestoreTabPanel() {
-  const router           = useRouter();
   const token            = useAuthStore((s) => s.token);
   const scheduleName     = useScheduleStore((s) => s.scheduleName);
-  const loadSchedule     = useScheduleStore((s) => s.loadSchedule);
-  const setRemoteBaseline = useScheduleStore((s) => s.setRemoteBaseline);
-  const setSyncStatus    = useScheduleStore((s) => s.setSyncStatus);
+  const documentSession = useScheduleStore((s) => s.documentSession);
+  const { restore, saveAsNew } = useSnapshotActions();
 
   const [snapshots, setSnapshots] = useState<Snapshot[]>([]);
   const [loading, setLoading]     = useState(false);
   const [preview, setPreview]     = useState<Snapshot | null>(null);
   const [successMsg, setSuccessMsg] = useState('');
+  const [copySnapshot, setCopySnapshot] = useState<Snapshot | null>(null);
 
   useEffect(() => {
-    if (!scheduleName || !token) return;
-    setLoading(true);
+    let active = true;
+    setPreview(null);
+    setCopySnapshot(null);
+    setSuccessMsg('');
     setSnapshots([]);
-    getSnapshots(scheduleName, token)
-      .then(setSnapshots)
-      .catch(() => setSnapshots([]))
-      .finally(() => setLoading(false));
-  }, [scheduleName, token]);
+    setLoading(Boolean(scheduleName && token));
+    if (scheduleName && token) {
+      getSnapshots(scheduleName, token)
+        .then((items) => { if (active) setSnapshots(items); })
+        .catch(() => { if (active) setSuccessMsg('Could not load snapshots. Please try again.'); })
+        .finally(() => { if (active) setLoading(false); });
+    }
+    return () => { active = false; };
+  }, [scheduleName, token, documentSession]);
 
   async function handleRestore(snap: Snapshot) {
-    if (!token || !scheduleName) return;
-    if (!confirm(`Restore this snapshot? The current schedule will be overwritten.`)) return;
+    if (!confirm('Restore this snapshot? The current saved schedule will be overwritten.')) return;
     try {
-      const result = await postSave(scheduleName, snap.data, token, { force: true });
-      loadSchedule(scheduleName, { ...snap.data, savedAt: result.savedAt });
-      setRemoteBaseline(result.savedAt, '');
-      setSyncStatus('synced');
-      setSuccessMsg('Snapshot restored.');
-      setTimeout(() => setSuccessMsg(''), 4000);
+      const message = await restore(snap);
+      if (message) setSuccessMsg(message);
     } catch {
-      alert('Restore failed — check your connection and try again.');
+      setSuccessMsg('Restore failed. Your open edits were kept. Please try again.');
     }
   }
 
-  async function handleSaveAsNew(snap: Snapshot) {
-    if (!token) return;
-    const newName = prompt('Save as new schedule — enter a name:', `${scheduleName} copy`)?.trim();
-    if (!newName) return;
-    try {
-      const result = await postSave(newName, snap.data, token, {});
-      // Pre-load the store so the editor skips the cloud fetch on mount
-      // (avoids blank schedule due to Blob propagation delay).
-      loadSchedule(newName, { ...snap.data, savedAt: result.savedAt });
-      setRemoteBaseline(result.savedAt, '');
-      setSyncStatus('synced');
-      try {
-        sessionStorage.setItem('rp_recently_added_schedule', JSON.stringify({ name: newName, addedAt: Date.now() }));
-        sessionStorage.setItem('rp_recently_saved_meta', JSON.stringify({
-          name: newName, meta: snap.data.meta, savedAt: result.savedAt, addedAt: Date.now(),
-        }));
-      } catch {}
-      router.push(`/schedule/${encodeURIComponent(newName)}`);
-    } catch {
-      alert('Save failed — check your connection and try again.');
-    }
+  function handleSaveAsNew(snap: Snapshot) {
+    setPreview(null);
+    setCopySnapshot(snap);
   }
 
   async function handleDelete(snap: Snapshot) {
     if (!token || !scheduleName) return;
     if (!confirm('Delete this snapshot?\n\nThe saved schedule will not be affected.')) return;
+    const session = useScheduleStore.getState().documentSession;
     try {
       await deleteSnapshot(scheduleName, snap.id, token);
+      if (session !== useScheduleStore.getState().documentSession) return;
       setSnapshots((prev) => prev.filter((s) => s.id !== snap.id));
     } catch {
       alert('Delete failed.');
@@ -239,6 +208,16 @@ function RestoreTabPanel() {
 
   return (
     <>
+      <SaveAsModal
+        open={copySnapshot !== null}
+        defaultName={`${scheduleName ?? 'Schedule'} copy`}
+        onClose={() => setCopySnapshot(null)}
+        onSave={async (newName) => {
+          if (!copySnapshot) return;
+          const message = await saveAsNew(copySnapshot, newName);
+          if (message) setSuccessMsg(message);
+        }}
+      />
       <div className="tp-restore-schedule">
         Showing snapshots for: <strong>{scheduleName ?? '—'}</strong>
       </div>

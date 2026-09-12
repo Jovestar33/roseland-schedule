@@ -65,6 +65,9 @@ export interface ScheduleStore {
   meta: ScheduleMeta;
   scheduleName: string | null;
   dirty: boolean;
+  // In-memory request guards; never serialized into ScheduleData.
+  editRevision: number;
+  documentSession: number;
   undoStack: Snapshot[];
   redoStack: Snapshot[];
 
@@ -109,6 +112,8 @@ export const useScheduleStore = create<ScheduleStore>((set, get) => ({
   meta: makeMeta(),
   scheduleName: null,
   dirty: false,
+  editRevision: 0,
+  documentSession: 0,
   undoStack: [],
   redoStack: [],
 
@@ -133,6 +138,7 @@ export const useScheduleStore = create<ScheduleStore>((set, get) => ({
       undoStack: undoStack.slice(0, -1),
       redoStack: [...redoStack, cur],
       dirty: true,
+      editRevision: get().editRevision + 1,
     });
   },
 
@@ -147,6 +153,7 @@ export const useScheduleStore = create<ScheduleStore>((set, get) => ({
       undoStack: [...undoStack, cur],
       redoStack: redoStack.slice(0, -1),
       dirty: true,
+      editRevision: get().editRevision + 1,
     });
   },
 
@@ -154,7 +161,7 @@ export const useScheduleStore = create<ScheduleStore>((set, get) => ({
     const { rows, rowKeys } = get();
     const updated = rows.map((r, i) => (i === index ? { ...r, ...patch } : r));
     const result = repositionSunRows(updated, rowKeys);
-    set({ rows: result.rows, rowKeys: result.rowKeys, dirty: true });
+    set({ rows: result.rows, rowKeys: result.rowKeys, dirty: true, editRevision: get().editRevision + 1 });
   },
 
   addRowAfter(afterIndex) {
@@ -163,7 +170,7 @@ export const useScheduleStore = create<ScheduleStore>((set, get) => ({
     const updated = [...rows.slice(0, afterIndex + 1), newRow, ...rows.slice(afterIndex + 1)];
     const updatedKeys = [...rowKeys.slice(0, afterIndex + 1), newKey(), ...rowKeys.slice(afterIndex + 1)];
     const result = repositionSunRows(updated, updatedKeys);
-    set({ rows: result.rows, rowKeys: result.rowKeys, dirty: true });
+    set({ rows: result.rows, rowKeys: result.rowKeys, dirty: true, editRevision: get().editRevision + 1 });
   },
 
   deleteRow(index) {
@@ -172,7 +179,7 @@ export const useScheduleStore = create<ScheduleStore>((set, get) => ({
     const updated = rows.filter((_, i) => i !== index);
     const updatedKeys = rowKeys.filter((_, i) => i !== index);
     const result = repositionSunRows(updated, updatedKeys);
-    set({ rows: result.rows, rowKeys: result.rowKeys, dirty: true });
+    set({ rows: result.rows, rowKeys: result.rowKeys, dirty: true, editRevision: get().editRevision + 1 });
   },
 
   reorderRows(from, to) {
@@ -184,12 +191,12 @@ export const useScheduleStore = create<ScheduleStore>((set, get) => ({
     updatedRows.splice(to, 0, movedRow);
     updatedKeys.splice(to, 0, movedKey);
     const result = repositionSunRows(updatedRows, updatedKeys);
-    set({ rows: result.rows, rowKeys: result.rowKeys, dirty: true });
+    set({ rows: result.rows, rowKeys: result.rowKeys, dirty: true, editRevision: get().editRevision + 1 });
   },
 
   updateMeta(patch) {
     const { meta } = get();
-    set({ meta: { ...meta, ...patch }, dirty: true });
+    set({ meta: { ...meta, ...patch }, dirty: true, editRevision: get().editRevision + 1 });
   },
 
   loadSchedule(name, data) {
@@ -199,6 +206,8 @@ export const useScheduleStore = create<ScheduleStore>((set, get) => ({
       rowKeys: makeDefaultKeys(normalized.length),
       meta: data.meta,
       scheduleName: name,
+      documentSession: get().documentSession + 1,
+      editRevision: get().editRevision + 1,
       dirty: false,
       undoStack: [],
       redoStack: [],
@@ -214,6 +223,8 @@ export const useScheduleStore = create<ScheduleStore>((set, get) => ({
       rowKeys: makeDefaultKeys(rows.length),
       meta: makeMeta(),
       scheduleName: name,
+      documentSession: get().documentSession + 1,
+      editRevision: get().editRevision + 1,
       dirty: false,
       undoStack: [],
       redoStack: [],
@@ -268,19 +279,19 @@ export const useScheduleStore = create<ScheduleStore>((set, get) => ({
       newKeys.splice(pt.idx, 0, newKey());
     });
 
-    set({ rows: recalcRows(newRows), rowKeys: newKeys, dirty: true });
+    set({ rows: recalcRows(newRows), rowKeys: newKeys, dirty: true, editRevision: get().editRevision + 1 });
   },
 
   clearSunRows() {
     const { rows, rowKeys } = get();
     const newRows = rows.filter(r => !r.sunLocked);
     const newKeys = rowKeys.filter((_, i) => !rows[i].sunLocked);
-    set({ rows: recalcRows(newRows), rowKeys: newKeys, dirty: true });
+    set({ rows: recalcRows(newRows), rowKeys: newKeys, dirty: true, editRevision: get().editRevision + 1 });
   },
 
   setWx(wx) {
     const { meta } = get();
-    set({ meta: { ...meta, wx }, dirty: true });
+    set({ meta: { ...meta, wx }, dirty: true, editRevision: get().editRevision + 1 });
   },
 
   setSyncStatus(s) { set({ syncStatus: s }); },

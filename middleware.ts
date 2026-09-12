@@ -6,7 +6,14 @@ import type { NextRequest } from 'next/server';
 const AUTH_COOKIE = 'rp_auth_flag';
 
 function isPublicPath(pathname: string): boolean {
-  return pathname === '/login' || pathname.startsWith('/view');
+  return pathname === '/login'
+    || pathname.startsWith('/view')
+    // This page has its own server-only kill switch and returns 404 unless
+    // explicitly enabled for an isolated Supabase development environment.
+    || pathname === '/platform/setup'
+    // Platform APIs authenticate their own Supabase bearer token. They are
+    // disabled unless the explicit server-only workflow flag is enabled.
+    || pathname.startsWith('/api/platform/');
 }
 
 function redirect(request: NextRequest, pathname: string): NextResponse {
@@ -35,7 +42,7 @@ export function middleware(request: NextRequest) {
   if (s) {
     return redirect(request, `/schedule/${encodeURIComponent(s)}`);
   }
-  if (v && vt) {
+  if (v && vt && pathname !== '/view') {
     const url = request.nextUrl.clone();
     url.pathname = '/view';
     url.search = `?v=${encodeURIComponent(v)}&vt=${encodeURIComponent(vt)}`;

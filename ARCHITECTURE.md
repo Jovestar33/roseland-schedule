@@ -1,5 +1,7 @@
 # Roseland Schedule — Architecture Reference
 
+Source status refreshed September 11, 2026 against auth `cbdb921`. This describes the existing daily editor; draft Supabase foundations and current verification/gaps are summarized in [READINESS.md](./READINESS.md). The freeze ended September 11; migration, merge and deployment are not authorized in this readiness step. Older dated UI observations below are historical, not fresh regression results.
+
 ## 1. Tech Stack
 
 | Layer | Tech |
@@ -10,7 +12,7 @@
 | Storage | Netlify Blobs (schedules, snapshots, CMS config, library meta, templates) |
 | Auth | HMAC token (password → SHA-256 HMAC) stored in sessionStorage |
 | Styling | Plain CSS (`styles/base.css`, no CSS-in-JS) |
-| Hosting | Netlify (static export + serverless functions) |
+| Hosting | Netlify Next.js runtime (`.next` + Next plugin) and serverless functions |
 
 ## 2. Folder Structure
 
@@ -19,11 +21,12 @@ app/
   (app)/             # Auth-gated routes (middleware enforces)
     page.tsx         # Library home
     schedule/[name]/ # Schedule editor
-    backup/          # Backup & export
   (auth)/
     login/           # PIN unlock page
   view/[name]/       # Public client viewer (no auth)
-  api/health/        # Health check (local dev)
+  api/places/        # Server-only Google Places proxy
+  api/platform/      # Draft auth branch: disabled-by-default server workflows
+  platform/setup/    # Draft auth branch: disabled-by-default development MFA setup
 components/
   schedule/          # ScheduleEditor, ScheduleHeader, ScheduleGrid, row types, modals
   schedule/CrewIdentityBlock.tsx  # Compact PRODUCER/DIRECTOR/CAMERA inline-edit block
@@ -37,12 +40,11 @@ lib/
   hooks/             # useSaveActions.ts
   api/               # save.ts, load.ts, snapshots.ts, library.ts, cms.ts
   rowNormalizer.ts   # Repairs loaded rows to current shape
-  recalcRows.ts      # Time cascade engine
-  time.ts            # computeTimeOut, formatTime helpers
+  time.ts            # recalcRows time cascade + computeTimeOut and time helpers
   constants.ts       # ACTIONS, CMS_COLORS, limits, intervals
   templates.ts       # Template type + LS_TEMPLATES_KEY (kept for migration helper)
   types.ts           # All shared TypeScript types
-netlify/functions/   # Serverless: save, load, snapshots, library, rename-schedule, move-schedule, delete-schedule, cms, templates, places
+netlify/functions/   # Serverless: save, load, snapshots, library, rename-schedule, move-schedule, delete-schedule, cms-load, cms-save, templates, view-link, auth, migrate-project-meta
 middleware.ts        # Auth gate + ?next= redirect preservation
 app/favicon.ico      # Served as Next.js metadata route — bypasses middleware entirely
 app/manifest.ts      # PWA manifest, auto-served at /manifest.webmanifest
@@ -54,11 +56,11 @@ app/manifest.ts      # PWA manifest, auto-served at /manifest.webmanifest
 |---|---|
 | `lib/store/scheduleStore.ts` | All schedule state + mutations; undo history; recalc trigger |
 | `lib/hooks/useSaveActions.ts` | save / saveAs / saveForce / conflict resolution / cloud load |
-| `lib/recalcRows.ts` | Time cascade — recomputes all row times from call time + durations |
+| `lib/time.ts` | Time cascade — recomputes all row times from call time + durations |
 | `lib/rowNormalizer.ts` | Upgrades loaded JSON to current row schema |
 | `lib/constants.ts` | ACTIONS list, color maps, UNDO_LIMIT=80, AUTO_SNAPSHOT_INTERVAL_MS=5min |
-| `netlify/functions/save.js` | Conflict detection (expectedSavedAt + expectedHash), stableStringify |
-| `netlify/functions/load.js` | Auth-gated load; `public=1` param for unauthenticated client view |
+| `netlify/functions/save.mjs` | Native runtime adapter; handler uses strong reads and atomic version/create preconditions |
+| `netlify/functions/load.mjs` | Native runtime adapter; editor auth or signed expiring client link, with public field projection |
 | `components/schedule/ScheduleEditor.tsx` | Main editor mount; auto-snapshot watcher; storeReady guard |
 | `components/schedule/CrewIdentityBlock.tsx` | Inline-edit crew display between identity line and meta-grid |
 | `components/toolbar/SaveDropdown.tsx` | Split Save button; dropdown uses position:fixed to escape overflow |
@@ -75,10 +77,10 @@ Three Zustand stores:
 **scheduleStore** — owns all schedule data:
 - `rows`, `meta`, `scheduleName`, `dirty`, `syncStatus`, `conflictData`
 - `remoteBaseline: { savedAt, hash }` — last known server state for conflict detection
-- `undoStack` / `redoStack` (max 80 entries, serialized row snapshots)
+- `undoStack` / `redoStack` (max 80 entries, cloned rows and metadata)
 - `loadSchedule()` calls `recalcRows()` + `repositionSunRows()` internally
 - `getScheduleData()` returns current rows + meta for save/snapshot payloads
-- `updateMeta(patch)` sets `dirty: true` — triggers autosave
+- `updateMeta(patch)` sets `dirty: true` — indicates unsaved changes; five-minute snapshots do not save the primary schedule
 
 **authStore** — `token: string | null` from sessionStorage
 
@@ -94,15 +96,15 @@ User edits row
 Save button
   → useSaveActions.save()
   → reads remoteBaselineRef.current (mutable ref, always fresh)
-  → POST /.netlify/functions/save with { expectedSavedAt, expectedHash }
-  → 200: updateBaseline(savedAt, hash) + markClean()
+  → POST /.netlify/functions/save with { expectedSavedAt }
+  → 200: updateBaseline(savedAt) + markClean()
   → 409: setConflictData({ local, remote }) → ConflictModal shown
 
 Load schedule
   → loadScheduleFromCloud(name) in useSaveActions
-  → POST /.netlify/functions/load
+  → GET /.netlify/functions/load
   → normalizeRows() → loadSchedule() → recalcRows()
-  → updateBaseline(savedAt, '') — server hash unknown until first save
+  → updateBaseline(savedAt) — hash remains empty/unused
 ```
 
 ## 6. Auth Flow
@@ -111,7 +113,7 @@ Load schedule
 2. No cookie → redirect to `/login?next=<original-path>`
 3. Login page: PIN → HMAC token stored in sessionStorage + cookie set
 4. Redirect to `?next=` target (or `/`)
-5. All API calls send token in POST body as `editorToken`
+5. Netlify write calls send `editorToken` in POST JSON; read calls commonly send it in GET query parameters. CMS writes instead require the delete/CMS PIN. These are legacy boundaries, not the target account/session design.
 6. Team Link (`/schedule/[name]?auth=true`) — `?auth=true` tells login page to show PIN inline; after unlock, redirects back to the schedule URL
 
 Public client links (`/view/[name]`) bypass auth entirely — no token needed, load function accepts `public=1`.
@@ -120,18 +122,18 @@ Public client links (`/view/[name]`) bypass auth entirely — no token needed, l
 
 | Function | Purpose |
 |---|---|
-| `save.js` | Write schedule; conflict detection via savedAt + stableStringify hash |
+| `save.js` | Write schedule; best-effort timestamp conflict check; no atomic compare-and-swap |
 | `load.js` | Read schedule; supports `public=1` for unauthenticated reads |
 | `snapshots.js` | Read/write named snapshots per schedule (store: schedule-snapshots) |
 | `library.js` | Read/write library metadata blob (phaseOrder, tsarchived, display name overrides, folder map, town/date caches) |
 | `rename-schedule.js` | Rename a schedule; copies blob to new key, migrates snapshot, updates all Library metadata references, deletes old blobs best-effort; cross-checks Library metadata on rename-back to avoid false 409 from stale CDN reads |
 | `move-schedule.js` | Move a schedule between productions/phases; coordinated two-write operation (not atomic): writes updated `meta.projectName`/`meta.phase` to schedule blob first, then updates `phaseOrder` in Library metadata; schedule name, snapshots, and links are preserved |
-| `delete-schedule.js` | Permanent delete of archived schedules; validates editorToken + delete passcode; deletes schedule blob, snapshot blob (best-effort), and cleans all library metadata references atomically |
-| `cms.js` | Read/write CMS branding config |
+| `delete-schedule.js` | Permanent delete exposed for archived schedules in the UI; validates editorToken + delete passcode but does not enforce archive state; sequential schedule/snapshot/library deletion, with partial-success handling |
+| `cms-load.js` / `cms-save.js` | Public CMS read / delete-PIN-protected CMS write |
 | `templates.js` | Read/write reusable schedule templates (store: schedule-templates) |
-| `places.js` | Google Places API proxy (forwards Referer, adds API key) |
+| `app/api/places/route.ts` (Next route) | Google Places GET details / POST autocomplete; server-only GOOGLE_PLACES_KEY and sanitized responses |
 
-All functions share the same HMAC auth check (`SCHEDULE_APP_PASSWORD` + `SCHEDULE_AUTH_SECRET`). `delete-schedule.js` additionally requires `SCHEDULE_DELETE_PASSWORD`; it is the sole server-side entry point for permanent schedule deletion.
+Schedule/library/template/snapshot mutations use the shared HMAC editor token (`SCHEDULE_APP_PASSWORD` + `SCHEDULE_AUTH_SECRET`). `delete-schedule.js` and the legacy delete path in `save.js` additionally require `SCHEDULE_DELETE_PASSWORD`. CMS uses that PIN separately; public loads and the Places proxy have different access paths. Middleware's cookie flag is only a navigation gate, not verified account authorization.
 
 ## 8. Public Routes
 
@@ -146,9 +148,9 @@ All functions share the same HMAC auth check (`SCHEDULE_APP_PASSWORD` + `SCHEDUL
 
 **remoteBaselineRef pattern** — `useSaveActions` keeps a mutable ref updated synchronously after every save response, mirroring the Zustand `remoteBaseline` slice. Zustand batching can produce intermediate renders where `dirty=false` but the store baseline is stale; the ref bypasses React's re-render cycle entirely.
 
-**Hash algorithm mismatch** — server uses `stableStringify` (sorted keys); client's old `hashSchedule` used `JSON.stringify` (insertion-order). Client-computed hashes are never used as baselines. Initial baseline uses `hash: ''`; after any save the server-returned hash is stored and reused verbatim.
+**Legacy hash field** — `save.js` returns sorted JSON as a field named `hash`, but timestamp comparison is the active conflict check. `postSave` sends only `expectedSavedAt`/`force`; `useSaveActions.updateBaseline` always stores `hash: ''`. The baseline type retains the old hash field for compatibility.
 
-**recalcRows after load** — `loadSchedule()` calls `recalcRows()` which rewrites row `timeOut` values. Rows in the store differ from the raw JSON on disk. `getScheduleData()` returns post-recalc rows; this is intentional (server always gets canonical data) but means you cannot diff store rows against raw loaded JSON.
+**recalcRows after load** — `loadSchedule()` calls `recalcRows()` which adjusts row `timeIn`/duration values; Time Out is computed for display rather than stored as `timeOut`. Rows in the store differ from the raw JSON on disk. `getScheduleData()` returns post-recalc rows; the store saves its recalculated representation but means you cannot diff store rows against raw loaded JSON.
 
 **Sun rows** — `recalcRows` skips sun rows (`continue` without advancing the cursor). Sun rows are repositioned to stay at sunrise/sunset times relative to call time via `repositionSunRows`.
 
@@ -168,7 +170,7 @@ All functions share the same HMAC auth check (`SCHEDULE_APP_PASSWORD` + `SCHEDUL
 
 **PWA** — `app/manifest.ts` auto-served at `/manifest.webmanifest`; iOS meta tags via `appleWebApp` in layout metadata; 192×192 and 512×512 icons generated from `apple-touch-icon.png` (1254×1254 source).
 
-**Print** — `@page { size: landscape }` in `print.css`. `lib/print.ts` sets `document.title` to `"[scheduleName] – [YYYY-MM-DD today]"` before `window.print()`, restores via `setTimeout(100)`. Print CSS is structured in versioned blocks (V5–V14k) appended over time. Desktop/laptop baseline: `thead th { font-size: 9px }`, `td { font-size: 8.1px }`, `.hdr-title { font-size: 17px }`. Touch/mobile device print overrides are scoped with `@media print and (hover: none) and (pointer: coarse)` — this catches both phones AND tablets. Landscape and portrait are further split with `and (orientation: landscape/portrait)`. As of 2026-05-14, mobile/touch font sizes in those blocks are smaller than desktop (thead th ~7–7.5px), causing "too small" complaints on tablet and mobile printouts. Active fix branch: `mobile-and-tablet-print`.
+**Print** — `@page { size: landscape }` in `print.css`. `lib/print.ts` sets `document.title` to `"[scheduleName] – [YYYY-MM-DD today]"` before `window.print()`, restores via `setTimeout(100)`. Print CSS is structured in versioned blocks (V5–V14k) appended over time. Desktop/laptop baseline: `thead th { font-size: 9px }`, `td { font-size: 8.1px }`, `.hdr-title { font-size: 17px }`. Touch/mobile device print overrides are scoped with `@media print and (hover: none) and (pointer: coarse)` — this catches both phones AND tablets. Landscape and portrait are further split with `and (orientation: landscape/portrait)`. As of 2026-05-14, mobile/touch font sizes in those blocks are smaller than desktop (thead th ~7–7.5px), causing "too small" complaints on tablet and mobile printouts. That note described the then-active `mobile-and-tablet-print` work; it is not a current readiness assessment.
 
 **Mobile CSS architecture** — Three CSS files interact on mobile: `styles/mobile.css` (primary mobile rules), `styles/inline-patches.css` (loads after mobile.css, has two `@media (max-width:760px)` blocks — "V2" ~line 509 and "V3 CORRECTION" ~line 728 — both use `!important` and win on specificity ties). When fixing mobile layout, both V2 and V3 blocks in inline-patches.css must be updated, not just mobile.css.
 
@@ -190,7 +192,7 @@ All functions share the same HMAC auth check (`SCHEDULE_APP_PASSWORD` + `SCHEDUL
 
 **NOTES column header alignment** — The notes cell (`NotesCell.tsx`) has a `notes-status-wrap` flex row: `status-icon-slot` (24px desktop / 22px mobile ≤760px) + 8px gap + notes textarea. The `<th className="th-notes">` uses `padding-left:37px` (desktop: 5px td-pad + 24px icon + 8px gap) or `36px` (mobile: 6px td-pad + 22px icon + 8px gap) so the header text aligns with the textarea content. Applied to both the actual thead and the `#mobile-grid-sticky` sticky overlay.
 
-**Stacked sub-locations (Phase 4)** — Each `ScheduleRow` has an optional `subLocations?: SubLocation[]` field. Each `SubLocation` carries `{ id, loc, locLat, locLng, done, desc }`. Sub-locations render inline inside the Location cell, stacked below the main location — no modal is used. `LocationCell.tsx` wraps the main location in a `.loc-main-row` container (`position: relative`) so the main map-pin button anchors to that row only, not the full cell including sub-location rows below. Each sub-location has its own `PlacesAutocomplete` instance (same `places.js` proxy) for Google-assisted address entry. The `DescTextarea` helper (private to `LocationCell.tsx`) auto-resizes via `useRef` + `useLayoutEffect` on value change — `useLayoutEffect` is used (not `useEffect`) so the DOM resize happens synchronously before paint and cannot interfere with the `@hello-pangea/dnd` drop animation window. All buttons in `LocationCell.tsx` carry `type="button"` to prevent implicit form submission; the `.loc-add-subloc` button has no CSS `transition` for the same reason. Sub-location edits write directly to the store via `updateRow` on every change — no buffering. The existing row-level contact button (`.done-tools` column) is separate and unrelated to sub-locations; contact-within-sub-location integration is deferred to Phase 4B. Old schedules without `subLocations` work unchanged — the field is absent from `makeRow()` defaults and preserved via `...overrides` spread in `normalizeRow()`. Sub-location data is row-level, not Library data; Library, rename, Move To, archive, delete, Save As, and DnD are unaffected. In print: sub-location `loc` text and `desc` text render; pin, remove, and add controls are hidden (`display: none !important`); `loc-subloc-desc` textareas get `height: auto !important; overflow: visible !important` so full description text is visible.
+**Stacked sub-locations (Phase 4)** — Each `ScheduleRow` has an optional `subLocations?: SubLocation[]` field. Each `SubLocation` carries `{ id, loc, locLat, locLng, done, desc }`. Sub-locations render inline inside the Location cell, stacked below the main location — no modal is used. `LocationCell.tsx` wraps the main location in a `.loc-main-row` container (`position: relative`) so the main map-pin button anchors to that row only, not the full cell including sub-location rows below. Each sub-location has its own `PlacesAutocomplete` instance (same `/api/places` proxy) for Google-assisted address entry. The `DescTextarea` helper (private to `LocationCell.tsx`) auto-resizes via `useRef` + `useLayoutEffect` on value change — `useLayoutEffect` is used (not `useEffect`) so the DOM resize happens synchronously before paint and cannot interfere with the `@hello-pangea/dnd` drop animation window. All buttons in `LocationCell.tsx` carry `type="button"` to prevent implicit form submission; the `.loc-add-subloc` button has no CSS `transition` for the same reason. Sub-location edits write directly to the store via `updateRow` on every change — no buffering. The existing row-level contact button (`.done-tools` column) is separate and unrelated to sub-locations; contact-within-sub-location integration is deferred to Phase 4B. Old schedules without `subLocations` work unchanged — the field is absent from `makeRow()` defaults and preserved via `...overrides` spread in `normalizeRow()`. Sub-location data is row-level, not Library data; Library, rename, Move To, archive, delete, Save As, and DnD are unaffected. In print: sub-location `loc` text and `desc` text render; pin, remove, and add controls are hidden (`display: none !important`); `loc-subloc-desc` textareas get `height: auto !important; overflow: visible !important` so full description text is visible.
 
 **Location/address compression (merged 2026-07-15)** — Branch `test/location-address-compression`, merged to `main`; `npm run build` passed and user testing confirmed the UI works well. Main rows now support optional `locName?: string` and `locAddress?: string` alongside legacy `loc`, `locLat`, and `locLng`. Sub-locations support optional `name?: string` and `address?: string` alongside legacy `loc`. The short name is the primary visible/editable line in the grid; the full address lives in a collapsible row beneath it. Google Places selection fills the address while preserving a human-friendly display name. Legacy schedules remain compatible: if name/address fields are absent, the UI falls back to `loc` and does not destructively rewrite old data on load. Map links prefer coordinates, then full address, then legacy `loc`. Print and read-only views render the name first with the address smaller underneath when present; Call Sheet location summaries prefer the display name while retaining usable address/map behavior.
 
@@ -235,13 +237,13 @@ If the Library metadata write fails after the blob write succeeds, the schedule 
 
 **Library display name overrides** — Renaming a production or phase writes `libMeta.productionDisplayNames[prodKey]` or `libMeta.phaseDisplayNames[prodKey][phaseKey]`. The normalized lowercase key (used for grouping) never changes; only the displayed label changes. Schedule blobs are not touched. The tree applies overrides after `buildTree()`, before merging empty containers.
 
-**Library archive and permanent delete** — `libMeta.tsarchived` is a string array of archived schedule names. Archiving removes the name from active `phaseOrder` entries and from the recent-schedules list. Restoring removes it from `tsarchived`. Permanent delete is only available for archived schedules (active schedules must be archived first). `delete-schedule.js` handles deletion atomically: deletes the schedule blob from the `schedules` store, deletes the associated snapshot blob from `schedule-snapshots` (keyed by `sha256(name)`; best-effort, non-fatal if absent), then reads and rewrites the library metadata blob with the schedule removed from `tsarchived`, `phaseOrder`, `scheduleFolderMap`, `townCache`, and `dateCache`. The two-step confirmation UI (passcode + type "DELETE") lives in `LibraryPage.tsx`. The server validates the delete password independently of the editor token.
+**Library archive and permanent delete** — `libMeta.tsarchived` is a string array of archived schedule names. Archiving removes the name from active `phaseOrder` entries and from the recent-schedules list. Restoring removes it from `tsarchived`. Permanent delete is shown only for archived schedules in the UI; neither deletion endpoint verifies archive state. `delete-schedule.js` handles deletion sequentially across stores, with partial-success responses: deletes the schedule blob from the `schedules` store, deletes the associated snapshot blob from `schedule-snapshots` (keyed by `sha256(name)`; best-effort, non-fatal if absent), then reads and rewrites the library metadata blob with the schedule removed from `tsarchived`, `phaseOrder`, `scheduleFolderMap`, `townCache`, and `dateCache`. The two-step confirmation UI (passcode + type "DELETE") lives in `LibraryPage.tsx`. The server validates the delete password independently of the editor token.
 
 **Library rename — key-migration approach** — Renaming a schedule from the Library copies the schedule blob to the new blob key, migrates the snapshot blob (keyed by `sha256(name)`), updates all Library metadata references (phaseOrder, tsarchived, scheduleFolderMap, townCache, dateCache), then deletes the old blobs best-effort. This is the backend flow in `netlify/functions/rename-schedule.js`. The schedule name is both the blob key and the URL segment (`/schedule/[name]`, `/view/[name]`), so rename is not a free metadata-only change — it is a full key migration. Existing Team Links and Client Links using the old name break after rename; users must copy new links. In-editor rename is not implemented; rename is Library-only. A future `scheduleId` architecture (permanent opaque ID separate from the display title) would eliminate the key-migration requirement entirely, but that is not current work.
 
-**Library rename — CDN consistency and client guards** — Netlify Blobs CDN reads use eventual consistency (no `uncachedEdgeURL` configured in this environment; `{ consistency: 'strong' }` is therefore not available). After a rename, the CDN may still serve the old blob key for minutes. Two guards protect against this: (1) a 15-second React-state sync guard (`syncingRenames`) disables opening or re-renaming the schedule immediately after a rename completes; (2) a sessionStorage pending rename map (`SS_RENAMES_KEY`, 60 s TTL) prevents stale blob-list reads from reverting the rename during Library Refresh — if the CDN still shows the old key, `applyPendingRenames` remaps it to the new name or filters it out. Rename-back (A→B→A) has an additional guard: `SS_RENAME_PREV_KEY` (5-min TTL) records each rename's predecessor; `isRenameBackAllowed()` exempts the predecessor from the client-side duplicate check. On the backend, when the `isRenameBack` flag is set and `store.get(newName)` returns a result (stale CDN blob), the backend reads Library metadata as a second authority: if Library no longer references the target name, the blob is a CDN artifact and the rename proceeds; if Library also references the name (genuine conflict or stale Library), a soft "still finalizing" 409 is returned instead of a hard "already exists" error.
+**Library rename — CDN consistency and client guards** — Rename uses ordinary Blob reads and historical CDN guards; `load.js` separately requests strong consistency when listing keys. Current provider configuration and read consistency were not revalidated here. After a rename, the CDN may still serve the old blob key for minutes. Two guards protect against this: (1) a 15-second React-state sync guard (`syncingRenames`) disables opening or re-renaming the schedule immediately after a rename completes; (2) a sessionStorage pending rename map (`SS_RENAMES_KEY`, 60 s TTL) prevents stale blob-list reads from reverting the rename during Library Refresh — if the CDN still shows the old key, `applyPendingRenames` remaps it to the new name or filters it out. Rename-back (A→B→A) has an additional guard: `SS_RENAME_PREV_KEY` (5-min TTL) records each rename's predecessor; `isRenameBackAllowed()` exempts the predecessor from the client-side duplicate check. On the backend, when the `isRenameBack` flag is set and `store.get(newName)` returns a result (stale CDN blob), the backend reads Library metadata as a second authority: if Library no longer references the target name, the blob is a CDN artifact and the rename proceeds; if Library also references the name (genuine conflict or stale Library), a soft "still finalizing" 409 is returned instead of a hard "already exists" error.
 
-**Netlify Blobs eventual consistency and client-side mutation guards** — Netlify Blobs CDN reads can return pre-write state for up to ~15 seconds after a write. `LibraryPage` guards against stale reads silently rolling back confirmed actions using sessionStorage-based pending mutation maps (60-second TTL): `rp_lib_pending_mutations` (archive/restore), `rp_lib_pending_phase_order` (DnD reorder), `rp_lib_pending_deletions` (permanent delete). On each Library fetch, `applyPendingMutations()` overlays pending state onto cloud state; if the cloud has caught up (confirms the mutation), the pending entry is cleared automatically. Guards are stored in sessionStorage rather than `useRef` so they survive in-session navigation (component unmount resets refs). Library metadata saves that fail now revert local state and surface an error banner rather than silently accepting the failure.
+**Netlify Blobs eventual consistency and client-side mutation guards** — Historical testing found stale Blob reads after writes; this review does not establish a current propagation-time bound. `LibraryPage` guards against stale reads silently rolling back confirmed actions using sessionStorage-based pending mutation maps (60-second TTL): `rp_lib_pending_mutations` (archive/restore), `rp_lib_pending_phase_order` (DnD reorder), `rp_lib_pending_deletions` (permanent delete). On each Library fetch, `applyPendingMutations()` overlays pending state onto cloud state; if the cloud has caught up (confirms the mutation), the pending entry is cleared automatically. Guards are stored in sessionStorage rather than `useRef` so they survive in-session navigation (component unmount resets refs). Library metadata saves that fail now revert local state and surface an error banner rather than silently accepting the failure.
 
 **ComboInput** — `components/schedule/ComboInput.tsx` is a controlled input with a filtered suggestion dropdown. `onMouseDown + e.preventDefault()` on options prevents blur-before-click. Pressing Enter fires `onBlur?.()` (commit) whether or not a dropdown item is active; pressing Escape fires `onEscape?.()` (revert). `HeaderIdentityLine` uses a `draftRef` alongside `draft` state so `commit()` always reads the latest value synchronously, even when a dropdown option was just selected (React batching would otherwise lag state).
 
@@ -257,16 +259,16 @@ If the Library metadata write fails after the blob write succeeds, the schedule 
 **Schedule header**: identity block (Phase 9: projectName prominent on row 1; phase · Day X of Y on row 2; Project/Phase ComboInput shows all options on open; Day enforced slash-notation input with strict validation — invalid input keeps editor open with inline error, never corrupts metadata), compact crew block (PRODUCER/DIRECTOR/CAMERA inline edit), Town/Location, Date, Call Time
 **Time cascade**: automatic timeOut recalc on any duration/order change
 **Drag & drop**: row reorder (row 0 protected), DnD via @hello-pangea/dnd
-**Undo/redo**: 80-level history, row-level snapshots
-**Conflict detection**: optimistic concurrency via savedAt + content hash, resolution modal (overwrite or reload)
+**Undo/redo**: 80-level in-memory history of rows and metadata
+**Conflict detection**: best-effort savedAt comparison and resolution modal (overwrite or reload); non-atomic writes and missing-baseline replacement remain readiness gaps
 **Auto-snapshot**: every 5 min while dirty; labeled `'Auto snapshot'`; best-effort (failure is silent)
 **Manual snapshots (Phase 8 polish)**: user-prompted custom label at snapshot time (blank/cancel → `'Manual snapshot'`); card shows label as main title with timestamp + action count as secondary; X/25 count badge in ToolsPanel Restore tab and Library Versions tab; capacity note at 25/25; creation failure surfaces error toast; Save As New pre-loads store to avoid blank-schedule on first open; server cap is 25 per schedule
-**Library**: collapsible production → phase → schedule tree (auto-grouped from metadata); same-section drag-and-drop reorder within a phase (cross-section DnD intentionally blocked); **Move To** — explicit modal workflow for moving a schedule between productions/phases without cross-section DnD, using controlled select dropdowns with custom/new entry support, preserving schedule name/data/snapshots/links; inline create production/phase; edit display names; contextual + New Schedule pre-populates identity; Links dropdown (Team Link + Client Link); archive/restore; permanent delete for archived schedules only (two-step confirmation, passcode-protected server-side); stale-read protection for recent Library mutations (sessionStorage pending-mutation guards); **rename** — Library-only key-migration rename with duplicate protection, rename-back support, and post-rename CDN sync guard; **row action model** — desktop: Links/Move To/Rename/Archive visible; mobile: Links/Move To visible + ⋯ menu (Rename/Archive); archived rows show Restore/Delete Permanently directly on all breakpoints (Phase 6)
-**Sharing**: Team Link (`?auth=true` deep link), Client Link (`/view/[name]` public), token-gated view (`/view?v=name&vt=token`)
+**Library**: collapsible production → phase → schedule tree (auto-grouped from metadata); same-section drag-and-drop reorder within a phase (cross-section DnD intentionally blocked); **Move To** — explicit modal workflow for moving a schedule between productions/phases without cross-section DnD, using controlled select dropdowns with custom/new entry support, preserving schedule name/data/snapshots/links; inline create production/phase; edit display names; contextual + New Schedule pre-populates identity; Links dropdown (Team Link + Client Link); archive/restore; permanent delete shown for archived schedules (two-step confirmation in UI; passcode required server-side, archive state not enforced server-side); stale-read protection for recent Library mutations (sessionStorage pending-mutation guards); **rename** — Library-only key-migration rename with duplicate protection, rename-back support, and post-rename CDN sync guard; **row action model** — desktop: Links/Move To/Rename/Archive visible; mobile: Links/Move To visible + ⋯ menu (Rename/Archive); archived rows show Restore/Delete Permanently directly on all breakpoints (Phase 6)
+**Sharing**: Team Link (`?auth=true` deep link), Client Link (`/view/[name]` public), token-gated view (`/view?v=name&vt=token`; a middleware self-redirect was reproduced September 11—see READINESS.md)
 **Public viewer**: branded read-only view; two routes (`/view/[name]` unauthenticated, `/view?v=name&vt=token` token-gated) share `ScheduleReadView`; renders schedule identity block (name / projectName / phase / day info), weather, meta grid, action color pills, stacked sub-locations with map links; completed rows not faded; mobile scroll hint; contact fields loaded but intentionally not rendered; `pub-view-hdr` hides public chrome from print; `rv-panel` restores Time Out column in read-only print (scoped override of editor's global last-child hide rule)
 **CMS**: per-brand colors, fonts, logo, action style overrides — applied via CSS custom properties
-**Backup**: export all schedules ZIP (Backup tab in Tools Panel); single-schedule JSON export is available via the Share menu (`ShareDropdown`) — no separate toolbar export phase planned
-**Google Places**: location autocomplete via proxied `places.js` function; shared by main location and sub-location address search; selected addresses populate full-address fields while display names stay editable
+**Backup**: Library exports loaded schedules as a JSON map; its import UI parses/reports without restoring. Tools Panel and Share export the current schedule JSON. No complete ZIP/snapshot/template/CMS backup or repeatable importer is implemented.
+**Google Places**: location autocomplete via the same-origin `/api/places` Next route; shared by main location and sub-location address search; selected addresses populate full-address fields while display names stay editable
 **Weather**: Open-Meteo integration; weather strip sits between Call Time field and schedule grid (screen); light grey background (#ebebeb) with design-system text colors
 **Templates**: reusable row sets stored in Netlify Blobs, synced across devices; accessible from within the editor via Tools Panel
 **Tools Panel**: slide-over drawer (Templates / Backup / Restore) accessible from the editor toolbar without closing the schedule
@@ -276,4 +278,6 @@ If the Library metadata write fails after the blob write succeeds, the schedule 
 **PWA**: installable via Safari Add to Home Screen; manifest at `/manifest.webmanifest`
 
 ---
-*Last updated: 2026-07-15 — Location/address compression documented. `locName` / `locAddress` and sub-location `name` / `address` are additive fields; legacy `loc`-only schedules remain compatible. Build passed and user testing confirmed the merged behavior.*
+*Historical validation, 2026-07-15 — Location/address compression documented. `locName` / `locAddress` and sub-location `name` / `address` are additive fields; legacy `loc`-only schedules remain compatible. Build passed and user testing confirmed the merged behavior.*
+
+*Documentation refreshed: 2026-09-11 — corrected runtime/routes, save semantics, snapshot versus autosave, deletion and backup claims. Fresh verification and limitations are in READINESS.md.*

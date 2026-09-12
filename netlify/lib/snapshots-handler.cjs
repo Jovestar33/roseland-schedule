@@ -1,4 +1,3 @@
-const { connectLambda, getStore } = require('@netlify/blobs');
 const crypto = require('crypto');
 
 function makeEditorToken(password, secret) {
@@ -29,7 +28,7 @@ function normalizeSnapshots(snaps) {
     .slice(0, 25);
 }
 
-exports.handler = async (event) => {
+exports.createHandler = (getStore) => async (event) => {
   const headers = {
     'Content-Type': 'application/json',
     'Access-Control-Allow-Origin': '*',
@@ -42,7 +41,6 @@ exports.handler = async (event) => {
   if (!['GET', 'POST'].includes(event.httpMethod)) return { statusCode: 405, headers, body: 'Method not allowed' };
 
   try {
-    connectLambda(event);
     const body = event.httpMethod === 'POST' ? JSON.parse(event.body || '{}') : {};
     const editorToken = event.httpMethod === 'GET' ? event.queryStringParameters?.editorToken : body.editorToken;
     const name = event.httpMethod === 'GET' ? event.queryStringParameters?.name : body.name;
@@ -56,7 +54,7 @@ exports.handler = async (event) => {
 
     const store = getStore('schedule-snapshots');
     const key = keyForName(name);
-    const raw = await store.get(key);
+    const raw = await store.get(key, { consistency: 'strong' });
     let record = raw === null || raw === undefined ? { name, snapshots: [] } : (typeof raw === 'string' ? JSON.parse(raw) : raw);
     record.name = name;
     record.snapshots = normalizeSnapshots(record.snapshots);

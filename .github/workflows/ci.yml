@@ -2,9 +2,9 @@ name: CI
 
 on:
   pull_request:
-    branches: [main]
+    branches: [main, "codex/phase-1-**"]
   push:
-    branches: [main]
+    branches: [main, "codex/phase-1-**"]
   workflow_dispatch:
 
 permissions:
@@ -25,10 +25,10 @@ jobs:
     timeout-minutes: 15
     steps:
       - name: Check out repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
 
       - name: Set up Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version: 22
           package-manager-cache: false
@@ -37,13 +37,19 @@ jobs:
         run: npm ci
 
       - name: Audit high-severity dependencies
-        run: npm audit --audit-level=high
+        run: npm run security:audit
 
       - name: Verify Google Places credentials stay server-only
         run: npm run test:credential-leaks
 
       - name: Lint application
         run: npm run lint
+
+      - name: Test platform request contracts
+        run: npm run test:platform
+
+      - name: Test editor saves and public routing
+        run: npm run test:editor
 
       - name: Build application
         run: npm run build
@@ -54,10 +60,10 @@ jobs:
     timeout-minutes: 20
     steps:
       - name: Check out repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
 
       - name: Set up Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version: 22
           package-manager-cache: false
@@ -73,6 +79,12 @@ jobs:
 
       - name: Run database and RLS tests
         run: npm run db:test
+
+      - name: Test invitation and suspension concurrency
+        run: python3 scripts/test-permission-concurrency.py --container supabase_db_roseland-schedule
+
+      - name: Run database security advisor
+        run: npm run db:advisors:security
 
       - name: Lint database schemas
         run: npm run db:lint

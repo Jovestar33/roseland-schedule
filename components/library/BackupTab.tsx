@@ -1,5 +1,6 @@
 'use client';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
+import { exportScheduleBackup, parseScheduleBackup, importScheduleBackup, type BackupSchedule } from '@/lib/api/backups';
 import { useAuthStore } from '@/lib/store/authStore';
 import type { LibrarySchedule } from './ScheduleListTab';
 
@@ -8,9 +9,12 @@ interface Props {
   onRefresh: () => void;
 }
 
-export default function BackupTab({ schedules, onRefresh }: Props) {
+export default function BackupTab({ onRefresh }: Props) {
   const token = useAuthStore((s) => s.token);
   const [syncMsg, setSyncMsg] = useState('');
+  const [backupBusy, setBackupBusy] = useState(false);
+  const busy = useRef(false);
+  const [pendingImport, setPendingImport] = useState<BackupSchedule[]>([]);
   const [migrateState, setMigrateState] = useState<'idle' | 'running' | 'done' | 'error'>('idle');
   const [migrateResult, setMigrateResult] = useState<{ migrated: string[]; skipped: string[]; errors: string[] } | null>(null);
 
@@ -22,36 +26,39 @@ export default function BackupTab({ schedules, onRefresh }: Props) {
     URL.revokeObjectURL(url);
   }
 
-  function exportLibraryJson() {
-    const bundle = schedules.reduce<Record<string, unknown>>((acc, s) => {
-      if (s.data) acc[s.name] = s.data;
-      return acc;
-    }, {});
-    exportJson(bundle, 'roseland-library.json');
+  async function exportLibraryJson() {
+    if (!token || busy.current) return;
+    busy.current = true; setBackupBusy(true); setSyncMsg('Reading all saved schedules…');
+    try {
+      const bundle = await exportScheduleBackup(token);
+      exportJson(bundle, 'roseland-schedules.json');
+      setSyncMsg(`Exported ${bundle.schedules.length} schedules.`);
+    } catch (error) { setSyncMsg(error instanceof Error ? error.message : 'Export failed.'); }
+    finally { busy.current = false; setBackupBusy(false); }
   }
 
-  function handleImportFile(file: File | null) {
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = e => {
-      try {
-        const data = JSON.parse(e.target?.result as string);
-        const keys = Object.keys(data);
-        if (!keys.length) { alert('JSON file appears empty.'); return; }
-        // Single-schedule format (has rows/meta) vs. library bundle (map of schedules)
-        const isBundle = keys.every(k => typeof data[k] === 'object' && 'rows' in data[k]);
-        if (isBundle) {
-          alert(`Parsed library bundle with ${keys.length} schedule(s): ${keys.slice(0, 5).join(', ')}${keys.length > 5 ? '…' : ''}.\n\nOpen each schedule in the editor and use Save to push it to the cloud.`);
-        } else if ('rows' in data) {
-          alert(`Parsed single schedule. Open a schedule in the editor and use Save to push changes.`);
-        } else {
-          alert('Unrecognized JSON format.');
-        }
-      } catch {
-        alert('Invalid JSON file — could not parse.');
-      }
-    };
-    reader.readAsText(file);
+  async function handleImportFile(file: File | null) {
+    if (!file || busy.current) return;
+    busy.current = true; setBackupBusy(true); setPendingImport([]);
+    try {
+      if (file.size > 20_000_000) throw new Error('Backup exceeds 20 MB.');
+      const entries = parseScheduleBackup(await file.text(), file.name.replace(/\.json$/i, ''));
+      setPendingImport(entries.map(entry => ({ ...entry, name: `${entry.name} (imported)` })));
+      setSyncMsg('Review the names below, then import. Existing schedules will never be overwritten.');
+    } catch (error) { setSyncMsg(error instanceof Error ? error.message : 'Could not read backup.'); }
+    finally { busy.current = false; setBackupBusy(false); }
+  }
+
+  async function confirmImport() {
+    if (!token || busy.current) return;
+    busy.current = true; setBackupBusy(true);
+    try {
+      const result = await importScheduleBackup(pendingImport, token);
+      setSyncMsg(`Imported ${result.imported.length}. ${result.failed.map(item => `${item.name}: ${item.reason}`).join(' ')}`);
+      setPendingImport(pendingImport.filter(entry => !result.imported.includes(entry.name)));
+      onRefresh();
+    } catch (error) { setSyncMsg(error instanceof Error ? error.message : 'Import failed.'); }
+    finally { busy.current = false; setBackupBusy(false); }
   }
 
   function handleSyncNow() {
@@ -105,19 +112,30 @@ export default function BackupTab({ schedules, onRefresh }: Props) {
         <div className="backup-card">
           <h3>Backup &amp; Import</h3>
           <div className="backup-actions">
-            <button className="btn btn-light btn-sm" onClick={exportLibraryJson}>Export Library JSON</button>
+            <button className="btn btn-light btn-sm" onClick={exportLibraryJson} disabled={backupBusy}>Export Schedules JSON</button>
             <label className="btn btn-pink btn-sm" style={{ cursor: 'pointer' }}>
               Import JSON
               <input
                 type="file"
+                disabled={backupBusy}
                 accept="application/json,.json"
                 style={{ display: 'none' }}
                 onChange={e => { handleImportFile(e.target.files?.[0] ?? null); e.target.value = ''; }}
               />
             </label>
           </div>
-          <div className="backup-note">Export the full library as JSON, or import a JSON backup to inspect it.</div>
+          <div className="backup-note">Export all saved schedule documents, or restore them as new schedules. Includes contacts and call-sheet data; keep the file private. Templates, snapshots, library organization and app settings are not included.</div>
         </div>
+        {pendingImport.length > 0 && <div className="backup-card">
+          <h3>Review import names</h3>
+          {pendingImport.map((entry, index) => <label key={index} style={{ display: 'block', marginBottom: 8 }}>
+            Schedule {index + 1}
+            <input className="ci" value={entry.name} disabled={backupBusy}
+              onChange={event => setPendingImport(items => items.map((item, i) => i === index ? { ...item, name: event.target.value } : item))} />
+          </label>)}
+          <button className="btn btn-pink btn-sm" disabled={backupBusy} onClick={confirmImport}>{backupBusy ? 'Working…' : 'Import as new schedules'}</button>
+          <button className="btn btn-light btn-sm" disabled={backupBusy} onClick={() => setPendingImport([])}>Cancel</button>
+        </div>}
         <div className="backup-card">
           <h3>Admin Utilities</h3>
           <div className="backup-actions">

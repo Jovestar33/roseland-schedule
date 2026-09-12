@@ -9,9 +9,10 @@ interface ModalProps {
   children: ReactNode;
   footer?: ReactNode;
   className?: string;
+  zIndex?: number;
 }
 
-export default function Modal({ open, onClose, title, children, footer, className }: ModalProps) {
+export default function Modal({ open, onClose, title, children, footer, className, zIndex }: ModalProps) {
   useEffect(() => {
     if (!open) return;
     function onKey(e: KeyboardEvent) {
@@ -26,6 +27,7 @@ export default function Modal({ open, onClose, title, children, footer, classNam
   return createPortal(
     <div
       className="overlay open"
+      style={zIndex === undefined ? undefined : { zIndex }}
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
     >
       <div className={`modal ${className ?? ''}`} role="dialog" aria-modal="true">
