@@ -1,4 +1,3 @@
-const { getStore } = require('@netlify/blobs');
 const crypto = require('crypto');
 
 function makeEditorToken(password, secret) {
@@ -25,7 +24,7 @@ function scheduleHash(data) {
   catch (_) { return ''; }
 }
 
-exports.handler = async (event) => {
+exports.createHandler = (getStore) => async (event) => {
   const headers = {
     'Content-Type': 'application/json',
     'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',

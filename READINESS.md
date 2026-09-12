@@ -12,7 +12,7 @@ The first staging deployment built successfully and authentication passed, but t
 
 Save, load and templates now use native Request/Response entrypoints, retaining Netlify's complete automatic Blobs context. Existing handler contracts and authorization remain unchanged. A new integration regression imports all three actual entrypoints and uses the real SDK with synthetic native context; it exercises create, read, update, stale-version rejection, duplicate-name rejection and template persistence, asserting that every read uses the uncached endpoint and the runtime context remains intact.
 
-**Local validation:** 53 editor/server/API/recovery tests plus 24 platform tests pass (77 total); build, TypeScript and integrated lint pass. Hosted validation of this correction is pending staging redeployment. Do not treat a successful build alone as functional sign-off.
+**Local validation:** 53 editor/server/API/recovery tests plus 24 platform tests pass (77 total); build, TypeScript and integrated lint pass. The first native-entrypoint deploy then exposed a bundling issue with the CommonJS SDK require. The entrypoints now import the SDK directly using ESM and pass the store constructor into the existing handlers, matching the native runtime's module format. The affected handler and native-runtime tests pass again; hosted verification is pending the follow-up redeployment. Do not treat a successful build alone as functional sign-off.
 
 ## September 12: sharing, concurrent saves, template recovery and imports
 

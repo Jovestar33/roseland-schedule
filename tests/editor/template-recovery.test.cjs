@@ -20,7 +20,7 @@ test('template recovery preserves collisions and is idempotent', async () => {
   };
   vm.runInNewContext(fs.readFileSync('netlify/lib/templates-handler.cjs', 'utf8'), context);
   const editorToken = crypto.createHmac('sha256', 'test').update('editor:test').digest('hex');
-  const request = () => context.exports.handler({ httpMethod: 'POST', body: JSON.stringify({ editorToken, action: 'replace', templates: { Shared: localTemplate } }) });
+  const request = () => context.exports.createHandler(context.require('@netlify/blobs').getStore)({ httpMethod: 'POST', body: JSON.stringify({ editorToken, action: 'replace', templates: { Shared: localTemplate } }) });
   assert.equal((await request()).statusCode, 200);
   assert.deepEqual(data.Shared, remoteTemplate);
   assert.deepEqual(data['Shared (recovered 1)'], localTemplate);

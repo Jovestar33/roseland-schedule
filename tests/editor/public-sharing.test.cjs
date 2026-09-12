@@ -15,7 +15,7 @@ function handler() {
       : name === './public-view' ? view : require(name),
   };
   vm.runInNewContext(fs.readFileSync('netlify/lib/load-handler.cjs', 'utf8'), context);
-  return query => context.exports.handler({ httpMethod: 'GET', queryStringParameters: { name: 'A', ...query } });
+  return query => context.exports.createHandler(context.require('@netlify/blobs').getStore)({ httpMethod: 'GET', queryStringParameters: { name: 'A', ...query } });
 }
 test('name-only and public=1 requests cannot bypass sharing authorization', async () => {
   const load = handler();

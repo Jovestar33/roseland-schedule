@@ -36,7 +36,7 @@ function setup({ failWrite = false } = {}) {
     },
   };
   vm.runInNewContext(fs.readFileSync('netlify/lib/save-handler.cjs', 'utf8'), context);
-  const save = (args = {}) => context.exports.handler({ httpMethod: 'POST', body: JSON.stringify({
+  const save = (args = {}) => context.exports.createHandler(context.require('@netlify/blobs').getStore)({ httpMethod: 'POST', body: JSON.stringify({
     name: 'Schedule', data: { meta: { town: 'Original' }, rows: [] }, editorToken, ...args,
   }) });
   return { save, entries, writes };

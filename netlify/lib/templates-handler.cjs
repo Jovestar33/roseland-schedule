@@ -1,4 +1,3 @@
-const { getStore } = require('@netlify/blobs');
 const crypto = require('crypto');
 
 function makeEditorToken(password, secret) {
@@ -12,7 +11,7 @@ function isAuthorizedEditor(token) {
   return token === makeEditorToken(APP_PASSWORD, AUTH_SECRET);
 }
 
-exports.handler = async (event) => {
+exports.createHandler = (getStore) => async (event) => {
   const headers = {
     'Content-Type': 'application/json',
     'Access-Control-Allow-Origin': '*',
