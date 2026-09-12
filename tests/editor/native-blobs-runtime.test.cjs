@@ -41,6 +41,7 @@ test('deployed Request/Response entrypoints preserve native strong-read context 
     const { default: save } = await import('../../netlify/functions/save.mjs');
     const { default: load } = await import('../../netlify/functions/load.mjs');
     const { default: templates } = await import('../../netlify/functions/templates.mjs');
+    const { default: snapshots } = await import('../../netlify/functions/snapshots.mjs');
     const post = (handler, body) => handler(new Request('https://staging.invalid/function', {
       method: 'POST', body: JSON.stringify({ editorToken, ...body }),
     }));
@@ -58,7 +59,12 @@ test('deployed Request/Response entrypoints preserve native strong-read context 
     const templateRead = await templates(new Request(`https://staging.invalid/templates?editorToken=${editorToken}`));
     assert.equal(templateRead.status, 200);
     assert.equal((await templateRead.json()).templates.Fixture.rows[0].action, 'Template');
-    assert.ok(reads.length >= 5);
+    const snapshotWrite = await post(snapshots, { name: 'Fixture', snapshot: { id: 'initial', label: 'Initial', savedAt: 1, data: { rows: [] } } });
+    assert.equal(snapshotWrite.status, 200);
+    const snapshotRead = await snapshots(new Request(`https://staging.invalid/snapshots?name=Fixture&editorToken=${editorToken}`));
+    assert.equal(snapshotRead.status, 200);
+    assert.equal((await snapshotRead.json()).snapshots[0].id, 'initial');
+    assert.ok(reads.length >= 7);
     assert.equal(process.env.NETLIFY_BLOBS_CONTEXT, nativeContext);
     assert.equal((await save(new Request('https://staging.invalid/save', { method: 'OPTIONS' }))).status, 200);
     assert.equal((await save(new Request('https://staging.invalid/save'))).status, 405);
