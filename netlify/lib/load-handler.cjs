@@ -25,7 +25,8 @@ exports.createHandler = (getStore) => async (event) => {
   if (event.httpMethod !== 'GET') return { statusCode: 405, headers, body: 'Method not allowed' };
 
   try {
-    const store = getStore('schedules');
+    // list() uses the store-level consistency setting; a per-list option is ignored.
+    const store = getStore({ name: 'schedules', consistency: 'strong' });
 
     const name = event.queryStringParameters?.name;
     const editorToken = event.queryStringParameters?.editorToken;
@@ -36,7 +37,7 @@ exports.createHandler = (getStore) => async (event) => {
         return { statusCode: 403, headers, body: JSON.stringify({ error: 'Unauthorized editor access' }) };
       }
       // Strong consistency so a schedule saved via Save As appears in the list immediately.
-      const { blobs } = await store.list({ consistency: 'strong' });
+      const { blobs } = await store.list();
       return { statusCode: 200, headers, body: JSON.stringify({ schedules: blobs.map((b) => b.key) }) };
     }
 

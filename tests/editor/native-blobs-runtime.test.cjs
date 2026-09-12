@@ -2,7 +2,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const crypto = require('node:crypto');
 
-test('deployed Request/Response entrypoints preserve native strong-read context across save, load and templates', async () => {
+test('deployed Request/Response entrypoints preserve native strong-read context across saving, listing, templates and snapshots', async () => {
   const originalFetch = global.fetch;
   const names = ['NETLIFY_BLOBS_CONTEXT', 'SCHEDULE_APP_PASSWORD', 'SCHEDULE_AUTH_SECRET'];
   const originalEnv = Object.fromEntries(names.map(name => [name, process.env[name]]));
@@ -27,6 +27,9 @@ test('deployed Request/Response entrypoints preserve native strong-read context 
     if (method === 'GET') {
       reads.push(url.pathname);
       assert.equal(url.hostname, 'fresh.invalid', 'version reads must use the uncached endpoint');
+      if (url.pathname.split('/').filter(Boolean).length === 2) {
+        return new Response(JSON.stringify({ blobs: [...entries.keys()].filter(key => key.startsWith(url.pathname + '/')).map(key => ({ key: key.slice(url.pathname.length + 1) })) }));
+      }
       return existing ? new Response(existing.body, { headers: { etag: existing.etag } }) : new Response(null, { status: 404 });
     }
     assert.equal(method, 'PUT');
@@ -48,6 +51,9 @@ test('deployed Request/Response entrypoints preserve native strong-read context 
     const first = await post(save, { name: 'Fixture', createOnly: true, data: { rows: [] } });
     assert.equal(first.status, 200);
     const { savedAt } = await first.json();
+    const list = await load(new Request(`https://staging.invalid/load?editorToken=${editorToken}`));
+    assert.equal(list.status, 200);
+    assert.deepEqual((await list.json()).schedules, ['Fixture']);
     const read = await load(new Request(`https://staging.invalid/load?name=Fixture&editorToken=${editorToken}`));
     assert.equal(read.status, 200);
     assert.equal((await read.json()).savedAt, savedAt);
