@@ -80,6 +80,9 @@ jobs:
       - name: Run database and RLS tests
         run: npm run db:test
 
+      - name: Test invitation and suspension concurrency
+        run: python3 scripts/test-permission-concurrency.py --container supabase_db_roseland-schedule
+
       - name: Run database security advisor
         run: npm run db:advisors:security
 
