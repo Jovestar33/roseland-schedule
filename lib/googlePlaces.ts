@@ -56,8 +56,13 @@ function formatAddress(
   const locality = get('locality') || get('postal_town');
   const admin = get('administrative_area_level_1', true);
   const postal = get('postal_code');
-  const addr = [street, locality, admin, postal].filter(Boolean).join(', ');
-  return [fallbackName, addr].filter(Boolean).join(', ') || details.formattedAddress || fallbackName;
+  const parts = [street, locality, admin, postal].filter(Boolean);
+  const addr = parts.join(', ');
+  const normalize = (value: string) => value.trim().toLocaleLowerCase();
+  const nameAlreadyIncluded = [...parts, addr].some(
+    part => normalize(part) === normalize(fallbackName),
+  );
+  return [nameAlreadyIncluded ? '' : fallbackName, addr].filter(Boolean).join(', ') || details.formattedAddress || fallbackName;
 }
 
 export async function geocodePlace(placeId: string, fallbackName = ''): Promise<GeoResult | null> {
