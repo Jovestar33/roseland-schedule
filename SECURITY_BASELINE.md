@@ -2,7 +2,7 @@
 
 Status: Phase 0 requirements with Phase 1 automation in progress. See
 [`SECURITY_AUTOMATION.md`](./SECURITY_AUTOMATION.md) for implemented gates,
-reviewed findings, and the open Google credential-rotation requirement.
+reviewed findings, and the resolved July 29 Google credential incident. See [READINESS.md](./READINESS.md) for September 11 dependency findings and incomplete release gates; this baseline describes requirements, not a completed implementation.
 
 ## Identity and authorization
 
@@ -25,7 +25,7 @@ reviewed findings, and the open Google credential-rotation requirement.
 ## Secrets and environments
 
 - Browser: Supabase publishable key only. Server: secret/service-role and paid-provider keys.
-- Remove `NEXT_PUBLIC_GOOGLE_PLACES_KEY`; rotate any key previously exposed and enforce provider restrictions/quotas.
+- Preserve the July 29 removal of browser Places keys and revocation of both historical credentials; continue enforcing provider restrictions/quotas. Do not reintroduce `NEXT_PUBLIC_GOOGLE_PLACES_KEY`.
 - Separate development, preview, and production projects, credentials, data, and deployment access.
 - Never place credentials in source, client bundles, generated files, URLs, analytics, logs, or migration reports.
 - Run secret and credential-leak scans in CI and before cutover.

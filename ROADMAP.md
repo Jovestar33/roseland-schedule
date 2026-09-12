@@ -54,13 +54,17 @@ Phase 0 documents: [`CURRENT_DATA_INVENTORY.md`](./CURRENT_DATA_INVENTORY.md), [
 
 ## 🟠 Phase 1: secure Supabase foundation
 
-**Status:** in progress. The tenant-foundation migration is merged to `main`; the draft auth/bootstrap, server-workflow, and security-automation foundations remain on PR #5. All database changes are applied only to `roseland-schedule-dev`. Organizations, production memberships, profiles, invitations, audit events, restricted platform operators, and service-only mutations use default-deny RLS and explicit privileges; 114 transaction-isolated local/linked database tests and 24 application contract/security tests pass. The local and linked security-advisor gates pass with only reviewed hosted warnings. The development Auth identity has verified TOTP MFA, and the one-time transaction created the Roseland Pictures organization, active Owner membership, restricted MFA-required platform `superadmin`, and bootstrap audit event. Replay protection is verified. GitHub secret scanning, push protection, Dependabot alerts/security updates, PR dependency review, Gitleaks, pinned CI actions, and a resilient runtime dependency audit are active. The Google Places credential incident was resolved through the isolated, production-verified security hotfix PR #7: browser-side key use was removed, a restricted server-only replacement is active in Netlify, both historical keys were revoked, and both GitHub alerts were resolved as revoked. The setup page and Supabase server routes remain disabled, PR #5 is still unmerged, and the live app still uses Netlify Auth/Blobs.
+**Status (September 11, 2026):** Phase 1 remains incomplete. Tenant foundation is merged. [PR #5](https://github.com/Jovestar33/roseland-schedule/pull/5) adds auth/bootstrap and server workflows on `cbdb921`; [PR #8](https://github.com/Jovestar33/roseland-schedule/pull/8), stacked on #5 at `3e0cb89`, adds schedule-domain tables/history and 45 domain assertions. Both remain drafts. Auth/bootstrap migrations were historically applied only to `roseland-schedule-dev`; the schedule migration has not been applied there according to PR #8. No live UI uses Supabase yet.
 
-**Production stability freeze:** [`PRODUCTION_STABILITY_POLICY.md`](./PRODUCTION_STABILITY_POLICY.md) is active during the heavy-usage period. Migration/auth/theming work remains on feature branches and `roseland-schedule-dev`; it is not merged into `main` until the user explicitly ends the freeze.
+**Freeze ended September 11, 2026.** The approved restart is a documentation/readiness pass, not merge, deployment or migration authorization. See [PRODUCTION_STABILITY_POLICY.md](./PRODUCTION_STABILITY_POLICY.md).
+
+**Current evidence and next work:** [READINESS.md](./READINESS.md) supersedes older undated readiness claims. Fresh auth tests (24), lint and build pass, but fresh runtime audits report critical/high findings on both foundation lockfiles. Address dependency/CI readiness first, then reproduced save/link issues and domain validation, mandatory optimistic writes, restore and lifecycle permissions. Docker was stopped; no fresh database or full editor/device regression was run. Historical 114 auth / 159 schedule database assertions are not current release approval.
+
+**Historical milestones:** July 26 development TOTP and one-time Roseland Owner/operator bootstrap completed; July 29 PR #5 CI passed and Places hotfix PR #7 resolved the historical credentials. These remain dated records, not fresh hosted checks.
 
 - [ ] Create isolated development, preview, and production Supabase environments.
 - [x] Commit database migrations to GitHub.
-- [ ] Create the initial tenant-aware schema: organizations, memberships, productions, phases, production days, schedules, rows, sub-locations, versions, contacts, locations, call sheets, share links, and audit events.
+- [ ] Complete the initial tenant-aware schema: organizations/memberships/productions are merged; profiles/invitations/audit and phases/days/schedules/versions are in draft foundations. Templates, shares and migration mappings remain planned. Keep rows/sub-locations/contacts/call-sheet fields in validated JSON initially; normalize later as needed.
 - [ ] Add UUID primary keys, foreign keys, indexes, timestamps, actor attribution, optimistic version fields, and recovery-friendly deletion behavior.
 - [ ] Enable RLS in the same migration that creates every exposed table.
 - [ ] Implement default-deny, least-privilege policies for SELECT/INSERT/UPDATE/DELETE.
@@ -262,10 +266,10 @@ Completed implementation history remains documented in Git history and [`ARCHITE
 ## Deferred and superseded work
 
 - `phase-11-production-command-planning` contains a functional Blob-based Production Command prototype plus planning. Do not merge it into `main`; inspect and salvage selectively after Phase 6.
-- Overtime notifications, Library search/sort/recent, public contact cards, snapshot compare/rename, contact-per-sub-location, and standalone PWA testing are deferred behind the platform migration unless required for current production use.
+- Overtime notifications, public contact cards, snapshot compare/rename, contact-per-sub-location, and standalone PWA testing remain deferred. Library already contains search/filter/recent surfaces; further polish is deferred unless required for current use.
 - Clerk was previously preferred for future auth. The approved direction now uses Supabase Auth to keep identity, RLS, storage, and realtime authorization within one platform.
 - The old plan to build the Mother App on additional Netlify Blob stores before migrating is superseded.
 
 ---
 
-*Last updated: 2026-07-29 — Google Places security hotfix PR #7 is live and verified, historical keys are revoked, and secret-scanning alerts are resolved. Development MFA and the one-time Roseland Owner/platform-superadmin bootstrap remain complete and verified. Phase 1 migration work continues only in the isolated development environment while the production stability freeze remains in force.*
+*Last updated: 2026-09-11 — freeze ended; August schedule foundation and fresh readiness findings recorded. No migration, merge or deployment authorized in this step. Prior July/August validation is preserved in READINESS.md and the historical workflow/security records.*

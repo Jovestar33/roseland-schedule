@@ -1,5 +1,5 @@
 'use client';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '../store/authStore';
 import { useScheduleStore } from '../store/scheduleStore';
@@ -9,44 +9,73 @@ import { postAddSnapshot } from '../api/snapshots';
 import { normalizeRows } from '../rowNormalizer';
 import type { ConflictState } from '../types';
 
-export function useSaveActions() {
+export function useSaveActions(routeName: string) {
   const router = useRouter();
   const token = useAuthStore((s) => s.token);
 
   const scheduleName      = useScheduleStore((s) => s.scheduleName);
-  const dirty             = useScheduleStore((s) => s.dirty);
   const getScheduleData   = useScheduleStore((s) => s.getScheduleData);
   const markClean         = useScheduleStore((s) => s.markClean);
   const loadSchedule      = useScheduleStore((s) => s.loadSchedule);
   const newSchedule       = useScheduleStore((s) => s.newSchedule);
   const setSyncStatus     = useScheduleStore((s) => s.setSyncStatus);
-  const remoteBaseline    = useScheduleStore((s) => s.remoteBaseline);
   const setRemoteBaseline = useScheduleStore((s) => s.setRemoteBaseline);
   const setConflictData   = useScheduleStore((s) => s.setConflictData);
 
-  // Mutable ref that stays current every render AND is updated synchronously
-  // right after each save response — before React's re-render cycle runs.
-  // This prevents stale closures from reading the pre-save baseline on the
-  // very next save attempt (the alternating-conflict bug).
-  const remoteBaselineRef = useRef(remoteBaseline);
-  remoteBaselineRef.current = remoteBaseline;
+  // Invalidate pending operations when the editor unmounts or its route changes.
+  // A session also changes on load/new, including reopening the same name.
+  const requestSequence = useRef(0);
+  useEffect(() => () => { requestSequence.current += 1; }, [routeName]);
+
+  function beginRequest() {
+    const state = useScheduleStore.getState();
+    return {
+      sequence: ++requestSequence.current,
+      session: state.documentSession,
+      revision: state.editRevision,
+      name: state.scheduleName,
+    };
+  }
+
+  function isCurrent(request: ReturnType<typeof beginRequest>) {
+    const state = useScheduleStore.getState();
+    return request.sequence === requestSequence.current
+      && request.session === state.documentSession
+      && request.name === state.scheduleName;
+  }
 
   function updateBaseline(savedAt: number) {
-    remoteBaselineRef.current = { savedAt, hash: '' };  // synchronous — visible in the same JS tick
-    setRemoteBaseline(savedAt, '');                      // async via Zustand/React (for store subscribers)
+    // Zustand updates synchronously. Read the store again for each request.
+    setRemoteBaseline(savedAt, '');
+  }
+
+  function acknowledgeSave(request: ReturnType<typeof beginRequest>, savedAt: number) {
+    if (!isCurrent(request)) return;
+    const unchanged = request.revision === useScheduleStore.getState().editRevision;
+    if (unchanged) markClean();
+    updateBaseline(savedAt);
+    setSyncStatus(unchanged ? 'synced' : 'pending');
+    setConflictData(null);
   }
 
   async function loadScheduleFromCloud(name: string) {
     // If the store already has this schedule with a remote baseline (e.g. navigation triggered
     // immediately after saveAs), skip the fetch — the data is already current.
-    if (scheduleName === name && remoteBaselineRef.current !== null) return;
+    const current = useScheduleStore.getState();
+    if (current.scheduleName === name && current.remoteBaseline !== null) return;
     // Immediately clear to blank so the UI never flashes the previous schedule's data.
     // If the server has real data for this name, loadSchedule() will replace the blank state.
     newSchedule(name);
+    const request = beginRequest();
     if (!token) return;
     setSyncStatus('syncing');
     try {
       const data = await postLoad(name, token);
+      if (!isCurrent(request)) return;
+      if (request.revision !== useScheduleStore.getState().editRevision) {
+        setSyncStatus('pending');
+        return;
+      }
       if (data) {
         const normalized = { ...data, rows: normalizeRows(data.rows) };
         loadSchedule(name, normalized);
@@ -54,32 +83,33 @@ export function useSaveActions() {
       }
       setSyncStatus('synced');
     } catch {
-      setSyncStatus('offline');
+      if (isCurrent(request)) setSyncStatus('offline');
     }
   }
 
-  async function save() {
-    if (!scheduleName) return;
+  async function saveCurrent(force = false) {
+    const current = useScheduleStore.getState();
+    const name = current.scheduleName;
+    if (!name) return;
     if (!token) { router.push('/login'); return; }
+    const request = beginRequest();
+    const data = current.getScheduleData();
     setSyncStatus('syncing');
-    const data = getScheduleData();
-    // Read from the ref — always the latest value regardless of render cycle.
-    const baseline = remoteBaselineRef.current;
     try {
-      const result = await postSave(scheduleName, data, token, {
-        expectedSavedAt: baseline?.savedAt ?? 0,
+      const result = await postSave(name, data, token, {
+        force,
+        expectedSavedAt: current.remoteBaseline?.savedAt ?? 0,
       });
-      markClean();
-      updateBaseline(result.savedAt);
-      setSyncStatus('synced');
+      acknowledgeSave(request, result.savedAt);
     } catch (e) {
+      if (!isCurrent(request)) return;
       const err = e as SaveError;
       if (err.conflict) {
         setSyncStatus('conflict');
         setConflictData({
-          local: data,
+          local: useScheduleStore.getState().getScheduleData(),
           remote: err.remoteData ?? data,
-          scheduleName: scheduleName,
+          scheduleName: name,
         } satisfies ConflictState);
       } else {
         setSyncStatus('offline');
@@ -87,31 +117,23 @@ export function useSaveActions() {
     }
   }
 
-  async function saveForce() {
-    if (!scheduleName || !token) return;
-    setSyncStatus('syncing');
-    const data = getScheduleData();
-    try {
-      const result = await postSave(scheduleName, data, token, { force: true });
-      markClean();
-      updateBaseline(result.savedAt);
-      setSyncStatus('synced');
-      setConflictData(null);
-    } catch {
-      setSyncStatus('offline');
-    }
-  }
+  async function save() { await saveCurrent(); }
+  async function saveForce() { await saveCurrent(true); }
 
   async function saveAs(newName: string) {
     if (!token) { router.push('/login'); return; }
+    const request = beginRequest();
     setSyncStatus('syncing');
     const data = getScheduleData();
     try {
       const result = await postSave(newName, data, token, {});
-      const savedData = { ...data, savedAt: result.savedAt };
-      loadSchedule(newName, savedData);
+      if (!isCurrent(request)) return;
+      const changed = request.revision !== useScheduleStore.getState().editRevision;
+      // Keep edits made during Save As in the new document, still unsaved.
+      useScheduleStore.setState({ scheduleName: newName, dirty: changed });
       updateBaseline(result.savedAt);
-      setSyncStatus('synced');
+      setSyncStatus(changed ? 'pending' : 'synced');
+      setConflictData(null);
       // Tell the Library that this name was just saved so a stale list read
       // during the Blob propagation window doesn't hide the new schedule.
       try {
@@ -130,7 +152,7 @@ export function useSaveActions() {
       } catch {}
       router.push(`/schedule/${encodeURIComponent(newName)}`);
     } catch {
-      setSyncStatus('offline');
+      if (isCurrent(request)) setSyncStatus('offline');
     }
   }
 
@@ -146,7 +168,8 @@ export function useSaveActions() {
   }
 
   async function resolveConflictOverwrite(conflictState: ConflictState) {
-    if (!token) return;
+    if (!token || useScheduleStore.getState().scheduleName !== conflictState.scheduleName) return;
+    const request = beginRequest();
     // Snapshot the remote version first so it's not lost
     try {
       await postAddSnapshot(
@@ -156,11 +179,12 @@ export function useSaveActions() {
         token
       );
     } catch { /* best-effort */ }
-    await saveForce();
+    if (isCurrent(request)) await saveForce();
   }
 
   async function resolveConflictReload(conflictState: ConflictState) {
-    if (!token) return;
+    if (!token || useScheduleStore.getState().scheduleName !== conflictState.scheduleName) return;
+    const request = beginRequest();
     // Snapshot the local version first
     try {
       await postAddSnapshot(
@@ -170,6 +194,7 @@ export function useSaveActions() {
         token
       );
     } catch { /* best-effort */ }
+    if (!isCurrent(request) || request.revision !== useScheduleStore.getState().editRevision) return;
     const remote = conflictState.remote;
     loadSchedule(conflictState.scheduleName, remote);
     updateBaseline(remote.savedAt ?? 0);
@@ -178,11 +203,12 @@ export function useSaveActions() {
   }
 
   function closeSchedule() {
-    if (dirty) {
+    if (useScheduleStore.getState().dirty) {
       if (!confirm('Close this schedule? Unsaved changes will be lost.')) return;
     }
     // Bust the Next.js router cache so LibraryPage remounts and re-fetches
     // rather than being reactivated from the stale client-side cache.
+    requestSequence.current += 1;
     router.refresh();
     router.push('/');
   }

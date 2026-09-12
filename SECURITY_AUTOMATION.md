@@ -1,8 +1,6 @@
 # Security Automation and Findings
 
-Status: implemented on draft PR #5 on 2026-07-26. These controls do not change
-the Netlify production deployment while the production stability freeze is
-active.
+Status: controls introduced on draft PR #5 on July 26, 2026, with secret/dependency review also merged through the hotfix lineage. The freeze ended September 11; this readiness step does not authorize deployment changes. Current checks and dependency findings are in [READINESS.md](./READINESS.md).
 
 ## Automated gates
 
@@ -24,19 +22,15 @@ active.
 - The linked-development advisor command fails on every unreviewed warning or
   error: `npm run db:advisors:security:linked`.
 
-## Current dependency result
+## Dependency result (September 11, 2026)
 
-- The production dependency tree has no known high or critical npm advisories
-  after updating Next.js to 15.5.21 and resolving the affected PostCSS, Sharp,
-  and brace-expansion versions.
-- The existing ESLint development toolchain still inherits a high-severity
-  brace-expansion denial-of-service advisory. It is not shipped in the
-  production bundle, cannot process user-controlled application input, and has
-  no compatible upstream fix within the supported ESLint/Next.js 15 peer ranges.
-  Dependabot continues to track it. Replace the override with supported upstream
-  versions as soon as the lint ecosystem publishes them.
+Fresh runtime audits supersede the July clean result: auth `cbdb921` reports one critical, two high and one moderate package finding; schedule `3e0cb89` reports one critical and one high. Next 15.5.21 and Sharp 0.35.0 remain flagged in both. Schedule's PostCSS/Nano ID update removes those findings but does not establish release readiness. See [READINESS.md](./READINESS.md) for advisories, applicability limits, PR #9's actual failure and the proposed dependency slice.
 
-## Supabase advisor review
+Historical July result: the runtime audit passed after the then-current Next/PostCSS/Sharp changes; a development ESLint/brace-expansion exception was recorded. Do not reuse that exception's old “no compatible upstream fix” claim without a fresh full dependency audit and compatibility check. No dependency changes were made during this documentation review.
+
+## Historical Supabase advisor review (July 26, 2026)
+
+Hosted settings and advisories were not rechecked in the September readiness pass.
 
 The hosted development project has no unreviewed security-advisor warnings after
 the function-privilege hardening migration.
@@ -62,7 +56,7 @@ function privileges have transaction-isolated local and linked tests.
 ## Resolved credential incident
 
 GitHub secret scanning identified two Google API keys committed in repository
-history, including a key still present on `main`. This incident was resolved on
+history, including a key then present on `main`. This incident was resolved on
 2026-07-29 through isolated security hotfix PR #7:
 
 1. The browser and hardcoded Google Places calls were replaced with the
@@ -78,10 +72,10 @@ history, including a key still present on `main`. This incident was resolved on
    `6a69a1941a16950008ce757e` published successfully.
 5. Production login, redirect, sanitized-error, autocomplete, and place-details
    smoke tests passed. Autocomplete was verified again after revocation.
-6. Both historical Google credentials were deleted provider-side and remain
-   restorable in Google Cloud for 30 days. GitHub secret-scanning alerts #1 and
+6. Both historical Google credentials were deleted provider-side; the July 29
+   record noted a 30-day provider restoration window, not an ongoing status. GitHub secret-scanning alerts #1 and
    #2 were resolved as `revoked`; zero open alerts remained.
 
-Do not rewrite public Git history during the production stability freeze.
+Public Git history rewriting is not authorized in the September 11 readiness step.
 Rotation removes the credential's value even though the old string remains in
 history.

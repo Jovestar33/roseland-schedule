@@ -47,7 +47,7 @@ export default function ScheduleEditor({ name, initMeta }: Props) {
     resolveConflictOverwrite,
     resolveConflictReload,
     closeSchedule,
-  } = useSaveActions();
+  } = useSaveActions(name);
 
   const { addToast } = useToast();
 
@@ -99,6 +99,8 @@ export default function ScheduleEditor({ name, initMeta }: Props) {
     if (loadedName.current === name) return;
     loadedName.current = name;
     loaderRef.current(name);
+    // Allow the replacement effect to load after Strict Mode cancels the first request.
+    return () => { loadedName.current = null; };
   }, [name, hydrated]);
 
   // Apply pre-populated metadata from contextual + New Schedule in Library

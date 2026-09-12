@@ -1,12 +1,14 @@
 # Production Stability Policy
 
-Status: active during Roseland's heavy-usage period. The user will explicitly declare when this freeze ends.
+Status: the user explicitly ended the heavy-usage freeze on **September 11, 2026**. The authorized follow-up includes isolated dependency/CI and reliability fixes, disposable local database tests, resuming only existing `roseland-schedule-dev`, compatible transaction-isolated hosted checks, and read-only usage review. **No merge, deployment, new hosted migration/import, purchase or production configuration change is authorized**. See [READINESS.md](./READINESS.md) for current findings and next work.
+
+The restrictions below retain the historical freeze policy. Current scope is stated above; historical rules do not independently authorize additional hosted changes.
 
 ## Protected production baseline
 
 The current Netlify application, shared-PIN authentication, Netlify Functions, and Netlify Blob data remain the production authority. Migration work must not change their behavior, credentials, routes, storage, or deployment configuration.
 
-## Allowed work
+## Historical work allowed during the freeze
 
 - Feature-branch development based on current `main`.
 - Local Supabase work with synthetic data.
@@ -16,7 +18,7 @@ The current Netlify application, shared-PIN authentication, Netlify Functions, a
 - Documentation committed to the active feature branch.
 - Narrow critical production fixes through a separate reviewed branch and regression run.
 
-## Prohibited during the freeze
+## Historical prohibitions during the freeze
 
 - Merging migration/auth/theming work into `main`.
 - Changing Netlify production environment variables, functions, redirects, middleware, or Blob data.
@@ -32,4 +34,4 @@ An urgent live-app fix must be isolated from migration work, minimize changed fi
 
 ## Exit
 
-The freeze ends only after the user explicitly declares the heavy-usage period over. Ending it does not automatically authorize migration cutover; normal preview, security, regression, backup, and rollback gates still apply.
+The user declared the heavy-usage period over on September 11, 2026. Ending the freeze does not automatically authorize migration or cutover; preview, security, regression, backup, rollback and explicit rollout gates still apply. This documentation step changes no deployment or data authority.

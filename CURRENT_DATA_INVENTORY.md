@@ -1,6 +1,6 @@
 # Current Data Inventory
 
-Status: Phase 0 baseline, 2026-07-19. This is a read-only inventory; no production data was exported or changed.
+Status: Phase 0 baseline, July 19, 2026, with Places corrections July 29 and source-based clarifications September 11. See [READINESS.md](./READINESS.md) for current foundation branches and validation scope. No production data was exported or changed in this review.
 
 ## Runtime and trust boundaries
 
@@ -59,7 +59,7 @@ The source-of-truth TypeScript definitions are in `lib/types.ts`; library and te
 | `view-link` | GET | create a signed read-only URL |
 | `cms-load` | GET | public presentation configuration |
 | `cms-save` | POST | delete-PIN protected CMS update |
-| `/api/places` | GET | Google Places proxy |
+| `/api/places` | GET/POST | place details / autocomplete, server-key proxy |
 
 ## Routes and public surfaces
 
@@ -73,9 +73,9 @@ The source-of-truth TypeScript definitions are in `lib/types.ts`; library and te
 
 ## Browser persistence
 
-Canonical keys include `rp_sched_editor_token_v16`, `rp_crew`, `rp_scheds`, `rp_sched_queue`, `rp_sched_snaps`, `rp_sync_meta`, `rp_sched_deleted`, `rp_library_meta_v1`, and `rp_tpls`. Additional session keys support recent saves/adds and mutation guards; UI preferences cache collapse state, recent schedules, project/phase choices, and library-operation state.
+Legacy constants and current keys include `rp_sched_editor_token_v16`, `rp_crew`, `rp_scheds`, `rp_sched_queue`, `rp_sched_snaps`, `rp_sync_meta`, `rp_sched_deleted`, `rp_library_meta_v1`, and `rp_tpls`. Additional session keys support recent saves/adds and mutation guards; UI preferences cache collapse state, recent schedules, project/phase choices, and library-operation state.
 
-Browser caches are compatibility/convenience data, not a future authorization boundary. Legacy template and suggestion data need an explicit import-or-retire decision.
+Some listed legacy keys are constants rather than active persistence paths; the current schedule store is in memory and has no durable offline save queue. Browser caches are compatibility/convenience data, not a future authorization boundary. Legacy template and suggestion data need an explicit import-or-retire decision.
 
 ## Environment variables and secrets
 
@@ -100,6 +100,8 @@ browser has been revoked.
 - Operational: logs, request IDs, migration manifests, checksums, reconciliation reports.
 
 ## Known constraints and migration implications
+
+The Library exports loaded schedules as JSON; the Tools Panel exports one schedule JSON. The import UI parses/reports rather than restoring data. These surfaces do not constitute a complete backup of snapshots/templates/CMS or an implemented migration importer. Public named reads return full schedule documents, not the target minimum projection.
 
 - Shared credentials cannot identify an actor or isolate organizations.
 - Blob mutations spanning stores are eventually consistent and non-transactional.

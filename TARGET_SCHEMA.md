@@ -1,6 +1,6 @@
 # Target Schema
 
-Status: Phase 0 design. PostgreSQL/Supabase implementation belongs to Phase 1 and must be expressed as reviewed migrations.
+Status: Phase 0 target design (July 19, 2026), not a claim of implementation completeness. Tenant foundation is merged; auth and schedule-domain foundations remain draft PRs #5/#8 as of September 11. See [READINESS.md](./READINESS.md) for implemented tables and validation/version/restore gaps. No migration is authorized in this restart step.
 
 ## Design decision
 

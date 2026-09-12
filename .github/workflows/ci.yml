@@ -2,9 +2,9 @@ name: CI
 
 on:
   pull_request:
-    branches: [main]
+    branches: [main, "codex/phase-1-**"]
   push:
-    branches: [main]
+    branches: [main, "codex/phase-1-**"]
   workflow_dispatch:
 
 permissions:
@@ -47,6 +47,9 @@ jobs:
 
       - name: Test platform request contracts
         run: npm run test:platform
+
+      - name: Test editor saves and public routing
+        run: npm run test:editor
 
       - name: Build application
         run: npm run build

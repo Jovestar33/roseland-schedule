@@ -1,0 +1,154 @@
+# Current state and restart readiness
+
+Reviewed September 11, 2026 (America/New_York; command timestamps cross into September 12 UTC). This is the current status reference; older dated validation records remain historical evidence.
+
+**The heavy-usage freeze ended September 11 by explicit user instruction. The follow-up authorizes isolated dependency/CI and two reproduced reliability fixes, disposable local database checks, and resuming only the existing development Supabase project with compatible transaction-isolated verification. No merge, deployment, new hosted migration/import, production configuration change, purchase, or hosted workflow activation is authorized.** Netlify Functions/Blobs and shared-PIN authentication remain the live application path. Ending the freeze does not authorize cutover.
+
+## Continuity and starting point
+
+The user's current priority is for the local Roseland Schedule project to be the authoritative, up-to-date home for decisions, implementation status and next work. The saved project is `/Users/johnsammon/roseland-schedule`; the reviewed documentation is maintained there and committed with the session changes. Its application branch remains `codex/phase-1-auth-bootstrap` at `cbdb921`; the six untracked branding PNGs are preserved. The maintenance implementation was developed and reviewed in `/Users/johnsammon/.codex/worktrees/9120/roseland-schedule` on `codex/restart-reliability`, based on the same auth commit, then copied into the saved project with explicit user approval after file-by-file baseline checks. The saved project contains locally committed maintenance code and tests on its existing auth branch; the review worktree retains its uncommitted copy. Nothing has been pushed, merged or published. Future sessions should start with this document, inspect the actual working-tree state, and check **both** foundation drafts below before choosing work. Record new decisions and verification scope in the repository rather than relying on chat memory alone; Git commits, PRs and test results remain the evidence for implemented behavior.
+
+Supplementary continuity recovered and read: [Import schedule app work](https://chatgpt.com/c/6a8e705b-2a64-83ea-b823-cb96394477f3), a late-August conversation in the Schedule App project. It discusses the account and schedule-foundation drafts, identifies August 8 as the newest development attempt then known, and assigns Docker only to disposable local Supabase testing. Its active-freeze wording is historical and is superseded by the September 11 instruction above. Docker is not the production hosting plan.
+
+That conversation claims a consolidated continuity document was created, but the retrieved attachment list was empty and the artifact itself was not recovered or inspected. Its existence in this repository is not established. The user confirms database work was done with Codex/ChatGPT; the original database-building conversation remains unidentified. This does not block development: the preserved migrations, branch diffs, PR descriptions and explicitly dated test evidence provide the current starting point.
+
+## Branches and implemented scope
+
+| Scope inspected | State verified in this review |
+|---|---|
+| Main baseline `62eb261` | Next.js/React/Zustand daily editor and Netlify persistence; tenant foundation merged; Places server-key hotfix merged as PR #7. |
+| Auth foundation `cbdb921`, [PR #5](https://github.com/Jovestar33/roseland-schedule/pull/5) | Open draft targeting `main`. Profiles, private operators, invitation acceptance, one-time bootstrap, service-only provisioning/invitation administration, privilege hardening, disabled setup/MFA page and API routes. Latest Application, Database and RLS, and Dependency and secret review checks passed July 29. |
+| Schedule foundation `3e0cb89`, [PR #8](https://github.com/Jovestar33/roseland-schedule/pull/8) | Open draft targeting the auth branch. Adds phases, production days, schedules, immutable JSONB document history, composite tenant/production foreign keys, RLS, 45 domain assertions, and PostCSS 8.5.26. No UI or persistence adapter. August 8 Netlify preview checks exist; no full GitHub CI checks are attached. |
+| Dependency [PR #9](https://github.com/Jovestar33/roseland-schedule/pull/9), `5df1872` | Open, targets `main`; js-yaml 4.3.0 → 4.3.1. Application audit failed August 12; database/security-review checks passed. |
+| Restart implementation | `codex/restart-reliability`, based on auth `cbdb921`, in `/Users/johnsammon/.codex/worktrees/9120/roseland-schedule`. Dependency, CI, editor/public-route fixes and regression tests, also transferred to the original checkout by user approval; neither foundation PR is merged. |
+
+The daily editor already includes grid/time cascade, fixed anchors, sun rows, undo/redo, library grouping/reordering/move/rename/archive, snapshots, templates, weather/Places, sharing, call/contact sheets and print. Preserve these surfaces. `phase-11-production-command-planning` remains prototype/reference material, not a wholesale merge target. The six untracked branding PNGs under `/Users/johnsammon/roseland-schedule/design` were not modified.
+
+Historical hosted context (current verification is recorded below): the July auth/bootstrap and corrective migrations were applied only to `roseland-schedule-dev`; the initial development Owner/operator account and TOTP bootstrap were verified July 26. PR #8 records no hosted schedule migration. The July 29 Places incident record says both historical keys were revoked. No credentials were read or copied into this worktree.
+
+Still planned: validated schedule mutation service, Netlify/Supabase repository adapters, legacy-name resolver, complete repeatable exporter/importer/reconciliation, application accounts/organization switching and recovery, administration UI, private Storage policies, scoped expiring shares, neutral organization theming, Vercel environment, pilot/cutover, and Production Command. SQL invitation acceptance exists; the complete onboarding/delivery/session experience does not. Rows/contacts/locations deliberately remain nested JSON initially; later normalization is not a reason to rewrite the editor now.
+
+## September 11 follow-up implementation and verification
+
+The isolated restart changes update Next and eslint-config-next to **15.5.25**, Sharp to **0.35.4**, PostCSS to **8.5.28**, brace-expansion to **5.0.9**, and js-yaml to **4.3.2**. PR #9's 4.3.1 is no longer sufficient against the fresh advisory set. Locked installation including the Supabase CLI lifecycle setup succeeded. Full production/development `npm audit --json` reports **zero vulnerabilities**; the existing runtime audit gate also passes. No force fix or framework-major upgrade was used.
+
+Save acknowledgement now checks the document session, request sequence and edit revision. Normal/force save responses update the baseline without clearing edits made during the request. Save As retains newer edits; stale success, failure and conflict responses cannot alter a reopened or different document. Conflict snapshot waits are guarded against navigation; route/unmount invalidation and Strict Mode loader cleanup are included. The wire document format is unchanged. Canonical `/view?v=...&vt=...` passes through; legacy viewer URLs redirect once.
+
+**Fresh verification:** 16 focused editor/middleware tests and 24 platform tests pass, including credential leakage checks; lint and production build pass on Node 24.15.0/npm 11.12.1. CI retains Node 22 and all audit/security/database gates, now covers `main` and `codex/phase-1-**` PR bases/pushes, and runs `test:editor`. These are local results; no new GitHub run was triggered and Netlify was not deployed. After the approved transfer, the original `/Users/johnsammon/roseland-schedule` checkout also passed a fresh locked install, all 40 application tests, lint, production build, full audit (zero findings) and runtime audit gate. Its existing `.env.local` was used by Next build without being copied, printed or modified. The original branch, unrelated documentation and six branding PNGs were preserved. These results cover the transferred maintenance patch; full browser/Netlify end-to-end QA is not claimed.
+
+Docker Desktop was started. Its existing `roseland-schedule` containers resumed automatically and were left intact. A separate stack, project ID `roseland-restart-9120` with 553xx ports, was created from the exact schedule foundation **3e0cb89** SQL/config under `/private/tmp/roseland-restart-db-3e0cb89`. The disposable stack was stopped after verification with its local volume retained; the existing stack was not stopped. Its clean startup applied migrations locally; all **159 database/RLS assertions across five files passed**, security advisor returned **no issues**, and schema lint returned **no errors**. This supersedes the earlier no-local-database-run entry below. The schema gaps below remain unmodified and are not disproved by those existing tests.
+
+### Hosted development verification after the user's unpause
+
+The user completed Supabase sign-in in the Codex browser and manually unpaused the existing **roseland-schedule-dev** project. CLI status reached **ACTIVE_HEALTHY** on September 11 (September 12 UTC), NANO compute, us-east-1. No second restore was requested. During COMING_UP the migration table was temporarily absent; after startup it and the expected application tables were present. This was a restore-progress observation, not evidence of lost migrations.
+
+Read-only inspection of `supabase_migrations.schema_migrations` confirmed exactly five versions, matching auth `cbdb921`: `20260719052450` tenant foundation, `20260720022921` auth bootstrap, `20260720034500` grant correction, `20260720043000` server workflows, and `20260726090000` function privileges. **The August schedule-domain migration is not hosted and was not applied.**
+
+The matching four hosted suites (`tenant_rls`, `auth_bootstrap`, `server_workflows`, `function_privileges`) passed **114/114 assertions** via the original checkout's verified saved CLI link. Every suite uses BEGIN/ROLLBACK; synthetic fixtures and temporary setup were not committed. No production data or app flags were changed. The hosted security advisor returned six WARN findings, all matching the existing linked allowlist: invitation acceptance plus four tenant/production SECURITY DEFINER helpers, and disabled leaked-password protection. There were no new blocking findings. These accepted development warnings remain visible; this is not a claim of zero warnings or completed production onboarding.
+
+### Free-plan capacity and monitoring
+
+[Roseland's usage dashboard](https://supabase.com/dashboard/org/ivyfugrhecyskrpiatdj/usage) confirmed **Free**, billing period **August 19–September 19, 2026**, and no exceeded-quota notice. After startup it displayed database size **0.029 / 0.5 GB (6%)**; the detailed project value was **27.32 MB**. Other values below are reported period usage, not a guarantee of no recent activity: the dashboard warns that summaries can lag one hour and some charts/MAU can lag 24 hours.
+
+| Metric | Reported usage / Free allowance | 80% early warning |
+|---|---|---|
+| Database size, per project | 0.029 / 0.5 GB (6%) | 0.4 GB |
+| Uncached egress | 0 / 5 GB | 4 GB |
+| Cached egress | 0 / 5 GB | 4 GB |
+| Storage size | 0 / 1 GB | 0.8 GB |
+| Monthly active users | 0 / 50,000 | 40,000 |
+| Monthly active third-party users | 0 / 50,000 | 40,000 |
+| Realtime peak connections | 0 / 200 | 160 |
+| Realtime messages | 0 / 2,000,000 | 1,600,000 |
+| Edge Function invocations | 0 / 500,000 | 400,000 |
+
+None is near the requested warning threshold. SSO users and Storage Image Transformations are marked unavailable in Free. Leaked-password protection is a paid feature, as documented below. Free usage overages are not billed automatically here: exceeding quotas can restrict service. In particular, the [500 MB database limit can make Free databases read-only](https://supabase.com/docs/guides/platform/database-size); it is distinct from disk provisioned capacity. The [billing FAQ](https://supabase.com/docs/guides/platform/billing-faq) distinguishes Free restrictions from paid overage/spend-cap behavior and allows two active free projects subject to Owner/Admin account capacity. Only this one project was returned by the current CLI account; that does not prove every other organization's capacity. No purchase or plan change occurred.
+
+The originating task reports an active daily quota monitor with an 80% early warning and minimal read-only Monday activity. No duplicate was created here. Weekly activity does **not** guarantee avoiding provider pauses. Existing CLI authentication supports unattended project status, migration metadata, advisor and `pg_database_size(current_database())` queries from the original linked checkout. The final SQL sample was 13,495,443 bytes for `postgres`, while the dashboard showed 27.32 MB; these differ in sampling/accounting scope, which was not reconciled here, so do not substitute the SQL value for the billing metric. A final metadata check retained exactly five migrations. Actual billing quota totals were verified through the browser; no unattended billing-usage API was validated. [Management API request counts are operational metrics, not billing totals](https://supabase.com/docs/guides/observability/detecting). The monitor must report unavailable/stale billing data rather than infer zero, and may need renewed browser/CLI authentication. Upgrade intent remains separate from purchase authorization.
+
+Remaining related legacy risks: baseline-free save/name collision can overwrite existing names; server concurrency is not made atomic by the client response guards. Tools Panel snapshot restore/save-as uses a separate asynchronous path that can still overwrite newer local state after its response. Template recovery, full backup/import and public projection gaps below remain follow-up work. No production data or credentials were used in regression tests.
+
+## Initial readiness findings and proposed fixes
+
+References below use **auth `cbdb921` unless explicitly marked schedule `3e0cb89`**. SQL findings are source-supported gaps, not database reproductions. This section preserves the initial review; the follow-up above records the dependency/save/redirect fixes actually applied.
+
+### 1. Dependency gates need fresh remediation before release
+
+Fresh `npm audit --omit=dev --json` returned usable advisory data and failed:
+
+| Exact lockfile | Critical | High | Moderate | Affected packages |
+|---|---:|---:|---:|---|
+| Auth `cbdb921` | 1 | 2 | 1 | Next 15.5.21, Sharp 0.35.0, Nano ID 3.3.16, PostCSS 8.5.18 |
+| Schedule `3e0cb89` | 1 | 1 | 0 | Next 15.5.21, Sharp 0.35.0; its PostCSS 8.5.26/Nano ID 3.3.18 fix removes those two findings |
+
+These are package counts, not counts of independently exploitable production vulnerabilities. Next's [Windows-hosted advisory](https://github.com/advisories/GHSA-p293-qw3h-jr36) is conditional on Windows; the separate [AVIF optimization advisory](https://github.com/advisories/GHSA-2xp9-vwfh-vxw4) concerns image processing. [Sharp's advisory](https://github.com/advisories/GHSA-rgj7-g3m4-5g8c) concerns untrusted image input. Production runtime routing/binaries and reachability were not verified or probed. The published patched lines include Next 15.5.24 and Sharp 0.35.4; choose supported versions against a fresh audit when implementing. `package.json:41` overrides transitive packages, so updating Next alone can retain an old Sharp/PostCSS override.
+
+[PR #9's failed run](https://github.com/Jovestar33/roseland-schedule/actions/runs/31551776604/job/93975797510) checked merge ref `19df70f` with Node 22.23.1/npm 10.9.8. Locked install succeeded. `npm audit --audit-level=high` then reported brace-expansion, Nano ID and PostCSS/dependent findings and exited 1 before lint/build. This was neither a js-yaml behavior failure nor the older npm registry outage. Main's all-dependency audit differs from PR #5's runtime-only wrapper. Its passing Dependency Review check covers newly introduced findings and does not prove the full existing dependency tree clean. Do not use `npm audit fix --force` or waive runtime findings to make CI green.
+
+### 2. Schedule recovery is incomplete
+
+Schedule migration `supabase/migrations/20260808090000_create_schedule_domain_foundation.sql:321`, `:343`, `:365`: UPDATE policies require the existing row's `deleted_at IS NULL`. An Owner/Admin can see deleted rows but cannot update them back to active through these policies. History survives, but there is no restore RPC. Tests at `supabase/tests/database/schedule_domain_rls.test.sql:259` check deletion/history, not restoration. Add an authorized, transactional restore operation and tests for owner/admin success, editor/viewer denial, parent state, and active slug/position collisions. Resolve production/organization recovery consistently with the tenant foundation too.
+
+### 3. Optimistic versions are available, not mandatory
+
+Schedule migration `:230` rejects changing `document_version` to a different supplied value, but an ordinary UPDATE that omits that field keeps `NEW.document_version = OLD.document_version` and passes. Authenticated users have direct UPDATE grants (`:391`). The stale-write test supplies its own `WHERE document_version = 1`; the database does not require every caller to do so. Phase/day versions similarly increment without enforcing a precondition. Introduce a mutation boundary requiring an expected version, atomically update/version, return a conflict on zero matching rows, and prevent ordinary callers bypassing it. Test two concurrent writers plus an omitted-version request.
+
+### 4. Nested validation and metadata consistency are not implemented
+
+Schedule migration `:96` checks object/meta/rows container types and a 2 MiB size; it permits invalid row values, coordinates, times, contacts, excessive nested counts and unknown schema versions. `lib/rowNormalizer.ts:50` fills defaults via spread rather than validating types. No schedule validator/API exists in either foundation diff. The schema's `town`, production/day references and document metadata can diverge; version history stores document/schema version but not the relational display name, status or day assignment (`:125`, `:242`). Define a versioned, bounded legacy-compatible document contract, metadata authority and restoration scope before connecting writes. Preserve optional legacy fields, zero durations, call-sheet fields and sub-locations in synthetic round-trip fixtures.
+
+### 5. Permissions need lifecycle tests, beyond cross-tenant reads
+
+Schedule INSERT policies (`:313`, `:335`, `:357`) bind the actor and tenant but do not prohibit pre-deleted inserts or caller-supplied initial versions/timestamps; the admin-only deletion guard is UPDATE-only. Foreign keys enforce identity, not active parent state: a schedule may reference a soft-deleted day, and a day may reference a soft-deleted phase within its production. In the tenant foundation, `is_active_org_member`/`is_org_admin` (`supabase/migrations/20260719052450_create_tenant_foundation.sql:164`, `:181`) consult membership without checking organization deletion. Specify parent deletion/recovery semantics and enforce them across reads and writes; test each role, deleted parent, attribution field and insert/update path. These are lifecycle gaps within the authorization design, not evidence of a cross-tenant data breach.
+
+Auth workflow follow-up: idempotency records bind action/key/actor/resource, not a request fingerprint (`supabase/migrations/20260720043000_create_server_workflows.sql:5`, `:78`), and rate checks count prior events under per-request locks (`:94`, `:286`). Add changed-payload replay and concurrent-rate-limit tests. Invitation acceptance can reactivate existing memberships; define how outstanding invitations interact with suspension/removal before onboarding users. The 24 platform tests cover pure contracts/configuration/security classification, not the HTTP/Auth/RPC integration or full account lifecycle.
+
+### 6. Existing save behavior can hide unsaved edits or replace a name
+
+Fresh synthetic probes reproduced two legacy behaviors without any network or Blob access:
+
+- `lib/hooks/useSaveActions.ts:65` captures a document, waits for save, then unconditionally `markClean()` at `:72` (`saveForce` also does this). An edit made while that request is pending remains in memory but is marked clean by the older response. Capture a local edit revision/schedule identity and clear dirty state only when the acknowledged revision still matches. Add delayed-response/navigation tests.
+- `netlify/functions/save.js:75` only checks timestamps when `expectedSavedAt > 0`. Save As supplies no baseline (`lib/hooks/useSaveActions.ts:111`); an existing key can be replaced. The timestamp read/check/write is also non-atomic, even with a supplied baseline. Use explicit create-versus-update semantics and conditional writes in the future adapter. Keep legacy behavior changes in a separately reviewed reliability slice.
+
+### 7. Legacy link compatibility has a reproduced redirect loop
+
+`middleware.ts:45` redirects every request carrying `v` and `vt` to `/view` with the same parameters, including `/view` itself. Credential-free built-app requests reproduced the 307 self-redirect. Limit the legacy redirect to a noncanonical path and test canonical and legacy URLs. The public `/view/[name]` path is separate.
+
+### 8. Recovery/export and public projections must not be overstated
+
+- Template migration deletes `rp_tpls` after `.catch(() => local)` in `components/library/TemplatesTab.tsx:31` and `components/toolbar/ToolsPanel.tsx:41`. Source review shows an upload failure can remove the durable local copy. Retain it until confirmed remote persistence; add a failed-upload/reload test. Not exercised with user templates.
+- `components/library/BackupTab.tsx:26` exports only loaded schedule documents; its import handler (`:33`) parses and reports, without restoring them. Tools Panel exports one schedule JSON (`components/toolbar/ToolsPanel.tsx:138`). There is no implemented full ZIP backup, complete snapshot/template/CMS export, or tested importer here.
+- `netlify/functions/delete-schedule.js:76` deletes sequentially across stores; archive state is not a server precondition. `save.js:60` is a second passcode-protected delete path. Archive/restore UI is not permanent-delete recovery.
+- `netlify/functions/load.js:57` accepts `public=1` for a named document and returns the full JSON at `:68`, including contact/call-sheet fields hidden by the view. Existing view tokens do not expire. Add allowlisted public projections and compatible scoped shares before multi-tenant release; do not equate read-only rendering with confidentiality.
+- Snapshot deletion ignores non-2xx responses (`lib/api/snapshots.ts:41`); CSV escaping quotes values but does not neutralize spreadsheet formulas (`components/modals/ContactSheetModal.tsx:60`). Both need targeted failure/input tests before the corresponding regression gates can be claimed.
+
+## Initial readiness verification ledger (before implementation)
+
+Fresh on September 11, in this worktree, source/lockfile **auth `cbdb921`**, Node **24.15.0**, npm **11.12.1** (CI uses Node 22):
+
+- `npm ci --ignore-scripts --no-audit --no-fund --cache /private/tmp/roseland-readiness-npm-cache`: locked dependencies installed after network permission; lifecycle scripts deliberately skipped. No dependency files changed.
+- `npm run test:platform`: **24/24 pass**, including credential-leak test. `npm run lint`: **pass**, with the existing Next lint deprecation notice.
+- `env -i PATH="$PATH" NEXT_TELEMETRY_DISABLED=1 npm run build`: **pass** after allowing Google Fonts network access; first sandboxed attempt failed only fetching fonts. No environment files or credentials copied.
+- Credential-free `next start --hostname 127.0.0.1 --port 3217`: startup passed; `/login` 200; `/` redirects to login; setup and all three platform POST routes return 404; legacy `?s=` redirects; tokenized `/view` self-redirect reproduced. Server stopped after checks. This is HTTP startup verification, not authenticated editor, Netlify Functions, Places, browser/mobile/print, or Supabase integration QA.
+- Temporary Node/VM probes using the actual save hook/store with stubbed React/network and an in-memory Blob stub reproduced the pending-save dirty-state issue and baseline-free overwrite. Scratch harness: `/private/tmp/roseland-readiness-probes.cjs`; not a committed regression suite.
+- Runtime audit: auth tree and exact schedule `3e0cb89` manifest/lockfile copied to `/private/tmp/roseland-readiness-schedule-3e0cb89`; results above. Schedule audit was lockfile-only: **no fresh schedule-branch build or database test**.
+- Docker availability checked read-only: daemon not running. No containers started, database reset, hosted query, migration, import, or advisor run performed. Documentation whitespace/diff checks completed.
+
+Historical evidence: July 26 workflow docs report 93 local/linked database assertions and 15 application tests; later auth tests total **114** database assertions across four files. July 29 PR #5 checks are green. August 8 PR #8 reports **159** assertions across five files, local reset/lint/advisor, application tests/build and runtime audit passing. These dates/results are preserved, not represented as newly rerun. The domain suite tests outer JSON shape and a caller-supplied stale-version predicate; it does not cover the gaps above.
+
+Review coverage: source/configuration inventory; auth and schedule foundation diffs and all added SQL/contracts; related platform tests and workflow gates; editor state/time/save/load, library mutations, snapshots/templates/backup, public views, Places and call/contact output paths; roadmap, security, schema, migration and regression documents. This was a bounded readiness review, not an exhaustive line-by-line security audit or full device regression run.
+
+## Supabase upgrade note resolved
+
+PR #8's old wording makes an organization upgrade sound like a universal migration prerequisite. It is not: Supabase documents [CLI/GitHub deployment on all plans](https://supabase.com/docs/guides/deployment); Pro is required for managed preview branching. [Leaked-password protection requires Pro or above](https://supabase.com/docs/guides/auth/password-security), matching the July development advisor exception. [Free project capacity is limited](https://supabase.com/docs/guides/platform/billing-faq); separate hosted environments may require a plan/capacity decision.
+
+The hosted follow-up above verifies Free usage, active health and the existing leaked-password warning. No current quota is near the 80% threshold, and no upgrade was needed for the completed local or compatible hosted tests. Paid-only features and later hosted rollout remain separate decisions; no upgrade, purchase or new hosted migration occurred.
+
+## Prioritized next work
+
+1. Review the isolated dependency/CI/reliability patch and obtain required GitHub checks when pushing is authorized. Local checks pass as recorded above. Assess Netlify image routing before deciding production urgency; production deployment is separate.
+2. Follow up with create-name safety, snapshot restore response guards and template recovery, each with focused regression tests. Pending-save acknowledgement and canonical view redirect fixes are implemented locally.
+3. Harden the schedule domain locally: mandatory versioned writes, bounded document contract, owner/admin restore with collision handling, active-parent/lifecycle policies and metadata synchronization. Extend pgTAP with two-writer, restore, invalid nested input and direct-access bypass cases. The restart patch enables full CI coverage for stacked foundation branches; hosted deployment workflows remain disabled.
+4. After those pass, implement the repository interface and synthetic compatibility fixtures before any real-data migration. Later hosted rollout requires explicit authorization, environment/capacity confirmation, fresh database/advisor checks, full regression and recovery evidence.
+
+No user decision is needed to complete this analysis. Later product decisions: day uniqueness (PR #8 allows only one active calendar date/day number per production), same-date units, cross-production moves (currently identity-protected), restoration scope for relational metadata, and legacy local-template ownership. Keep the existing schema provisional until those compatibility requirements are tested.

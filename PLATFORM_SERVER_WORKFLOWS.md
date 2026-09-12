@@ -36,7 +36,7 @@ Required server-only settings are documented in `.env.example`:
 - `SUPABASE_PUBLISHABLE_KEY`
 - `SUPABASE_SECRET_KEY` (or temporary legacy `SUPABASE_SERVICE_ROLE_KEY` compatibility)
 
-The feature flag defaults off. Do not add these settings to Netlify production or deploy previews during the active stability freeze. Future Supabase/Vercel development configuration must use development-project values only.
+The feature flag defaults off. The freeze ended September 11, 2026, but the readiness step does not authorize enabling routes or adding settings to Netlify production/deploy previews. Future authorized Supabase/Vercel development configuration must use isolated development-project values only. See [READINESS.md](./READINESS.md).
 
 ## Development Auth and MFA setup
 
@@ -59,7 +59,9 @@ On 2026-07-26, the initial development Auth identity enrolled and verified one T
 
 Post-transaction verification confirmed that anonymous and authenticated roles cannot execute the bootstrap function, the service role retains the intended permission, and a replay attempt is rejected without creating duplicate records. The browser setup session was signed out and its local server stopped afterward. This state exists only in `roseland-schedule-dev`; it does not affect the live Netlify application.
 
-## Validation evidence
+## Historical validation evidence (July 26, 2026)
+
+The counts below describe that session. Later auth source contains 114 database assertions and 24 platform tests; fresh September 11 scope and remaining workflow gaps are recorded in [READINESS.md](./READINESS.md).
 
 - 93 database authorization/workflow tests pass locally and against `roseland-schedule-dev`.
 - 15 application contract tests cover setup fail-closed configuration, secret-key rejection, validation, international preferences, roles, idempotency keys, JWT claim binding, MFA, and stale authentication.

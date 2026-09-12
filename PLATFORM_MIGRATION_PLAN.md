@@ -1,8 +1,8 @@
 # Roseland Schedule — Multi-User Platform Migration Plan
 
-> **Status:** Phase 0 specification completed 2026-07-19. Phase 1 is in progress only on draft PR #5 and `roseland-schedule-dev`; development MFA and the one-time Roseland Owner/platform-superadmin bootstrap are complete. The production stability freeze remains active, and no production migration has begun.
+> **Status refreshed 2026-09-11:** Phase 0 specification completed 2026-07-19. Tenant foundation is merged; auth PR #5 and stacked schedule-domain PR #8 remain drafts. Development MFA/bootstrap completion is historical; no production migration has begun. The freeze ended September 11, but this restart step authorizes only readiness/documentation and local checks. See [READINESS.md](./READINESS.md) for exact revisions, fresh validation and unresolved gaps. Migration, hosted changes, merge and deployment are not authorized here.
 >
-> **Date:** 2026-07-19
+> **Original plan date:** 2026-07-19
 >
 > **Scope:** migrate the current Next.js application from shared-PIN authentication and Netlify Blob persistence to a secure, tenant-aware Supabase/Postgres platform without disrupting the working daily schedule product.
 
@@ -57,7 +57,7 @@ The migration must not regress:
 - Desktop, mobile, and iPad layouts.
 - Schedule, Contact Sheet, Call Sheet, and read-only print/PDF fidelity.
 - Team/client link behavior or an explicit compatible replacement.
-- JSON/ZIP backup and data portability.
+- Existing JSON export and data portability; complete backup/import tooling remains to be built (see READINESS.md).
 
 ## 4. Security and privacy model
 
@@ -96,7 +96,7 @@ RLS must cover SELECT, INSERT, UPDATE, and DELETE. Tests must attempt access thr
 
 - Browser code may receive only Supabase’s publishable key and intentionally public provider keys.
 - Supabase secret/service-role credentials stay in server-only environments and bypass RLS, so every use requires explicit server authorization.
-- Google browser keys must be restricted by domain and API; privileged or paid operations should use controlled server endpoints where practical.
+- The current Places implementation uses only the server-side `GOOGLE_PLACES_KEY` through `/api/places` (July 29 hotfix). Preserve provider restrictions and quotas and add authenticated abuse controls as required by the target platform.
 - Secrets must not enter source, public environment variables, URLs, API responses, analytics, screenshots, or logs.
 - Development, preview, and production secrets and databases remain separate.
 

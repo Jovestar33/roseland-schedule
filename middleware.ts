@@ -42,7 +42,7 @@ export function middleware(request: NextRequest) {
   if (s) {
     return redirect(request, `/schedule/${encodeURIComponent(s)}`);
   }
-  if (v && vt) {
+  if (v && vt && pathname !== '/view') {
     const url = request.nextUrl.clone();
     url.pathname = '/view';
     url.search = `?v=${encodeURIComponent(v)}&vt=${encodeURIComponent(vt)}`;
