@@ -1,5 +1,9 @@
 # Platform Migration Runbook
 
+## Executed local recovery procedure
+
+See [RECOVERY_REHEARSAL.md](./RECOVERY_REHEARSAL.md) for the September 15 tested fictional checkpoint → ordered replay → post-recovery edit → independent file-only restore procedure. It preserves exact schedule/related-store histories, tests partial failures and retries, and finishes with frozen writers. This is supporting SQL data-recovery evidence. Hosted Auth/role/service restoration, actual endpoint fallback, complete real-data coverage and paired runtime parity remain release gates; synthetic success does not authorize migration.
+
 ## Required rollback and security evidence (September 15 clarification)
 
 Rollback must demonstrably recover both the pre-migration checkpoint and accepted target edits after a simulated cutover. Retain known-good code and recoverable data checkpoints; document executable steps, rehearse partial migration failures and post-cutover edits using fictional data, and reconcile every record/version/related-store entry. Netlify availability alone cannot preserve newer target edits. Before a real cutover, decide and test the reverse-export/replay or same-database fallback strategy, one-writer freeze, recovery access, failure handling and per-record reconciliation. Existing local atomic-failure tests are supporting evidence; they do not complete this end-to-end rollback gate. Subsequent authorized local rehearsals must fill it before real migration.

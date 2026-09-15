@@ -1,5 +1,13 @@
 # Current state and restart readiness
 
+## September 15: fictional checkpoint recovery and post-cutover replay completed
+
+The isolated migration branch now adds a credential-free checkpoint/journal contract, a guarded local recovery CLI and a full SQL rehearsal after known-good application commit `ddef735`. New disconnected recovery databases restore exact stable IDs, schedule documents/metadata/histories, audit events and all four private related-store catalogue types, including an explicit fictional tombstone. Ordered replay preserves edits after simulated cutover and an additional accepted edit after recovery. The old writer remains frozen; all rehearsal writers finish frozen. No source replacement, actual-schedule access, hosted operation or new application/schema migration occurred.
+
+**Fresh evidence:** 30 Python contract tests and 13 executed recovery scenarios pass. Injected checkpoint/schedule/related-history failures roll back rows, trigger states and durable retry markers; wrong/stale predecessors and both active/frozen target drift are refused unchanged. File-only rebuild and resume verify **55 records**, including three schedules, eight schedule versions, eleven catalogue records and twenty catalogue versions. The standalone recovery CLI and its resume return identical results. See [RECOVERY_REHEARSAL.md](./RECOVERY_REHEARSAL.md) for the usable procedure, per-record evidence and scope. Final artifacts: `/private/tmp/roseland-recovery-20260915-verified/`.
+
+This proves bounded fictional SQL data recovery, not hosted/Auth/service recovery or application parity. Actual object ownership, privileged default grants, credential/session/permission recovery, complete real exporter coverage and the eventual Netlify fallback/endpoint strategy still need separate evidence. All F01–F05 security/account/projection findings remain explicit. Next: the local authorization-entrypoint review and dedicated session-revocation/expiry races. Keep the user’s 1:05 PM Eastern cutoff for starting new batches.
+
 ## September 15: local account/editor integration completed
 
 Continue from `codex/migration-schedule-contract` in `/private/tmp/roseland-migration-contract-20260914`, after known-good checkpoint `cc35dc9`. The additive `/local-schedule` route is explicitly enabled only for a loopback Supabase rehearsal. Genuine account sessions now list, select/open, edit, version-save and reload fictional schedules using the shared editor controls. The original Netlify defaults remain unchanged. See [LOCAL_EDITOR_CONTRACT.md](./LOCAL_EDITOR_CONTRACT.md) for configuration, reproduction, evidence and the open finding ledger.

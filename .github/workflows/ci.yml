@@ -101,6 +101,9 @@ jobs:
       - name: Rehearse related-store import and reconciliation
         run: python3 -B scripts/migration/rehearse-related.py --workdir . --report /tmp/roseland-related-migration-report.json
 
+      - name: Rehearse fictional checkpoint recovery and post-cutover replay
+        run: python3 -B scripts/migration/rehearse-recovery.py --workdir . --output-dir /tmp/roseland-recovery-artifacts
+
       - name: Run database security advisor
         run: npm run db:advisors:security
 
