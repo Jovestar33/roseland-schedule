@@ -7,6 +7,7 @@ const AUTH_COOKIE = 'rp_auth_flag';
 
 function isPublicPath(pathname: string): boolean {
   return pathname === '/login'
+    || pathname === '/local-workspace' // Independent loopback/configuration gate.
     || pathname === '/local-schedule' // Independently gated server-side; disabled by default.
     || pathname === '/local-accept-invitation' // Independent loopback/configuration gate.
     || pathname === '/local-invitations' // Independent loopback/configuration gate.

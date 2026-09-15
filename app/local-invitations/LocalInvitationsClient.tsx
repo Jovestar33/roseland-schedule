@@ -5,6 +5,7 @@ import type { LocalEditorConfig } from '@/lib/platform/local-editor-config';
 import { InvitationController, InvitationError, type FailureKind } from '@/lib/platform/invitation-controller';
 import { createInvitationRepository, sendInvitationAttempt, type OrganizationChoice, type ProductionChoice, type PendingInvitation } from '@/lib/platform/invitation-repository';
 import styles from './invitations.module.css';
+import { useLocalWorkspace, useWorkspacePanelState } from '@/components/local/LocalWorkspaceContext';
 
 const errors: Record<FailureKind, string> = {
   auth: 'Sign in again. Your draft and request are still here.',
@@ -17,7 +18,10 @@ const errors: Record<FailureKind, string> = {
 type MfaStage = 'checking' | 'enroll' | 'code' | 'ready';
 
 export default function LocalInvitationsClient({ config }: { config: LocalEditorConfig }) {
-  const [client] = useState(() => createClient(config.supabaseUrl, config.anonymousKey, {
+  const workspace = useLocalWorkspace();
+  const managed = !!workspace;
+  const active = workspace?.active ?? true;
+  const [client] = useState(() => workspace?.client ?? createClient(config.supabaseUrl, config.anonymousKey, {
     auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
     global: { fetch(input, init) {
       const url = new URL(typeof input === 'string' ? input : input instanceof URL ? input.href : input.url);
@@ -43,7 +47,7 @@ export default function LocalInvitationsClient({ config }: { config: LocalEditor
   const [recipient, setRecipient] = useState(''), [role, setRole] = useState('member');
   const [production, setProduction] = useState(''), [productionRole, setProductionRole] = useState('viewer'), [days, setDays] = useState(7);
   const [revoking, setRevoking] = useState<PendingInvitation | null>(null), [reason, setReason] = useState('');
-  const [message, setMessage] = useState('Sign in with a fictional local account to manage invitations.');
+  const [message, setMessage] = useState(managed ? 'Review access for the selected fictional organization.' : 'Sign in with a fictional local account to manage invitations.');
   const [confirmation, setConfirmation] = useState<{ title: string; text: string; label: string; action: () => void } | null>(null);
   const dialog = useRef<HTMLDialogElement>(null), review = useRef<HTMLElement>(null);
   const currentOrg = organizations.find(item => item.id === selected);
@@ -51,7 +55,8 @@ export default function LocalInvitationsClient({ config }: { config: LocalEditor
   const roleAvailable = role === 'member' || currentOrg?.role === 'owner';
   const productionAvailable = !production || productions.some(item => item.id === production);
   const dirty = !!recipient || !!reason || !!revoking || !!attempt || role !== 'member' || !!production || days !== 7;
-  const ready = !!session && !authNeeded && mfa === 'ready';
+  const ready = !!session && !authNeeded && !workspace?.authNeeded && mfa === 'ready';
+  useWorkspacePanelState(dirty, busy);
 
   function clearDraft() { setRecipient(''); setRole('member'); setProduction(''); setProductionRole('viewer'); setDays(7); setRevoking(null); setReason(''); }
   function clearAccount() {
@@ -62,6 +67,7 @@ export default function LocalInvitationsClient({ config }: { config: LocalEditor
   }
   useEffect(() => {
     const generation = epoch;
+    if (managed) return () => { generation.current++; controller.bind(null); };
     const subscription = client.auth.onAuthStateChange((_event, next) => {
       if (next && account.current !== next.user.id) {
         clearAccount(); account.current = next.user.id; controller.bind(next.user.id);
@@ -72,17 +78,17 @@ export default function LocalInvitationsClient({ config }: { config: LocalEditor
     return () => { generation.current++; controller.bind(null); subscription.data.subscription.unsubscribe(); };
     // Account identity lives in refs; never subscribe with stale draft state.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [client, controller]);
+  }, [client, controller, managed]);
   useEffect(() => {
     const warn = (event: BeforeUnloadEvent) => { if (dirty) { event.preventDefault(); event.returnValue = ''; } };
     window.addEventListener('beforeunload', warn); return () => window.removeEventListener('beforeunload', warn);
   }, [dirty]);
-  useEffect(() => { if (confirmation) dialog.current?.showModal(); else dialog.current?.close(); }, [confirmation]);
-  useEffect(() => { if (attempt) review.current?.focus(); }, [attempt]);
+  useEffect(() => { if (confirmation && active) dialog.current?.showModal(); else dialog.current?.close(); }, [confirmation, active]);
+  useEffect(() => { if (attempt && active) review.current?.focus(); }, [attempt, active]);
 
   function showFailure(kind: FailureKind) {
     setMessage(errors[kind]);
-    if (kind === 'auth') setAuthNeeded(true);
+    if (kind === 'auth') { setAuthNeeded(true); workspace?.requireAuth(); }
     if (kind === 'mfa') { setMfa(factor ? 'code' : 'enroll'); setCode(''); }
   }
   async function run(action: () => Promise<unknown>) {
@@ -93,6 +99,7 @@ export default function LocalInvitationsClient({ config }: { config: LocalEditor
     finally { busyRef.current = false; setBusy(false); redraw(); }
   }
   async function loadOrganizations(append = false) {
+    if (workspace) { const org = workspace.organization; setOrganizations(org && org.role !== 'member' ? [{ ...org, role: org.role }] : []); setOrgMore(false); return org && org.role !== 'member' ? 1 : 0; }
     const actor = account.current; if (!actor) return;
     const stamp = epoch.current;
     const page = await repository.organizations(actor, append ? organizations.at(-1)?.id : undefined);
@@ -135,6 +142,19 @@ export default function LocalInvitationsClient({ config }: { config: LocalEditor
     } catch { setMessage('Sign-in could not finish. Your draft is retained.'); }
     finally { busyRef.current = false; setBusy(false); }
   }
+  useEffect(() => {
+    if (!workspace) return;
+    const next = workspace.session;
+    if (next && account.current !== next.user.id) { clearAccount(); account.current = next.user.id; controller.bind(next.user.id); }
+    sessionRef.current = next; setSession(next);
+    setAuthNeeded(workspace.authNeeded); if (next) setEmail(next.user.email ?? '');
+    if (!workspace.active || !workspace.session || workspace.authNeeded || !workspace.organization) return;
+    const id = workspace.organization.id;
+    setSelected(id);
+    void run(async () => { await loadOrganizations(); await inspectMfa(); await loadProductions(id); await loadInvitations(id); });
+    // Each retained management panel has one fixed organization; token changes keep its request identity.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [workspace?.session?.access_token, workspace?.authNeeded, workspace?.active, workspace?.organization?.id, workspace?.organization?.role]);
   function chooseOrganization(id: string) {
     const action = () => {
       epoch.current++; controller.clear(); clearDraft(); setSelected(id); setProductions([]); setInvitations([]);
@@ -162,7 +182,7 @@ export default function LocalInvitationsClient({ config }: { config: LocalEditor
     <header className={styles.header}><div><span className={styles.eyebrow}>LOCAL ACCOUNT REHEARSAL</span><h1>Invitations</h1><p>Manage access for fictional organizations on this computer.</p></div><span className={styles.badge}>Local only</span></header>
     <p className={styles.notice}>Creating an invitation records access; this rehearsal does not send email. Drafts stay in this tab and are lost when it closes or reloads.</p>
     <p className={styles.status} role="status" aria-live="polite">{message}</p>
-    {(!session || authNeeded) && <section className={styles.card} aria-label="Account sign in"><h2>{account.current ? 'Sign in again' : 'Sign in'}</h2>
+    {!workspace && (!session || authNeeded) && <section className={styles.card} aria-label="Account sign in"><h2>{account.current ? 'Sign in again' : 'Sign in'}</h2>
       {account.current && <p>Your draft and original request key are retained for this account.</p>}
       <form className={styles.form} onSubmit={login}>
         <label>Fictional account email<input type="email" required autoComplete="off" readOnly={!!account.current} value={session?.user.email ?? email} onChange={event => setEmail(event.target.value)} /></label>
@@ -173,7 +193,7 @@ export default function LocalInvitationsClient({ config }: { config: LocalEditor
           action: () => { clearAccount(); setEmail(''); setPassword(''); setAuthNeeded(false); setMessage('Local drafts cleared. Sign in with another fictional account.'); },
         })}>Use another account</button>}
       </form></section>}
-    {session && <div className={styles.account}><span>{session.user.email} · {mfa === 'ready' && !authNeeded ? 'MFA verified' : 'Verification required'}</span>
+    {!workspace && session && <div className={styles.account}><span>{session.user.email} · {mfa === 'ready' && !authNeeded ? 'MFA verified' : 'Verification required'}</span>
       <button className={styles.secondary} disabled={busy} onClick={() => {
         const action = () => void run(async () => {
           const result = await client.auth.signOut({ scope: 'local' });
@@ -196,7 +216,7 @@ export default function LocalInvitationsClient({ config }: { config: LocalEditor
         await inspectMfa(); await loadOrganizations(); setMessage('Authenticator verified. Your draft and request are ready to continue.');
       }); }}><label>Six-digit authenticator code<input required inputMode="numeric" pattern="[0-9]{6}" autoComplete="off" value={code} onChange={event => setCode(event.target.value.replace(/\D/g, '').slice(0, 6))} /></label><button disabled={busy || code.length !== 6}>Verify code</button></form>}
     </section>}
-    {session && <section className={styles.card} aria-label="Organization selection"><div className={styles.sectionTitle}><h2>Organization</h2><button className={styles.secondary} disabled={busy || !ready} onClick={() => void run(() => loadOrganizations())}>Refresh organizations</button></div>
+    {!workspace && session && <section className={styles.card} aria-label="Organization selection"><div className={styles.sectionTitle}><h2>Organization</h2><button className={styles.secondary} disabled={busy || !ready} onClick={() => void run(() => loadOrganizations())}>Refresh organizations</button></div>
       <label>Manage invitations for<select value={selected} disabled={busy || !ready || !!attempt} onChange={event => chooseOrganization(event.target.value)}><option value="">Select an organization</option>{selected && !currentOrg && <option value={selected}>Previous selection unavailable — refresh or load more</option>}{organizations.map(item => <option key={item.id} value={item.id}>{item.name} · {item.role}</option>)}</select></label>
       {!organizations.length && <p>No Owner/Admin organizations are available to this account.</p>}
       {orgMore && <button className={styles.secondary} disabled={busy || !ready} onClick={() => void run(() => loadOrganizations(true))}>Load more organizations</button>}

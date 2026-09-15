@@ -1,0 +1,24 @@
+.page { background:#f4f6f7; min-height:100vh; }
+.header { background:#112633; color:#eff5f7; padding:28px max(24px,calc((100vw - 1200px)/2)); display:flex; justify-content:space-between; align-items:flex-start; gap:20px; }
+.header h1 { font-size:30px; margin:10px 0; }
+.header p { color:#bcd0dc; }
+.eyebrow { color:#9dc5d8; letter-spacing:.15em; font-size:11px; font-weight:700; }
+.badge { white-space:nowrap; border:1px solid #64808d; border-radius:20px; padding:7px 12px; font-size:12px; }
+.shell { max-width:1248px; padding:20px 24px; margin:auto; color:#183443; }
+.notice { color:#49616d; font-size:13px; line-height:1.6; }
+.status { background:#e1edf2; border-left:3px solid #518ca5; padding:14px 16px; margin:14px 0; line-height:1.5; }
+.login { max-width:420px; display:grid; gap:16px; padding:20px 0; }
+.shell label { display:grid; gap:8px; font-size:13px; font-weight:600; }
+.shell input,.shell select { background:white; color:#183443; border:1px solid #97aab5; border-radius:7px; padding:10px 12px; font:inherit; min-width:0; }
+.shell input:focus,.shell select:focus { outline:2px solid #4983a1; outline-offset:2px; }
+.shell button,.dialog button { background:#faffff; color:#173848; border:1px solid #8da5b2; border-radius:7px; padding:10px 15px; font:inherit; font-size:13px; cursor:pointer; }
+.shell button:disabled,.dialog button:disabled { opacity:.45; cursor:not-allowed; }
+.account,.directory,.tabs { display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin:18px 0; }
+.account { justify-content:space-between; font-size:13px; }
+.account span { overflow-wrap:anywhere; min-width:0; }
+.directory label { flex:1; min-width:min(100%,260px); }
+.tabs { border-bottom:1px solid #a8b9c2; padding-bottom:15px; }
+.tabs [aria-current] { background:#173848; color:white; }
+.dialog { margin:auto; max-width:520px; width:calc(100% - 40px); border:1px solid #7d98a5; border-radius:14px; padding:24px; background:white; color:#173848; }
+.dialog h2 { margin-bottom:16px; font-size:21px; }.dialog p { line-height:1.6; }.dialog div { display:flex; flex-wrap:wrap; gap:10px; margin-top:20px; }.dialog::backdrop { background:#06121bc9; }
+@media(max-width:760px){.header{padding:24px 16px;flex-wrap:wrap;}.shell{padding:16px;}.directory{align-items:stretch;}.directory label{flex-basis:100%;}.tabs{gap:8px;}}

@@ -1,6 +1,9 @@
 'use client';
-import { useEffect, type ReactNode } from 'react';
+import { createContext, useContext, useEffect, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
+
+/** Retained local panels can hide portals without discarding their form state. */
+export const ModalVisibilityContext = createContext(true);
 
 interface ModalProps {
   open: boolean;
@@ -13,16 +16,17 @@ interface ModalProps {
 }
 
 export default function Modal({ open, onClose, title, children, footer, className, zIndex }: ModalProps) {
+  const visible = useContext(ModalVisibilityContext);
   useEffect(() => {
-    if (!open) return;
+    if (!open || !visible) return;
     function onKey(e: KeyboardEvent) {
       if (e.key === 'Escape') onClose();
     }
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
-  }, [open, onClose]);
+  }, [open, visible, onClose]);
 
-  if (!open || typeof document === 'undefined') return null;
+  if (!open || !visible || typeof document === 'undefined') return null;
 
   return createPortal(
     <div

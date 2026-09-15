@@ -1,5 +1,13 @@
 # Current state and restart readiness
 
+## September 15: shared local session and organization navigation verified
+
+The slice after `3e5ac67` adds an independently gated `/local-workspace` joining the editor, invitation management and acceptance rehearsals. One in-memory session, exact authorized organization navigation and retained panels preserve dirty schedules, undo history, modal drafts and immutable invitation requests across internal navigation/back/forward. Account switching clears all work; expired/revoked sessions preserve the same actor's drafts for explicit reauthentication. Acceptance leads to an authorized schedule view with existing role permissions. See [LOCAL_WORKSPACE_REVIEW.md](./LOCAL_WORKSPACE_REVIEW.md).
+
+Fresh evidence: **78 platform tests, 53 editor regressions, 431 database assertions across 14 unchanged migrations**, the new genuine workspace/Admin-MFA runtime, all three existing standalone runtimes, TypeScript/build/integrated lint, SQL lint and local advisor checks pass. Browser tests cover pending/late and lost invitation responses, organization isolation, exact request retention, dirty/modal discard cancellation, account-history isolation, recipient read-only access and desktop/mobile dialogs. This is local integration evidence, not full parity or hosted security acceptance.
+
+Next bounded local work can expose the existing versioned schedule lifecycle/recovery actions within this workspace, preserving dirty/modal drafts and existing roles/policies. Delivery, recipient disclosure, password/MFA recovery and broader administration remain explicit F02 gaps; no new policies are inferred. Actual schedules, hosted services, real credentials and Netlify defaults remain untouched. No mail, push, deployment or billing change occurred. Preserve earlier recovery volumes/checkpoints and the 1:05 PM Eastern new-batch cutoff; all real-migration parity/reconciliation/rollback gates remain.
+
 ## September 15: local invitation acceptance and receipt recovery verified
 
 The slice after `2bb06f8` adds an independently gated loopback `/local-accept-invitation` UI and a recipient-only acceptance receipt RPC. It preserves the existing verified-email, single-use, expiry, role and suspension rules. Explicit ID reviews survive unknown results and same-account reauthentication; retries check the own committed receipt before accepting again. See [LOCAL_ACCEPTANCE_REVIEW.md](./LOCAL_ACCEPTANCE_REVIEW.md).

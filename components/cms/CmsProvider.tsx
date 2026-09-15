@@ -6,7 +6,7 @@ import CmsModal from './CmsModal';
 
 export default function CmsProvider({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const isLocal = pathname === '/local-schedule' || pathname === '/local-invitations' || pathname === '/local-accept-invitation';
+  const isLocal = pathname === '/local-workspace' || pathname === '/local-schedule' || pathname === '/local-invitations' || pathname === '/local-accept-invitation';
   const loadConfig = useCmsStore(s => s.loadConfig);
   const modalOpen  = useCmsStore(s => s.modalOpen);
 
