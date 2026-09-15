@@ -20,9 +20,9 @@ Open findings/gaps for the required security review:
 
 | Finding | Current evidence / required follow-up |
 |---|---|
-| F01: revocation is not yet a universal backend policy | New editor wrappers enforce active sessions. Older direct authenticated RPCs and RLS reads retain JWT-lifetime semantics. This is not a global revocation rollout; reconcile policy across every target entrypoint before release. Do not silently accept a production revocation bypass. |
+| F01: broader revocation policy remains open | September 15 follow-up adds local Data API admission to all authenticated RPC/table routes and actor-bound admin workflows. Auth/Storage/Realtime and trusted SQL are outside this hook; hosted policy and admission/cancellation decisions remain explicit. See [SESSION_ADMISSION_REVIEW.md](./SESSION_ADMISSION_REVIEW.md). |
 | F02: recovery and account lifecycle are incomplete | Password login, wrong password, expiry/relogin, sign-out and same-account unsaved recovery are exercised. Password reset, invitation/AAL2/admin UX, enumeration/rate-limit review and hosted configuration remain separate checks. |
-| F03: session-revocation concurrency proof remains | Existing 14 permission/document/lifecycle races pass. New helper holds SHARE locks, but dedicated concurrent session deletion/expiry races still need explicit two-connection evidence. |
+| F03: local admission concurrency verified | September 15 follow-up passes seven observed-lock session/admin races and one controlled read-admission scenario, plus the existing 14 races. Writes admitted first can finish before sign-out; reads use committed snapshot admission. This is local evidence, with hosted/load and stricter cancellation policy still unresolved. |
 | F04: related-store application access is unresolved | The private catalogue at cc35dc9 preserves source data but is not an application API. Template ownership/sharing, CMS access, snapshot deletion/retention and library moves require explicit policies, repositories and tests. See RELATED_MIGRATION_CONTRACT.md. |
 | F05: broader release security and rollback remain open | Review all public-link data/expiry, secrets and dependency controls, malicious input/XSS, privilege boundaries, concurrent writes, backup/rollback access and authorized hosted settings. No claim of perfect security, full parity or a completed external audit. |
 

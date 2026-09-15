@@ -37,6 +37,8 @@ export type RevokeInvitationInput = {
 
 export type VerifiedJwtClaims = {
   userId: string;
+  sessionId: string;
+  expiresAt: number;
   aal: 'aal2';
   authenticatedAt: string;
 };
@@ -200,7 +202,9 @@ export function parseVerifiedJwtClaims(
     || !audience.includes('authenticated')
     || claims.aal !== 'aal2'
     || claims.is_anonymous === true
-    || !Number.isFinite(expiresAt)
+    || typeof claims.session_id !== 'string'
+    || !UUID_PATTERN.test(claims.session_id)
+    || !Number.isSafeInteger(expiresAt)
     || expiresAt <= nowSeconds
     || (notBefore !== null && (!Number.isFinite(notBefore) || notBefore > nowSeconds + 60))
   ) {
@@ -227,6 +231,8 @@ export function parseVerifiedJwtClaims(
 
   return {
     userId: verifiedUserId,
+    sessionId: claims.session_id as string,
+    expiresAt,
     aal: 'aal2',
     authenticatedAt: new Date(authenticatedAtSeconds * 1000).toISOString(),
   };

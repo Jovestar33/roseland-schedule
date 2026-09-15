@@ -2,6 +2,7 @@ import 'server-only';
 
 import { randomUUID } from 'node:crypto';
 import { NextRequest, NextResponse } from 'next/server';
+import { serviceApiHeaders } from './service-headers';
 import {
   parseIdempotencyKey,
   parseVerifiedJwtClaims,
@@ -15,6 +16,7 @@ type PlatformConfig = {
   url: string;
   publishableKey: string;
   secretKey: string;
+  actor?: VerifiedJwtClaims;
 };
 
 type SupabaseUser = {
@@ -182,7 +184,7 @@ export async function authenticatePlatformRequest(
       Math.floor(Date.now() / 1000),
       maximumAuthenticationAgeSeconds,
     );
-    return { actor, config };
+    return { actor, config: { ...config, actor } };
   } catch (error) {
     if (error instanceof PlatformInputError) {
       throw new PlatformHttpError(403, error.message);
@@ -196,13 +198,27 @@ export async function callPlatformRpc(
   functionName: string,
   payload: Record<string, unknown>,
 ): Promise<string> {
+  if (
+    !config.actor
+    || ![
+      'provision_customer_organization',
+      'create_organization_invitation',
+      'revoke_organization_invitation',
+    ].includes(functionName)
+    || payload.p_actor_user_id !== config.actor.userId
+  ) {
+    throw new PlatformHttpError(403, 'Workflow unavailable');
+  }
   let response: Response;
   try {
     response = await fetch(`${config.url}/rest/v1/rpc/${functionName}`, {
       method: 'POST',
       headers: {
-        apikey: config.secretKey,
+        ...serviceApiHeaders(config.secretKey),
         'content-type': 'application/json',
+        'x-actor-user-id': config.actor.userId,
+        'x-actor-session-id': config.actor.sessionId,
+        'x-actor-session-exp': String(config.actor.expiresAt),
       },
       body: JSON.stringify(payload),
       cache: 'no-store',
@@ -213,6 +229,7 @@ export async function callPlatformRpc(
   }
 
   if (!response.ok) {
+    if (response.status === 401) throw new PlatformHttpError(401, 'Authentication required');
     let providerMessage = '';
     try {
       const body = await response.json() as { message?: unknown };

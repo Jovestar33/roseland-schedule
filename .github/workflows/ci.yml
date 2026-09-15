@@ -92,6 +92,9 @@ jobs:
       - name: Test local editor session RPC integration
         run: node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types scripts/test-local-editor-runtime.ts --workdir .
 
+      - name: Test Data API session admission and genuine revocation races
+        run: node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types scripts/test-session-admission.ts --workdir .
+
       - name: Rehearse synthetic import and final catch-up
         run: python3 scripts/migration/rehearse-synthetic.py --workdir . --report /tmp/roseland-synthetic-migration-report.json
 

@@ -24,6 +24,7 @@ function token(payload: Record<string, unknown>): string {
 function claims(overrides: Record<string, unknown> = {}): Record<string, unknown> {
   return {
     sub: USER_ID,
+    session_id: '61000000-0000-4000-a000-000000000099',
     iss: ISSUER,
     aud: 'authenticated',
     role: 'authenticated',
@@ -133,6 +134,8 @@ test('verified AAL2 claims use the recent authentication method, not token refre
     15 * 60,
   ), {
     userId: USER_ID,
+    sessionId: '61000000-0000-4000-a000-000000000099',
+    expiresAt: NOW + 3600,
     aal: 'aal2',
     authenticatedAt: new Date((NOW - 30) * 1000).toISOString(),
   });
@@ -146,6 +149,15 @@ test('AAL1 sessions are rejected', () => {
     NOW,
     15 * 60,
   ), PlatformInputError);
+});
+
+test('verified workflow claims require a usable session ID and integral expiry', () => {
+  for (const invalid of [
+    { session_id: undefined }, { session_id: '' }, { session_id: USER_ID + 'x' },
+    { exp: NOW + 0.5 }, { exp: Number.MAX_SAFE_INTEGER + 1 }, { exp: NOW },
+  ]) {
+    assert.throws(() => parseVerifiedJwtClaims(token(claims(invalid)), USER_ID, ISSUER, NOW, 900), PlatformInputError);
+  }
 });
 
 test('stale authentication is rejected even when a token was recently refreshed', () => {

@@ -25,7 +25,9 @@ The mutation functions are executable only by the Supabase `service_role`. They 
 - Invitation creation and revocation are transactional, idempotent, rate-bounded, and audited.
 - No authenticated or anonymous database role can execute these server functions or read private idempotency/operator records.
 
-The browser access token is verified with Supabase Auth before its claims are used. The server then validates issuer, audience, subject, expiry, anonymity, AAL, and the most recent non-refresh authentication method. The server secret is sent only as the Supabase `apikey`; it is never used as a browser bearer token.
+The browser access token is verified with Supabase Auth before its claims are used. The server then validates issuer, audience, subject, session ID, expiry, anonymity, AAL, and the most recent non-refresh authentication method. The server binds the verified actor/session/expiry to internal service headers and rejects mismatched payload actors. New secret keys are sent only as `apikey`; legacy JWT service-role keys additionally use a server-only bearer header. Neither key is exposed to the browser.
+
+The local September 15 forward migration checks and locks the verified actor session at Data API admission for these three workflows. Concurrent committed revocation/expiry prevents an unadmitted workflow; an admitted write may complete before sign-out returns. All three workflows passed with genuine fictional AAL2 sessions. This migration has not been applied to hosted development. See [SESSION_ADMISSION_REVIEW.md](./SESSION_ADMISSION_REVIEW.md) for the inventory, evidence and remaining scope/policy decisions.
 
 ## Configuration
 

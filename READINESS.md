@@ -1,5 +1,13 @@
 # Current state and restart readiness
 
+## September 15: local Data API session admission and concurrency verified
+
+The batch after `7903ac1` adds database-scoped Data API admission across all authenticated RPC/table routes and verified actor-session binding for the three trusted admin workflows. It also fixes the reproduced legacy service-key bearer-header omission. Actual schedules and hosted systems were untouched. See [SESSION_ADMISSION_REVIEW.md](./SESSION_ADMISSION_REVIEW.md) for the per-entrypoint inventory, concurrency results and policy limits.
+
+Fresh evidence: **12 migrations, 383 pgTAP assertions, 44 platform tests, 53 editor tests**, all three genuine local Auth runners, **14 existing races plus eight admission scenarios**, TypeScript/build/integrated lint, SQL lint and local security advisor pass. Seven new scenarios observe actual database lock waits; the eighth demonstrates read snapshot admission. Genuine local AAL2 succeeds on all three admin workflows and retained binding after sign-out is denied.
+
+F01 is closed only for the tested local Data API boundary; F03 now has dedicated local revocation/expiry race evidence. Auth/Storage/Realtime/trusted-SQL scope, cancellation after admission, full account/admin recovery UX (F02), related projections (F04), hosted/performance/configuration recovery and broad security review (F05) remain explicit. Previously admitted reads/writes may finish under the documented contract. No real migration, hosted rollout, push or deployment is authorized by these results. The separate recovery databases/artifacts remain preserved.
+
 ## September 15: fictional checkpoint recovery and post-cutover replay completed
 
 The isolated migration branch now adds a credential-free checkpoint/journal contract, a guarded local recovery CLI and a full SQL rehearsal after known-good application commit `ddef735`. New disconnected recovery databases restore exact stable IDs, schedule documents/metadata/histories, audit events and all four private related-store catalogue types, including an explicit fictional tombstone. Ordered replay preserves edits after simulated cutover and an additional accepted edit after recovery. The old writer remains frozen; all rehearsal writers finish frozen. No source replacement, actual-schedule access, hosted operation or new application/schema migration occurred.
