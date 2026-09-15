@@ -383,3 +383,12 @@ No Supabase project creation, production credential changes, production export, 
 ---
 
 *This plan supersedes the earlier strategy of extending the Mother App through additional Netlify Blob stores before introducing accounts and relational storage.*
+
+
+## Netlify billing-transition milestone
+
+- [ ] After complete final active-schedule/related-data reconciliation, a functioning Supabase/Vercel pilot, approved cutover, successful real-use/rollback review and the agreed parallel availability period, notify the user when reducing or ending the **paid Netlify plan** is appropriate.
+- [ ] Verify current provider/account plans and compare combined Vercel + Supabase costs and residual Netlify dependencies. Assess a downgrade that retains required Netlify fallback/legacy access; never assume cancellation is compatible with availability.
+- [ ] Present the evidence, proposed cost/effective date and any unresolved availability tradeoff for an explicit user decision. No subscription change, purchase or shutdown is authorized.
+
+The existing daily Supabase follow-up includes this future notification gate. Details are in [MIGRATION_RUNBOOK.md](./MIGRATION_RUNBOOK.md). Billing reduction remains downstream of migration acceptance, not a new blocker for today's local work.

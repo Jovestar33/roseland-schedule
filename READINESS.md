@@ -1,5 +1,10 @@
 # Current state and restart readiness
 
+## September 15: future billing-transition requirement
+
+The user wants to redirect Netlify spending toward Supabase when migration acceptance and the agreed parallel-availability period make that appropriate. The roadmap/runbook/readiness assessment now require a current combined Vercel/Supabase/residual-Netlify cost and dependency review, a compatible downgrade/fallback assessment and user notification after the defined gates. The existing daily Supabase follow-up was updated to include this future milestone; it stays quiet while the gate is unmet. No pricing assumption, subscription change, purchase or shutdown was made.
+
+
 ## September 15 completion: genuine Auth, lifecycle and synthetic catch-up
 
 Continue from local branch `codex/migration-schedule-contract` in `/private/tmp/roseland-migration-contract-20260914`. Auth verification is committed at `9f64037`, the recoverable lifecycle slice at `66c1e22`, and the subsequent rehearsal/acceptance commit records the remainder. The original development branch and live editor have not been switched.

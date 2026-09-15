@@ -90,6 +90,22 @@ Rollback triggers include unexplained reconciliation differences, cross-tenant a
 
 Rollback becomes substantially harder once both systems accept writes. During the stability window there must be exactly one authoritative writer, and target-side writes must be recoverable through an explicit change ledger/version history.
 
+## Billing transition: reduce Netlify cost after migration acceptance
+
+The user wants eventually to stop paying for Netlify to help fund Supabase, and to be notified when the evidence supports that decision. This does not supersede the requirement to keep Netlify active and available in parallel. Do not equate ending a paid plan with shutting down the app or assume a cancellation preserves fallback access.
+
+Before recommending a billing change, require all of these:
+
+- Verified complete active-schedule reconciliation against the final source state, with all in-scope related data accounted for and discrepancies resolved.
+- A functioning Supabase/Vercel pilot, explicitly approved cutover and successful real-use review.
+- Verified backup/restore and rollback, including recovery of target-only writes.
+- Completion of the agreed parallel availability/stability period, while preserving remaining fallback and legacy-access obligations. The 30-day baseline is not automatic cancellation approval.
+- A current dependency and cost assessment for **Vercel plus Supabase plus any residual Netlify services**. Include relevant seats, environments, compute/storage/egress, usage/overages, functions/Blobs, DNS/domains, legacy routes and other dependencies actually used.
+
+At that milestone, verify current official plan prices/terms and the account's actual subscriptions through authorized read-only access. Assess whether a downgrade can remove or reduce Netlify charges while retaining required app/fallback access; identify limitations, renewal/effective dates and the proposed combined monthly cost. If no compatible downgrade is verified, explain the remaining cost and availability tradeoff and obtain a user decision. Unknown plan terms or missing evidence mean the recommendation is not ready.
+
+Notify the user when these gates are met, with the evidence, residual dependencies, cost comparison and concrete proposed next step. The existing daily Supabase follow-up now includes this milestone and stays quiet while it is unchanged or unmet. This is a future assessment/notification requirement; no purchase, subscription change, cancellation, shutdown or deployment is authorized. Continue the migration critical path without making speculative billing research a blocker for local work.
+
 ## Retirement
 
 No retirement is currently authorized. The user requires Netlify to remain active and available. Any future retirement proposal must obtain an explicit superseding user decision, meet retention/legacy-access obligations and include tested recovery; expiry of the stability window alone authorizes no shutdown or deletion.

@@ -42,3 +42,12 @@ Then implement one narrow schedule read/update mutation contract on that baselin
 ## Sources
 
 Current source: `lib/api/*.ts`, `lib/store/authStore.ts`, `lib/platform/*`, current `supabase/migrations/`, and schedule SQL at `3e0cb89`. Evidence: [READINESS.md](./READINESS.md), [STAGING_VERIFICATION.md](./STAGING_VERIFICATION.md), [MIGRATION_RUNBOOK.md](./MIGRATION_RUNBOOK.md), plus the completed September 14 browser verification. GitHub metadata checked for [auth PR #5](https://github.com/Jovestar33/roseland-schedule/pull/5) and [schedule PR #8](https://github.com/Jovestar33/roseland-schedule/pull/8). Older staging notes describing the browser Restore check as pending are superseded by this assessment's dated result.
+
+
+## Netlify billing-transition milestone
+
+- [ ] After complete final active-schedule/related-data reconciliation, a functioning Supabase/Vercel pilot, approved cutover, successful real-use/rollback review and the agreed parallel availability period, notify the user when reducing or ending the **paid Netlify plan** is appropriate.
+- [ ] Verify current provider/account plans and compare combined Vercel + Supabase costs and residual Netlify dependencies. Assess a downgrade that retains required Netlify fallback/legacy access; never assume cancellation is compatible with availability.
+- [ ] Present the evidence, proposed cost/effective date and any unresolved availability tradeoff for an explicit user decision. No subscription change, purchase or shutdown is authorized.
+
+The existing daily Supabase follow-up includes this future notification gate. Details are in [MIGRATION_RUNBOOK.md](./MIGRATION_RUNBOOK.md). Billing reduction remains downstream of migration acceptance, not a new blocker for today's local work.
