@@ -131,6 +131,8 @@ Migration takes scheduling priority. This track may proceed alongside it only wh
 
 ## 🟠 Phase 3: accounts, organizations, and permissions
 
+September 15 local evidence and next slice: [ACCOUNT_WORKFLOW_REVIEW.md](./ACCOUNT_WORKFLOW_REVIEW.md). Organization/invitation workflows now have input-bound retries, serialized existing rate buckets and genuine MFA HTTP/race tests. Next is an explicitly gated loopback Owner/Admin invitation-management UI with stable request snapshots, recoverable drafts and result review. Delivery, password/MFA recovery and wider lifecycle policy remain separate prerequisites; this does not complete Phase 3 or authorize hosted onboarding.
+
 - [ ] Replace the shared PIN with Supabase Auth in the migration environment.
 - [ ] Create the initial Roseland organization and membership flow.
 - [ ] Implement Owner/Admin, Producer/Editor, and Viewer permissions; defer specialized external roles until their data views are designed.

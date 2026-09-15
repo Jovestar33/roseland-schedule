@@ -29,6 +29,8 @@ The browser access token is verified with Supabase Auth before its claims are us
 
 The local September 15 forward migration checks and locks the verified actor session at Data API admission for these three workflows. Concurrent committed revocation/expiry prevents an unadmitted workflow; an admitted write may complete before sign-out returns. All three workflows passed with genuine fictional AAL2 sessions. This migration has not been applied to hosted development. See [SESSION_ADMISSION_REVIEW.md](./SESSION_ADMISSION_REVIEW.md) for the inventory, evidence and remaining scope/policy decisions.
 
+The follow-up local migration `20260915060000_workflow_request_contract.sql` binds retries to canonical business inputs and serializes each existing rate bucket. Identical retries preserve the first result; changed or unverifiable historical inputs return 409 for review. The application sends stable `expiresInDays` to the service-only `create_organization_invitation_with_days` RPC, which has the same actor-session admission requirement. The original absolute-expiry RPC remains compatible. Rate thresholds and Netlify defaults are unchanged. See [ACCOUNT_WORKFLOW_REVIEW.md](./ACCOUNT_WORKFLOW_REVIEW.md) for reproduced defects, real concurrency/HTTP evidence and the next local administration UI slice.
+
 ## Configuration
 
 Required server-only settings are documented in `.env.example`:

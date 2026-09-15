@@ -92,3 +92,32 @@ test('platform workflows stay disabled by default', async () => {
   global.fetch = async () => assert.fail('Disabled workflows must not use Auth or service transport');
   await assert.rejects(server.authenticatePlatformRequest(request(), 900), isError(404));
 });
+
+test('workflow replay conflicts and rate caps have bounded, distinct responses', async () => {
+  global.fetch = async () => userReply();
+  const { config } = await server.authenticatePlatformRequest(request(), 900);
+  global.fetch = async () => Response.json({ message: 'Internal request details' }, { status: 409 });
+  await assert.rejects(server.callPlatformRpc(config, 'create_organization_invitation', { p_actor_user_id: userId }),
+    error => isError(409)(error) && error.message === 'Request key conflict; review the original result before retrying');
+  global.fetch = async () => Response.json({ message: 'workflow rate limit exceeded' }, { status: 400 });
+  await assert.rejects(server.callPlatformRpc(config, 'create_organization_invitation', { p_actor_user_id: userId }),
+    error => isError(429)(error) && error.message === 'Please try again later');
+});
+
+test('actual NextRequest loopback normalization preserves exact browser origin checks', async () => {
+  const { NextRequest } = require('next/server');
+  const bearer = request().headers.get('authorization');
+  global.fetch = async () => userReply();
+  const same = new NextRequest('http://127.0.0.1:3341/api/platform/invitations', {
+    headers: { host: '127.0.0.1:3341', origin: 'http://127.0.0.1:3341', authorization: bearer },
+  });
+  assert.equal(same.nextUrl.hostname, 'localhost');
+  await server.authenticatePlatformRequest(same, 900);
+  global.fetch = async () => assert.fail('Wrong origin must fail before Auth');
+  for (const origin of ['http://localhost:3341', 'http://127.0.0.1:3342', 'https://untrusted.example']) {
+    const cross = new NextRequest('http://127.0.0.1:3341/api/platform/invitations', {
+      headers: { host: '127.0.0.1:3341', origin, authorization: bearer },
+    });
+    await assert.rejects(server.authenticatePlatformRequest(cross, 900), isError(403));
+  }
+});

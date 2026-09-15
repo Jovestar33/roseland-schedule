@@ -95,7 +95,14 @@ function assertAllowedOrigin(request: NextRequest): void {
     throw new PlatformHttpError(403, 'Request unavailable');
   }
 
-  if (normalizedOrigin !== request.nextUrl.origin) {
+  // NextURL rewrites 127.0.0.1 to localhost. Preserve the actual local Host so
+  // same-origin browser requests work without treating the two origins alike.
+  let requestOrigin = request.nextUrl.origin;
+  const host = request.headers.get('host');
+  if (request.nextUrl.hostname === 'localhost' && host && /^(localhost|127\.0\.0\.1)(:\d+)?$/.test(host)) {
+    requestOrigin = new URL(`${request.nextUrl.protocol}//${host}`).origin;
+  }
+  if (normalizedOrigin !== requestOrigin) {
     throw new PlatformHttpError(403, 'Request unavailable');
   }
 }
@@ -203,6 +210,7 @@ export async function callPlatformRpc(
     || ![
       'provision_customer_organization',
       'create_organization_invitation',
+      'create_organization_invitation_with_days',
       'revoke_organization_invitation',
     ].includes(functionName)
     || payload.p_actor_user_id !== config.actor.userId
@@ -230,6 +238,9 @@ export async function callPlatformRpc(
 
   if (!response.ok) {
     if (response.status === 401) throw new PlatformHttpError(401, 'Authentication required');
+    if (response.status === 409) {
+      throw new PlatformHttpError(409, 'Request key conflict; review the original result before retrying');
+    }
     let providerMessage = '';
     try {
       const body = await response.json() as { message?: unknown };

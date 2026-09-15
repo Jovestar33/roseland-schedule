@@ -1,5 +1,13 @@
 # Current state and restart readiness
 
+## September 15: account-workflow replay, rate and HTTP reliability verified locally
+
+The batch after `c03d0f7` fixes confirmed changed-input replay and concurrent rate-cap overshoot in provisioning and invitation workflows. Canonical fingerprints bind request keys to business inputs; a shared transaction lock serializes each existing rate bucket without changing thresholds. Stable expiry days use an additive service-only RPC, preserving the original timestamp signature and actor-session protection. A reproduced Next loopback-origin mismatch is fixed with exact origin checks. See [ACCOUNT_WORKFLOW_REVIEW.md](./ACCOUNT_WORKFLOW_REVIEW.md) for defects, per-workflow evidence and compatibility/release limits.
+
+Fresh validation: **13 migrations, 409 database assertions, 46 platform tests, 53 editor tests, 30 Python contract tests**, all four genuine local Auth runners, the built Next MFA workflows, **nine new workflow races plus eight session-admission scenarios and 14 existing permission/document/lifecycle races** pass. TypeScript/build/integrated lint, SQL lint and local security advisor pass. Changed requests conflict, concurrent rate denials leave no partial state, and injected audit failures roll back state/markers before successful retries.
+
+F02 remains open for the complete recovery/onboarding/admin UI. The next coherent local slice is an explicitly gated loopback Owner/Admin invitation-management screen with genuine MFA, tenant-scoped pending lists, stable request snapshots/keys and recoverable drafts. Real delivery/reset/MFA recovery, verified-owner lookup and old request-key reconciliation need their documented procedures before the corresponding rollout. Related ownership/projections and stricter cancellation remain unresolved decisions. Actual schedules, original Netlify defaults and all earlier recovery artifacts remain preserved; no hosted operation, credential/billing change, push or deployment occurred. Keep the 1:05 PM Eastern cutoff for starting new batches.
+
 ## September 15: local Data API session admission and concurrency verified
 
 The batch after `7903ac1` adds database-scoped Data API admission across all authenticated RPC/table routes and verified actor-session binding for the three trusted admin workflows. It also fixes the reproduced legacy service-key bearer-header omission. Actual schedules and hosted systems were untouched. See [SESSION_ADMISSION_REVIEW.md](./SESSION_ADMISSION_REVIEW.md) for the per-entrypoint inventory, concurrency results and policy limits.

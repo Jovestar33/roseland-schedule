@@ -19,15 +19,14 @@ export async function POST(request: NextRequest) {
     requestId = workflowRequestId(request);
     const body = parseCreateInvitationInput(await readPlatformJson(request));
     const { actor, config } = await authenticatePlatformRequest(request, 30 * 60);
-    const expiresAt = new Date(Date.now() + body.expiresInDays * 24 * 60 * 60 * 1000).toISOString();
-    const invitationId = await callPlatformRpc(config, 'create_organization_invitation', {
+    const invitationId = await callPlatformRpc(config, 'create_organization_invitation_with_days', {
       p_actor_user_id: actor.userId,
       p_organization_id: body.organizationId,
       p_email: body.email,
       p_organization_role: body.organizationRole,
       p_production_id: body.productionId,
       p_production_role: body.productionRole,
-      p_expires_at: expiresAt,
+      p_expires_in_days: body.expiresInDays,
       p_actor_aal: actor.aal,
       p_actor_authenticated_at: actor.authenticatedAt,
       p_request_id: requestId,

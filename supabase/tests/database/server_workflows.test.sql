@@ -180,7 +180,7 @@ select extensions.is(
 );
 
 set local role service_role;
-select extensions.lives_ok(
+select extensions.throws_ok(
   $$select public.provision_customer_organization(
     '51000000-0000-4000-a000-000000000001',
     '51000000-0000-4000-a000-000000000002',
@@ -195,7 +195,9 @@ select extensions.lives_ok(
     now(),
     'provision-0001'
   )$$,
-  'provisioning is idempotent for the same actor and request ID'
+  'PT409',
+  'Workflow request conflict',
+  'provisioning rejects changed input for an already used request ID'
 );
 set local role postgres;
 select extensions.is((select count(*) from public.organizations), 2::bigint, 'idempotent provisioning does not create another organization');
@@ -268,7 +270,7 @@ select extensions.is(
 );
 
 set local role service_role;
-select extensions.lives_ok(
+select extensions.throws_ok(
   $$select public.create_organization_invitation(
     '51000000-0000-4000-a000-000000000002',
     current_setting('test.customer_org_id')::uuid,
@@ -281,7 +283,9 @@ select extensions.lives_ok(
     now(),
     'invite-admin-0001'
   )$$,
-  'invitation creation is idempotent for the same actor and request ID'
+  'PT409',
+  'Workflow request conflict',
+  'invitation creation rejects changed input for an already used request ID'
 );
 set local role postgres;
 select extensions.is(

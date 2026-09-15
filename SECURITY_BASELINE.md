@@ -8,6 +8,8 @@ reviewed findings, and the resolved July 29 Google credential incident. See [REA
 
 Local September 15 evidence: [SESSION_ADMISSION_REVIEW.md](./SESSION_ADMISSION_REVIEW.md) verifies Data API admission across authenticated RPC/table routes and actor-bound admin workflows, with dedicated revocation/expiry races. This is an admission contract, not universal cancellation or Auth/Storage/Realtime enforcement; F02/F04/F05 and the broader F01 policy remain open.
 
+[ACCOUNT_WORKFLOW_REVIEW.md](./ACCOUNT_WORKFLOW_REVIEW.md) records the subsequent local fixes for changed-input request replay, concurrent rate-cap overshoot, legacy expiry-call compatibility and loopback origin handling. Genuine MFA HTTP tests and transactional audit/state checks pass; full account recovery/onboarding/admin UX and hosted readiness remain open.
+
 - Supabase Auth replaces shared PINs; production sessions use secure provider-managed cookies/tokens and defined expiry/refresh behavior.
 - Initial methods are email/password, email recovery, and invitation-based onboarding. Magic-link-only and social login are deferred until their account-linking and support paths are designed.
 - MFA is required for owners/admins before external tenant onboarding.

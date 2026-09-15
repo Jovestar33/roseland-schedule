@@ -95,6 +95,12 @@ jobs:
       - name: Test Data API session admission and genuine revocation races
         run: node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types scripts/test-session-admission.ts --workdir .
 
+      - name: Build local application for account workflow integration
+        run: npm run build
+
+      - name: Test genuine account workflows, idempotency and rate races
+        run: node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types scripts/test-workflow-runtime.ts --workdir . --next-port 3341
+
       - name: Rehearse synthetic import and final catch-up
         run: python3 scripts/migration/rehearse-synthetic.py --workdir . --report /tmp/roseland-synthetic-migration-report.json
 
