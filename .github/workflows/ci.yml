@@ -86,6 +86,9 @@ jobs:
       - name: Test schedule write and suspension concurrency
         run: python3 scripts/test-schedule-concurrency.py --container supabase_db_roseland-schedule
 
+      - name: Test real local Auth and schedule RPC integration
+        run: node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types scripts/test-schedule-auth-runtime.ts --workdir .
+
       - name: Run database security advisor
         run: npm run db:advisors:security
 

@@ -1,5 +1,14 @@
 # Current state and restart readiness
 
+## September 15: genuine local Auth/API/repository verification
+
+The isolated integration branch now has `scripts/test-schedule-auth-runtime.ts`. It discovers only an unlinked local CLI project, verifies the matching Docker database and loopback API, creates three fictional identities through actual Auth signup, signs them out, then obtains normal password-grant sessions and verifies them through Auth. No user password, hosted/personal account, forged JWT, `set_config` identity substitution or service-role API client is used. Generated passwords/tokens remain in memory and are not printed.
+
+The actual user-session SDK adapter → local gateway/PostgREST → database/RLS path passed: owner/viewer reads, attributed/versioned update and matching history/checksum; second-tenant read/update/history denial; viewer update denial; wrong-password rejection; HTTP 409 stale-write conflict; invalid document rejection; direct REST write-bypass rejection; full rollback after an injected history insert failure; and denial after membership suspension while the original login session remains valid. Fixture setup and targeted failure injection use only trusted SQL in the disposable database. The temporary failure trigger is removed; synthetic users/content remain only in that local volume. CI includes this runner after transaction-isolated database tests. This is local backend integration evidence, not a hosted pilot or completed application login UI.
+
+The current editor, hosted services, deployments and live data remain unchanged. The next bounded batch is the documented schedule lifecycle contracts and an explicitly limited synthetic migration rehearsal; full live exporter/importer and target UI still remain ahead of cutover.
+
+
 ## September 14 completion: target schedule read/update contract (local only)
 
 The isolated `codex/migration-schedule-contract` branch now adds forward migration `20260915010000_schedule_read_update_contract.sql`, a user-session Supabase RPC adapter, database/adapter regressions, and a three-scenario real concurrency runner. See [SCHEDULE_CONTRACT.md](./SCHEDULE_CONTRACT.md) for the interface, validation limits and explicit exclusions. The original development checkout remains on its existing application branch; the tested implementation is in `/private/tmp/roseland-migration-contract-20260914` and its local Git branch.
