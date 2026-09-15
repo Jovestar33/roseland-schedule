@@ -1,5 +1,8 @@
 # Migration critical path — pilot to cutover
 
+> **Related-store implementation:** shared snapshot/template/library/CMS preservation, stable catalogue mapping, import history, catch-up and per-record reconciliation are now tested locally. This closes the prior inventory-only coverage gap at the private migration-catalogue layer, not at the application/UI layer. See [RELATED_MIGRATION_CONTRACT.md](./RELATED_MIGRATION_CONTRACT.md) and [READINESS.md](./READINESS.md). Next: local-only authenticated account/library/editor integration and explicit related application projections. Real migration remains blocked by the parity and complete-export gates.
+
+
 > **TOTAL PARITY GATE (2026-09-15): NOT PASSED.** Before beginning migration of any real schedules, verify total parity between actual current Netlify production behavior and the eventual Supabase/Vercel target runtime, then obtain explicit user approval. This includes PDF creation, printing, navigation, data entry, input-field sizing and every existing feature. Local SQL/API tests or Netlify staging results cannot satisfy this gate. Each item requires Pass/Fail/Not tested and reproducible comparison evidence; unknown/untested blocks migration. Verified improvements may Pass without copying old pixels or needing waivers solely for differing; regressions and untested required behavior block migration. Surface material workflow tradeoffs and unclear cases for user review. Synthetic rehearsals may continue within their existing authorization. See [REGRESSION_MATRIX.md](./REGRESSION_MATRIX.md).
 
 

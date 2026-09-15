@@ -1,5 +1,8 @@
 # Synthetic migration rehearsal
 
+> **Related-store update:** a separate tested private-catalogue rehearsal now covers complete shared snapshot/template/library/CMS objects, individual items, history and tenant references. See [RELATED_MIGRATION_CONTRACT.md](./RELATED_MIGRATION_CONTRACT.md). The schedule-only runner below retains its explicit limited scope; neither runner claims finished runtime parity or a complete production exporter.
+
+
 This is a limited local database experiment, not a production exporter/importer. It accepts no live input, hosted URL, password or secret. All fixture inserts, updates, temporary mappings and helpers run inside one transaction that always rolls back. No actual Netlify schedule has been read or changed.
 
 Run against an unlinked disposable local Supabase stack after applying all nine migrations:
