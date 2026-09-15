@@ -1,5 +1,12 @@
 # Current state and restart readiness
 
+## September 14: local foundation integration
+
+Local branch `codex/migration-schedule-contract` integrates schedule foundation `3e0cb89` into current development `b9d6523`. Current planning documents were preserved in a separate local commit. The only merge conflicts were dependency manifests; the current development manifests were retained byte-for-byte, preserving the tested dependency/CI/editor/staging changes. Historical migrations were not edited.
+
+The combined seven-migration chain applied cleanly in the separate disposable local project `roseland-contract-20260914`: **193 pgTAP assertions across six files passed**, **eight two-connection invitation/suspension scenarios passed**, security advisor reported no issues and SQL lint found no errors. The user's existing local stack was not modified. These results prove the combined foundation baseline, not the outstanding schedule mutation/restore gaps or hosted readiness. No push, hosted migration, deployment or live-data operation occurred.
+
+
 Reviewed September 11, 2026 (America/New_York; command timestamps cross into September 12 UTC). This is the current status reference; older dated validation records remain historical evidence.
 
 **The heavy-usage freeze ended September 11 by explicit user instruction. The follow-up authorizes isolated dependency/CI and two reproduced reliability fixes, local permission lifecycle hardening, disposable local database checks, and resuming only the existing development Supabase project with compatible transaction-isolated verification. No merge, deployment, new hosted migration/import, production configuration change, purchase, or hosted workflow activation is authorized.** Netlify Functions/Blobs and shared-PIN authentication remain the live application path. Ending the freeze does not authorize cutover.

@@ -156,7 +156,12 @@ select extensions.ok(
       'public.protect_organization_identity()',
       'public.protect_production_identity()',
       'public.protect_profile_identity()',
-      'public.handle_new_auth_user()'
+      'public.handle_new_auth_user()',
+      'public.protect_phase_identity()',
+      'public.protect_production_day_identity()',
+      'public.protect_schedule_identity()',
+      'public.record_schedule_version()',
+      'public.prevent_schedule_version_mutation()'
     ]) signature
     where has_function_privilege('anon', signature, 'EXECUTE')
       or has_function_privilege('authenticated', signature, 'EXECUTE')
