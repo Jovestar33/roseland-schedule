@@ -107,10 +107,7 @@ select extensions.is(public.can_access_production('63000000-0000-4000-a000-00000
 select set_config('request.jwt.claims', '{"sub":"61000000-0000-4000-a000-000000000002","role":"authenticated"}', true);
 select extensions.results_eq('select slug from public.schedules', $$values ('schedule-a-day-1'::text)$$, 'editor A sees assigned schedule A');
 select extensions.lives_ok(
-  $$update public.schedules
-    set document = '{"meta":{"town":"New York"},"rows":[{"action":"Crew Call"}]}'::jsonb
-    where id = '66000000-0000-4000-a000-000000000001'
-      and document_version = 1$$,
+  $$select public.update_schedule_document('66000000-0000-4000-a000-000000000001',1,'{"meta":{"town":"New York"},"rows":[{"action":"Crew Call"}]}'::jsonb,1)$$,
   'editor A can update a current schedule document'
 );
 select extensions.is(
@@ -132,23 +129,20 @@ select extensions.is(
   '61000000-0000-4000-a000-000000000002'::uuid,
   'schedule update records the authenticated editor'
 );
-select extensions.results_eq(
-  $$update public.schedules
-    set town = 'Stale update'
-    where id = '66000000-0000-4000-a000-000000000001'
-      and document_version = 1
-    returning town$$,
-  $$select null::text where false$$,
-  'stale optimistic update affects no schedule row'
+select extensions.throws_ok(
+  $$select public.update_schedule_document('66000000-0000-4000-a000-000000000001',1,'{"meta":{"town":"Stale update"},"rows":[]}'::jsonb,1)$$,
+  'PT409', 'Schedule changed; reload before saving',
+  'stale optimistic update is rejected by the mutation boundary'
 );
 select extensions.throws_ok(
   $$update public.schedules
     set document_version = 99
     where id = '66000000-0000-4000-a000-000000000001'$$,
-  'P0001',
-  'schedule document version must be current',
+  '42501',
+  'permission denied for table schedules',
   'client cannot forge a schedule document version'
 );
+set local role postgres;
 select extensions.throws_ok(
   $$insert into public.schedules (
       organization_id, production_id, production_day_id, display_name, slug, created_by, updated_by
@@ -165,10 +159,11 @@ select extensions.throws_ok(
   'insert or update on table "schedules" violates foreign key constraint "schedules_production_day_fk"',
   'schedule cannot reference a day from another tenant or production'
 );
+set local role authenticated;
 select extensions.throws_ok(
   $$update public.schedules set deleted_at = now() where id = '66000000-0000-4000-a000-000000000001'$$,
-  'P0001',
-  'only an organization owner or admin may change schedule deletion state',
+  '42501',
+  'permission denied for table schedules',
   'editor cannot soft-delete a schedule'
 );
 select extensions.lives_ok(
@@ -208,10 +203,10 @@ select extensions.throws_ok(
 -- Viewer A can read but cannot mutate schedule-domain rows or history.
 select set_config('request.jwt.claims', '{"sub":"61000000-0000-4000-a000-000000000003","role":"authenticated"}', true);
 select extensions.results_eq('select slug from public.schedules', $$values ('schedule-a-day-1'::text)$$, 'viewer A sees assigned schedule A');
-select extensions.results_eq(
-  $$update public.schedules set town = 'Unauthorized' where id = '66000000-0000-4000-a000-000000000001' returning town$$,
-  $$select null::text where false$$,
-  'viewer update affects no schedule row'
+select extensions.throws_ok(
+  $$select public.update_schedule_document('66000000-0000-4000-a000-000000000001',2,'{"meta":{},"rows":[]}',1)$$,
+  'PT404', 'Schedule unavailable',
+  'viewer cannot use the schedule mutation boundary'
 );
 select extensions.throws_ok(
   $$insert into public.phases (
@@ -252,12 +247,14 @@ select extensions.is((select count(*) from public.production_days), 0::bigint, '
 select extensions.is((select count(*) from public.schedules), 0::bigint, 'suspended member sees no schedules');
 select extensions.is((select count(*) from public.schedule_versions), 0::bigint, 'suspended member sees no schedule history');
 
--- Owner A can perform recoverable deletion while immutable history remains.
+-- Trusted fixture deletion preserves history; user deletion awaits its own versioned contract.
 select set_config('request.jwt.claims', '{"sub":"61000000-0000-4000-a000-000000000001","role":"authenticated"}', true);
+set local role postgres;
 select extensions.lives_ok(
   $$update public.schedules set deleted_at = now() where id = '66000000-0000-4000-a000-000000000001'$$,
-  'organization owner can soft-delete a schedule'
+  'trusted fixture deletion records history'
 );
+set local role authenticated;
 select extensions.is(
   (select count(*) from public.schedules where deleted_at is null),
   0::bigint,

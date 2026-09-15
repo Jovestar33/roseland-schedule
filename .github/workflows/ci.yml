@@ -2,9 +2,9 @@ name: CI
 
 on:
   pull_request:
-    branches: [main, "codex/phase-1-**"]
+    branches: [main, "codex/phase-1-**", "codex/migration-**"]
   push:
-    branches: [main, "codex/phase-1-**"]
+    branches: [main, "codex/phase-1-**", "codex/migration-**"]
   workflow_dispatch:
 
 permissions:
@@ -82,6 +82,9 @@ jobs:
 
       - name: Test invitation and suspension concurrency
         run: python3 scripts/test-permission-concurrency.py --container supabase_db_roseland-schedule
+
+      - name: Test schedule write and suspension concurrency
+        run: python3 scripts/test-schedule-concurrency.py --container supabase_db_roseland-schedule
 
       - name: Run database security advisor
         run: npm run db:advisors:security

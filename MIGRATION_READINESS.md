@@ -2,6 +2,10 @@
 
 Assessed 2026-09-14 from development `b9d6523`, current source, GitHub PR metadata and dated verification records. No hosted migration, new deployment, production data operation or infrastructure removal was performed. Historical test results below were not rerun for this assessment.
 
+## Local implementation update — September 14
+
+The foundation integration and narrow schedule read/update contract have since been completed and tested in the isolated local branch `codex/migration-schedule-contract`; see [READINESS.md](./READINESS.md) and [SCHEDULE_CONTRACT.md](./SCHEDULE_CONTRACT.md). The integrated chain passed 257 database assertions and 11 real concurrency scenarios. Remote draft metadata and earlier gaps below describe the pre-implementation assessment. No push, hosted migration or cutover occurred. Continue from the tested local branch; next work is target-runtime JWT/adapter verification, remaining lifecycle/repository/account integration and full import/reconciliation.
+
 ## Priority
 
 Migration readiness is the near-term critical path: foundation → data adapters/import/reconciliation → accounts and permissions → protected Supabase-backed Vercel pilot → controlled cutover. Installation/offline remains ahead of later Production Command expansion, but must not displace this work or become a new cutover requirement. Small installation validation can proceed alongside migration when it does not consume the capacity needed for the critical path. Offline delivery can follow migration; broader production-management expansion remains later.

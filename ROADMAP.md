@@ -77,7 +77,7 @@ Migration takes scheduling priority. This track may proceed alongside it only wh
 
 ## 🟠 Phase 1: secure Supabase foundation
 
-**Current assessment:** [MIGRATION_READINESS.md](./MIGRATION_READINESS.md) supersedes stale blockers in the September 11 status below. Dependency/CI remediation and local lifecycle tests subsequently passed; the still-separate schedule draft now conflicts with its updated auth base and is the next integration task.
+**Current assessment:** the isolated local branch `codex/migration-schedule-contract` now contains the tested integrated foundation and narrow schedule read/update contract. See [READINESS.md](./READINESS.md), [MIGRATION_READINESS.md](./MIGRATION_READINESS.md) and [SCHEDULE_CONTRACT.md](./SCHEDULE_CONTRACT.md). Target-runtime verification, remaining lifecycle/repository/account work and complete import/reconciliation are next. The September 11 status below is historical; no remote merge, migration or cutover has occurred.
 
 **Status (September 11, 2026):** Phase 1 remains incomplete. Tenant foundation is merged. [PR #5](https://github.com/Jovestar33/roseland-schedule/pull/5) adds auth/bootstrap and server workflows on `cbdb921`; [PR #8](https://github.com/Jovestar33/roseland-schedule/pull/8), stacked on #5 at `3e0cb89`, adds schedule-domain tables/history and 45 domain assertions. Both remain drafts. Auth/bootstrap migrations were historically applied only to `roseland-schedule-dev`; the schedule migration has not been applied there according to PR #8. No live UI uses Supabase yet.
 
