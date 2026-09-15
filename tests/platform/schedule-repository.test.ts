@@ -4,7 +4,7 @@ import { createScheduleRepository, ScheduleRepositoryError } from '../../lib/pla
 
 const id = '66000000-0000-4000-a000-000000000001';
 const record = { id, organization_id: id, production_id: id, production_day_id: id, updated_by: id,
-  display_name: 'Fictional', updated_at: '2026-09-15T00:00:00Z',
+  display_name: 'Fictional', slug: 'fictional', status: 'draft', archived_from_status: null, deleted_at: null, updated_at: '2026-09-15T00:00:00Z',
   document_version: 2, document_schema_version: 1, document: { meta: {}, rows: [] } };
 const failure = (kind: string) => (error: unknown) => error instanceof ScheduleRepositoryError && error.kind === kind;
 
@@ -60,4 +60,18 @@ test('malformed, mismatched and stale acknowledgements are rejected', async () =
     const repo = createScheduleRepository({ rpc: async () => ({ data, error: null }) });
     await assert.rejects(repo.update(id, 1, {}, 1), failure('failed'));
   }
+});
+
+
+test('creation requires a version-one acknowledgement for the requested parent', async () => {
+  for (const patch of [{document_version:2}, {production_day_id:'77000000-0000-4000-a000-000000000001'}]) {
+    const repo = createScheduleRepository({ rpc: async () => ({data:{...record,document_version:1,...patch},error:null}) });
+    await assert.rejects(repo.create(id,id,'Fictional','fictional',record.document,1),failure('failed'));
+  }
+});
+
+test('lifecycle acknowledgements must advance the requested version exactly once', async () => {
+  const repo = createScheduleRepository({rpc:async()=>({data:record,error:null})});
+  await assert.rejects(repo.mutate(id,2,'archive'),failure('failed'));
+  assert.throws(()=>repo.mutate(id,0,'delete'),failure('invalid'));
 });

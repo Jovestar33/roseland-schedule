@@ -143,6 +143,25 @@ try {
   sql(`drop trigger ${failureTrigger} on public.schedule_versions; drop function private.${failureTrigger}();`);
   failureTrigger = undefined;
   pass('history failure through real RPC rolls back document, summary, version and history');
+  const createdId = randomUUID();
+  const created = await repo.create(createdId,dayA,'Lifecycle fixture','lifecycle',document,1);
+  ensure(created.document_version===1 && created.updated_by===a.id, 'Create acknowledgement mismatch');
+  await denied(()=>repo.create(createdId,dayA,'Lifecycle fixture','lifecycle',document,1),'conflict',409);
+  await denied(()=>foreign.mutate(createdId,1,'archive'),'unavailable',404);
+  await denied(()=>readOnly.mutate(createdId,1,'archive'),'unavailable',404);
+  await repo.mutate(createdId,1,'rename',{display_name:'Renamed fixture',slug:'renamed-fixture'});
+  await repo.mutate(createdId,2,'archive');
+  ensure((await repo.mutate(createdId,3,'unarchive')).status==='draft','Unarchive lost previous status');
+  await repo.mutate(createdId,4,'restore_version',{version:1});
+  await repo.mutate(createdId,5,'delete');
+  await denied(()=>repo.read(createdId),'unavailable',404);
+  ensure((await repo.readDeleted(createdId)).document_version===6,'Admin recovery read failed');
+  ensure((await repo.mutate(createdId,6,'restore')).deleted_at===null,'Admin recovery failed');
+  await denied(()=>repo.mutate(createdId,6,'archive'),'conflict',409);
+  const lifecycleHistory = await a.c.from('schedule_versions').select('version,metadata').eq('schedule_id',createdId).order('version');
+  ensure(!lifecycleHistory.error && lifecycleHistory.data?.length===7
+    && lifecycleHistory.data[6].metadata.display_name==='Renamed fixture','Lifecycle history missing');
+  pass('real-session create, rename, archive/unarchive, document restore and soft-delete recovery preserve versioned history');
   // Permissions must be current even while the previously issued JWT remains valid.
   sql(`update public.organization_memberships set status='suspended' where organization_id='${orgA}' and user_id='${a.id}';`);
   ensure(!(await a.c.auth.getUser()).error, 'Expected login session to remain valid during permission test');

@@ -1,5 +1,12 @@
 # Current state and restart readiness
 
+## September 15: recoverable schedule lifecycle (local only)
+
+The forward lifecycle migration and repository now support create, rename, archive/unarchive, soft-delete/undelete, deleted-record recovery reads and document-version restore. Scope/actor identity derive from verified parents and the current user. All changes after creation require the current version. Archive preserves the prior status; deletion recovery preserves identity and rejects slug collisions. Metadata and document history/checksums plus audit events commit atomically; injected history/audit failures roll back the full mutation. No cross-production move, hierarchy edit, purge, editor backend switch or hosted change is included. See [SCHEDULE_CONTRACT.md](./SCHEDULE_CONTRACT.md).
+
+A clean **nine-migration** rebuild passed **340 pgTAP assertions**. Genuine local signup/password-login sessions passed the SDK/PostgREST read, write and lifecycle flows, tenant/viewer denial, stale-request conflicts, rollback and membership suspension checks. **Fourteen real concurrency scenarios passed**: eight permission races plus three document and three archive races with observed lock waits. SQL lint and local security advisor were clean. These checks use a separate disposable local project and fictional fixtures; actual Netlify schedules remain untouched.
+
+
 ## September 15: genuine local Auth/API/repository verification
 
 The isolated integration branch now has `scripts/test-schedule-auth-runtime.ts`. It discovers only an unlinked local CLI project, verifies the matching Docker database and loopback API, creates three fictional identities through actual Auth signup, signs them out, then obtains normal password-grant sessions and verifies them through Auth. No user password, hosted/personal account, forged JWT, `set_config` identity substitution or service-role API client is used. Generated passwords/tokens remain in memory and are not printed.

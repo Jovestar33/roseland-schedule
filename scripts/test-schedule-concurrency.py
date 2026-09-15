@@ -32,7 +32,7 @@ def sql(statement):
     return result.stdout.strip()
 
 
-def race(kind):
+def race(kind, operation):
     owner, editor, org, production, day, schedule = [str(uuid.uuid4()) for _ in range(6)]
     marker = uuid.uuid4().hex
     sql(f"""begin;
@@ -52,6 +52,8 @@ def race(kind):
     commit;""")
     auth = f"set local role authenticated; select set_config('request.jwt.claims','{{\"sub\":\"{editor}\",\"role\":\"authenticated\"}}',true);"
     update = f"select public.update_schedule_document('{schedule}',1,'{{\"meta\":{{\"town\":\"Winner\"}},\"rows\":[]}}',1);"
+    if operation == 'archive':
+        update = f"select public.mutate_schedule('{schedule}',1,'archive','{{}}');"
     suspend = f"update public.production_memberships set status='suspended' where production_id='{production}' and user_id='{editor}';"
     if kind == 'two-writers':
         first_sql, second_sql, expected_error, version = auth + update, auth + update, 'PT409', 2
@@ -105,7 +107,7 @@ def race(kind):
             assert state['suspended'], state
             denied = subprocess.run(command(), input="\\set VERBOSITY verbose\nbegin; " + auth + update + ' rollback;', text=True, capture_output=True)
             assert denied.returncode != 0 and 'PT404' in denied.stderr, 'Subsequent write after suspension must fail'
-        print(f'PASS: {kind}; real lock wait, version/history consistent', flush=True)
+        print(f'PASS: {operation}/{kind}; real lock wait, version/history consistent', flush=True)
     finally:
         for proc in [first, second]:
             if proc and proc.poll() is None:
@@ -113,6 +115,7 @@ def race(kind):
                 proc.wait()
 
 
-for scenario in ['two-writers', 'suspension-first', 'write-first']:
-    race(scenario)
-print('3/3 schedule concurrency scenarios passed; synthetic fixtures retained in disposable stack.')
+for operation in ['document','archive']:
+    for scenario in ['two-writers', 'suspension-first', 'write-first']:
+        race(scenario, operation)
+print('6/6 schedule concurrency scenarios passed; synthetic fixtures retained in disposable stack.')
