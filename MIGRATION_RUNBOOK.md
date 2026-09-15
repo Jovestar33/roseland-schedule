@@ -7,8 +7,26 @@ Status: Phase 0 procedure. No step authorizes production mutation by itself. Exa
 - Netlify Blobs remains authoritative until the declared cutover point.
 - Exports are read-only and repeatable; imports are idempotent and target disposable environments first.
 - Legacy data is never automatically deleted.
-- Every migrated record maps from `(store, key, source checksum)` to a stable target UUID.
+- Permanent identity maps from `(source environment, store, key or reviewed rename alias)` to one stable target UUID. Source revisions/checksums are import-ledger attributes, never inputs that generate a new ID for each edit.
 - A failed gate stops the migration without improvising in production.
+
+## September 15 acceptance requirement: preserve Netlify and prove complete mirroring
+
+Netlify must remain active and available in parallel with the Supabase/Vercel environment. Every active Netlify schedule must be mirrored and individually verified in the target before migration can be declared complete. Preserve all in-scope schedule fields; separately reconcile snapshots/versions, library placement/order/archive state, templates, CMS and legacy access according to the complete source inventory. Counts and representative samples supplement, but cannot replace, per-record verification. No decommissioning, disabling the live app, hosted export/import or authority switch is authorized by this requirement.
+
+The final machine-readable acceptance report must contain the complete source inventory and its capture boundary, stable source-to-target mappings (including reviewed rename aliases), each schedule's source revision/checksum and target version/document checksum, related metadata/version comparisons, and explicit missing, duplicate, mismatched, orphaned and failed records. Record unsupported entity types and unresolved metadata decisions. An unknown revision, unverified schedule or unexplained discrepancy blocks completion; an initial copy that has become stale cannot pass.
+
+### Consistency boundary and final catch-up
+
+During rehearsal and transfer, Netlify remains the single authoritative writer. Repeated read-only inventories and delta imports must capture new schedules, changed content/metadata and reviewed rename/deletion mappings. Content hashes are required even when legacy `savedAt` is absent or unreliable. Never infer a rename from similar names, drop disappeared records, or overwrite divergent target edits. Source revision markers are observations to verify, not proof of an atomic multi-store snapshot.
+
+Immediately before switching authority, stop **all legacy write paths** under the separately approved read-only window, drain/resolve in-flight writes, and record the freeze boundary. The app must remain available for reads. Re-enumerate the complete source inventory at this stable boundary, capture/verify a final backup, and run the final delta/catch-up and full per-record reconciliation against this latest state. Recheck inventory and hashes before sign-off. If writes resume or any source state changes, invalidate the report and repeat catch-up/reconciliation; do not switch from a stale report. Unknown/deferred discrepancies block cutover. Account for old installed clients and pending drafts so they cannot write to the previous authority after the switch.
+
+### Decision required before cutover: Netlify behavior after authority switches
+
+Availability is required. Indefinite two-way synchronization or simultaneous independent edits in Netlify Blobs and Supabase have **not** been requested or authorized. Keep one authoritative writer. Agree with the user on the post-cutover behavior before cutover: either adapt the Netlify app to the same Supabase authority (including its account/security model), or keep an explicitly dated read-only legacy view available with a clear path to the current Vercel app. A frozen view must never imply that it includes newer target edits. These are proposed options, not an approved implementation choice, and do not block today's local work.
+
+Keep verified backup/restore and rollback evidence, recover target-only writes before re-enabling legacy writes, retain legacy access for at least the agreed 12 months, and retain the 30-day rollback baseline as a minimum, not an automatic shutdown date. Netlify removal requires a future explicit decision; preservation is part of migration acceptance.
 
 ## Stage 1 — prepare
 
@@ -51,12 +69,12 @@ Any unexplained difference is a failed gate.
 
 1. Announce the planned 1–2 hour maintenance/read-only window and support contact.
 2. Verify latest Blob backup and manifest are readable and checksummed.
-3. Run final importer dry run; require recorded approvals.
-4. Stop legacy writes and record the write-authority timestamp.
-5. Export the final delta, import, and reconcile counts/checksums/relationships.
+3. Run final importer dry run; require recorded approvals and agreement on Netlify availability/behavior after cutover.
+4. Freeze every legacy write path, drain in-flight writes and record the consistency boundary; keep the Netlify app available for reads.
+5. Re-enumerate the latest complete source state, take the final verified backup, import the final delta and reconcile every active schedule plus all in-scope related records. Explicit missing/duplicate/mismatched/failed records must be resolved, not waived by matching counts.
 6. Validate representative schedules, users/roles, links, storage, outputs, monitoring, and backups.
 7. Switch traffic only after migration, product, and security approvers sign off.
-8. Keep Netlify/Blobs read-only for the 30-day stability window and preserve legacy route resolvers for at least 12 months.
+8. Preserve Netlify availability using the agreed single-authority behavior; retain the verified legacy rollback baseline for at least 30 days and legacy route resolution for at least 12 months. Neither deadline authorizes disabling the app.
 9. Monitor auth failures, authorization denials, errors, latency, writes, provider spend, and support reports.
 
 ## Rollback
@@ -74,4 +92,4 @@ Rollback becomes substantially harder once both systems accept writes. During th
 
 ## Retirement
 
-After the stability window, successful restore drills, resolved incidents, and explicit owner/legal approval: disable Blob writes, preserve the agreed backup/compatibility archive, rotate legacy credentials, remove legacy runtime dependencies, and later dispose of data according to retention policy. Retirement is a separate change, never an automatic cutover step.
+No retirement is currently authorized. The user requires Netlify to remain active and available. Any future retirement proposal must obtain an explicit superseding user decision, meet retention/legacy-access obligations and include tested recovery; expiry of the stability window alone authorizes no shutdown or deletion.

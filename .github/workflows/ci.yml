@@ -89,6 +89,9 @@ jobs:
       - name: Test real local Auth and schedule RPC integration
         run: node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types scripts/test-schedule-auth-runtime.ts --workdir .
 
+      - name: Rehearse synthetic import and final catch-up
+        run: python3 scripts/migration/rehearse-synthetic.py --workdir . --report /tmp/roseland-synthetic-migration-report.json
+
       - name: Run database security advisor
         run: npm run db:advisors:security
 

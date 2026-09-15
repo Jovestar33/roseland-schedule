@@ -1,5 +1,8 @@
 # Migration critical path — pilot to cutover
 
+> **September 15 local update:** genuine password-login/API verification, recoverable schedule lifecycle contracts and a bounded synthetic import/delta-reconciliation rehearsal now pass on `codex/migration-schedule-contract`. See [READINESS.md](./READINESS.md) for evidence and [MIGRATION_REHEARSAL.md](./MIGRATION_REHEARSAL.md) for limitations. Full related-store migration and hosted/editor integration remain open. Final acceptance requires Netlify availability and complete per-schedule verification against the latest frozen source state under [MIGRATION_RUNBOOK.md](./MIGRATION_RUNBOOK.md); no live action or shutdown is authorized.
+
+
 Assessed 2026-09-14 from development `b9d6523`, current source, GitHub PR metadata and dated verification records. No hosted migration, new deployment, production data operation or infrastructure removal was performed. Historical test results below were not rerun for this assessment.
 
 ## Local implementation update — September 14

@@ -1,5 +1,8 @@
 # Roseland Schedule — Master Roadmap
 
+> **Migration acceptance update (2026-09-15):** keep Netlify active and available in parallel. Every active Netlify schedule must be mirrored into Supabase/Vercel and verified individually against the latest source state immediately before switching authority. Require complete inventory, stable mappings, content/revision and related version/metadata checks, explicit missing/duplicate/mismatched/failed records, repeatable delta/final catch-up, a documented consistency boundary and verified backup/rollback. Unresolved differences block completion. Maintain one authoritative writer; post-cutover Netlify behavior requires user agreement, and independent dual writes/two-way sync are not implied. No decommissioning is authorized. See [MIGRATION_RUNBOOK.md](./MIGRATION_RUNBOOK.md) and the bounded local [MIGRATION_REHEARSAL.md](./MIGRATION_REHEARSAL.md).
+
+
 > **Current priority (2026-09-14):** migration readiness is the near-term critical path: integrated foundation, adapters/import/reconciliation, app accounts/permissions, protected Supabase-backed Vercel pilot, then controlled cutover. Installation and offline support remain ahead of later Production Command expansion, but must not delay migration or become a new cutover prerequisite. See [MIGRATION_READINESS.md](./MIGRATION_READINESS.md) for current gaps and the smallest next implementation task.
 >
 > **Delivery plan:** [`INSTALLATION_OFFLINE_PLAN.md`](./INSTALLATION_OFFLINE_PLAN.md) separates existing metadata from unimplemented offline capabilities, dependencies, device decisions and release gates. This is a planning change, not implementation or rollout authorization.

@@ -109,3 +109,8 @@ The Library exports loaded schedules as JSON; the Tools Panel exports one schedu
 - Full JSON responses can expose more fields than a recipient needs.
 - Only `X-Frame-Options` is configured globally today; the security-header baseline is incomplete.
 - Production data may remain in browser storage, generated files, logs, exports, backups, and received share links after the primary record changes.
+
+
+## Required final inventory evidence (September 15)
+
+This code-derived inventory is not a live enumeration. Before cutover, a separately authorized exporter must enumerate every source store/key and active schedule, capture source revisions/content hashes and all related snapshots/metadata, and produce per-record target mappings and comparison results. Re-enumerate at the final write-freeze boundary and run delta catch-up; a rehearsal or stale initial copy is insufficient. Missing, duplicate, mismatched, orphaned, unsupported and failed records remain explicit blockers. Preserve Netlify availability and legacy access under the single-authority procedure in [MIGRATION_RUNBOOK.md](./MIGRATION_RUNBOOK.md). Today's synthetic rehearsal has not queried or exported any actual schedules.

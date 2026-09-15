@@ -1,5 +1,8 @@
 # Roseland Schedule — Multi-User Platform Migration Plan
 
+> **Migration acceptance update (2026-09-15):** keep Netlify active and available in parallel. Every active Netlify schedule must be mirrored into Supabase/Vercel and verified individually against the latest source state immediately before switching authority. Require complete inventory, stable mappings, content/revision and related version/metadata checks, explicit missing/duplicate/mismatched/failed records, repeatable delta/final catch-up, a documented consistency boundary and verified backup/rollback. Unresolved differences block completion. Maintain one authoritative writer; post-cutover Netlify behavior requires user agreement, and independent dual writes/two-way sync are not implied. No decommissioning is authorized. See [MIGRATION_RUNBOOK.md](./MIGRATION_RUNBOOK.md) and the bounded local [MIGRATION_REHEARSAL.md](./MIGRATION_REHEARSAL.md).
+
+
 > **Status refreshed 2026-09-11:** Phase 0 specification completed 2026-07-19. Tenant foundation is merged; auth PR #5 and stacked schedule-domain PR #8 remain drafts. Development MFA/bootstrap completion is historical; no production migration has begun. The freeze ended September 11, but this restart step authorizes only readiness/documentation and local checks. See [READINESS.md](./READINESS.md) for exact revisions, fresh validation and unresolved gaps. Migration, hosted changes, merge and deployment are not authorized here.
 >
 > **Original plan date:** 2026-07-19
@@ -258,7 +261,7 @@ At minimum compare:
 
 Cutover uses a short read-only window. A final backup and dry run precede the final import. Traffic changes only after reconciliation and security gates pass.
 
-Netlify remains intact and read-only through a defined stability period. Rollback instructions must state how to restore routing, re-enable the legacy app safely, and handle any writes created after cutover. No legacy deletion is bundled into cutover.
+Netlify remains active and available; its agreed post-cutover behavior must preserve a single authoritative writer. The legacy rollback baseline remains intact and read-only through at least the defined stability period. Rollback instructions must state how to restore routing, re-enable the legacy app safely, and handle any writes created after cutover. No legacy deletion is bundled into cutover.
 
 ## 8. Deployment model
 

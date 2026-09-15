@@ -37,13 +37,13 @@ The adapter rejects partial/mismatched acknowledgements and never retries a writ
 
 ## Verification and next work
 
-`supabase/tests/database/schedule_contract.test.sql` exercises the actual SQL/RLS boundary, malformed legacy documents, access denials, stale/omitted versions, parent deletion and an injected history failure. Existing schedule-domain tests now use the mutation boundary; privileged fixture deletion remains only to test immutable history and read restrictions. No test asserts a user-facing delete/restore contract exists.
+`supabase/tests/database/schedule_contract.test.sql` exercises the actual SQL/RLS boundary, malformed legacy documents, access denials, stale/omitted versions, parent deletion and an injected history failure. Existing schedule-domain tests now use the mutation boundary; privileged fixture deletion remains only to test immutable history and read restrictions. The lifecycle suite separately tests the new soft-delete/restore contract, including role limits, slug collisions and audit rollback.
 
 `scripts/test-schedule-concurrency.py` uses two real local PostgreSQL connections for competing writers and both suspension/write orderings, observes lock waits and verifies current document/history consistency. It creates only new fictional fixtures and leaves them in the disposable stack for inspection. Run it after the transaction-isolated pgTAP suite; rebuilding the disposable stack clears those fixtures. CI also retains the eight invitation/suspension races and runs the new schedule races.
 
 The TypeScript adapter tests verify request/version forwarding, bounded error mapping, uncertain outcomes and malformed acknowledgements. Full app tests, type/build and local database/advisor results are recorded in `READINESS.md`. The separate `scripts/test-schedule-auth-runtime.ts` now verifies genuine login-issued user sessions through the actual local API/RLS path, including denial, conflict and history rollback. Hosted runtime and editor integration remain unverified.
 
-Next: the minimum create/rename/move/archive/restore and metadata contracts, repository coverage, application account/session integration, and complete export/import/reconciliation needed for the protected Vercel/Supabase pilot. Phase/day direct updates, their complete optimistic/lifecycle rules, and the broader legacy importer remain unfinished. Installation/offline and Production Command are outside this slice.
+Next: application account/session and editor repository integration, the remaining hierarchy/metadata contracts and complete export/import/reconciliation needed for the protected Vercel/Supabase pilot. The bounded synthetic rehearsal is documented in `MIGRATION_REHEARSAL.md`; it does not claim full migration parity. Phase/day direct updates, their complete optimistic/lifecycle rules, and the broader legacy importer remain unfinished. Installation/offline and Production Command are outside this slice.
 
 
 ## September 15: recoverable lifecycle slice
