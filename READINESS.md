@@ -1,5 +1,12 @@
 # Current state and restart readiness
 
+## September 15: total parity blocks real-schedule migration
+
+**Gate status: NOT PASSED.** The user requires total parity with actual current Netlify production before beginning any real-schedule migration, including a real-data pilot. The clarified criterion is preserved capability, data and practical usability without regressions; verified improvements may Pass without matching old dimensions or receiving waivers solely for being different. The acceptance ledger in `REGRESSION_MATRIX.md` explicitly marks every production-versus-Supabase/Vercel comparison Not tested until paired runtime evidence is captured. PDF creation/printing, navigation, data entry and field sizing are mandatory, alongside all existing features and data preservation. Existing local database/API/application successes and Netlify staging checks do not prove target-runtime parity.
+
+Remaining gaps include actual target editor/account integration, complete related-store features, move/snapshot semantics, paired production/target workflow and layout comparisons, physical-device/browser evidence, print/PDF output comparisons and reviewed criteria for material workflow tradeoffs such as login/accounts. No screenshots or comparisons were fabricated. No actual schedules were queried or changed. Synthetic work can continue; real-data migration requires all applicable items to Pass with evidence and explicit user approval. Latest-source reconciliation, Netlify availability, one writer and rollback remain separate mandatory gates.
+
+
 ## September 15: future billing-transition requirement
 
 The user wants to redirect Netlify spending toward Supabase when migration acceptance and the agreed parallel-availability period make that appropriate. The roadmap/runbook/readiness assessment now require a current combined Vercel/Supabase/residual-Netlify cost and dependency review, a compatible downgrade/fallback assessment and user notification after the defined gates. The existing daily Supabase follow-up was updated to include this future milestone; it stays quiet while the gate is unmet. No pricing assumption, subscription change, purchase or shutdown was made.

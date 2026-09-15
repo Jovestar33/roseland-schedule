@@ -63,3 +63,8 @@ Rename takes `{display_name, slug}`. Restore-version takes `{version}` and appen
 Every lifecycle mutation increments the version and appends document and metadata snapshots, with separate SHA-256 checksums, in the same transaction as a safe audit event. Metadata includes name, slug, day, status, previous archive status, town and deletion timestamp. Existing immutable versions are not rewritten; older versions have null metadata. History and audit failure injection both prove complete rollback. Direct authenticated schedule writes and history rewrites remain denied.
 
 The local nine-migration chain passes 340 database assertions. Genuine password-login sessions exercise these RPCs through the SDK/PostgREST adapter. These are local contract results; the editor remains on Netlify and hosted readiness, UI/account integration and complete migration parity remain separate gates.
+
+
+## Pre-migration capability-preservation gate
+
+Before any real-schedule migration (including a real-data pilot), the actual current Netlify production and eventual Supabase/Vercel runtime must pass the complete [REGRESSION_MATRIX.md](./REGRESSION_MATRIX.md) comparison and receive explicit user approval. Preserve existing capability, data and practical usability; verified improvements may pass without exact pixel matching or a waiver solely for differing. Regressions, untested required behavior and unresolved material tradeoffs block migration. Local contract/rehearsal success does not establish runtime parity. Synthetic work remains within its existing authorization; no new live access, data transfer, deployment or cutover is implied.

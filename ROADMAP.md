@@ -1,5 +1,8 @@
 # Roseland Schedule — Master Roadmap
 
+> **TOTAL PARITY GATE (2026-09-15): NOT PASSED.** Before beginning migration of any real schedules, verify total parity between actual current Netlify production behavior and the eventual Supabase/Vercel target runtime, then obtain explicit user approval. This includes PDF creation, printing, navigation, data entry, input-field sizing and every existing feature. Local SQL/API tests or Netlify staging results cannot satisfy this gate. Each item requires Pass/Fail/Not tested and reproducible comparison evidence; unknown/untested blocks migration. Verified improvements may Pass without copying old pixels or needing waivers solely for differing; regressions and untested required behavior block migration. Surface material workflow tradeoffs and unclear cases for user review. Synthetic rehearsals may continue within their existing authorization. See [REGRESSION_MATRIX.md](./REGRESSION_MATRIX.md).
+
+
 > **Migration acceptance update (2026-09-15):** keep Netlify active and available in parallel. Every active Netlify schedule must be mirrored into Supabase/Vercel and verified individually against the latest source state immediately before switching authority. Require complete inventory, stable mappings, content/revision and related version/metadata checks, explicit missing/duplicate/mismatched/failed records, repeatable delta/final catch-up, a documented consistency boundary and verified backup/rollback. Unresolved differences block completion. Maintain one authoritative writer; post-cutover Netlify behavior requires user agreement, and independent dual writes/two-way sync are not implied. No decommissioning is authorized. See [MIGRATION_RUNBOOK.md](./MIGRATION_RUNBOOK.md) and the bounded local [MIGRATION_REHEARSAL.md](./MIGRATION_REHEARSAL.md).
 
 
@@ -118,7 +121,7 @@ Migration takes scheduling priority. This track may proceed alongside it only wh
 - [ ] Produce record-count, relationship, and checksum reconciliation reports.
 - [ ] Verify importer reruns do not duplicate or corrupt data.
 
-**Exit gate:** all current data can be imported repeatedly into a disposable environment and reconciled without changing production.
+**Exit gate:** synthetic fixtures can be imported repeatedly into a disposable environment and reconciled without changing production. Real-schedule migration additionally requires the total-parity gate and explicit user approval first.
 
 ## 🟠 Phase 3: accounts, organizations, and permissions
 
@@ -157,7 +160,7 @@ This phase follows authentication and organization context and must finish befor
 
 - [ ] Deploy the Supabase-backed app to a protected Vercel preview environment.
 - [ ] Keep the current Netlify production app unchanged.
-- [ ] Use synthetic data by default in previews; import one approved test production for migration QA.
+- [ ] Use synthetic data in previews to establish actual Netlify-production versus Supabase/Vercel runtime parity. Import a real test production only after every parity item passes its preservation/improvement criteria and the user explicitly approves real-data migration.
 - [ ] Configure and test CSP, HSTS, content-type, referrer, permissions, framing, cookie, and authenticated-cache policies.
 - [ ] Add structured redacted logging, generic client errors, request IDs, monitoring, provider budget alerts, and risk-based rate limits.
 - [ ] Protect public/anonymous abuse surfaces with Cloudflare Turnstile where warranted and validate tokens server-side.
@@ -179,7 +182,7 @@ This phase follows authentication and organization context and must finish befor
 9. Keep Netlify available as a read-only rollback system through an agreed stability window.
 10. Retire Blob writes only after explicit approval; do not automatically delete legacy data.
 
-**Cutover gate:** RLS, authorization, auth failure, secret scan, OWASP/ASVS, migration reconciliation, backup restore, and rollback rehearsal all pass. Privacy/terms and incident ownership must be ready before unrelated external users are invited.
+**Cutover gate:** the previously approved pre-migration total-parity gate remains valid for the candidate builds; RLS, authorization, auth failure, secret scan, OWASP/ASVS, migration reconciliation, backup restore, and rollback rehearsal all pass. Privacy/terms and incident ownership must be ready before unrelated external users are invited.
 
 ## 🟡 Phase 6: multi-user reliability
 

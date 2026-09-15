@@ -1,5 +1,8 @@
 # Migration critical path — pilot to cutover
 
+> **TOTAL PARITY GATE (2026-09-15): NOT PASSED.** Before beginning migration of any real schedules, verify total parity between actual current Netlify production behavior and the eventual Supabase/Vercel target runtime, then obtain explicit user approval. This includes PDF creation, printing, navigation, data entry, input-field sizing and every existing feature. Local SQL/API tests or Netlify staging results cannot satisfy this gate. Each item requires Pass/Fail/Not tested and reproducible comparison evidence; unknown/untested blocks migration. Verified improvements may Pass without copying old pixels or needing waivers solely for differing; regressions and untested required behavior block migration. Surface material workflow tradeoffs and unclear cases for user review. Synthetic rehearsals may continue within their existing authorization. See [REGRESSION_MATRIX.md](./REGRESSION_MATRIX.md).
+
+
 > **September 15 local update:** genuine password-login/API verification, recoverable schedule lifecycle contracts and a bounded synthetic import/delta-reconciliation rehearsal now pass on `codex/migration-schedule-contract`. See [READINESS.md](./READINESS.md) for evidence and [MIGRATION_REHEARSAL.md](./MIGRATION_REHEARSAL.md) for limitations. Full related-store migration and hosted/editor integration remain open. Final acceptance requires Netlify availability and complete per-schedule verification against the latest frozen source state under [MIGRATION_RUNBOOK.md](./MIGRATION_RUNBOOK.md); no live action or shutdown is authorized.
 
 

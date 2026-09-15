@@ -1,5 +1,8 @@
 # Roseland Schedule — Multi-User Platform Migration Plan
 
+> **TOTAL PARITY GATE (2026-09-15): NOT PASSED.** Before beginning migration of any real schedules, verify total parity between actual current Netlify production behavior and the eventual Supabase/Vercel target runtime, then obtain explicit user approval. This includes PDF creation, printing, navigation, data entry, input-field sizing and every existing feature. Local SQL/API tests or Netlify staging results cannot satisfy this gate. Each item requires Pass/Fail/Not tested and reproducible comparison evidence; unknown/untested blocks migration. Verified improvements may Pass without copying old pixels or needing waivers solely for differing; regressions and untested required behavior block migration. Surface material workflow tradeoffs and unclear cases for user review. Synthetic rehearsals may continue within their existing authorization. See [REGRESSION_MATRIX.md](./REGRESSION_MATRIX.md).
+
+
 > **Migration acceptance update (2026-09-15):** keep Netlify active and available in parallel. Every active Netlify schedule must be mirrored into Supabase/Vercel and verified individually against the latest source state immediately before switching authority. Require complete inventory, stable mappings, content/revision and related version/metadata checks, explicit missing/duplicate/mismatched/failed records, repeatable delta/final catch-up, a documented consistency boundary and verified backup/rollback. Unresolved differences block completion. Maintain one authoritative writer; post-cutover Netlify behavior requires user agreement, and independent dual writes/two-way sync are not implied. No decommissioning is authorized. See [MIGRATION_RUNBOOK.md](./MIGRATION_RUNBOOK.md) and the bounded local [MIGRATION_REHEARSAL.md](./MIGRATION_REHEARSAL.md).
 
 
@@ -318,6 +321,12 @@ Requirements:
 - Schema and RLS policies reviewed.
 - Preview/production separation proven.
 - Export/import tools tested on synthetic fixtures.
+
+### Before any real-schedule migration
+
+- TOTAL parity with actual current Netlify production is verified on the eventual Supabase/Vercel runtime, including layout/input dimensions and print/PDF outputs.
+- Every item in `REGRESSION_MATRIX.md` is Pass with reproducible evidence; no Fail/Not tested or unresolved material workflow tradeoff remains.
+- The user approves the completed evidence and resolves material workflow tradeoffs, then explicitly approves real-data migration. Verified improvements need no waiver solely for differing. Synthetic development/rehearsals may precede this gate.
 
 ### Before cutover
 

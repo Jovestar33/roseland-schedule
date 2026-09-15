@@ -28,6 +28,18 @@ Availability is required. Indefinite two-way synchronization or simultaneous ind
 
 Keep verified backup/restore and rollback evidence, recover target-only writes before re-enabling legacy writes, retain legacy access for at least the agreed 12 months, and retain the 30-day rollback baseline as a minimum, not an automatic shutdown date. Netlify removal requires a future explicit decision; preservation is part of migration acceptance.
 
+## Gate 0 — total parity before real-schedule migration
+
+**Current status: NOT PASSED.** Total parity means preserving existing capabilities, data and practical workflow usability with no regressions. It is a hard pass/fail prerequisite **before beginning migration of real schedules**, including a real-data pilot; it is not deferred to final cutover. Build and test with synthetic data first. Compare actual current Netlify **production** behavior with the eventual Supabase/Vercel target runtime. Netlify staging, local repository/SQL tests and API-only results are supporting evidence, never substitutes for this comparison.
+
+Use the per-item acceptance ledger in [REGRESSION_MATRIX.md](./REGRESSION_MATRIX.md). Cover PDF creation, printing, navigation between screens, data entry/input-field dimensions, all editor/library/tools/sharing/template/backup/location/contact/call-sheet features, responsive/device behavior and every preserved data field. Capture paired screenshots, measurements and output files with reproducible steps and exact runtime/build/device/fixture identities. Record each item as Pass, Fail or Not tested; unknown, missing evidence, omitted features and untested profiles are not Pass. Revalidate affected comparisons after either runtime changes.
+
+Classify comparisons as preserved capability, improvement, regression or unverified alongside Pass/Fail/Not tested. Intentional improvements can Pass without reproducing old behavior or pixel dimensions and without individual waivers merely for being different. Test correctness, permissions, accessibility, input capacity/usability and print/PDF content/layout. Better field layouts/sizes are acceptable when information and usability are retained or improved. Actual loss of function, data or usability and untested required behavior block migration. Never label a regression an improvement to bypass the gate. Surface material workflow tradeoffs or unclear cases for user review; account/login/permission architecture changes need reviewed criteria for their material workflow implications. Preserve original comparisons and any explicit user decisions in the ledger.
+
+Require completed evidence and explicit user approval before any real-schedule migration transfer/import begins. Any export performed as part of that migration is also gated. Separately authorized read-only production baseline/inventory capture can support validation, but is not permission to mutate schedules or transfer them into the target. No live inspection/export, production fixture creation, deployment, hosted migration or cutover is authorized by this document update. Synthetic local/test-runtime rehearsals remain permitted within their existing scope.
+
+After Gate 0 passes, the complete latest-source reconciliation, Netlify parallel availability, single authoritative writer, final catch-up/freeze boundary and verified backup/rollback gates still apply. Total UI/functional parity cannot substitute for data reconciliation, and matching data cannot substitute for parity. Reopen Gate 0 for candidate changes that invalidate its evidence.
+
 ## Stage 1 — prepare
 
 1. Confirm the approved baseline: East US (North Virginia), AWS `us-east-1` Supabase region; global availability; production-specific membership; RPO 24 hours; RTO 4 hours; 12-month legacy URL compatibility; and 30-day rollback stability window.
@@ -37,7 +49,7 @@ Keep verified backup/restore and rollback evidence, recover target-only writes b
 5. Inventory and rotate credentials as needed; configure quotas, monitoring, alerts, and backups.
 6. Record baseline counts for stores, schedules, snapshots, templates, library references, and public links.
 
-## Stage 2 — export and import tooling
+## Stage 2 — synthetic export/import tooling; real data only after Gate 0
 
 1. Export each Blob record without mutation, recording store, key, byte size, saved timestamp/metadata, and SHA-256 checksum.
 2. Store the manifest and payloads in a restricted temporary location; never print payloads or tokens to logs.
@@ -59,8 +71,8 @@ Any unexplained difference is a failed gate.
 
 ## Stage 4 — pilot
 
-1. Select one approved non-critical production; use synthetic data by default before approval.
-2. Import to protected preview, invite named pilot users, and test role boundaries.
+1. Establish the complete production-versus-target parity evidence with synthetic fixtures first. Select a real non-critical production only after Gate 0 passes and the user explicitly approves real-schedule migration.
+2. Import approved data to protected preview only within that approval; invite named pilot users and test role boundaries. A real-data pilot cannot be used to bypass the pre-migration parity gate.
 3. Exercise editing, stale-save conflict, snapshots/restore, rename/move/archive/delete/restore, call/contact sheets, print/PDF/CSV, mobile, and share expiry/revocation.
 4. Record defects, rerun the importer, and repeat until acceptance criteria pass.
 5. Rehearse the exact cutover and rollback with timing.
