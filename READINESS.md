@@ -1,5 +1,13 @@
 # Current state and restart readiness
 
+## September 15: local invitation-management UI verified
+
+The slice after `fb6c2e9` adds an explicitly gated loopback `/local-invitations` UI for fictional Owner/Admin accounts. It includes genuine MFA enrollment/rechallenge, tenant-scoped paginated lists, reviewed create/revoke requests, immutable snapshots/keys, result lookup, recoverable drafts and same-account reauthentication. See [LOCAL_INVITATIONS_REVIEW.md](./LOCAL_INVITATIONS_REVIEW.md) for behavior, browser/runtime evidence and limits.
+
+Fresh validation: **409 database assertions, 59 platform tests, 53 editor tests**, production build/integrated lint/TypeScript and the new genuine-auth built runtime pass. Browser checks cover creation/revocation, lost response, outage, rate denial, expiry/password/MFA recovery and role controls. Visual review caught and fixed header contrast; Viewer empty-state wording was corrected. The test proxy/fixtures are local only. No new schema migration, actual schedule access, hosted operation, real credential, push/deployment or billing change occurred.
+
+F02 remains open for acceptance/onboarding/delivery, password/MFA recovery, provisioning and the wider lifecycle. A next bounded local slice is fictional invitation acceptance under existing email/expiry/replay rules; do not invent delivery, owner lookup, recovery or related ownership policies. Earlier checkpoints and recovery volumes remain preserved. Real migration still requires full parity/reconciliation and explicit approval. Keep the 1:05 PM Eastern new-batch cutoff.
+
 ## September 15: account-workflow replay, rate and HTTP reliability verified locally
 
 The batch after `c03d0f7` fixes confirmed changed-input replay and concurrent rate-cap overshoot in provisioning and invitation workflows. Canonical fingerprints bind request keys to business inputs; a shared transaction lock serializes each existing rate bucket without changing thresholds. Stable expiry days use an additive service-only RPC, preserving the original timestamp signature and actor-session protection. A reproduced Next loopback-origin mismatch is fixed with exact origin checks. See [ACCOUNT_WORKFLOW_REVIEW.md](./ACCOUNT_WORKFLOW_REVIEW.md) for defects, per-workflow evidence and compatibility/release limits.
