@@ -110,6 +110,9 @@ jobs:
       - name: Test shared local workspace and acceptance-to-schedule access
         run: node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types scripts/test-workspace-runtime.ts --workdir .
 
+      - name: Test local schedule lifecycle and uncertain result recovery
+        run: node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types scripts/test-lifecycle-ui-runtime.ts --workdir .
+
       - name: Rehearse synthetic import and final catch-up
         run: python3 scripts/migration/rehearse-synthetic.py --workdir . --report /tmp/roseland-synthetic-migration-report.json
 

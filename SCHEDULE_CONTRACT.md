@@ -68,3 +68,8 @@ The local nine-migration chain passes 340 database assertions. Genuine password-
 ## Pre-migration capability-preservation gate
 
 Before any real-schedule migration (including a real-data pilot), the actual current Netlify production and eventual Supabase/Vercel runtime must pass the complete [REGRESSION_MATRIX.md](./REGRESSION_MATRIX.md) comparison and receive explicit user approval. Preserve existing capability, data and practical usability; verified improvements may pass without exact pixel matching or a waiver solely for differing. Regressions, untested required behavior and unresolved material tradeoffs block migration. Local contract/rehearsal success does not establish runtime parity. Synthetic work remains within its existing authorization; no new live access, data transfer, deployment or cutover is implied.
+
+
+## September 15: local lifecycle UI checkpoint
+
+The shared loopback workspace exposes these existing RPCs through immutable identity/version reviews, explicit unknown-result reconciliation against immutable history and paginated discovery/preview. It preserves unsaved editor/modal drafts and requires explicit discard before opening a saved result. No new SQL, policy or causal request-receipt ledger is added. Automated/genuine runtime checks pass; final browser acceptance is pending the Mac unlock. See [LOCAL_LIFECYCLE_REVIEW.md](./LOCAL_LIFECYCLE_REVIEW.md) for exact evidence and remaining checks.

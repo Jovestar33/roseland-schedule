@@ -1,9 +1,9 @@
-export type WorkspaceScreen = 'schedule' | 'invitations' | 'acceptance';
+export type WorkspaceScreen = 'schedule' | 'invitations' | 'acceptance' | 'lifecycle';
 export interface WorkspaceLocation { screen: WorkspaceScreen; organization: string|null }
 const uuid=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 export function parseWorkspaceLocation(search:string):WorkspaceLocation {
   const params=new URLSearchParams(search),screen=params.get('screen'),organization=params.get('org');
-  return {screen:screen==='invitations'||screen==='acceptance'?screen:'schedule',organization:organization&&uuid.test(organization)?organization:null};
+  return {screen:screen==='invitations'||screen==='acceptance'||screen==='lifecycle'?screen:'schedule',organization:organization&&uuid.test(organization)?organization:null};
 }
 export function workspaceHref(value:WorkspaceLocation):string {
   const params=new URLSearchParams({screen:value.screen});

@@ -13,7 +13,7 @@ test('workspace gate requires independent opt-in, matching loopback config and s
   assert.equal(readLocalWorkspaceConfig(env,'untrusted.example'),null);
 });
 test('navigation serializes only known screens and UUID organization identifiers',()=>{
-  for(const screen of ['schedule','invitations','acceptance'] as const){const location={screen,organization:org};assert.deepEqual(parseWorkspaceLocation(workspaceHref(location).split('?')[1]),location);}
+  for(const screen of ['schedule','invitations','acceptance','lifecycle'] as const){const location={screen,organization:org};assert.deepEqual(parseWorkspaceLocation(workspaceHref(location).split('?')[1]),location);}
   assert.deepEqual(parseWorkspaceLocation('?screen=https://other.example&org=//other.example'),{screen:'schedule',organization:null});
   assert.deepEqual(parseWorkspaceLocation('?screen=acceptance&org='+org+'&next=https://other.example'),{screen:'acceptance',organization:org});
 });

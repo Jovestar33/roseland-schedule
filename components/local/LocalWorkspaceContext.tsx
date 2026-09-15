@@ -3,6 +3,7 @@ import { createContext, useContext, useEffect } from 'react';
 import type { Session, SupabaseClient } from '@supabase/supabase-js';
 import type { WorkspaceOrganization } from '@/lib/platform/workspace-repository';
 export interface WorkspacePanelState { dirty:boolean; busy:boolean }
+export interface WorkspaceScheduleRequest {id:string;organization:string;sequence:number}
 export interface WorkspacePanel {
   client:SupabaseClient;
   session:Session|null;
@@ -13,6 +14,9 @@ export interface WorkspacePanel {
   report:(id:string,state:WorkspacePanelState|null)=>void;
   requireAuth:()=>void;
   openOrganization:(id:string)=>void;
+  openSchedule:(organization:string,id:string)=>void;
+  scheduleRequest:WorkspaceScheduleRequest|null;
+  consumeScheduleRequest:(sequence:number)=>void;
 }
 export const LocalWorkspaceContext=createContext<WorkspacePanel|null>(null);
 export const useLocalWorkspace=()=>useContext(LocalWorkspaceContext);

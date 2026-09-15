@@ -61,7 +61,7 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
   const [message, setMessage] = useState(managed ? 'Choose an authorized organization above.' : 'Sign in with a fictional local account.');
   const [selected, setSelected] = useState<string | null>(null);
   const [version, setVersion] = useState<number | null>(null);
-  const [confirmation, setConfirmation] = useState<{ label: string; action: () => void } | null>(null);
+  const [confirmation, setConfirmation] = useState<{ label: string; action: () => void; scope: string | null } | null>(null);
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [contact, setContact] = useState<number | null>(null);
   const [status, setStatus] = useState<number | null>(null);
@@ -108,12 +108,12 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
   }, [hasLocalDraft]);
 
   useEffect(() => {
-    if (confirmation && active) dialogRef.current?.showModal();
+    if (confirmation && active && confirmation.scope === scopeRef.current) dialogRef.current?.showModal();
     else dialogRef.current?.close();
-  }, [confirmation, active]);
+  }, [confirmation, active, workspace?.organization?.id]);
 
   function guarded(action: () => void, label: string) {
-    if (state().dirty || contact !== null || status !== null || notes !== null) setConfirmation({ label, action }); else action();
+    if (state().dirty || contact !== null || status !== null || notes !== null) setConfirmation({ label, action, scope: scopeRef.current }); else action();
   }
   async function run(action: () => Promise<void>) {
     if (busyRef.current) return;
@@ -168,6 +168,14 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
     // Navigation retains the document, undo history and in-flight operation identity.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [workspace?.session?.access_token, workspace?.authNeeded, workspace?.organization?.id, workspace?.active]);
+  useEffect(() => {
+    const request = workspace?.scheduleRequest;
+    if (!request || !workspace.active || !ready || busy || request.organization !== workspace.organization?.id) return;
+    workspace.consumeScheduleRequest(request.sequence);
+    guarded(() => void run(() => open(request.id)), 'Open saved result and discard unsaved changes');
+    // One account-bound request opens only after the editor is ready; normal discard guards apply.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [workspace?.scheduleRequest?.sequence, workspace?.active, workspace?.organization?.id, ready, busy]);
   async function login(event: React.FormEvent) {
     event.preventDefault();
     if (busyRef.current) return;
@@ -224,7 +232,7 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
             {canEdit && ready && <UndoRedoButtons />}
           </div>
           {!canEdit && <><p>Read-only schedule access.</p><ScheduleReadView data={state().getScheduleData()} name={state().scheduleName ?? undefined}/></>}
-          <ModalVisibilityContext.Provider value={active && recordInScope && ready && canEdit}>
+          <ModalVisibilityContext.Provider value={active && recordInScope && ready && canEdit && !confirmation}>
           <fieldset disabled={!ready || !canEdit} style={{border:0,padding:0,minWidth:0,display:canEdit?undefined:'none'}}>
           <ScheduleHeader />
           <ScheduleGrid onOpenContact={setContact} onOpenStatus={setStatus} onOpenNotes={setNotes} />

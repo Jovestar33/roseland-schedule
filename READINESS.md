@@ -1,5 +1,13 @@
 # Current state and restart readiness
 
+## September 15: local schedule lifecycle checkpoint; final browser checks pending
+
+The slice after `5c533cc` adds versioned blank creation, rename, archive/unarchive, soft-delete/recovery and document-history restore to the shared loopback workspace. Immutable actor/tenant/identity/version reviews retain uncertain results and use explicit immutable-history checking. Saved operations preserve dirty editor and modal drafts; opening a result uses the normal discard guard. See [LOCAL_LIFECYCLE_REVIEW.md](./LOCAL_LIFECYCLE_REVIEW.md) for boundaries, evidence and the exact remaining checks.
+
+Fresh evidence: **101 platform tests, 53 editor regressions, 431 database assertions over 14 unchanged migrations**, production build/integrated lint/TypeScript, SQL lint and local advisor pass. Genuine Auth/runtime checks cover all actions, role/tenant denial, response loss/outages, stale restore, simultaneous writes, 25+2 pagination, inactive-parent recovery denial and expiry/reauthentication. Browser work verified the core lifecycle, collisions, concurrent restore and retained editor/contact drafts before the Mac locked. Final Escape/discard, browser uncertainty/expiry/roles and responsive screenshot checks remain pending; do not mark the slice fully accepted or begin a substitute batch. The user was asked to unlock the Mac.
+
+Actual schedules, hosted services, user credentials, billing and Netlify defaults remain untouched. No push or deployment. Both new disposable databases and previous recovery checkpoints are preserved. Complete pending browser acceptance next; full parity/reconciliation/rollback gates and the 1:05 PM Eastern new-batch cutoff remain.
+
 ## September 15: shared local session and organization navigation verified
 
 The slice after `3e5ac67` adds an independently gated `/local-workspace` joining the editor, invitation management and acceptance rehearsals. One in-memory session, exact authorized organization navigation and retained panels preserve dirty schedules, undo history, modal drafts and immutable invitation requests across internal navigation/back/forward. Account switching clears all work; expired/revoked sessions preserve the same actor's drafts for explicit reauthentication. Acceptance leads to an authorized schedule view with existing role permissions. See [LOCAL_WORKSPACE_REVIEW.md](./LOCAL_WORKSPACE_REVIEW.md).
