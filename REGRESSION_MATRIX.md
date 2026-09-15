@@ -1,5 +1,7 @@
 # Regression Matrix
 
+September 15 gate clarification: comprehensive internal security review and demonstrable end-to-end rollback are required before migration. Track findings/retests and unresolved high-risk exceptions explicitly; distinguish local checks from hosted configuration checks pending authorization. Rollback evidence must include recoverable code/data checkpoints, partial migration failure and preservation/reconciliation of target edits after simulated cutover. Netlify remaining available alone does not satisfy recovery. The local editor/session evidence in `LOCAL_EDITOR_CONTRACT.md` is supporting evidence; all production-versus-target parity statuses below remain unchanged.
+
 Status: pre-migration preservation contract, updated September 15. All existing required capabilities must pass before real-schedule migration begins. Historical P0/P1 labels are planning priorities, not permission to omit a feature or defer its parity test until cutover.
 
 | Area | Priority | Required scenarios |

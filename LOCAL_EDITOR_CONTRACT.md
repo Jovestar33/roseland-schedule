@@ -1,0 +1,54 @@
+# Local account and schedule editor rehearsal
+
+September 15, 2026. Additive slice after known-good checkpoint `cc35dc9`, on `codex/migration-schedule-contract` in `/private/tmp/roseland-migration-contract-20260914`. No push, deployment, hosted schema/data change, billing action or actual-schedule access. The supplied user credential was not used or copied into files/logs. All accounts and documents in these checks are fictional.
+
+## Runtime and scope
+
+The existing Netlify login, library, editor and APIs remain the defaults. `/local-schedule` is a separate route, disabled unless the server-only `ROSELAND_LOCAL_EDITOR=supabase` switch, a loopback Host and loopback Supabase URL/anonymous key all validate. NETLIFY/VERCEL environments are rejected. The launcher binds `127.0.0.1`, discovers only an unlinked local CLI project, refuses Next environment files, forwards a minimal environment and never prints key-bearing CLI output. The Host check complements the loopback listener; it is not an authentication mechanism.
+
+The local route uses the normal Supabase browser SDK with genuine password-grant sessions and the anonymous API key, never a service-role client. Requests are restricted to the configured loopback origin and do not follow redirects. Tokens remain in memory, with automatic refresh and URL session detection disabled for this rehearsal. Full browser refresh requires signing in again. Expiry encountered during an action offers reauthentication; a new session for the same account preserves unsaved work. Account changes/sign-out clear the document and undo history, with explicit discard confirmation when dirty. There is no offline persistence/recovery claim.
+
+Listing, UUID selection, open/read, editing, save and reload use `session_list_schedules`, `session_read_schedule` and `session_update_schedule_document`. Listing uses a bounded UUID cursor, current RLS and active-parent rules, excludes deleted schedules and does not fetch full documents. It is a live listing rather than a consistent snapshot across pages. The read/update adapter retains validated acknowledgements, mandatory expected versions and bounded errors from the existing schedule repository. A failed/conflicting save keeps its baseline and dirty edits; an acknowledgement advances the baseline while preserving edits made during the request. Canceled requests cannot mutate a later document/session.
+
+The shared schedule header, grid, time controls, contact/status/notes modals and undo/redo controls are reused. Missing legacy metadata/row fields receive existing editor defaults; known optional call-sheet, weather, contact and sub-location data survive saving. Local location entry is manual, with online autocomplete/geocoding disabled by an opt-in context. The local route skips legacy CMS loading and legacy project/phase suggestions. This is a limited selector/editor, not the full library or a parity claim: weather refresh, hierarchy operations, lifecycle menus, sharing, snapshots, templates, CMS, call-sheet tools, print/PDF and other tools still require integration and comparison evidence.
+
+## Session boundary and security findings
+
+The new forward migration `20260915040000_local_editor_session_contract.sql` supplies invoker wrappers around the existing permission-checked contracts. A minimal definer helper checks the caller's real `session_id`, `sub` and JWT expiry against `auth.sessions`; it locks the session row through the enclosing transaction and rechecks expiry after lock acquisition. Clients receive no session-table/private-schema access. Anonymous and service-role execution is revoked. Supabase documents why [access tokens can remain valid after sign-out](https://supabase.com/docs/guides/auth/signout) and recommends checking the [session ID against the session table](https://supabase.com/docs/guides/auth/sessions) when immediate revocation matters.
+
+Open findings/gaps for the required security review:
+
+| Finding | Current evidence / required follow-up |
+|---|---|
+| F01: revocation is not yet a universal backend policy | New editor wrappers enforce active sessions. Older direct authenticated RPCs and RLS reads retain JWT-lifetime semantics. This is not a global revocation rollout; reconcile policy across every target entrypoint before release. Do not silently accept a production revocation bypass. |
+| F02: recovery and account lifecycle are incomplete | Password login, wrong password, expiry/relogin, sign-out and same-account unsaved recovery are exercised. Password reset, invitation/AAL2/admin UX, enumeration/rate-limit review and hosted configuration remain separate checks. |
+| F03: session-revocation concurrency proof remains | Existing 14 permission/document/lifecycle races pass. New helper holds SHARE locks, but dedicated concurrent session deletion/expiry races still need explicit two-connection evidence. |
+| F04: related-store application access is unresolved | The private catalogue at cc35dc9 preserves source data but is not an application API. Template ownership/sharing, CMS access, snapshot deletion/retention and library moves require explicit policies, repositories and tests. See RELATED_MIGRATION_CONTRACT.md. |
+| F05: broader release security and rollback remain open | Review all public-link data/expiry, secrets and dependency controls, malicious input/XSS, privilege boundaries, concurrent writes, backup/rollback access and authorized hosted settings. No claim of perfect security, full parity or a completed external audit. |
+
+## Fresh evidence
+
+- Clean eleven-migration rebuild of **only** `roseland-contract-20260914`; **367 pgTAP assertions / 10 files** pass. The new ten assertions cover session function/table/schema privileges and missing/malformed/expired/revoked claims. Claim substitution is confined to SQL unit tests and trusted fictional parent-state fixture setup; actual API checks use genuine Auth-issued sessions.
+- `scripts/test-local-editor-runtime.ts`: genuine signup then password login; tenant/viewer/deleted-parent listing, cursor pagination, optional-field read/save/reload, invalid documents, stale HTTP 409 and unauthorized HTTP 404; expired database sessions and actual sign-out with retained original access tokens all reject list/read/save with HTTP 401. CI gains this local step; no remote CI run was triggered.
+- Existing genuine Auth/repository/lifecycle runner passes, including direct-write denial, immutable history rollback and suspension. All **14** existing two-connection permission/document/archive races pass.
+- **37 platform tests**, **53 existing editor/server/API tests**, TypeScript, lint and the final production build pass. SQL lint and local security advisor report no issues. Dependencies/lockfile are unchanged; no new dependency audit result is claimed in this batch.
+- Built HTTP checks: default `/local-schedule` and `/platform/setup` 404; `/login` 200; private `/` and `/schedule/Fiction` redirect to the existing login. Explicitly enabled loopback route 200. A Node HTTP request with non-loopback Host returns 404 with no local config. Node fetch ignored a custom Host in an initial probe, so the Host test uses HTTP directly.
+- Visible in-app browser walkthrough at `http://127.0.0.1:3287/local-schedule`, built Next 15.5.25, default narrow viewport. Two independent fictional password sessions listed and opened `Fictional harbour day`. Town + note edits saved version 2→3 and reloaded. Second session saved version 4; stale first-session save was denied, preserving version-3 unsaved edits. Keep Editing retained them; explicit discard/reload loaded version 4. After expiry of only the fictional account's database sessions, saving preserved edits and offered reauthentication; a new password session retained them and saved version 5. The screenshot and AX evidence are in the development task transcript, not paired production/target parity evidence.
+- Read-only local SQL after the browser test verified version **5**, **5** history entries, recovered town, call-sheet note `Recovery fixture`, contact `Example Contact`, sub-location `Fictional lane` and zero duration `00:00` intact. Browser fixture schedule ID: `45876fee-09da-443e-853e-c7b1894ca781`.
+
+Initial checks caught a mutable revision capture in the test harness; the controller now captures primitive revisions. Fixture deletion/parent edits were corrected to use appropriate fictional owner authorization. Launcher validation was corrected for the actual local CLI issuer `supabase-demo`. Final checks above use the corrected code.
+
+## Reproduction and local rollback
+
+Use an isolated worktree without environment files, installed locked dependencies, and a separate unlinked disposable Supabase project. Never point the runner at hosted/live data. Resetting this disposable DB discards its fictional fixtures; retain any desired rehearsal checkpoint first.
+
+```sh
+node --experimental-strip-types scripts/test-local-editor-runtime.ts --workdir /private/tmp/roseland-contract-db-20260914 --browser-fixture
+node --experimental-strip-types scripts/start-local-editor.ts --workdir /private/tmp/roseland-contract-db-20260914
+```
+
+The optional walkthrough prints a generated `example.test` account; its deliberately public fictional password is `Fictional-local-rehearsal-2026!`. It has no access outside that disposable database. Existing test runner credentials otherwise remain generated and in memory. No user credential is needed.
+
+To disable this local slice, stop its loopback server and omit the explicit environment switch; the existing app remains the default. Preserve `cc35dc9` and the new local commit. Stop only the disposable Supabase project with its `--workdir`, retaining its volume; do not touch the existing `roseland-schedule` stack. Returning to earlier code must not be represented as recovery of newer target data. A subsequent local batch must export/checkpoint fictional documents and related records, rehearse partial-import failures and post-cutover edits, execute a documented recovery/replay strategy and reconcile every record/version. The end-to-end rollback gate is still open.
+
+Next bounded work: local rollback/recovery rehearsal with post-cutover target edits and per-record reconciliation, followed by outstanding application projections and the tracked security/regression checks. Complete production/target capability and usability parity before any real-schedule migration. No new batch may start after the user's September 15, 1:05 PM Eastern cutoff without further authorization.

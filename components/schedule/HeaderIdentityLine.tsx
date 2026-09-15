@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useScheduleStore } from '@/lib/store/scheduleStore';
 import ComboInput from './ComboInput';
+import { useLocalEditor } from './LocalEditorContext';
 
 type Field = 'projectName' | 'phase' | 'day';
 
@@ -19,6 +20,7 @@ function readOptions(key: string): string[] {
 }
 
 export default function HeaderIdentityLine({ readOnly = false }: Props) {
+  const localEditor = useLocalEditor();
   const meta       = useScheduleStore((s) => s.meta);
   const updateMeta = useScheduleStore((s) => s.updateMeta);
   const [editing,       setEditing]       = useState<Field | null>(null);
@@ -35,9 +37,9 @@ export default function HeaderIdentityLine({ readOnly = false }: Props) {
   });
 
   useEffect(() => {
-    setProjectOptions(readOptions('rp_lib_project_options'));
-    setPhaseOptions(readOptions('rp_lib_phase_options'));
-  }, []);
+    setProjectOptions(localEditor ? [] : readOptions('rp_lib_project_options'));
+    setPhaseOptions(localEditor ? [] : readOptions('rp_lib_phase_options'));
+  }, [localEditor]);
 
   function setDraft(v: string) {
     draftRef.current = v;

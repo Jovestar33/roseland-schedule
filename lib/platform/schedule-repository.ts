@@ -65,7 +65,7 @@ export function createScheduleRepository(client: ScheduleRpcClient): ScheduleRep
     catch { throw new ScheduleRepositoryError('failed'); }
     if (result.error) {
       const kinds: Record<string, ScheduleFailure> = {
-        PT400: 'invalid', PT401: 'unauthenticated', PGRST301: 'unauthenticated',
+        PT400: 'invalid', PT401: 'unauthenticated', PGRST301: 'unauthenticated', PGRST303: 'unauthenticated',
         PT404: 'unavailable', '42501': 'unavailable', PT409: 'conflict',
       };
       throw new ScheduleRepositoryError(kinds[result.error.code ?? ''] ?? 'failed');

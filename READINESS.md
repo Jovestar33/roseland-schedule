@@ -1,5 +1,15 @@
 # Current state and restart readiness
 
+## September 15: local account/editor integration completed
+
+Continue from `codex/migration-schedule-contract` in `/private/tmp/roseland-migration-contract-20260914`, after known-good checkpoint `cc35dc9`. The additive `/local-schedule` route is explicitly enabled only for a loopback Supabase rehearsal. Genuine account sessions now list, select/open, edit, version-save and reload fictional schedules using the shared editor controls. The original Netlify defaults remain unchanged. See [LOCAL_EDITOR_CONTRACT.md](./LOCAL_EDITOR_CONTRACT.md) for configuration, reproduction, evidence and the open finding ledger.
+
+Fresh validation: eleven migrations, **367 pgTAP assertions**, **37 platform tests**, **53 editor/server/API tests**, both genuine Auth runtime runners and all **14** existing concurrency scenarios pass. TypeScript, lint, the production build, SQL lint and local security advisor pass. Built HTTP checks verify disabled/default routes and enabled loopback Host restrictions. Visible two-session browser checks verify persisted optional fields, stale-save rejection without lost edits, explicit discard/reload, expired-session denial and same-account reauthentication preserving unsaved work; the fictional record reaches version 5 with five history entries. No production/target parity comparison or new dependency audit is claimed.
+
+The new active-session requirement applies to this editor's wrappers, not all existing RPC/RLS entrypoints. Global revocation policy, dedicated session-revocation races, full account recovery/admin UX and related-store application policies remain open. Full capability/usability parity, end-to-end rollback including post-cutover target edits, and comprehensive internal security review are mandatory before real migration. The unnumbered future external AI-assisted security-tool evaluation is recorded in ROADMAP.md; it is not work to start now or an added blocker for this batch.
+
+**Next bounded local batch:** recoverable fictional migration checkpoints and rollback/replay after simulated cutover edits, with partial-failure injection and per-record reconciliation. Keep one writer and preserve known-good code/data. No new batch after September 15, 1:05 PM Eastern without further authorization. No hosted work, actual-schedule access, push, deployment, credential or billing change occurred in this batch.
+
 ## September 15: related-store preservation and reconciliation batch
 
 The local `codex/migration-schedule-contract` branch now includes forward migration `20260915030000_related_migration_catalogue.sql`, a strict shared-store planner, private tenant-isolated catalogue with immutable history, and a synthetic related-store rehearsal. Full snapshot/template/library/CMS collections and individual snapshots/templates/folders are preserved with stable IDs and verified tenant schedule references. Explicit fictional removal uses a recoverable tombstone, not purge. Details, scope and decisions are in [RELATED_MIGRATION_CONTRACT.md](./RELATED_MIGRATION_CONTRACT.md).

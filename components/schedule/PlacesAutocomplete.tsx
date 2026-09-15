@@ -1,6 +1,7 @@
 'use client';
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { createPortal } from 'react-dom';
+import { useLocalEditor } from './LocalEditorContext';
 import { searchPlaces, geocodePlace, type PlaceSuggestion, type GeoResult } from '@/lib/googlePlaces';
 
 interface Props {
@@ -26,6 +27,7 @@ export default function PlacesAutocomplete({
   dropdownClass = 'ac-dropdown',
   multiline = false,
 }: Props) {
+  const localEditor = useLocalEditor();
   const [suggestions, setSuggestions] = useState<PlaceSuggestion[]>([]);
   const [open, setOpen]         = useState(false);
   const [focused, setFocused]   = useState(0);
@@ -60,7 +62,7 @@ export default function PlacesAutocomplete({
 
   const search = useCallback((q: string) => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
-    if (!q.trim()) { setSuggestions([]); setOpen(false); return; }
+    if (localEditor || !q.trim()) { setSuggestions([]); setOpen(false); return; }
     debounceRef.current = setTimeout(async () => {
       console.log('[places] searching:', q);
       const results = await searchPlaces(q);
@@ -74,7 +76,7 @@ export default function PlacesAutocomplete({
       }
       setFocused(0);
     }, 220);
-  }, []);
+  }, [localEditor]);
 
   function handleInput(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     const v = e.target.value;
@@ -86,7 +88,7 @@ export default function PlacesAutocomplete({
     setOpen(false);
     setSuggestions([]);
     onChange(s.main || s.label);
-    if (onSelect) {
+    if (onSelect && !localEditor) {
       const geo = await geocodePlace(s.placeId, s.main || s.label);
       onSelect(geo?.address || s.label, geo);
     }

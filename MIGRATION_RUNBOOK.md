@@ -1,5 +1,11 @@
 # Platform Migration Runbook
 
+## Required rollback and security evidence (September 15 clarification)
+
+Rollback must demonstrably recover both the pre-migration checkpoint and accepted target edits after a simulated cutover. Retain known-good code and recoverable data checkpoints; document executable steps, rehearse partial migration failures and post-cutover edits using fictional data, and reconcile every record/version/related-store entry. Netlify availability alone cannot preserve newer target edits. Before a real cutover, decide and test the reverse-export/replay or same-database fallback strategy, one-writer freeze, recovery access, failure handling and per-record reconciliation. Existing local atomic-failure tests are supporting evidence; they do not complete this end-to-end rollback gate. Subsequent authorized local rehearsals must fill it before real migration.
+
+A comprehensive internal security review is also mandatory before migration. Track findings and retests across authentication/session expiry/revocation/recovery; tenant, role, invitation and admin boundaries; direct API bypass; public-link projection/expiry; secrets/dependencies; input validation; concurrent writes; backup and rollback access. Keep local evidence separate from hosted configuration checks pending separate authorization. Report unresolved high-risk findings/exceptions and necessary user decisions; do not silently accept them or claim total security/an external audit. No hosted scan, live migration or cutover is authorized by this clarification.
+
 Status: Phase 0 procedure. No step authorizes production mutation by itself. Exact owners, dates, RPO/RTO, URLs, and commands must be filled in during implementation and rehearsal.
 
 ## Invariants

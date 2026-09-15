@@ -7,6 +7,7 @@ const AUTH_COOKIE = 'rp_auth_flag';
 
 function isPublicPath(pathname: string): boolean {
   return pathname === '/login'
+    || pathname === '/local-schedule' // Independently gated server-side; disabled by default.
     || pathname.startsWith('/view')
     // This page has its own server-only kill switch and returns 404 unless
     // explicitly enabled for an isolated Supabase development environment.
