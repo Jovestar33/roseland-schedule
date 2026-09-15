@@ -6,6 +6,8 @@
 >
 > **Scope:** migrate the current Next.js application from shared-PIN authentication and Netlify Blob persistence to a secure, tenant-aware Supabase/Postgres platform without disrupting the working daily schedule product.
 
+> **Priority update 2026-09-14:** migration readiness is the near-term critical path; see [MIGRATION_READINESS.md](./MIGRATION_READINESS.md). Installation and offline use precede broader Production Command expansion but must not delay migration or become new cutover gates. Follow the staged plan in [INSTALLATION_OFFLINE_PLAN.md](./INSTALLATION_OFFLINE_PLAN.md) and ordering in [ROADMAP.md](./ROADMAP.md). Installation-only validation can proceed in preview before the full migration; private offline viewing/editing require their specific identity, storage, access and sync gates. Live cutover remains separately gated.
+
 ## 1. Executive decision
 
 Roseland Schedule will establish the multi-user platform foundation before resuming major Production Command development.
@@ -26,7 +28,7 @@ This replaces two earlier assumptions:
 1. The Blob-based Production Command prototype is not the future data foundation.
 2. User accounts, relational storage, roles, and tenant isolation are not postponed until after Production Command.
 
-## 2. Why migration comes first
+## 2. Why migration precedes Production Command expansion
 
 Netlify Blobs has been serviceable for a single shared-PIN workflow, but the app now needs capabilities that belong in a transactional relational system:
 
@@ -40,7 +42,7 @@ Netlify Blobs has been serviceable for a single shared-PIN workflow, but the app
 - Secure public projections and revocable links.
 - Reliable migration paths for future Production Command modules.
 
-Continuing to add Blob stores for Production Command would create another interim architecture and a larger later migration.
+Continuing to add Blob stores for Production Command would create another interim architecture and a larger later migration. This does not make the entire migration a prerequisite for installation. An online installed-app preview can use the existing backend; offline previews need a versioned local repository and adapter boundary. Private multi-user offline release requires account/tenant lifecycle checks and safe replay, not full normalization of every future production-management entity.
 
 ## 3. Non-negotiable preservation requirements
 
@@ -214,7 +216,7 @@ ShareLinkRepository
 CMSRepository
 ```
 
-Create a legacy Netlify implementation and a Supabase implementation. This is a migration seam, not permission to maintain two permanent backends.
+Create a legacy Netlify implementation and a Supabase implementation. This is a migration seam, not permission to maintain two permanent backends. Offline documents and pending drafts must record stable identity, base version, schema and backend authority. Do not replay queued work across adapters automatically; cutover reconciliation and rollback must account for unsynced devices, mapping changes and old installed clients. See the installation/offline plan for the required local access and reconnect gates.
 
 ### 7.2 Exporter
 
@@ -338,7 +340,7 @@ Requirements:
 
 The branch `phase-11-production-command-planning` contains valuable planning and a functional Blob-based prototype. It is intentionally unmerged because its first dashboard was technically valid but not sufficiently useful, and its persistence model predates the approved multi-user migration.
 
-After the platform foundation is stable:
+After the platform foundation is stable and the selected installation/offline milestones pass:
 
 - Inspect and selectively port reusable presentation and workflow ideas.
 - Build Production Command against stable production, phase, day, schedule, contact, location, and membership IDs.

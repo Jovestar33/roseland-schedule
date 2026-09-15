@@ -1,5 +1,7 @@
 # Roseland Schedule — Next.js Migration Plan
 
+> **Historical archive:** the HTML-to-Next.js migration plan below is retained as a dated design record, not the current delivery sequence or proof that its proposed cache/offline queue exists. Current priorities are in [ROADMAP.md](./ROADMAP.md); verified code capabilities and planned installation/offline work are in [INSTALLATION_OFFLINE_PLAN.md](./INSTALLATION_OFFLINE_PLAN.md).
+
 > **Status:** Planning — do not merge to `main` until feature parity is verified.
 > **Main branch:** Golden locked baseline, live on Netlify. Do not touch.
 > **Migration branch:** `next-app-migration-v2` (to be created fresh off `main`)

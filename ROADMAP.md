@@ -1,6 +1,8 @@
 # Roseland Schedule — Master Roadmap
 
-> **Current direction (approved 2026-07-19):** migrate the working single-PIN app to a secure multi-user platform before resuming Production Command feature development.
+> **Current priority (2026-09-14):** migration readiness is the near-term critical path: integrated foundation, adapters/import/reconciliation, app accounts/permissions, protected Supabase-backed Vercel pilot, then controlled cutover. Installation and offline support remain ahead of later Production Command expansion, but must not delay migration or become a new cutover prerequisite. See [MIGRATION_READINESS.md](./MIGRATION_READINESS.md) for current gaps and the smallest next implementation task.
+>
+> **Delivery plan:** [`INSTALLATION_OFFLINE_PLAN.md`](./INSTALLATION_OFFLINE_PLAN.md) separates existing metadata from unimplemented offline capabilities, dependencies, device decisions and release gates. This is a planning change, not implementation or rollout authorization.
 >
 > **Detailed plan:** see [`PLATFORM_MIGRATION_PLAN.md`](./PLATFORM_MIGRATION_PLAN.md).
 >
@@ -52,7 +54,30 @@ Phase 0 documents: [`CURRENT_DATA_INVENTORY.md`](./CURRENT_DATA_INVENTORY.md), [
 
 **Exit gate:** schema, authorization model, threat model, migration procedure, rollback procedure, and regression matrix reviewed and approved before implementation.
 
+## Priority delivery track: installation and offline use
+
+Migration takes scheduling priority. This track may proceed alongside it only when it does not delay the critical path; offline delivery can follow cutover. Phase numbers below remain migration workstream identifiers, not a requirement to finish every migration phase before testing installation. Execute this track before Phase 7 and later production-management expansion; the detailed gates are in [INSTALLATION_OFFLINE_PLAN.md](./INSTALLATION_OFFLINE_PLAN.md).
+
+| Order | Deliverable | Required foundation / timing |
+|---|---|---|
+| I1 | Installable home-screen/desktop app validation, initially online | Select the device/package target; test existing manifest, launch, login and updates in preview. Can precede full Supabase migration. Native installer/store distribution is a separate unresolved product choice. |
+| I2 | Offline viewing of selected downloaded schedules | Offline shell, durable versioned local storage, stable identity adapter and explicit private-data/access policy. Synthetic preview can precede cutover; private multi-user use requires account/tenant lifecycle controls from Phases 1–3. |
+| I3 | Durable offline drafts with safe reconnect | I2 plus permission revalidation, version-checked writes, idempotent replay, history and conflict recovery. Pull these Phase 6 prerequisites forward; prove them in preview before shipping offline editing. |
+| Then | Broader Production Command and production-management modules | Complete installation/offline gates for the selected target and the relevant secure platform/migration gates. |
+
+- [ ] Confirm initial devices and whether an installed web app meets the installation requirement; do not assume native packaging is required or already provided.
+- [ ] Complete I1 installation/launch/update verification.
+- [ ] Complete I2 offline download, cold-start viewing and access-lifecycle verification.
+- [ ] Complete I3 durable editing, restart recovery, reconnect and conflict verification.
+- [ ] Extend cutover/rollback rehearsals to include installed app versions, local schema/ID mappings and pending drafts; never replay one outbox to two backend authorities.
+
+**Current capability:** manifest/icons and Apple standalone metadata exist. No current service worker, durable offline schedule cache or reconnect outbox was found in the development app. Installation on target devices remains unverified; the Offline status label is not a promise of local persistence. Historical cache/queue descriptions do not establish current support.
+
+**Scope boundary:** Netlify remains live and authoritative until explicit cutover approval. Installation and offline previews do not authorize production changes, hosted migrations, a native rewrite or deployments. Existing security, backup, reconciliation and rollback gates remain mandatory.
+
 ## 🟠 Phase 1: secure Supabase foundation
+
+**Current assessment:** [MIGRATION_READINESS.md](./MIGRATION_READINESS.md) supersedes stale blockers in the September 11 status below. Dependency/CI remediation and local lifecycle tests subsequently passed; the still-separate schedule draft now conflicts with its updated auth base and is the next integration task.
 
 **Status (September 11, 2026):** Phase 1 remains incomplete. Tenant foundation is merged. [PR #5](https://github.com/Jovestar33/roseland-schedule/pull/5) adds auth/bootstrap and server workflows on `cbdb921`; [PR #8](https://github.com/Jovestar33/roseland-schedule/pull/8), stacked on #5 at `3e0cb89`, adds schedule-domain tables/history and 45 domain assertions. Both remain drafts. Auth/bootstrap migrations were historically applied only to `roseland-schedule-dev`; the schedule migration has not been applied there according to PR #8. No live UI uses Supabase yet.
 
@@ -155,6 +180,8 @@ This phase follows authentication and organization context and must finish befor
 
 ## 🟡 Phase 6: multi-user reliability
 
+**Dependency override:** version-checked writes, save attribution/history, permission revalidation, idempotent replay and conflict recovery are prerequisites for I3 offline editing and must be implemented and tested before that release. Phase 6 is not a reason to postpone them until after live cutover. Presence and realtime collaboration remain later work.
+
 - [ ] Optimistic concurrency and stale-edit warnings using database versions.
 - [ ] Save attribution and activity/audit history.
 - [ ] Safe conflict resolution and recovery workflows.
@@ -229,7 +256,7 @@ Production Command v1 should be a useful operating surface:
 - [ ] Budget and expense integration.
 - [ ] Documents and production reports expansion.
 - [ ] Realtime shared editing after conflict prevention is proven.
-- [ ] PWA/App Store packaging improvements.
+- [ ] Additional platform/store distribution beyond the chosen I1 installation target, if separately selected. Core installation and offline support now belong to I1–I3 above.
 - [ ] AI-production workflows: prompt packs, shotboards, assets, consistency references, model/version notes, render tasks, edit milestones, and rights/licensing.
 - [ ] Saluki Media/international branding, currency, tax, and localization.
 
@@ -266,10 +293,10 @@ Completed implementation history remains documented in Git history and [`ARCHITE
 ## Deferred and superseded work
 
 - `phase-11-production-command-planning` contains a functional Blob-based Production Command prototype plus planning. Do not merge it into `main`; inspect and salvage selectively after Phase 6.
-- Overtime notifications, public contact cards, snapshot compare/rename, contact-per-sub-location, and standalone PWA testing remain deferred. Library already contains search/filter/recent surfaces; further polish is deferred unless required for current use.
+- Overtime notifications, public contact cards, snapshot compare/rename, and contact-per-sub-location remain deferred. Standalone installation testing and offline support have moved to the priority I1–I3 track. Library already contains search/filter/recent surfaces; further polish is deferred unless required for current use.
 - Clerk was previously preferred for future auth. The approved direction now uses Supabase Auth to keep identity, RLS, storage, and realtime authorization within one platform.
 - The old plan to build the Mother App on additional Netlify Blob stores before migrating is superseded.
 
 ---
 
-*Last updated: 2026-09-11 — freeze ended; August schedule foundation and fresh readiness findings recorded. No migration, merge or deployment authorized in this step. Prior July/August validation is preserved in READINESS.md and the historical workflow/security records.*
+*Last updated: 2026-09-14 — migration readiness confirmed as the critical path; installation/offline stays ahead of production-management expansion without delaying migration. Live cutover remains separately gated. Planning/documentation only; no implementation, merge, migration or deployment authorized.*
