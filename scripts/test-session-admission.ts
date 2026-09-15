@@ -159,7 +159,7 @@ try {
   const routes: Array<[string,Record<string,unknown>]>=[
     ['is_active_org_member',{target_organization_id:org}],['is_org_admin',{target_organization_id:org}],
     ['can_access_production',{target_production_id:prod}],['can_edit_production',{target_production_id:prod}],
-    ['accept_organization_invitation',{invitation_id:randomUUID()}],['read_schedule',{target_schedule_id:scheduleId}],
+    ['accept_organization_invitation',{invitation_id:randomUUID()}],['get_my_invitation_acceptance',{invitation_id:randomUUID()}],['read_schedule',{target_schedule_id:scheduleId}],
     ['read_deleted_schedule',{target_schedule_id:scheduleId}],['create_schedule',{target_schedule_id:randomUUID(),target_day_id:day,next_display_name:'Never created',next_slug:'never-created',next_document:{meta:{},rows:[]},schema_version:1}],
     ['mutate_schedule',{target_schedule_id:scheduleId,expected_version:1,operation:'archive',payload:{}}],
     ['update_schedule_document',{target_schedule_id:scheduleId,expected_version:1,next_document:{meta:{},rows:[]},schema_version:1}],
@@ -190,6 +190,7 @@ try {
     ensure((await api(retained,'profiles?user_id=eq.'+owner.id,'PATCH',{display_name:'Must not persist'})).status===401,label+' profile write bypass');
     ensure((await api(retained,'schedules?id=eq.'+scheduleId,'HEAD')).status===401,label+' HEAD bypass');
     ensure((await api(retained,'rpc/read_schedule?target_schedule_id='+scheduleId)).status===401,label+' GET RPC bypass');
+    ensure((await api(retained,'rpc/get_my_invitation_acceptance?invitation_id='+randomUUID())).status===401,label+' receipt GET bypass');
     ensure((await graphql(retained)).status===401,label+' GraphQL gateway bypass');
     ensure((await api(retained,'rpc/graphql','POST',{query:'{ __typename }'},{'content-profile':'graphql_public'})).status===401,label+' alternate-schema RPC bypass');
   }
@@ -199,7 +200,7 @@ try {
   ensure(!(await owner.c.auth.signOut({scope:'local'})).error,'Genuine sign-out failed');
   await assertBlocked(token,'Revoked session');
   ensure(sql(`select document_version from public.schedules where id='${scheduleId}';`)==='1','Blocked endpoints mutated schedule');
-  pass('expired sessions and retained tokens after real sign-out denied on all 15 authenticated RPCs, all 11 table routes across five HTTP methods, and GET RPC');
+  pass('expired sessions and retained tokens after real sign-out denied on all 16 authenticated RPCs, all 11 table routes across five HTTP methods, and GET RPC');
   pass('GraphQL gateway and alternate graphql_public RPC also reject expired/revoked sessions; extension '+(graphqlEnabled?'enabled':'not enabled (route admission only)'));
 
   const [raceDay,raceSchedule]=[randomUUID(),randomUUID()];

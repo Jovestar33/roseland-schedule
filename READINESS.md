@@ -1,5 +1,13 @@
 # Current state and restart readiness
 
+## September 15: local invitation acceptance and receipt recovery verified
+
+The slice after `2bb06f8` adds an independently gated loopback `/local-accept-invitation` UI and a recipient-only acceptance receipt RPC. It preserves the existing verified-email, single-use, expiry, role and suspension rules. Explicit ID reviews survive unknown results and same-account reauthentication; retries check the own committed receipt before accepting again. See [LOCAL_ACCEPTANCE_REVIEW.md](./LOCAL_ACCEPTANCE_REVIEW.md).
+
+Fresh evidence: **14 migrations, 431 database assertions, 70 platform tests, 53 editor tests**, genuine local acceptance/runtime and browser scenarios, **eight invitation/suspension races plus eight session-admission scenarios**, the expanded 16-RPC session inventory, TypeScript/build/integrated lint, SQL lint and local advisor checks pass. Wrong/unverified accounts, expired/revoked/reused invitations and suspended/deleted parents are denied without new grants. Concurrent/lost-response/expiry recovery yields one acceptance audit per successful invitation. Browser discard/cancel preserves the ID draft and account; mobile review corrected dialog placement.
+
+F02 remains open for shared account/navigation, recipient preview, delivery/signup, password/MFA recovery and wider lifecycle review. Next coherent local work can connect the existing rehearsal screens with shared sessions and authorized organization navigation. Delivery, redirect, owner lookup, recovery and related ownership decisions remain explicit gates. Actual schedules and hosted systems are untouched; no real credential, mail, push, deployment or billing change occurred. Preserve all prior checkpoints and the 1:05 PM Eastern new-batch cutoff; real migration remains blocked by full parity/reconciliation/rollback requirements.
+
 ## September 15: local invitation-management UI verified
 
 The slice after `fb6c2e9` adds an explicitly gated loopback `/local-invitations` UI for fictional Owner/Admin accounts. It includes genuine MFA enrollment/rechallenge, tenant-scoped paginated lists, reviewed create/revoke requests, immutable snapshots/keys, result lookup, recoverable drafts and same-account reauthentication. See [LOCAL_INVITATIONS_REVIEW.md](./LOCAL_INVITATIONS_REVIEW.md) for behavior, browser/runtime evidence and limits.

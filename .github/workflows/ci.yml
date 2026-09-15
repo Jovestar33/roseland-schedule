@@ -104,6 +104,9 @@ jobs:
       - name: Test local invitation UI requests against built application
         run: node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types scripts/test-invitation-ui-runtime.ts --workdir .
 
+      - name: Test local invitation acceptance and result recovery
+        run: node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types scripts/test-acceptance-runtime.ts --workdir .
+
       - name: Rehearse synthetic import and final catch-up
         run: python3 scripts/migration/rehearse-synthetic.py --workdir . --report /tmp/roseland-synthetic-migration-report.json
 

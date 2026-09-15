@@ -41,6 +41,6 @@
 .main summary { cursor: pointer; font-size: 13px; color: #c4e3f2; }
 .main small { font-weight: 400; color: #a8bed2; line-height: 1.5; }
 .main .secret { max-width: 540px; font-family: monospace; }
-.dialog { max-width: 500px; width: calc(100% - 40px); background: #1b2c3d; color: #f0f4fa; border: 1px solid #63829d; border-radius: 14px; padding: 26px; }
+.dialog { margin: auto; max-width: 500px; width: calc(100% - 40px); background: #1b2c3d; color: #f0f4fa; border: 1px solid #63829d; border-radius: 14px; padding: 26px; }
 .dialog::backdrop { background: #050b14c9; }
 @media (max-width: 760px) { .main { padding: 28px 16px 55px; } .columns { grid-template-columns: 1fr; gap: 0; } .card { padding: 20px; } .account, .sectionTitle { align-items: flex-start; flex-wrap: wrap; } .list li { align-items: flex-start; } }

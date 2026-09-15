@@ -1,5 +1,7 @@
 # Local Data API session admission review — September 15, 2026
 
+Acceptance follow-up after `2bb06f8`: the new recipient receipt expands the authenticated RPC inventory to **16**. Fresh GET/POST expiry/revocation and all admission scenarios pass; see [LOCAL_ACCEPTANCE_REVIEW.md](./LOCAL_ACCEPTANCE_REVIEW.md). Counts below describe the original session-admission checkpoint unless explicitly updated.
+
 This batch follows local checkpoint `7903ac1` on `codex/migration-schedule-contract`. It closes the reproduced **local Data API** part of F01 and supplies the dedicated F03 concurrency evidence. It does not authorize a hosted rollout or close the broader migration/security gates. Actual schedules were not read or changed. All runtime accounts, MFA factors and records were fictional, in the separate `roseland-session-20260915` Docker project on 583xx ports.
 
 ## Policy and implementation
@@ -25,6 +27,7 @@ The runtime runner queries the actual public-function grants and fails if its in
 | `can_access_production` | Normal owner/viewer read and cross-tenant denial |
 | `can_edit_production` | Normal owner write and viewer denial |
 | `accept_organization_invitation` | Existing acceptance/suspension SQL suite and eight permission races |
+| `get_my_invitation_acceptance` (acceptance follow-up) | Own verified-email/active-membership receipt; fresh GET/POST expiry and revocation denial, expanded 16-RPC inventory; see [LOCAL_ACCEPTANCE_REVIEW.md](./LOCAL_ACCEPTANCE_REVIEW.md) |
 | `read_schedule` | Genuine owner/viewer reads; outsider unavailable; GET RPC denial also checked |
 | `read_deleted_schedule` | Genuine lifecycle recovery runner and role checks |
 | `create_schedule` | Genuine lifecycle creation and initial-version contract |
