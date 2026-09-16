@@ -1,5 +1,7 @@
 # Local account and schedule editor rehearsal
 
+> **September 16 current-state reconciliation:** Lifecycle browser acceptance completed at `d27ccbf`; restricted provisioning completed at `379e066`. Old Mac-unlock/pending-browser and design-next paragraphs below are superseded. Ordinary editor save-result recovery is only a proposed next batch; its canceled WIP was reverted. F01–F05 remain scoped open gates, not blanket failures. See [TECHNICAL_ACCEPTANCE_AUDIT.md](./TECHNICAL_ACCEPTANCE_AUDIT.md) for evidence, gates and bounded dispatch proposals.
+
 September 15, 2026. Additive slice after known-good checkpoint `cc35dc9`, on `codex/migration-schedule-contract` in `/private/tmp/roseland-migration-contract-20260914`. No push, deployment, hosted schema/data change, billing action or actual-schedule access. The supplied user credential was not used or copied into files/logs. All accounts and documents in these checks are fictional.
 
 ## Runtime and scope

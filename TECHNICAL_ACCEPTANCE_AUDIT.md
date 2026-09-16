@@ -1,0 +1,346 @@
+# Technical migration acceptance audit
+
+**Audit date: September 16, 2026. Status: audit complete; technical migration acceptance NOT passed.** This is a documentation-only inventory and dispatch proposal, not authorization to implement, deploy or migrate.
+
+## Source, scope and evidence rules
+
+Audited application checkpoint: **`379e066`**, branch `codex/migration-schedule-contract`, checkout `/private/tmp/roseland-migration-contract-20260914`. This audit inspected source, committed review records and retained executed reports. It did not run a new application, database, browser or security test. The shared original project remains a separate application checkout at `b9d6523`; copied notes do not promote its application to the implementation checkpoint.
+
+The canceled save-recovery changes were archived at `/private/tmp/roseland-canceled-save-recovery-20260916-011325`, then reverted by Voice and Planning under the user's instruction. The three tracked files match `379e066`; the added helper was removed. The audit independently confirmed an empty diff against that checkpoint across `app/`, `components/`, `lib/`, `scripts/`, `tests/` and `supabase/`. The archive is **unvalidated reference**, not implemented functionality or permission to reapply it. Its 114 passing pre-existing platform tests did not cover the new optional path; they are excluded from accepted-feature evidence. See [the cancellation record](./TECHNICAL_GAP_CLOSURE_REVIEW.md).
+
+The user's order is: technical functionality/practical parity/security/migration and rollback readiness → design research/selection/reskin/company theming/Roseland preset → final candidate revalidation → explicit real-data migration/cutover approval. A synthetic hosted preview may precede design, with separate deployment authorization. Production Command remains the brand. No automatic coordinator is active. See [the canonical brief](./PRODUCTION_COMMAND_DESIGN_BRIEF.md).
+
+**Status vocabulary:** `Implemented locally` means code exists in the isolated rehearsal; `Partial` means only named operations are integrated; `Absent` means the inspected target path lacks the capability. `Passed scoped checks` refers only to the enumerated evidence. `Not tested` is missing evidence, not an observed failure. A source-visible omission is an implementation gap, not a fabricated failed runtime run. `H0` means **hosted verification not performed for the current candidate; production/target parity not tested**. H0 applies separately to every row that names it. `G` = implementation gap, `V` = verification gap, `P` = material policy/product decision, `A` = external-operation authorization. None is silently waived.
+
+The [regression matrix](./REGRESSION_MATRIX.md) contains **45 unique case groups**. Its authoritative paired-runtime totals remain **0 Pass / 0 observed Fail / 45 Not tested**, all unverified. Local evidence below does not change those totals. The eight supplemental groups and F01–F05/account/security entries expand coverage without relabeling the existing 45.
+
+## Evidence register
+
+Each evidence ID below supplies the exact associated commit, environment and date for every inventory row that references it. `S0` is inspection only; it is never an execution result. Reports generally do not embed a signed build digest: commit attribution comes from the checked-in completion record and Git history. Do not claim cryptographic linkage or freshness after subsequent source changes. Dates are the documented execution dates, not this audit's file-access date. Linked temporary artifacts exist at audit time unless explicitly stated; durable evidence retention remains a release task.
+
+| ID | Commit / date / environment | Executed evidence, location and limits |
+|---|---|---|
+| S0 | `379e066`; inspected 2026-09-16; local source only | `app/local-workspace`, `app/local-schedule`, `lib/platform`, legacy `components`/`lib/api`, 14 migrations, tests and CI. No runtime result inferred. |
+| E0 | `379e066`; 2026-09-16; `roseland-provisioning-20260916`, API/DB 65321/65322, Next 3382 / proxy 3383 | [Provisioning review](./LOCAL_PROVISIONING_REVIEW.md). Retained logs confirm [114 platform tests](/private/tmp/roseland-provisioning-platform.log), [53 editor/server/routing tests](/private/tmp/roseland-provisioning-editor.log), [431 pgTAP assertions/13 files](/private/tmp/roseland-provisioning-db.log), [build](/private/tmp/roseland-provisioning-build.log), [lint](/private/tmp/roseland-provisioning-lint.log), [SQL lint](/private/tmp/roseland-provisioning-sql-lint.log), [dependency audit](/private/tmp/roseland-provisioning-dependency-audit.log), [genuine provisioning runtime](/private/tmp/roseland-provisioning-runtime.log), [workspace rerun](/private/tmp/roseland-provisioning-workspace-regression.log), [workflow/race rerun](/private/tmp/roseland-provisioning-workflow-regression.log). Advisor JSON is empty; [stderr](/private/tmp/roseland-provisioning-advisor.stderr) explicitly says no issues found. Do not represent it as a populated JSON report. Local high/critical runtime dependency findings: none in that run; no universal security claim. |
+| E1 | `ddef735`; 2026-09-15; `roseland-contract-20260914`, loopback local editor 3287 | [Editor contract](./LOCAL_EDITOR_CONTRACT.md): genuine Auth read/write/list, conflict/expiry and dirty-draft behavior, 37 platform/53 editor tests, 367 pgTAP assertions. Browser evidence is described in the task/review; no exported paired baseline screenshots are claimed. |
+| E2 | `c03d0f7`; 2026-09-15; `roseland-session-db-20260915`, local Auth/Data API/Docker SQL | [Session review](./SESSION_ADMISSION_REVIEW.md), [final admission log](/private/tmp/roseland-session-final-admission.log): 15 authenticated RPCs; 11 table routes × 5 methods × expired/revoked = 110 denials; alternate GraphQL gateway admission only; seven observed-lock races plus one read-admission scenario. Existing 14 permission/document/lifecycle races also passed. Auth/Storage/Realtime and enabled GraphQL feature authorization are outside this evidence. |
+| E3 | `fb6c2e9`; 2026-09-15; `roseland-workflow-20260915`, 593xx local stack, built Next 3341 | [Workflow review](./ACCOUNT_WORKFLOW_REVIEW.md), [HTTP/runtime log](/private/tmp/roseland-workflow-http-runtime.log): three genuine MFA workflows; input-bound retries, rate serialization, nine workflow races, audit rollback, origin handling. 409 pgTAP assertions/13 migrations at that checkpoint. E0 reruns the workflow suite on 14 migrations. |
+| E4 | `2bb06f8`; 2026-09-15; `roseland-invitation-ui-20260915`, 60321/60322, app/proxy 3346/3345 | [Invitation review](./LOCAL_INVITATIONS_REVIEW.md): create/revoke UI, genuine MFA, immutable request retry/result checks; 59 platform/53 editor tests, 409 assertions. Browser observations retained in review/task, no exported screenshots or physical-device claim. No email delivery. |
+| E5 | `3e5ac67`; 2026-09-15; `roseland-acceptance-20260915`, 61321/61322, app/proxy 3352/3351 | [Acceptance review](./LOCAL_ACCEPTANCE_REVIEW.md): verified-email/invitation identity rules, own receipt lookup, expiry/reuse/suspension/uncertain-result recovery; 70 platform/53 editor tests, 431 assertions/14 migrations. Auto-confirmed fictional local accounts do not prove delivery/verification UX. |
+| E6 | `5c533cc`; 2026-09-15; `roseland-workspace-20260915`, 62321/62322, Next 3362, proxies 3361/3363 | [Workspace review](./LOCAL_WORKSPACE_REVIEW.md): one session, organization navigation, retained drafts/modal state, back/forward, account clearing, viewer access; 78 platform/53 editor tests, 431 assertions. E0 repeats genuine workspace runtime at the current checkpoint. |
+| E7 | `67cdc0c` implementation 2026-09-15; `d27ccbf` browser acceptance/fixes 2026-09-16; `roseland-lifecycle-ui-20260915`, 63321/63322, proxies/app 3371/3372 | [Lifecycle review](./LOCAL_LIFECYCLE_REVIEW.md), [runtime](/private/tmp/roseland-lifecycle-ui-runtime.log), [corrected history screenshot](/private/tmp/roseland-lifecycle-acceptance-20260916/desktop-history-review-fixed.png), [corrected mobile discard](/private/tmp/roseland-lifecycle-acceptance-20260916/mobile-editor-discard-fixed.png), [retained contact](/private/tmp/roseland-lifecycle-acceptance-20260916/contact-after-escape.png). Create/rename/archive/unarchive/delete/recover/history restore, roles, stale versions, dropped responses, expiry, 25+2 pagination. 101 platform/53 editor tests at acceptance. Emulated 1280×720 and 390×844, not physical iPad/full parity. |
+| E8 | `cc35dc9`; 2026-09-15; disposable `roseland-contract-20260914`, trusted local SQL transaction rolled back | [Related contract](./RELATED_MIGRATION_CONTRACT.md), [report](/private/tmp/roseland-related-migration-report.json): four source blobs; 11 final catalogue records (10 active, one tombstone), stable mappings, complete payload/history/reference reconciliation, repeat report. `catalogue_verified=true`; `application_parity=false`, `migration_complete=false`. |
+| E9 | `db56882`; 2026-09-15; disposable `roseland-contract-20260914`, trusted local SQL transaction rolled back | [Synthetic rehearsal](./MIGRATION_REHEARSAL.md), [report](/private/tmp/roseland-synthetic-migration-report.json): three final schedules, idempotent initial/catch-up replay, per-record checks, stale/invalid/conflicting input and atomic failure. Schedule-only experiment; not an exporter or global multi-store capture. |
+| E10 | Tooling `7903ac1`; schema/application checkpoint **`ddef73592a4db2b92cc63bfa0ed7c935eafca92f`**; 2026-09-15; `roseland-contract-20260914`, disconnected fresh recovery databases | [Recovery review](./RECOVERY_REHEARSAL.md), [executed report](/private/tmp/roseland-recovery-20260915-verified/report.json), run `aff2f519-4361-4cc2-aeaf-c1100b55db04`: 13 executed checks, 55 individually reconciled records/11 table groups, 30 Python contract tests, three journals including later target/recovered-writer edits. Report explicitly has `application_parity=false`, `migration_complete=false`; Auth/API services, cluster credentials/config, hosted rollback and Netlify reverse export were not restored. |
+| E11 | `379e066`; 2026-09-16; E0 visible browser, desktop/mobile emulation | [Recovered provisioning](/private/tmp/roseland-provisioning-20260916/recovered-provisioning.png), [mobile review](/private/tmp/roseland-provisioning-20260916/mobile-provisioning-review.png), [long-input review](/private/tmp/roseland-provisioning-20260916/mobile-long-input-review.png), [recipient workspace](/private/tmp/roseland-provisioning-20260916/recipient-workspace.png). Existing-factor MFA, exact retry, expiry, operator/nonmember and recipient discovery. No hosted enrollment, recovery or general owner-search UI. |
+
+## Source map for the capability inventory
+
+- **T1:** `app/local-schedule/LocalScheduleClient.tsx`, `lib/platform/{local-editor-controller,session-schedule-repository,schedule-repository}.ts`, `components/schedule/{ScheduleHeader,ScheduleGrid}.tsx`, `lib/store/scheduleStore.ts`. Reuses the grid but not the complete legacy editor shell.
+- **T2:** `app/local-workspace/{LocalWorkspaceClient,LocalLifecycleClient,LocalProvisioningClient}.tsx`, `lib/platform/{workspace-repository,schedule-lifecycle-controller,schedule-lifecycle-repository}.ts`. Existing local authorized directory, lifecycle and retained account workflows.
+- **T3:** `components/library/*`, `components/toolbar/{EditorToolbar,ToolsPanel,ShareDropdown}.tsx`, `lib/api/{backups,library,snapshots,templates,cms,viewLink}.ts`. These legacy paths still use Netlify/shared auth; presence is not target integration.
+- **T4:** `components/modals/{CallSheetModal,ContactSheetModal,ContactModal}.tsx`, `components/view/ScheduleReadView.tsx`, `lib/print.ts`, `styles/*`, `app/view/*`. Existing document/read-only presentation; target workflow/output validation remains incomplete.
+- **T5:** `app/local-invitations`, `app/local-accept-invitation`, `app/api/platform`, `lib/platform/*`, `supabase/migrations/*`. Local account/session and SQL authority boundaries.
+- **T6:** `scripts/migration/{related_contract,recovery_contract,recovery_runtime}.py`, `rehearse-{synthetic,related,recovery}.py`; private migration catalogue. Preservation tooling, not public app repositories.
+
+## All 45 regression case groups
+
+Every row retains **H0 / paired parity Not tested** even when a scoped local check passed. Full acceptance requires the matrix's matched fixture, actual source/target builds, roles, supported device/browser profiles and output evidence. “Next” references the bounded queue below; it does not authorize execution.
+
+| Case | Implementation at S0 | Evidence | Local verification status | Hosted | Unresolved gap / explicit next action |
+|---|---|---|---|---|---|
+| NAV-01 | Partial: T2 shared workspace and T1 selector; full T3 library/deep-link integration absent | S0, E6, E0 | Scoped navigation passed; complete menu/refresh path not tested | H0 | G/V: finish B03/B05–B07 integration, then B15 paired navigation/refresh matrix |
+| NAV-02 | T1/T2 draft/account guards implemented; ordinary editor save lacks explicit uncertain-result recovery | S0, E1, E6, E7 | Retention and late-result controller checks passed in named paths; entire matrix not tested | H0 | G/V: B01 attempt recovery, then cross-workflow navigation in B15 |
+| IN-01 | Existing grid/modal fields reused; full document/admin field surfaces not integrated | S0 T1–T4, E7, E11 | Targeted history/discard/long provisioning layouts passed; all fields/long values unverified | H0 | V: B02 output/field fixtures; B15 measured capacity sweep |
+| IN-02 | Native grid and modal editing retained in rehearsal | S0 T1, E1, E6 | Named desktop edits/modal navigation passed; paste/tab/touch/calendar matrix incomplete | H0 | V: B15 keyboard/input and physical touch profiles |
+| IN-03 | Some labeled controls/focus/native dialogs; contrast fixes in lifecycle review | S0 T1/T2, E7, E11 | Specific contrast/wrapping fixes verified; no full accessibility audit | H0 | V: B13 accessibility/security-related UI checks, B15 full focus/contrast/error coverage |
+| LIB-01 | T2 paginated schedule/day list; full T3 hierarchy/search/order/tab repository absent | S0, E6, E7 | Scoped list/pagination passed; complete library not tested | H0 | G/P: D03, then B03 library integration |
+| LIB-02 | Blank UUID creation/open collision checks implemented; current-editor Save As/copy UI absent | S0 T2/T3, E7 | Blank creation/open/slug collision passed; copy/Save As not tested | H0 | G: B04 copy path with reviewed destination/current draft; B15 end-to-end |
+| LIB-03 | Versioned rename implemented; production/phase/folder Move To and aliases incomplete | S0 T2/T3, E7 | Rename/conflict/identity checks passed; Move To not implemented in target | H0 | P/G: resolve D03 cross-production identity semantics, implement B03 |
+| LIB-04 | Versioned archive/unarchive/delete/recovery implemented locally | S0 T2, E7 | Owner/editor/viewer/stale/parent/confirmation paths passed | H0 | V: B15 full source/target lifecycle comparison; no new lifecycle rewrite needed |
+| ED-01 | T1 existing grid/store reused | S0, E0/E1 | 53 legacy/editor tests plus scoped editing; complete drag/reorder/touch coverage absent | H0 | V: B15 row identity and interaction fixture matrix |
+| ED-02 | Existing cascade/zero/fixed/sun primitives and schema validation present; weather shell incomplete | S0 T1, E0/E1 | Existing regressions/optional-field RPC checks passed; target midnight/sun UX matrix absent | H0 | G/V: B02 weather shell and B15 deterministic time cases |
+| ED-03 | Existing action/status/notes/completion controls reused; tenant CMS projection absent | S0 T1/T3, E0/E1/E6 | Scoped notes/modal retention passed; all action styles and CMS not verified | H0 | G/P: B07 after D02; B15 every action/status/color semantics |
+| ED-04 | Store undo/redo reused; workspace keeps state across navigation | S0 T1, E0/E6 | Existing tests and scoped retention passed | H0 | V: B01 saves during edits/undo; B15 all edit kinds and saved baselines |
+| ED-05 | Document metadata retained; legacy full header/lookup/day hierarchy workflow incomplete | S0 T1/T2, E1/E7 | Optional metadata persisted; full header/date/hierarchy synchronization unverified | H0 | G/P: B02 field coverage, D03/B03 relational-vs-document metadata rules |
+| SAVE-01 | Versioned document update and acknowledgement baseline implemented | S0 T1, E1/E0 | Genuine read/save/reload and stale version checks passed | H0 | V: B01 exact acknowledgement/result checks; B15 long/ordinary/create/save UX |
+| SAVE-02 | Dirty draft retained on failure; no explicit probe/exact retry for ordinary editor save | S0 T1, E1 | Conflict/expiry and late ack tests passed; lost committed acknowledgement recovery UI absent | H0 | G/V: **B01 recommended**; no observed data-loss failure is asserted |
+| SNAP-01 | Immutable target version history/restore implemented; legacy named snapshot application repository absent | S0 T2/T3/T6, E7/E8 | History restore and catalogue preservation passed; snapshot create/copy/delete/auto-snapshot unverified | H0 | P/G: D01 then B05; keep snapshots distinct from immutable history |
+| TOOL-01 | Full legacy Tools exists; local target exposes only selected editor/lifecycle controls | S0 T1/T3 | Source inventory only; no complete target Tools walk-through | H0 | G/V: B02/B05/B06 feature integration, B15 exhaustive command checklist |
+| TPL-01 | Legacy shared-template CRUD exists; private catalogue only on target | S0 T3/T6, E8 | Import/catch-up preservation passed; target application CRUD absent | H0 | P/G: D02 then B06 scoped repository/UI and denied-write tests |
+| TPL-02 | Browser-only template discovery/ownership unresolved | S0 T3, E8 limits | No complete migration/runtime verification | H0 | P: D02 browser ownership choice; B06 explicit discovery/import/skip reporting |
+| BKP-01 | Legacy single/current and all-schedule JSON export exists; target complete export UI absent | S0 T3, E0 | Legacy test suite supporting evidence; target downloads not tested | H0 | G/V: B04 target bounded exports; B12 complete migration capture separately |
+| BKP-02 | Legacy parse/review/**create-only import** exists; target import UI absent | S0 T3, E0 | Current source contradicts old inventory's parse-only statement; no target import acceptance | H0 | G/V: B04 reviewed new-copy imports, collisions/partial errors; no overwrite inference |
+| LOC-01 | Manual grid location data exists; local lookups deliberately disabled | S0 T1, E1 | Optional coordinate values survive API; target Places/map/provider errors not tested | H0 | G/A: B02 mocked provider integration; separately authorized provider verification in B15 |
+| LOC-02 | Nested sub-location grid/schema present | S0 T1, E1 | Genuine optional nested data persistence; reorder/long/multi-location print unverified | H0 | V: B02/B15 nested fixture/UI/output round-trip |
+| WX-01 | Weather data schema exists; local shell omits legacy automatic weather effects | S0 T1, E1 | Saved weather field persistence only; target fetch/sun-lock behavior incomplete | H0 | G/V: B02 deterministic provider seam and sun rows; no live paid lookup during local work |
+| CON-01 | Contact modal/grid persisted in document; crew suggestion ownership separate | S0 T1/T4, E1/E6/E7 | Contact draft retained across navigation/Escape; full international/long-field cases unverified | H0 | G/P/V: B02 field coverage; D02 for browser suggestions if migrated |
+| CON-02 | Legacy Contact Sheet/CSV implemented, absent from local target toolbar | S0 T3/T4, E0 | No genuine target output/CSV acceptance run | H0 | G/V: B02 attach existing document controls and verify safe complete output |
+| CALL-01 | Callsheet document fields accepted; legacy modal exists, local workflow absent | S0 T1/T4, E1 | Optional callsheet bytes persist; complete target entry/output not tested | H0 | G/V: B02 all current fields, modal retention and document output |
+| SHARE-01 | Legacy Share includes print/PDF, JSON, Contact Sheet and Call Sheet; target toolbar omits these | S0 T3/T4 | Source inventory; no full target menu run | H0 | G/V: B02/B04 restore those controls; B11 handles token sharing separately |
+| SHARE-02 | Legacy named/signed views exist; internal target read-only view exists; stable legacy-link resolver absent | S0 T4/T5, E6 | Internal viewer navigation passed; public target links absent | H0 | P/G: D04 then B11 resolver/expiry/revocation with fictional URLs |
+| SHARE-03 | Target approved allowlisted share model is specified, not exposed as finished projection | S0 T3/T5; authorization requirements | No target public projection security acceptance | H0 | P/G: D04 exact audience fields and legacy compatibility, then B11 |
+| PDF-01 | Legacy browser print/Save as PDF path waits for fonts; no dedicated target export workflow | S0 T3/T4 | No saved target PDF compared | H0 | G/V: B02 real print/PDF artifacts, then B15 paired output |
+| PRINT-01 | Existing print CSS/helpers remain | S0 T4 | Source presence only; pagination/page-break evidence absent | H0 | V: B02 ordinary/long/empty print output and B15 paper/browser profiles |
+| PDF-02 | Legacy Contact Sheet print implementation exists | S0 T4 | Target PDF/long contacts not tested | H0 | G/V: B02 isolated output, complete fields and pagination |
+| PDF-03 | Legacy Call Sheet print implementation exists | S0 T4 | Target PDF/optional/long sections not tested | H0 | G/V: B02 isolated output and complete section comparison |
+| PRINT-02 | Existing read-only view/print code; target responsive output path partial | S0 T4, E6 | Read-only screen observed, not printed/PDF verified | H0 | V: B02/B15 read-only/mobile print paths |
+| UI-01 | Local grid/workspace/dialog layouts present | S0, E7/E11 | Named 1280×720 screenshots passed; supported zoom/browser matrix absent | H0 | V: B15 desktop viewport/zoom and long-field sweep |
+| UI-02 | Responsive local dialogs fixed; existing grid mobile CSS reused | S0, E7/E11 | Named 390×844 emulated checks passed; full mobile workflow/rotation not tested | H0 | V: B15 phone entry/reorder/save/share/modal rotation cases |
+| UI-03 | Existing tablet-responsive CSS; no physical target acceptance | S0 T1/T4 | Not tested on physical/validated iPad touch | H0 | V/P: D07 supported profiles; B15 touch keyboard/rotation/reorder/print |
+| CMS-01 | Legacy global CMS UI/API; target private catalogue only | S0 T3/T6, E8 | Unsafe catalogue inputs rejected; target scoped CMS runtime absent | H0 | P/G: D02 then B07 functional configuration; styling reskin remains later |
+| AUTH-01 | Local password/session/MFA/invite/accept/provision/workspace slices implemented | S0 T5, E0–E7/E11 | Named role/expiry/retry checks passed; signup/recovery/admin completeness absent | H0 | G/P/A: D05/D06; B08–B10 and B13/B15 |
+| DATA-01 | Schema-1 full known document fields and versioned updates present | S0 T1/T5, E1/E0 | Known optional fixtures pass; complete latest legacy shapes/large limits not reconciled | H0 | V/P: B12 format/limit inventory; refuse unknown fields without stripping; D08 exceptions |
+| DATA-02 | Stable schedule IDs/history and private related catalogue implemented | S0 T2/T6, E7–E10 | Synthetic identities/payload/history reconcile; full target related app semantics absent | H0 | P/G: D01–D04 then B03/B05–B07/B11/B12 |
+| MIG-01 | Synthetic import/catch-up and disconnected recovery tools implemented | S0 T6, E8–E10 | Scoped synthetic checks pass; complete capture/services/hosted rollback absent | H0 | G/P/A: B12/B14, D09, B15 separately authorized rehearsal |
+| INV-01 | 45-group ledger exists; source walk-through in this audit expands eight omissions below | S0 T1–T6 | Source inventory only, no actual complete production UI walk-through | H0 | V/A: B15 complete authorized baseline walk-through; add every discovered case before sign-off |
+
+## Supplemental omissions and ambiguity checks
+
+These are separate audit groups, not eight invented runtime failures. Each uses S0 (`379e066`, local source inspection, September 16) and the listed evidence; hosted status remains H0.
+
+| ID | Implementation / evidence | Local status | Hosted | Gap or decision / next action |
+|---|---|---|---|---|
+| X01 | Auto-snapshot timer exists in `ScheduleEditor.tsx`; local T1 shell does not mount it; E8 catalogue preserves legacy collections without the legacy 25-item normalizer | Source omission; no target auto-snapshot runtime | H0 | D01/B05: define retention/deletion versus immutable history and verify periodic snapshots without silently dropping imported items |
+| X02 | Backup “Sync Now” / “Retry Pending” refresh the list; “Clear Stale Cache” reports no cache; S0 T3 | Source verified; these are not durable outbox/recovery implementations | H0 | B15 inventory their actual behavior; do not advertise offline replay. Offline remains separate, not a new migration prerequisite |
+| X03 | Backup admin utility applies project/phase metadata to schedules missing a project; S0 T3 | Source inspected, no execution | H0 | D03/B03: explicitly preserve, replace or retire this tool with a user decision; never run it on actual schedules during testing |
+| X04 | Legacy JSON validation permits up to 1,000 sub-locations; target schema permits 100; strict known-field/date/time limits also differ | Source compatibility gap, no real-data loss observed | H0 | D08/B12: synthetic boundary fixtures and later approved inventory; reject/report rather than silently trim; approve valid schema expansion if needed |
+| X05 | `getScheduleData()` and document/metadata schemas differ from relational production/day identity; source labels can drift from hierarchy | Existing document-only contract explicitly limits synchronization; E1/E7 | H0 | D03/B03: immutable production identity vs Move To, phase/day/label synchronization and rename aliases require explicit contract |
+| X06 | Session pre-request hook is database/service configuration; E10 disconnected SQL restore predates E2 hook and later workflow migrations | E10 passed only its checkpoint scope; service/config restoration not verified | H0 | B14: current-candidate connected Auth/API restore plus hook/config/roles/requests/receipts coverage |
+| X07 | Setup-only factor enrollment/unverified cleanup and local invitation enrollment exist; no full lost-factor support/recovery flow | S0 T5, E4 backend/UI subset | H0 | D05/B09: distinguish reauthentication with an existing factor from recovery after factor loss; do not count provisioning MFA as recovery completeness |
+| X08 | Evidence screenshots/logs live partly under `/private/tmp`; earlier browser evidence sometimes transcript-only; current reports lack embedded build digests | Files checked during audit; durable/reproducible evidence package incomplete | H0 | B13/B15: retain redacted artifacts with candidate SHA, schema/config, commands, fixtures and device profiles; missing artifact ≠ failed functionality |
+
+## F01–F05, account and release gate inventory
+
+Each evidence reference expands to the exact commit/date/environment in the register. “No execution” means S0 inspection only; historical requirement documents are not accepted evidence. Every item retains an explicit next action.
+
+| Gate | Implementation and evidence | Local verification | Hosted | Unresolved defect/decision / next action |
+|---|---|---|---|---|---|
+| F01 | Data API session admission and actor-bound admin workflow checks implemented; E2/E3/E0 | Passed scoped revocation/expiry checks | H0 | P/V: D06 admission-vs-cancellation contract; Auth/Storage/Realtime/GraphQL coverage in B13/B15 |
+| F02 | Account foundation implemented locally, not complete recovery/onboarding/admin product; E0/E4–E7/E11 | Passed named slices | H0 | P/G: D05 and B08–B10; do not relabel password relogin as password reset |
+| F03 | Seven observed-lock races + read admission, prior 14 races and later nine workflow races; E2/E3/E0 | Passed within documented ordering | H0 | P/V: D06 post-admission completion, refresh contention/load and disabled-user paths; B13/B15 |
+| F04 | Four-store private catalogue, no related app authorization/projections; E8 | Preservation passed only | H0 | P/G: D01–D03; B03/B05–B07 repositories/UI; no assumption that org membership grants all template/CMS access |
+| F05 | Scoped local dependency/advisor/RLS tests and disconnected recovery, E0/E2/E10 | Partial passed evidence; full internal security review not complete | H0 | V/P/A: B13/B14/B15 plus D04/D06/D09; no blanket security acceptance |
+| A01 Password/session UX | T1/T2 password login, local sign-out, expiry/reauthentication; E1/E6/E0 | Passed fictional login/retention/session denial | H0 | G/P: product session storage/refresh/cookie strategy not finalized in rehearsal; D05/B08 |
+| A02 Signup/email verification | Runtime uses fictional signup; app onboarding/delivery/terms flow absent; E5 limits | Genuine local signup only; delivery/duplicate/nonexistent account feedback unverified | H0 | P/G/A: D05/B08; generic responses and allowlisted redirects; real delivery configuration separately authorized |
+| A03 Invitation management | T5 retained create/revoke UI and backend idempotency/rate/audit; E3/E4/E0 | Scoped local acceptance passed | H0 | V/G: delivery links/account onboarding B08; test deployed defaults before enabling |
+| A04 Invitation acceptance | Supplied ID, verified account rules, own receipt recovery; E5/E6 | Scoped acceptance/replay/wrong actor/suspension passed | H0 | P/G: approved link recipient preview/disclosure and expired invitation UX in D05/B08 |
+| A05 Password recovery | No app reset/request/callback/change-password path found at S0 | Not implemented/tested as product flow | H0 | P/G: D05 then B08; include nonexistent/reset spam/reuse/expiry/session invalidation tests |
+| A06 MFA | Local enrollment/rechallenge and sensitive-route AAL2/freshness; E3/E4/E11 | Existing-factor scenarios passed; removal/loss/recovery unverified | H0 | P/G: D05/B09 anti-lockout/support contract and owner/admin enforcement |
+| A07 Restricted provisioning | Existing verified owner UUID + private operator designation; E0/E11 | Passed MFA/retry/recipient/outsider/rate/disabled operator | H0 | P/G: owner verification/lookup and operator recovery remain separate; D05/B09; no blanket operator tenant access |
+| A08 Organization switching | Retained same-actor panels and clear on account change; E6/E0 | Passed named scopes/back/forward | H0 | V: B01 late save/auth/navigation edges, B15 full integration |
+| A09 Member/role/parent administration | SQL foundation/constraints exist; full role management/production/day lifecycle UI absent at S0 | E2/E3/E7 permission subsets; no full admin acceptance | H0 | P/G: D03/D05/B03/B10 owner-preservation, assigned access, parent recovery and late writes |
+| A10 Export/deletion/privacy | Requirements in security/authorization docs; legacy schedule export only; S0 T3 | Organization/account export/deletion lifecycle not implemented end-to-end | H0 | P/G: D05 retention/legal-hold/support approval then B10; no unapproved purge |
+| A11 Audit/security events | Existing database schedule/workflow audit and history; E3/E7/E0 | Atomicity tested for named mutations | H0 | G/V: B10/B13 inventory login/reset/MFA/shares/import/security events, redacted read access and failure handling |
+| A12 Existing retry records | Canonical fingerprints fail closed for unknown historical keys; E3 | Replay/rate behavior passed | H0 | V/A: B12 fictional compatibility fixtures; separately authorized hosted old-key inventory before rollout |
+| R01 Named snapshots | Private catalogue plus target immutable history, no full snapshot API; E7/E8 | Preservation/history passed; named snapshot feature absent | H0 | P/G: D01/B05 |
+| R02 Shared/local templates | Legacy shared API/browser paths; catalogue; S0/E8 | Synthetic preservation only | H0 | P/G: D02/B06 |
+| R03 Library hierarchy/moves | Local directory/lifecycle + private metadata catalogue; E6–E8 | Scoped list/rename/archive passed; normalization/moves absent | H0 | P/G: D03/B03 |
+| R04 CMS/action configuration | Legacy global API/private catalogue; S0/E8 | Catalogue rejects unsafe input; target scoped application absent | H0 | P/G: D02/B07; functional configuration first, visual reskin later |
+| M01 Complete exporter/capture | Schedule and four-store synthetic planners exist; S0/E8/E9 | Synthetic replay passed; no complete actual capture protocol/tool accepted | H0 | G/P: D08/B12; real source reads require A authorization after prerequisite gates |
+| M02 Identity/reconciliation | Stable synthetic mappings, version/checksum histories, reviewed tombstone semantics; E8–E10 | Passed scoped fictional inventories | H0 | G/V: B12 complete latest all-store boundary, rename/removal/alias mapping, discrepancy ledger |
+| M03 Recovery | Disconnected SQL recovery preserves newer edits; E10 | 13 checks/55 records passed at older checkpoint | H0 | G/P/V: D09/B14 current connected service restore, roles/hooks/new tables, post-recovery edits |
+| M04 One writer/fallback | Runbook requirement + fictional membership freeze in E10 | Ordinary RPC one-writer rehearsal passed; no distributed cutover | H0 | P/A: D09; B14/B15 prove selected fallback; actual switching only B18 approval |
+| M05 Infrastructure/security configuration | Local gates default disabled, server key exclusion tested; E0/E6 | Local gates passed; hosted providers/settings unverified | H0 | A/V: B15 approved synthetic deployment + Auth/headers/CORS/cache/secrets/Storage/realtime/rate/backup checks |
+| M06 Operations and privacy | Requirements for RPO/RTO 24h/4h, cutover 1–2h, 30-day read-only fallback, 12-month legacy links | No production rehearsal, monitoring/restore-owner sign-off or qualified policy approval | H0 | P/A/V: D09/B14/B15; confirm named owners/evidence, retain Netlify and billing until separate retirement approval |
+
+## Material decisions and external authorization
+
+Routine code choices (component composition, test fixture naming, local request guards, pagination helpers) do not require separate product approval. The following change who can access data, recovery guarantees or preserved behavior; none is inferred from a broad implementation instruction. Recommendations are proposals only.
+
+| Decision | Concrete options / recommended disposition | Blocks |
+|---|---|---|
+| D01 Snapshots | Keep named mutable/deletable snapshots separate from immutable document history (**recommended**); or expose a different unified-history product after explicit behavior review. Decide whether delete is recoverable, retention/purge and whether the old 25-item cap applies only to new snapshots. Preserve all imported source items until an approved retention action. | B05; SNAP-01/X01 |
+| D02 Templates/CMS/browser data | Production-scoped templates with deliberate org-wide publication versus all-org shared templates visible to every member. Recommend production scope plus explicit publication; Owner/Admin manage org-wide CMS, but exact viewer/editor visibility and document overrides need approval. Browser-only templates/suggestions: explicit user-owned import/export versus reviewed discard; recommend explicit discovery with no silent tenant assignment. | B06/B07, F04 |
+| D03 Hierarchy/Move To | Within-production reparent preserving schedule UUID; cross-production transfer via new identity/copy plus explicit source/alias handling versus reviewed atomic transfer with authorization on both parents. Recommend within-production reparent first, cross-production behavior explicitly decided before claiming parity. Define folder normalization, phase/day labels and source metadata utility replacement. | B03 and complete LIB-03/DATA-02 |
+| D04 Share audiences/legacy links | Approve exact Team/Client/Public field lists and handling of old full-document named URLs. Recommend hashed revocable expiring tokens and minimum public fields as already specified, but explicit compatibility treatment for existing links. Do not silently expose full internal documents or break the agreed 12-month access window. | B11 |
+| D05 Account/recovery/support | Invite-led onboarding with generic account responses versus general signup/provisioning. Recommend invite-led initial product, provider password recovery with strict redirect allowlist, and verified support procedures for factor/owner loss; define session revocation and final-owner safeguards before implementation. UUID-supplied provisioning can remain while owner lookup policy is unresolved. Decide privacy/terms acceptance and account/org deletion recovery/retention. | B08–B10, production onboarding |
+| D06 Admission/revocation | Accept the documented admission boundary (admitted transactions may finish, subsequent calls denied) versus require stricter post-wait cancellation/deadlines. Recommend explicitly accepting/recording current transactional boundary only after reviewing refresh/load and service-surface results; do not promise instantaneous cancellation. | F01/F03 release sign-off; B13/B15 |
+| D07 Supported clients | Declare actual browser/OS/device profiles, iPad/touch validation method, zoom, paper sizes and offline installation target separately. Recommend desktop Chrome/Safari/Firefox plus phone/iPad profiles agreed for actual users; do not turn optional offline support into an unapproved migration blocker. | B15 full parity execution count |
+| D08 Data compatibility | Preserve all valid legacy fields by deliberate schema evolution versus explicit approved conversion with source bytes retained. Recommend reject/report unfamiliar shapes first, never strip to satisfy target limits. Requires separately authorized final source inventory before real migration. | B12/DATA-01 |
+| D09 Cutover/fallback | Netlify read-only archive versus Netlify shell using the target backend; compatible same-database fallback versus reverse export/replay. Recommend one writer and read-only legacy availability, with a tested recovery choice preserving newer target edits; actual mechanism, owners, backups/key custody/RPO/RTO and support runbook require approval. | B14/B15/B18 |
+| External authorization | Hosted deployments/projects/migrations/configuration, actual source access/export, real mail/credential/security changes, external scans/purchases and cutover are distinct authorizations. Audit and fictional local tests do not grant them. Existing coordinator cancellation persists. | Hosted verification, real migration and retirement |
+
+## Dependency-ordered bounded technical queue
+
+These are **dispatch briefs, not self-executing tasks**. B01 is the only recommended immediate implementation proposal. No archived code is automatically restored. Each downstream batch must start from the then-reviewed checkpoint, record its own scope and stop; a prerequisite decision does not authorize external operations.
+
+### B01 — Ordinary editor save-result recovery (recommended; fully specified below)
+
+Scope T1 editor save/controller plus a session-pinned read/history probe using existing contracts. No SQL/policy/auth product expansion, durable offline queue, snapshots or reskin. Prerequisite `379e066`, approved existing save/history authority; no material decision above is needed for this narrow behavior. Acceptance/evidence/checkpoint/stop are specified in the next section. This proposal requires a fresh bounded dispatch.
+
+### B02 — Existing document tools and metadata in the local editor
+
+- **Scope:** integrate existing Call Sheet, Contact Sheet/CSV, schedule print/PDF controls, missing metadata/weather/sun workflow from T4/legacy editor into T1 under the existing session/document store. Inventory all current fields first. Use deterministic local provider responses.
+- **Non-goals/prerequisites:** no public sharing, CMS redesign, hierarchy move, real provider lookup or delivery. B01 completed or explicitly deferred with a retained defect; document read/write policy already applies. Any discovered audience change returns to D04.
+- **Acceptance:** same fictional optional/long/multiline/nested/contact/call-sheet data edits and saves/reloads; viewer cannot mutate; modal draft survives navigation/auth; exports escape values/formulas; isolated print excludes editor chrome, repeats headers and preserves all text over pages; no Netlify write/lookup from local route.
+- **Evidence/checkpoint/stop:** genuine Auth + editor tests/build; desktop/phone screenshots, actual PDFs/CSV text and page checks, request-origin trace. Checkpoint current accepted SHA/fixtures, revert local integration while preserving test artifacts if rejected. Stop after these controls pass locally; paired hosted output remains B15.
+
+### B03 — Hierarchy, placement and legacy identity integration
+
+- **Scope:** production/phase/day/library repository, list/search/order/folder normalization, reviewed metadata synchronization and Move To, legacy name-to-ID aliases. Use T2/T3 and existing SQL protections; do not assume direct parent updates are complete mutation APIs.
+- **Prerequisites/non-goals:** D03 recorded before implementation; B01 retained draft contract. No cross-tenant transfer, bulk real-data metadata utility, template/CMS scope or policy invention.
+- **Acceptance:** same-parent/cross-parent allowed cases, denied destination, rename/slug collision, parent deletion/recovery, stale placement/order versions, concurrent moves, rollback of references/history and old aliases; UI undo/discard boundaries explicit.
+- **Evidence/checkpoint/stop:** versioned contract/forward migration if necessary, pgTAP/observed races/genuine Auth/UI plus metadata/alias reconciliation. New disposable stack and schema checkpoint; no downgrade of existing data. Stop when approved placement scope passes; unresolved cross-production behavior prevents LIB-03 acceptance.
+
+### B04 — Copy, Save As and schedule-only backup/import
+
+- **Scope:** current-draft Save As/copy and all-authorized-schedule JSON export; reviewed create-only import through existing schedule creation into an authorized day. T1/T2 with `lib/api/backups.ts` format/validation reused carefully.
+- **Prerequisites/non-goals:** B01, destination rules B03 or explicitly existing-day-only scope. No complete migration exporter, overwrite import, related stores or real downloads.
+- **Acceptance:** source untouched, generated identity, duplicate name/slug, user edits during export/import, bad/oversize/partial files, partial network failure and unknown created UUID recovery; role/tenant denial and safe filenames.
+- **Evidence/checkpoint/stop:** genuine Auth, file round-trip/hash checks, browser review/cancel/error/retry, regressions/build. Preserve source/fixture checkpoint and created UUID manifest; remove only owned fictional fixtures if needed. Stop at schedule-only import/export; label exclusions visibly and retain B12 gate.
+
+### B05 — Named snapshots and automatic snapshot integration
+
+- **Scope:** separate named-snapshot repository/API and create/list/label/preview/restore/copy/delete or recover under D01; connect existing Tools/Versions and auto-snapshot timer. Preserve source snapshot IDs/order/full payload.
+- **Prerequisites/non-goals:** D01, B01/B04; no rewriting immutable document history, silent cap/pruning or migration of real snapshots.
+- **Acceptance:** all named operations, expiry/current roles, newest-first paging, complete imported collections, stale restore and uncertain response, timer navigation/session identity, audit/recovery semantics, zero cross-tenant disclosure.
+- **Evidence/checkpoint/stop:** schema/RLS/history/repository/UI tests, timer race tests, screenshots and catalogue-to-app reconciliation on a new stack. Preserve before/after synthetic manifests, forward-only schema checkpoint. Stop on approved snapshot scope; no template work added.
+
+### B06 — Shared and browser template workflow
+
+- **Scope:** D02-defined template ownership/visibility/editing, list/load/create/replace/delete/copy, browser discovery with explicit import/export choice; T3 application repository replacing legacy dependency only in local target.
+- **Prerequisites/non-goals:** D02, B01/B03; no automatic global-template exposure, browser-data reassignment or arbitrary theme uploads.
+- **Acceptance:** editor/viewer/outsider matrix, same-name collisions, replaced-template optimistic version, apply retains schedule metadata and follows discard rules, failed/uncertain writes recover, source bytes and ownership preserved.
+- **Evidence/checkpoint/stop:** RLS/API/UI and malicious input tests; catalogue reconciliation; local screenshots/build/regressions. Retain catalogue and source fixture checkpoint; no hard purge. Stop after template lifecycle acceptance, before CMS branding work.
+
+### B07 — Functional organization CMS/configuration projection
+
+- **Scope:** D02-authorized settings/actions/labels projection and safe mutation, with legacy Roseland configuration preserved; T3 CMS to target organization context. This is data/permission integration, not visual reskin.
+- **Prerequisites/non-goals:** D02, B03; no new palette/wordmark, arbitrary CSS/font uploads or cross-tenant logo copying. Later selected design controls remain a separate phase.
+- **Acceptance:** owner/admin/edit/view visibility, safe fallback during session/tenant switch, malformed CSS/URL/logo rejection, stale settings writes and rollback, action labels/style data survive output without execution.
+- **Evidence/checkpoint/stop:** scoped RLS/repository/browser tests, XSS/CSP/input review and full serialized config comparisons. Preserve original settings/catalogue fixture and accepted SHA. Stop at parity-preserving configuration behavior; visual design stays paused.
+
+### B08 — Approved account onboarding and password recovery
+
+- **Scope:** D05-defined invite entry/email verification/password reset request/callback/change flow, generic account responses and local mail capture, session/redirect handling integrated with T2.
+- **Prerequisites/non-goals:** D05; no real email, credentials, provider settings or MFA-loss bypass. Existing local auto-confirmed fixtures cannot stand in for verification delivery tests.
+- **Acceptance:** wrong/unknown/duplicate accounts, allowed/hostile redirects, wrong-account invite, expired/reused/reset tokens, rate limits, response loss, retained drafts where appropriate and clearing when account changes; audit/no token leak.
+- **Evidence/checkpoint/stop:** local mail-sink genuine Auth flow, route/security and browser tests, non-enumeration/timing/rate review. Disposable Auth project and known-good config/code checkpoint. Stop at accepted local contract; hosted delivery remains B15 authorization.
+
+### B09 — MFA and restricted operator/owner recovery
+
+- **Scope:** D05-defined enrollment/rechallenge/removal/replacement and approved factor/owner-loss support procedure; existing setup/invitation/provisioning code may be reused after authority review.
+- **Prerequisites/non-goals:** D05, B08; no self-grant superadmin, broad user lookup, actual factor reset or invented anti-lockout exception.
+- **Acceptance:** recent-AAL2 enforcement, malicious/replayed challenges, final-owner/factor safeguards, wrong-account/disabled operator/support proof denial, exact retry and audit; fail closed when proof absent.
+- **Evidence/checkpoint/stop:** genuine local factors/Auth, role/support threat review, abuse tests and user-facing walkthrough. Preserve fictional account/config checkpoint without publishing secrets. Stop once approved recovery scope passes; unresolved support policy blocks dispatch rather than inviting a workaround.
+
+### B10 — Membership, account and organization administration
+
+- **Scope:** D05-approved membership role/removal/suspension, final-owner safeguards, export/deletion initiation and audit access; connect T2 to scoped server contracts. Split account/organization deletion into a later dispatch if retention decisions remain open.
+- **Prerequisites/non-goals:** D03/D05, B03/B08/B09; no purge, ownership transfer or legal-retention behavior without its exact approved contract.
+- **Acceptance:** last-owner concurrent removal/demotion, assigned-production access, expiry/revocation, inactive parent, export authorization, deletion/cancel/recovery and atomic audit; no user enumeration.
+- **Evidence/checkpoint/stop:** table/role matrix, observed concurrency, genuine API/UI, export completeness and recovery manifest. New stack/data checkpoint; retain recovery state and roll code back only after data compatibility review. Stop at the explicitly dispatched admin operations.
+
+### B11 — Public projections and legacy links
+
+- **Scope:** D04 exact view fields, hashed-token create/revoke/expiry, scoped endpoint, stable legacy resolver, response cache/referrer/log controls; keep internal viewer projection distinct.
+- **Prerequisites/non-goals:** D04, B03; no generic full-document anonymous endpoint or actual legacy-link enumeration.
+- **Acceptance:** missing/expired/reused/revoked/guessed tokens, role/tenant changes, omitted contact/internal fields, rate abuse, URL/log/referrer/cache leak checks, legacy alias continuity against fictional source links.
+- **Evidence/checkpoint/stop:** public API/browser negative tests, payload allowlist diff and internal security review. Disposable keys/fixtures and pre-change contract checkpoint; no real token issuance. Stop on scoped link acceptance; hosted controls await B15.
+
+### B12 — Complete synthetic capture, import and final reconciliation
+
+- **Scope:** one explicit all-store capture envelope/planner and application projections for schedules, snapshots, templates, library, CMS, references/aliases and required browser choices. E8/E9 are inputs, not substitutes for a complete exporter.
+- **Prerequisites/non-goals:** D01–D04/D08 and relevant B03–B07/B11 projections; no actual source access/export. Maintain immutable original bytes and explicit removal/rename review.
+- **Acceptance:** non-atomic store-capture detection, stable freeze/revision boundary, full inventory, idempotency, malformed/unknown/duplicate/orphan, partial failure/rollback, changed target conflict, final delta to latest fixture state, per-record/version/hash differences resolved.
+- **Evidence/checkpoint/stop:** deterministic contract tests plus genuine application readback of imported fictional records; complete manifests and discrepancy report with zero unexplained entries. Unique output/new stack; never overwrite checkpoint. Stop at synthetic tool acceptance; real capture needs B18 prerequisites/authorization.
+
+### B13 — Comprehensive current-candidate internal security review
+
+- **Scope:** enumerate every route/RPC/table/asset/service and trust boundary in the final technical candidate; retest F01–F05, auth abuse/recovery, tenant/role bypass, shares, XSS/injection, malicious imports/CSV, secrets/dependencies/logs, CSRF/origin/cache, paid-provider quotas and concurrency.
+- **Prerequisites/non-goals:** security-sensitive implementations B01–B12 as applicable and D06; no external scanner, provider changes or claim of perfect security. Earlier scoped passes are baseline evidence only.
+- **Acceptance:** mapped test/inspection for every boundary, triaged findings with severity/owner, fix/retest confirmed defects, no unresolved blocking risk silently accepted, credential-free reproducible reports and pinned candidate/config.
+- **Evidence/checkpoint/stop:** full role/session matrix, build/dependency/advisor/secret tests, genuine requests, abuse/race reports and redacted browser artifacts. Accepted pre-review SHA plus fresh fixture stack; isolate fixes and rerun affected checks. Stop at reviewed local finding disposition; hosted-only items stay explicit for B15.
+
+### B14 — Current connected-service rollback rehearsal
+
+- **Scope:** extend E10 to the current schema and configured local Auth/API service, necessary role/default grants/hooks/request ledgers/receipts, newer target edits and selected D09 fallback; verify app behavior after recovery.
+- **Prerequisites/non-goals:** B12/B13, D09; no real keys/accounts, actual cutover or assumption disconnected SQL equals a whole Supabase restore.
+- **Acceptance:** fresh restore, mid-import failure, config/hook absence rejected, auth boundaries, current lifecycle and related data, lost ack/retry, post-recovery edits, single ordinary writer, final per-record reconciliation, measured local duration and restore operator procedure.
+- **Evidence/checkpoint/stop:** disk-only rebuild plus genuine Auth/browser reopened documents, all-store/history/config manifest and failure logs. New source/destination stacks; retain all generations. Stop when the specific fallback is proven locally; hosted RPO/RTO/backup operation remains B15.
+
+### B15 — Separately authorized synthetic hosted verification and technical parity baseline
+
+- **Scope:** protected target deployment and isolated Supabase fixture environment; record actual production baseline only under explicit permitted read/capture scope, or report it blocked. Run all 45 plus X01–X08 across D07 profiles; verify hosted controls/services and operational recovery.
+- **Prerequisites/non-goals:** B01–B14 applicable gates, D06/D07/D09, explicit deployment/configuration/baseline-access authorization. No real migration or source mutation. An isolated synthetic legacy checkout can support comparison but cannot be mislabeled actual production evidence.
+- **Acceptance:** exact builds/config/fixtures, required executions counted, every case classified preserved/improved/regressed/unverified; complete paired screenshots/input measurements/PDFs and security/recovery evidence. Missing tests/regressions remain blockers.
+- **Evidence/checkpoint/stop:** durable redacted acceptance package and technical sign-off, known-good hosted rollback/config checkpoint. Stop at technical baseline acceptance; no reskin or real-data move inferred.
+
+### B16 — Design selection and bounded reskin (later, after technical baseline)
+
+- **Scope:** resume [paused research](./design/production-command/2026-09-16-directions/RESEARCH.md), complete comparable concepts, obtain selection, then explicitly dispatched neutral Production Command/company theming/versioned Roseland implementation.
+- **Prerequisites/non-goals:** B15 technical gate (or explicit reviewed statement of remaining external checks); user design selection before implementation. No broader production-management features or silent document restyle.
+- **Acceptance/evidence:** canonical approved examples/tokens/licensing, scoped tenant validation, Roseland preservation and paired affected editor/document/mobile outputs. Keep pre-reskin accepted technical checkpoint and presets. Stop at bounded selected slice; final release remains B17.
+
+### B17 — Final reskinned-candidate revalidation
+
+- **Scope:** rerun complete applicable parity, security, latest schema/data tooling and connected rollback against final selected design and candidate build.
+- **Prerequisites/non-goals:** B16 complete; prior local/hosted baseline does not waive new visual/print/mobile/security regressions. No real migration.
+- **Acceptance/evidence/checkpoint:** all required cases pass or explicit approved scope change, no unexplained differences, current candidate/config/evidence package and recoverable checkpoint. Stop at final acceptance report ready for user approval.
+
+### B18 — Actual data migration/cutover (separate approval)
+
+- **Scope:** only the specifically approved real capture/pilot/final freeze/catch-up/reconciliation/switch operations in the runbook, one writer and preserved Netlify availability.
+- **Prerequisites/non-goals:** B17, approved D09 owners/windows and explicit actual-data/external-operation authorization. No billing cancellation, retirement or indefinite dual write implied.
+- **Acceptance/evidence/checkpoint:** complete latest per-record reconciliation and monitored acceptance, proven recovery retaining newer edits, final backup/capture manifests and incident/rollback ownership. Abort on discrepancy or resumed source writes. Stop at approved operation boundary; retirement is another decision.
+
+## B01 dispatch proposal — exact ordinary-save result recovery
+
+**Recommendation:** dispatch this narrow existing-workflow completion next, after reviewing this audit. It can use existing local permissions and contracts without deciding D01–D09 or accessing hosted systems. It is a proposal, not continuation of the canceled implementation. Start from `379e066` plus accepted documentation, not by replaying the archive.
+
+### Why this is the next self-contained technical slice
+
+At S0, `LocalEditorController.save()` captures document session/edit revision, calls `update()` with the current version, advances the baseline only on a response and preserves later edits. On failure it throws while keeping the old baseline. `LocalScheduleClient` offers Save, Reload and same-account reauthentication. It has **no explicit immutable attempted-document record/result check** for an ordinary editor save. A lost committed response therefore leads to a stale-version conflict on another save or an explicit discard/reload. This is a source-confirmed recovery UX gap; this audit has not reproduced data loss or bypass.
+
+Existing `session_update_schedule_document` and `update_schedule_document` enforce expected version and authorization; immutable `schedule_versions` is already readable through authorized history. `createLifecycleRepository.historical()` pins actor/session and parses history; lifecycle `probe()` provides an established pattern. These contracts permit an exact saved-state check without adding a request ledger, server credential, public API, new RLS grant or password-recovery policy. A matching document/history is **state evidence**, not proof that a particular network request caused the commit.
+
+### Allowed changes and exclusions
+
+- Inspect and, as necessary, change only the T1 local controller/client/recovery notice styles; add a focused platform helper if needed; reuse existing ordinary-session repository/history APIs. Add focused unit/runtime fixtures, browser fault-injection harness and CI invocation. Document results in a new bounded review.
+- Preserve legacy Netlify default routes, SQL/RLS/session admission, shared workspace account/organization behavior, editor grid/undo/modal data and existing lifecycle UI.
+- Exclude account reset/enrollment/owner lookup, snapshots/templates/CMS, full library integration, hierarchy moves, reskin, auto-save, durable/offline persistence, database mutation contracts/idempotency ledgers, hosted configuration/data and application deployment.
+- The reverted four-file archive is optional untrusted development reference only. No change is accepted merely because it existed before cancellation. Review any proposed new implementation from the clean source contract.
+
+### Required behavior
+
+1. Capture one immutable actor, organization/production/schedule identity, schema/expected version, attempted document and editor session/revision at send time. Never read a mutated draft when retrying the old attempt. Prevent overlapping saves for that attempt.
+2. A valid matching acknowledgement advances only that document's baseline; mark clean only if no newer edits occurred. Malformed/mismatched acknowledgement stays uncertain. A definitively rejected invalid request may be corrected; other uncertainty must not be silently discarded.
+3. After response loss, expose **Check saved result** using genuine current-session authorization. Do not load/replace the draft just to check. Require exact next version, document, actor, tenant/production identity and unchanged lifecycle metadata for a saved-state match; mismatches/hidden history are not success.
+4. If the attempted result is the current saved version, confirm it and preserve any later local edits as dirty. If matching history exists but the server has a later version, report both versions, retain the draft and block new write until explicit conflict review/reload; never silently adopt the later baseline to authorize an overwrite.
+5. Retry only the original immutable document/version after an explicit check confirms the original baseline remains current. Recheck before retry; the SQL conditional version still wins a concurrent race. No automatic resend or fresh version/key after a conflict.
+6. Unavailable/denied/expired checks keep the attempt and draft and use generic existing errors. Unavailability does not prove failure. Same-account reauthentication retains the attempt; changed account/sign-out clears it and rejects late responses. Internal navigation preserves it within the correct scope. Explicit discard/reload warns a sent write may have committed and does not undo it.
+7. Keep contact/status/notes modal drafts and undo/redo state during checking/retry/navigation; read-only users cannot gain writes. Reuse the existing admission ordering—do not promise cancellation of already admitted writes.
+
+### Required acceptance scenarios and artifacts
+
+| ID | Scenario / expected result | Evidence required |
+|---|---|---|
+| B01-01 | Ordinary successful save; duplicate click while held; edits and undo arriving during send | Controller test + genuine Auth runtime; one version/history entry, correct clean/dirty state |
+| B01-02 | Commit succeeds but response is deliberately replaced with an ambiguous gateway failure | Built browser and runtime: draft retained, exact attempt visible, check confirms the committed version without another write |
+| B01-03 | Request fails before reaching SQL | Check reports original baseline current; explicit retry sends identical document/version; newer draft not substituted; one resulting history entry |
+| B01-04 | Another actor writes first, writes between probe/retry, or writes after the attempted commit | Real two-session runtime and browser conflict; no overwrite/false success; matching older history distinguishes current newer version |
+| B01-05 | Malformed/wrong-ID/wrong-actor/wrong-payload acknowledgement; missing/mismatched history | Negative helper/transport tests; uncertain/conflict/unavailable state, no clean flag from bad evidence |
+| B01-06 | Genuine session expiry/revocation, same-account password login, permission removal, viewer and outsider | Real Auth/Data API; RLS denial, generic errors, unchanged document, exact attempt retained only for same actor |
+| B01-07 | Switch organization/screens/back/forward during held/check/retry; sign out/change actor before late response | Browser + controller tests; no cross-scope rendered result, no old account draft/attempt restoration |
+| B01-08 | Modal draft open, additional edits/undo, Escape, reload/discard cancel and confirm | Visible desktop/390px browser screenshots; canceled discard retains fields/attempt; explicit discard clears only intended local state |
+| B01-09 | Large optional-field document incl contacts, callsheet, sublocations, zero/fixed duration and weather | Immutable payload comparison and runtime round-trip; no normalizing/trimming of attempted bytes |
+| B01-10 | Disabled local route/host/nonloopback destination and server-key exposure checks | Existing config/credential tests plus built route checks; Netlify legacy defaults remain unchanged |
+
+Run existing platform and 53 editor/server regressions, focused new tests, TypeScript/lint/production build and appropriate internal review. Because no SQL/dependency change is intended, the 431-assertion database suite should establish the disposable schema baseline; do not invent a migration just for this feature. If schema/permission changes prove necessary, stop and return the new contract for review. Genuine runtime tests must use generated fictional users, current JWT/RLS/session checks and an explicitly named unlinked disposable stack, never substituted JWT claims for browser acceptance. Preserve existing recovery volumes and the original 543xx stack.
+
+Fault injection must avoid accidentally resending a POST through browser TCP behavior: prefer a bounded ambiguous HTTP failure after consuming the committed upstream response. Record request/version/history counts, current account and fixture identities, build/schema/config, commands/results and screenshot paths without credentials. Show the browser visibly for interaction review. Stop owned processes/stacks afterward and retain fixture checkpoints.
+
+### Completion and stop condition
+
+Complete only when B01-01 through B01-10 have recorded expected results, regressions/build and scoped internal review pass, reviewed changes are committed locally, and a concise remaining-gates report is synchronized. State which cases are automated, genuine runtime, browser emulation and still hosted-only. Do not mark SAVE-02 production/target parity Pass from these tests. No automatic B02 start, design resumption, push or deployment.
+
+Rollback checkpoint: `379e066` source plus this audit; new fictional stack and initial data/history manifest. If acceptance fails, keep the branch/diff and diagnostic artifacts, stop owned services, leave deployed/real systems untouched, and revert product source only with explicit instruction or the agreed batch rollback procedure. A code rollback does not undo an already committed fixture save. Preserve the uncertain attempt/result evidence and baseline manifest for diagnosis.
+
+## Audit completion checks and handoff
+
+- All 45 unique regression IDs are represented once; 8 supplementary groups, F01–F05, 12 account/admin items, four related-store items and six migration/operations items have implementation, evidence, local/hosted status and next actions.
+- Evidence register distinguishes current local execution, older checkpoints, source inspection and missing runtime artifacts. No new test result or hosted parity was fabricated. Historical fixed bugs remain documented in their original reviews.
+- B01 is a concrete proposed next implementation; B02–B18 state scope, exclusions, prerequisites, acceptance/evidence, checkpoint and stop boundary. Material decisions and external authorizations stay separate.
+- Documentation consistency/link checks and unchanged application-source check are recorded in the audit commit. No application test rerun is required for these Markdown-only changes. No live schedule was read, exported, edited or restored.
+- Voice and Planning should dispatch **B01 explicitly** if selected; otherwise select a different fully bounded brief after its listed prerequisites. This audit itself stops here.

@@ -6,10 +6,19 @@ Confirmed by the user on September 16, 2026. This is the shared decision record 
 
 - **Production Command is the product brand from the scheduling release onward.** The name does not depend on completing the later production-management features. Scheduling is the first capability within the product; future tools extend the same product and design system.
 - Commercialization beyond Roseland is a core objective. The base interface must be company-neutral, suitable for new customer organizations without inherited Roseland branding.
-- Reskinning and organization theming are top priorities, following the current foundation/acceptance batch and before pilot migration. This builds on roadmap Phase 3A, rather than creating a competing roadmap.
+- Reskinning and organization theming remain required before real-data migration, but only after functionality, parity, security and technical migration/rollback readiness are verified. This September 16 sequencing correction supersedes the earlier instruction to start design immediately after the foundation batch.
 - Companies must be able to configure their identity, including company name, logo, colors, and fonts/typography. Configuration must be scoped to the correct organization.
 - Preserve the existing Roseland schedule design as an explicit, selectable preset available to Roseland and other users. Do not remove it or silently restyle existing schedules and documents.
 - The neutral design system will be the foundation for future Production Command capabilities. The outdated Production Command prototype is reference material only, not an approved design or implementation foundation.
+
+## Delivery order — user correction, September 16
+
+1. Complete technical functionality, account/recovery and related-data workflows. Verify functional and practical-usability parity, comprehensive internal security, and technical migration/rollback readiness, including separately authorized hosted checks. Local tests alone do not close hosted gates.
+2. Complete design research and obtain the user’s selection, then implement the neutral Production Command reskin, company theming and preserved Roseland preset. Preserve unfinished research as reference; it must not displace technical work now.
+3. Revalidate the final reskinned candidate: functionality, security, mobile/accessibility, printing/PDF, data reconciliation and rollback. Earlier parity results are a baseline, not automatic acceptance of the changed interface.
+4. Only then seek explicit approval for real-data migration and cutover, keeping Netlify available as agreed.
+
+A protected synthetic-data pilot may be needed to clear technical hurdles before reskinning; it is distinct from real-data migration and still requires deployment authorization. Phase numbers are workstream labels, not an override of this execution order.
 
 ## Research and design decision before implementation
 
@@ -46,4 +55,8 @@ Use versioned presets and validated design tokens. Preserve the current Roseland
 
 Use this file as the canonical brief; link to it instead of creating divergent summaries. Tasks in separate checkouts must read this shared project copy and synchronize it deliberately with their own documentation. Chat memory alone is not the decision record. Update the brief when the user makes a design decision, distinguishing confirmed requirements from proposals and completed implementation from planned work.
 
-The ten-minute automatic development coordinator was canceled on September 15. This brief does not restart it or expand the currently assigned implementation batch. The current batch finishes its existing browser acceptance and organization-foundation scope; design research and selection are the next dedicated design milestone.
+The ten-minute automatic development coordinator was canceled on September 15. This brief does not restart it or expand the currently assigned implementation batch. Lifecycle acceptance and organization provisioning have completed locally. The subsequent design-research assignment is superseded by the technical-first priority above; retain its useful artifacts and resume authorized technical work. Design implementation still requires the user’s selection.
+
+## September 16 technical audit pointer
+
+[TECHNICAL_ACCEPTANCE_AUDIT.md](./TECHNICAL_ACCEPTANCE_AUDIT.md) is the current technical gate inventory and dispatch proposal; no feature or design implementation is authorized by that audit. Initial [unfinished design research](./design/production-command/2026-09-16-directions/RESEARCH.md) is preserved for later. It has no completed gallery, approved recommendation or user selection. The technical-first delivery order above remains controlling.

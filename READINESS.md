@@ -1,12 +1,34 @@
 # Current state and restart readiness
 
+## September 16: documentation-only technical acceptance audit complete
+
+[TECHNICAL_ACCEPTANCE_AUDIT.md](./TECHNICAL_ACCEPTANCE_AUDIT.md) reconciles source at `379e066` and retained executed reports: all 45 parity groups, eight supplemental checks, F01–F05, account/admin, related stores and migration/rollback. Scoped local completion is separated from missing functionality, missing evidence and material decisions. Paired production/target parity remains **0 Pass / 0 observed Fail / 45 Not tested**. B01 is a precise proposed ordinary editor save-result recovery batch for separate dispatch; no implementation is authorized by this audit. B02–B18 are dependency-ordered bounded proposals.
+
+The canceled four-file save-recovery WIP remains archived and reverted; application code is unchanged from `379e066`. This audit ran documentation/link/count/source-diff checks only, not new application tests. Unfinished design research remains preserved and paused. Technical readiness precedes design/reskin, then final revalidation and separately approved actual-data migration. No hosted/data/credential changes or coordinator restart occurred. All earlier “next batch,” expired cutoff and design-next statements below are historical where superseded here.
+
+## September 16: canceled save-recovery work reverted
+
+At the user’s request, the unfinished save-recovery implementation from the canceled broad assignment was archived at `/private/tmp/roseland-canceled-save-recovery-20260916-011325`. The three modified tracked source files were restored byte-for-byte to verified checkpoint `379e066`; the new untracked recovery helper was archived and removed. No source changes from that unfinished feature remain. The archive is unvalidated reference, not permission to reapply it. Completed lifecycle/provisioning work, approved research and planning documents are preserved. No hosted, credential, database, real-data or deployment change occurred in the canceled batch, as confirmed by Development and Testing.
+
+The replacement assignment is documentation-only: an evidence-backed technical acceptance audit and a precise next-batch proposal. No feature implementation is authorized during that audit. Historical statements below about recovery work in progress or retained source edits are superseded by this entry.
+
+
+## Historical September 16: canceled technical gap-closure assignment
+
+The canceled assignment had selected uncertain schedule-save recovery in the existing authenticated local editor. See [TECHNICAL_GAP_CLOSURE_REVIEW.md](./TECHNICAL_GAP_CLOSURE_REVIEW.md) for the evidence reconciliation and open gates. Its unfinished code was archived and reverted; it is not in progress or accepted. Unfinished design work is preserved as reference and paused.
+
+## September 16: corrected priority — technical readiness before reskin
+
+The user explicitly requires functionality, parity, security and all technical migration/rollback hurdles to be verified first; then the Production Command reskin and company theming; then final candidate revalidation and approved real-data migration. Preserve unfinished design research for later and prioritize technical work now. A synthetic hosted pilot may be required for technical verification but needs separate deployment authorization. The reskin remains before migration, and the Production Command brand/Roseland preset requirements are unchanged. See [the canonical brief](./PRODUCTION_COMMAND_DESIGN_BRIEF.md). This entry supersedes earlier next-step design priorities below.
+
+
 ## September 16: lifecycle acceptance and restricted provisioning complete locally
 
 The one-time batch after `67cdc0c` finishes all four lifecycle browser groups, including two verified responsive/contrast fixes in `d27ccbf`, then integrates the existing restricted organization-provisioning workflow into the shared local workspace. Canonical immutable reviews and exact retry keys survive response loss and same-account password/MFA recovery. Ordinary organization Owners/Admins gain no provisioning permission; operators gain no membership in organizations created for someone else. No SQL, grant, dependency or hosted change. See [LOCAL_PROVISIONING_REVIEW.md](./LOCAL_PROVISIONING_REVIEW.md) for exact fresh evidence, screenshots, boundaries and reproduction.
 
 Fresh checks pass: **114 platform tests, 53 editor regressions, 431 database assertions across 14 unchanged migrations**, the new genuine provisioning runtime, existing shared-workspace and full account-workflow regressions (including nine workflow races), production build/lint/TypeScript, SQL lint, local advisor and dependency audit with no high/critical runtime findings. Visible browser tests cover lifecycle retention/Escape/recovery/roles, provisioning MFA, uncertain retry, expiry recovery, operator-versus-recipient discovery, account clearing and desktop/mobile layouts. Local results do not establish hosted parity.
 
-Actual schedules, hosted services, Netlify appearance, real credentials and billing remain untouched. Test servers/stacks are stopped with recovery volumes retained and the original 543xx stack preserved. The bounded batch stops here; the ten-minute coordinator stays canceled. Next is the canonical Production Command research/design decision milestone below, with user selection before implementation. Full migration/security/reconciliation/rollback gates remain.
+Actual schedules, hosted services, Netlify appearance, real credentials and billing remain untouched. Test servers/stacks are stopped with recovery volumes retained and the original 543xx stack preserved. The bounded batch stops here; the ten-minute coordinator stays canceled. The subsequent broad gap-closure assignment was canceled; the documentation-only audit above is now complete. Design selection remains later, before reskin and real migration. Full migration/security/reconciliation/rollback gates remain.
 
 
 ## September 16 priority update: Production Command design decision

@@ -1,5 +1,7 @@
 # Fictional checkpoint, rollback and replay rehearsal
 
+> **September 16 current-state reconciliation:** The proposed session-entrypoint/race follow-up below was completed at `c03d0f7`; later account-workflow races passed at `fb6c2e9` and were rerun at `379e066`. This recovery evidence remains scoped to its older `ddef735` checkpoint and disconnected SQL databases. Current connected-service recovery remains open. The historical September 15 cutoff is not current dispatch authority. See [TECHNICAL_ACCEPTANCE_AUDIT.md](./TECHNICAL_ACCEPTANCE_AUDIT.md) for evidence, gates and bounded dispatch proposals.
+
 September 15, 2026. Known-good application/schema checkpoint: **ddef735**. The new work adds local Python recovery tooling and tests; no application route, hosted schema, credential, subscription or actual schedule was changed.
 
 ## What is recoverable

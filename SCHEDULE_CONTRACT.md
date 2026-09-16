@@ -1,5 +1,7 @@
 # Local Supabase schedule contract
 
+> **September 16 current-state reconciliation:** Local editor/account, lifecycle and shared workspace/provisioning integration are completed through `379e066`; old paragraphs describing them as the next implementation are historical. Hierarchy/related-store contracts and full parity remain incomplete. See [TECHNICAL_ACCEPTANCE_AUDIT.md](./TECHNICAL_ACCEPTANCE_AUDIT.md) for evidence, gates and bounded dispatch proposals.
+
 Implemented on `codex/migration-schedule-contract`, following the integration of the auth and schedule foundations. This is an isolated local/tested slice. The existing editor still uses Netlify; no hosted migration, endpoint deployment or backend switch is included.
 
 ## Interface

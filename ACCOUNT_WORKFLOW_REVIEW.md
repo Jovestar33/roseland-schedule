@@ -1,5 +1,7 @@
 # Local account workflow reliability review — September 15, 2026
 
+> **September 16 current-state reconciliation:** The invitation-management, acceptance, shared workspace and provisioning UI prerequisites listed below were subsequently implemented and locally accepted at `2bb06f8`, `3e5ac67`, `5c533cc`, `d27ccbf` and `379e066`. The table and next-batch proposal below describe this review’s September 15 checkpoint, not current missing work. Delivery/password/factor recovery and broader administration remain open. See [TECHNICAL_ACCEPTANCE_AUDIT.md](./TECHNICAL_ACCEPTANCE_AUDIT.md) for evidence, gates and bounded dispatch proposals.
+
 This batch follows `c03d0f7` on `codex/migration-schedule-contract`. It fixes confirmed request-replay and concurrent-rate defects in the existing organization provisioning and invitation workflows. It adds a compatible days-based invitation RPC, preserves the original timestamp-based RPC, and verifies the built application with genuine fictional MFA sessions. Actual schedules, hosted systems, credentials, billing and deployment settings were untouched.
 
 ## Findings, changes and retests

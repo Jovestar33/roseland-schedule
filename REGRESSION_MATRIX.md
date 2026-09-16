@@ -1,5 +1,7 @@
 # Regression Matrix
 
+> **September 16 audit:** [TECHNICAL_ACCEPTANCE_AUDIT.md](./TECHNICAL_ACCEPTANCE_AUDIT.md) inventories all 45 groups and eight additional checks against `379e066`, distinguishing completed local slices from missing integration/evidence/decisions. The paired-runtime ledger remains 0 Pass, 0 observed Fail and 45 Not tested.
+
 September 15 gate clarification: comprehensive internal security review and demonstrable end-to-end rollback are required before migration. Track findings/retests and unresolved high-risk exceptions explicitly; distinguish local checks from hosted configuration checks pending authorization. Rollback evidence must include recoverable code/data checkpoints, partial migration failure and preservation/reconciliation of target edits after simulated cutover. Netlify remaining available alone does not satisfy recovery. The local editor/session evidence in `LOCAL_EDITOR_CONTRACT.md` is supporting evidence; all production-versus-target parity statuses below remain unchanged.
 
 Status: pre-migration preservation contract, updated September 15. All existing required capabilities must pass before real-schedule migration begins. Historical P0/P1 labels are planning priorities, not permission to omit a feature or defer its parity test until cutover.
@@ -119,6 +121,6 @@ Record material tradeoffs in a decision ledger: case/build, existing capability,
 
 ### Known gaps and sign-off
 
-Current gaps: target editor/account integration; complete snapshots/templates/library/CMS and legacy-link runtime coverage; Move To semantics under immutable production identity; legacy snapshot-delete versus target immutable-history behavior; complete field preservation; actual paired production/target navigation/input/layout runs; physical-device/browser and PDF/print evidence. Passing a local archive or Auth RPC does not close its UI parity row.
+Current gaps: completion of the existing local editor/account integration into the full product (the scoped workspace/lifecycle/provisioning slices are already locally accepted); complete snapshots/templates/library/CMS and legacy-link runtime coverage; Move To semantics under immutable production identity; legacy snapshot-delete versus target immutable-history behavior; complete field preservation; actual paired production/target navigation/input/layout runs; physical-device/browser and PDF/print evidence. Passing a local archive or Auth RPC does not close its UI parity row.
 
 Gate summary must state required executions, Pass/Fail/Not tested totals, classification totals, unresolved defects/decisions, exact candidate builds and user approval. Currently **0 Pass, 0 observed Fail, 45 case groups Not tested; all 45 unverified; real-schedule migration blocked**. The final execution count expands these groups across the agreed fixtures and device/browser profiles. The absence of an observed failure is not evidence of success. Reopen affected cases if production or target behavior changes after capture. Even after parity approval, latest-source complete reconciliation, Netlify availability, a single authoritative writer and verified rollback remain mandatory.

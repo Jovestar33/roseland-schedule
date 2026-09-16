@@ -1,5 +1,7 @@
 # Related-store migration catalogue
 
+> **September 16 current-state reconciliation:** The next-batch editor/account integration paragraph below has been completed through `ddef735`, `5c533cc`, `d27ccbf` and `379e066`. The private catalogue remains distinct from still-unimplemented related application projections and their unresolved policies. See [TECHNICAL_ACCEPTANCE_AUDIT.md](./TECHNICAL_ACCEPTANCE_AUDIT.md) for evidence, gates and bounded dispatch proposals.
+
 This local slice preserves and reconciles shared Netlify snapshot, template, library and CMS records in a **private migration catalogue**. It is not an application repository, a production exporter or a claim of runtime feature parity. No real schedules or hosted stores were accessed.
 
 ## Source contracts and preservation

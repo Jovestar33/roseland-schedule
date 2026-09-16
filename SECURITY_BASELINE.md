@@ -1,5 +1,7 @@
 # Security Baseline
 
+> **September 16 current-state reconciliation:** The current audit maps the completed local session/workflow/UI security evidence and outstanding F01–F05 gates. September 11 dependency findings cited below are historical: the September 16 audit at `379e066` reported no high/critical runtime findings. This does not complete comprehensive internal or hosted security acceptance. See [TECHNICAL_ACCEPTANCE_AUDIT.md](./TECHNICAL_ACCEPTANCE_AUDIT.md) for evidence, gates and bounded dispatch proposals.
+
 Status: Phase 0 requirements with Phase 1 automation in progress. See
 [`SECURITY_AUTOMATION.md`](./SECURITY_AUTOMATION.md) for implemented gates,
 reviewed findings, and the resolved July 29 Google credential incident. See [READINESS.md](./READINESS.md) for September 11 dependency findings and incomplete release gates; this baseline describes requirements, not a completed implementation.

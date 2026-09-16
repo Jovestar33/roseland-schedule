@@ -101,7 +101,7 @@ browser has been revoked.
 
 ## Known constraints and migration implications
 
-The Library exports loaded schedules as JSON; the Tools Panel exports one schedule JSON. The import UI parses/reports rather than restoring data. These surfaces do not constitute a complete backup of snapshots/templates/CMS or an implemented migration importer. Public named reads return full schedule documents, not the target minimum projection.
+September 16 source reconciliation at `379e066`: Library export reads every listed saved schedule through `lib/api/backups.ts`; Tools/Share can export the current schedule JSON. The current import UI parses and reviews names, then performs create-only imports as new schedules and reports per-item failures. The earlier parse-only description was stale. Target Supabase import/export UI parity is still unverified; see [TECHNICAL_ACCEPTANCE_AUDIT.md](./TECHNICAL_ACCEPTANCE_AUDIT.md). These surfaces do not constitute a complete backup of snapshots/templates/CMS or an implemented migration importer. Public named reads return full schedule documents, not the target minimum projection.
 
 - Shared credentials cannot identify an actor or isolate organizations.
 - Blob mutations spanning stores are eventually consistent and non-transactional.
