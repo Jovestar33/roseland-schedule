@@ -1,0 +1,3 @@
+.preview { background: white; color: #173848; padding: 16px; border-radius: 10px; overflow: auto; }
+/* Keep the shared read view's light surface independent of the dark form labels. */
+.preview :global(.meta) label { color: #415565 !important; }

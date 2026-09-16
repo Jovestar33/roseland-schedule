@@ -1,5 +1,17 @@
 # Local schedule lifecycle review — September 15, 2026
 
+## September 16 acceptance completed
+
+The user's one-time batch authorization supersedes the earlier new-batch cutoff and approves provisioning integration after these checks. All four previously pending browser groups now pass in the visible in-app browser using fictional local accounts. Escape dismisses only the editor discard confirmation and restores the exact contact/town drafts; explicit discard reloads the saved version. A dropped committed rename response retained its original review across navigation, surfaced a conflict (consistent with a repeated old-version request), and **Check saved result** confirmed version 3. Genuine session expiry blocked the reviewed archive, and same-account login plus the unchanged retry saved version 4. Read-only audit evidence confirms four histories, one rename audit and one archive audit for `1f53f4b5-05c9-476f-bee6-4699f50f9211`.
+
+Assigned-editor controls allow rename/archive/document restore but omit delete/recovery; viewer controls are disabled with no editable destination; another tenant's account cannot recover Harbour through browser history. Account changes clear prior reviews. Desktop 1280×720 and mobile 390×844 review/history/discard checks caught and fixed faint preview labels and a clipped, uncentered editor discard action. The final rebuilt app verifies readable labels, wrapping/centered dialogs, cancellation retaining edits and explicit discard returning to the saved baseline. The temporary viewport was reset and the fictional account signed out.
+
+Fresh platform/editor runs pass **101/53** tests. Production build/integrated lint/type checks and the genuine lifecycle runtime pass after the changes. No new SQL or permission change; earlier 431-assertion evidence below remains historical until the batch's final database run. Browser evidence is under `/private/tmp/roseland-lifecycle-acceptance-20260916/`: `contact-after-escape.png`, `desktop-history-review-fixed.png`, `mobile-history-review-fixed.png`, `desktop-editor-discard-fixed.png`, `mobile-editor-discard-fixed.png`, `mobile-discard.png`, and `browser-audit.log`. Earlier non-`fixed` layout captures record the diagnosed failures and are not final acceptance artifacts. These are emulated viewport checks, not physical-device or hosted parity.
+
+The remainder of this document preserves the September 15 checkpoint and its then-pending status. Next within the newly authorized batch: existing restricted organization-provisioning integration, with no new onboarding, owner lookup, disclosure or operator-grant policy.
+
+
+
 This checkpoint follows `5c533cc` on `codex/migration-schedule-contract` in `/private/tmp/roseland-migration-contract-20260914`. The shared loopback workspace now exposes blank creation in an existing authorized production day, rename, archive/unarchive, soft-delete/recovery and document-history restore through the existing versioned RPCs. All execution uses fictional accounts and schedules. Actual schedules, hosted services, real credentials, billing and Netlify defaults are untouched. No push, deployment, schema migration, new dependency or policy change is included.
 
 **Status: implementation and automated/runtime checks pass; final visual acceptance remains pending.** The Mac locked before the remaining browser checks, and the computer-use tool could not unlock it. The user has been asked to unlock it. Do not mark the remaining scenarios below as passed, or start a new implementation batch in their place.

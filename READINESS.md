@@ -1,5 +1,10 @@
 # Current state and restart readiness
 
+## September 16: lifecycle browser acceptance passed
+
+All four pending lifecycle browser groups pass; contrast and mobile discard layout failures were fixed and verified in fresh builds. New screenshot and audit evidence is recorded in [LOCAL_LIFECYCLE_REVIEW.md](./LOCAL_LIFECYCLE_REVIEW.md). Fresh platform/editor tests pass 101/53. Actual schedules and hosted systems remain untouched. The user authorized one bounded follow-up batch: proceed to existing restricted organization-provisioning integration, then final validation and continuity. The canceled ten-minute coordinator must not be reinstated.
+
+
 ## September 15: local schedule lifecycle checkpoint; final browser checks pending
 
 The slice after `5c533cc` adds versioned blank creation, rename, archive/unarchive, soft-delete/recovery and document-history restore to the shared loopback workspace. Immutable actor/tenant/identity/version reviews retain uncertain results and use explicit immutable-history checking. Saved operations preserve dirty editor and modal drafts; opening a result uses the normal discard guard. See [LOCAL_LIFECYCLE_REVIEW.md](./LOCAL_LIFECYCLE_REVIEW.md) for boundaries, evidence and the exact remaining checks.

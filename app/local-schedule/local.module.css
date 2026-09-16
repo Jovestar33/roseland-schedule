@@ -7,6 +7,6 @@
 .login input { border: 1px solid #999; border-radius: 6px; padding: 10px; font: inherit; }
 .toolbar, .list { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 16px 0; }
 .list [aria-current] { outline: 2px solid #287753; }
-.confirm { width: min(450px, 90vw); padding: 24px; border: 2px solid #287753; border-radius: 10px; background: white; }
+.confirm { margin: auto; width: min(450px, 90vw); max-height: 90vh; overflow: auto; padding: 24px; border: 2px solid #287753; border-radius: 10px; background: white; }
 .confirm::backdrop { background: #0008; }
-.confirm button { margin: 6px; }
+.confirm button { margin: 6px; max-width: calc(100% - 12px); white-space: normal; overflow-wrap: anywhere; height: auto; min-height: 40px; }
