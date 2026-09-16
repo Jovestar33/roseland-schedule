@@ -1,5 +1,18 @@
 # Current state and restart readiness
 
+## September 16: lifecycle acceptance and restricted provisioning complete locally
+
+The one-time batch after `67cdc0c` finishes all four lifecycle browser groups, including two verified responsive/contrast fixes in `d27ccbf`, then integrates the existing restricted organization-provisioning workflow into the shared local workspace. Canonical immutable reviews and exact retry keys survive response loss and same-account password/MFA recovery. Ordinary organization Owners/Admins gain no provisioning permission; operators gain no membership in organizations created for someone else. No SQL, grant, dependency or hosted change. See [LOCAL_PROVISIONING_REVIEW.md](./LOCAL_PROVISIONING_REVIEW.md) for exact fresh evidence, screenshots, boundaries and reproduction.
+
+Fresh checks pass: **114 platform tests, 53 editor regressions, 431 database assertions across 14 unchanged migrations**, the new genuine provisioning runtime, existing shared-workspace and full account-workflow regressions (including nine workflow races), production build/lint/TypeScript, SQL lint, local advisor and dependency audit with no high/critical runtime findings. Visible browser tests cover lifecycle retention/Escape/recovery/roles, provisioning MFA, uncertain retry, expiry recovery, operator-versus-recipient discovery, account clearing and desktop/mobile layouts. Local results do not establish hosted parity.
+
+Actual schedules, hosted services, Netlify appearance, real credentials and billing remain untouched. Test servers/stacks are stopped with recovery volumes retained and the original 543xx stack preserved. The bounded batch stops here; the ten-minute coordinator stays canceled. Next is the canonical Production Command research/design decision milestone below, with user selection before implementation. Full migration/security/reconciliation/rollback gates remain.
+
+
+## September 16 priority update: Production Command design decision
+
+[PRODUCTION_COMMAND_DESIGN_BRIEF.md](./PRODUCTION_COMMAND_DESIGN_BRIEF.md) is the synchronized canonical record: Production Command is the product brand from scheduling onward. The neutral visual direction is not selected. Next after this bounded batch is broad evidenced research, distinct representative interface/document mockups and a user design decision before implementation. Preserve organization-scoped branding and the selectable versioned Roseland schedule preset; keep product chrome, document branding and operational templates separate. Existing concept assets are exploratory. No live rename, prototype revival, deployment, purchase, migration or coordinator restart is authorized.
+
 ## September 16: lifecycle browser acceptance passed
 
 All four pending lifecycle browser groups pass; contrast and mobile discard layout failures were fixed and verified in fresh builds. New screenshot and audit evidence is recorded in [LOCAL_LIFECYCLE_REVIEW.md](./LOCAL_LIFECYCLE_REVIEW.md). Fresh platform/editor tests pass 101/53. Actual schedules and hosted systems remain untouched. The user authorized one bounded follow-up batch: proceed to existing restricted organization-provisioning integration, then final validation and continuity. The canceled ten-minute coordinator must not be reinstated.

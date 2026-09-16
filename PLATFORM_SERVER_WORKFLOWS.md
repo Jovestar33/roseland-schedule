@@ -2,7 +2,7 @@
 
 Historical hosted status: implemented on draft PR #5 and migrated only to `roseland-schedule-dev`. The organization/invitation routes are disabled by default and have no hosted administration interface. The separate development Auth/MFA setup page is also disabled by default.
 
-The isolated migration branch now adds a loopback-only fictional invitation-management interface; see [LOCAL_INVITATIONS_REVIEW.md](./LOCAL_INVITATIONS_REVIEW.md). This local follow-up does not change the historical hosted rollout status above. Provisioning and hosted administration interfaces remain unavailable.
+The isolated migration branch now adds a loopback-only fictional invitation-management interface; see [LOCAL_INVITATIONS_REVIEW.md](./LOCAL_INVITATIONS_REVIEW.md). This local follow-up does not change the historical hosted rollout status above. The shared loopback workspace now also exposes the existing restricted provisioning workflow; see [LOCAL_PROVISIONING_REVIEW.md](./LOCAL_PROVISIONING_REVIEW.md). Hosted administration interfaces remain unavailable.
 
 ## Purpose
 

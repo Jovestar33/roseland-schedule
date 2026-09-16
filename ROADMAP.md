@@ -23,7 +23,7 @@
 ## Product principles
 
 1. Preserve the working daily schedule editor. Do not rewrite its grid, time cascade, mobile layout, print/PDF, snapshots, call sheet, contact sheet, or read-only views during the platform migration.
-2. Production Command manages the production. Daily Schedule manages one day. Call Sheet communicates one day.
+2. Production Command is the product brand. Daily Schedule manages one day and Call Sheet communicates one day; broader production-management capabilities extend the same product later.
 3. Security, privacy, tenant isolation, backup, and recovery are release gates in every phase—not end-of-project polish.
 4. Migrate through parallel environments with a tested rollback path. Netlify data is not destructively removed during cutover.
 5. Use stable internal IDs. Display names must not serve as permanent database identity.
@@ -146,6 +146,12 @@ September 15 local evidence and next slice: [ACCOUNT_WORKFLOW_REVIEW.md](./ACCOU
 **Exit gate:** the full authentication failure-path suite and permission matrix pass.
 
 ## 🟠 Phase 3A: neutral platform design and organization theming
+
+Follow [PRODUCTION_COMMAND_DESIGN_BRIEF.md](./PRODUCTION_COMMAND_DESIGN_BRIEF.md). This is a top-priority design milestone after the current foundation/acceptance batch. The brand is confirmed; the neutral visual direction remains undecided.
+
+- [ ] Conduct broad design research with sources and explicit usability/accessibility criteria.
+- [ ] Present distinct visual directions with representative interface and document mockups, tradeoffs, and preserved Roseland preset examples.
+- [ ] Record the user's selected direction and approved design-system foundation before implementing the reskin.
 
 This phase follows authentication and organization context and must finish before pilot migration or unrelated organizations are invited. It is intentionally earlier than the broader SaaS customization work.
 
