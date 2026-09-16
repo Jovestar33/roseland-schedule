@@ -1,5 +1,11 @@
 # Current state and restart readiness
 
+## September 16: B01 ordinary save-result recovery passed locally
+
+The explicitly dispatched B01 batch is complete within [LOCAL_SAVE_RECOVERY_REVIEW.md](./LOCAL_SAVE_RECOVERY_REVIEW.md). All ten scoped acceptance cases pass with 139 platform tests (25 new), 53 editor regressions, 431 database assertions, genuine local Auth/RLS runtime, desktop/390px visible-browser evidence, TypeScript/lint/build and scoped internal review. Lost acknowledgements retain immutable attempts and newer drafts; exact retry rechecks the original baseline; matching older history never authorizes overwriting a later version.
+
+The implementation was independently built after audit `8dde3a9`; the canceled archive was not reapplied. Actual schedules, hosted systems, SQL/RLS, dependencies and real credentials remain unchanged. Owned test services are stopped and the new fictional recovery volume is retained. No push/deploy occurred. Paired production/target parity remains 0 Pass / 0 observed Fail / 45 Not tested. B01 stops here; this completion does not dispatch another batch. The audit and cancellation entries below describe their dated checkpoints.
+
 ## September 16: documentation-only technical acceptance audit complete
 
 [TECHNICAL_ACCEPTANCE_AUDIT.md](./TECHNICAL_ACCEPTANCE_AUDIT.md) reconciles source at `379e066` and retained executed reports: all 45 parity groups, eight supplemental checks, F01–F05, account/admin, related stores and migration/rollback. Scoped local completion is separated from missing functionality, missing evidence and material decisions. Paired production/target parity remains **0 Pass / 0 observed Fail / 45 Not tested**. B01 is a precise proposed ordinary editor save-result recovery batch for separate dispatch; no implementation is authorized by this audit. B02–B18 are dependency-ordered bounded proposals.

@@ -40,10 +40,10 @@ function harness() {
   let loads = 0;
   let writes = 0;
   const state = {documentSession:1,editRevision:1,getScheduleData:()=>structuredClone(document),markClean:()=>{dirty=false;}};
-  const record = {id:'aaaaaaaa-0000-4000-8000-000000000001',document_version:3,document_schema_version:1,document} as StoredSchedule;
-  const controller: LocalEditorController = new LocalEditorController({read:async()=>response.promise,update:async(_id,version)=>{writes++; assert.equal(version,controller.record!.document_version);return response.promise;}},
+  const record = {id:'aaaaaaaa-0000-4000-8000-000000000001',organization_id:'bbbbbbbb-0000-4000-8000-000000000001',production_id:'cccccccc-0000-4000-8000-000000000001',production_day_id:'dddddddd-0000-4000-8000-000000000001',display_name:'Fiction',slug:'fiction',status:'draft',deleted_at:null,archived_from_status:null,updated_at:'2026-09-16T00:00:00Z',updated_by:'eeeeeeee-0000-4000-8000-000000000001',document_version:3,document_schema_version:1,document} as StoredSchedule;
+  const controller: LocalEditorController = new LocalEditorController({read:async()=>response.promise,send:async(attempt)=>{writes++; assert.equal(attempt.before.document_version,controller.record!.document_version);return response.promise;},probe:async()=>({state:'retryable',saved:null,currentVersion:3})},
     {getState:()=>state,load:()=>{loads++;state.documentSession++;state.editRevision++;dirty=false;}});
-  controller.record=record;
+  controller.bind(record.updated_by); controller.record=record;
   return {controller,response,state,record,isDirty:()=>dirty,loads:()=>loads,writes:()=>writes};
 }
 test('pending save advances version while preserving newer unsaved edits and prevents parallel save', async () => {

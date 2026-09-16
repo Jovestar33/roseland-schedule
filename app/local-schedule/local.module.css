@@ -10,3 +10,8 @@
 .confirm { margin: auto; width: min(450px, 90vw); max-height: 90vh; overflow: auto; padding: 24px; border: 2px solid #287753; border-radius: 10px; background: white; }
 .confirm::backdrop { background: #0008; }
 .confirm button { margin: 6px; max-width: calc(100% - 12px); white-space: normal; overflow-wrap: anywhere; height: auto; min-height: 40px; }
+
+.recovery { margin: 12px 0; padding: 16px; border: 1px solid #9d1468; border-radius: 8px; background: #fff7fb; color: #27272a; overflow-wrap: anywhere; }
+.recovery h2 { font-size: 18px; margin: 0 0 8px; }
+.recovery p { margin: 8px 0; }
+.recovery button { margin: 4px 8px 4px 0; min-height: 44px; white-space: normal; }

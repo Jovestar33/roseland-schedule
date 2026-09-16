@@ -1,0 +1,10 @@
+CONTROL save response held
+PASS: B01-01 genuine held ordinary save sends once, advances one version and preserves newer edit/undo revision
+PASS: B01-02/05 lost and malformed committed acknowledgements confirm immutable history without resend or replacing newer draft
+PASS: B01-03 pre-send failure checks baseline then retries the exact frozen document/version while retaining newer draft
+PASS: B01-04 other-writer first/after-commit/between-probe-and-retry cases retain drafts and never overwrite or adopt newer server baseline
+PASS: B01-06 genuine session expiry/revocation, password reauthentication, membership suspension and viewer/outsider saves enforce current Auth/RLS without losing attempt
+CONTROL save response held
+PASS: B01-07 a held admitted write may commit, but changed actor clears attempt and rejects its late acknowledgement
+PASS: B01-09 300-row optional/contact/callsheet/sub-location/zero/fixed/weather payload is preserved exactly through lost acknowledgement recovery
+PASS: B01-10 built workspace stays loopback-only, independent routes disabled, service key absent and default legacy routes untouched

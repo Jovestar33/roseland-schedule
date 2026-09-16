@@ -1,5 +1,7 @@
 # Roseland Schedule
 
+B01 ordinary save-result recovery is complete locally after explicit dispatch: [review and acceptance evidence](./LOCAL_SAVE_RECOVERY_REVIEW.md). Lost responses can be checked without replacing newer drafts; exact retry preserves the attempted document. This does not establish hosted parity or authorize migration.
+
 Current migration status and bounded next-work proposals: [Technical acceptance audit](./TECHNICAL_ACCEPTANCE_AUDIT.md) (September 16, source `379e066`). Local passes do not establish hosted parity; design follows technical readiness and precedes real migration.
 
 **Product direction (September 16, 2026):** the commercial product is **Production Command**, with scheduling as its first capability. Read [the canonical brand and design brief](./PRODUCTION_COMMAND_DESIGN_BRIEF.md) for the neutral default, company branding, preserved Roseland preset, and required research/design decision before reskinning. This repository retains its existing name during development.

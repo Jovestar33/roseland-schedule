@@ -1,5 +1,7 @@
 # Technical migration acceptance audit
 
+**Subsequent B01 dispatch/completion (September 16):** [LOCAL_SAVE_RECOVERY_REVIEW.md](./LOCAL_SAVE_RECOVERY_REVIEW.md) records the independently implemented ordinary-save recovery and all ten passing local acceptance cases after audit commit `8dde3a9`. It supersedes the B01 implementation gap below, without rewriting this source-`379e066` audit or changing its 45 paired-runtime parity totals. No hosted, SQL/RLS, dependency, real-data or deployment change occurred; B02–B18 remain separate work.
+
 **Audit date: September 16, 2026. Status: audit complete; technical migration acceptance NOT passed.** This is a documentation-only inventory and dispatch proposal, not authorization to implement, deploy or migrate.
 
 ## Source, scope and evidence rules

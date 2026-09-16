@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { createClient, type Session } from '@supabase/supabase-js';
 import type { LocalEditorConfig } from '@/lib/platform/local-editor-config';
 import { createSessionScheduleRepository, type ScheduleSummary } from '@/lib/platform/session-schedule-repository';
+import { createSaveRecoveryRepository } from '@/lib/platform/schedule-save-recovery';
 import { LocalEditorController } from '@/lib/platform/local-editor-controller';
 import { ScheduleRepositoryError } from '@/lib/platform/schedule-repository';
 import { makeMeta } from '@/lib/rowNormalizer';
@@ -39,7 +40,7 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
   const scopeRef = useRef<string | null>(null), listTicket = useRef(0);
   scopeRef.current = workspace?.organization?.id ?? null;
   const [itemsOrganization, setItemsOrganization] = useState<string | null>(null);
-  const [controller] = useState(() => new LocalEditorController(repository, {
+  const [controller] = useState(() => new LocalEditorController(createSaveRecoveryRepository(client, () => accountRef.current), {
     getState: useScheduleStore.getState,
     load(record) {
       const doc = record.document;
@@ -69,7 +70,7 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
   const dirty = useScheduleStore(s => s.dirty);
   const rows = useScheduleStore(s => s.rows);
   const state = useScheduleStore.getState;
-  const hasLocalDraft = dirty || contact !== null || status !== null || notes !== null;
+  const hasLocalDraft = dirty || contact !== null || status !== null || notes !== null || controller.attempt !== null;
   useWorkspacePanelState(hasLocalDraft, busy);
   const ready = !!session && !authNeeded && !workspace?.authNeeded;
   const recordInScope = !workspace || (!!workspace.organization && controller.record?.organization_id === workspace.organization.id);
@@ -80,20 +81,20 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
     if (managed) return () => { requestEpoch.current++; requests.current++; controller.invalidate(); };
     const subscription = client.auth.onAuthStateChange((_event, next) => {
       if (sessionRef.current?.access_token !== next?.access_token) {
-        const sameAccount = next && accountRef.current === next.user.id;
-        if (next) accountRef.current = next.user.id;
-        const previousRecord = controller.record;
+        const sameAccount = !!next && accountRef.current === next.user.id;
         epoch.current++;
-        controller.invalidate();
+        if (next) {
+          accountRef.current = next.user.id;
+          if (sameAccount) controller.suspend(); else controller.bind(next.user.id);
+        } else controller.suspend();
         setItems([]); setMore(false); setConfirmation(null);
-        setContact(null); setStatus(null); setNotes(null);
-        if (sameAccount) controller.record = previousRecord;
-        else {
-          // Never carry a previous account's document/undo history across sessions.
+        if (next && !sameAccount) {
+          // Account changes clear all prior document and modal state.
+          setContact(null); setStatus(null); setNotes(null);
           setSelected(null); setVersion(null); state().newSchedule();
         }
-        setAuthNeeded(false);
-        if (!next) { busyRef.current = false; setBusy(false); }
+        setAuthNeeded(!next && !!accountRef.current);
+        busyRef.current = false; setBusy(false);
       }
       sessionRef.current = next;
       setSession(next);
@@ -113,7 +114,7 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
   }, [confirmation, active, workspace?.organization?.id]);
 
   function guarded(action: () => void, label: string) {
-    if (state().dirty || contact !== null || status !== null || notes !== null) setConfirmation({ label, action, scope: scopeRef.current }); else action();
+    if (state().dirty || contact !== null || status !== null || notes !== null || controller.attempt) setConfirmation({ label, action, scope: scopeRef.current }); else action();
   }
   async function run(action: () => Promise<void>) {
     if (busyRef.current) return;
@@ -154,7 +155,7 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
   useEffect(() => {
     if (!workspace) return;
     const next = workspace.session;
-    if (next) accountRef.current = next.user.id;
+    if (next) { accountRef.current = next.user.id; controller.bind(next.user.id); }
     sessionRef.current = next; setSession(next); setAuthNeeded(workspace.authNeeded);
     if (next) setEmail(next.user.email ?? '');
     const ticket = ++listTicket.current, requestEpoch = epoch.current;
@@ -209,6 +210,7 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
           {!workspace && <button className="btn btn-light" disabled={busy} onClick={() => guarded(() => void run(async () => {
             const result = await client.auth.signOut({ scope: 'local' });
             if (result.error) throw new Error('Sign-out failed');
+            controller.invalidate(); accountRef.current = null; setSelected(null); setVersion(null); setContact(null); setStatus(null); setNotes(null); state().newSchedule(); setAuthNeeded(false);
             setMessage('Signed out.');
           }), 'Sign out and discard unsaved changes')}>Sign out</button>}
           <button className="btn btn-light" disabled={busy || !ready} onClick={() => void run(() => list(false))}>Refresh list</button>
@@ -225,12 +227,25 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
         {selected && <section className="panel" aria-label="Schedule editor" style={{display:recordInScope?undefined:'none'}}>
           <div className={styles.toolbar}>
             <strong>{state().scheduleName}</strong><span>Version {version} · {dirty ? 'Unsaved changes' : 'Saved'}</span>
-            <button className="btn btn-primary" disabled={busy || !dirty || !ready || !canEdit} onClick={() => void run(async () => {
+            <button className="btn btn-primary" disabled={busy || !dirty || !ready || !canEdit || !!controller.attempt} onClick={() => void run(async () => {
               if (await controller.save()) { setVersion(controller.record!.document_version); setMessage(state().dirty ? 'Saved earlier edits. Newer edits remain unsaved.' : 'Schedule saved.'); }
             })}>Save schedule</button>
             <button className="btn btn-light" disabled={busy} onClick={() => guarded(() => void run(() => open(selected)), 'Reload and discard unsaved changes')}>Reload schedule</button>
             {canEdit && ready && <UndoRedoButtons />}
           </div>
+          {(controller.attempt || controller.result) && <section className={styles.recovery} aria-label="Save recovery">
+            <h2>{controller.result?.state === 'matched' ? 'Saved version confirmed' : 'Save needs review'}</h2>
+            <p>{controller.result?.state === 'matched'
+              ? `Your attempted document matches saved version ${controller.result.saved!.document_version}. ${controller.attempt ? `The current schedule is version ${controller.result.currentVersion}; your draft is retained. Review or reload before saving again.` : 'Newer local edits, if any, remain unsaved.'}`
+              : controller.result?.state === 'retryable' ? 'The original saved version is still current. You can retry the exact attempted document; newer edits stay in your draft.'
+              : controller.result?.state === 'different' ? 'The saved schedule changed. Your attempted document was not confirmed. Your draft is retained; do not overwrite the newer version.'
+              : controller.result?.state === 'unavailable' ? 'The schedule is unavailable to this account. That does not establish whether your save committed. Your draft and attempted save are retained.'
+              : 'The save result is not confirmed. Your draft and exact attempted document are retained. Check the saved result before retrying.'}</p>
+            {controller.attempt && <><p>Attempted from version {controller.attempt.before.document_version}. Checking does not replace your draft.</p>
+              <button className="btn btn-light" disabled={busy || !ready} onClick={() => void run(async () => { if (await controller.recover()) { setVersion(controller.record!.document_version); setMessage('Saved-result check completed. Review the recovery status.'); } })}>Check saved result</button>
+              <button className="btn btn-light" disabled={busy || !ready || !canEdit || controller.result?.state !== 'retryable'} onClick={() => void run(async () => { if (await controller.recover(true)) { setVersion(controller.record!.document_version); setMessage('Retry checked against the original saved version. Review the recovery status.'); } })}>Retry exact save</button>
+            </>}
+          </section>}
           {!canEdit && <><p>Read-only schedule access.</p><ScheduleReadView data={state().getScheduleData()} name={state().scheduleName ?? undefined}/></>}
           <ModalVisibilityContext.Provider value={active && recordInScope && ready && canEdit && !confirmation}>
           <fieldset disabled={!ready || !canEdit} style={{border:0,padding:0,minWidth:0,display:canEdit?undefined:'none'}}>
@@ -249,7 +264,7 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
         </section>}
       </>}
       <dialog ref={dialogRef} onCancel={() => setConfirmation(null)} aria-label="Discard unsaved changes" className={styles.confirm}>
-        <p>Your unsaved edits will be discarded.</p>
+        <p>Your unsaved edits and retained save attempt will be discarded. A sent save may already have committed; discarding does not undo it.</p>
         <button className="btn btn-light" onClick={() => setConfirmation(null)}>Keep editing</button>
         <button className="btn btn-primary" onClick={() => { const action = confirmation?.action; setConfirmation(null); action?.(); }}>{confirmation?.label}</button>
       </dialog>
