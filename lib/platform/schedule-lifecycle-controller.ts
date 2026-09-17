@@ -8,7 +8,7 @@ export interface ScheduleHistory {
 }
 export interface LifecycleAttempt {
   readonly actor:string; readonly organization:string; readonly id:string; readonly kind:LifecycleKind;
-  readonly expectedVersion:number; readonly dayId:string; readonly name:string; readonly slug:string;
+  readonly expectedVersion:number; readonly dayId:string|null; readonly productionId?:string; readonly phaseId?:string|null; readonly name:string; readonly slug:string;
   readonly before:StoredSchedule|null; readonly payload:Readonly<Record<string,unknown>>;
   readonly document:StoredSchedule['document'];
 }
@@ -28,9 +28,9 @@ export class ScheduleLifecycleController {
   failure:ScheduleRepositoryError['kind']|null=null; busy=false; private generation=0;
   bind(actor:string|null){if(actor!==this.actor){this.clear();this.actor=actor;}}
   clear(){this.generation++;this.attempt=null;this.result=null;this.phase='review';this.failure=null;this.busy=false;}
-  prepareCreate(organization:string,id:string,dayId:string,name:string,slug:string,document:StoredSchedule['document']={meta:{},rows:[]} as unknown as StoredSchedule['document']){
-    if(!this.actor||this.attempt)throw new ScheduleRepositoryError('invalid');namePair(name,slug);
-    this.attempt=freeze({actor:this.actor,organization:parseInvitationId(organization),id:parseInvitationId(id),dayId:parseInvitationId(dayId),kind:'create',expectedVersion:0,name,slug,before:null,payload:{},document:structuredClone(document)});
+  prepareCreate(organization:string,id:string,dayId:string|null,name:string,slug:string,document:StoredSchedule['document']={meta:{},rows:[]} as unknown as StoredSchedule['document'],placement?:{productionId:string;phaseId:string|null}){
+    if(!this.actor||this.attempt||(!dayId&&!placement))throw new ScheduleRepositoryError('invalid');namePair(name,slug);
+    this.attempt=freeze({actor:this.actor,organization:parseInvitationId(organization),id:parseInvitationId(id),dayId:dayId===null?null:parseInvitationId(dayId),...(placement?{productionId:parseInvitationId(placement.productionId),phaseId:placement.phaseId===null?null:parseInvitationId(placement.phaseId)}:{}),kind:'create',expectedVersion:0,name,slug,before:null,payload:{},document:structuredClone(document)});
   }
   prepare(before:StoredSchedule,kind:ScheduleLifecycle,payload:Record<string,unknown>={},source?:ScheduleHistory){
     if(!this.actor||this.attempt)throw new ScheduleRepositoryError('invalid');version(before.document_version);
@@ -40,7 +40,7 @@ export class ScheduleLifecycleController {
     else if(kind==='restore_version'){if(Object.keys(payload).join()!=='version'||!source||source.schedule_id!==before.id||source.organization_id!==before.organization_id||source.version!==payload.version)throw new ScheduleRepositoryError('invalid');version(source.version);}
     else if(Object.keys(payload).length)throw new ScheduleRepositoryError('invalid');
     if((kind==='archive'&&before.status==='archived')||(kind==='unarchive'&&(before.status!=='archived'||!before.archived_from_status)))throw new ScheduleRepositoryError('invalid');
-    this.attempt=freeze(structuredClone({actor:this.actor,organization:parseInvitationId(before.organization_id),id:parseInvitationId(before.id),dayId:parseInvitationId(before.production_day_id),kind,expectedVersion:before.document_version,name:before.display_name,slug:before.slug,before,payload,document:kind==='restore_version'?source!.document:before.document}));
+    this.attempt=freeze(structuredClone({actor:this.actor,organization:parseInvitationId(before.organization_id),id:parseInvitationId(before.id),dayId:before.production_day_id===null?null:parseInvitationId(before.production_day_id),kind,expectedVersion:before.document_version,name:before.display_name,slug:before.slug,before,payload,document:kind==='restore_version'?source!.document:before.document}));
   }
   async execute(repository:LifecycleTransport,checkOnly=false){
     if(!this.attempt||this.busy||(!checkOnly&&['success','conflict'].includes(this.phase)))return;
@@ -63,15 +63,16 @@ export class ScheduleLifecycleController {
 /** A matching immutable version is evidence of saved state, not a causal request receipt. */
 export function historyMatches(attempt:LifecycleAttempt,history:ScheduleHistory):boolean {
   const m=history.metadata,b=attempt.before;
-  if(!m||(b&&history.production_id!==b.production_id)||history.schedule_id!==attempt.id||history.organization_id!==attempt.organization||history.version!==attempt.expectedVersion+1||history.created_by!==attempt.actor||history.document_schema_version!==1||!sameJson(history.document,attempt.document))return false;
+  if(!m||(attempt.productionId&&history.production_id!==attempt.productionId)||(attempt.phaseId!==undefined&&attempt.dayId===null&&m.phase_id!==attempt.phaseId)||(b&&history.production_id!==b.production_id)||history.schedule_id!==attempt.id||history.organization_id!==attempt.organization||history.version!==attempt.expectedVersion+1||history.created_by!==attempt.actor||history.document_schema_version!==1||!sameJson(history.document,attempt.document))return false;
   const name=attempt.kind==='rename'?attempt.payload.display_name:attempt.name,slug=attempt.kind==='rename'?attempt.payload.slug:attempt.slug;
   const status=attempt.kind==='create'?'draft':attempt.kind==='archive'?'archived':attempt.kind==='unarchive'?b?.archived_from_status:b?.status;
   const prior=attempt.kind==='archive'?b?.status:attempt.kind==='unarchive'||attempt.kind==='create'?null:b?.archived_from_status;
+  if(b&&(m.phase_id??null)!==(b.phase_id??null))return false;
   if(m.display_name!==name||m.slug!==slug||m.production_day_id!==attempt.dayId||m.status!==status||m.archived_from_status!==prior)return false;
   if(attempt.kind==='delete')return typeof m.deleted_at==='string'&&Number.isFinite(Date.parse(m.deleted_at));
   return m.deleted_at===null;
 }
 
 export function acknowledgementMatches(attempt:LifecycleAttempt,record:StoredSchedule):boolean {
-  return historyMatches(attempt,{schedule_id:record.id,organization_id:record.organization_id,production_id:record.production_id,version:record.document_version,document_schema_version:record.document_schema_version,document:record.document,created_by:record.updated_by,created_at:record.updated_at,checksum:'',metadata_checksum:null,metadata:{display_name:record.display_name,slug:record.slug,production_day_id:record.production_day_id,status:record.status,archived_from_status:record.archived_from_status,deleted_at:record.deleted_at}});
+  return historyMatches(attempt,{schedule_id:record.id,organization_id:record.organization_id,production_id:record.production_id,version:record.document_version,document_schema_version:record.document_schema_version,document:record.document,created_by:record.updated_by,created_at:record.updated_at,checksum:'',metadata_checksum:null,metadata:{phase_id:record.phase_id??null,display_name:record.display_name,slug:record.slug,production_day_id:record.production_day_id,status:record.status,archived_from_status:record.archived_from_status,deleted_at:record.deleted_at}});
 }

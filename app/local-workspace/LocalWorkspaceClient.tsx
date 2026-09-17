@@ -114,7 +114,8 @@ export default function LocalWorkspaceClient({config}:{config:LocalEditorConfig}
   const active=location.screen;
   const openOrganization=(id:string)=>{void navigate({screen:'schedule',organization:id});};
   const openSchedule=(organization:string,id:string)=>{const generation=identity.capture();void navigate({screen:'schedule',organization}).then(ok=>{if(ok&&identity.current(generation)&&locationRef.current.organization===organization&&locationRef.current.screen==='schedule')setScheduleRequest({id,organization,sequence:++scheduleSequence.current});});};
-  const panel=(id:string,organization:WorkspaceOrganization|null,enabled:boolean)=>({client,session,authNeeded,organization,active:enabled,panelId:id,report,requireAuth,openOrganization,openSchedule,scheduleRequest,consumeScheduleRequest});
+  const openLifecycle=(organization:string,id:string)=>{const generation=identity.capture();void navigate({screen:'lifecycle',organization}).then(ok=>{if(ok&&identity.current(generation)&&locationRef.current.organization===organization&&locationRef.current.screen==='lifecycle')setScheduleRequest({id,organization,sequence:++scheduleSequence.current,target:'lifecycle'});});};
+  const panel=(id:string,organization:WorkspaceOrganization|null,enabled:boolean)=>({client,session,authNeeded,organization,active:enabled,panelId:id,report,requireAuth,openOrganization,openSchedule,openLifecycle,scheduleRequest,consumeScheduleRequest});
   function tab(screen:WorkspaceScreen){if(authNeeded||!session){requireAuth();return;}void navigate({screen,organization:locationRef.current.organization});}
   return <div className={styles.page}>
     <header className={styles.header}><div><span className={styles.eyebrow}>LOCAL WORKSPACE</span><h1>Roseland rehearsals</h1><p>One account, with unfinished work kept in this tab.</p></div><span className={styles.badge}>Fictional data only</span></header>

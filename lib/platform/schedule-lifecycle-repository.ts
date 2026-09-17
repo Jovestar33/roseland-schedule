@@ -44,11 +44,11 @@ export function createLifecycleRepository(client:SupabaseClient){
     async canEdit(actor:string,production:string,schedule?:string,action='edit'){const token=await bearer(actor);const r=await client.rpc('schedule_capability',{action,target_production_id:parseInvitationId(production),target_schedule_id:schedule?parseInvitationId(schedule):null}).setHeader('Authorization',`Bearer ${token}`);fail(r.error,r.status);if(typeof r.data!=='boolean')throw new ScheduleRepositoryError('failed');return r.data;},
     async send(attempt:LifecycleAttempt,source?:{id:string;version:number;policy:string}){
       const repo=await adapter(attempt.actor,source);
-      if(attempt.kind==='create'){
+      if(attempt.kind==='create'&&attempt.dayId){
         const token=await bearer(attempt.actor),day=await client.from('production_days').select('id').eq('id',attempt.dayId).eq('organization_id',attempt.organization).is('deleted_at',null).maybeSingle().setHeader('Authorization',`Bearer ${token}`);fail(day.error,day.status);if(!day.data)throw new ScheduleRepositoryError('unavailable');
       }
       if(attempt.kind!=='create'){const current=await read(attempt.actor,attempt.organization,attempt.id);if(current.document_version!==attempt.expectedVersion)throw new ScheduleRepositoryError('conflict');}
-      const record=attempt.kind==='create'?await repo.create(attempt.id,attempt.dayId,attempt.name,attempt.slug,attempt.document,1):await repo.mutate(attempt.id,attempt.expectedVersion,attempt.kind,{...attempt.payload});
+      const record=attempt.kind==='create'?(attempt.productionId?await repo.createAtPlacement(attempt.id,attempt.productionId,attempt.dayId,attempt.phaseId??null,attempt.name,attempt.slug,attempt.document):await repo.create(attempt.id,attempt.dayId!,attempt.name,attempt.slug,attempt.document,1)):await repo.mutate(attempt.id,attempt.expectedVersion,attempt.kind,{...attempt.payload});
       if(!acknowledgementMatches(attempt,record))throw new ScheduleRepositoryError('failed');return record;
     },
     async probe(attempt:LifecycleAttempt,source?:{id:string;version:number;policy:string}):Promise<LifecycleResult>{
@@ -58,6 +58,7 @@ export function createLifecycleRepository(client:SupabaseClient){
         fail(receipt.error,receipt.status);if(receipt.data===true)return {state:'matched',current,matchedVersion:1};
         return {state:'different',current,matchedVersion:null};
       }
+      if(attempt.kind==='create'&&!source&&acknowledgementMatches(attempt,current))return {state:'matched',current,matchedVersion:1};
       const target=attempt.expectedVersion+1,version=await historical(attempt.actor,attempt.organization,attempt.id,target);
       if(version&&historyMatches(attempt,version)){if(current.document_version<target)current=await read(attempt.actor,attempt.organization,attempt.id);return {state:'matched',current,matchedVersion:target};}
       return {state:current.document_version===attempt.expectedVersion?'retryable':'different',current,matchedVersion:null};

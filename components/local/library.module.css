@@ -1,0 +1,20 @@
+/* Preserve the compact library row inside the local workspace shell. */
+.library button:global(.lbt-sched-name) {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  color: var(--pink);
+  font-size: 13px;
+  font-weight: 600;
+  text-align: left;
+  min-width: 0;
+}
+.library button:global(.lbt-ctx-btn) { padding: 0 8px; flex-shrink: 0; }
+.metadata { color: var(--g600); font-size: 12px; }
+.library .newInProduction { margin: 8px 14px; }
+@media (max-width: 760px) {
+  .library :global(.lbt-phase .lbt-sched-list .lbt-sched-row) { padding-left: 28px; }
+  .library button:global(.lbt-sched-name) { white-space: normal; overflow-wrap: anywhere; }
+  .metadata { order: 1; flex-basis: 100%; padding-left: 20px; }
+}

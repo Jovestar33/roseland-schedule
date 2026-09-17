@@ -56,7 +56,7 @@ export function canonicalJson(value:unknown):string {
   return JSON.stringify(ordered(value));
 }
 export async function documentHash(value:unknown) { return [...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(canonicalJson(value))))].map(n=>n.toString(16).padStart(2,'0')).join(''); }
-export interface FileEntry { name:string; slug:string; data:Doc; sha256?:string; source?:{id:string;organization:string;production:string;day:string;version:number;status:string;deletedAt:string|null} }
+export interface FileEntry { name:string; slug:string; data:Doc; sha256?:string; source?:{id:string;organization:string;production:string;day:string|null;version:number;status:string;deletedAt:string|null} }
 export interface ScheduleFile { format:'production-command-schedule-only';version:1;exportedAt:string;scope:string;excludes:string[];schedules:FileEntry[] }
 export async function encodeScheduleFile(records:StoredSchedule[]):Promise<ScheduleFile> {
   if(records.length>FILE_COUNT) invalid('More than 500 schedules are readable. No partial file was produced.');

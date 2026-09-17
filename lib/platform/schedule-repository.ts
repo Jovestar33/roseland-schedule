@@ -6,7 +6,9 @@ export interface StoredSchedule {
   id: string;
   organization_id: string;
   production_id: string;
-  production_day_id: string;
+  production_day_id: string | null;
+  phase_id?: string | null;
+  library_position?: number;
   display_name: string;
   slug: string;
   status: 'draft' | 'published' | 'archived';
@@ -53,6 +55,7 @@ function assertVersion(version: number) {
 export interface ScheduleRepository {
   read(id: string): Promise<StoredSchedule>;
   readDeleted(id: string): Promise<StoredSchedule>;
+  createAtPlacement(id:string,production:string,day:string|null,phase:string|null,name:string,slug:string,document:unknown):Promise<StoredSchedule>;
   create(id: string, dayId: string, name: string, slug: string, document: unknown, schemaVersion: number): Promise<StoredSchedule>;
   mutate(id: string, expectedVersion: number, operation: ScheduleLifecycle, payload?: Record<string, unknown>): Promise<StoredSchedule>;
   update(id: string, expectedVersion: number, document: unknown, schemaVersion: number): Promise<StoredSchedule>;
@@ -76,17 +79,19 @@ export function createScheduleRepository(client: ScheduleRpcClient): ScheduleRep
       || data.document_version < 1 || data.document_schema_version !== 1
       || !data.document || !Array.isArray(data.document.rows)
       || !data.document.meta || typeof data.document.meta !== 'object' || Array.isArray(data.document.meta)
-      || ![data.organization_id, data.production_id, data.production_day_id, data.updated_by].every(value => typeof value === 'string' && uuid.test(value))
+      || ![data.organization_id, data.production_id, data.updated_by].every(value => typeof value === 'string' && uuid.test(value))
+      || !(data.production_day_id===null||typeof data.production_day_id==='string'&&uuid.test(data.production_day_id))
       || typeof data.slug !== 'string' || !['draft','published','archived'].includes(data.status)
       || ![null,'draft','published'].includes(data.archived_from_status)
       || !(data.deleted_at === null || (typeof data.deleted_at === 'string' && Number.isFinite(Date.parse(data.deleted_at))))
       || typeof data.display_name !== 'string' || typeof data.updated_at !== 'string' || !Number.isFinite(Date.parse(data.updated_at))) {
       throw new ScheduleRepositoryError('failed');
     }
+    if ('target_production_id' in args && (data.production_id!==args.target_production_id || (args.target_day_id===null && data.phase_id!==args.target_phase_id))) throw new ScheduleRepositoryError('failed');
     if ('expected_version' in args && data.document_version !== Number(args.expected_version) + 1) {
       throw new ScheduleRepositoryError('failed');
     }
-    if (name === 'create_schedule' && (data.document_version !== 1 || data.production_day_id !== args.target_day_id)) {
+    if (['create_schedule','create_schedule_in_production'].includes(name) && (data.document_version !== 1 || data.production_day_id !== args.target_day_id)) {
       throw new ScheduleRepositoryError('failed');
     }
     return data;
@@ -99,6 +104,10 @@ export function createScheduleRepository(client: ScheduleRpcClient): ScheduleRep
     readDeleted(id) {
       assertId(id);
       return invoke('read_deleted_schedule', { target_schedule_id: id });
+    },
+    createAtPlacement(id,production,day,phase,name,slug,document){
+      assertId(id);assertId(production);if(day!==null)assertId(day);if(phase!==null)assertId(phase);
+      return invoke('create_schedule_in_production',{target_schedule_id:id,target_production_id:production,target_day_id:day,target_phase_id:phase,next_display_name:name,next_slug:slug,next_document:document,schema_version:1});
     },
     create(id, dayId, name, slug, document, schemaVersion) {
       assertId(id); assertId(dayId);

@@ -1,0 +1,7 @@
+Connecting to local database...
+Linting schema: extensions
+Linting schema: private
+Linting schema: public
+
+No schema errors found
+{"results":[],"message":"db lint"}

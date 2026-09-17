@@ -20,6 +20,7 @@ import styles from './local.module.css';
 import { useLocalWorkspace, useWorkspacePanelState } from '@/components/local/LocalWorkspaceContext';
 import { createWorkspaceRepository } from '@/lib/platform/workspace-repository';
 import ScheduleReadView from '@/components/view/ScheduleReadView';
+import LocalScheduleLibrary from '@/components/local/LocalScheduleLibrary';
 import LocalScheduleFiles from '@/components/local/LocalScheduleFiles';
 import ShareDropdown from '@/components/toolbar/ShareDropdown';
 import LocalWeatherControls from '@/components/local/LocalWeatherControls';
@@ -76,13 +77,15 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
   const [notes, setNotes] = useState<number | null>(null);
   const [documentDialogOpen, setDocumentDialogOpen] = useState(false);
   const documentSession = useScheduleStore(s => s.documentSession);
+  const [libraryState,setLibraryState]=useState({dirty:false,busy:false});
+  const reportLibrary=useCallback((dirty:boolean,busy:boolean)=>setLibraryState({dirty,busy}),[]);
   const [fileState, setFileState] = useState({dirty:false,busy:false});
   const reportFiles = useCallback((dirty:boolean,busy:boolean)=>setFileState({dirty,busy}),[]);
   const dirty = useScheduleStore(s => s.dirty);
   const rows = useScheduleStore(s => s.rows);
   const state = useScheduleStore.getState;
-  const hasLocalDraft = fileState.dirty || dirty || documentDialogOpen || contact !== null || status !== null || notes !== null || controller.attempt !== null;
-  useWorkspacePanelState(hasLocalDraft, busy || fileState.busy);
+  const hasLocalDraft = libraryState.dirty || fileState.dirty || dirty || documentDialogOpen || contact !== null || status !== null || notes !== null || controller.attempt !== null;
+  useWorkspacePanelState(hasLocalDraft, busy || fileState.busy || libraryState.busy);
   const ready = !!session && !authNeeded && !workspace?.authNeeded;
   const recordInScope = !workspace || (!!workspace.organization && controller.record?.organization_id === workspace.organization.id);
   const canEdit = (permission?.recordId === controller.record?.id && permission?.token === session?.access_token && permission?.allowed === true);
@@ -203,7 +206,7 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
   }, [workspace?.session?.access_token, workspace?.authNeeded, workspace?.organization?.id, workspace?.active]);
   useEffect(() => {
     const request = workspace?.scheduleRequest;
-    if (!request || !workspace.active || !ready || busy || request.organization !== workspace.organization?.id) return;
+    if (!request || request.target==='lifecycle' || !workspace.active || !ready || busy || request.organization !== workspace.organization?.id) return;
     workspace.consumeScheduleRequest(request.sequence);
     guarded(() => void run(() => open(request.id)), 'Open saved result and discard unsaved changes');
     // One account-bound request opens only after the editor is ready; normal discard guards apply.
@@ -251,15 +254,12 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
         {workspace && <LocalScheduleFiles client={client} actor={session?.user.id ?? accountRef.current} organization={workspace.organization?.id ?? null}
           enabled={active && ready && !confirmation} copyEnabled={!busy && !!selected && recordInScope && canEdit && permission?.copy===true && !documentDialogOpen && contact===null && notes===null && status===null}
           getSource={()=>controller.record} getDraft={()=>state().getScheduleData()} name={state().scheduleName ?? 'Schedule'} onState={reportFiles} requireAuth={workspace.requireAuth}/>}
-        <nav aria-label="Local schedules" className={styles.list}>
-          {workspace && !workspace.organization && <p>Choose an authorized organization above.</p>}
-          {selected && !recordInScope && <p>A schedule draft is retained in another organization. Return to that organization to continue, or explicitly discard it when opening another schedule.</p>}
-          {(!workspace || itemsOrganization === workspace.organization?.id ? items : []).map(item => <button key={item.id} className="btn btn-light" disabled={busy || !ready} aria-current={selected === item.id ? 'page' : undefined}
-            onClick={() => guarded(() => void run(() => open(item.id)), 'Open schedule and discard unsaved changes')}>
-            {item.display_name} · {item.status}
-          </button>)}
-          {more && (!workspace || itemsOrganization === workspace.organization?.id) && <button className="btn btn-light" disabled={busy} onClick={() => void run(() => list(true))}>Load more schedules</button>}
-        </nav>
+        {workspace&&<LocalScheduleLibrary client={client} actor={session?.user.id??accountRef.current} organization={workspace.organization?.id??null} enabled={active&&ready&&!confirmation} selected={selected} onOpen={id=>guarded(()=>void run(()=>open(id)),'Open schedule and discard unsaved changes')} onInspect={id=>workspace.openLifecycle?.(workspace.organization!.id,id)} onState={reportLibrary}/>}
+        {workspace&&selected&&!recordInScope&&<p>A schedule draft is retained in another organization. Return there to continue, or explicitly discard it when opening another schedule.</p>}
+        {!workspace&&<nav aria-label="Local schedules" className={styles.list}>
+          {items.map(item=><button key={item.id} className="btn btn-light" disabled={busy||!ready} aria-current={selected===item.id?'page':undefined} onClick={()=>guarded(()=>void run(()=>open(item.id)),'Open schedule and discard unsaved changes')}>{item.display_name} · {item.status}</button>)}
+          {more&&<button className="btn btn-light" disabled={busy} onClick={()=>void run(()=>list(true))}>Load more schedules</button>}
+        </nav>}
         {selected && <section className="panel" aria-label="Schedule editor" style={{display:recordInScope&&permission?.read===true?undefined:'none'}}>
           <div className={styles.toolbar}>
             <strong>{state().scheduleName}</strong><span>Version {version} · {dirty ? 'Unsaved changes' : 'Saved'}</span>

@@ -1,3 +1,6 @@
+import { createScheduleLibraryRepository,filterLibrary } from '../lib/platform/schedule-library.ts';
+import { createScheduleRepository } from '../lib/platform/schedule-repository.ts';
+import { sameJson } from '../lib/platform/schedule-lifecycle-controller.ts';
 import { createLifecycleRepository } from '../lib/platform/schedule-lifecycle-repository.ts';
 import { ScheduleLifecycleController } from '../lib/platform/schedule-lifecycle-controller.ts';
 import { documentFixture } from '../tests/fixtures/document-fixtures.ts';
@@ -181,6 +184,50 @@ try {
   check(saveResult.data.document_version===6,'Admitted save commits exactly once before later restriction');
   await denied(()=>organizer.c.rpc('update_schedule_document',{...updateArgs,expected_version:6}),'Next save is denied after policy tightening');
  } finally {sql('drop trigger b03_hold_write on public.schedules;drop function private.b03_hold_write();');}
+
+ if(args.includes('--library')){
+  const prod2=randomUUID(),phase2=randomUUID(),day2=randomUUID();
+  sql(`begin;insert into public.productions(id,organization_id,name,slug) values('${prod2}','${org}','B03 Fictional Riverside','riverside-${prod2}');
+  insert into public.phases(id,organization_id,production_id,name,phase_type,position,created_by,updated_by) values('${phase2}','${org}','${prod2}','Fictional Shoot','shoot',0,'${owner.id}','${owner.id}');
+  insert into public.production_days(id,organization_id,production_id,phase_id,calendar_date,day_number,position,created_by,updated_by) values('${day2}','${org}','${prod2}','${phase2}','2026-11-10',4,0,'${owner.id}','${owner.id}');
+  insert into public.production_memberships(organization_id,production_id,user_id,role,status,joined_at) values('${org}','${prod2}','${organizer.id}','organizer','active',now()),('${org}','${prod2}','${editor.id}','editor','active',now()),('${org}','${prod2}','${viewer.id}','viewer','active',now());commit;`);
+  const raw=createScheduleRepository(organizer.c),id=randomUUID(),blank={meta:{},rows:[]};
+  const unassigned=await raw.createAtPlacement(id,prod2,null,null,'Unassigned fictional schedule','unassigned-'+id,blank);
+  check(unassigned.production_day_id===null&&unassigned.phase_id===null&&!('date' in unassigned.document.meta!),'Create Unassigned without inventing day, phase or date');
+  const deniedCreate=()=>editor.c.rpc('create_schedule_in_production',{target_schedule_id:randomUUID(),target_production_id:prod2,target_day_id:null,target_phase_id:null,next_display_name:'Forbidden',next_slug:'forbidden',next_document:blank,schema_version:1});
+  await denied(deniedCreate,'Editor cannot create through Unassigned entry point');
+  const edited=await editor.c.rpc('update_schedule_document',{target_schedule_id:id,expected_version:1,next_document:{meta:{town:'Fictional Unassigned town'},rows:[]},schema_version:1});ensure(!edited.error,JSON.stringify(edited.error));check(edited.data.production_day_id===null&&edited.data.document_version===2,'Editor saves existing Unassigned content');
+  const restored=await editor.c.rpc('mutate_schedule',{target_schedule_id:id,expected_version:2,operation:'restore_version',payload:{version:1}});ensure(!restored.error,JSON.stringify(restored.error));check(restored.data.document_version===3&&sameJson(restored.data.document,blank),'Unassigned document-version restore retains placement');
+  await denied(()=>editor.c.rpc('place_schedule',{target_schedule_id:id,expected_version:3,target_day_id:day2,target_phase_id:phase2}),'Editor cannot organize Unassigned placement');
+  await denied(()=>organizer.c.rpc('place_schedule',{target_schedule_id:id,expected_version:3,target_day_id:day,target_phase_id:null}),'Cross-production day substitution is rejected');
+  const placed=await organizer.c.rpc('place_schedule',{target_schedule_id:id,expected_version:3,target_day_id:day2,target_phase_id:phase2});ensure(!placed.error,JSON.stringify(placed.error));check(placed.data.production_day_id===day2&&placed.data.document_version===4&&sameJson(placed.data.document,blank),'Assign existing real day without rewriting date/location/document');
+  await denied(()=>organizer.c.rpc('place_schedule',{target_schedule_id:id,expected_version:3,target_day_id:null,target_phase_id:null}),'Stale placement cannot overwrite newer placement');
+  const clearedPlacement=await organizer.c.rpc('place_schedule',{target_schedule_id:id,expected_version:4,target_day_id:null,target_phase_id:phase2});ensure(!clearedPlacement.error,JSON.stringify(clearedPlacement.error));check(clearedPlacement.data.production_day_id===null&&clearedPlacement.data.phase_id===phase2&&sameJson(clearedPlacement.data.document,blank),'Clear day to production-contained Unassigned with explicit valid phase');
+  const lib=createScheduleLibraryRepository(organizer.c);
+  const choices=await lib.destinations(organizer.id,org);check(choices.some(p=>p.id===prod2&&p.days.some(d=>d.id===day2)&&p.phases.some(p=>p.id===phase2)),'Destination chooser uses actual production phase/day identities');
+  for(let i=0;i<3;i++){const sibling=randomUUID();await raw.createAtPlacement(sibling,prod2,null,null,'Fictional sibling '+i,'sibling-'+sibling,blank);}
+  const beforeOrder=(await lib.inventory(organizer.id,org)).filter(r=>r.production_id===prod2&&r.production_day_id===null);
+  const ordered=[...beforeOrder].reverse();await lib.order(organizer.id,ordered);
+  const afterOrder=(await lib.inventory(organizer.id,org)).filter(r=>r.production_id===prod2).sort((a,b)=>a.library_position-b.library_position);
+  check(afterOrder.map(r=>r.id).join()===ordered.map(r=>r.id).join(),'Same-group library ordering saves atomically');
+  try{await lib.order(organizer.id,ordered);throw Error('Expected stale order rejection');}catch(e){check(e instanceof Error&&'kind' in e&&e.kind==='conflict','Stale library order is rejected');}
+  const editorLib=createScheduleLibraryRepository(editor.c);try{await editorLib.order(editor.id,afterOrder);throw Error('Expected Editor order rejection');}catch(e){check(e instanceof Error&&'kind' in e&&e.kind==='unavailable','Editor cannot reorder library');}
+  const targetVersion=afterOrder.find(r=>r.id===id)!.document_version;
+  const trashResult=await organizer.c.rpc('mutate_schedule',{target_schedule_id:id,expected_version:targetVersion,operation:'delete',payload:{}});ensure(!trashResult.error,JSON.stringify(trashResult.error));check(!!trashResult.data.deleted_at,'Organizer trashes Unassigned schedule');
+  check(!(await editorLib.inventory(editor.id,org)).some(r=>r.id===id),'Unassigned Trash is hidden from Editor library');
+  const recoverResult=await organizer.c.rpc('mutate_schedule',{target_schedule_id:id,expected_version:targetVersion+1,operation:'restore',payload:{}});ensure(!recoverResult.error,JSON.stringify(recoverResult.error));check(recoverResult.data.production_day_id===null&&recoverResult.data.phase_id===phase2,'Trash recovery retains Unassigned placement and phase');
+  const lastId='ffffffff-'+randomUUID().slice(9);
+  sql(`insert into public.schedules(id,organization_id,production_id,production_day_id,display_name,slug,document,created_by,updated_by)
+  select gen_random_uuid(),'${org}','${prod2}',null,'Fictional paging schedule '||n,'paging-'||gen_random_uuid(),'{"meta":{},"rows":[]}'::jsonb,'${owner.id}','${owner.id}' from generate_series(1,205) n;
+  insert into public.schedules(id,organization_id,production_id,production_day_id,display_name,slug,document,created_by,updated_by)
+  values('${lastId}','${org}','${prod2}',null,'Needle beyond page two','needle-${lastId}','{"meta":{"town":"Fictional Search Harbor","date":"2026-11-12"},"rows":[]}'::jsonb,'${owner.id}','${owner.id}');`);
+  const all=await lib.inventory(organizer.id,org);check(all.length>200&&all.some(r=>r.id===lastId),'Library retrieves complete inventory across multiple pages');
+  check(filterLibrary(all,'Needle beyond','active',prod2,'2026-11-01','2026-11-30','name').map(r=>r.id).join()===lastId,'Search and date filters find final-page schedule');
+  check(filterLibrary(all,'riverside','active',prod2,'','','manual').length===210,'Production-name search covers every page');
+  const hidden=await owner.c.rpc('set_schedule_restriction',{...policy,target_id:randomUUID(),target_production_id:prod2,target_schedule_id:null,subject_role:'editor',denied_actions:['read']});ensure(!hidden.error,JSON.stringify(hidden.error));
+  check(!(await editorLib.inventory(editor.id,org)).some(r=>r.production_id===prod2),'Production restriction removes library and search metadata');
+  check((await createScheduleLibraryRepository(outsider.c).inventory(outsider.id,org)).length===0,'Outside account cannot enumerate library metadata');
+ }
  if(args.includes('--serve')){
   const fixture={project,org,prod,schedule,owner:{email:owner.email,password:owner.password},organizer:{email:organizer.email,password:organizer.password},editor:{email:editor.email,password:editor.password},admin:{email:admin.email,password:admin.password}};
   writeFileSync('/private/tmp/roseland-b03-browser-fixtures.json',JSON.stringify(fixture),{mode:0o600});

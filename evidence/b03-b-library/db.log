@@ -1,0 +1,30 @@
+Connecting to local database...
+psql:/private/tmp/roseland-b03-local-20260917/supabase/tests/database/auth_bootstrap.test.sql:4: NOTICE:  extension "pgtap" already exists, skipping
+/private/tmp/roseland-b03-local-20260917/supabase/tests/database/auth_bootstrap.test.sql ................. ok
+psql:/private/tmp/roseland-b03-local-20260917/supabase/tests/database/data_api_sessions.test.sql:2: NOTICE:  extension "pgtap" already exists, skipping
+/private/tmp/roseland-b03-local-20260917/supabase/tests/database/data_api_sessions.test.sql .............. ok
+psql:/private/tmp/roseland-b03-local-20260917/supabase/tests/database/function_privileges.test.sql:4: NOTICE:  extension "pgtap" already exists, skipping
+/private/tmp/roseland-b03-local-20260917/supabase/tests/database/function_privileges.test.sql ............ ok
+psql:/private/tmp/roseland-b03-local-20260917/supabase/tests/database/invitation_acceptance_receipt.test.sql:2: NOTICE:  extension "pgtap" already exists, skipping
+/private/tmp/roseland-b03-local-20260917/supabase/tests/database/invitation_acceptance_receipt.test.sql .. ok
+psql:/private/tmp/roseland-b03-local-20260917/supabase/tests/database/local_editor_sessions.test.sql:2: NOTICE:  extension "pgtap" already exists, skipping
+/private/tmp/roseland-b03-local-20260917/supabase/tests/database/local_editor_sessions.test.sql .......... ok
+psql:/private/tmp/roseland-b03-local-20260917/supabase/tests/database/permission_lifecycle.test.sql:3: NOTICE:  extension "pgtap" already exists, skipping
+/private/tmp/roseland-b03-local-20260917/supabase/tests/database/permission_lifecycle.test.sql ........... ok
+psql:/private/tmp/roseland-b03-local-20260917/supabase/tests/database/related_catalogue.test.sql:4: NOTICE:  extension "pgtap" already exists, skipping
+/private/tmp/roseland-b03-local-20260917/supabase/tests/database/related_catalogue.test.sql .............. ok
+psql:/private/tmp/roseland-b03-local-20260917/supabase/tests/database/schedule_contract.test.sql:4: NOTICE:  extension "pgtap" already exists, skipping
+/private/tmp/roseland-b03-local-20260917/supabase/tests/database/schedule_contract.test.sql .............. ok
+psql:/private/tmp/roseland-b03-local-20260917/supabase/tests/database/schedule_domain_rls.test.sql:4: NOTICE:  extension "pgtap" already exists, skipping
+/private/tmp/roseland-b03-local-20260917/supabase/tests/database/schedule_domain_rls.test.sql ............ ok
+psql:/private/tmp/roseland-b03-local-20260917/supabase/tests/database/schedule_lifecycle.test.sql:4: NOTICE:  extension "pgtap" already exists, skipping
+/private/tmp/roseland-b03-local-20260917/supabase/tests/database/schedule_lifecycle.test.sql ............. ok
+psql:/private/tmp/roseland-b03-local-20260917/supabase/tests/database/server_workflows.test.sql:4: NOTICE:  extension "pgtap" already exists, skipping
+/private/tmp/roseland-b03-local-20260917/supabase/tests/database/server_workflows.test.sql ............... ok
+psql:/private/tmp/roseland-b03-local-20260917/supabase/tests/database/tenant_rls.test.sql:7: NOTICE:  extension "pgtap" already exists, skipping
+/private/tmp/roseland-b03-local-20260917/supabase/tests/database/tenant_rls.test.sql ..................... ok
+psql:/private/tmp/roseland-b03-local-20260917/supabase/tests/database/workflow_requests.test.sql:2: NOTICE:  extension "pgtap" already exists, skipping
+/private/tmp/roseland-b03-local-20260917/supabase/tests/database/workflow_requests.test.sql .............. ok
+All tests successful.
+Files=13, Tests=431,  0 wallclock secs ( 0.03 usr  0.02 sys +  0.05 cusr  0.02 csys =  0.12 CPU)
+Result: PASS
