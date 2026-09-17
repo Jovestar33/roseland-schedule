@@ -1,0 +1,5 @@
+
+> roseland-schedule@2.0.0 security:audit
+> node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types scripts/security/npm-audit.ts
+
+npm audit found no high or critical runtime vulnerabilities.

@@ -1,0 +1,336 @@
+{
+  "project": "roseland-b02-20260916",
+  "api": "http://127.0.0.1:57321",
+  "app": "http://127.0.0.1:3402",
+  "actors": {
+    "owner": "8efe4c15-98f3-49f5-8080-befbdfb8db7e",
+    "editor": "3acb217e-3800-4168-88ce-0cc61540ddb4",
+    "viewer": "8ff6a40a-48e3-4d0f-9aa6-27f78f407bf1",
+    "outside": "2ebdf37e-e975-4634-ad20-81a9e625c50c"
+  },
+  "a": {
+    "org": "5e5f0078-4ba2-4c98-a941-1d0f6d237a4e",
+    "prod": "629203ba-7b14-499f-b1f6-2101e04b68b1",
+    "day": "0adfa927-b765-4754-baf9-843281f56099"
+  },
+  "b": {
+    "org": "a397f208-e0c6-49f0-93db-3e8bca435089",
+    "prod": "86e720de-a85c-4c34-99fd-df2b7baf4ee6",
+    "day": "f803b68a-5016-4589-8c59-de6eb9b88997"
+  },
+  "records": [
+    {
+      "id": "23167bdc-6a6c-4c1f-8944-77faebdcf5c9",
+      "name": "B04 ordinary fictional day",
+      "organization": "5e5f0078-4ba2-4c98-a941-1d0f6d237a4e"
+    },
+    {
+      "id": "fc374767-3d2e-46b0-a327-4489581630c3",
+      "name": "B04 long fictional day",
+      "organization": "5e5f0078-4ba2-4c98-a941-1d0f6d237a4e"
+    },
+    {
+      "id": "2189a66b-4f2e-4e0a-8124-b69b6d8128c7",
+      "name": "B04 empty fictional day",
+      "organization": "5e5f0078-4ba2-4c98-a941-1d0f6d237a4e"
+    },
+    {
+      "id": "2cb538d4-900a-436f-8ad0-eb866a7fa642",
+      "name": "B04 Woodland fictional day",
+      "organization": "a397f208-e0c6-49f0-93db-3e8bca435089"
+    },
+    {
+      "id": "1fc41cc9-c750-4d34-8754-d249ae6c4bc2",
+      "name": "B04 pagination 1",
+      "organization": "5e5f0078-4ba2-4c98-a941-1d0f6d237a4e"
+    },
+    {
+      "id": "94be8327-82b5-45f0-bb00-b7070bf38ec9",
+      "name": "B04 pagination 2",
+      "organization": "5e5f0078-4ba2-4c98-a941-1d0f6d237a4e"
+    },
+    {
+      "id": "b168a6f8-8ec9-4637-a68b-18472d56e8e6",
+      "name": "B04 pagination 3",
+      "organization": "5e5f0078-4ba2-4c98-a941-1d0f6d237a4e"
+    },
+    {
+      "id": "b49eda31-cb3f-4041-a69c-4115c6af5720",
+      "name": "B04 pagination 4",
+      "organization": "5e5f0078-4ba2-4c98-a941-1d0f6d237a4e"
+    },
+    {
+      "id": "d79cf4dd-9f71-4a9c-9e97-b998767d6bb2",
+      "name": "B04 pagination 5",
+      "organization": "5e5f0078-4ba2-4c98-a941-1d0f6d237a4e"
+    },
+    {
+      "id": "93783f87-e88e-48cf-bbf5-83ac0df68d36",
+      "name": "B04 pagination 6",
+      "organization": "5e5f0078-4ba2-4c98-a941-1d0f6d237a4e"
+    },
+    {
+      "id": "9ed0e7b6-218e-4432-9bf6-6bd2861b8c21",
+      "name": "B04 pagination 7",
+      "organization": "5e5f0078-4ba2-4c98-a941-1d0f6d237a4e"
+    },
+    {
+      "id": "84b1fca1-aaef-4e8f-a9c3-ec592b3041ea",
+      "name": "B04 pagination 8",
+      "organization": "5e5f0078-4ba2-4c98-a941-1d0f6d237a4e"
+    },
+    {
+      "id": "d191f5b0-1684-4fb3-8c40-bffcb182031d",
+      "name": "B04 pagination 9",
+      "organization": "5e5f0078-4ba2-4c98-a941-1d0f6d237a4e"
+    },
+    {
+      "id": "a246689f-52ea-4ea5-948e-8eec59b13c9c",
+      "name": "B04 pagination 10",
+      "organization": "5e5f0078-4ba2-4c98-a941-1d0f6d237a4e"
+    },
+    {
+      "id": "23737c1d-5c51-4386-b2cf-4748aa32eb8a",
+      "name": "B04 pagination 11",
+      "organization": "5e5f0078-4ba2-4c98-a941-1d0f6d237a4e"
+    },
+    {
+      "id": "0684bd2b-b547-4298-9f59-30cf530f16f1",
+      "name": "B04 pagination 12",
+      "organization": "5e5f0078-4ba2-4c98-a941-1d0f6d237a4e"
+    },
+    {
+      "id": "b4b8447e-f5fa-48d2-ac12-33d21321795c",
+      "name": "B04 pagination 13",
+      "organization": "5e5f0078-4ba2-4c98-a941-1d0f6d237a4e"
+    },
+    {
+      "id": "ed878331-a0cb-448b-9282-2c14233bba1f",
+      "name": "B04 pagination 14",
+      "organization": "5e5f0078-4ba2-4c98-a941-1d0f6d237a4e"
+    },
+    {
+      "id": "eb79cf12-c229-4c9a-a278-4aeaf6d6ff27",
+      "name": "B04 pagination 15",
+      "organization": "5e5f0078-4ba2-4c98-a941-1d0f6d237a4e"
+    },
+    {
+      "id": "4a9cfec1-1d22-42b0-b3be-913a4562bdc1",
+      "name": "B04 pagination 16",
+      "organization": "5e5f0078-4ba2-4c98-a941-1d0f6d237a4e"
+    },
+    {
+      "id": "08ef4551-71da-467a-a5be-8c1a2365724a",
+      "name": "B04 pagination 17",
+      "organization": "5e5f0078-4ba2-4c98-a941-1d0f6d237a4e"
+    },
+    {
+      "id": "e705b567-5940-4a8f-95c4-6d167610999c",
+      "name": "B04 pagination 18",
+      "organization": "5e5f0078-4ba2-4c98-a941-1d0f6d237a4e"
+    },
+    {
+      "id": "e4c50a3c-6d35-441b-bc2d-62d4ed1f1420",
+      "name": "B04 pagination 19",
+      "organization": "5e5f0078-4ba2-4c98-a941-1d0f6d237a4e"
+    },
+    {
+      "id": "ac895706-56dd-4e04-b27a-0154712b98a7",
+      "name": "B04 pagination 20",
+      "organization": "5e5f0078-4ba2-4c98-a941-1d0f6d237a4e"
+    },
+    {
+      "id": "94fc8554-1e4e-4622-b54f-6dcd8f26b168",
+      "name": "B04 pagination 21",
+      "organization": "5e5f0078-4ba2-4c98-a941-1d0f6d237a4e"
+    },
+    {
+      "id": "be5bb786-2cb5-4a18-afa3-b119fd9555e7",
+      "name": "B04 pagination 22",
+      "organization": "5e5f0078-4ba2-4c98-a941-1d0f6d237a4e"
+    },
+    {
+      "id": "4143e6b2-a39b-4c41-baaf-d5fe68927fb6",
+      "name": "B04 pagination 23",
+      "organization": "5e5f0078-4ba2-4c98-a941-1d0f6d237a4e"
+    },
+    {
+      "id": "67685ad4-d7ba-42ca-bdf3-21e0ba353cde",
+      "name": "B04 pagination 24",
+      "organization": "5e5f0078-4ba2-4c98-a941-1d0f6d237a4e"
+    },
+    {
+      "id": "9e6dd96b-f641-4348-8cdd-3c1f8f37ca9a",
+      "name": "B04 pagination 25",
+      "organization": "5e5f0078-4ba2-4c98-a941-1d0f6d237a4e"
+    },
+    {
+      "id": "ce1c4fa4-9aa0-4ba8-b811-6151bbfd232a",
+      "name": "B04 pagination 26",
+      "organization": "5e5f0078-4ba2-4c98-a941-1d0f6d237a4e"
+    },
+    {
+      "id": "739ebecd-9e03-4603-a633-5251cd7f8729",
+      "name": "B04 pagination 27",
+      "organization": "5e5f0078-4ba2-4c98-a941-1d0f6d237a4e"
+    },
+    {
+      "id": "355c11c3-33e1-45e6-ac7b-730a91406548",
+      "name": "B04 pagination 28",
+      "organization": "5e5f0078-4ba2-4c98-a941-1d0f6d237a4e"
+    },
+    {
+      "id": "72b24768-7de0-4d3a-85e2-7cd42fa5fff1",
+      "name": "B04 pagination 29",
+      "organization": "5e5f0078-4ba2-4c98-a941-1d0f6d237a4e"
+    },
+    {
+      "id": "c83665c5-f247-476b-9fb9-ca04b11c2df6",
+      "name": "B04 pagination 30",
+      "organization": "5e5f0078-4ba2-4c98-a941-1d0f6d237a4e"
+    },
+    {
+      "id": "6e09481e-fa5b-43bf-9816-7367a1a7e843",
+      "name": "B04 pagination 31",
+      "organization": "5e5f0078-4ba2-4c98-a941-1d0f6d237a4e"
+    },
+    {
+      "id": "06ecfb65-4fdb-4d84-82be-5c4b920156de",
+      "name": "B04 pagination 32",
+      "organization": "5e5f0078-4ba2-4c98-a941-1d0f6d237a4e"
+    },
+    {
+      "id": "221bdc9a-e642-4240-bad3-af505fe9466e",
+      "name": "B04 pagination 33",
+      "organization": "5e5f0078-4ba2-4c98-a941-1d0f6d237a4e"
+    },
+    {
+      "id": "049ce1d5-5bd1-4b60-a934-8770732358d2",
+      "name": "B04 pagination 34",
+      "organization": "5e5f0078-4ba2-4c98-a941-1d0f6d237a4e"
+    },
+    {
+      "id": "b50cae76-1aef-4634-a89d-60a3f58445ce",
+      "name": "B04 pagination 35",
+      "organization": "5e5f0078-4ba2-4c98-a941-1d0f6d237a4e"
+    },
+    {
+      "id": "19af7a73-ada3-4c26-953b-794eeef838e0",
+      "name": "B04 pagination 36",
+      "organization": "5e5f0078-4ba2-4c98-a941-1d0f6d237a4e"
+    },
+    {
+      "id": "d1d78cf9-17d5-46e0-8964-4ac630d18a00",
+      "name": "B04 pagination 37",
+      "organization": "5e5f0078-4ba2-4c98-a941-1d0f6d237a4e"
+    },
+    {
+      "id": "776a15fa-5903-4ba9-9763-28283dcb2415",
+      "name": "B04 pagination 38",
+      "organization": "5e5f0078-4ba2-4c98-a941-1d0f6d237a4e"
+    },
+    {
+      "id": "d6d1848b-1d4f-4243-992a-3dd9d846f953",
+      "name": "B04 pagination 39",
+      "organization": "5e5f0078-4ba2-4c98-a941-1d0f6d237a4e"
+    },
+    {
+      "id": "eb3fde1b-077a-4dc3-ab77-d612f65e9e28",
+      "name": "B04 pagination 40",
+      "organization": "5e5f0078-4ba2-4c98-a941-1d0f6d237a4e"
+    },
+    {
+      "id": "8010d4c7-d06b-403e-875c-b0eceaa79a7d",
+      "name": "B04 pagination 41",
+      "organization": "5e5f0078-4ba2-4c98-a941-1d0f6d237a4e"
+    },
+    {
+      "id": "497bfeef-43a9-40e2-a84c-48ff4a73e0eb",
+      "name": "B04 pagination 42",
+      "organization": "5e5f0078-4ba2-4c98-a941-1d0f6d237a4e"
+    },
+    {
+      "id": "9af79d47-4af2-438d-91de-7890b411f2db",
+      "name": "B04 pagination 43",
+      "organization": "5e5f0078-4ba2-4c98-a941-1d0f6d237a4e"
+    },
+    {
+      "id": "ec1dcc2e-6ea1-4469-8586-3b8963a61a62",
+      "name": "B04 pagination 44",
+      "organization": "5e5f0078-4ba2-4c98-a941-1d0f6d237a4e"
+    },
+    {
+      "id": "a336b8a0-6601-46b0-a18b-fe8b09faa3ab",
+      "name": "B04 pagination 45",
+      "organization": "5e5f0078-4ba2-4c98-a941-1d0f6d237a4e"
+    },
+    {
+      "id": "2dc01005-d92b-44e9-adb7-5bd5009771b2",
+      "name": "B04 pagination 46",
+      "organization": "5e5f0078-4ba2-4c98-a941-1d0f6d237a4e"
+    },
+    {
+      "id": "4c9128e5-7c84-4534-ad24-aaa9903c026c",
+      "name": "B04 pagination 47",
+      "organization": "5e5f0078-4ba2-4c98-a941-1d0f6d237a4e"
+    },
+    {
+      "id": "05ee32b0-f0ed-483c-9d00-a0dfef3751a0",
+      "name": "B04 pagination 48",
+      "organization": "5e5f0078-4ba2-4c98-a941-1d0f6d237a4e"
+    },
+    {
+      "id": "5e1587b9-4b48-4b26-8fc0-191496f68c88",
+      "name": "B04 pagination 49",
+      "organization": "5e5f0078-4ba2-4c98-a941-1d0f6d237a4e"
+    },
+    {
+      "id": "7accaa1d-ea52-4308-ba2e-d71d6ae2c6b2",
+      "name": "B04 pagination 50",
+      "organization": "5e5f0078-4ba2-4c98-a941-1d0f6d237a4e"
+    }
+  ],
+  "created": [
+    {
+      "id": "ee52698c-f02a-4bd2-b1b2-62f2b1a9af9a",
+      "name": "B04 runtime copy",
+      "slug": "b04-runtime-copy",
+      "organization": "5e5f0078-4ba2-4c98-a941-1d0f6d237a4e",
+      "day": "0adfa927-b765-4754-baf9-843281f56099",
+      "state": "success",
+      "failure": null,
+      "matchedVersion": 1
+    },
+    {
+      "id": "a3b05625-7c97-43a7-8ba4-2610fe257bf4",
+      "name": "B04 recovered 1",
+      "slug": "b04-recovered-1",
+      "organization": "5e5f0078-4ba2-4c98-a941-1d0f6d237a4e",
+      "day": "0adfa927-b765-4754-baf9-843281f56099",
+      "state": "success",
+      "failure": null,
+      "matchedVersion": 1
+    },
+    {
+      "id": "3570407e-e490-43fb-b936-568497fd8eec",
+      "name": "B04 recovered 2",
+      "slug": "b04-recovered-2",
+      "organization": "5e5f0078-4ba2-4c98-a941-1d0f6d237a4e",
+      "day": "0adfa927-b765-4754-baf9-843281f56099",
+      "state": "success",
+      "failure": null,
+      "matchedVersion": 1
+    },
+    {
+      "id": "6a7d0a3f-119f-45a5-a21c-1a9a4c125279",
+      "name": "B04 recovered 3",
+      "slug": "b04-recovered-3",
+      "organization": "5e5f0078-4ba2-4c98-a941-1d0f6d237a4e",
+      "day": "0adfa927-b765-4754-baf9-843281f56099",
+      "state": "success",
+      "failure": null,
+      "matchedVersion": 1
+    }
+  ],
+  "fictional": true
+}

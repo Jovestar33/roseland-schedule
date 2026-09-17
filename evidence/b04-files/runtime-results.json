@@ -1,0 +1,54 @@
+{
+  "fictional": true,
+  "allReadable": 54,
+  "viewerReadable": 52,
+  "outsideReadable": 0,
+  "copy": [
+    {
+      "id": "ee52698c-f02a-4bd2-b1b2-62f2b1a9af9a",
+      "name": "B04 runtime copy",
+      "slug": "b04-runtime-copy",
+      "organization": "5e5f0078-4ba2-4c98-a941-1d0f6d237a4e",
+      "day": "0adfa927-b765-4754-baf9-843281f56099",
+      "state": "success",
+      "failure": null,
+      "matchedVersion": 1
+    }
+  ],
+  "recovered": [
+    {
+      "id": "a3b05625-7c97-43a7-8ba4-2610fe257bf4",
+      "name": "B04 recovered 1",
+      "slug": "b04-recovered-1",
+      "organization": "5e5f0078-4ba2-4c98-a941-1d0f6d237a4e",
+      "day": "0adfa927-b765-4754-baf9-843281f56099",
+      "state": "success",
+      "failure": null,
+      "matchedVersion": 1
+    },
+    {
+      "id": "3570407e-e490-43fb-b936-568497fd8eec",
+      "name": "B04 recovered 2",
+      "slug": "b04-recovered-2",
+      "organization": "5e5f0078-4ba2-4c98-a941-1d0f6d237a4e",
+      "day": "0adfa927-b765-4754-baf9-843281f56099",
+      "state": "success",
+      "failure": null,
+      "matchedVersion": 1
+    },
+    {
+      "id": "6a7d0a3f-119f-45a5-a21c-1a9a4c125279",
+      "name": "B04 recovered 3",
+      "slug": "b04-recovered-3",
+      "organization": "5e5f0078-4ba2-4c98-a941-1d0f6d237a4e",
+      "day": "0adfa927-b765-4754-baf9-843281f56099",
+      "state": "success",
+      "failure": null,
+      "matchedVersion": 1
+    }
+  ],
+  "sourceUnchanged": true,
+  "hashRoundTrip": true,
+  "duplicateNameDenied": true,
+  "viewerAndTenantCreateDenied": true
+}

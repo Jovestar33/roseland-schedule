@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useRef, useState, useMemo } from 'react';
+import { useEffect, useRef, useState, useMemo, useCallback } from 'react';
 import { createClient, type Session } from '@supabase/supabase-js';
 import type { LocalEditorConfig } from '@/lib/platform/local-editor-config';
 import { createSessionScheduleRepository, type ScheduleSummary } from '@/lib/platform/session-schedule-repository';
@@ -20,6 +20,7 @@ import styles from './local.module.css';
 import { useLocalWorkspace, useWorkspacePanelState } from '@/components/local/LocalWorkspaceContext';
 import { createWorkspaceRepository } from '@/lib/platform/workspace-repository';
 import ScheduleReadView from '@/components/view/ScheduleReadView';
+import LocalScheduleFiles from '@/components/local/LocalScheduleFiles';
 import ShareDropdown from '@/components/toolbar/ShareDropdown';
 import LocalWeatherControls from '@/components/local/LocalWeatherControls';
 import LocalSchedulePrint from '@/components/local/LocalSchedulePrint';
@@ -74,11 +75,13 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
   const [notes, setNotes] = useState<number | null>(null);
   const [documentDialogOpen, setDocumentDialogOpen] = useState(false);
   const documentSession = useScheduleStore(s => s.documentSession);
+  const [fileState, setFileState] = useState({dirty:false,busy:false});
+  const reportFiles = useCallback((dirty:boolean,busy:boolean)=>setFileState({dirty,busy}),[]);
   const dirty = useScheduleStore(s => s.dirty);
   const rows = useScheduleStore(s => s.rows);
   const state = useScheduleStore.getState;
-  const hasLocalDraft = dirty || documentDialogOpen || contact !== null || status !== null || notes !== null || controller.attempt !== null;
-  useWorkspacePanelState(hasLocalDraft, busy);
+  const hasLocalDraft = fileState.dirty || dirty || documentDialogOpen || contact !== null || status !== null || notes !== null || controller.attempt !== null;
+  useWorkspacePanelState(hasLocalDraft, busy || fileState.busy);
   const ready = !!session && !authNeeded && !workspace?.authNeeded;
   const recordInScope = !workspace || (!!workspace.organization && controller.record?.organization_id === workspace.organization.id);
   const canEdit = !workspace || (permission?.recordId === controller.record?.id && permission?.token === workspace.session?.access_token && permission?.allowed === true);
@@ -227,6 +230,9 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
           }), 'Sign out and discard unsaved changes')}>Sign out</button>}
           <button className="btn btn-light" disabled={busy || !ready} onClick={() => void run(() => list(false))}>Refresh list</button>
         </div>
+        {workspace && <LocalScheduleFiles client={client} actor={session?.user.id ?? accountRef.current} organization={workspace.organization?.id ?? null}
+          enabled={active && ready && !confirmation} copyEnabled={!busy && !!selected && recordInScope && canEdit && !documentDialogOpen && contact===null && notes===null && status===null}
+          getDraft={()=>state().getScheduleData()} name={state().scheduleName ?? 'Schedule'} onState={reportFiles} requireAuth={workspace.requireAuth}/>}
         <nav aria-label="Local schedules" className={styles.list}>
           {workspace && !workspace.organization && <p>Choose an authorized organization above.</p>}
           {selected && !recordInScope && <p>A schedule draft is retained in another organization. Return to that organization to continue, or explicitly discard it when opening another schedule.</p>}

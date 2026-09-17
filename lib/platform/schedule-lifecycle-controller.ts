@@ -28,9 +28,9 @@ export class ScheduleLifecycleController {
   failure:ScheduleRepositoryError['kind']|null=null; busy=false; private generation=0;
   bind(actor:string|null){if(actor!==this.actor){this.clear();this.actor=actor;}}
   clear(){this.generation++;this.attempt=null;this.result=null;this.phase='review';this.failure=null;this.busy=false;}
-  prepareCreate(organization:string,id:string,dayId:string,name:string,slug:string){
+  prepareCreate(organization:string,id:string,dayId:string,name:string,slug:string,document:StoredSchedule['document']={meta:{},rows:[]} as unknown as StoredSchedule['document']){
     if(!this.actor||this.attempt)throw new ScheduleRepositoryError('invalid');namePair(name,slug);
-    this.attempt=freeze({actor:this.actor,organization:parseInvitationId(organization),id:parseInvitationId(id),dayId:parseInvitationId(dayId),kind:'create',expectedVersion:0,name,slug,before:null,payload:{},document:{meta:{},rows:[]} as unknown as StoredSchedule['document']});
+    this.attempt=freeze({actor:this.actor,organization:parseInvitationId(organization),id:parseInvitationId(id),dayId:parseInvitationId(dayId),kind:'create',expectedVersion:0,name,slug,before:null,payload:{},document:structuredClone(document)});
   }
   prepare(before:StoredSchedule,kind:ScheduleLifecycle,payload:Record<string,unknown>={},source?:ScheduleHistory){
     if(!this.actor||this.attempt)throw new ScheduleRepositoryError('invalid');version(before.document_version);

@@ -1,3 +1,11 @@
+## September 16: authorized B02/B04 bundle complete locally
+
+Durable checkout: `/Users/johnsammon/.codex/worktrees/roseland-b02/roseland-schedule`, branch `codex/migration-schedule-contract`. B02 checkpoint `c14e03fe3416eb5f07688ad8c7abebbaffb1046d`; the separate B04 commit containing this entry completes the resumed dispatch B02-B04-AUTH-20260916. See [document-tools review](./LOCAL_DOCUMENT_TOOLS_REVIEW.md) and [schedule-files review](./LOCAL_SCHEDULE_FILES_REVIEW.md). Earlier pause and pending-browser statuses below are historical.
+
+Final B04 validation: 158 platform tests, 56 editor regressions, 431 database assertions, production build/types/scoped lint, no high/critical runtime dependency findings, genuine Auth/RLS, actual JSON round trips/checksums, visible draft-copy preservation and import cancel/error/lost-response/auth-recovery/viewer checks. B02 retains five verified PDFs and exact browser CSV evidence. Library parity is still open before reskin; [the next library/B03 brief](./NEXT_LIBRARY_B03_BRIEF.md) records unresolved placement/identity decisions and is not an implementation dispatch.
+
+Actual schedules, hosted services and real credentials/providers are untouched. No push/deployment/schema change. Owned app/proxy/database services are stopped, browser signed out and viewport reset; fictional records, recovery volumes, failure diagnostics and manifests retained. Shared application source is unchanged; synchronize review/evidence only. Recreate the dependency symlink to `/Users/johnsammon/roseland-schedule/node_modules` for future local builds. The authorized bundle stops here.
+
 # Current state and restart readiness
 
 ## September 16: B01 ordinary save-result recovery passed locally

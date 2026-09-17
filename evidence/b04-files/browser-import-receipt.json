@@ -1,0 +1,26 @@
+{
+  "format": "schedule-create-receipt",
+  "fictional": true,
+  "items": [
+    {
+      "id": "f768f024-bd15-4a1b-a804-a08f8ad51ded",
+      "name": "B04 browser import one",
+      "slug": "b04-browser-import-one",
+      "organization": "5e5f0078-4ba2-4c98-a941-1d0f6d237a4e",
+      "day": "0adfa927-b765-4754-baf9-843281f56099",
+      "state": "success",
+      "failure": null,
+      "matchedVersion": 1
+    },
+    {
+      "id": "e7b6d04a-a7e4-4156-a444-0a9807e986c1",
+      "name": "B04 browser import two",
+      "slug": "b04-browser-import-two",
+      "organization": "5e5f0078-4ba2-4c98-a941-1d0f6d237a4e",
+      "day": "0adfa927-b765-4754-baf9-843281f56099",
+      "state": "success",
+      "failure": null,
+      "matchedVersion": 1
+    }
+  ]
+}

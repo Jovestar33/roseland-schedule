@@ -1,0 +1,30 @@
+Connecting to local database...
+psql:/Users/johnsammon/.codex/worktrees/roseland-b02/runtime/b02-stack/supabase/tests/database/auth_bootstrap.test.sql:4: NOTICE:  extension "pgtap" already exists, skipping
+/Users/johnsammon/.codex/worktrees/roseland-b02/runtime/b02-stack/supabase/tests/database/auth_bootstrap.test.sql ................. ok
+psql:/Users/johnsammon/.codex/worktrees/roseland-b02/runtime/b02-stack/supabase/tests/database/data_api_sessions.test.sql:2: NOTICE:  extension "pgtap" already exists, skipping
+/Users/johnsammon/.codex/worktrees/roseland-b02/runtime/b02-stack/supabase/tests/database/data_api_sessions.test.sql .............. ok
+psql:/Users/johnsammon/.codex/worktrees/roseland-b02/runtime/b02-stack/supabase/tests/database/function_privileges.test.sql:4: NOTICE:  extension "pgtap" already exists, skipping
+/Users/johnsammon/.codex/worktrees/roseland-b02/runtime/b02-stack/supabase/tests/database/function_privileges.test.sql ............ ok
+psql:/Users/johnsammon/.codex/worktrees/roseland-b02/runtime/b02-stack/supabase/tests/database/invitation_acceptance_receipt.test.sql:2: NOTICE:  extension "pgtap" already exists, skipping
+/Users/johnsammon/.codex/worktrees/roseland-b02/runtime/b02-stack/supabase/tests/database/invitation_acceptance_receipt.test.sql .. ok
+psql:/Users/johnsammon/.codex/worktrees/roseland-b02/runtime/b02-stack/supabase/tests/database/local_editor_sessions.test.sql:2: NOTICE:  extension "pgtap" already exists, skipping
+/Users/johnsammon/.codex/worktrees/roseland-b02/runtime/b02-stack/supabase/tests/database/local_editor_sessions.test.sql .......... ok
+psql:/Users/johnsammon/.codex/worktrees/roseland-b02/runtime/b02-stack/supabase/tests/database/permission_lifecycle.test.sql:3: NOTICE:  extension "pgtap" already exists, skipping
+/Users/johnsammon/.codex/worktrees/roseland-b02/runtime/b02-stack/supabase/tests/database/permission_lifecycle.test.sql ........... ok
+psql:/Users/johnsammon/.codex/worktrees/roseland-b02/runtime/b02-stack/supabase/tests/database/related_catalogue.test.sql:4: NOTICE:  extension "pgtap" already exists, skipping
+/Users/johnsammon/.codex/worktrees/roseland-b02/runtime/b02-stack/supabase/tests/database/related_catalogue.test.sql .............. ok
+psql:/Users/johnsammon/.codex/worktrees/roseland-b02/runtime/b02-stack/supabase/tests/database/schedule_contract.test.sql:4: NOTICE:  extension "pgtap" already exists, skipping
+/Users/johnsammon/.codex/worktrees/roseland-b02/runtime/b02-stack/supabase/tests/database/schedule_contract.test.sql .............. ok
+psql:/Users/johnsammon/.codex/worktrees/roseland-b02/runtime/b02-stack/supabase/tests/database/schedule_domain_rls.test.sql:4: NOTICE:  extension "pgtap" already exists, skipping
+/Users/johnsammon/.codex/worktrees/roseland-b02/runtime/b02-stack/supabase/tests/database/schedule_domain_rls.test.sql ............ ok
+psql:/Users/johnsammon/.codex/worktrees/roseland-b02/runtime/b02-stack/supabase/tests/database/schedule_lifecycle.test.sql:4: NOTICE:  extension "pgtap" already exists, skipping
+/Users/johnsammon/.codex/worktrees/roseland-b02/runtime/b02-stack/supabase/tests/database/schedule_lifecycle.test.sql ............. ok
+psql:/Users/johnsammon/.codex/worktrees/roseland-b02/runtime/b02-stack/supabase/tests/database/server_workflows.test.sql:4: NOTICE:  extension "pgtap" already exists, skipping
+/Users/johnsammon/.codex/worktrees/roseland-b02/runtime/b02-stack/supabase/tests/database/server_workflows.test.sql ............... ok
+psql:/Users/johnsammon/.codex/worktrees/roseland-b02/runtime/b02-stack/supabase/tests/database/tenant_rls.test.sql:7: NOTICE:  extension "pgtap" already exists, skipping
+/Users/johnsammon/.codex/worktrees/roseland-b02/runtime/b02-stack/supabase/tests/database/tenant_rls.test.sql ..................... ok
+psql:/Users/johnsammon/.codex/worktrees/roseland-b02/runtime/b02-stack/supabase/tests/database/workflow_requests.test.sql:2: NOTICE:  extension "pgtap" already exists, skipping
+/Users/johnsammon/.codex/worktrees/roseland-b02/runtime/b02-stack/supabase/tests/database/workflow_requests.test.sql .............. ok
+All tests successful.
+Files=13, Tests=431,  0 wallclock secs ( 0.02 usr  0.02 sys +  0.04 cusr  0.02 csys =  0.10 CPU)
+Result: PASS

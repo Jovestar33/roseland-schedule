@@ -1,0 +1,15 @@
+{
+  "ownedPortsClosed": {
+    "3401": true,
+    "3402": true,
+    "3403": true,
+    "3404": true,
+    "57321": true,
+    "57322": true
+  },
+  "supabaseStoppedWithVolumesRetained": true,
+  "browserSignedOut": true,
+  "viewportReset": true,
+  "fixtureDataRetained": true,
+  "printRenders": "../runtime/retained-print-renders"
+}

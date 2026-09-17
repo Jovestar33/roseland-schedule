@@ -15,3 +15,13 @@
 .recovery h2 { font-size: 18px; margin: 0 0 8px; }
 .recovery p { margin: 8px 0; }
 .recovery button { margin: 4px 8px 4px 0; min-height: 44px; white-space: normal; }
+
+.files { margin: 20px 0; padding: 16px; border: 1px solid #96b3a7; border-radius: 8px; background: #fff; color: #17252b; }
+.files h2 { font-size: 20px; }
+.files label { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.files input, .files select { max-width: 100%; padding: 8px; border: 1px solid #7b878c; border-radius: 5px; font: inherit; background: white; color: #17252b; }
+.files button { min-height: 44px; white-space: normal; margin: 4px; }
+.files fieldset { min-width: 0; border: 1px solid #9aaba4; padding: 12px; }
+.fileEntry { display: grid; gap: 10px; margin: 16px 0; }
+.files pre { max-height: 300px; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; }
+.files li { margin: 10px 0; overflow-wrap: anywhere; }

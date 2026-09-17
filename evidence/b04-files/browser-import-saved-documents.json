@@ -1,0 +1,313 @@
+{
+  "fictional": true,
+  "records": [
+    {
+      "id": "f768f024-bd15-4a1b-a804-a08f8ad51ded",
+      "display_name": "B04 browser import one",
+      "slug": "b04-browser-import-one",
+      "document_version": 1,
+      "document": {
+        "meta": {
+          "dp": "Fictional camera lead",
+          "wx": {
+            "code": 2,
+            "cond": "Partly Cloudy",
+            "maxC": 24,
+            "maxF": 75,
+            "minC": 12,
+            "minF": 54,
+            "prec": 35,
+            "town": "Fictional Harbor Studio",
+            "sunset": "7:15 PM",
+            "sunrise": "6:30 AM",
+            "fetchedAt": "Fictional forecast"
+          },
+          "dir": "Fictional director",
+          "lat": 0,
+          "lng": 0,
+          "date": "2026-10-20",
+          "prod": "Fictional producer with complete long credit",
+          "town": "Fictional Harbor Studio",
+          "phase": "Principal photography",
+          "callsheet": {
+            "notes": "CALL-NOTES Fictional detail with a comma, \"quoted text\", and multiple lines.\nSecond line remains visible. Fictional detail with a comma, \"quoted text\", and multiple lines.\nSecond line remains visible.  END-CALL-NOTES",
+            "parking": "200 Sample Road, Fictional Town",
+            "basecamp": "100 Example Lane, Fictional Harbor",
+            "hospital": "Fictional care center \u2014 fixture only",
+            "emergency": "Example coordinator +1 202 555 0100",
+            "mealNotes": "Fictional lunch\nVegetarian option",
+            "safetyNotes": "Fictional safety instructions\nKeep pathways clear",
+            "specialInstructions": "Fictional access instructions\nBring sample badge"
+          },
+          "dayNumber": 2,
+          "totalDays": 12,
+          "projectName": "Fictional production \u2013 document acceptance"
+        },
+        "rows": [
+          {
+            "dur": "00:00",
+            "loc": "Fictional location 1",
+            "desc": "DESC-1 Fictional detail with a comma, \"quoted text\", and multiple lines.\nSecond line remains visible.  END-DESC-1",
+            "done": false,
+            "notes": "NOTE-1\nFictional instructions END-NOTE-1",
+            "action": "Crew Call",
+            "locLat": 0,
+            "locLng": 0,
+            "status": "Ready",
+            "timeIn": "9:00 AM",
+            "fixedIn": true,
+            "locName": "Fictional location 1",
+            "fixedOut": false,
+            "otherText": "Fictional scene 1",
+            "sunLocked": false,
+            "locAddress": "100 Example Lane, Fictional Town",
+            "contactName": "=Fictional Crew",
+            "contactEmail": "crew1@example.test",
+            "contactPhone": "+1 202 555 0142",
+            "contactTitle": "Fictional department",
+            "fixedOutTime": "",
+            "subLocations": [
+              {
+                "id": "fictional-sub-0",
+                "loc": "Fictional annex",
+                "desc": "SUB-1 Fictional nested description END-SUB-1",
+                "done": false,
+                "name": "Annex 1",
+                "locLat": 0,
+                "locLng": 0,
+                "address": "200 Sample Road"
+              }
+            ]
+          },
+          {
+            "dur": "00:15",
+            "loc": "Fictional location 2",
+            "desc": "DESC-2 Fictional detail with a comma, \"quoted text\", and multiple lines.\nSecond line remains visible.  END-DESC-2",
+            "done": true,
+            "notes": "NOTE-2\nFictional instructions END-NOTE-2",
+            "action": "Other",
+            "locLat": 0,
+            "locLng": 0,
+            "status": "Ready",
+            "timeIn": "9:00 AM",
+            "fixedIn": false,
+            "locName": "Fictional location 2",
+            "fixedOut": false,
+            "otherText": "Fictional scene 2",
+            "sunLocked": false,
+            "locAddress": "101 Example Lane, Fictional Town",
+            "contactName": "Example Crew 2",
+            "contactEmail": "crew2@example.test",
+            "contactPhone": "+1 202 555 0142",
+            "contactTitle": "Fictional department",
+            "fixedOutTime": "",
+            "subLocations": [
+              {
+                "id": "fictional-sub-1",
+                "loc": "Fictional annex",
+                "desc": "SUB-2 Fictional nested description END-SUB-2",
+                "done": false,
+                "name": "Annex 2",
+                "locLat": 0,
+                "locLng": 0,
+                "address": "201 Sample Road"
+              }
+            ]
+          },
+          {
+            "dur": "00:15",
+            "loc": "Fictional location 3",
+            "desc": "DESC-3 Fictional detail with a comma, \"quoted text\", and multiple lines.\nSecond line remains visible.  END-DESC-3",
+            "done": false,
+            "notes": "NOTE-3\nFictional instructions END-NOTE-3",
+            "action": "Wrap",
+            "locLat": 0,
+            "locLng": 0,
+            "status": "Ready",
+            "timeIn": "9:00 AM",
+            "fixedIn": false,
+            "locName": "Fictional location 3",
+            "fixedOut": false,
+            "otherText": "Fictional scene 3",
+            "sunLocked": false,
+            "locAddress": "102 Example Lane, Fictional Town",
+            "contactName": "Example Crew 3",
+            "contactEmail": "crew3@example.test",
+            "contactPhone": "+1 202 555 0142",
+            "contactTitle": "Fictional department",
+            "fixedOutTime": "",
+            "subLocations": [
+              {
+                "id": "fictional-sub-2",
+                "loc": "Fictional annex",
+                "desc": "SUB-3 Fictional nested description END-SUB-3",
+                "done": false,
+                "name": "Annex 3",
+                "locLat": 0,
+                "locLng": 0,
+                "address": "202 Sample Road"
+              }
+            ]
+          }
+        ],
+        "savedAt": 1720000000000
+      }
+    },
+    {
+      "id": "e7b6d04a-a7e4-4156-a444-0a9807e986c1",
+      "display_name": "B04 browser import two",
+      "slug": "b04-browser-import-two",
+      "document_version": 1,
+      "document": {
+        "meta": {
+          "dp": "Fictional camera lead",
+          "wx": {
+            "code": 2,
+            "cond": "Partly Cloudy",
+            "maxC": 24,
+            "maxF": 75,
+            "minC": 12,
+            "minF": 54,
+            "prec": 35,
+            "town": "Fictional Harbor Studio",
+            "sunset": "7:15 PM",
+            "sunrise": "6:30 AM",
+            "fetchedAt": "Fictional forecast"
+          },
+          "dir": "Fictional director",
+          "lat": 0,
+          "lng": 0,
+          "date": "2026-10-20",
+          "prod": "Fictional producer with complete long credit",
+          "town": "Fictional Harbor Studio",
+          "phase": "Principal photography",
+          "callsheet": {
+            "notes": "CALL-NOTES Fictional detail with a comma, \"quoted text\", and multiple lines.\nSecond line remains visible. Fictional detail with a comma, \"quoted text\", and multiple lines.\nSecond line remains visible.  END-CALL-NOTES",
+            "parking": "200 Sample Road, Fictional Town",
+            "basecamp": "100 Example Lane, Fictional Harbor",
+            "hospital": "Fictional care center \u2014 fixture only",
+            "emergency": "Example coordinator +1 202 555 0100",
+            "mealNotes": "Fictional lunch\nVegetarian option",
+            "safetyNotes": "Fictional safety instructions\nKeep pathways clear",
+            "specialInstructions": "Fictional access instructions\nBring sample badge"
+          },
+          "dayNumber": 2,
+          "totalDays": 12,
+          "projectName": "Fictional production \u2013 document acceptance"
+        },
+        "rows": [
+          {
+            "dur": "00:00",
+            "loc": "Fictional location 1",
+            "desc": "DESC-1 Fictional detail with a comma, \"quoted text\", and multiple lines.\nSecond line remains visible.  END-DESC-1",
+            "done": false,
+            "notes": "NOTE-1\nFictional instructions END-NOTE-1",
+            "action": "Crew Call",
+            "locLat": 0,
+            "locLng": 0,
+            "status": "Ready",
+            "timeIn": "9:00 AM",
+            "fixedIn": true,
+            "locName": "Fictional location 1",
+            "fixedOut": false,
+            "otherText": "Fictional scene 1",
+            "sunLocked": false,
+            "locAddress": "100 Example Lane, Fictional Town",
+            "contactName": "=Fictional Crew",
+            "contactEmail": "crew1@example.test",
+            "contactPhone": "+1 202 555 0142",
+            "contactTitle": "Fictional department",
+            "fixedOutTime": "",
+            "subLocations": [
+              {
+                "id": "fictional-sub-0",
+                "loc": "Fictional annex",
+                "desc": "SUB-1 Fictional nested description END-SUB-1",
+                "done": false,
+                "name": "Annex 1",
+                "locLat": 0,
+                "locLng": 0,
+                "address": "200 Sample Road"
+              }
+            ]
+          },
+          {
+            "dur": "00:15",
+            "loc": "Fictional location 2",
+            "desc": "DESC-2 Fictional detail with a comma, \"quoted text\", and multiple lines.\nSecond line remains visible.  END-DESC-2",
+            "done": true,
+            "notes": "NOTE-2\nFictional instructions END-NOTE-2",
+            "action": "Other",
+            "locLat": 0,
+            "locLng": 0,
+            "status": "Ready",
+            "timeIn": "9:00 AM",
+            "fixedIn": false,
+            "locName": "Fictional location 2",
+            "fixedOut": false,
+            "otherText": "Fictional scene 2",
+            "sunLocked": false,
+            "locAddress": "101 Example Lane, Fictional Town",
+            "contactName": "Example Crew 2",
+            "contactEmail": "crew2@example.test",
+            "contactPhone": "+1 202 555 0142",
+            "contactTitle": "Fictional department",
+            "fixedOutTime": "",
+            "subLocations": [
+              {
+                "id": "fictional-sub-1",
+                "loc": "Fictional annex",
+                "desc": "SUB-2 Fictional nested description END-SUB-2",
+                "done": false,
+                "name": "Annex 2",
+                "locLat": 0,
+                "locLng": 0,
+                "address": "201 Sample Road"
+              }
+            ]
+          },
+          {
+            "dur": "00:15",
+            "loc": "Fictional location 3",
+            "desc": "DESC-3 Fictional detail with a comma, \"quoted text\", and multiple lines.\nSecond line remains visible.  END-DESC-3",
+            "done": false,
+            "notes": "NOTE-3\nFictional instructions END-NOTE-3",
+            "action": "Wrap",
+            "locLat": 0,
+            "locLng": 0,
+            "status": "Ready",
+            "timeIn": "9:00 AM",
+            "fixedIn": false,
+            "locName": "Fictional location 3",
+            "fixedOut": false,
+            "otherText": "Fictional scene 3",
+            "sunLocked": false,
+            "locAddress": "102 Example Lane, Fictional Town",
+            "contactName": "Example Crew 3",
+            "contactEmail": "crew3@example.test",
+            "contactPhone": "+1 202 555 0142",
+            "contactTitle": "Fictional department",
+            "fixedOutTime": "",
+            "subLocations": [
+              {
+                "id": "fictional-sub-2",
+                "loc": "Fictional annex",
+                "desc": "SUB-3 Fictional nested description END-SUB-3",
+                "done": false,
+                "name": "Annex 3",
+                "locLat": 0,
+                "locLng": 0,
+                "address": "202 Sample Road"
+              }
+            ]
+          }
+        ],
+        "savedAt": 1720000000000
+      }
+    }
+  ],
+  "exactDocuments": true,
+  "cancelCreatedCount": 0,
+  "lostAcknowledgementRecoveredWithoutDuplicate": true,
+  "reauthRetainedOriginalIds": true
+}

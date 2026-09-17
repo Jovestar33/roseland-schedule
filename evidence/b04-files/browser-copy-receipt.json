@@ -1,0 +1,16 @@
+{
+  "format": "schedule-create-receipt",
+  "fictional": true,
+  "items": [
+    {
+      "id": "f65fdfee-fdd8-4f62-b7d9-4cd0bcfeb798",
+      "name": "B04 browser draft copy",
+      "slug": "b04-browser-draft-copy",
+      "organization": "5e5f0078-4ba2-4c98-a941-1d0f6d237a4e",
+      "day": "0adfa927-b765-4754-baf9-843281f56099",
+      "state": "success",
+      "failure": null,
+      "matchedVersion": 1
+    }
+  ]
+}
