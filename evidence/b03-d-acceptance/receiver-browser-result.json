@@ -1,0 +1,20 @@
+{
+  "day": null,
+  "date": "2026-10-20",
+  "rows": 12,
+  "phase": "2d8736e0-0497-4006-9676-d39d53de8012",
+  "schedule": "9a27dbb5-55f9-40fb-baa5-7ce1105c800d",
+  "production": "7aefd67c-5f5e-4c5f-8954-6d6785041cf2",
+  "phase_label": "Fictional Destination Phase",
+  "project_label": "Fictional Transfer Destination",
+  "current_version": 5,
+  "history_versions": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "old_source_provenance": "eb37d3d1-9674-4a11-b127-9d10e61ea467",
+  "restored_document_except_labels": true
+}

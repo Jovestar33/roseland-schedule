@@ -1,0 +1,10 @@
+begin;
+set local role postgres;
+create extension if not exists pgtap with schema extensions;
+select extensions.plan(4);
+select extensions.ok((select count(*)=9 and bool_and(not has_function_privilege('anon',p.oid,'EXECUTE') and not has_function_privilege('service_role',p.oid,'EXECUTE')) from pg_proc p join pg_namespace n on n.oid=p.pronamespace where n.nspname='public' and p.proname in ('schedule_transfer_destinations','review_schedule_transfer','review_schedule_copy','request_schedule_transfer','list_schedule_transfers','preview_schedule_transfer','close_schedule_transfer','move_schedule','copy_schedule_to_production')), 'All transfer entrypoints reject anonymous and service-role execution');
+select extensions.ok((select count(*)=9 and bool_and(has_function_privilege('authenticated',p.oid,'EXECUTE')) from pg_proc p join pg_namespace n on n.oid=p.pronamespace where n.nspname='public' and p.proname in ('schedule_transfer_destinations','review_schedule_transfer','review_schedule_copy','request_schedule_transfer','list_schedule_transfers','preview_schedule_transfer','close_schedule_transfer','move_schedule','copy_schedule_to_production')), 'Transfer entrypoints admit authenticated calls for per-request authorization');
+select extensions.ok((select count(*)=15 and bool_and(not has_function_privilege(r.name,p.oid,'EXECUTE')) from pg_proc p join pg_namespace n on n.oid=p.pronamespace cross join (values('anon'),('authenticated'),('service_role')) r(name) where n.nspname='private' and p.proname in ('schedule_context_denied','transfer_stamp','destination_document','transfer_write_allowed','receiver_can_review')), 'Clients cannot invoke private preview or transaction-context helpers');
+select extensions.ok((select count(*)=6 and bool_and(not has_table_privilege(r.name,t.name,'SELECT,INSERT,UPDATE,DELETE')) from (values('private.schedule_transfers'),('private.schedule_transfer_writes')) t(name) cross join (values('anon'),('authenticated'),('service_role')) r(name)), 'Clients cannot read or forge transfer receipts and write contexts');
+select * from extensions.finish();
+rollback;

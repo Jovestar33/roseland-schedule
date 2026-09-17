@@ -220,6 +220,7 @@ try {
   const renewed=await rpc(viewer.c,'preview_schedule_transfer',{request_id:req});
   const approvedArgs={...request,expected_version:2,expected_policy:renewed.policy,target_day_id:null,target_phase_id:ph,approve_request:true};
   const approved=await rpc(viewer.c,'move_schedule',approvedArgs);check(approved.version===3,'Receiver approval moves original identity exactly once');
+  check((await rpc(organizer.c,'request_schedule_transfer',request)).status==='approved','Original requester receipt remains recoverable after acceptance');
   check((await rpc(viewer.c,'move_schedule',approvedArgs)).version===3,'Lost Move acknowledgement recovers exact receipt without another version');
   const moved=await rpc(viewer.c,'read_schedule',{target_schedule_id:sid});
   check(moved.production_id===dst&&moved.phase_id===ph&&moved.production_day_id===null&&moved.document.meta.projectName==='Fictional Transfer Destination'&&moved.document.meta.phase==='Fictional Destination Phase','Move updates only current production/phase placement and labels');
@@ -262,6 +263,19 @@ try {
   const pendingReview=await rpc(organizer.c,'review_schedule_transfer',{target_schedule_id:previewID,target_production_id:dst}),pendingID=randomUUID();
   await rpc(organizer.c,'request_schedule_transfer',{request_id:pendingID,target_schedule_id:previewID,target_production_id:dst,expected_version:1,expected_policy:pendingReview.policy});
   transferFixture={source:src,destination:dst,phase:ph,schedule:previewID,request:pendingID};
+  const otherOrg=randomUUID(),otherProd=randomUUID();
+  sql(`begin;insert into public.organizations(id,name,slug) values('${otherOrg}','Other Fictional Tenant','other-${otherOrg}');insert into public.organization_memberships(organization_id,user_id,role,status,joined_at) values('${otherOrg}','${owner.id}','owner','active',now());insert into public.productions(id,organization_id,name,slug) values('${otherProd}','${otherOrg}','Other Tenant Production','other-${otherProd}');commit;`);
+  await denied(()=>owner.c.rpc('review_schedule_transfer',{target_schedule_id:previewID,target_production_id:otherProd}),'Even dual-tenant leadership cannot review cross-organization Move');
+  await denied(()=>owner.c.rpc('request_schedule_transfer',{request_id:randomUUID(),target_schedule_id:previewID,target_production_id:otherProd,expected_version:1,expected_policy:pendingReview.policy}),'Cross-organization request is rejected');
+  const copyReview=await rpc(owner.c,'review_schedule_copy',{target_schedule_id:previewID,target_production_id:dst});
+  const forbiddenCopy={target_schedule_id:randomUUID(),source_schedule_id:previewID,source_version:1,source_policy:copyReview.policy,target_production_id:otherProd,target_day_id:null,target_phase_id:null,next_display_name:'Forbidden copy',next_slug:'forbidden-copy',next_document:documentFixture(12),schema_version:1};
+  await denied(()=>owner.c.rpc('copy_schedule_to_production',forbiddenCopy),'Cross-organization Duplicate is rejected');
+  check(sql(`select count(*) from public.schedules where id='${forbiddenCopy.target_schedule_id}'`)==='0','Rejected cross-organization Duplicate leaves no identity');
+  await denied(()=>editor.c.rpc('request_schedule_transfer',{request_id:randomUUID(),target_schedule_id:previewID,target_production_id:dst,expected_version:1,expected_policy:pendingReview.policy}),'Source Editor cannot request transfer');
+  await denied(()=>outsider.c.rpc('preview_schedule_transfer',{request_id:pendingID}),'Unrelated account cannot use receiver preview endpoint');
+  await denied(()=>viewer.c.rpc('move_schedule',{request_id:pendingID,target_schedule_id:previewID,target_production_id:dst,target_day_id:day,target_phase_id:null,expected_version:1,expected_policy:pendingReview.policy,approve_request:true}),'Receiving approval rejects a day from another production');
+  check((await rpc(viewer.c,'preview_schedule_transfer',{request_id:pendingID})).schedule.document_version===1,'Rejected approval retains pending request and original document');
+
 
  }
  if(args.includes('--library')){

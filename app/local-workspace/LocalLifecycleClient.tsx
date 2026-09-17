@@ -50,7 +50,7 @@ export default function LocalLifecycleClient(){
     // Each retained panel is fixed to one organization; account changes remount it.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[workspace.active,workspace.authNeeded,workspace.session?.access_token,workspace.organization?.role]);
-  useEffect(()=>{const request=workspace.scheduleRequest;if(request?.target!=='lifecycle'||!workspace.active||!ready||busy||request.organization!==workspace.organization?.id)return;if(attempt){setMessage('Finish the retained lifecycle review before opening another schedule.');return;}workspace.consumeScheduleRequest(request.sequence);choose(request.id);
+  useEffect(()=>{const request=workspace.scheduleRequest;if(request?.target!=='lifecycle'||!workspace.active||!ready||busy||busyRef.current||request.organization!==workspace.organization?.id)return;if(attempt){setMessage('Finish the retained lifecycle review before opening another schedule.');return;}workspace.consumeScheduleRequest(request.sequence);choose(request.id);
     // Existing choose() retains rename-draft confirmation and server permission checks.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[workspace.scheduleRequest?.sequence,workspace.active,ready,busy,!!attempt]);
