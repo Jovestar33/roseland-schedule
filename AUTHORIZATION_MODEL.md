@@ -103,3 +103,9 @@ The first implemented server boundary is documented in [`PLATFORM_SERVER_WORKFLO
 ## Required automated tests
 
 For each table and operation, test owner, editor, viewer, removed member, anonymous user, expired share link, and a user in another organization. Include guessed UUIDs, changed tenant IDs, nested-parent substitution, bulk operations, realtime subscriptions, storage paths, and service endpoints. The release gate is that cross-tenant access returns no data and causes no mutation.
+
+## Template publication decision — 2026-09-17
+
+Templates default to their production. Editors and Production Organizers can write production-scoped templates under effective restrictions; Viewers remain read-only. Deliberate organization-wide publication is authorized for the template production's **Production Organizers** and organization **Super Admins/Admins**. Another production's Organizer and an Editor cannot publish. Source and production restrictions remain binding; no cross-organization or ordinary source-history access is granted. Changing published content returns it to production scope for a fresh publication review.
+
+The local server contract and outstanding application acceptance are recorded in [PRODUCTION_TEMPLATE_CHECKPOINT.md](./PRODUCTION_TEMPLATE_CHECKPOINT.md). This decision does not assign organization CMS authority or browser-only template ownership.
