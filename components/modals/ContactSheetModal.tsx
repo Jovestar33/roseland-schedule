@@ -2,86 +2,21 @@
 import { createPortal } from 'react-dom';
 import { useScheduleStore } from '@/lib/store/scheduleStore';
 import Modal from './Modal';
-import type { ScheduleRow } from '@/lib/types';
+import { documentContacts, contactsCsv, safeDownloadName, type DocumentContact } from '@/lib/document-tools';
+import { printDocument } from '@/lib/print';
+import { useContext } from 'react';
+import { ModalVisibilityContext } from './Modal';
+import { useLocalEditor } from '@/components/schedule/LocalEditorContext';
 
-interface RowCtx {
-  timeIn: string;
-  action: string;
-  loc: string;
-  desc: string;
-}
-
-interface ContactEntry {
-  name: string;
-  title: string;
-  phone: string;
-  email: string;
-  rows: RowCtx[];
-}
-
-function extractContacts(rows: ScheduleRow[]): ContactEntry[] {
-  const map = new Map<string, ContactEntry>();
-  for (const row of rows) {
-    if (row.sunLocked) continue;
-    const { contactName, contactTitle, contactPhone, contactEmail } = row;
-    if (!contactName && !contactPhone && !contactEmail) continue;
-    // Deduplicate by exact name + phone pair (null-byte separator prevents collisions)
-    const key = `${contactName.trim()}\0${contactPhone.trim()}`;
-    const ctx: RowCtx = {
-      timeIn: row.timeIn,
-      action: row.action === 'Other' ? (row.otherText || 'Other') : row.action,
-      loc: row.loc,
-      desc: row.desc,
-    };
-    const existing = map.get(key);
-    if (existing) {
-      existing.rows.push(ctx);
-    } else {
-      map.set(key, {
-        name: contactName.trim(),
-        title: contactTitle.trim(),
-        phone: contactPhone.trim(),
-        email: contactEmail.trim(),
-        rows: [ctx],
-      });
-    }
-  }
-  return Array.from(map.values());
-}
-
-function downloadCsv(contacts: ContactEntry[], scheduleName: string) {
-  const headers = ['Name', 'Title', 'Phone', 'Email', 'Time In', 'Action', 'Location', 'Description'];
-  const lines: string[][] = [];
-  for (const c of contacts) {
-    for (const r of c.rows) {
-      lines.push([c.name, c.title, c.phone, c.email, r.timeIn, r.action, r.loc, r.desc]);
-    }
-  }
-  const esc = (s: string) => `"${(s ?? '').replace(/"/g, '""')}"`;
-  const csv = [headers, ...lines].map(row => row.map(esc).join(',')).join('\n');
-  const blob = new Blob([csv], { type: 'text/csv' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `${scheduleName || 'Schedule'} – Contacts – ${new Date().toISOString().slice(0, 10)}.csv`;
-  a.click();
-  URL.revokeObjectURL(url);
-}
-
-function handlePrint(scheduleName: string) {
-  const prev = document.title;
-  document.title = `${scheduleName || 'Schedule'} – Contacts – ${new Date().toISOString().slice(0, 10)}`;
-  document.body.classList.add('cs-printing');
-  window.addEventListener('afterprint', function cleanup() {
-    document.body.classList.remove('cs-printing');
-    document.title = prev;
-    window.removeEventListener('afterprint', cleanup);
-  });
-  window.print();
+function downloadCsv(contacts: DocumentContact[], scheduleName: string) {
+  const blob = new Blob([contactsCsv(contacts)], { type: 'text/csv;charset=utf-8' });
+  const url = URL.createObjectURL(blob), a = document.createElement('a');
+  a.href = url; a.download = safeDownloadName(scheduleName, 'contacts.csv'); a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
 // Shared card list — rendered both inside the modal and in the print-only clone.
-function ContactCards({ contacts }: { contacts: ContactEntry[] }) {
+function ContactCards({ contacts }: { contacts: DocumentContact[] }) {
   if (contacts.length === 0) {
     return (
       <p className="empty cs-empty">
@@ -92,7 +27,7 @@ function ContactCards({ contacts }: { contacts: ContactEntry[] }) {
   return (
     <div className="cs-list">
       {contacts.map((c, i) => {
-        const hasCtx = c.rows.some(r => r.timeIn || r.action || r.loc);
+        const hasCtx = c.rows.some(r => r.timeIn || r.action || r.loc || r.desc);
         return (
           <div key={i} className="cs-card">
             <div className="cs-card-head">
@@ -106,7 +41,7 @@ function ContactCards({ contacts }: { contacts: ContactEntry[] }) {
             {hasCtx && (
               <div className="cs-rows">
                 {c.rows.map((r, j) =>
-                  (r.timeIn || r.action || r.loc) ? (
+                  (r.timeIn || r.action || r.loc || r.desc) ? (
                     <div key={j} className="cs-row-ctx">
                       {r.timeIn  && <span className="cs-row-time">{r.timeIn}</span>}
                       {r.action  && <span className="cs-row-action">{r.action}</span>}
@@ -134,7 +69,9 @@ export default function ContactSheetModal({ open, onClose }: Props) {
   const scheduleName = useScheduleStore((s) => s.scheduleName) ?? '';
   const meta         = useScheduleStore((s) => s.meta);
 
-  const contacts = extractContacts(rows);
+  const contacts = documentContacts(rows);
+  const visible = useContext(ModalVisibilityContext);
+  const local = useLocalEditor();
 
   const formattedDate = meta.date
     ? new Date(meta.date + 'T12:00:00').toLocaleDateString('en-US', {
@@ -155,7 +92,7 @@ export default function ContactSheetModal({ open, onClose }: Props) {
             <button
               type="button"
               className="btn btn-light btn-sm"
-              onClick={() => handlePrint(scheduleName)}
+              onClick={() => void printDocument(scheduleName, 'contacts', local)}
             >
               🖨 Print
             </button>
@@ -183,7 +120,7 @@ export default function ContactSheetModal({ open, onClose }: Props) {
           shown only when body.cs-printing is set during contact sheet print.
           The modal itself stays hidden (print.css handles it as normal).
       ──────────────────────────────────────────────────────────────────── */}
-      {open && typeof document !== 'undefined' && createPortal(
+      {open && visible && typeof document !== 'undefined' && createPortal(
         <div className="cs-print-only">
           <div className="cs-print-header">
             <div className="cs-print-sched-name">{scheduleName}</div>

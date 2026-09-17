@@ -1,8 +1,12 @@
 'use client';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useContext, createContext } from 'react';
 import { createPortal } from 'react-dom';
 import { useScheduleStore } from '@/lib/store/scheduleStore';
-import Modal from './Modal';
+import Modal, { ModalVisibilityContext } from './Modal';
+import { useLocalEditor } from '@/components/schedule/LocalEditorContext';
+import { documentContacts } from '@/lib/document-tools';
+import { printDocument } from '@/lib/print';
+const CallSheetReadOnly = createContext(false);
 import PlacesAutocomplete from '@/components/schedule/PlacesAutocomplete';
 import type { ScheduleRow, WeatherData, CallSheetData } from '@/lib/types';
 
@@ -35,18 +39,6 @@ function deriveCall(rows: ScheduleRow[]): string {
 
 interface Contact { name: string; title: string; phone: string; email: string; }
 
-function extractContacts(rows: ScheduleRow[]): Contact[] {
-  const map = new Map<string, Contact>();
-  for (const row of rows) {
-    if (row.sunLocked) continue;
-    const { contactName: n, contactTitle: t, contactPhone: p, contactEmail: e } = row;
-    if (!n && !p && !e) continue;
-    const key = `${n.trim()}\0${p.trim()}`;
-    if (!map.has(key)) map.set(key, { name: n.trim(), title: t.trim(), phone: p.trim(), email: e.trim() });
-  }
-  return Array.from(map.values());
-}
-
 function buildWxStr(wx: WeatherData | null | undefined): string {
   if (!wx) return '';
   const parts: string[] = [];
@@ -61,20 +53,6 @@ function buildDayStr(dayNumber: number | null, totalDays: number | null): string
   return totalDays != null ? `Day ${dayNumber} of ${totalDays}` : `Day ${dayNumber}`;
 }
 
-// ---- Print handler ----
-
-function handlePrint(scheduleName: string) {
-  const prev = document.title;
-  document.title = `${scheduleName || 'Schedule'} – Call Sheet – ${new Date().toISOString().slice(0, 10)}`;
-  document.body.classList.add('callsheet-printing');
-  window.addEventListener('afterprint', function cleanup() {
-    document.body.classList.remove('callsheet-printing');
-    document.title = prev;
-    window.removeEventListener('afterprint', cleanup);
-  });
-  window.print();
-}
-
 // ---- Inline editable field (single-line) ----
 
 type CSKey = keyof CallSheetData;
@@ -85,11 +63,12 @@ function Field({
   label: string; fieldKey: CSKey; value: string; placeholder?: string;
   onCommit: (key: CSKey, val: string) => void;
 }) {
+  const readOnly = useContext(CallSheetReadOnly);
   const [editing, setEditing] = useState(false);
   const [draft,   setDraft  ] = useState('');
 
-  function start() { setDraft(value); setEditing(true); }
-  function commit() { onCommit(fieldKey, draft.trim()); setEditing(false); }
+  function start() { if (readOnly) return; setDraft(value); setEditing(true); }
+  function commit() { if (readOnly) return; onCommit(fieldKey, draft); setEditing(false); }
   function revert() { setEditing(false); }
 
   return (
@@ -98,6 +77,8 @@ function Field({
       {editing ? (
         <input
           className="csh-fi"
+          aria-label={label}
+          disabled={readOnly}
           autoFocus
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
@@ -124,12 +105,13 @@ function LocationField({
   label: string; fieldKey: CSKey; value: string; placeholder?: string;
   onCommit: (key: CSKey, val: string) => void;
 }) {
+  const readOnly = useContext(CallSheetReadOnly);
   const [editing, setEditing] = useState(false);
   const [draft,   setDraft  ] = useState('');
   const wrapRef = useRef<HTMLDivElement>(null);
 
-  function start() { setDraft(value); setEditing(true); }
-  function finish(val: string) { onCommit(fieldKey, val.trim()); setEditing(false); }
+  function start() { if (readOnly) return; setDraft(value); setEditing(true); }
+  function finish(val: string) { if (readOnly) return; onCommit(fieldKey, val); setEditing(false); }
 
   // Focus the autocomplete input when edit mode opens
   useEffect(() => {
@@ -146,7 +128,8 @@ function LocationField({
     if (e.key === 'Escape') { e.preventDefault(); setEditing(false); }
   }
 
-  const mapUrl = value
+  const local = useLocalEditor();
+  const mapUrl = !local && value
     ? `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(value)}`
     : '';
 
@@ -156,6 +139,8 @@ function LocationField({
       {editing ? (
         <div ref={wrapRef} className="csh-loc-wrap" onBlur={handleWrapBlur} onKeyDown={handleKeyDown}>
           <PlacesAutocomplete
+            disabled={readOnly}
+            ariaLabel={label}
             className="csh-fi"
             value={draft}
             onChange={setDraft}
@@ -191,11 +176,12 @@ function Notes({ label, fieldKey, value, onCommit }: {
   label: string; fieldKey: CSKey; value: string;
   onCommit: (key: CSKey, val: string) => void;
 }) {
+  const readOnly = useContext(CallSheetReadOnly);
   const [editing, setEditing] = useState(false);
   const [draft,   setDraft  ] = useState('');
 
-  function start() { setDraft(value); setEditing(true); }
-  function commit() { onCommit(fieldKey, draft.trim()); setEditing(false); }
+  function start() { if (readOnly) return; setDraft(value); setEditing(true); }
+  function commit() { if (readOnly) return; onCommit(fieldKey, draft); setEditing(false); }
   function revert() { setEditing(false); }
 
   return (
@@ -203,6 +189,8 @@ function Notes({ label, fieldKey, value, onCommit }: {
       <span className="csh-fl">{label}</span>
       {editing ? (
         <textarea
+          aria-label={label}
+          disabled={readOnly}
           className="csh-fi csh-notes-ta"
           autoFocus
           value={draft}
@@ -251,6 +239,7 @@ function PrintDoc({
   prod, dir, dp, town, weather, generalCall,
   lines, cs, contacts, showContacts,
 }: PrintDocProps) {
+  const local = useLocalEditor();
   const hasKeyInfo = cs.basecamp || cs.parking || cs.hospital || cs.emergency ||
                      cs.mealNotes || cs.safetyNotes || cs.specialInstructions || cs.notes;
   const projectLine = [projectName, phase, dayStr].filter(Boolean).join(' · ');
@@ -318,6 +307,7 @@ function PrintDoc({
         <div className="csh-pdoc-section csh-pdoc-section-fixed">
           <div className="csh-pdoc-sh">Contacts</div>
           <table className="csh-pdoc-contacts">
+            {local && <thead><tr><th>Name / role</th><th>Phone</th><th>Email</th></tr></thead>}
             <tbody>
               {contacts.map((c, i) => (
                 <tr key={i}>
@@ -336,6 +326,7 @@ function PrintDoc({
         <div className="csh-pdoc-section">
           <div className="csh-pdoc-sh">Schedule</div>
           <table className="csh-pdoc-sched">
+            {local && <thead><tr><th>Time</th><th>Action</th><th>Location</th></tr></thead>}
             <tbody>
               {lines.map((l, i) => (
                 <tr key={i} className={l.isSun ? 'csh-pdoc-sun' : ''}>
@@ -354,14 +345,16 @@ function PrintDoc({
 
 // ---- Modal ----
 
-interface Props { open: boolean; onClose: () => void; }
+interface Props { open: boolean; onClose: () => void; readOnly?: boolean; }
 
-export default function CallSheetModal({ open, onClose }: Props) {
+export default function CallSheetModal({ open, onClose, readOnly = false }: Props) {
   const rows         = useScheduleStore((s) => s.rows);
   const meta         = useScheduleStore((s) => s.meta);
   const scheduleName = useScheduleStore((s) => s.scheduleName) ?? '';
   const updateMeta   = useScheduleStore((s) => s.updateMeta);
 
+  const local = useLocalEditor();
+  const visible = useContext(ModalVisibilityContext);
   const [showContacts, setShowContacts] = useState(false);
 
   // Reset contacts toggle to OFF each time the modal opens
@@ -372,7 +365,7 @@ export default function CallSheetModal({ open, onClose }: Props) {
   const cs          = meta.callsheet ?? {};
   const lines       = buildLines(rows);
   const generalCall = deriveCall(rows);
-  const contacts    = extractContacts(rows);
+  const contacts    = documentContacts(rows);
   const weather     = buildWxStr(meta.wx);
   const dayStr      = buildDayStr(meta.dayNumber, meta.totalDays);
   const formattedDate = meta.date
@@ -383,16 +376,19 @@ export default function CallSheetModal({ open, onClose }: Props) {
   const projectLine = [meta.projectName, meta.phase, dayStr].filter(Boolean).join(' · ');
 
   function commit(key: CSKey, val: string) {
+    if (readOnly) return;
+    useScheduleStore.getState().pushUndo();
     updateMeta({ callsheet: { ...(meta.callsheet ?? {}), [key]: val } as CallSheetData });
   }
 
   return (
-    <>
+    <CallSheetReadOnly.Provider value={readOnly}>
       <Modal
         open={open}
         onClose={onClose}
         title="Call Sheet"
         className="csh-modal"
+        retainWhenHidden={local}
         footer={
           <>
             <label className="csh-contacts-toggle">
@@ -406,7 +402,7 @@ export default function CallSheetModal({ open, onClose }: Props) {
             <button
               type="button"
               className="btn btn-light btn-sm"
-              onClick={() => handlePrint(scheduleName)}
+              onClick={() => void printDocument(scheduleName, 'callsheet', local)}
             >
               🖨 Print
             </button>
@@ -511,7 +507,7 @@ export default function CallSheetModal({ open, onClose }: Props) {
       </Modal>
 
       {/* Print portal — rendered on document.body, outside modal DOM */}
-      {open && typeof document !== 'undefined' && createPortal(
+      {open && visible && typeof document !== 'undefined' && createPortal(
         <div className="callsheet-print-only">
           <PrintDoc
             scheduleName={scheduleName}
@@ -533,6 +529,6 @@ export default function CallSheetModal({ open, onClose }: Props) {
         </div>,
         document.body
       )}
-    </>
+    </CallSheetReadOnly.Provider>
   );
 }

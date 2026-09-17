@@ -1,0 +1,68 @@
+
+> roseland-schedule@2.0.0 test:editor
+> node --test tests/editor/*.test.cjs
+
+✔ new and legacy backup formats round-trip complete schedule fields (34.791ms)
+✔ export fails instead of silently omitting unreadable schedules (8.361042ms)
+✔ invalid backups are rejected before any writes (4.736917ms)
+✔ imports are create-only and report partial failures without overwriting (4.251042ms)
+✔ long document fields survive real store load, edits, undo/redo, serialization and reload (61.515709ms)
+✔ refresh/clear of sun rows retains ordinary row identities, nested content and zero duration (19.838291ms)
+✔ weather metadata and sun changes undo as one user operation without changing call sheet (11.9165ms)
+✔ canonical tokenized public view passes through without an auth cookie or redirect (1.91675ms)
+✔ legacy viewer link redirects once and preserves encoded name and token (0.539875ms)
+✔ private schedules still require the auth flag (0.190542ms)
+✔ deployed Request/Response entrypoints preserve native strong-read context across saving, listing, templates and snapshots (25.690334ms)
+✔ name-only and public=1 requests cannot bypass sharing authorization (1.493375ms)
+✔ signed viewers receive only displayed fields; editors retain full documents (1.775917ms)
+✔ view links are scoped, expire, and reject legacy or altered tokens (0.180875ms)
+✔ save: acknowledges the submitted revision and reads the new baseline on the next save (70.3405ms)
+✔ saveForce: acknowledges the submitted revision and reads the new baseline on the next save (23.756416ms)
+✔ late success cannot mutate a reopened document with the same name (17.716625ms)
+✔ late offline cannot mutate a reopened document with the same name (17.544417ms)
+✔ late conflict cannot mutate a reopened document with the same name (14.374708ms)
+✔ unmount cancels acknowledgements without requiring a different schedule name (12.811417ms)
+✔ out-of-order responses do not roll back the latest acknowledged baseline (12.901542ms)
+✔ Save As retains edits made during its request and keeps them dirty (17.752834ms)
+✔ Save As response after navigation cannot replace the document or route (11.996125ms)
+✔ resolveConflictOverwrite stops after its snapshot if navigation changed the document (17.5745ms)
+✔ resolveConflictReload stops after its snapshot if navigation changed the document (11.080833ms)
+✔ late cloud loads cannot overwrite a subsequent document (10.596625ms)
+✔ row edits, undo and redo advance revisions without persisting request guards (10.910209ms)
+✔ Save As requires creation and reports an existing name without losing edits (11.304125ms)
+✔ restore applies only when the submitted document is unchanged (10.696ms)
+✔ restore preserves edits made during the request (15.374667ms)
+✔ restore ignores a late response after switch (10.320583ms)
+✔ restore ignores a late response after reopen (10.781959ms)
+✔ restore ignores a late response after unmount (10.044041ms)
+✔ restore ignores a late response after later save (11.02175ms)
+✔ snapshot copy applies only when the submitted document is unchanged (14.363708ms)
+✔ snapshot copy preserves edits made during the request (9.774667ms)
+✔ snapshot copy ignores a late response after switch (10.131583ms)
+✔ snapshot copy ignores a late response after reopen (9.181833ms)
+✔ snapshot copy ignores a late response after unmount (10.40675ms)
+✔ snapshot copy ignores a late response after later save (14.03825ms)
+✔ an older toolbar save cannot acknowledge edits after restore starts (9.824709ms)
+✔ snapshot copy name collision leaves the source unchanged and can be retried (9.995708ms)
+✔ Save As refuses an existing name even with force and preserves its contents (10.600667ms)
+✔ two simultaneous Save As requests for one name produce exactly one winner (0.935041ms)
+✔ a provider outage must not be reported as a successful conditional save (25010.107625ms)
+✔ normal saves retain timestamp conflict protection and allow intended updates (8.011667ms)
+✔ create-only requests still require an authorized editor (1.196084ms)
+✔ save API distinguishes a name collision from a remote-version conflict (44.5905ms)
+✔ two ordinary saves of the same baseline cannot overwrite each other (1.317708ms)
+✔ baseline-free ordinary save cannot replace an existing schedule (0.716458ms)
+✔ a stale update cannot resurrect a deleted document (0.99075ms)
+✔ template recovery preserves collisions and is idempotent (1.700208ms)
+✔ local template copies survive failure unless fully acknowledged and unchanged (42.285667ms)
+✔ local template copies survive incomplete unless fully acknowledged and unchanged (6.218208ms)
+✔ local template copies survive changed locally unless fully acknowledged and unchanged (5.407125ms)
+✔ local template copies survive success unless fully acknowledged and unchanged (4.372875ms)
+ℹ tests 56
+ℹ suites 0
+ℹ pass 56
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 25201.728292

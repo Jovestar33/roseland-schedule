@@ -1,0 +1,1724 @@
+[
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/local-workspace",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/_next/static/media/13971731025ec697-s.p.woff2",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/_next/static/media/4261f91ea7100e2e-s.p.woff2",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/_next/static/css/0688e01ed382c861.css",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/_next/static/css/f917ac1c383b255a.css",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/_next/static/css/d793577efcae068b.css",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/_next/static/css/1a45fc74bad2e67f.css",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/_next/static/media/6c25f6e897d845a3-s.p.woff2",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/_next/static/chunks/webpack-a6a855f63910379f.js",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/_next/static/chunks/2296c096-eff79f19ba6c2503.js",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/_next/static/chunks/949-e6491ec6c4568dcb.js",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/_next/static/chunks/main-app-67206a7485dc879c.js",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/_next/static/chunks/app/layout-9c2401c632c69496.js",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/_next/static/chunks/de968d1c-a71966f3e4cdfc4d.js",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/_next/static/chunks/4a7a3159-c5042bdab8f1ad21.js",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/_next/static/chunks/363-a85535b57d0c8531.js",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/_next/static/chunks/905-8c15849fe40e01b6.js",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/_next/static/chunks/51-58f2d2c379744e04.js",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/_next/static/chunks/295-720aa6ad72fc1320.js",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/_next/static/chunks/596-08296a8bcc513fc3.js",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/_next/static/chunks/23-d748e5c0f788cb08.js",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/_next/static/chunks/917-e3991b932cbd4b98.js",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/_next/static/chunks/629-1da65d95a5f08990.js",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/_next/static/chunks/app/local-workspace/page-2aa4eca269b01d6e.js",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/logo-header.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/local-workspace",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/logo-header.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/local-workspace",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/_next/static/css/18f943b9a5b1e03e.css",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/_next/static/chunks/webpack-fd20fa922ab83151.js",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-16x16.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/logo-header.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/local-workspace",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/_next/static/css/app/layout.css",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/_next/static/css/app/local-workspace/page.css",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/_next/static/chunks/webpack.js",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/_next/static/chunks/main-app.js",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/_next/static/chunks/app-pages-internals.js",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/_next/static/chunks/app/layout.js",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/manifest.webmanifest",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/_next/static/chunks/app/local-workspace/page.js",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/__nextjs_font/geist-latin.woff2",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/icon-192.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/_next/webpack-hmr",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/logo-header.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/local-workspace",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/_next/static/css/app/layout.css",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/_next/static/css/app/local-workspace/page.css",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/_next/static/chunks/webpack.js",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/_next/static/chunks/main-app.js",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/_next/static/chunks/app-pages-internals.js",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/_next/static/chunks/app/layout.js",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/manifest.webmanifest",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/_next/static/chunks/app/local-workspace/page.js",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/local-workspace",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/_next/static/css/app/layout.css",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/_next/static/css/app/local-workspace/page.css",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/_next/static/chunks/webpack.js",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/_next/static/chunks/main-app.js",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/_next/static/chunks/app-pages-internals.js",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/_next/static/chunks/app/layout.js",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/manifest.webmanifest",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/_next/static/chunks/app/local-workspace/page.js",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/_next/webpack-hmr",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/icon-192.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/logo-header.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/local-workspace",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/_next/static/css/app/layout.css",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/_next/static/css/app/local-workspace/page.css",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/_next/static/chunks/webpack.js",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/_next/static/chunks/main-app.js",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/_next/static/chunks/app-pages-internals.js",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/_next/static/chunks/app/layout.js",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/manifest.webmanifest",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/_next/static/chunks/app/local-workspace/page.js",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/_next/webpack-hmr",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/icon-192.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/logo-header.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "POST",
+    "path": "/__nextjs_original-stack-frames",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "POST",
+    "path": "/__nextjs_original-stack-frames",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/logo-header.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/logo-header.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/logo-header.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/local-workspace",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/_next/static/css/ee307d61f341bd01.css",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-16x16.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/logo-header.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/logo-header.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/logo-header.png",
+    "result": "local application"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/",
+    "result": "local application"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/_next/static/media/4261f91ea7100e2e-s.p.woff2",
+    "result": "local application"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/_next/static/css/0688e01ed382c861.css",
+    "result": "local application"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/_next/static/css/f917ac1c383b255a.css",
+    "result": "local application"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/_next/static/css/ee307d61f341bd01.css",
+    "result": "local application"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/_next/static/media/6c25f6e897d845a3-s.p.woff2",
+    "result": "local application"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/_next/static/media/logo-login.0d0db23d.png",
+    "result": "local application"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/manifest.webmanifest",
+    "result": "local application"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/_next/static/chunks/webpack-fd20fa922ab83151.js",
+    "result": "local application"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/_next/static/chunks/2296c096-eff79f19ba6c2503.js",
+    "result": "local application"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/_next/static/chunks/949-e6491ec6c4568dcb.js",
+    "result": "local application"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/_next/static/chunks/main-app-67206a7485dc879c.js",
+    "result": "local application"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/_next/static/chunks/app/(auth)/login/page-4743614096b2c34b.js",
+    "result": "local application"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/.netlify/functions/cms-load",
+    "result": "fictional fixture"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/icon-192.png",
+    "result": "local application"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "POST",
+    "path": "/.netlify/functions/auth",
+    "result": "fictional fixture"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/",
+    "result": "local application"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/_next/static/chunks/app/(app)/layout-f1989432ee17d380.js",
+    "result": "local application"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/_next/static/chunks/4a7a3159-c5042bdab8f1ad21.js",
+    "result": "local application"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/_next/static/chunks/905-8c15849fe40e01b6.js",
+    "result": "local application"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/_next/static/chunks/295-720aa6ad72fc1320.js",
+    "result": "local application"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/_next/static/chunks/app/(app)/page-ba501b0c01463e3e.js",
+    "result": "local application"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/logo-header.png",
+    "result": "local application"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/.netlify/functions/load",
+    "result": "fictional fixture"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/.netlify/functions/library",
+    "result": "fictional fixture"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/manifest.webmanifest",
+    "result": "local application"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/.netlify/functions/load",
+    "result": "fictional fixture"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/.netlify/functions/load",
+    "result": "fictional fixture"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/.netlify/functions/load",
+    "result": "fictional fixture"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/icon-192.png",
+    "result": "local application"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/.netlify/functions/templates",
+    "result": "fictional fixture"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/.netlify/functions/snapshots",
+    "result": "fictional fixture"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/local-workspace",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/logo-header.png",
+    "result": "local application"
+  }
+]

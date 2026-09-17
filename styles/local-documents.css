@@ -1,0 +1,78 @@
+/* Local portals reuse legacy document styling without printing workspace chrome. */
+.local-schedule-print { display: none; }
+.local-weather-controls { display:flex; flex-wrap:wrap; gap:8px; align-items:center; padding:8px 12px; font-size:12px; }
+@media print {
+  body[data-local-document] { margin:0 !important; padding:0 !important; min-height:0 !important; }
+  body[data-local-document] > * { display:none !important; }
+  body[data-local-document="schedule"] > .local-schedule-print,
+  body[data-local-document="contacts"] > .cs-print-only,
+  body[data-local-document="callsheet"] > .callsheet-print-only { display:block !important; }
+  body[data-local-document] :is(.local-schedule-print,.cs-print-only,.callsheet-print-only) {
+    position:static !important; width:100% !important; min-width:0 !important; max-width:none !important;
+    height:auto !important; overflow:visible !important; margin:0 !important; padding:0 !important;
+    color:#111 !important; background:white !important;
+  }
+  body[data-local-document] :is(.panel,.tbl-wrap,.meta,.meta-grid,.mf,.call-disp,.rv-identity,.rv-identity-name,.rv-identity-title,.rv-identity-meta,.cs-list,.cs-card,.cs-row-ctx,.csh-pdoc-section,.csh-pdoc-subbrand) {
+    height:auto !important; max-height:none !important; min-width:0 !important; max-width:none !important;
+    overflow:visible !important; text-overflow:clip !important; white-space:normal !important;
+    overflow-wrap:anywhere !important;
+  }
+  body[data-local-document] :is(.csh-pdoc-section-fixed,.cs-row-ctx) { break-inside:auto !important; page-break-inside:auto !important; }
+  body[data-local-document] .cs-card { break-inside:avoid !important; page-break-inside:avoid !important; }
+  body[data-local-document] :is(.csh-pdoc-sh,.cs-card-head) { break-after:avoid; }
+  body[data-local-document] table { width:100% !important; min-width:0 !important; table-layout:fixed !important; }
+  body[data-local-document] thead { display:table-header-group !important; }
+  body[data-local-document] tbody { display:table-row-group !important; }
+  body[data-local-document] :is(td,th), body[data-local-document] :is(td,th):last-child {
+    display:table-cell !important; visibility:visible !important; overflow:visible !important;
+    white-space:pre-wrap !important; text-overflow:clip !important; height:auto !important;
+    overflow-wrap:anywhere !important; word-break:normal !important;
+  }
+  body[data-local-document] :is(.rv-loc-name,.rv-loc-addr,.rv-subloc-addr,.rv-subloc-desc,.cs-row-loc,.cs-row-desc,.cs-name,.cs-title,.cs-email,.cs-phone) {
+    white-space:pre-wrap !important; overflow-wrap:anywhere !important; max-width:none !important; overflow:visible !important;
+  }
+  body[data-local-document] a::after { content:none !important; }
+  body[data-local-document] .local-schedule-print :is(td,th):last-child { width:10% !important; }
+  body[data-local-document] .local-schedule-print .sched col.c-n { width:3% !important; }
+  body[data-local-document] .local-schedule-print .sched col.c-a { width:12% !important; }
+  body[data-local-document] .local-schedule-print .sched col.c-l { width:22% !important; }
+  body[data-local-document] .local-schedule-print .sched col.c-d { width:20% !important; }
+  body[data-local-document] .local-schedule-print .sched col.c-nt { width:13% !important; }
+  body[data-local-document] .local-schedule-print .sched col.c-dv { width:0 !important; }
+  body[data-local-document] .local-schedule-print .sched :is(col.c-ti,col.c-du,col.c-to) { width:10% !important; }
+  body[data-local-document] .local-schedule-print .col-dv { display:none !important; }
+  body[data-local-document] .callsheet-print-only :is(td,th) { padding:4pt !important; font-size:9pt !important; }
+  body[data-local-document] .callsheet-print-only :is(.csh-pdoc-meta,.csh-pdoc-info) td:first-child { width:25% !important; }
+  body[data-local-document] .callsheet-print-only .csh-pdoc-sched :is(td,th):first-child { width:14% !important; }
+}
+
+@page local-schedule { size: landscape; margin: 0.24in; }
+@page local-document { size: portrait; margin: 0.35in; }
+@media print {
+  html:has(body[data-local-document="schedule"]) { page:local-schedule; }
+  html:has(body[data-local-document="contacts"]),
+  html:has(body[data-local-document="callsheet"]) { page:local-document; }
+  body[data-local-document] .local-schedule-print .hdr {
+    position:relative !important; top:auto !important; height:auto !important; min-height:44px !important;
+    overflow:visible !important; padding:4px 8px !important; transform:none !important;
+  }
+  body[data-local-document] .local-schedule-print .hdr-title { position:static !important; transform:none !important; line-height:1.2 !important; }
+  body[data-local-document] .local-schedule-print .meta-grid { display:grid !important; grid-template-columns:2fr 1fr 1fr !important; gap:5pt 10pt !important; }
+  body[data-local-document] .local-schedule-print .mf { grid-column:auto !important; width:auto !important; }
+  body[data-local-document] .local-schedule-print .wx-strip.show { display:flex !important; flex-flow:row wrap !important; gap:6pt 12pt !important; }
+  body[data-local-document] .local-schedule-print .wx-item { display:inline-flex !important; width:auto !important; flex:0 1 auto !important; border:0 !important; }
+  body[data-local-document] .local-schedule-print :is(td,.rv-loc-name,.rv-loc-addr,.rv-subloc-addr,.rv-subloc-loc,.rv-subloc-desc) { font-size:8pt !important; line-height:1.3 !important; }
+}
+
+@media print {
+  /* Screen sticky headers and hidden editor columns must not control pagination. */
+  body[data-local-document] :is(thead,thead tr,thead th) { position:static !important; top:auto !important; transform:none !important; break-inside:avoid !important; }
+  body[data-local-document] .callsheet-print-only :is(td,th) { width:auto !important; max-width:none !important; min-width:0 !important; }
+  body[data-local-document] .callsheet-print-only :is(.csh-pdoc-meta,.csh-pdoc-info) td:first-child { width:25% !important; }
+  body[data-local-document] .callsheet-print-only .csh-pdoc-sched th:nth-child(1) { width:18% !important; }
+  body[data-local-document] .callsheet-print-only .csh-pdoc-sched th:nth-child(2) { width:32% !important; }
+  body[data-local-document] .callsheet-print-only .csh-pdoc-sched th:nth-child(3) { width:50% !important; }
+  body[data-local-document] .callsheet-print-only .csh-pdoc-contacts th:nth-child(1) { width:40% !important; }
+  body[data-local-document] .callsheet-print-only .csh-pdoc-contacts th:nth-child(2) { width:25% !important; }
+  body[data-local-document] .callsheet-print-only .csh-pdoc-contacts th:nth-child(3) { width:35% !important; }
+}

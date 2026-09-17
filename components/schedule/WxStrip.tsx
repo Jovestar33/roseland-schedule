@@ -1,13 +1,16 @@
 'use client';
 import { useScheduleStore } from '@/lib/store/scheduleStore';
 import { wxIcon } from '@/lib/weather';
+import { useLocalEditor } from './LocalEditorContext';
 
 interface Props {
   onRefresh: () => void;
   onClear: () => void;
+  readOnly?: boolean;
 }
 
-export default function WxStrip({ onRefresh, onClear }: Props) {
+export default function WxStrip({ onRefresh, onClear, readOnly = false }: Props) {
+  const local = useLocalEditor();
   const wx = useScheduleStore((s) => s.meta.wx);
   const town = useScheduleStore((s) => s.meta.town);
 
@@ -45,14 +48,14 @@ export default function WxStrip({ onRefresh, onClear }: Props) {
               {wx.prec !== undefined ? (
                 <>
                   {wx.prec}%&nbsp;
-                  <a
+                  {!local && <a
                     href={`https://www.google.com/search?q=${searchQ}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     style={{ color: '#38bdf8', fontSize: '11px' }}
                   >
                     Google Weather ↗
-                  </a>
+                  </a>}
                 </>
               ) : '—'}
             </span>
@@ -70,8 +73,8 @@ export default function WxStrip({ onRefresh, onClear }: Props) {
         <span className="wx-val wx-ts" id="wx-ts">{wx.fetchedAt || '—'}</span>
       </div>
       <div className="wx-refresh-row">
-        <button className="wx-refresh" onClick={onRefresh} title="Refresh weather">↻ Refresh</button>
-        <button className="wx-refresh" onClick={onClear} title="Clear weather">✕ Clear</button>
+        <button className="wx-refresh" disabled={readOnly} onClick={onRefresh} title="Refresh weather">↻ Refresh</button>
+        <button className="wx-refresh" disabled={readOnly} onClick={onClear} title="Clear weather">✕ Clear</button>
       </div>
     </div>
   );

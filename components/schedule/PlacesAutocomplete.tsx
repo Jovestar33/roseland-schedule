@@ -2,6 +2,7 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useLocalEditor } from './LocalEditorContext';
+import { useDocumentProviders } from '@/components/local/DocumentProvidersContext';
 import { searchPlaces, geocodePlace, type PlaceSuggestion, type GeoResult } from '@/lib/googlePlaces';
 
 interface Props {
@@ -14,6 +15,8 @@ interface Props {
   className?: string;
   dropdownClass?: string;
   multiline?: boolean;
+  disabled?: boolean;
+  ariaLabel?: string;
 }
 
 export default function PlacesAutocomplete({
@@ -26,8 +29,17 @@ export default function PlacesAutocomplete({
   className,
   dropdownClass = 'ac-dropdown',
   multiline = false,
+  disabled = false,
+  ariaLabel,
 }: Props) {
   const localEditor = useLocalEditor();
+  const providers = useDocumentProviders();
+  const request = useRef(0);
+  useEffect(() => {
+    const pending = request;
+    pending.current++; setOpen(false);
+    return () => { pending.current++; if (debounceRef.current) clearTimeout(debounceRef.current); };
+  }, [providers, localEditor, disabled]);
   const [suggestions, setSuggestions] = useState<PlaceSuggestion[]>([]);
   const [open, setOpen]         = useState(false);
   const [focused, setFocused]   = useState(0);
@@ -62,11 +74,11 @@ export default function PlacesAutocomplete({
 
   const search = useCallback((q: string) => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
-    if (localEditor || !q.trim()) { setSuggestions([]); setOpen(false); return; }
+    const ticket = ++request.current;
+    if ((localEditor && !providers) || !q.trim()) { setSuggestions([]); setOpen(false); return; }
     debounceRef.current = setTimeout(async () => {
-      console.log('[places] searching:', q);
-      const results = await searchPlaces(q);
-      console.log('[places] got', results.length, 'results');
+      const results = await (localEditor ? providers!.search(q) : searchPlaces(q)).catch(() => []);
+      if (request.current !== ticket) return;
       setSuggestions(results);
       if (results.length > 0) {
         setRect(elementRef.current?.getBoundingClientRect() ?? null);
@@ -76,7 +88,7 @@ export default function PlacesAutocomplete({
       }
       setFocused(0);
     }, 220);
-  }, [localEditor]);
+  }, [localEditor, providers]);
 
   function handleInput(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     const v = e.target.value;
@@ -88,9 +100,10 @@ export default function PlacesAutocomplete({
     setOpen(false);
     setSuggestions([]);
     onChange(s.main || s.label);
-    if (onSelect && !localEditor) {
-      const geo = await geocodePlace(s.placeId, s.main || s.label);
-      onSelect(geo?.address || s.label, geo);
+    const ticket = ++request.current;
+    if (onSelect && (!localEditor || providers)) {
+      const geo = await (localEditor ? providers!.geocode(s.placeId) : geocodePlace(s.placeId, s.main || s.label)).catch(() => null);
+      if (request.current === ticket) onSelect(geo?.address || s.label, geo);
     }
   }
 
@@ -104,7 +117,7 @@ export default function PlacesAutocomplete({
     else if (e.key === 'Escape')  { setOpen(false); }
   }
 
-  const dropdown = open && suggestions.length > 0 && mounted && rect
+  const dropdown = (!localEditor || providers) && open && suggestions.length > 0 && mounted && rect
     ? createPortal(
         <div
           className={`${dropdownClass} open`}
@@ -134,6 +147,8 @@ export default function PlacesAutocomplete({
 
   const sharedProps = {
     id,
+    disabled,
+    'aria-label': ariaLabel,
     className,
     value,
     placeholder,

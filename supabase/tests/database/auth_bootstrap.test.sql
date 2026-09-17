@@ -8,6 +8,9 @@ select extensions.plan(35);
 -- The linked development database may already contain the completed real
 -- bootstrap. Clear application state only inside this test transaction so the
 -- one-time path remains testable; rollback restores every pre-existing row.
+-- Clear the later schedule-domain children inside this rolled-back test only.
+-- TRUNCATE avoids immutable-history delete triggers; no cascade is needed.
+truncate public.schedule_versions, public.schedules, public.production_days, public.phases;
 delete from private.workflow_requests;
 delete from public.audit_events;
 delete from public.organization_invitations;

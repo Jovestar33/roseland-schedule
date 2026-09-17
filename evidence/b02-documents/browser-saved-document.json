@@ -1,0 +1,151 @@
+{
+  "fictional": true,
+  "id": "edfb38a3-8db4-49fa-ae6c-fccb5ac3b28f",
+  "version": 3,
+  "document": {
+    "meta": {
+      "dp": "Fictional camera lead",
+      "wx": {
+        "code": 2,
+        "cond": "Partly Cloudy",
+        "maxC": 24,
+        "maxF": 75,
+        "minC": 12,
+        "minF": 54,
+        "prec": 35,
+        "town": "Fictional Harbor Studio",
+        "sunset": "7:15 PM",
+        "sunrise": "6:30 AM",
+        "fetchedAt": "Fictional forecast"
+      },
+      "dir": "Fictional director",
+      "lat": 0,
+      "lng": 0,
+      "date": "2026-10-20",
+      "prod": "Fictional producer with complete long credit",
+      "town": "Fictional Harbor Studio",
+      "phase": "Principal photography",
+      "callsheet": {
+        "notes": "  Fictional browser notes\nComplete long text with comma, and \"quotes\". Complete long text with comma, and \"quotes\". Complete long text with comma, and \"quotes\". Complete long text with comma, and \"quotes\". Complete long text with comma, and \"quotes\". Complete long text with comma, and \"quotes\". Complete long text with comma, and \"quotes\". Complete long text with comma, and \"quotes\". Complete long text with comma, and \"quotes\". Complete long text with comma, and \"quotes\". Complete long text with comma, and \"quotes\". Complete long text with comma, and \"quotes\". Complete long text with comma, and \"quotes\". Complete long text with comma, and \"quotes\". Complete long text with comma, and \"quotes\". Complete long text with comma, and \"quotes\". Complete long text with comma, and \"quotes\". Complete long text with comma, and \"quotes\". Complete long text with comma, and \"quotes\". Complete long text with comma, and \"quotes\". Complete long text with comma, and \"quotes\". Complete long text with comma, and \"quotes\". Complete long text with comma, and \"quotes\". Complete long text with comma, and \"quotes\". Complete long text with comma, and \"quotes\". Complete long text with comma, and \"quotes\". Complete long text with comma, and \"quotes\". Complete long text with comma, and \"quotes\". Complete long text with comma, and \"quotes\". Complete long text with comma, and \"quotes\". \nEND-BROWSER-NOTES  ",
+        "parking": "Fictional edited parking",
+        "basecamp": "Fictional edited basecamp",
+        "hospital": "Fictional edited care center",
+        "emergency": "Fictional edited coordinator",
+        "mealNotes": "  Saved fictional meal\nSecond line  ",
+        "safetyNotes": "Fictional edited safety\nSecond line",
+        "specialInstructions": "Fictional edited access\nSecond line"
+      },
+      "dayNumber": 2,
+      "totalDays": 12,
+      "projectName": "Fictional production \u2013 document acceptance"
+    },
+    "rows": [
+      {
+        "dur": "00:00",
+        "loc": "Fictional location 1",
+        "desc": "DESC-1 Fictional detail with a comma, \"quoted text\", and multiple lines.\nSecond line remains visible.  END-DESC-1",
+        "done": false,
+        "notes": "Fictional row note\nExact row ending",
+        "action": "Crew Call",
+        "locLat": 0,
+        "locLng": 0,
+        "status": "Ready",
+        "timeIn": "9:00 AM",
+        "fixedIn": true,
+        "locName": "Fictional location 1",
+        "fixedOut": false,
+        "otherText": "Fictional scene 1",
+        "sunLocked": false,
+        "locAddress": "100 Example Lane, Fictional Town",
+        "contactName": "=Fictional Crew",
+        "contactEmail": "crew1@example.test",
+        "contactPhone": "+1 202 555 0142",
+        "contactTitle": "Fictional department",
+        "fixedOutTime": "",
+        "subLocations": [
+          {
+            "id": "fictional-sub-0",
+            "loc": "Fictional edited annex",
+            "desc": "SUB-1 Fictional nested description END-SUB-1",
+            "done": false,
+            "name": "Fictional edited annex",
+            "locLat": 0,
+            "locLng": 0,
+            "address": "200 Sample Road"
+          }
+        ]
+      },
+      {
+        "dur": "00:15",
+        "loc": "Fictional location 2",
+        "desc": "DESC-2 Fictional detail with a comma, \"quoted text\", and multiple lines.\nSecond line remains visible.  END-DESC-2",
+        "done": true,
+        "notes": "NOTE-2\nFictional instructions END-NOTE-2",
+        "action": "Other",
+        "locLat": 0,
+        "locLng": 0,
+        "status": "Ready",
+        "timeIn": "9:00 AM",
+        "fixedIn": false,
+        "locName": "Fictional location 2",
+        "fixedOut": false,
+        "otherText": "Fictional scene 2",
+        "sunLocked": false,
+        "locAddress": "101 Example Lane, Fictional Town",
+        "contactName": "Example Crew 2",
+        "contactEmail": "crew2@example.test",
+        "contactPhone": "+1 202 555 0142",
+        "contactTitle": "Fictional department",
+        "fixedOutTime": "",
+        "subLocations": [
+          {
+            "id": "fictional-sub-1",
+            "loc": "Fictional annex",
+            "desc": "SUB-2 Fictional nested description END-SUB-2",
+            "done": false,
+            "name": "Annex 2",
+            "locLat": 0,
+            "locLng": 0,
+            "address": "201 Sample Road"
+          }
+        ]
+      },
+      {
+        "dur": "00:15",
+        "loc": "Fictional location 3",
+        "desc": "DESC-3 Fictional detail with a comma, \"quoted text\", and multiple lines.\nSecond line remains visible.  END-DESC-3",
+        "done": false,
+        "notes": "NOTE-3\nFictional instructions END-NOTE-3",
+        "action": "Wrap",
+        "locLat": 0,
+        "locLng": 0,
+        "status": "Ready",
+        "timeIn": "9:15 AM",
+        "fixedIn": false,
+        "locName": "Fictional location 3",
+        "fixedOut": false,
+        "otherText": "Fictional scene 3",
+        "sunLocked": false,
+        "locAddress": "102 Example Lane, Fictional Town",
+        "contactName": "Example Crew 3",
+        "contactEmail": "crew3@example.test",
+        "contactPhone": "+1 202 555 0142",
+        "contactTitle": "Fictional department",
+        "fixedOutTime": "",
+        "subLocations": [
+          {
+            "id": "fictional-sub-2",
+            "loc": "Fictional annex",
+            "desc": "SUB-3 Fictional nested description END-SUB-3",
+            "done": false,
+            "name": "Annex 3",
+            "locLat": 0,
+            "locLng": 0,
+            "address": "202 Sample Road"
+          }
+        ]
+      }
+    ],
+    "savedAt": 1789609566929
+  }
+}

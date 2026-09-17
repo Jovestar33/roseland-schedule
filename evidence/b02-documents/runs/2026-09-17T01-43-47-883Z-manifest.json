@@ -1,0 +1,44 @@
+{
+  "project": "roseland-b02-20260916",
+  "api": "http://127.0.0.1:57321",
+  "app": "http://127.0.0.1:3402",
+  "actors": {
+    "owner": "d8ed8080-cdc1-481d-b012-68c228f8c439",
+    "editor": "9b2ad562-81bb-404e-a659-9882facd8c42",
+    "viewer": "dfb9e756-4438-4c3a-8d75-7eb081803837",
+    "outside": "c315b6fb-71c2-4b57-a150-c06edeedb711"
+  },
+  "a": {
+    "org": "c55cecdd-04b0-4230-8cfd-94096cc58458",
+    "prod": "6b9c5108-528b-4a41-9484-e55a487c6591",
+    "day": "90e37a85-b337-4114-a871-ef6f72c19a05"
+  },
+  "b": {
+    "org": "a681a676-63e1-4854-97e5-78977d91e594",
+    "prod": "81eedbb4-7e76-4763-89eb-f841fafb60a3",
+    "day": "01dc5316-1c80-47ed-90d3-1f32e341323e"
+  },
+  "records": [
+    {
+      "id": "edfb38a3-8db4-49fa-ae6c-fccb5ac3b28f",
+      "name": "B02 ordinary fictional day",
+      "organization": "c55cecdd-04b0-4230-8cfd-94096cc58458"
+    },
+    {
+      "id": "dce06dff-db36-4b20-9c32-f2231876b3b2",
+      "name": "B02 long fictional day",
+      "organization": "c55cecdd-04b0-4230-8cfd-94096cc58458"
+    },
+    {
+      "id": "5aadac52-172a-4fdf-8934-f24d6a921848",
+      "name": "B02 empty fictional day",
+      "organization": "c55cecdd-04b0-4230-8cfd-94096cc58458"
+    },
+    {
+      "id": "b5e9706b-5d59-41fa-9441-99dd583b7c7e",
+      "name": "B02 Woodland fictional day",
+      "organization": "a681a676-63e1-4854-97e5-78977d91e594"
+    }
+  ],
+  "fictional": true
+}

@@ -2,6 +2,7 @@
 import { useState, useRef, useLayoutEffect } from 'react';
 import { useScheduleStore } from '@/lib/store/scheduleStore';
 import type { ScheduleRow, SubLocation } from '@/lib/types';
+import { useLocalEditor } from './LocalEditorContext';
 import PlacesAutocomplete from './PlacesAutocomplete';
 import type { GeoResult } from '@/lib/googlePlaces';
 
@@ -41,6 +42,7 @@ function DescTextarea({ value, onChange, onFocus }: {
 }
 
 export default function LocationCell({ index, row }: Props) {
+  const local = useLocalEditor();
   const updateRow = useScheduleStore((s) => s.updateRow);
   const pushUndo  = useScheduleStore((s) => s.pushUndo);
 
@@ -82,6 +84,7 @@ export default function LocationCell({ index, row }: Props) {
   }
 
   function openMainMap() {
+    if (local) return;
     const url = row.locLat && row.locLng
       ? `https://www.google.com/maps/dir/?api=1&destination=${row.locLat},${row.locLng}`
       : row.locAddress
@@ -113,6 +116,7 @@ export default function LocationCell({ index, row }: Props) {
   }
 
   function openSubMap(sl: SubLocation) {
+    if (local) return;
     const url = sl.locLat && sl.locLng
       ? `https://www.google.com/maps/dir/?api=1&destination=${sl.locLat},${sl.locLng}`
       : sl.address
@@ -148,8 +152,8 @@ export default function LocationCell({ index, row }: Props) {
         >
           {addrOpen ? '▾' : '▸'}
         </button>
-        {hasMainMap && (
-          <button type="button" className="loc-map-btn" onClick={openMainMap} title="Get directions">
+        {!local && hasMainMap && (
+          <button type="button" className="loc-map-btn" onClick={openMainMap} disabled={local} title="Get directions">
             &#128205;
           </button>
         )}
@@ -215,7 +219,7 @@ export default function LocationCell({ index, row }: Props) {
                 {subAddrIsOpen ? '▾' : '▸'}
               </button>
               {hasSubMap && (
-                <button type="button" className="loc-subloc-pin" onClick={() => openSubMap(sl)} title="Get directions">
+                <button type="button" className="loc-subloc-pin" onClick={() => openSubMap(sl)} disabled={local} title="Get directions">
                   &#128205;
                 </button>
               )}

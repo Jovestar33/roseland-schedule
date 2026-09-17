@@ -1,11 +1,14 @@
 'use client';
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, useContext } from 'react';
 import { useScheduleStore } from '@/lib/store/scheduleStore';
-import { printSchedule } from '@/lib/print';
+import { printSchedule, printDocument } from '@/lib/print';
+import { useLocalEditor } from '@/components/schedule/LocalEditorContext';
+import { ModalVisibilityContext } from '@/components/modals/Modal';
 import ContactSheetModal from '@/components/modals/ContactSheetModal';
 import CallSheetModal from '@/components/modals/CallSheetModal';
 
-export default function ShareDropdown() {
+export default function ShareDropdown({ readOnly = false, onModalChange }: { readOnly?: boolean; onModalChange?: (open: boolean) => void } = {}) {
+  const local = useLocalEditor(), visible = useContext(ModalVisibilityContext);
   const scheduleName    = useScheduleStore((s) => s.scheduleName);
   const getScheduleData = useScheduleStore((s) => s.getScheduleData);
   const [open, setOpen] = useState(false);
@@ -29,6 +32,9 @@ export default function ShareDropdown() {
     };
   }, [open]);
 
+  useEffect(() => { onModalChange?.(callSheetOpen || contactSheetOpen); }, [callSheetOpen, contactSheetOpen, onModalChange]);
+  useEffect(() => { if (!visible) setOpen(false); }, [visible]);
+
   function toggle() {
     if (!open && btnRef.current) {
       const r = btnRef.current.getBoundingClientRect();
@@ -41,7 +47,8 @@ export default function ShareDropdown() {
 
   function handlePrint() {
     close();
-    printSchedule(scheduleName ?? 'Schedule');
+    if (local) void printDocument(scheduleName ?? 'Schedule', 'schedule', true);
+    else void printSchedule(scheduleName ?? 'Schedule');
   }
 
   function handleContactSheet() {
@@ -87,7 +94,7 @@ export default function ShareDropdown() {
           style={{ position: 'fixed', top: dropPos.top, right: dropPos.right, left: 'auto', zIndex: 9999 }}
         >
           <button className="tbar-drop-item" onClick={handlePrint}>🖨 Print / PDF</button>
-          <button className="tbar-drop-item" onClick={handleExportJson}>⬇ Export JSON</button>
+          {!local && <button className="tbar-drop-item" onClick={handleExportJson}>⬇ Export JSON</button>}
           <button className="tbar-drop-item" onClick={handleContactSheet}>📋 Contact Sheet</button>
           <button className="tbar-drop-item" onClick={handleCallSheet}>📄 Call Sheet</button>
         </div>
@@ -99,6 +106,7 @@ export default function ShareDropdown() {
     />
     <CallSheetModal
       open={callSheetOpen}
+      readOnly={readOnly}
       onClose={() => setCallSheetOpen(false)}
     />
 </>

@@ -91,7 +91,7 @@ select extensions.ok(
     and not has_table_privilege('anon', 'public.schedule_versions', 'SELECT'),
   'anonymous users have no schedule-domain table privileges'
 );
-select extensions.is((select count(*) from public.schedule_versions), 2::bigint, 'each schedule insert records its initial immutable version');
+select extensions.is((select count(*) from public.schedule_versions where schedule_id in ('66000000-0000-4000-a000-000000000001', '66000000-0000-4000-a000-000000000002')), 2::bigint, 'each schedule insert records its initial immutable version');
 
 set local role authenticated;
 

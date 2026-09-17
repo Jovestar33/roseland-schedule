@@ -1,4 +1,5 @@
 'use client';
+import { useLocalEditor } from '@/components/schedule/LocalEditorContext';
 import { wxIcon } from '@/lib/weather';
 import { computeTimeOut } from '@/lib/time';
 import type { ScheduleData, SubLocation } from '@/lib/types';
@@ -26,6 +27,7 @@ function metaDate(dateStr: string): string {
 }
 
 function SubLocList({ subLocations }: { subLocations: SubLocation[] }) {
+  const local = useLocalEditor();
   return (
     <div className="rv-sublocs">
       {subLocations.map((sl, i) => {
@@ -39,7 +41,7 @@ function SubLocList({ subLocations }: { subLocations: SubLocation[] }) {
           <div key={sl.id || String(i)} className="rv-subloc">
             <span className="rv-subloc-bullet">↳</span>
             <div className="rv-subloc-body">
-              {mapHref ? (
+              {mapHref && !local ? (
                 <a href={mapHref} target="_blank" rel="noopener noreferrer" className="rv-subloc-loc">
                   {displayName}
                 </a>
@@ -62,6 +64,7 @@ interface Props {
 }
 
 export default function ScheduleReadView({ data, name }: Props) {
+  const local = useLocalEditor();
   const { meta, rows } = data;
   const wx = meta.wx;
   const visibleRows = rows.filter(r => r.action || r.timeIn);
@@ -216,7 +219,7 @@ export default function ScheduleReadView({ data, name }: Props) {
                             : null;
                           return (
                             <>
-                              {mapHref ? (
+                              {mapHref && !local ? (
                                 <a href={mapHref} target="_blank" rel="noopener noreferrer" className="rv-loc-name rv-loc-link">
                                   {displayName}
                                 </a>

@@ -1,0 +1,195 @@
+{
+  "fictional": true,
+  "pdfs": [
+    {
+      "path": "output/pdf/b02-empty-schedule.pdf",
+      "pages": 1,
+      "sha256": "4616a0f0a848a18d08e2b4f6038b3169203d2f2c24de5fe569cbf9605cd8f4f5",
+      "page_sizes": [
+        [
+          792,
+          612
+        ]
+      ],
+      "all_pages_nonblank": true,
+      "intended_text_complete": true,
+      "workspace_chrome_absent": true
+    },
+    {
+      "path": "output/pdf/b02-long-callsheet.pdf",
+      "pages": 3,
+      "sha256": "4f04a69ee8902cded849aeb9b197511726b35a673382de4854d46b93287c81e7",
+      "page_sizes": [
+        [
+          612,
+          792
+        ],
+        [
+          612,
+          792
+        ],
+        [
+          612,
+          792
+        ]
+      ],
+      "all_pages_nonblank": true,
+      "intended_text_complete": true,
+      "workspace_chrome_absent": true
+    },
+    {
+      "path": "output/pdf/b02-long-contacts.pdf",
+      "pages": 6,
+      "sha256": "62c58e0352011375d473fb97322161211a6706e5e2c03fd43fa844fa0fcc2716",
+      "page_sizes": [
+        [
+          612,
+          792
+        ],
+        [
+          612,
+          792
+        ],
+        [
+          612,
+          792
+        ],
+        [
+          612,
+          792
+        ],
+        [
+          612,
+          792
+        ],
+        [
+          612,
+          792
+        ]
+      ],
+      "all_pages_nonblank": true,
+      "intended_text_complete": true,
+      "workspace_chrome_absent": true
+    },
+    {
+      "path": "output/pdf/b02-long-schedule.pdf",
+      "pages": 5,
+      "sha256": "d7adf68eb0874fccddb0dc518b86782dcc2d476f0a2a89e173c77c67b70b2d04",
+      "page_sizes": [
+        [
+          792,
+          612
+        ],
+        [
+          792,
+          612
+        ],
+        [
+          792,
+          612
+        ],
+        [
+          792,
+          612
+        ],
+        [
+          792,
+          612
+        ]
+      ],
+      "all_pages_nonblank": true,
+      "intended_text_complete": true,
+      "workspace_chrome_absent": true
+    },
+    {
+      "path": "output/pdf/b02-ordinary-schedule.pdf",
+      "pages": 1,
+      "sha256": "12abc7223911fe7de6df0b26ee7ef0dc3fbce63fb1e3d0305f98a179f9d20daa",
+      "page_sizes": [
+        [
+          792,
+          612
+        ]
+      ],
+      "all_pages_nonblank": true,
+      "intended_text_complete": true,
+      "workspace_chrome_absent": true
+    }
+  ],
+  "csv": {
+    "sha256": "5e636ac785c2d8a5fabbb59708a916fb8ee822b52443e84f07ef7ea79c0d240a",
+    "contacts": 32,
+    "columns": 8,
+    "exact_expected_bytes": true,
+    "formula_prefixes_neutralized": true,
+    "expected_times": "existing editor recalcRows cascade"
+  },
+  "screenshots": {
+    "b02-auth-retained.jpg": {
+      "pixels": [
+        994,
+        933
+      ]
+    },
+    "b02-library-legacy-mobile.jpg": {
+      "pixels": [
+        390,
+        921
+      ]
+    },
+    "b02-organization-isolation.jpg": {
+      "pixels": [
+        1280,
+        720
+      ]
+    },
+    "b02-modal-retained.jpg": {
+      "pixels": [
+        1280,
+        720
+      ]
+    },
+    "b02-library-legacy-desktop.jpg": {
+      "pixels": [
+        1280,
+        720
+      ]
+    },
+    "b02-library-target-desktop.jpg": {
+      "pixels": [
+        1280,
+        925
+      ]
+    },
+    "b02-desktop-editor.jpg": {
+      "pixels": [
+        1280,
+        1843
+      ]
+    },
+    "b02-viewer-callsheet.jpg": {
+      "pixels": [
+        1280,
+        720
+      ]
+    },
+    "b02-mobile-callsheet.jpg": {
+      "pixels": [
+        390,
+        844
+      ]
+    },
+    "b02-mobile-editor.jpg": {
+      "pixels": [
+        390,
+        2854
+      ]
+    },
+    "b02-library-target-mobile.jpg": {
+      "pixels": [
+        390,
+        1443
+      ]
+    }
+  }
+}

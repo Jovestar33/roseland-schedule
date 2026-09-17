@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
 import { createClient, type Session } from '@supabase/supabase-js';
 import type { LocalEditorConfig } from '@/lib/platform/local-editor-config';
 import { createSessionScheduleRepository, type ScheduleSummary } from '@/lib/platform/session-schedule-repository';
@@ -20,6 +20,11 @@ import styles from './local.module.css';
 import { useLocalWorkspace, useWorkspacePanelState } from '@/components/local/LocalWorkspaceContext';
 import { createWorkspaceRepository } from '@/lib/platform/workspace-repository';
 import ScheduleReadView from '@/components/view/ScheduleReadView';
+import ShareDropdown from '@/components/toolbar/ShareDropdown';
+import LocalWeatherControls from '@/components/local/LocalWeatherControls';
+import LocalSchedulePrint from '@/components/local/LocalSchedulePrint';
+import { DocumentProvidersContext } from '@/components/local/DocumentProvidersContext';
+import { fictionalDocumentProviders } from '@/lib/platform/document-providers';
 
 export default function LocalScheduleClient({ config }: { config: LocalEditorConfig }) {
   const workspace = useLocalWorkspace();
@@ -67,14 +72,20 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
   const [contact, setContact] = useState<number | null>(null);
   const [status, setStatus] = useState<number | null>(null);
   const [notes, setNotes] = useState<number | null>(null);
+  const [documentDialogOpen, setDocumentDialogOpen] = useState(false);
+  const documentSession = useScheduleStore(s => s.documentSession);
   const dirty = useScheduleStore(s => s.dirty);
   const rows = useScheduleStore(s => s.rows);
   const state = useScheduleStore.getState;
-  const hasLocalDraft = dirty || contact !== null || status !== null || notes !== null || controller.attempt !== null;
+  const hasLocalDraft = dirty || documentDialogOpen || contact !== null || status !== null || notes !== null || controller.attempt !== null;
   useWorkspacePanelState(hasLocalDraft, busy);
   const ready = !!session && !authNeeded && !workspace?.authNeeded;
   const recordInScope = !workspace || (!!workspace.organization && controller.record?.organization_id === workspace.organization.id);
   const canEdit = !workspace || (permission?.recordId === controller.record?.id && permission?.token === workspace.session?.access_token && permission?.allowed === true);
+
+  // A fresh provider identity invalidates pending selections when document/account scope changes.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const documentProviders = useMemo(() => ({...fictionalDocumentProviders}), [documentSession, workspace?.organization?.id, session?.user.id]);
 
   useEffect(() => {
     const requestEpoch = epoch, requests = listTicket;
@@ -114,7 +125,7 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
   }, [confirmation, active, workspace?.organization?.id]);
 
   function guarded(action: () => void, label: string) {
-    if (state().dirty || contact !== null || status !== null || notes !== null || controller.attempt) setConfirmation({ label, action, scope: scopeRef.current }); else action();
+    if (state().dirty || documentDialogOpen || contact !== null || status !== null || notes !== null || controller.attempt) setConfirmation({ label, action, scope: scopeRef.current }); else action();
   }
   async function run(action: () => Promise<void>) {
     if (busyRef.current) return;
@@ -191,11 +202,12 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
   }
 
   return <LocalEditorContext.Provider value={true}>
+    <DocumentProvidersContext.Provider value={active && recordInScope && ready && canEdit && !confirmation ? documentProviders : null}>
     <main className={styles.main}>
       <header className={styles.banner}>
         <h1>Local schedule rehearsal</h1>
         <p>Fictional data only · Supabase on this computer</p>
-        <p>Account login, schedule selection and editing. Other library tools and online lookups are not available here.</p>
+        <p>Authenticated editing and document tools with fictional location and weather responses. Library parity review remains open.</p>
       </header>
       <p role="status" aria-live="polite">{message}</p>
       {!workspace && (!session || authNeeded) && <form className={styles.login} onSubmit={login}>
@@ -233,6 +245,10 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
             <button className="btn btn-light" disabled={busy} onClick={() => guarded(() => void run(() => open(selected)), 'Reload and discard unsaved changes')}>Reload schedule</button>
             {canEdit && ready && <UndoRedoButtons />}
           </div>
+          <ModalVisibilityContext.Provider value={active && recordInScope && ready && !confirmation}>
+            <div className={styles.toolbar}><ShareDropdown key={documentSession} readOnly={!canEdit || !ready || !active || !recordInScope || !!confirmation} onModalChange={setDocumentDialogOpen} /></div>
+          </ModalVisibilityContext.Provider>
+          <LocalSchedulePrint visible={active && recordInScope && ready && !confirmation} />
           {(controller.attempt || controller.result) && <section className={styles.recovery} aria-label="Save recovery">
             <h2>{controller.result?.state === 'matched' ? 'Saved version confirmed' : 'Save needs review'}</h2>
             <p>{controller.result?.state === 'matched'
@@ -250,6 +266,7 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
           <ModalVisibilityContext.Provider value={active && recordInScope && ready && canEdit && !confirmation}>
           <fieldset disabled={!ready || !canEdit} style={{border:0,padding:0,minWidth:0,display:canEdit?undefined:'none'}}>
           <ScheduleHeader />
+          <LocalWeatherControls enabled={active && recordInScope && ready && canEdit && !confirmation} scope={`${accountRef.current}:${controller.record?.id}`} />
           <ScheduleGrid onOpenContact={setContact} onOpenStatus={setStatus} onOpenNotes={setNotes} />
           <div className="add-area"><button className="btn btn-light" onClick={() => { state().pushUndo(); state().addRowAfter(rows.length - 1); }}>+ Add Row</button></div>
           <ContactModal open={contact !== null} row={contact !== null ? rows[contact] : null} onClose={() => setContact(null)}
@@ -269,5 +286,6 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
         <button className="btn btn-primary" onClick={() => { const action = confirmation?.action; setConfirmation(null); action?.(); }}>{confirmation?.label}</button>
       </dialog>
     </main>
+    </DocumentProvidersContext.Provider>
   </LocalEditorContext.Provider>;
 }

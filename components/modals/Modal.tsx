@@ -13,9 +13,10 @@ interface ModalProps {
   footer?: ReactNode;
   className?: string;
   zIndex?: number;
+  retainWhenHidden?: boolean;
 }
 
-export default function Modal({ open, onClose, title, children, footer, className, zIndex }: ModalProps) {
+export default function Modal({ open, onClose, title, children, footer, className, zIndex, retainWhenHidden = false }: ModalProps) {
   const visible = useContext(ModalVisibilityContext);
   useEffect(() => {
     if (!open || !visible) return;
@@ -26,12 +27,12 @@ export default function Modal({ open, onClose, title, children, footer, classNam
     return () => document.removeEventListener('keydown', onKey);
   }, [open, visible, onClose]);
 
-  if (!open || !visible || typeof document === 'undefined') return null;
+  if (!open || (!visible && !retainWhenHidden) || typeof document === 'undefined') return null;
 
   return createPortal(
     <div
       className="overlay open"
-      style={zIndex === undefined ? undefined : { zIndex }}
+      style={{ zIndex, display: visible ? undefined : 'none' }}
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
     >
       <div className={`modal ${className ?? ''}`} role="dialog" aria-modal="true">

@@ -2,6 +2,7 @@
 import { useScheduleStore } from '@/lib/store/scheduleStore';
 import { useCmsLabel } from '@/lib/store/cmsStore';
 import PlacesAutocomplete from './PlacesAutocomplete';
+import { useLocalEditor } from './LocalEditorContext';
 import CrewIdentityBlock from './CrewIdentityBlock';
 import HeaderIdentityLine from './HeaderIdentityLine';
 import type { GeoResult } from '@/lib/googlePlaces';
@@ -11,6 +12,7 @@ interface Props {
 }
 
 export default function ScheduleHeader({ readOnly = false }: Props) {
+  const local = useLocalEditor();
   const meta       = useScheduleStore((s) => s.meta);
   const rows       = useScheduleStore((s) => s.rows);
   const updateMeta = useScheduleStore((s) => s.updateMeta);
@@ -30,6 +32,7 @@ export default function ScheduleHeader({ readOnly = false }: Props) {
   }
 
   function openTownMap() {
+    if (local) return;
     const url = meta.lat && meta.lng
       ? `https://www.google.com/maps/search/?api=1&query=${meta.lat},${meta.lng}`
       : `https://www.google.com/maps/search/${encodeURIComponent(meta.town)}`;
@@ -54,7 +57,7 @@ export default function ScheduleHeader({ readOnly = false }: Props) {
                 onSelect={handleTownSelect}
                 placeholder="e.g. Garner, NC"
               />
-              {meta.lat !== null && meta.lng !== null && (
+              {!local && meta.lat !== null && meta.lng !== null && (
                 <button className="loc-map-btn" onClick={openTownMap} title="Open in Google Maps">
                   📍
                 </button>
