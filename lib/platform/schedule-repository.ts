@@ -9,6 +9,8 @@ export interface StoredSchedule {
   production_day_id: string | null;
   phase_id?: string | null;
   library_position?: number;
+  last_transfer_version?: number;
+  destination_labels?: {projectName:string;phase:string};
   display_name: string;
   slug: string;
   status: 'draft' | 'published' | 'archived';

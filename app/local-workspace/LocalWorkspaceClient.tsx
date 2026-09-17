@@ -120,7 +120,7 @@ export default function LocalWorkspaceClient({config}:{config:LocalEditorConfig}
   return <div className={styles.page}>
     <header className={styles.header}><div><span className={styles.eyebrow}>LOCAL WORKSPACE</span><h1>Roseland rehearsals</h1><p>One account, with unfinished work kept in this tab.</p></div><span className={styles.badge}>Fictional data only</span></header>
     <div className={styles.shell}>
-      <p className={styles.notice}>Switching local screens keeps drafts and request details. Closing or reloading this page loses them. No email is sent.</p>
+      <p className={styles.notice}>Switching local screens keeps drafts and request details. Closing or reloading loses tab-only requests. Source drafts retained by Duplicate can be recovered on this computer. No email is sent.</p>
       <p role="status" aria-live="polite" className={styles.status}>{message}</p>
       {(!session||authNeeded)&&<form className={styles.login} onSubmit={login} aria-label="Workspace sign in"><h2>{identity.actor?'Sign in again':'Sign in'}</h2><label>Fictional account email<input type="email" required autoComplete="off" readOnly={!!identity.actor} value={session?.user.email??email} onChange={event=>setEmail(event.target.value)}/></label><label>Password<input type="password" required autoComplete="off" value={password} onChange={event=>setPassword(event.target.value)}/></label><button disabled={busy||working}>Sign in</button></form>}
       {identity.actor&&<><div className={styles.account}><span>{session?.user.email??email}{authNeeded?' · Sign-in required':''}</span><span>{dirty?'Unfinished work retained':'No unfinished work'}</span><button disabled={busy||working} onClick={()=>dirty?setConfirmSignOut(true):void signOut()}>Sign out</button></div>

@@ -75,7 +75,8 @@ async function identity(label: string) {
   return { c, id, email, password };
 }
 
-ensure(project==='roseland-b03-20260917','Only the new named B03 fixture stack is allowed');
+ensure(['roseland-b03-20260917','roseland-b03-replay-20260917'].includes(project),'Only the new named B03 fixture stack is allowed');
+let transferFixture:Record<string,string>|null=null;
 let passed=0;
 function check(value:unknown,label:string){ensure(value,label);passed++;console.log('PASS '+label);}
 async function denied(operation:()=>PromiseLike<{error:unknown}>,label:string){const r=await operation();check(!!r.error,label);}
@@ -185,6 +186,84 @@ try {
   await denied(()=>organizer.c.rpc('update_schedule_document',{...updateArgs,expected_version:6}),'Next save is denied after policy tightening');
  } finally {sql('drop trigger b03_hold_write on public.schedules;drop function private.b03_hold_write();');}
 
+ if(args.includes('--transfers')){
+  const src=randomUUID(),dst=randomUUID(),ph=randomUUID(),sid=randomUUID();
+  sql(`begin;insert into public.productions(id,organization_id,name,slug) values('${src}','${org}','Fictional Transfer Source','source-${src}'),('${dst}','${org}','Fictional Transfer Destination','destination-${dst}');
+  insert into public.phases(id,organization_id,production_id,name,phase_type,position,created_by,updated_by) values('${ph}','${org}','${dst}','Fictional Destination Phase','shoot',0,'${owner.id}','${owner.id}');
+  insert into public.production_memberships(organization_id,production_id,user_id,role,status,joined_at) values
+  ('${org}','${src}','${organizer.id}','organizer','active',now()),('${org}','${src}','${editor.id}','editor','active',now()),
+  ('${org}','${dst}','${viewer.id}','organizer','active',now());commit;`);
+  const doc={...documentFixture(),meta:{...documentFixture().meta,projectName:'Fictional Transfer Source',phase:'',date:'2026-11-12',town:'Fictional Harbor'}};
+  const made=await createScheduleRepository(organizer.c).createAtPlacement(sid,src,null,null,'Fictional transfer','transfer-'+sid,doc);
+  const rule={...policy,target_id:randomUUID(),target_production_id:src,target_schedule_id:sid,subject_role:'admin',denied_actions:['read']};
+  ensure(!(await owner.c.rpc('set_schedule_restriction',rule)).error,'Transfer rule setup');
+  const rpc=async(c:SupabaseClient,name:string,args:Record<string,unknown>)=>{const r=await c.rpc(name,args);ensure(!r.error,name+': '+JSON.stringify(r.error));return r.data;};
+  const destinations=await rpc(organizer.c,'schedule_transfer_destinations',{target_schedule_id:sid});const minimal=destinations.find((d:{id:string})=>d.id===dst);
+  check(!!minimal&&!minimal.direct&&Object.keys(minimal).sort().join()==='direct,id,name','Source Organizer discovers minimal destination without membership');
+  check((await organizer.c.from('production_memberships').select('user_id').eq('production_id',dst)).data?.length===0,'Destination discovery does not reveal roster');
+  await denied(()=>editor.c.rpc('schedule_transfer_destinations',{target_schedule_id:sid}),'Editor cannot initiate transfer discovery');
+  const review=await rpc(organizer.c,'review_schedule_transfer',{target_schedule_id:sid,target_production_id:dst});
+  const req=randomUUID(),request={request_id:req,target_schedule_id:sid,target_production_id:dst,expected_version:1,expected_policy:review.policy};
+  await denied(()=>organizer.c.rpc('move_schedule',{...request,target_day_id:null,target_phase_id:ph,approve_request:false}),'Source-only Organizer cannot directly move');
+  const requested=await rpc(organizer.c,'request_schedule_transfer',request);check(requested.status==='pending','Source-only Organizer creates transfer request');
+  check((await rpc(organizer.c,'request_schedule_transfer',request)).id===req,'Lost request acknowledgement reuses original ID');
+  check((await viewer.c.from('schedules').select('id').eq('id',sid)).data?.length===0,'Pending request grants no normal schedule read');
+  check((await viewer.c.from('schedule_versions').select('version').eq('schedule_id',sid)).data?.length===0,'Receiver cannot read source history before acceptance');
+  const preview=await rpc(viewer.c,'preview_schedule_transfer',{request_id:req});
+  check(sameJson(preview.schedule.document,doc),'Eligible receiver previews whole current saved document');
+  const denyPreview={...rule,target_id:randomUUID(),subject_role:null,subject_user_id:viewer.id,denied_actions:['read']};
+  ensure(!(await owner.c.rpc('set_schedule_restriction',denyPreview)).error,'Preview restriction setup');
+  await denied(()=>viewer.c.rpc('preview_schedule_transfer',{request_id:req}),'Source explicit restriction blocks whole request preview');
+  ensure(!(await owner.c.rpc('set_schedule_restriction',{...denyPreview,expected_revision:1,denied_actions:[]})).error,'Preview restriction cleanup');
+  const changed=await rpc(organizer.c,'update_schedule_document',{target_schedule_id:sid,expected_version:1,next_document:{...doc,meta:{...doc.meta,town:'Newer Fictional Harbor'}},schema_version:1});
+  await denied(()=>viewer.c.rpc('move_schedule',{...request,target_day_id:null,target_phase_id:ph,approve_request:true}),'Stale receiver review cannot approve newer document');
+  const renewed=await rpc(viewer.c,'preview_schedule_transfer',{request_id:req});
+  const approvedArgs={...request,expected_version:2,expected_policy:renewed.policy,target_day_id:null,target_phase_id:ph,approve_request:true};
+  const approved=await rpc(viewer.c,'move_schedule',approvedArgs);check(approved.version===3,'Receiver approval moves original identity exactly once');
+  check((await rpc(viewer.c,'move_schedule',approvedArgs)).version===3,'Lost Move acknowledgement recovers exact receipt without another version');
+  const moved=await rpc(viewer.c,'read_schedule',{target_schedule_id:sid});
+  check(moved.production_id===dst&&moved.phase_id===ph&&moved.production_day_id===null&&moved.document.meta.projectName==='Fictional Transfer Destination'&&moved.document.meta.phase==='Fictional Destination Phase','Move updates only current production/phase placement and labels');
+  const expectedMoved={...changed.document,meta:{...changed.document.meta,projectName:'Fictional Transfer Destination',phase:'Fictional Destination Phase'}};
+  check(sameJson(moved.document,expectedMoved),'Move preserves current date, location, rows and all other document data');
+  check(sql(`select count(*) from public.schedule_restrictions where schedule_id='${sid}' and production_id='${dst}'`)==='1','Move carries explicit restriction atomically');
+  check((await admin.c.from('schedules').select('id').eq('id',sid)).data?.length===0,'Carried Super Admin restriction still binds Admin');
+  check((await organizer.c.from('schedules').select('id').eq('id',sid)).data?.length===0,'Source-only user loses current schedule access');
+  check((await editor.c.from('schedule_versions').select('version').eq('schedule_id',sid)).data?.length===0,'Source-only reader loses all old history references');
+  const history=await viewer.c.from('schedule_versions').select('version,production_id,document').eq('schedule_id',sid).order('version');
+  check(history.data?.length===3&&history.data[0].production_id===src&&sameJson(history.data[0].document,made.document),'Destination reader gets full byte-preserved historical provenance');
+  const restored=await rpc(viewer.c,'mutate_schedule',{target_schedule_id:sid,expected_version:3,operation:'restore_version',payload:{version:1}});
+  check(restored.production_id===dst&&restored.phase_id===ph&&restored.document.meta.projectName==='Fictional Transfer Destination'&&restored.document.meta.phase==='Fictional Destination Phase'&&restored.document.meta.town===doc.meta.town,'Restore old document preserves current destination placement and labels');
+  await denied(()=>viewer.c.rpc('preview_schedule_transfer',{request_id:req}),'Accepted request revokes new source-preview path');
+  const backReview=await rpc(owner.c,'review_schedule_transfer',{target_schedule_id:sid,target_production_id:src});
+  const copyId=randomUUID(),copy={target_schedule_id:copyId,source_schedule_id:sid,source_version:4,source_policy:backReview.policy,target_production_id:src,target_day_id:null,target_phase_id:null,next_display_name:'Fictional independent duplicate',next_slug:'duplicate-'+copyId,next_document:restored.document,schema_version:1};
+  const copyResult=await rpc(owner.c,'copy_schedule_to_production',copy);check(copyResult.id===copyId,'Cross-production Duplicate confirms independent identity');
+  const copyRow=await rpc(owner.c,'read_schedule',{target_schedule_id:copyId});
+  check(copyRow.document.meta.projectName==='Fictional Transfer Source'&&copyRow.document.meta.phase===''&&copyRow.document_version===1,'Duplicate normalizes destination labels without copying history');
+  check((await rpc(owner.c,'copy_schedule_to_production',copy)).version===1&&sql(`select document_version from public.schedules where id='${sid}'`)==='4','Duplicate retry never recreates or changes source');
+  check(sql(`select count(*) from public.schedule_restrictions where schedule_id='${copyId}'`)==='1','Duplicate preserves explicit source policy');
+  await denied(()=>owner.c.rpc('copy_schedule_to_production',{...copy,next_display_name:'Different retry'}),'Duplicate receipt rejects changed intent');
+  const directId=randomUUID(),direct={request_id:directId,target_schedule_id:sid,target_production_id:src,target_day_id:null,target_phase_id:null,expected_version:4,expected_policy:backReview.policy,approve_request:false};
+  check((await rpc(owner.c,'move_schedule',direct)).version===5,'Organization leadership directly moves with retained history');
+  check((await rpc(owner.c,'move_schedule',direct)).version===5,'Direct Move exact retry does not repeat mutation');
+  const r2=await rpc(organizer.c,'review_schedule_transfer',{target_schedule_id:sid,target_production_id:dst});
+  for(const decision of ['cancelled','declined','expired','role-loss'] as const){
+   const id=randomUUID();await rpc(organizer.c,'request_schedule_transfer',{...request,request_id:id,expected_version:5,expected_policy:r2.policy});
+   if(decision==='expired')sql(`update private.schedule_transfers set expires_at=now()-interval '1 second' where id='${id}'`);
+   else if(decision==='role-loss')sql(`update public.production_memberships set role='viewer' where production_id='${dst}' and user_id='${viewer.id}'`);
+   else await rpc(decision==='cancelled'?organizer.c:viewer.c,'close_schedule_transfer',{request_id:id,decision});
+   await denied(()=>viewer.c.rpc('preview_schedule_transfer',{request_id:id}),decision+' revokes new receiver preview');
+   if(decision==='role-loss')sql(`update public.production_memberships set role='organizer' where production_id='${dst}' and user_id='${viewer.id}'`);
+  }
+  const concurrentReview=await rpc(owner.c,'review_schedule_transfer',{target_schedule_id:sid,target_production_id:dst});
+  const concurrentArgs={request_id:randomUUID(),target_schedule_id:sid,target_production_id:dst,target_day_id:null,target_phase_id:ph,expected_version:5,expected_policy:concurrentReview.policy,approve_request:false};
+  const raced=await Promise.all([owner.c.rpc('move_schedule',concurrentArgs),owner.c.rpc('move_schedule',{...concurrentArgs,request_id:randomUUID()})]);
+  check(raced.filter(r=>!r.error).length===1&&sql(`select document_version from public.schedules where id='${sid}'`)==='6','Competing Moves commit one destination change and one new version');
+  const previewID=randomUUID();await createScheduleRepository(organizer.c).createAtPlacement(previewID,src,null,null,'Fictional receiving review — long schedule name with complete details','receiving-'+previewID,documentFixture(12));
+  const pendingReview=await rpc(organizer.c,'review_schedule_transfer',{target_schedule_id:previewID,target_production_id:dst}),pendingID=randomUUID();
+  await rpc(organizer.c,'request_schedule_transfer',{request_id:pendingID,target_schedule_id:previewID,target_production_id:dst,expected_version:1,expected_policy:pendingReview.policy});
+  transferFixture={source:src,destination:dst,phase:ph,schedule:previewID,request:pendingID};
+
+ }
  if(args.includes('--library')){
   const prod2=randomUUID(),phase2=randomUUID(),day2=randomUUID();
   sql(`begin;insert into public.productions(id,organization_id,name,slug) values('${prod2}','${org}','B03 Fictional Riverside','riverside-${prod2}');
@@ -229,7 +308,7 @@ try {
   check((await createScheduleLibraryRepository(outsider.c).inventory(outsider.id,org)).length===0,'Outside account cannot enumerate library metadata');
  }
  if(args.includes('--serve')){
-  const fixture={project,org,prod,schedule,owner:{email:owner.email,password:owner.password},organizer:{email:organizer.email,password:organizer.password},editor:{email:editor.email,password:editor.password},admin:{email:admin.email,password:admin.password}};
+  const fixture={project,org,prod,schedule,transfer:transferFixture,viewer:{email:viewer.email,password:viewer.password},owner:{email:owner.email,password:owner.password},organizer:{email:organizer.email,password:organizer.password},editor:{email:editor.email,password:editor.password},admin:{email:admin.email,password:admin.password}};
   writeFileSync('/private/tmp/roseland-b03-browser-fixtures.json',JSON.stringify(fixture),{mode:0o600});
   console.log('Fictional browser fixture saved privately in /private/tmp/roseland-b03-browser-fixtures.json');
  }

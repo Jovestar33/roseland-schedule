@@ -20,6 +20,8 @@ import styles from './local.module.css';
 import { useLocalWorkspace, useWorkspacePanelState } from '@/components/local/LocalWorkspaceContext';
 import { createWorkspaceRepository } from '@/lib/platform/workspace-repository';
 import ScheduleReadView from '@/components/view/ScheduleReadView';
+import LocalScheduleTransfers from '@/components/local/LocalScheduleTransfers';
+import {retainSourceDraft,readSourceDraft} from '@/lib/platform/schedule-drafts';
 import LocalScheduleLibrary from '@/components/local/LocalScheduleLibrary';
 import LocalScheduleFiles from '@/components/local/LocalScheduleFiles';
 import ShareDropdown from '@/components/toolbar/ShareDropdown';
@@ -77,6 +79,13 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
   const [notes, setNotes] = useState<number | null>(null);
   const [documentDialogOpen, setDocumentDialogOpen] = useState(false);
   const documentSession = useScheduleStore(s => s.documentSession);
+  const [transferState,setTransferState]=useState({dirty:false,busy:false});
+  const reportTransfers=useCallback((dirty:boolean,busy:boolean)=>setTransferState({dirty,busy}),[]);
+  const [transferRequest,setTransferRequest]=useState<{id:string;copy:boolean;sequence:number}|null>(null);
+  const transferSequence=useRef(0),navigationEpoch=useRef(0);
+  const [draftAvailable,setDraftAvailable]=useState(false);
+  useEffect(()=>{navigationEpoch.current++;},[active,workspace?.organization?.id,session?.user.id]);
+  const startTransfer=(id:string,copy:boolean)=>setTransferRequest({id,copy,sequence:++transferSequence.current});
   const [libraryState,setLibraryState]=useState({dirty:false,busy:false});
   const reportLibrary=useCallback((dirty:boolean,busy:boolean)=>setLibraryState({dirty,busy}),[]);
   const [fileState, setFileState] = useState({dirty:false,busy:false});
@@ -84,8 +93,8 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
   const dirty = useScheduleStore(s => s.dirty);
   const rows = useScheduleStore(s => s.rows);
   const state = useScheduleStore.getState;
-  const hasLocalDraft = libraryState.dirty || fileState.dirty || dirty || documentDialogOpen || contact !== null || status !== null || notes !== null || controller.attempt !== null;
-  useWorkspacePanelState(hasLocalDraft, busy || fileState.busy || libraryState.busy);
+  const hasLocalDraft = transferState.dirty || libraryState.dirty || fileState.dirty || dirty || documentDialogOpen || contact !== null || status !== null || notes !== null || controller.attempt !== null;
+  useWorkspacePanelState(hasLocalDraft, busy || fileState.busy || libraryState.busy || transferState.busy);
   const ready = !!session && !authNeeded && !workspace?.authNeeded;
   const recordInScope = !workspace || (!!workspace.organization && controller.record?.organization_id === workspace.organization.id);
   const canEdit = (permission?.recordId === controller.record?.id && permission?.token === session?.access_token && permission?.allowed === true);
@@ -183,10 +192,34 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
     if (await controller.open(id)) {
       setSelected(id); setVersion(controller.record!.document_version);
       setContact(null); setStatus(null); setNotes(null);
+      try{setDraftAvailable(!!readSourceDraft(localStorage,accountRef.current!,controller.record!.organization_id,id));}catch{setDraftAvailable(false);}
       setMessage('Schedule loaded.');
       await refreshPermission();
     }
   }
+  function captureCopyOpen(){return {actor:accountRef.current,organization:scopeRef.current,documentSession:state().documentSession,navigation:navigationEpoch.current};}
+  async function openConfirmedCopy(id:string,context:unknown){
+    const c=context as ReturnType<typeof captureCopyOpen>;
+    const safe=()=>!!c&&c.actor===accountRef.current&&c.organization===scopeRef.current&&c.documentSession===state().documentSession&&c.navigation===navigationEpoch.current&&activeRef.current&&!!sessionRef.current&&!busyRef.current&&!controller.attempt&&!documentDialogOpen&&contact===null&&status===null&&notes===null;
+    if(!safe())return false;
+    const original=controller.record, current=state();
+    if(original){
+      try{retainSourceDraft(localStorage,{actor:c.actor!,organization:original.organization_id,source:original.id,before:original,document:current.getScheduleData(),undo:current.undoStack,redo:current.redoStack,savedAt:Date.now()});}
+      catch{setMessage('Copy saved. Source draft persistence could not be verified, so opening is deferred.');return false;}
+    }
+    if(!safe())return false;
+    await open(id);return controller.record?.id===id;
+  }
+  async function recoverSourceDraft(){
+    const record=controller.record,actor=accountRef.current;if(!record||!actor)return;
+    if(!await directory.canEdit(actor,record.production_id,record.id,'edit'))throw new Error('Draft recovery is unavailable under current permissions.');
+    const retained=readSourceDraft(localStorage,actor,record.organization_id,record.id);
+    if(!retained||controller.record?.id!==record.id||accountRef.current!==actor||scopeRef.current!==record.organization_id||!activeRef.current)return;
+    state().loadSchedule(record.display_name,{rows:retained.document.rows??[],meta:makeMeta(retained.document.meta),savedAt:retained.document.savedAt??0});
+    useScheduleStore.setState({dirty:true,undoStack:retained.undo as typeof currentUndo,redoStack:retained.redo as typeof currentUndo});
+    controller.record=retained.before;setVersion(retained.before.document_version);setMessage('Source draft and undo history recovered. Saving still checks its original server version.');
+  }
+  const currentUndo=state().undoStack;
   useEffect(() => {
     if (!workspace) return;
     const next = workspace.session;
@@ -253,8 +286,9 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
         </div>
         {workspace && <LocalScheduleFiles client={client} actor={session?.user.id ?? accountRef.current} organization={workspace.organization?.id ?? null}
           enabled={active && ready && !confirmation} copyEnabled={!busy && !!selected && recordInScope && canEdit && permission?.copy===true && !documentDialogOpen && contact===null && notes===null && status===null}
-          getSource={()=>controller.record} getDraft={()=>state().getScheduleData()} name={state().scheduleName ?? 'Schedule'} onState={reportFiles} requireAuth={workspace.requireAuth}/>}
-        {workspace&&<LocalScheduleLibrary client={client} actor={session?.user.id??accountRef.current} organization={workspace.organization?.id??null} enabled={active&&ready&&!confirmation} selected={selected} onOpen={id=>guarded(()=>void run(()=>open(id)),'Open schedule and discard unsaved changes')} onInspect={id=>workspace.openLifecycle?.(workspace.organization!.id,id)} onState={reportLibrary}/>}
+          getSource={()=>controller.record} getDraft={()=>state().getScheduleData()} name={state().scheduleName ?? 'Schedule'} onState={reportFiles} requireAuth={workspace.requireAuth} onCopy={()=>{if(selected)startTransfer(selected,true);}}/>}
+        {workspace&&<LocalScheduleLibrary client={client} actor={session?.user.id??accountRef.current} organization={workspace.organization?.id??null} enabled={active&&ready&&!confirmation} selected={selected} onOpen={id=>guarded(()=>void run(()=>open(id)),'Open schedule and discard unsaved changes')} onInspect={id=>workspace.openLifecycle?.(workspace.organization!.id,id)} onState={reportLibrary} onTransfer={startTransfer}/>}
+        {workspace&&<LocalScheduleTransfers client={client} actor={session?.user.id??null} organization={workspace.organization?.id??null} enabled={active&&ready&&!confirmation} request={transferRequest} onState={reportTransfers} getDraft={id=>controller.record?.id===id?{record:controller.record,document:structuredClone(state().getScheduleData())}:null} captureOpen={captureCopyOpen} onCopy={openConfirmedCopy}/>}
         {workspace&&selected&&!recordInScope&&<p>A schedule draft is retained in another organization. Return there to continue, or explicitly discard it when opening another schedule.</p>}
         {!workspace&&<nav aria-label="Local schedules" className={styles.list}>
           {items.map(item=><button key={item.id} className="btn btn-light" disabled={busy||!ready} aria-current={selected===item.id?'page':undefined} onClick={()=>guarded(()=>void run(()=>open(item.id)),'Open schedule and discard unsaved changes')}>{item.display_name} · {item.status}</button>)}
@@ -268,6 +302,7 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
             })}>Save schedule</button>
             <button className="btn btn-light" disabled={busy} onClick={() => guarded(() => void run(() => open(selected)), 'Reload and discard unsaved changes')}>Reload schedule</button>
             {canEdit && ready && <UndoRedoButtons />}
+            {draftAvailable&&canEdit&&ready&&<button className="btn btn-light" disabled={busy||!!controller.attempt} onClick={()=>guarded(()=>void run(recoverSourceDraft),'Recover retained source draft and replace current edits')}>Recover retained source draft</button>}
           </div>
           <ModalVisibilityContext.Provider value={active && recordInScope && ready && !confirmation}>
             <ModalVisibilityContext.Provider value={active&&recordInScope&&ready&&permission?.read===true&&!confirmation}><div className={styles.toolbar}><ShareDropdown authorizeOutput={authorizeOutput} key={documentSession} readOnly={!canEdit || (workspace && permission?.output!==true) || !ready || !active || !recordInScope || !!confirmation} onModalChange={setDocumentDialogOpen} /></div></ModalVisibilityContext.Provider>

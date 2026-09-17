@@ -1,0 +1,103 @@
+PASS Editor cannot create
+PASS Organizer creates without permission setup
+PASS Viewer cannot save
+PASS Editor saves existing document
+PASS Editor cannot rename
+PASS Editor cannot archive
+PASS Editor restores document version
+PASS Organizer soft deletes
+PASS Editor cannot list Trash
+PASS Organizer reads recoverable Trash
+PASS Organizer restores identity and history
+PASS Super Admin sets individual schedule bounds on Admin
+PASS Admin cannot discover restricted schedule
+PASS Admin cannot read restricted history
+PASS Admin cannot bypass restriction via definer save RPC
+PASS Admin cannot remove Super Admin bound
+PASS Policy administration does not grant document access
+PASS Outside actor cannot inspect policy
+PASS Admin restricts Editor within owner bounds
+PASS Inherited organization restriction blocks save
+PASS Stale policy revision is rejected
+PASS Explicit policy clears to inherited Standard
+PASS Leadership explicitly assigns Organizer
+PASS Existing Editor is not automatically promoted
+PASS Copy creates one independent identity
+PASS Copy atomically retains both explicit source restrictions
+PASS Copied individual restriction denies original subject
+PASS Copied Super Admin restriction still binds Admin
+PASS Copy leaves source version unchanged
+PASS Copy history restriction is effective
+PASS Lost copy acknowledgement has exact receipt without history access
+PASS Receipt rejects mismatched captured copy
+PASS Receipt reveals nothing to restricted noncreator
+PASS Real copy with discarded acknowledgement retains an uncertain request
+PASS Retry recovers exact copy without history or duplicate creation
+PASS Copy recovery creates no extra document or version
+PASS Stale copy policy cannot be submitted
+PASS Rejected copy leaves no partial schedule
+PASS Permission Settings returns scoped fictional choices
+PASS Destination bounds block an uneditable copy
+PASS Failed policy combination rolls back document and history
+PASS Inherited production bound blocks Organizer archive
+PASS Denied mutations append no history
+PASS Save waiting for admission honors newly committed restriction
+PASS Blocked concurrent save changes neither version nor history
+PASS Admitted save commits exactly once before later restriction
+PASS Next save is denied after policy tightening
+PASS Source Organizer discovers minimal destination without membership
+PASS Destination discovery does not reveal roster
+PASS Editor cannot initiate transfer discovery
+PASS Source-only Organizer cannot directly move
+PASS Source-only Organizer creates transfer request
+PASS Lost request acknowledgement reuses original ID
+PASS Pending request grants no normal schedule read
+PASS Receiver cannot read source history before acceptance
+PASS Eligible receiver previews whole current saved document
+PASS Source explicit restriction blocks whole request preview
+PASS Stale receiver review cannot approve newer document
+PASS Receiver approval moves original identity exactly once
+PASS Lost Move acknowledgement recovers exact receipt without another version
+PASS Move updates only current production/phase placement and labels
+PASS Move preserves current date, location, rows and all other document data
+PASS Move carries explicit restriction atomically
+PASS Carried Super Admin restriction still binds Admin
+PASS Source-only user loses current schedule access
+PASS Source-only reader loses all old history references
+PASS Destination reader gets full byte-preserved historical provenance
+PASS Restore old document preserves current destination placement and labels
+PASS Accepted request revokes new source-preview path
+PASS Cross-production Duplicate confirms independent identity
+PASS Duplicate normalizes destination labels without copying history
+PASS Duplicate retry never recreates or changes source
+PASS Duplicate preserves explicit source policy
+PASS Duplicate receipt rejects changed intent
+PASS Organization leadership directly moves with retained history
+PASS Direct Move exact retry does not repeat mutation
+PASS cancelled revokes new receiver preview
+PASS declined revokes new receiver preview
+PASS expired revokes new receiver preview
+PASS role-loss revokes new receiver preview
+PASS Competing Moves commit one destination change and one new version
+PASS Create Unassigned without inventing day, phase or date
+PASS Editor cannot create through Unassigned entry point
+PASS Editor saves existing Unassigned content
+PASS Unassigned document-version restore retains placement
+PASS Editor cannot organize Unassigned placement
+PASS Cross-production day substitution is rejected
+PASS Assign existing real day without rewriting date/location/document
+PASS Stale placement cannot overwrite newer placement
+PASS Clear day to production-contained Unassigned with explicit valid phase
+PASS Destination chooser uses actual production phase/day identities
+PASS Same-group library ordering saves atomically
+PASS Stale library order is rejected
+PASS Editor cannot reorder library
+PASS Organizer trashes Unassigned schedule
+PASS Unassigned Trash is hidden from Editor library
+PASS Trash recovery retains Unassigned placement and phase
+PASS Library retrieves complete inventory across multiple pages
+PASS Search and date filters find final-page schedule
+PASS Production-name search covers every page
+PASS Production restriction removes library and search metadata
+PASS Outside account cannot enumerate library metadata
+{"passed":102,"scope":"B03 genuine fictional Auth and RLS foundation","project":"roseland-b03-20260917"}

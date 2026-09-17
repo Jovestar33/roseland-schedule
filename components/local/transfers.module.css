@@ -1,0 +1,18 @@
+.dialog { margin:auto; width:calc(100% - 40px); max-width:1080px; max-height:calc(100vh - 40px); overflow:auto; padding:24px; border:1px solid #7d98a5; border-radius:14px; background:white; color:#173848; }
+.dialog::backdrop { background:#06121bc9; }
+.dialog h2 { margin-bottom:12px; font-size:21px; }
+.dialog p { line-height:1.6; margin:10px 0; }
+.dialog button { margin:6px 8px 6px 0; }
+.preview { background:white; color:#173848; padding:12px 0; overflow:auto; }
+.preview :global(.meta) label { color:#415565 !important; }
+@media(max-width:760px){.dialog{padding:16px;width:calc(100% - 20px);max-height:calc(100dvh - 20px);}}
+.preview :global(.call-disp), .preview :global(.wx-val) { white-space:normal !important; overflow:visible !important; overflow-wrap:anywhere; line-height:1.35 !important; text-overflow:clip !important; }
+.preview :global(.sched) { table-layout:fixed !important; min-width:1040px !important; width:100% !important; }
+.preview :global(col.c-n) { width:32px !important; }
+.preview :global(col.c-a) { width:130px !important; }
+.preview :global(col.c-l) { width:180px !important; }
+.preview :global(col.c-d) { width:250px !important; }
+.preview :global(col.c-nt) { width:160px !important; }
+.preview :global(col.c-dv) { width:3px !important; }
+.preview :global(col.c-ti), .preview :global(col.c-to) { width:100px !important; }
+.preview :global(col.c-du) { width:85px !important; }
