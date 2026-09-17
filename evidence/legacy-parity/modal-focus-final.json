@@ -1,0 +1,48 @@
+[
+  {
+    "case": "desktop-final-visible-focus",
+    "result": {
+      "focused": "INPUT",
+      "outline": "rgb(233, 30, 140) solid 2px",
+      "viewport": {
+        "height": 720,
+        "width": 1280
+      }
+    }
+  },
+  {
+    "case": "desktop-final-backward-wrap",
+    "state": "The focused UI element is 491 button Save Contact"
+  },
+  {
+    "case": "desktop-final-forward-wrap",
+    "state": "The focused UI element is 480 button Close"
+  },
+  {
+    "case": "desktop-final-return",
+    "state": "The focused UI element is 330 button 👤, Help: Edit contact"
+  },
+  {
+    "case": "phone-final-visible-focus",
+    "result": {
+      "focused": "INPUT",
+      "outline": "rgb(233, 30, 140) solid 2px",
+      "viewport": {
+        "height": 844,
+        "width": 390
+      }
+    }
+  },
+  {
+    "case": "phone-final-backward-wrap",
+    "state": "The focused UI element is 501 button Save Contact"
+  },
+  {
+    "case": "phone-final-forward-wrap",
+    "state": "The focused UI element is 490 button Close"
+  },
+  {
+    "case": "phone-final-return",
+    "state": "The focused UI element is 330 button 👤, Help: Edit contact"
+  }
+]

@@ -1,0 +1,58 @@
+[
+  {
+    "case": "target-desktop-backward-wrap",
+    "state": "The focused UI element is 491 button Save Contact"
+  },
+  {
+    "case": "target-desktop-forward-wrap",
+    "state": "The focused UI element is 480 button Close"
+  },
+  {
+    "case": "target-desktop-escape-return",
+    "state": "The focused UI element is 0 AXWebArea Local Roseland workspace, URL: 127.0.0.1:3422/local-workspace?screen=schedule&org=36cd756f-07ce-4a7d-a476-9500a2b6b62b"
+  },
+  {
+    "case": "legacy-phone-focus-escapes",
+    "state": "The focused UI element is 384 button + Add Row"
+  },
+  {
+    "case": "target-phone-backward-wrap-fixed",
+    "state": "The focused UI element is 1070 button Save Contact"
+  },
+  {
+    "case": "target-phone-forward-wrap-fixed",
+    "state": "The focused UI element is 1059 button Close"
+  },
+  {
+    "case": "target-phone-escape-return-fixed",
+    "state": "The focused UI element is 907 button 👤, Help: Edit contact"
+  },
+  {
+    "case": "target-desktop-backward-wrap-fixed",
+    "state": "The focused UI element is 1079 button Save Contact"
+  },
+  {
+    "case": "target-desktop-forward-wrap-fixed",
+    "state": "The focused UI element is 1068 button Close"
+  },
+  {
+    "case": "target-desktop-escape-return-fixed",
+    "state": "The focused UI element is 907 button 👤, Help: Edit contact"
+  },
+  {
+    "case": "target-call-sheet-backward-wrap",
+    "state": "The focused UI element is 1099 button 🖨 Print"
+  },
+  {
+    "case": "target-call-sheet-return-to-share",
+    "state": "The focused UI element is 1065 button ⬆ Share ▾, Help: Share"
+  },
+  {
+    "case": "target-contact-typing-focus",
+    "state": "The focused UI element is 1074 text field (settable) NAME, Value: Fictional cancelled contact"
+  },
+  {
+    "case": "target-contact-cancel-retains-original",
+    "state": "+\t\t\t1077 text NAME\n+\t\t\t1078 text field (settable) NAME, Value: =Fictional Crew\nThe focused UI element is 1078 text field (settable) NAME, Value: =Fictional Crew"
+  }
+]

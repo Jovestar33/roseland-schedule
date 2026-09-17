@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useId } from 'react';
 import Modal from './Modal';
 import type { ScheduleRow } from '@/lib/types';
 
@@ -23,6 +23,7 @@ const inp: React.CSSProperties = {
 };
 
 export default function ContactModal({ open, row, onSave, onClose }: Props) {
+  const fieldId = useId();
   const [name, setName]   = useState('');
   const [title, setTitle] = useState('');
   const [phone, setPhone] = useState('');
@@ -63,20 +64,20 @@ export default function ContactModal({ open, row, onSave, onClose }: Props) {
     >
       <div className="location-contact-grid">
         <div className="location-contact-full">
-          <label className="location-contact-label">Name</label>
-          <input autoFocus style={inp} type="text" placeholder="Contact name" value={name} onChange={(e) => setName(e.target.value)} />
+          <label className="location-contact-label" htmlFor={fieldId+'-name'}>Name</label>
+          <input autoFocus style={inp} type="text" placeholder="Contact name" id={fieldId+'-name'} value={name} onChange={(e) => setName(e.target.value)} />
         </div>
         <div className="location-contact-full">
-          <label className="location-contact-label">Title</label>
-          <input style={inp} type="text" placeholder="Role / title" value={title} onChange={(e) => setTitle(e.target.value)} />
+          <label className="location-contact-label" htmlFor={fieldId+'-title'}>Title</label>
+          <input style={inp} type="text" placeholder="Role / title" id={fieldId+'-title'} value={title} onChange={(e) => setTitle(e.target.value)} />
         </div>
         <div className="location-contact-full">
-          <label className="location-contact-label">Phone</label>
-          <input style={inp} type="tel" placeholder="Phone" value={phone} onChange={(e) => setPhone(e.target.value)} />
+          <label className="location-contact-label" htmlFor={fieldId+'-phone'}>Phone</label>
+          <input style={inp} type="tel" placeholder="Phone" id={fieldId+'-phone'} value={phone} onChange={(e) => setPhone(e.target.value)} />
         </div>
         <div className="location-contact-full">
-          <label className="location-contact-label">Email</label>
-          <input style={inp} type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
+          <label className="location-contact-label" htmlFor={fieldId+'-email'}>Email</label>
+          <input style={inp} type="email" placeholder="Email" id={fieldId+'-email'} value={email} onChange={(e) => setEmail(e.target.value)} />
         </div>
       </div>
     </Modal>

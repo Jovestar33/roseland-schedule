@@ -14,3 +14,9 @@
 @import '../styles/view.css';
 @import '../styles/print.css';
 @import '../styles/local-documents.css';
+
+/* Keep keyboard focus visible in modal forms, including legacy inline styles. */
+.modal :is(button, input, textarea, select, a[href]):focus-visible {
+  outline: 2px solid var(--pink, #c6286b) !important;
+  outline-offset: 2px;
+}

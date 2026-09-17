@@ -55,12 +55,14 @@ export default function ShareDropdown({ readOnly = false, onModalChange, authori
   async function handleContactSheet() {
     if (authorizeOutput && !await authorizeOutput()) return;
     close();
+    btnRef.current?.focus();
     setContactSheetOpen(true);
   }
 
   async function handleCallSheet() {
     if (authorizeOutput && !await authorizeOutput()) return;
     close();
+    btnRef.current?.focus();
     setCallSheetOpen(true);
   }
 

@@ -1,0 +1,12 @@
+import {readFileSync,writeFileSync} from 'node:fs';
+import {execFileSync} from 'node:child_process';
+import {randomUUID,createHash} from 'node:crypto';
+import {documentFixture} from '../tests/fixtures/document-fixtures.ts';
+const f=JSON.parse(readFileSync('/private/tmp/roseland-b03-browser-fixtures.json','utf8'));
+if(f.project!=='roseland-b03-replay-20260917')throw Error('Owned fictional replay stack required');
+const id=randomUUID(),doc=documentFixture(),quoted=(s:string)=>"'"+s.replaceAll("'","''")+"'";
+const actor=execFileSync('docker',['exec','supabase_db_'+f.project,'psql','-X','-At','-U','postgres','-d','postgres','-c',`select id from auth.users where email=${quoted(f.owner.email)}`],{encoding:'utf8'}).trim();
+const sql=`insert into public.schedules(id,organization_id,production_id,display_name,slug,document,created_by,updated_by) values (${quoted(id)},${quoted(f.org)},${quoted(f.prod)},'Parity ordinary fictional day',${quoted('parity-'+id)},${quoted(JSON.stringify(doc))}::jsonb,${quoted(actor)},${quoted(actor)})`;
+execFileSync('docker',['exec','supabase_db_'+f.project,'psql','-X','-q','-v','ON_ERROR_STOP=1','-U','postgres','-d','postgres','-c',sql],{stdio:['ignore','pipe','pipe']});
+writeFileSync('evidence/legacy-parity/fixture-manifest.json',JSON.stringify({sourceCommit:'62eb261c897b3a5c4e03857e59fee8071d520b88',targetBase:'2b46d98',organization:f.org,production:f.prod,schedule:id,name:'Parity ordinary fictional day',document:doc,sha256:createHash('sha256').update(JSON.stringify(doc)).digest('hex')},null,2));
+console.log('Created isolated fictional paired fixture '+id);

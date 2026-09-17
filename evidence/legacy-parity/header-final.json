@@ -1,0 +1,14 @@
+[
+  {
+    "case": "target-day-invalid",
+    "state": "~\t\t\t\t479 text field (settable) 13/12\n+\t\t\t\t488 text Day 13 cannot exceed total 12 PRODUCER Fictional producer with complete long credit DIRECTOR Fictional director CAMERA Fictional camera lead\nThe focused UI element is 479 text field (settable) 13/12"
+  },
+  {
+    "case": "target-day-escape",
+    "state": "~\t\t\t102 text Version  1  ·  Unsaved changes\n~\t\t\t\t115 text Principal photography · Day 2 of 12 PRODUCER Fictional producer with complete long credit DIRECTOR Fictional director CAMERA Fictional camera lead\nThe focused UI element is 0 AXWebArea Local Roseland workspace, URL: 127.0.0.1:3422/local-workspace?screen=schedule&org=36cd756f-07ce-4a7d-a476-9500a2b6b62b"
+  },
+  {
+    "case": "target-reload-cancel",
+    "state": "\t\t\t101 text Version  1  ·  Unsaved changes\n\t\t\t\t114 text Principal photography · Day 2 of 12 PRODUCER Fictional producer with complete long credit DIRECTOR Fictional director CAMERA Fictional camera lead\nThe focused UI element is 103 button Reload schedule"
+  }
+]
