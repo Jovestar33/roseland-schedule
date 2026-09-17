@@ -22,10 +22,8 @@ The test run found and corrected two fixture issues (JSON property ordering and 
 
 See `evidence/production-templates/auth-api.txt`, `clean-replay-auth-api.txt` and `verification.json`. Test credentials remain in a private temporary local file and are not in this checkout or evidence.
 
-## Remaining B06 work — not accepted
+## B06 local workflow acceptance — 2026-09-17
 
-The target template repository, Tools/library UI, publication review, account/scope-safe pending operation recovery, and existing-schedule Apply are not wired yet. Apply must retain receiving metadata and normal discard/undo behavior, and preserve source restrictions when saving into another schedule; merely checking the applying actor's access would not prove that the receiving audience is safe. Browser-only discovery/import/export requires explicit ownership handling. Those paths still need paired desktop/phone/keyboard evidence and failure/race checks before B06 or any whole legacy-parity group can be accepted.
+The complete local browse/save/replace/rename/Trash/restore, deliberate publication, Apply and reviewed browser-import paths are now implemented and exercised. See [B06_LOCAL_ACCEPTANCE.md](./B06_LOCAL_ACCEPTANCE.md) for the current acceptance scope and evidence. The earlier server-only evidence above remains historical; it is not the final test total.
 
-Legacy references are `lib/templates.ts` and `components/toolbar/ToolsPanel.tsx`: save keeps row fields and excludes generated sun rows; apply normalizes/recalculates rows and retains current schedule metadata. Their presence alone is not target integration.
-
-Only isolated local fictional data was used. No actual schedule, hosted application, provider, subscription, migration service, push or deployment was changed. This is a bounded server checkpoint, not whole-app parity acceptance.
+The broader 45-group legacy parity gate, hosted application acceptance and physical-device testing remain open. No actual schedule, hosted application, provider, subscription, migration service, push or deployment was changed.

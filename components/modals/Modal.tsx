@@ -8,7 +8,7 @@ export const ModalVisibilityContext = createContext(true);
 // Only the frontmost visible modal owns keyboard focus. A nested native dialog
 // already has a browser focus scope and must not be intercepted here.
 const openModals: {node: HTMLDivElement; layer: number}[] = [];
-const focusable = 'button, a[href], input, select, textarea, [tabindex], [contenteditable="true"]';
+const focusable = 'button, summary, a[href], input, select, textarea, [tabindex], [contenteditable="true"]';
 function canFocus(node: HTMLElement) {
   return !node.matches(':disabled, [hidden], [inert]') && !node.closest('[inert]') &&
     node.getClientRects().length > 0 && getComputedStyle(node).visibility !== 'hidden';

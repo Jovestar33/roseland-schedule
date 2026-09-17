@@ -67,3 +67,21 @@ test('late save and load cannot cross a session boundary or overwrite edits made
   const h=harness();const pending=h.controller.open(h.record.id);h.state.editRevision++;h.response.resolve(h.record);
   assert.equal(await pending,false);assert.equal(h.loads(),0);
 });
+
+test('Template recovery releases only a freshly verified unchanged baseline and preserves newer edits', async()=>{
+ const h=harness();(h.state as typeof h.state & {templateUses:unknown[]}).templateUses=[{id:h.record.id,version:1,policy:'policy'}];
+ const pending=h.controller.save();h.response.reject(new Error('lost reply'));await assert.rejects(pending);h.state.editRevision++;
+ assert.equal(await h.controller.resumeTemplateEditing(),false);await h.controller.recover();
+ assert.equal(await h.controller.resumeTemplateEditing(),true);assert.equal(h.controller.attempt,null);assert.equal(h.isDirty(),true);assert.equal(h.state.editRevision,2);assert.equal(h.controller.record!.document_version,3);
+});
+
+test('Template re-review cannot release an uncertain attempt when a later save or account switch wins', async()=>{
+ for(const mode of ['changed','switched'] as const){
+  const h=harness(),gate=deferred<any>();
+  const c=new LocalEditorController({read:async()=>h.record,send:async()=>{throw Error('lost');},probe:async()=>gate.promise},{getState:()=>({...h.state,templateUses:[{id:h.record.id,version:1,policy:'policy'}]}),load:()=>{throw Error('No draft reload');}});
+  c.bind(h.record.updated_by);c.record=h.record;await assert.rejects(c.save());c.result={state:'retryable',saved:null,currentVersion:3};
+  const pending=c.resumeTemplateEditing();if(mode==='switched')c.invalidate();
+  gate.resolve({state:mode==='changed'?'different':'retryable',saved:null,currentVersion:mode==='changed'?4:3});
+  assert.equal(await pending,false);if(mode==='changed')assert.ok(c.attempt);else assert.equal(c.record,null);assert.equal(h.isDirty(),true);
+ }
+});

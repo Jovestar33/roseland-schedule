@@ -1,0 +1,37 @@
+{
+  "date": "2026-09-17",
+  "scope": "B06 isolated local template workflow; not whole legacy parity or deployment acceptance",
+  "templateAuthApi": {
+    "primary": 110,
+    "replay": 110
+  },
+  "databaseAssertions": 447,
+  "platformTests": 184,
+  "editorTests": 60,
+  "b03AuthApiRegression": 111,
+  "priorMigrationsUnchanged": 25,
+  "newForwardMigrations": 3,
+  "typescript": "pass",
+  "build": "pass; pre-existing LocalScheduleLibrary hook warning",
+  "databaseLint": "pass",
+  "securityAdvisors": "no issues",
+  "sources": "Both fictional source schedules unchanged at version 1",
+  "browser": [
+    "Chrome desktop 1280x720 and phone viewport 390x844",
+    "create with committed response loss, reload and exact receipt recovery",
+    "Viewer read-only, Editor recovery isolated by account, source Organizer publication, outsider empty organization catalogue",
+    "rename, replacement, recoverable Trash and production-only restore",
+    "file and browser-storage import with explicit ownership and production; collision retains form; originals and downloaded source unchanged",
+    "Apply 3 to 2 rows preserves metadata; exact visible-field Undo and Redo; discard guard",
+    "delayed Apply close/newer-edit fence; delayed save preserves newer draft",
+    "stale Apply conflict, saved-result check, retain draft, fresh review, save and reload",
+    "summary keyboard activation, Tab and Shift-Tab wrapping, Escape returns focus",
+    "phone modal 350px within 390px viewport; no horizontal dialog overflow"
+  ],
+  "limitations": [
+    "Local viewport testing is not physical phone or tablet acceptance",
+    "No new hosted production comparison or whole 45-group legacy-parity approval",
+    "Source restrictions captured at accepted Apply/save are retained; this is not recall of previously delivered content",
+    "No actual schedules, hosted data, deployment, push or migration service touched"
+  ]
+}

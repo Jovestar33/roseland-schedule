@@ -23,6 +23,8 @@ import ScheduleReadView from '@/components/view/ScheduleReadView';
 import LocalScheduleTransfers from '@/components/local/LocalScheduleTransfers';
 import {retainSourceDraft,readSourceDraft} from '@/lib/platform/schedule-drafts';
 import LocalScheduleLibrary from '@/components/local/LocalScheduleLibrary';
+import LocalScheduleTemplates from '@/components/local/LocalScheduleTemplates';
+import {createTemplateRepository} from '@/lib/platform/schedule-templates';
 import LocalScheduleFiles from '@/components/local/LocalScheduleFiles';
 import ShareDropdown from '@/components/toolbar/ShareDropdown';
 import LocalWeatherControls from '@/components/local/LocalWeatherControls';
@@ -85,16 +87,20 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
   const transferSequence=useRef(0),navigationEpoch=useRef(0);
   const [draftAvailable,setDraftAvailable]=useState(false);
   useEffect(()=>{navigationEpoch.current++;},[active,workspace?.organization?.id,session?.user.id]);
-  const startTransfer=(id:string,copy:boolean)=>setTransferRequest({id,copy,sequence:++transferSequence.current});
+  const startTransfer=(id:string,copy:boolean)=>{if(controller.record?.id===id&&state().templateUses.length){setMessage('Save the applied template first so its source restrictions accompany the copy or move.');return;}setTransferRequest({id,copy,sequence:++transferSequence.current});};
   const [libraryState,setLibraryState]=useState({dirty:false,busy:false});
   const reportLibrary=useCallback((dirty:boolean,busy:boolean)=>setLibraryState({dirty,busy}),[]);
+  const [templateState,setTemplateState]=useState({dirty:false,busy:false});
+  const reportTemplates=useCallback((dirty:boolean,busy:boolean)=>setTemplateState({dirty,busy}),[]);
+  const templateUses=useScheduleStore(s=>s.templateUses);
+  const [templateRepository]=useState(()=>createTemplateRepository(client));
   const [fileState, setFileState] = useState({dirty:false,busy:false});
   const reportFiles = useCallback((dirty:boolean,busy:boolean)=>setFileState({dirty,busy}),[]);
   const dirty = useScheduleStore(s => s.dirty);
   const rows = useScheduleStore(s => s.rows);
   const state = useScheduleStore.getState;
-  const hasLocalDraft = transferState.dirty || libraryState.dirty || fileState.dirty || dirty || documentDialogOpen || contact !== null || status !== null || notes !== null || controller.attempt !== null;
-  useWorkspacePanelState(hasLocalDraft, busy || fileState.busy || libraryState.busy || transferState.busy);
+  const hasLocalDraft = templateState.dirty || transferState.dirty || libraryState.dirty || fileState.dirty || dirty || documentDialogOpen || contact !== null || status !== null || notes !== null || controller.attempt !== null;
+  useWorkspacePanelState(hasLocalDraft, templateState.busy || busy || fileState.busy || libraryState.busy || transferState.busy);
   const ready = !!session && !authNeeded && !workspace?.authNeeded;
   const recordInScope = !workspace || (!!workspace.organization && controller.record?.organization_id === workspace.organization.id);
   const canEdit = (permission?.recordId === controller.record?.id && permission?.token === session?.access_token && permission?.allowed === true);
@@ -182,7 +188,10 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
   async function authorizeOutput(){
     const record=controller.record,actor=accountRef.current,token=sessionRef.current?.access_token;
     if(!record||!actor||!token||!active||!ready)return false;
-    try{const allowed=await directory.canEdit(actor,record.production_id,record.id,'export');
+    try{const uses=structuredClone(state().templateUses),documentSession=state().documentSession,editRevision=state().editRevision;
+      for(const use of uses){const review=await templateRepository.reviewApply(actor,use.id,record.id,record.organization_id);if(review.template.version!==use.version||review.policy!==use.policy){setMessage('Template permissions changed. Review the application before exporting this draft.');return false;}}
+      const allowed=await directory.canEdit(actor,record.production_id,record.id,'export');
+      if(documentSession!==state().documentSession||editRevision!==state().editRevision)return false;
       if(!activeRef.current||controller.record?.id!==record.id||accountRef.current!==actor||sessionRef.current?.access_token!==token||(workspace&&scopeRef.current!==record.organization_id))return false;
       if(!allowed)setMessage('Export and print are unavailable under current permissions. Your draft is retained.');
       return allowed;
@@ -204,7 +213,7 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
     if(!safe())return false;
     const original=controller.record, current=state();
     if(original){
-      try{retainSourceDraft(localStorage,{actor:c.actor!,organization:original.organization_id,source:original.id,before:original,document:current.getScheduleData(),undo:current.undoStack,redo:current.redoStack,savedAt:Date.now()});}
+      try{retainSourceDraft(localStorage,{actor:c.actor!,organization:original.organization_id,source:original.id,before:original,document:current.getScheduleData(),undo:current.undoStack,redo:current.redoStack,templateUses:current.templateUses,savedAt:Date.now()});}
       catch{setMessage('Copy saved. Source draft persistence could not be verified, so opening is deferred.');return false;}
     }
     if(!safe())return false;
@@ -216,7 +225,7 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
     const retained=readSourceDraft(localStorage,actor,record.organization_id,record.id);
     if(!retained||controller.record?.id!==record.id||accountRef.current!==actor||scopeRef.current!==record.organization_id||!activeRef.current)return;
     state().loadSchedule(record.display_name,{rows:retained.document.rows??[],meta:makeMeta(retained.document.meta),savedAt:retained.document.savedAt??0});
-    useScheduleStore.setState({dirty:true,undoStack:retained.undo as typeof currentUndo,redoStack:retained.redo as typeof currentUndo});
+    useScheduleStore.setState({dirty:true,templateUses:retained.templateUses??[],undoStack:retained.undo as typeof currentUndo,redoStack:retained.redo as typeof currentUndo});
     controller.record=retained.before;setVersion(retained.before.document_version);setMessage('Source draft and undo history recovered. Saving still checks its original server version.');
   }
   const currentUndo=state().undoStack;
@@ -285,8 +294,9 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
           <button className="btn btn-light" disabled={busy || !ready} onClick={() => void run(() => list(false))}>Refresh list</button>
         </div>
         {workspace && <LocalScheduleFiles client={client} actor={session?.user.id ?? accountRef.current} organization={workspace.organization?.id ?? null}
-          enabled={active && ready && !confirmation} copyEnabled={!busy && !!selected && recordInScope && canEdit && permission?.copy===true && !documentDialogOpen && contact===null && notes===null && status===null}
+          enabled={active && ready && !confirmation} copyEnabled={!templateUses.length && !busy && !!selected && recordInScope && canEdit && permission?.copy===true && !documentDialogOpen && contact===null && notes===null && status===null}
           getSource={()=>controller.record} getDraft={()=>state().getScheduleData()} name={state().scheduleName ?? 'Schedule'} onState={reportFiles} requireAuth={workspace.requireAuth} onCopy={()=>{if(selected)startTransfer(selected,true);}}/>}
+        {workspace&&<LocalScheduleTemplates client={client} actor={session?.user.id??null} organization={workspace.organization?.id??null} enabled={active&&ready&&!confirmation&&!busy} canWriteCurrent={canEdit&&recordInScope&&permission?.output===true&&!controller.attempt} getSource={()=>controller.record} canApply={()=>!!controller.record&&canEdit&&recordInScope&&!controller.attempt&&!busyRef.current&&!documentDialogOpen&&contact===null&&status===null&&notes===null} onState={reportTemplates} requireAuth={workspace.requireAuth} onApply={(review,capture)=>{const st=state();if(!activeRef.current||!canEdit||!recordInScope||controller.attempt||busyRef.current||controller.record?.id!==capture.id||controller.record.document_version!==capture.version||st.documentSession!==capture.documentSession||st.editRevision!==capture.editRevision)return false;st.applyTemplateRows(review.template.rows,{id:review.template.id,version:review.template.version,policy:review.policy});setMessage('Template applied to draft. Save schedule retains its source restrictions.');return true;}}/>}
         {workspace&&<LocalScheduleLibrary client={client} actor={session?.user.id??accountRef.current} organization={workspace.organization?.id??null} enabled={active&&ready&&!confirmation} selected={selected} onOpen={id=>guarded(()=>void run(()=>open(id)),'Open schedule and discard unsaved changes')} onInspect={id=>workspace.openLifecycle?.(workspace.organization!.id,id)} onState={reportLibrary} onTransfer={startTransfer}/>}
         {workspace&&<LocalScheduleTransfers client={client} actor={session?.user.id??null} organization={workspace.organization?.id??null} enabled={active&&ready&&!confirmation} request={transferRequest} onState={reportTransfers} getDraft={id=>controller.record?.id===id?{record:controller.record,document:structuredClone(state().getScheduleData())}:null} captureOpen={captureCopyOpen} onCopy={openConfirmedCopy}/>}
         {workspace&&selected&&!recordInScope&&<p>A schedule draft is retained in another organization. Return there to continue, or explicitly discard it when opening another schedule.</p>}
@@ -319,6 +329,7 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
             {controller.attempt && <><p>Attempted from version {controller.attempt.before.document_version}. Checking does not replace your draft.</p>
               <button className="btn btn-light" disabled={busy || !ready} onClick={() => void run(async () => { if (await controller.recover()) { setVersion(controller.record!.document_version); setMessage('Saved-result check completed. Review the recovery status.'); } })}>Check saved result</button>
               <button className="btn btn-light" disabled={busy || !ready || !canEdit || controller.result?.state !== 'retryable'} onClick={() => void run(async () => { if (await controller.recover(true)) { setVersion(controller.record!.document_version); setMessage('Retry checked against the original saved version. Review the recovery status.'); } })}>Retry exact save</button>
+              {!!controller.attempt.templateUses?.length && controller.result?.state === 'retryable' && <button className="btn btn-light" disabled={busy || !ready || !canEdit} onClick={() => void run(async () => { if (await controller.resumeTemplateEditing()) setMessage('Draft retained. Undo the earlier Apply or review and apply a current template before saving. Reapplying replaces all rows; metadata stays intact.'); })}>Keep draft and review template again</button>}
             </>}
           </section>}
           {!canEdit && <><p>Read-only schedule access.</p><ScheduleReadView data={state().getScheduleData()} name={state().scheduleName ?? undefined}/></>}

@@ -75,7 +75,7 @@ async function identity(label: string) {
   return { c, id, email, password };
 }
 
-ensure(['roseland-b03-20260917','roseland-b03-replay-20260917'].includes(project),'Only the new named B03 fixture stack is allowed');
+ensure(['roseland-b03-20260917','roseland-b03-replay-20260917','roseland-templates-20260917','roseland-template-replay-20260917'].includes(project),'Only the named isolated B03 or template regression stacks are allowed');
 let transferFixture:Record<string,string>|null=null;
 let passed=0;
 function check(value:unknown,label:string){ensure(value,label);passed++;console.log('PASS '+label);}

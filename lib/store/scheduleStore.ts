@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import type {TemplateUse} from '../platform/schedule-templates';
 import { makeRow, makeMeta, normalizeRows } from '../rowNormalizer';
 import { recalcRows, t12m, computeTimeOut } from '../time';
 import { UNDO_LIMIT, DEFAULT_ROW_COUNT } from '../constants';
@@ -53,11 +54,10 @@ function repositionSunRows(rows: ScheduleRow[], rowKeys: string[]): { rows: Sche
   return { rows: recalcRows(newRows), rowKeys: newKeys };
 }
 
-type Snapshot = { rows: ScheduleRow[]; meta: ScheduleMeta };
+type Snapshot = { rows: ScheduleRow[]; meta: ScheduleMeta; templateUses?: TemplateUse[] };
 
 let keySeq = 0;
 function newKey(): string { return `rk_${++keySeq}`; }
-function cloneRows(rows: ScheduleRow[]): ScheduleRow[] { return rows.map(r => ({ ...r })); }
 
 export interface ScheduleStore {
   rows: ScheduleRow[];
@@ -68,6 +68,9 @@ export interface ScheduleStore {
   // In-memory request guards; never serialized into ScheduleData.
   editRevision: number;
   documentSession: number;
+  templateUses: TemplateUse[];
+  applyTemplateRows: (rows: ScheduleRow[], use: TemplateUse) => void;
+  acknowledgeTemplateUses: (uses: readonly TemplateUse[]) => void;
   undoStack: Snapshot[];
   redoStack: Snapshot[];
 
@@ -114,6 +117,7 @@ export const useScheduleStore = create<ScheduleStore>((set, get) => ({
   dirty: false,
   editRevision: 0,
   documentSession: 0,
+  templateUses: [],
   undoStack: [],
   redoStack: [],
 
@@ -122,19 +126,21 @@ export const useScheduleStore = create<ScheduleStore>((set, get) => ({
   conflictData: null,
 
   pushUndo() {
-    const { rows, meta, undoStack } = get();
-    const snap: Snapshot = { rows: cloneRows(rows), meta: { ...meta } };
+    const { rows, meta, undoStack, templateUses } = get();
+    const snap: Snapshot = { rows: structuredClone(rows), meta: structuredClone(meta), templateUses: structuredClone(templateUses) };
     set({ undoStack: [...undoStack, snap].slice(-UNDO_LIMIT), redoStack: [] });
   },
 
   undo() {
-    const { rows, meta, undoStack, redoStack } = get();
+    const { rows, meta, undoStack, redoStack, templateUses } = get();
     if (!undoStack.length) return;
     const prev = undoStack[undoStack.length - 1];
-    const cur: Snapshot = { rows: cloneRows(rows), meta: { ...meta } };
+    const cur: Snapshot = { rows: structuredClone(rows), meta: structuredClone(meta), templateUses: structuredClone(templateUses) };
     set({
       rows: recalcRows(prev.rows),
+      rowKeys: makeDefaultKeys(prev.rows.length),
       meta: prev.meta,
+      templateUses: prev.templateUses ?? [],
       undoStack: undoStack.slice(0, -1),
       redoStack: [...redoStack, cur],
       dirty: true,
@@ -143,13 +149,15 @@ export const useScheduleStore = create<ScheduleStore>((set, get) => ({
   },
 
   redo() {
-    const { rows, meta, undoStack, redoStack } = get();
+    const { rows, meta, undoStack, redoStack, templateUses } = get();
     if (!redoStack.length) return;
     const next = redoStack[redoStack.length - 1];
-    const cur: Snapshot = { rows: cloneRows(rows), meta: { ...meta } };
+    const cur: Snapshot = { rows: structuredClone(rows), meta: structuredClone(meta), templateUses: structuredClone(templateUses) };
     set({
       rows: recalcRows(next.rows),
+      rowKeys: makeDefaultKeys(next.rows.length),
       meta: next.meta,
+      templateUses: next.templateUses ?? [],
       undoStack: [...undoStack, cur],
       redoStack: redoStack.slice(0, -1),
       dirty: true,
@@ -209,7 +217,8 @@ export const useScheduleStore = create<ScheduleStore>((set, get) => ({
       documentSession: get().documentSession + 1,
       editRevision: get().editRevision + 1,
       dirty: false,
-      undoStack: [],
+      templateUses: [],
+  undoStack: [],
       redoStack: [],
       syncStatus: 'synced',
       conflictData: null,
@@ -226,7 +235,8 @@ export const useScheduleStore = create<ScheduleStore>((set, get) => ({
       documentSession: get().documentSession + 1,
       editRevision: get().editRevision + 1,
       dirty: false,
-      undoStack: [],
+      templateUses: [],
+  undoStack: [],
       redoStack: [],
       syncStatus: 'synced',
       remoteBaseline: null,
@@ -234,6 +244,17 @@ export const useScheduleStore = create<ScheduleStore>((set, get) => ({
     });
   },
 
+  applyTemplateRows(rows, use) {
+    get().pushUndo();
+    const normalized = recalcRows(normalizeRows(structuredClone(rows).map(row => ({...row,sunLocked:false}))));
+    // Every row is replaced; Undo retains the previous rows and their provenance.
+    const templateUses = [structuredClone(use)];
+    set({rows:normalized,rowKeys:makeDefaultKeys(normalized.length),templateUses,dirty:true,editRevision:get().editRevision+1});
+  },
+  acknowledgeTemplateUses(uses) {
+    const remove=(values:TemplateUse[]=[])=>values.filter(v=>!uses.some(u=>u.id===v.id&&u.version===v.version&&u.policy===v.policy));
+    set({templateUses:remove(get().templateUses),undoStack:get().undoStack.map(v=>({...v,templateUses:remove(v.templateUses)})),redoStack:get().redoStack.map(v=>({...v,templateUses:remove(v.templateUses)}))});
+  },
   markClean() {
     set({ dirty: false });
   },

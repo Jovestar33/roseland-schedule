@@ -1,0 +1,111 @@
+PASS Viewer cannot create template
+PASS Same-organization other-production Editor cannot create template
+PASS Other organization owner cannot create template
+PASS Production Editor creates a production-only template
+PASS Authorized Viewer receives every original row field and generated sun rows are omitted
+PASS Viewer receives read-only template controls
+PASS Exact lost-acknowledgement retry returns original receipt without another version
+PASS Same request ID cannot substitute changed content
+PASS Other-production member cannot enumerate template names
+PASS Cross-organization list reveals no templates
+PASS Cross-organization guessed UUID cannot read rows
+PASS Case/whitespace name collision is atomic and never overwrites
+PASS Source cannot be copied into another production through template creation
+PASS Unknown row fields are rejected rather than silently stripped
+PASS Replacement advances optimistic version and accepts a second authorized source
+PASS Stale replacement cannot overwrite a newer template
+PASS Retained source restriction hides template even after replacement from a different schedule
+PASS Template reading cannot bypass old source-specific read restriction
+PASS Source export restriction also prevents reuse through templates
+PASS Template creation cannot bypass source export restriction
+PASS Production edit denial applies to existing template replacement
+PASS Organization Admin can rename under effective scope
+PASS Explicit Trash restriction blocks template Trash
+PASS Template Editor uses recoverable Trash
+PASS Viewer cannot enumerate template Trash
+PASS Viewer cannot read deleted template by ID
+PASS Organizer can recover full deleted template content
+PASS Restore retains template identity and content
+PASS Competing replacements commit exactly one version
+PASS Old exact receipt stays identifiable after later versions
+PASS Another actor cannot inspect a private operation receipt
+PASS Role revocation blocks fresh template delivery
+PASS Removed member cannot use a committed receipt to regain data
+PASS All template operations leave the source schedule unchanged
+PASS New and edited templates default to production-only
+PASS Production Editor cannot publish across the organization
+PASS Production Viewer cannot publish
+PASS Another production cannot substitute its authority
+PASS Foreign organization leadership cannot publish
+PASS Source Production Organizer deliberately publishes
+PASS Lost publication acknowledgement retries exactly once
+PASS Publication receipt cannot substitute an opposite action
+PASS Other-production member receives published rows without template write authority
+PASS Organization catalogue discovers intentionally published template
+PASS Published templates never cross organizations
+PASS Published UUID does not expose rows across organizations
+PASS Publication does not grant source schedule access
+PASS Publication does not grant replacement source access
+PASS Source Viewer restriction binds a published recipient without a source-production role
+PASS Restricted publication hides even its catalogue metadata
+PASS Recipient-specific source export denial binds published content
+PASS Organizer authority cannot bypass source export restrictions
+PASS Organization Admin can withdraw publication
+PASS Unpublication immediately prevents fresh organization delivery
+PASS Retrying an old publication receipt never republishes withdrawn content
+PASS Stale review cannot publish a changed template
+PASS Organization Super Admin can deliberately publish
+PASS Editor content replacement withdraws publication until an authorized fresh review
+PASS Editor cannot silently deliver a replacement to the organization
+PASS Suspended organization membership revokes published template delivery
+PASS Recoverable Trash withdraws publication
+PASS Restoring from Trash does not silently republish
+PASS Organizer of another production cannot publish this production template
+PASS Production organize denial binds the publishing Organizer
+PASS Organization leadership cannot override an explicit source read denial
+PASS Competing publication reviews commit exactly one version
+PASS Publication does not bypass a suspended source-production membership
+PASS Revoked publishing role cannot retry a privileged publication receipt
+PASS Restore name collision never overwrites a later template
+PASS Failed restore leaves the recoverable template unchanged
+PASS Publication and all lifecycle checks preserve both source schedules at their original saved version and rows
+PASS Source Trash restriction still binds its template after the source moves production
+PASS Original template-production export restriction still binds after all sources move
+PASS Rejected moved-source template operations never modify the source schedule
+PASS Production-only template cannot be applied across productions
+PASS Viewer initially reads the receiving schedule before restricted template content exists
+PASS Policy changes after Apply review block save without discarding the local document
+PASS Rejected Apply save leaves the receiver unchanged
+PASS Apply save preserves receiving metadata and saves reviewed rows
+PASS Applied source read restriction protects the receiving schedule
+PASS Lost Apply acknowledgement proves exact source restriction receipt
+PASS Another actor cannot confirm the Apply receipt
+PASS Matching rows alone cannot confirm changed Apply provenance
+PASS Saved source restrictions remain attached after later source policy relaxation
+PASS Copying an applied private template cannot drop inherited audience constraints
+PASS Receiving Organizer preview cannot bypass inherited private template restrictions
+PASS Restricted template transfer is absent from an unauthorized receiving inbox
+PASS Republishing a template from a constrained schedule cannot launder its inherited restrictions
+PASS Applying a derived template back to its source remains finite and authorized
+PASS Deliberately published template can be applied in another production in the same organization
+PASS Organization publication permits safe cross-production Apply without metadata replacement
+PASS Apply and receiving copies leave original template source schedules untouched
+PASS Browser import requires explicit ownership review
+PASS Viewer cannot assign browser content to a production
+PASS Other-production Organizer cannot import into an unrelated production
+PASS Foreign organization leadership cannot import into this production
+PASS Editor explicitly imports reviewed browser rows into the selected production
+PASS Browser import lost acknowledgement retries without duplication
+PASS Browser import receipt cannot change source identity
+PASS Imported template is production-only, preserves row fields and omits generated sun rows
+PASS Browser import never silently assigns organization-wide ownership
+PASS Import name collision never overwrites an existing template
+PASS Malformed browser rows are rejected rather than stripped
+PASS Import ownership does not give Editors publication authority
+PASS Organizer can separately publish an explicitly owned browser import
+PASS Direct table RLS also hides a receiver with inherited source restrictions
+PASS Immutable receiver history cannot bypass inherited source restrictions
+PASS Anonymous direct RPC is denied
+PASS Private template table cannot bypass the authenticated RPC
+PASS Private authorization helper is not client or service-role callable
+PASS 110 genuine local template Auth/API checks

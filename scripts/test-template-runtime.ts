@@ -75,6 +75,21 @@ let passed=0;
 function check(value:unknown,label:string){ensure(value,label);passed++;console.log('PASS '+label);}
 async function ok(c:SupabaseClient,name:string,args:Record<string,unknown>){const r=await c.rpc(name,args);ensure(!r.error,JSON.stringify(r.error));return r.data;}
 async function denied(c:SupabaseClient,name:string,args:Record<string,unknown>,label:string){const r=await c.rpc(name,args);check(!!r.error,label);}
+if(args.includes('--browser-actors')){
+ const file='/private/tmp/roseland-template-browser-fixtures.json',fixture=JSON.parse(readFileSync(file,'utf8'));
+ ensure(fixture.project===project&&/^[0-9a-f-]{36}$/.test(fixture.org)&&/^[0-9a-f-]{36}$/.test(fixture.prod),'Existing fictional browser scope required');
+ try{
+  const organizer=await identity('browser-template-organizer'),outsider=await identity('browser-template-outsider'),foreignOrg=randomUUID(),foreignProd=randomUUID();
+  sql(`insert into public.organization_memberships(organization_id,user_id,role,status,joined_at) values('${fixture.org}','${organizer.id}','member','active',now());
+  insert into public.production_memberships(organization_id,production_id,user_id,role,status,joined_at) values('${fixture.org}','${fixture.prod}','${organizer.id}','organizer','active',now());
+  insert into public.organizations(id,name,slug) values('${foreignOrg}','Fictional Browser Outsider Studio','browser-${foreignOrg}');
+  insert into public.organization_memberships(organization_id,user_id,role,status,joined_at) values('${foreignOrg}','${outsider.id}','owner','active',now());
+  insert into public.productions(id,organization_id,name,slug) values('${foreignProd}','${foreignOrg}','Fictional Outsider Production','browser-${foreignProd}');`);
+  writeFileSync(file,JSON.stringify({...fixture,organizer:{email:organizer.email,password:organizer.password},outsider:{email:outsider.email,password:outsider.password},foreignOrg,foreignProd},null,2),{mode:0o600});
+  console.log('Prepared fictional local Organizer and outsider browser profiles.');
+ }finally{await Promise.all(clients.map(c=>c.auth.signOut({scope:'local'}).catch(()=>undefined)));}
+ process.exit(0);
+}
 try {
  const owner=await identity('template-owner'),admin=await identity('template-admin'),organizer=await identity('template-organizer'),editor=await identity('template-editor'),viewer=await identity('template-viewer'),other=await identity('template-other-production'),outsider=await identity('template-outsider');
  const org=randomUUID(),prod=randomUUID(),prodB=randomUUID(),orgB=randomUUID(),foreign=randomUUID(),source=randomUUID(),sourceB=randomUUID();
@@ -234,6 +249,69 @@ try {
  await denied(owner.c,'read_schedule_template',{target_template_id:moveTemplate},'Original template-production export restriction still binds after all sources move');
  await ok(owner.c,'set_schedule_restriction',{...originalScopeDeny,expected_revision:1,denied_actions:[]});
  check((await ok(owner.c,'read_schedule',{target_schedule_id:moveSource})).document_version===2,'Rejected moved-source template operations never modify the source schedule');
+ // Safe Apply preserves the receiver and binds source constraints in the save transaction.
+ const receiver=randomUUID(),crossReceiver=randomUUID();
+ const receiverDoc={...documentFixture(2),meta:{...original.meta,town:'Fictional Receiving Town',date:'2026-10-02'}};
+ for(const [id,destination] of [[receiver,prod],[crossReceiver,prodB]])await ok(owner.c,'create_schedule_in_production',{target_schedule_id:id,target_production_id:destination,target_day_id:null,target_phase_id:null,next_display_name:'Fictional template receiver',next_slug:'receiver-'+id,next_document:receiverDoc,schema_version:1});
+ await denied(owner.c,'review_schedule_template_apply',{target_template_id:a.target_template_id,target_schedule_id:crossReceiver},'Production-only template cannot be applied across productions');
+ const applyDeny={...policy,target_id:randomUUID(),subject_role:'viewer',denied_actions:['read']};
+ await ok(owner.c,'set_schedule_restriction',applyDeny);
+ check((await ok(viewer.c,'read_schedule',{target_schedule_id:receiver})).document_version===1,'Viewer initially reads the receiving schedule before restricted template content exists');
+ let applyReview=await ok(editor.c,'review_schedule_template_apply',{target_template_id:a.target_template_id,target_schedule_id:receiver});
+ const use=(r:typeof applyReview)=>[{id:r.template.id,version:r.template.version,policy:r.policy}];
+ const appliedDoc={...receiverDoc,rows:applyReview.template.rows};
+ const saveApply=(r:typeof applyReview)=>({target_schedule_id:receiver,expected_version:1,next_document:appliedDoc,schema_version:1,template_uses:use(r)});
+ const staleApplyPolicy={...policy,target_id:randomUUID(),subject_role:null,subject_user_id:other.id,denied_actions:['export']};
+ await ok(owner.c,'set_schedule_restriction',staleApplyPolicy);
+ await denied(editor.c,'save_schedule_with_templates',saveApply(applyReview),'Policy changes after Apply review block save without discarding the local document');
+ check((await ok(owner.c,'read_schedule',{target_schedule_id:receiver})).document_version===1,'Rejected Apply save leaves the receiver unchanged');
+ applyReview=await ok(editor.c,'review_schedule_template_apply',{target_template_id:a.target_template_id,target_schedule_id:receiver});
+ const savedApply=await ok(editor.c,'save_schedule_with_templates',saveApply(applyReview));
+ check(savedApply.document_version===2&&isDeepStrictEqual(savedApply.document.meta,receiverDoc.meta)&&isDeepStrictEqual(savedApply.document.rows,appliedDoc.rows),'Apply save preserves receiving metadata and saves reviewed rows');
+ await denied(viewer.c,'read_schedule',{target_schedule_id:receiver},'Applied source read restriction protects the receiving schedule');
+ check(await ok(editor.c,'check_schedule_template_save',{target_schedule_id:receiver,saved_version:2,template_uses:use(applyReview)}),'Lost Apply acknowledgement proves exact source restriction receipt');
+ check(!await ok(owner.c,'check_schedule_template_save',{target_schedule_id:receiver,saved_version:2,template_uses:use(applyReview)}),'Another actor cannot confirm the Apply receipt');
+ check(!await ok(editor.c,'check_schedule_template_save',{target_schedule_id:receiver,saved_version:2,template_uses:[{...use(applyReview)[0],policy:'changed'}]}),'Matching rows alone cannot confirm changed Apply provenance');
+ await ok(owner.c,'set_schedule_restriction',{...applyDeny,expected_revision:1,denied_actions:[]});
+ await denied(viewer.c,'read_schedule',{target_schedule_id:receiver},'Saved source restrictions remain attached after later source policy relaxation');
+ await ok(owner.c,'set_schedule_restriction',{...staleApplyPolicy,expected_revision:1,denied_actions:[]});
+ const receiverCopy=randomUUID(),copyReview=await ok(owner.c,'review_schedule_copy',{target_schedule_id:receiver,target_production_id:prodB});
+ await ok(owner.c,'copy_schedule_to_production',{target_schedule_id:receiverCopy,source_schedule_id:receiver,source_version:2,source_policy:copyReview.policy,target_production_id:prodB,target_day_id:null,target_phase_id:null,next_display_name:'Fictional restricted template copy',next_slug:'copy-'+receiverCopy,next_document:savedApply.document,schema_version:1});
+ await denied(other.c,'read_schedule',{target_schedule_id:receiverCopy},'Copying an applied private template cannot drop inherited audience constraints');
+ const restrictedMoveReview=await ok(owner.c,'review_schedule_transfer',{target_schedule_id:receiver,target_production_id:prodB}),restrictedMoveRequest=randomUUID();
+ await ok(owner.c,'request_schedule_transfer',{request_id:restrictedMoveRequest,target_schedule_id:receiver,target_production_id:prodB,expected_version:2,expected_policy:restrictedMoveReview.policy});
+ await denied(other.c,'preview_schedule_transfer',{request_id:restrictedMoveRequest},'Receiving Organizer preview cannot bypass inherited private template restrictions');
+ check(!(await ok(other.c,'list_schedule_transfers',{target_organization_id:org})).some((t:{id:string})=>t.id===restrictedMoveRequest),'Restricted template transfer is absent from an unauthorized receiving inbox');
+ const fromApplied=randomUUID();
+ await ok(owner.c,'mutate_schedule_template',{...a,request_id:randomUUID(),target_template_id:fromApplied,next_name:'Template from constrained receiver',next_rows:appliedDoc.rows,source_schedule_id:receiver,source_version:2});
+ await ok(owner.c,'publish_schedule_template',{...pub,request_id:randomUUID(),target_template_id:fromApplied,expected_version:1});
+ await denied(other.c,'read_schedule_template',{target_template_id:fromApplied},'Republishing a template from a constrained schedule cannot launder its inherited restrictions');
+ const selfReview=await ok(editor.c,'review_schedule_template_apply',{target_template_id:fromApplied,target_schedule_id:receiver});
+ check(selfReview.target_version===2,'Applying a derived template back to its source remains finite and authorized');
+ latest=await currentTemplate();await ok(organizer.c,'publish_schedule_template',{...pub,request_id:randomUUID(),expected_version:latest.version});
+ const crossApply=await ok(other.c,'review_schedule_template_apply',{target_template_id:a.target_template_id,target_schedule_id:crossReceiver});
+ check(crossApply.target_id===crossReceiver,'Deliberately published template can be applied in another production in the same organization');
+ const crossSaved=await ok(other.c,'save_schedule_with_templates',{target_schedule_id:crossReceiver,expected_version:1,next_document:{...receiverDoc,rows:crossApply.template.rows},schema_version:1,template_uses:use(crossApply)});
+ check(crossSaved.document_version===2&&isDeepStrictEqual(crossSaved.document.meta,receiverDoc.meta),'Organization publication permits safe cross-production Apply without metadata replacement');
+ check((await ok(owner.c,'read_schedule',{target_schedule_id:source})).document_version===1&&(await ok(owner.c,'read_schedule',{target_schedule_id:sourceB})).document_version===1,'Apply and receiving copies leave original template source schedules untouched');
+ // Browser ownership is explicitly assigned once, without a fabricated source schedule.
+ const browserImport={request_id:randomUUID(),target_template_id:randomUUID(),target_production_id:prod,next_name:'Reviewed browser template',source_name:'Original browser fixture',source_rows:withSun,source_saved_at:1720000000000,ownership_confirmed:true};
+ await denied(editor.c,'import_browser_schedule_template',{...browserImport,ownership_confirmed:false},'Browser import requires explicit ownership review');
+ await denied(viewer.c,'import_browser_schedule_template',browserImport,'Viewer cannot assign browser content to a production');
+ await denied(other.c,'import_browser_schedule_template',browserImport,'Other-production Organizer cannot import into an unrelated production');
+ await denied(outsider.c,'import_browser_schedule_template',browserImport,'Foreign organization leadership cannot import into this production');
+ const imported=await ok(editor.c,'import_browser_schedule_template',browserImport);check(imported.confirmed&&imported.version===1,'Editor explicitly imports reviewed browser rows into the selected production');
+ check(isDeepStrictEqual(await ok(editor.c,'import_browser_schedule_template',browserImport),imported),'Browser import lost acknowledgement retries without duplication');
+ await denied(editor.c,'import_browser_schedule_template',{...browserImport,source_name:'Changed origin'},'Browser import receipt cannot change source identity');
+ const importedRead=await ok(viewer.c,'read_schedule_template',{target_template_id:browserImport.target_template_id});check(!importedRead.published_at&&isDeepStrictEqual(importedRead.rows,original.rows),'Imported template is production-only, preserves row fields and omits generated sun rows');
+ await denied(other.c,'read_schedule_template',{target_template_id:browserImport.target_template_id},'Browser import never silently assigns organization-wide ownership');
+ await denied(editor.c,'import_browser_schedule_template',{...browserImport,request_id:randomUUID(),target_template_id:randomUUID()},'Import name collision never overwrites an existing template');
+ await denied(editor.c,'import_browser_schedule_template',{...browserImport,request_id:randomUUID(),target_template_id:randomUUID(),next_name:'Malformed browser fixture',source_rows:[{unknown:'retained at source'}]},'Malformed browser rows are rejected rather than stripped');
+ await denied(editor.c,'publish_schedule_template',{...pub,request_id:randomUUID(),target_template_id:browserImport.target_template_id,expected_version:1},'Import ownership does not give Editors publication authority');
+ await ok(organizer.c,'publish_schedule_template',{...pub,request_id:randomUUID(),target_template_id:browserImport.target_template_id,expected_version:1});
+ check((await ok(other.c,'read_schedule_template',{target_template_id:browserImport.target_template_id})).published_at!==null,'Organizer can separately publish an explicitly owned browser import');
+ const tableRead=await viewer.c.from('schedules').select('id,document').eq('id',receiver);check(!tableRead.error&&tableRead.data?.length===0,'Direct table RLS also hides a receiver with inherited source restrictions');
+ const historyRead=await viewer.c.from('schedule_versions').select('version,document').eq('schedule_id',receiver);check(!historyRead.error&&historyRead.data?.length===0,'Immutable receiver history cannot bypass inherited source restrictions');
  const anon=client();await denied(anon,'read_schedule_template',{target_template_id:a.target_template_id},'Anonymous direct RPC is denied');
  const forbiddenTable=await editor.c.schema('private').from('schedule_templates').select('*');check(!!forbiddenTable.error,'Private template table cannot bypass the authenticated RPC');
  const perms=sql(`select count(*) from pg_proc p join pg_namespace n on n.oid=p.pronamespace where n.nspname='private' and p.proname='template_actor_can' and (has_function_privilege('authenticated',p.oid,'execute') or has_function_privilege('anon',p.oid,'execute') or has_function_privilege('service_role',p.oid,'execute'));`);check(perms==='0','Private authorization helper is not client or service-role callable');

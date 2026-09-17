@@ -1,8 +1,9 @@
+import type {TemplateUse} from './schedule-templates.ts';
 import type { ScheduleData } from '../types.ts';
 import { ScheduleRepositoryError, type StoredSchedule } from './schedule-repository.ts';
 import { captureSaveAttempt, saveMatches, type SaveAttempt, type SaveResult, type SaveRecoveryRepository } from './schedule-save-recovery.ts';
 
-export interface EditorSnapshot { documentSession: number; editRevision: number; getScheduleData(): ScheduleData }
+export interface EditorSnapshot { documentSession: number; editRevision: number; getScheduleData(): ScheduleData; templateUses?: TemplateUse[]; acknowledgeTemplateUses?(uses: readonly TemplateUse[]): void }
 export interface LocalEditorStore {
   getState(): EditorSnapshot & { markClean(): void };
   load(record: StoredSchedule): void;
@@ -33,6 +34,7 @@ export class LocalEditorController {
     if (result.state !== 'matched' || !result.saved || !saveMatches(attempt,result.saved)
       || !Number.isSafeInteger(result.currentVersion) || result.currentVersion! < result.saved.document_version) throw new ScheduleRepositoryError('failed');
     this.record = result.saved;
+    this.store.getState().acknowledgeTemplateUses?.(attempt.templateUses ?? []);
     // A later server version is never silently adopted or overwritten.
     if (result.currentVersion === result.saved.document_version) {
       if (this.store.getState().editRevision === attempt.editRevision) this.store.getState().markClean();
@@ -57,7 +59,7 @@ export class LocalEditorController {
     if (this.busy || !this.record || this.attempt) return false;
     if (!this.actor) throw new ScheduleRepositoryError('unauthenticated');
     const generation = this.generation, state = this.store.getState();
-    const attempt = captureSaveAttempt({actor:this.actor,before:this.record,document:state.getScheduleData(),documentSession:state.documentSession,editRevision:state.editRevision});
+    const attempt = captureSaveAttempt({actor:this.actor,before:this.record,document:state.getScheduleData(),documentSession:state.documentSession,editRevision:state.editRevision,templateUses:state.templateUses});
     this.attempt = attempt; this.result = null; this.busy = true;
     try {
       const saved = await this.repository.send(attempt);
@@ -69,6 +71,22 @@ export class LocalEditorController {
       // A definitive input rejection allows correction; transport uncertainty does not.
       if (error instanceof ScheduleRepositoryError && error.kind === 'invalid') this.attempt = null;
       throw error;
+    } finally { if (generation === this.generation) this.busy = false; }
+  }
+  async resumeTemplateEditing() {
+    if (this.busy || !this.attempt?.templateUses?.length || this.result?.state !== 'retryable') return false;
+    const attempt = this.attempt, generation = this.generation;
+    this.busy = true;
+    try {
+      const result = await this.repository.probe(attempt);
+      if (!this.current(attempt,generation)) return false;
+      if (result.state === 'matched') this.accept(attempt,result);
+      this.result = result;
+      if (result.state !== 'retryable' || result.saved !== null || result.currentVersion !== attempt.before.document_version) return false;
+      // Keep the draft and its restrictions. A later save still uses the original
+      // optimistic version, so an in-flight old save cannot be overwritten.
+      this.attempt = null; this.result = null;
+      return true;
     } finally { if (generation === this.generation) this.busy = false; }
   }
   async recover(retry = false) {

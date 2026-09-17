@@ -1,0 +1,6289 @@
+[
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/local-workspace",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/static/media/13971731025ec697-s.p.woff2",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/static/media/4261f91ea7100e2e-s.p.woff2",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/static/css/app/layout.css",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/static/css/app/local-workspace/page.css",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/static/media/6c25f6e897d845a3-s.p.woff2",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/static/chunks/webpack.js",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/static/chunks/main-app.js",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/manifest.webmanifest",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/static/chunks/app-pages-internals.js",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/static/chunks/app/layout.js",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/static/chunks/app/local-workspace/page.js",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/icon-192.png",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/webpack-hmr",
+    "status": 0
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 304
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/auth/v1/token",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/auth/v1/token",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/organization_memberships",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/__nextjs_font/geist-latin.woff2",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/organization_memberships",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/organization_memberships",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/organization_memberships",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/organization_memberships",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "GET",
+    "path": "/rest/v1/organization_memberships",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 304
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/organization_memberships",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "GET",
+    "path": "/rest/v1/organization_memberships",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/list_schedule_library",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/schedules",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_creation_destinations",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/list_schedule_transfers",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/list_schedule_library",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_creation_destinations",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/list_schedule_transfers",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "GET",
+    "path": "/rest/v1/schedules",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "status": 500
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 304
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/session_read_schedule",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/session_read_schedule",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/logo-header.png",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_template_productions",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_template_productions",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/list_schedule_templates",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/list_schedule_templates",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/mutate_schedule_template",
+    "status": 502,
+    "effect": "lost local response after server result"
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/check_schedule_template_request",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/check_schedule_template_request",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/mutate_schedule_template",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/mutate_schedule_template",
+    "status": 502,
+    "effect": "lost local response after server result"
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/local-workspace",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/static/css/app/layout.css",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/static/css/app/local-workspace/page.css",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/static/chunks/webpack.js",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/manifest.webmanifest",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/static/chunks/main-app.js",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/static/chunks/app-pages-internals.js",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/static/chunks/app/layout.js",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/static/chunks/app/local-workspace/page.js",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/webpack-hmr",
+    "status": 0
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/icon-192.png",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 304
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/auth/v1/token",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/auth/v1/token",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/organization_memberships",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "GET",
+    "path": "/rest/v1/organization_memberships",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/organization_memberships",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "GET",
+    "path": "/rest/v1/organization_memberships",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/list_schedule_library",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_creation_destinations",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/list_schedule_transfers",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/schedules",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/list_schedule_library",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_creation_destinations",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/list_schedule_transfers",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "GET",
+    "path": "/rest/v1/schedules",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 304
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_template_productions",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_template_productions",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/list_schedule_templates",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/list_schedule_templates",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/check_schedule_template_request",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/check_schedule_template_request",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_template_productions",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_template_productions",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/list_schedule_templates",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/list_schedule_templates",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/read_schedule_template",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/read_schedule_template",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/read_schedule_template",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/read_schedule_template",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/publish_schedule_template",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/publish_schedule_template",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_template_productions",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_template_productions",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/list_schedule_templates",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/list_schedule_templates",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/local-workspace",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/static/css/app/layout.css",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/static/css/app/local-workspace/page.css",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/static/chunks/webpack.js",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/static/chunks/main-app.js",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/static/chunks/app-pages-internals.js",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/static/chunks/app/layout.js",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/static/chunks/app/local-workspace/page.js",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/manifest.webmanifest",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/webpack-hmr",
+    "status": 0
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/icon-192.png",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 304
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/auth/v1/token",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/auth/v1/token",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/organization_memberships",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "GET",
+    "path": "/rest/v1/organization_memberships",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/organization_memberships",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "GET",
+    "path": "/rest/v1/organization_memberships",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/list_schedule_library",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_creation_destinations",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/list_schedule_transfers",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/schedules",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/list_schedule_library",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_creation_destinations",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/list_schedule_transfers",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "GET",
+    "path": "/rest/v1/schedules",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 304
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/session_read_schedule",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/session_read_schedule",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/logo-header.png",
+    "status": 304
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_template_productions",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_template_productions",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/list_schedule_templates",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/list_schedule_templates",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/read_schedule_template",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/read_schedule_template",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/review_schedule_template_apply",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/review_schedule_template_apply",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/review_schedule_template_apply",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/review_schedule_template_apply",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/review_schedule_template_apply",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/review_schedule_template_apply",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/save_schedule_with_templates",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/save_schedule_with_templates",
+    "status": 200,
+    "effect": "held local response"
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/list_schedule_library",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/logo-header.png",
+    "status": 304
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_creation_destinations",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/list_schedule_transfers",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/list_schedule_library",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_creation_destinations",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/list_schedule_transfers",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/list_schedule_library",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_creation_destinations",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/list_schedule_transfers",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/session_read_schedule",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/list_schedule_library",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_creation_destinations",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/list_schedule_transfers",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/session_read_schedule",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_template_productions",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_template_productions",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/list_schedule_templates",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/list_schedule_templates",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/read_schedule_template",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/read_schedule_template",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/read_schedule_template",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/read_schedule_template",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/mutate_schedule_template",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/mutate_schedule_template",
+    "status": 502,
+    "effect": "lost local response after server result"
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/auth/v1/logout",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/auth/v1/logout",
+    "status": 204
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 304
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/auth/v1/token",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/auth/v1/token",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/organization_memberships",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "GET",
+    "path": "/rest/v1/organization_memberships",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/local-workspace",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/static/css/app/layout.css",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/static/css/app/local-workspace/page.css",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/static/chunks/webpack.js",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/manifest.webmanifest",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/static/chunks/main-app.js",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/static/chunks/app-pages-internals.js",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/static/chunks/app/layout.js",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/static/chunks/app/local-workspace/page.js",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/icon-192.png",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/webpack-hmr",
+    "status": 0
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 304
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/auth/v1/token",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/auth/v1/token",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/organization_memberships",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "GET",
+    "path": "/rest/v1/organization_memberships",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "status": 500
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 304
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/organization_memberships",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "GET",
+    "path": "/rest/v1/organization_memberships",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/list_schedule_library",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_creation_destinations",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/list_schedule_transfers",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/schedules",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/list_schedule_library",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_creation_destinations",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/list_schedule_transfers",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "GET",
+    "path": "/rest/v1/schedules",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "status": 500
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 304
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_template_productions",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_template_productions",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/list_schedule_templates",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/list_schedule_templates",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/read_schedule_template",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/read_schedule_template",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/auth/v1/logout",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/auth/v1/logout",
+    "status": 204
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "status": 500
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "status": 500
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "status": 500
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "status": 500
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/auth/v1/token",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/auth/v1/token",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/organization_memberships",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "GET",
+    "path": "/rest/v1/organization_memberships",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 304
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/organization_memberships",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "GET",
+    "path": "/rest/v1/organization_memberships",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/list_schedule_library",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_creation_destinations",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/list_schedule_transfers",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/schedules",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/list_schedule_library",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/list_schedule_transfers",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_creation_destinations",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "GET",
+    "path": "/rest/v1/schedules",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "status": 500
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 304
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_template_productions",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_template_productions",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/list_schedule_templates",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/list_schedule_templates",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/check_schedule_template_request",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/check_schedule_template_request",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_template_productions",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_template_productions",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/list_schedule_templates",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/list_schedule_templates",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/read_schedule_template",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/read_schedule_template",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/read_schedule_template",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/read_schedule_template",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/mutate_schedule_template",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/mutate_schedule_template",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_template_productions",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_template_productions",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/list_schedule_templates",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/list_schedule_templates",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_template_productions",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_template_productions",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/list_schedule_templates",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/list_schedule_templates",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/read_schedule_template",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/read_schedule_template",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/read_schedule_template",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/read_schedule_template",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/mutate_schedule_template",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/mutate_schedule_template",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_template_productions",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_template_productions",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/list_schedule_templates",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/list_schedule_templates",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_template_productions",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_template_productions",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/list_schedule_templates",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/list_schedule_templates",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/import_browser_schedule_template",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/import_browser_schedule_template",
+    "status": 409
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/import_browser_schedule_template",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/import_browser_schedule_template",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_template_productions",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_template_productions",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/list_schedule_templates",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/list_schedule_templates",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/session_read_schedule",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/session_read_schedule",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/logo-header.png",
+    "status": 304
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_template_productions",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_template_productions",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/list_schedule_templates",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/list_schedule_templates",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/read_schedule_template",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/read_schedule_template",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/read_schedule_template",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/read_schedule_template",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/mutate_schedule_template",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/mutate_schedule_template",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_template_productions",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_template_productions",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/list_schedule_templates",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/list_schedule_templates",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/auth/v1/logout",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/auth/v1/logout",
+    "status": 204
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "status": 500
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "status": 500
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "status": 500
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "status": 500
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "status": 500
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/local-workspace",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/static/css/app/layout.css",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/static/css/app/local-workspace/page.css",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/static/chunks/webpack.js",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/static/chunks/main-app.js",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/static/chunks/app-pages-internals.js",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/static/chunks/app/layout.js",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/static/chunks/app/local-workspace/page.js",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/manifest.webmanifest",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/local-workspace",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/webpack-hmr",
+    "status": 0
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/icon-192.png",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/static/css/app/layout.css",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/static/css/app/local-workspace/page.css",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/static/chunks/webpack.js",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/static/chunks/main-app.js",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/static/chunks/app-pages-internals.js",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/static/chunks/app/layout.js",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/manifest.webmanifest",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/static/chunks/app/local-workspace/page.js",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/icon-192.png",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/webpack-hmr",
+    "status": 0
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "status": 500
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-16x16.png",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "status": 500
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "status": 500
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "status": 500
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "status": 500
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/auth/v1/token",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/auth/v1/token",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/organization_memberships",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "GET",
+    "path": "/rest/v1/organization_memberships",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "status": 500
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-16x16.png",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "status": 500
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/organization_memberships",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "GET",
+    "path": "/rest/v1/organization_memberships",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/list_schedule_library",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_creation_destinations",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/list_schedule_transfers",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/schedules",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/list_schedule_library",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_creation_destinations",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/list_schedule_transfers",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "GET",
+    "path": "/rest/v1/schedules",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "status": 500
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_template_productions",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_template_productions",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/list_schedule_templates",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/list_schedule_templates",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "status": 500
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/read_schedule_template",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/read_schedule_template",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "status": 500
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "status": 500
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/read_schedule_template",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/read_schedule_template",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/publish_schedule_template",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/publish_schedule_template",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_template_productions",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_template_productions",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/list_schedule_templates",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/list_schedule_templates",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/session_read_schedule",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/session_read_schedule",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/logo-header.png",
+    "status": 304
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_template_productions",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_template_productions",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/list_schedule_templates",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/list_schedule_templates",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/read_schedule_template",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/read_schedule_template",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/review_schedule_template_apply",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/review_schedule_template_apply",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/review_schedule_template_apply",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/review_schedule_template_apply",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/logo-header.png",
+    "status": 304
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/list_schedule_library",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_creation_destinations",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/list_schedule_transfers",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/list_schedule_library",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/list_schedule_transfers",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_creation_destinations",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/session_read_schedule",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/session_read_schedule",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_template_productions",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_template_productions",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/list_schedule_templates",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/list_schedule_templates",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/read_schedule_template",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/read_schedule_template",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/review_schedule_template_apply",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/review_schedule_template_apply",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/review_schedule_template_apply",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/review_schedule_template_apply",
+    "status": 200,
+    "effect": "held local response"
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_template_productions",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_template_productions",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/list_schedule_templates",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/list_schedule_templates",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/review_schedule_template_apply",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/review_schedule_template_apply",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/list_schedule_library",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_creation_destinations",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/list_schedule_transfers",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/session_read_schedule",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/list_schedule_library",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_creation_destinations",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/list_schedule_transfers",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/session_read_schedule",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/auth/v1/logout",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/auth/v1/logout",
+    "status": 204
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "status": 500
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "status": 500
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "status": 500
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "status": 500
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "status": 500
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/__fictional_browser_templates",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/local-workspace",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/static/css/0688e01ed382c861.css",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/static/css/f917ac1c383b255a.css",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/static/css/181a2c033838e464.css",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/static/css/53227bf9a5e36b32.css",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/static/chunks/webpack-3383a2db8e67bc07.js",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/static/chunks/4bd1b696-c023c6e3521b1417.js",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/static/chunks/255-37e0f0325134c4d7.js",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/static/chunks/main-app-f273383036413f8b.js",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/static/chunks/app/layout-a7fd5bf9a2e1a87e.js",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/static/chunks/44530001-36b3e4f4c85f2629.js",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/static/chunks/602dbae6-6eba18f6a2389cbb.js",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/static/chunks/817-d495aa05f0765985.js",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/static/chunks/909-075045ecd79fd447.js",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/static/chunks/407-508808369e40f8a4.js",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/static/chunks/311-5771b604f313d7b6.js",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/static/chunks/305-b612596823d964d1.js",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/static/chunks/486-4e39a0012aace58b.js",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/static/chunks/931-6592d4431879a8bf.js",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/static/chunks/633-f576f1f5a520a2b9.js",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/_next/static/chunks/app/local-workspace/page-4603629f9a8a5046.js",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/auth/v1/token",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/auth/v1/token",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/organization_memberships",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "GET",
+    "path": "/rest/v1/organization_memberships",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "status": 304
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/organization_memberships",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "GET",
+    "path": "/rest/v1/organization_memberships",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/list_schedule_library",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_creation_destinations",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/list_schedule_transfers",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/schedules",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/list_schedule_library",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/list_schedule_transfers",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_creation_destinations",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "GET",
+    "path": "/rest/v1/schedules",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-16x16.png",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "status": 304
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_template_productions",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_template_productions",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/list_schedule_templates",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/list_schedule_templates",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/import_browser_schedule_template",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/import_browser_schedule_template",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_template_productions",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_template_productions",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/list_schedule_templates",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/list_schedule_templates",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/__fictional_browser_templates",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/local-workspace",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "status": 304
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/auth/v1/token",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/auth/v1/token",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/organization_memberships",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "GET",
+    "path": "/rest/v1/organization_memberships",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "status": 304
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/organization_memberships",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "GET",
+    "path": "/rest/v1/organization_memberships",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/list_schedule_library",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_creation_destinations",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/schedules",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_creation_destinations",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/list_schedule_transfers",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/list_schedule_library",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "GET",
+    "path": "/rest/v1/schedules",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/list_schedule_transfers",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/session_read_schedule",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/session_read_schedule",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/logo-header.png",
+    "status": 304
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_template_productions",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_template_productions",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/list_schedule_templates",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/list_schedule_templates",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/read_schedule_template",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/read_schedule_template",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/review_schedule_template_apply",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/review_schedule_template_apply",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/review_schedule_template_apply",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/review_schedule_template_apply",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_template_productions",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_template_productions",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/list_schedule_templates",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/list_schedule_templates",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/read_schedule_template",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/read_schedule_template",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/read_schedule_template",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/read_schedule_template",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/mutate_schedule_template",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/mutate_schedule_template",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_template_productions",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_template_productions",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/list_schedule_templates",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/list_schedule_templates",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/save_schedule_with_templates",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/save_schedule_with_templates",
+    "status": 409
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/session_read_schedule",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/session_read_schedule",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/schedule_versions",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "GET",
+    "path": "/rest/v1/schedule_versions",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/check_schedule_template_save",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/check_schedule_template_save",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/session_read_schedule",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/session_read_schedule",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/schedule_versions",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "GET",
+    "path": "/rest/v1/schedule_versions",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/check_schedule_template_save",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/check_schedule_template_save",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_template_productions",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_template_productions",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/list_schedule_templates",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/list_schedule_templates",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/read_schedule_template",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/read_schedule_template",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/review_schedule_template_apply",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/review_schedule_template_apply",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/review_schedule_template_apply",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/review_schedule_template_apply",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/save_schedule_with_templates",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/save_schedule_with_templates",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/session_read_schedule",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/session_read_schedule",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_capability",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/auth/v1/logout",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/auth/v1/logout",
+    "status": 204
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "status": 304
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/auth/v1/token",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/auth/v1/token",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/organization_memberships",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "GET",
+    "path": "/rest/v1/organization_memberships",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon-16x16.png",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "status": 304
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/organization_memberships",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "GET",
+    "path": "/rest/v1/organization_memberships",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/list_schedule_library",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_creation_destinations",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/list_schedule_transfers",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/schedules",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/list_schedule_library",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_creation_destinations",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/list_schedule_transfers",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "GET",
+    "path": "/rest/v1/schedules",
+    "status": 200
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "status": 304
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_template_productions",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_template_productions",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/list_schedule_templates",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/list_schedule_templates",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/schedule_template_productions",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/schedule_template_productions",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/rest/v1/rpc/list_organization_templates",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/rest/v1/rpc/list_organization_templates",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "OPTIONS",
+    "path": "/auth/v1/logout",
+    "status": 200
+  },
+  {
+    "surface": "fictional API",
+    "method": "POST",
+    "path": "/auth/v1/logout",
+    "status": 204
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "status": 304
+  },
+  {
+    "surface": "local app",
+    "method": "GET",
+    "path": "/favicon.ico",
+    "status": 304
+  }
+]

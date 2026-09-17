@@ -1,0 +1,12 @@
+[
+  {
+    "source": "source A",
+    "version": 1,
+    "unchanged": true
+  },
+  {
+    "source": "source B",
+    "version": 1,
+    "unchanged": true
+  }
+]

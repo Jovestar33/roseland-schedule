@@ -1,3 +1,5 @@
+import {createScheduleLibraryRepository} from './schedule-library.ts';
+import type {TemplateUse} from './schedule-templates.ts';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { ScheduleRepositoryError, type StoredSchedule } from './schedule-repository.ts';
 import { createSessionScheduleRepository } from './session-schedule-repository.ts';
@@ -5,6 +7,7 @@ import { createLifecycleRepository } from './schedule-lifecycle-repository.ts';
 import { sameJson, type ScheduleHistory } from './schedule-lifecycle-controller.ts';
 
 export interface SaveAttempt {
+  readonly templateUses?: readonly TemplateUse[];
   readonly actor: string;
   readonly before: StoredSchedule;
   readonly document: StoredSchedule['document'];
@@ -50,6 +53,7 @@ export function savedFromHistory(attempt: SaveAttempt, history: ScheduleHistory 
 /** A matching immutable version proves saved state, not which network request caused it. */
 export function createSaveRecoveryRepository(client: SupabaseClient, actor: () => string | null): SaveRecoveryRepository {
   const history = createLifecycleRepository(client);
+  const {rpc}=createScheduleLibraryRepository(client);
   async function pinned(expected: string | null) {
     const r = await client.auth.getSession();
     if (!expected || actor() !== expected || r.error || r.data.session?.user.id !== expected) throw new ScheduleRepositoryError('unauthenticated');
@@ -60,7 +64,7 @@ export function createSaveRecoveryRepository(client: SupabaseClient, actor: () =
     async read(id) { return (await pinned(actor())).read(id); },
     async send(attempt) {
       const repo = await pinned(attempt.actor), b = attempt.before;
-      const saved = await repo.update(b.id,b.document_version,attempt.document,b.document_schema_version);
+      const saved = attempt.templateUses?.length ? await rpc(attempt.actor,'save_schedule_with_templates',{target_schedule_id:b.id,expected_version:b.document_version,next_document:attempt.document,schema_version:b.document_schema_version,template_uses:attempt.templateUses}) as StoredSchedule : await repo.update(b.id,b.document_version,attempt.document,b.document_schema_version);
       if (!saveMatches(attempt,saved)) throw new ScheduleRepositoryError('failed');
       return saved;
     },
@@ -76,7 +80,8 @@ export function createSaveRecoveryRepository(client: SupabaseClient, actor: () =
       if (!inScope(current) || current.document_version < b.document_version) throw new ScheduleRepositoryError('failed');
       const version = await history.historical(attempt.actor,b.organization_id,b.id,b.document_version+1);
       const saved = savedFromHistory(attempt,version);
-      if (saved) {
+      const constraintsConfirmed = !attempt.templateUses?.length || await rpc(attempt.actor,'check_schedule_template_save',{target_schedule_id:b.id,saved_version:b.document_version+1,template_uses:attempt.templateUses}) === true;
+      if (saved && constraintsConfirmed) {
         // The two reads are not a transaction snapshot. A concurrent commit may
         // make history newer than the first read; never use a lower current version.
         if (current.document_version < saved.document_version) current = await repo.read(b.id);
