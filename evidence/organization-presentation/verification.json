@@ -1,0 +1,35 @@
+{
+  "date": "2026-09-17",
+  "scope": "B07 existing organization presentation, bounded local acceptance",
+  "authority": "Organization Super Admins and Admins only, explicitly confirmed by user",
+  "authApi": {
+    "primary": 32,
+    "replay": 32
+  },
+  "databaseAssertions": 453,
+  "platformTests": 189,
+  "editorTests": 62,
+  "build": "pass with one pre-existing LocalScheduleLibrary effect-cleanup warning",
+  "databaseLint": "no schema errors",
+  "securityAdvisors": "no issues",
+  "priorMigrationsUnchanged": 28,
+  "newForwardMigrations": 3,
+  "browserChecks": [
+    "Preview changes color; Cancel restores prior color and labels",
+    "Embedded fictional SVG logo, saved labels and palette appear in editor",
+    "Lost response recovered after reload without advancing the version again; repeated on final built app using request journal",
+    "Concurrent save rejected; current saved config reviewed before explicitly retaining and saving the draft",
+    "Organization switch clears styles, isolates config and retains the original draft",
+    "Viewer fields disabled and no save control; same labels visible in read-only schedule",
+    "Existing action value remains visible after its menu entry is renamed",
+    "Print projection has matching labels, subtitle and embedded logo",
+    "390x844 dialog fits at 350px with visible Close control; Close and Escape restore focus",
+    "Sign-out clears scoped styles; viewport override reset"
+  ],
+  "boundaries": [
+    "No actual schedules, hosted changes, deployment, push or migration service",
+    "Print projection DOM verified; no new physical print or PDF output acceptance",
+    "Desktop and phone viewport evidence does not claim physical-device or whole legacy-parity completion",
+    "Two fictional source schedules remain byte-identical at version 1"
+  ]
+}

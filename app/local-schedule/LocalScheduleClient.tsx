@@ -1,4 +1,5 @@
 'use client';
+/* eslint-disable @next/next/no-img-element -- Validated embedded organization logos do not use image optimization. */
 import { useEffect, useRef, useState, useMemo, useCallback } from 'react';
 import { createClient, type Session } from '@supabase/supabase-js';
 import type { LocalEditorConfig } from '@/lib/platform/local-editor-config';
@@ -28,11 +29,13 @@ import {createTemplateRepository} from '@/lib/platform/schedule-templates';
 import LocalScheduleFiles from '@/components/local/LocalScheduleFiles';
 import ShareDropdown from '@/components/toolbar/ShareDropdown';
 import LocalWeatherControls from '@/components/local/LocalWeatherControls';
+import {useCmsStore,useCmsLabel} from '@/lib/store/cmsStore';
 import LocalSchedulePrint from '@/components/local/LocalSchedulePrint';
 import { DocumentProvidersContext } from '@/components/local/DocumentProvidersContext';
 import { fictionalDocumentProviders } from '@/lib/platform/document-providers';
 
 export default function LocalScheduleClient({ config }: { config: LocalEditorConfig }) {
+  const appearance=useCmsStore(s=>s.config),addRowLabel=useCmsLabel('btnAddRow','+ Add Row');
   const workspace = useLocalWorkspace();
   const managed = !!workspace;
   const active = workspace?.active ?? true;
@@ -305,6 +308,7 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
           {more&&<button className="btn btn-light" disabled={busy} onClick={()=>void run(()=>list(true))}>Load more schedules</button>}
         </nav>}
         {selected && <section className="panel" aria-label="Schedule editor" style={{display:recordInScope&&permission?.read===true?undefined:'none'}}>
+          {(appearance.logo||appearance.labels?.hdrTitle)&&<div className="local-organization-brand">{appearance.logo&&<img src={appearance.logo} alt="Organization logo" style={{maxHeight:72,maxWidth:240}}/>}{appearance.labels?.hdrTitle&&<span>{appearance.labels.hdrTitle}</span>}</div>}
           <div className={styles.toolbar}>
             <strong>{state().scheduleName}</strong><span>Version {version} · {dirty ? 'Unsaved changes' : 'Saved'}</span>
             <button className="btn btn-primary" disabled={busy || !dirty || !ready || !canEdit || !!controller.attempt} onClick={() => void run(async () => {
@@ -338,7 +342,7 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
           <ScheduleHeader />
           <LocalWeatherControls enabled={active && recordInScope && ready && canEdit && !confirmation} scope={`${accountRef.current}:${controller.record?.id}`} />
           <ScheduleGrid onOpenContact={setContact} onOpenStatus={setStatus} onOpenNotes={setNotes} />
-          <div className="add-area"><button className="btn btn-light" onClick={() => { state().pushUndo(); state().addRowAfter(rows.length - 1); }}>+ Add Row</button></div>
+          <div className="add-area"><button className="btn btn-light" onClick={() => { state().pushUndo(); state().addRowAfter(rows.length - 1); }}>{addRowLabel}</button></div>
           <ContactModal open={contact !== null} row={contact !== null ? rows[contact] : null} onClose={() => setContact(null)}
             onSave={patch => { if (contact !== null) { state().pushUndo(); state().updateRow(contact, patch); } }} />
           <StatusModal open={status !== null} row={status !== null ? rows[status] : null} onClose={() => setStatus(null)}

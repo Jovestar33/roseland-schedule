@@ -1,4 +1,5 @@
 'use client';
+import {useCmsStore} from '@/lib/store/cmsStore';
 import { useState, useEffect, useRef, useContext, createContext } from 'react';
 import { createPortal } from 'react-dom';
 import { useScheduleStore } from '@/lib/store/scheduleStore';
@@ -244,12 +245,13 @@ function PrintDoc({
                      cs.mealNotes || cs.safetyNotes || cs.specialInstructions || cs.notes;
   const projectLine = [projectName, phase, dayStr].filter(Boolean).join(' · ');
 
+  const organizationLogo=useCmsStore(s=>s.config.logo);
   return (
     <div className="csh-pdoc">
       {/* Branded header bar */}
       <div className="csh-pdoc-brand">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/logo-header.png" className="csh-pdoc-logo" alt="Roseland Pictures" />
+        <img src={organizationLogo||"/logo-header.png"} className="csh-pdoc-logo" alt="Organization logo" />
         <span className="csh-pdoc-brand-title">Call Sheet</span>
       </div>
 
@@ -348,6 +350,7 @@ function PrintDoc({
 interface Props { authorizeOutput?:()=>Promise<boolean>; open: boolean; onClose: () => void; readOnly?: boolean; }
 
 export default function CallSheetModal({ open, onClose, readOnly = false, authorizeOutput }: Props) {
+
   const rows         = useScheduleStore((s) => s.rows);
   const meta         = useScheduleStore((s) => s.meta);
   const scheduleName = useScheduleStore((s) => s.scheduleName) ?? '';

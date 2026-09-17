@@ -1,5 +1,6 @@
 'use client';
 import { useLocalEditor } from '@/components/schedule/LocalEditorContext';
+import {useCmsStore,useCmsActionClassMap} from '@/lib/store/cmsStore';
 import { wxIcon } from '@/lib/weather';
 import { computeTimeOut } from '@/lib/time';
 import type { ScheduleData, SubLocation } from '@/lib/types';
@@ -65,6 +66,8 @@ interface Props {
 
 export default function ScheduleReadView({ data, name }: Props) {
   const local = useLocalEditor();
+  const config=useCmsStore(s=>s.config),actionClasses=useCmsActionClassMap();
+  const label=(key:string,fallback:string)=>config.labels?.[key]||fallback;
   const { meta, rows } = data;
   const wx = meta.wx;
   const visibleRows = rows.filter(r => r.action || r.timeIn);
@@ -128,27 +131,27 @@ export default function ScheduleReadView({ data, name }: Props) {
         <div className="meta">
           <div className="meta-grid">
             <div className="mf">
-              <label>Town / Location</label>
+              <label>{label('metaTown','Town / Location')}</label>
               <div className="call-disp">{meta.town || '—'}</div>
             </div>
             <div className="mf">
-              <label>Date</label>
+              <label>{label('metaDate','Date')}</label>
               <div className="call-disp">{meta.date ? metaDate(meta.date) : '—'}</div>
             </div>
             <div className="mf">
-              <label>Call Time</label>
+              <label>{label('metaCall','Call Time')}</label>
               <div className="call-disp">{callTime || '—'}</div>
             </div>
             <div className="mf">
-              <label>Producer</label>
+              <label>{label('metaProd','Producer')}</label>
               <div className="call-disp">{meta.prod || '—'}</div>
             </div>
             <div className="mf">
-              <label>Director</label>
+              <label>{label('metaDir','Director')}</label>
               <div className="call-disp">{meta.dir || '—'}</div>
             </div>
             <div className="mf">
-              <label>Camera</label>
+              <label>{label('metaDp','Camera')}</label>
               <div className="call-disp">{meta.dp || '—'}</div>
             </div>
           </div>
@@ -172,14 +175,14 @@ export default function ScheduleReadView({ data, name }: Props) {
             <thead>
               <tr>
                 <th />
-                <th className="tp">Action</th>
-                <th>Location</th>
-                <th>Description</th>
-                <th>Notes</th>
+                <th className="tp">{label('colAction','Action')}</th>
+                <th>{label('colLocation','Location')}</th>
+                <th>{label('colDesc','Description')}</th>
+                <th>{label('colNotes','Notes')}</th>
                 <th className="col-dv" />
-                <th className="tc tp">Time In</th>
-                <th className="tc tp">Duration</th>
-                <th className="tc tp">Time Out</th>
+                <th className="tc tp">{label('colTimeIn','Time In')}</th>
+                <th className="tc tp">{label('colDuration','Duration')}</th>
+                <th className="tc tp">{label('colTimeOut','Time Out')}</th>
               </tr>
             </thead>
             <tbody>
@@ -199,7 +202,7 @@ export default function ScheduleReadView({ data, name }: Props) {
                     </tr>
                   );
                 }
-                const actionCls = ACTION_CLASSES[row.action];
+                const actionCls = actionClasses[row.action] || ACTION_CLASSES[row.action];
                 return (
                   <tr key={i}>
                     <td className="rn">{i + 1}</td>

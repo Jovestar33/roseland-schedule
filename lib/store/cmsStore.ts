@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { loadCmsConfig, type CmsConfig, type CmsAction } from '../api/cms';
-import { ACTIONS, ACTION_CLASS_MAP, CMS_ACTION_STYLES } from '../constants';
+import { ACTIONS, ACTION_CLASS_MAP, CMS_ACTION_STYLES, CMS_COLORS } from '../constants';
 
 export interface CmsStore {
   config: CmsConfig;
@@ -14,14 +14,18 @@ export interface CmsStore {
   closeModal: () => void;
 }
 
+let configRequest = 0;
+
 export const useCmsStore = create<CmsStore>((set, get) => ({
   config: {},
   loaded: false,
   modalOpen: false,
 
   async loadConfig() {
+    const request = ++configRequest;
     try {
       const config = await loadCmsConfig();
+      if (request !== configRequest) return;
       set({ config, loaded: true });
       get().applyConfig(config);
     } catch {
@@ -30,6 +34,7 @@ export const useCmsStore = create<CmsStore>((set, get) => ({
   },
 
   setConfig(config) {
+    configRequest++;
     set({ config });
     get().applyConfig(config);
   },
@@ -37,13 +42,11 @@ export const useCmsStore = create<CmsStore>((set, get) => ({
   applyConfig(config) {
     if (typeof document === 'undefined') return;
 
-    // Apply CSS custom properties
-    if (config.colors) {
-      const root = document.documentElement;
-      Object.entries(config.colors).forEach(([k, v]) => {
-        if (v) root.style.setProperty(k, v);
-      });
-    }
+    // Clear absent settings so a previous organization cannot color this one.
+    CMS_COLORS.forEach(({key}) => document.documentElement.style.removeProperty(key));
+    if (config.colors) Object.entries(config.colors).forEach(([key,value]) => {
+      if (value) document.documentElement.style.setProperty(key,value);
+    });
 
     // Apply action styles as an injected <style> block
     const styles = config.actionStyles || {};
@@ -60,9 +63,7 @@ export const useCmsStore = create<CmsStore>((set, get) => ({
       el.id = 'cms-action-styles';
       document.head.appendChild(el);
     }
-    if (Object.keys(styles).length > 0) {
-      el.textContent = css;
-    }
+    el.textContent = Object.keys(styles).length > 0 ? css : "";
   },
 
   openModal() { set({ modalOpen: true }); },
@@ -88,6 +89,6 @@ export function useCmsActionClassMap(): Record<string, string> {
   const actions = useCmsStore(s => s.config.actions);
   if (!actions?.length) return ACTION_CLASS_MAP;
   const map: Record<string, string> = { ...ACTION_CLASS_MAP };
-  actions.forEach((a: CmsAction) => { if (a.color) map[a.name] = a.color; });
+  actions.forEach((a: CmsAction) => { map[a.name] = a.color; });
   return map;
 }

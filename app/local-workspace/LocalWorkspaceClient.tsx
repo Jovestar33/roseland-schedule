@@ -14,6 +14,7 @@ import styles from './workspace.module.css';
 import LocalSchedulePermissions from '@/components/local/LocalSchedulePermissions';
 import LocalLifecycleClient from './LocalLifecycleClient';
 import LocalProvisioningClient from './LocalProvisioningClient';
+import LocalOrganizationSettings from '@/components/local/LocalOrganizationSettings';
 
 const initial:WorkspaceLocation={screen:'schedule',organization:null};
 export default function LocalWorkspaceClient({config}:{config:LocalEditorConfig}){
@@ -108,7 +109,7 @@ export default function LocalWorkspaceClient({config}:{config:LocalEditorConfig}
   async function signOut(){
     if(busyRef.current||working)return;busyRef.current=true;setBusy(true);
     try{if(sessionRef.current){const r=await client.auth.signOut({scope:'local'});if(r.error)throw new Error('Sign out unavailable');}
-      navigationTicket.current++;directoryTicket.current++;identity.clear();useScheduleStore.getState().newSchedule();setAccountEpoch(identity.generation);setPanels({});setVisited([]);setManagementPanels([]);setLifecyclePanels([]);setScheduleRequest(null);setOrganizations([]);setScope(null);setMore(false);setSession(null);sessionRef.current=null;setEmail('');setPassword('');setAuthNeeded(false);setConfirmSignOut(false);setLocation(initial);locationRef.current=initial;history.replaceState(null,'',workspaceHref(initial));setMessage('Signed out. Tab-only drafts and requests cleared. Retained source drafts and template recovery requests remain available to their original account.');
+      navigationTicket.current++;directoryTicket.current++;identity.clear();useScheduleStore.getState().newSchedule();setAccountEpoch(identity.generation);setPanels({});setVisited([]);setManagementPanels([]);setLifecyclePanels([]);setScheduleRequest(null);setOrganizations([]);setScope(null);setMore(false);setSession(null);sessionRef.current=null;setEmail('');setPassword('');setAuthNeeded(false);setConfirmSignOut(false);setLocation(initial);locationRef.current=initial;history.replaceState(null,'',workspaceHref(initial));setMessage('Signed out. Tab-only drafts and requests cleared. Retained source drafts, template requests and appearance requests remain available to their original account.');
     }catch{setMessage('Sign-out could not finish. Your workspace is retained.');}finally{busyRef.current=false;setBusy(false);}
   }
   const active=location.screen;
@@ -120,7 +121,7 @@ export default function LocalWorkspaceClient({config}:{config:LocalEditorConfig}
   return <div className={styles.page}>
     <header className={styles.header}><div><span className={styles.eyebrow}>LOCAL WORKSPACE</span><h1>Roseland rehearsals</h1><p>One account, with unfinished work kept in this tab.</p></div><span className={styles.badge}>Fictional data only</span></header>
     <div className={styles.shell}>
-      <p className={styles.notice}>Switching local screens keeps drafts and request details. Closing or reloading loses tab-only requests. Source drafts retained by Duplicate and template request receipts can be recovered by the original account on this computer. No email is sent.</p>
+      <p className={styles.notice}>Switching local screens keeps drafts and request details. Closing or reloading loses tab-only requests. Duplicate source backups and template or appearance request receipts can be recovered by the original account on this computer. No email is sent.</p>
       <p role="status" aria-live="polite" className={styles.status}>{message}</p>
       {(!session||authNeeded)&&<form className={styles.login} onSubmit={login} aria-label="Workspace sign in"><h2>{identity.actor?'Sign in again':'Sign in'}</h2><label>Fictional account email<input type="email" required autoComplete="off" readOnly={!!identity.actor} value={session?.user.email??email} onChange={event=>setEmail(event.target.value)}/></label><label>Password<input type="password" required autoComplete="off" value={password} onChange={event=>setPassword(event.target.value)}/></label><button disabled={busy||working}>Sign in</button></form>}
       {identity.actor&&<><div className={styles.account}><span>{session?.user.email??email}{authNeeded?' · Sign-in required':''}</span><span>{dirty?'Unfinished work retained':'No unfinished work'}</span><button disabled={busy||working} onClick={()=>dirty?setConfirmSignOut(true):void signOut()}>Sign out</button></div>
@@ -129,6 +130,7 @@ export default function LocalWorkspaceClient({config}:{config:LocalEditorConfig}
       </>}
     </div>
     {identity.actor&&<div key={accountEpoch}>
+      {visited.map(o=><div key={'presentation:'+o.id} hidden={scope?.id!==o.id}><LocalWorkspaceContext.Provider value={panel('presentation:'+o.id,o,scope?.id===o.id)}><LocalOrganizationSettings/></LocalWorkspaceContext.Provider></div>)}
       {visited.filter(o=>o.role!=='member').map(o=><div key={'permissions:'+o.id} hidden={scope?.id!==o.id}><LocalWorkspaceContext.Provider value={panel('permissions:'+o.id,o,scope?.id===o.id)}><LocalSchedulePermissions/></LocalWorkspaceContext.Provider></div>)}
       <div hidden={active!=='schedule'}><LocalWorkspaceContext.Provider value={panel('schedule',scope,active==='schedule')}><LocalScheduleClient config={config}/></LocalWorkspaceContext.Provider></div>
       <div hidden={active!=='acceptance'}><LocalWorkspaceContext.Provider value={panel('acceptance',null,active==='acceptance')}><LocalAcceptanceClient config={config}/></LocalWorkspaceContext.Provider></div>
@@ -136,6 +138,6 @@ export default function LocalWorkspaceClient({config}:{config:LocalEditorConfig}
       {lifecyclePanels.map(id=>{const organization=visited.find(item=>item.id===id)!;const enabled=active==='lifecycle'&&scope?.id===id;return <div key={id} hidden={!enabled}><LocalWorkspaceContext.Provider value={panel('lifecycle:'+id,organization,enabled)}><LocalLifecycleClient/></LocalWorkspaceContext.Provider></div>;})}
       {managementPanels.map(id=>{const organization=visited.find(item=>item.id===id)!;const enabled=active==='invitations'&&scope?.id===id&&scope.role!=='member';return <div key={id} hidden={!enabled}><LocalWorkspaceContext.Provider value={panel('invitations:'+id,organization,enabled)}><LocalInvitationsClient config={config}/></LocalWorkspaceContext.Provider></div>;})}
     </div>}
-    <dialog ref={dialog} className={styles.dialog} onCancel={()=>setConfirmSignOut(false)} aria-label="Clear workspace"><h2>Sign out and clear this workspace?</h2><p>Unsaved schedule edits and tab-only workflow drafts will be cleared. Retained source drafts and template recovery requests remain on this computer for the original account. A request already sent may have completed; signing out does not undo it.</p><div><button disabled={busy||working} onClick={()=>setConfirmSignOut(false)}>Keep working</button><button disabled={busy||working} onClick={()=>void signOut()}>Sign out and clear</button></div></dialog>
+    <dialog ref={dialog} className={styles.dialog} onCancel={()=>setConfirmSignOut(false)} aria-label="Clear workspace"><h2>Sign out and clear this workspace?</h2><p>Unsaved schedule edits and tab-only workflow drafts will be cleared. Retained source drafts, template requests and appearance requests remain on this computer for the original account. A request already sent may have completed; signing out does not undo it.</p><div><button disabled={busy||working} onClick={()=>setConfirmSignOut(false)}>Keep working</button><button disabled={busy||working} onClick={()=>void signOut()}>Sign out and clear</button></div></dialog>
   </div>;
 }

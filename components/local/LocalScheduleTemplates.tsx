@@ -42,10 +42,10 @@ export default function LocalScheduleTemplates({client,actor,organization,enable
  }
  async function send(current:()=>boolean,checkOnly=false){
   if(!pending)return;const a=pending.attempt;
-  if(pending.started){const receipt=await repo.probe(a);if(!current())return;if(receipt){clearTemplateRequest(localStorage,a);setPending(null);setSelected(null);setMessage('Template change confirmed. Your schedule draft is unchanged.');await refresh(current);return;}if(checkOnly){setMessage('No matching result is confirmed yet. Retry uses the same exact request; your draft is retained.');return;}}
+  if(pending.started){const receipt=await repo.probe(a);if(!current())return;if(receipt){clearTemplateRequest(localStorage,a);setPending(readTemplateRequest(localStorage,a.actor,a.organization));setSelected(null);setMessage('Template change confirmed. Your schedule draft is unchanged.');await refresh(current);return;}if(checkOnly){setMessage('No matching result is confirmed yet. Retry uses the same exact request; your draft is retained.');return;}}
   const sent={attempt:a,started:true};retainTemplateRequest(localStorage,sent);setPending(sent);
-  try{await repo.send(a);}catch(e){if(current()&&e instanceof ScheduleRepositoryError&&['invalid','conflict'].includes(e.kind)){clearTemplateRequest(localStorage,a);setPending(null);}throw e;}
-  if(!current())return;clearTemplateRequest(localStorage,a);setPending(null);setSelected(null);setName('');setNewName('');setMessage('Template change confirmed. Your schedule draft is unchanged.');await refresh(current);
+  try{await repo.send(a);}catch(e){if(current()&&e instanceof ScheduleRepositoryError&&['invalid','conflict'].includes(e.kind)){clearTemplateRequest(localStorage,a);setPending(readTemplateRequest(localStorage,a.actor,a.organization));}throw e;}
+  if(!current())return;clearTemplateRequest(localStorage,a);setPending(readTemplateRequest(localStorage,a.actor,a.organization));setSelected(null);setName('');setNewName('');setMessage('Template change confirmed. Your schedule draft is unchanged.');await refresh(current);
  }
  const writeProduction=productions.find(p=>p.id===production)?.can_manage===true;
  const canCapture=canWriteCurrent&&!pendingUses&&getSource()?.production_id===production;

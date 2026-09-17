@@ -1,0 +1,33 @@
+PASS Active member reads default organization configuration
+PASS Production Organizer gets no organization settings authority
+PASS Organizer cannot write organization appearance
+PASS Editor cannot write organization appearance
+PASS Viewer cannot write organization appearance
+PASS Other organization owner cannot write organization appearance
+PASS Organization Super Admin saves the complete configuration
+PASS Exact lost-response retry produces no duplicate version
+PASS Viewer reads every saved configuration field intact
+PASS Foreign organization cannot read configuration
+PASS Receipt is bound to the original account
+PASS Retried request cannot replace its original payload
+PASS Organization Admin can save a newer version
+PASS Old exact receipt never overwrites a later settings save
+PASS Stale version cannot overwrite another administrator
+PASS Malformed configuration 1 rejected without partial stripping
+PASS Malformed configuration 2 rejected without partial stripping
+PASS Malformed configuration 3 rejected without partial stripping
+PASS Malformed configuration 4 rejected without partial stripping
+PASS Malformed configuration 5 rejected without partial stripping
+PASS Malformed configuration 6 rejected without partial stripping
+PASS Malformed configuration 7 rejected without partial stripping
+PASS Malformed configuration 8 rejected without partial stripping
+PASS Malformed configuration 9 rejected without partial stripping
+PASS Malformed configuration 10 rejected without partial stripping
+PASS Denied and malformed writes do not advance the version
+PASS Suspended Admin cannot save
+PASS Suspended member cannot read
+PASS Anonymous reads denied
+PASS Private table cannot bypass authenticated RPC
+PASS Exactly two accepted saves have receipts
+PASS Concurrent settings writers serialize; exactly one baseline wins
+PASS 32 genuine local organization presentation Auth/API checks

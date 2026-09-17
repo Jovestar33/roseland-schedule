@@ -1,0 +1,6 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {capturePresentation,validatePresentation} from '../../lib/platform/organization-presentation.ts';
+const id='11111111-1111-4111-8111-111111111111';
+test('Organization appearance preserves supported complete configuration and captures immutable requests',()=>{const cfg={actions:[{name:'Scene',color:'aShoot'}],labels:{colAction:'Activity'},colors:{'--pink':'#123456'},actionStyles:{aShoot:{bg:'#ffffff',text:'#111111'}},logo:null};assert.deepEqual(validatePresentation(cfg),cfg);const a=capturePresentation({actor:id,organization:id,request:id,version:0,config:cfg});cfg.actions[0].name='Newer';assert.equal(a.config.actions![0].name,'Scene');assert.ok(Object.isFrozen(a.config.actions));});
+test('Organization appearance rejects arbitrary CSS, external logos, unknown fields and duplicate or reserved actions',()=>{for(const value of [{unknown:true},{colors:{'--pink':'red;display:none'}},{colors:{'--unapproved':'#112233'}},{actionStyles:{aShoot:{bg:'#123456',text:'url(x)'}}},{labels:{colAction:'bad\nlabel'}},{actions:[{name:'Other',color:''}]},{actions:[{name:'One',color:''},{name:'one',color:''}]},{logo:'https://example.test/logo.png'},{logo:'data:text/html;base64,SGk='}])assert.throws(()=>validatePresentation(value));});

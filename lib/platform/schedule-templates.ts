@@ -1,3 +1,4 @@
+import {journalEntries,journalWrite,journalClear,type RequestJournalStorage} from './request-journal.ts';
 import type {SupabaseClient} from '@supabase/supabase-js';
 import type {BrowserTemplate} from './browser-templates.ts';
 import type {ScheduleRow} from '../types.ts';
@@ -39,9 +40,9 @@ export function createTemplateRepository(client:SupabaseClient){
   async probe(a:TemplateAttempt){const v=await rpc(a.actor,'check_schedule_template_request',{request_id:a.request,target_production_id:a.production});if(v?.confirmed===false)return null;return templateReceipt(v,a);},
  };
 }
-export interface TemplateRequestStorage {getItem(k:string):string|null;setItem(k:string,v:string):void;removeItem(k:string):void}
+export type TemplateRequestStorage = RequestJournalStorage;
 export interface RetainedTemplateRequest {attempt:TemplateAttempt;started:boolean}
 const requestKey=(actor:string,org:string)=>`roseland-template-request:${actor}:${org}`;
-export function retainTemplateRequest(storage:TemplateRequestStorage,value:RetainedTemplateRequest){const {attempt:a}=value;const encoded=JSON.stringify(value),key=requestKey(a.actor,a.organization);storage.setItem(key,encoded);if(storage.getItem(key)!==encoded)throw Error('Request recovery could not be saved. No new request was sent.');}
-export function readTemplateRequest(storage:TemplateRequestStorage,actor:string,org:string):RetainedTemplateRequest|null{const raw=storage.getItem(requestKey(actor,org));if(!raw)return null;const value=JSON.parse(raw) as RetainedTemplateRequest;if(value.attempt?.actor!==actor||value.attempt.organization!==org||typeof value.started!=='boolean')throw Error('Retained template request does not match this account and organization.');return {attempt:captureTemplateAttempt(value.attempt),started:value.started};}
-export function clearTemplateRequest(storage:TemplateRequestStorage,a:TemplateAttempt){const existing=readTemplateRequest(storage,a.actor,a.organization);if(existing?.attempt.request===a.request)storage.removeItem(requestKey(a.actor,a.organization));}
+export function retainTemplateRequest(storage:TemplateRequestStorage,value:RetainedTemplateRequest){const a=value.attempt;journalWrite(storage,requestKey(a.actor,a.organization),a.request,JSON.stringify(value),raw=>{const v=JSON.parse(raw);return v.attempt?.request===a.request&&v.attempt.actor===a.actor&&v.attempt.organization===a.organization;});}
+export function readTemplateRequest(storage:TemplateRequestStorage,actor:string,org:string):RetainedTemplateRequest|null{const entry=journalEntries(storage,requestKey(actor,org))[0];if(!entry)return null;const value=JSON.parse(entry.raw) as RetainedTemplateRequest;if(value.attempt?.actor!==actor||value.attempt.organization!==org||typeof value.started!=='boolean')throw Error('Retained template request does not match this account and organization.');return {attempt:captureTemplateAttempt(value.attempt),started:value.started};}
+export function clearTemplateRequest(storage:TemplateRequestStorage,a:TemplateAttempt){journalClear(storage,requestKey(a.actor,a.organization),a.request,raw=>{const v=JSON.parse(raw);return v.attempt?.request===a.request&&v.attempt.actor===a.actor&&v.attempt.organization===a.organization;});}

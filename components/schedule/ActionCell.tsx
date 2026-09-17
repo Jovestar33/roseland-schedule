@@ -57,6 +57,7 @@ export default function ActionCell({ index, row }: Props) {
           value={row.action}
           onChange={(e) => handleSelectChange(e.target.value)}
         >
+          {row.action&&!actions.includes(row.action)&&<option value={row.action}>{row.action} (existing value)</option>}
           {actions.map((a) => (
             <option key={a} value={a}>{a || '—'}</option>
           ))}

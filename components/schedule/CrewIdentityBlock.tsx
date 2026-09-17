@@ -1,5 +1,6 @@
 'use client';
 import { useState, useRef, useEffect } from 'react';
+import {useCmsStore} from '@/lib/store/cmsStore';
 import { useScheduleStore } from '@/lib/store/scheduleStore';
 
 type CrewField = 'prod' | 'dir' | 'dp';
@@ -15,6 +16,7 @@ interface Props {
 }
 
 export default function CrewIdentityBlock({ readOnly = false }: Props) {
+  const labels=useCmsStore(s=>s.config.labels);
   const meta       = useScheduleStore((s) => s.meta);
   const updateMeta = useScheduleStore((s) => s.updateMeta);
   const [editing, setEditing] = useState<CrewField | null>(null);
@@ -48,7 +50,7 @@ export default function CrewIdentityBlock({ readOnly = false }: Props) {
     <div className="crew-id">
       {FIELDS.map(({ key, label }) => (
         <div key={key} className="crew-col">
-          <span className="crew-label" onClick={() => startEdit(key)}>{label}</span>
+          <span className="crew-label" onClick={() => startEdit(key)}>{labels?.[{prod:'metaProd',dir:'metaDir',dp:'metaDp'}[key]]||label}</span>
           {editing === key ? (
             <input
               ref={inputRef}

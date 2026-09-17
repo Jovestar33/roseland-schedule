@@ -32,3 +32,6 @@
 .template-modal .template-ownership { flex-direction:row; align-items:flex-start; }
 .template-modal .template-ownership input { margin-top:4px; flex-shrink:0; }
 .browser-template-import { margin:16px 0; }
+.template-modal .mhdr { gap: 12px; }
+.template-modal .mhdr h2 { min-width: 0; flex: 1; overflow-wrap: anywhere; line-height: 1.15; }
+.template-modal .mhdr .mclose { flex: 0 0 34px; }
