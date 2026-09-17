@@ -9,3 +9,13 @@ Baseline refreshed read-only from Netlify Deploys: published Jovestar33/roseland
 First section: generic modal keyboard scope, nested dialogs and opener focus restoration (IN-02, IN-03, UI-03; source audit S12). Baseline lacks trap/return. Bounded focus checks passed; see LEGACY_PARITY_MODAL_REVIEW.md. Full-group acceptance remains open. Source comparison and new runtime results must be recorded separately.
 
 Full gate remains 0 Pass / 0 observed Fail / 45 Not tested pending paired profiles. A fix, build, source equality or scoped test does not establish full-group or whole-app parity.
+
+## Current handoff
+
+Section 01 committed as `8ce428a`: modal keyboard focus, contact labels, shared dialog focus return and paired fictional evidence. See LEGACY_PARITY_MODAL_REVIEW.md. User question D02 is pending; do not infer approval from elapsed time. No template/CMS/share access policy was expanded.
+
+Owned test services are currently running for the pending local review: replay Supabase `/private/tmp/roseland-b03-replay-20260917`, target Next at 3418, immutable-source rehearsal at 3420, guarded proxies at 3421/3422. Earlier recovery volumes remain untouched. A fictional paired fixture is identified in evidence/legacy-parity/fixture-manifest.json. Credentials remain only in the private temp fixture file.
+
+Next: incorporate D02 answer, continue independent whole-app cases, and inspect established snapshot/share policies before any new access design. All 45 full-profile groups remain unaccepted; passing scoped cases is not the complete gate.
+
+Handoff verification: fixture remains version 1 with its exact seeded document; residual UI-only test edits were explicitly discarded. The final fictional target tab is retained, viewport override reset. The completed baseline tab is closed. A one-request post-restart trace has zero unexpected blocked calls; earlier request tracing remains unclaimed.

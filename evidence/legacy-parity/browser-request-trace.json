@@ -1,0 +1,8 @@
+[
+  {
+    "surface": "authenticated local",
+    "method": "GET",
+    "path": "/logo-header.png",
+    "result": "local application"
+  }
+]
