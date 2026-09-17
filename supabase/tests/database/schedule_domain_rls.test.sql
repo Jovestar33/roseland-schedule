@@ -143,6 +143,7 @@ select extensions.throws_ok(
   'client cannot forge a schedule document version'
 );
 set local role postgres;
+select set_config('request.jwt.claims','{"sub":"61000000-0000-4000-a000-000000000001","role":"authenticated"}',true);
 select extensions.throws_ok(
   $$insert into public.schedules (
       organization_id, production_id, production_day_id, display_name, slug, created_by, updated_by
@@ -160,29 +161,30 @@ select extensions.throws_ok(
   'schedule cannot reference a day from another tenant or production'
 );
 set local role authenticated;
+select set_config('request.jwt.claims','{"sub":"61000000-0000-4000-a000-000000000002","role":"authenticated"}',true);
 select extensions.throws_ok(
   $$update public.schedules set deleted_at = now() where id = '66000000-0000-4000-a000-000000000001'$$,
   '42501',
   'permission denied for table schedules',
   'editor cannot soft-delete a schedule'
 );
-select extensions.lives_ok(
-  $$update public.phases set name = 'Principal Photography A' where id = '64000000-0000-4000-a000-000000000001'$$,
-  'editor can update an ordinary phase field'
+select extensions.is_empty(
+  $$update public.phases set name = 'Principal Photography A' where id = '64000000-0000-4000-a000-000000000001' returning id$$,
+  'editor cannot update ordinary phase field'
 );
 select extensions.is(
   (select version from public.phases where id = '64000000-0000-4000-a000-000000000001'),
-  2::bigint,
-  'phase update increments its version'
+  1::bigint,
+  'denied phase update retains its version'
 );
-select extensions.lives_ok(
-  $$update public.production_days set status = 'completed' where id = '65000000-0000-4000-a000-000000000001'$$,
-  'editor can update an ordinary production-day field'
+select extensions.is_empty(
+  $$update public.production_days set status = 'completed' where id = '65000000-0000-4000-a000-000000000001' returning id$$,
+  'editor cannot update ordinary production-day field'
 );
 select extensions.is(
   (select version from public.production_days where id = '65000000-0000-4000-a000-000000000001'),
-  2::bigint,
-  'production-day update increments its version'
+  1::bigint,
+  'denied production-day update retains its version'
 );
 select extensions.throws_ok(
   $$insert into public.phases (
@@ -274,6 +276,7 @@ select extensions.is(
 
 -- Database constraints and immutable-history triggers protect trusted paths too.
 set local role postgres;
+select set_config('request.jwt.claims','{"sub":"61000000-0000-4000-a000-000000000001","role":"authenticated"}',true);
 select extensions.throws_ok(
   $$update public.schedule_versions set label = 'Changed by owner' where schedule_id = '66000000-0000-4000-a000-000000000001'$$,
   'P0001',

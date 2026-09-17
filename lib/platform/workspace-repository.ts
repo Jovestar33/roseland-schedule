@@ -20,6 +20,6 @@ export function createWorkspaceRepository(client:SupabaseClient){
       if(after)q=q.gt('id',parseInvitationId(after));const r=await q;fail(r.error,r.status);
       return (r.data??[]).map(row=>{if(typeof row.display_name!=='string'||!['draft','published','archived'].includes(row.status)||!Number.isSafeInteger(row.document_version)||row.document_version<1||!Number.isFinite(Date.parse(row.updated_at)))throw new ScheduleRepositoryError('failed');return {...row,id:parseInvitationId(row.id)} as ScheduleSummary;});
     },
-    async canEdit(actor:string,production:string){const bearer=await token(actor);const r=await client.rpc('can_edit_production',{target_production_id:parseInvitationId(production)}).setHeader('Authorization',`Bearer ${bearer}`);fail(r.error,r.status);if(typeof r.data!=='boolean')throw new ScheduleRepositoryError('failed');return r.data;},
+    async canEdit(actor:string,production:string,schedule?:string,action='edit'){const bearer=await token(actor);const r=await client.rpc('schedule_capability',{action,target_production_id:parseInvitationId(production),target_schedule_id:schedule?parseInvitationId(schedule):null}).setHeader('Authorization',`Bearer ${bearer}`);fail(r.error,r.status);if(typeof r.data!=='boolean')throw new ScheduleRepositoryError('failed');return r.data;},
   };
 }

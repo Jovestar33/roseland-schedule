@@ -10,7 +10,7 @@ const PAGE=25;
 export function createLifecycleRepository(client:SupabaseClient){
   async function bearer(actor:string){const r=await client.auth.getSession();if(r.error||r.data.session?.user.id!==actor)throw new ScheduleRepositoryError('unauthenticated');return r.data.session.access_token;}
   function fail(error:unknown,status:number){if(error)throw new ScheduleRepositoryError(status===401?'unauthenticated':status===403?'unavailable':'failed');}
-  async function adapter(actor:string){const token=await bearer(actor);return createScheduleRepository({rpc:(name,args)=>client.rpc(name,args).setHeader('Authorization',`Bearer ${token}`)});}
+  async function adapter(actor:string,source?:{id:string;version:number;policy:string}){const token=await bearer(actor);return createScheduleRepository({rpc:(name,args)=>client.rpc(source&&name==='create_schedule'?'copy_schedule':name,source&&name==='create_schedule'?{...args,source_schedule_id:source.id,source_version:source.version,source_policy:source.policy}:args).setHeader('Authorization',`Bearer ${token}`)});}
   async function read(actor:string,organization:string,id:string):Promise<StoredSchedule>{
     const repo=await adapter(actor);let record:StoredSchedule;
     try{record=await repo.read(id);}catch(error){if(!(error instanceof ScheduleRepositoryError)||error.kind!=='unavailable')throw error;record=await repo.readDeleted(id);}
@@ -31,7 +31,7 @@ export function createLifecycleRepository(client:SupabaseClient){
   async function days(actor:string,organization:string,after?:string){
     const token=await bearer(actor);let q=client.from('production_days').select('id,production_id,calendar_date,day_number,position,phase_id,productions!inner(name,deleted_at),phases(deleted_at)').eq('organization_id',parseInvitationId(organization)).is('deleted_at',null).is('productions.deleted_at',null).order('id').limit(PAGE+1).setHeader('Authorization',`Bearer ${token}`);if(after)q=q.gt('id',parseInvitationId(after));const r=await q;fail(r.error,r.status);
     const rows=r.data??[],visible=rows.slice(0,PAGE);const permissions=new Map<string,boolean>();
-    await Promise.all([...new Set(visible.map(row=>String(row.production_id)))].map(async production=>{const p=await client.rpc('can_edit_production',{target_production_id:parseInvitationId(production)}).setHeader('Authorization',`Bearer ${token}`);fail(p.error,p.status);if(typeof p.data!=='boolean')throw new ScheduleRepositoryError('failed');permissions.set(production,p.data);}));
+    await Promise.all([...new Set(visible.map(row=>String(row.production_id)))].map(async production=>{const p=await client.rpc('schedule_capability',{action:'create',target_production_id:parseInvitationId(production)}).setHeader('Authorization',`Bearer ${token}`);fail(p.error,p.status);if(typeof p.data!=='boolean')throw new ScheduleRepositoryError('failed');permissions.set(production,p.data);}));
     const items=visible.flatMap(row=>{const p=row.productions as unknown as {name:unknown},phase=row.phases as unknown as {deleted_at:string|null}|null;if(row.phase_id&&(!phase||phase.deleted_at))return [];if(typeof p.name!=='string')throw new ScheduleRepositoryError('failed');return [{id:parseInvitationId(row.id),productionId:parseInvitationId(row.production_id),label:`${p.name} · Day ${row.day_number??Number(row.position)+1}${row.calendar_date?' · '+row.calendar_date:''}`,editable:permissions.get(row.production_id)===true}];});return {items,more:rows.length>PAGE,cursor:visible.at(-1)?.id as string|undefined};
   }
   return {read,history,historical,days,
@@ -41,9 +41,9 @@ export function createLifecycleRepository(client:SupabaseClient){
       q=filter==='deleted'?q.not('deleted_at','is',null):q.is('deleted_at',null);if(filter==='archived')q=q.eq('status','archived');else if(filter==='active')q=q.neq('status','archived');if(after)q=q.gt('id',parseInvitationId(after));const r=await q;fail(r.error,r.status);
       const items=(r.data??[]).map(row=>{if(typeof row.display_name!=='string'||typeof row.slug!=='string'||!Number.isSafeInteger(row.document_version)||row.document_version<1||!['draft','published','archived'].includes(row.status))throw new ScheduleRepositoryError('failed');return {...row,id:parseInvitationId(row.id),production_id:parseInvitationId(row.production_id)} as LifecycleSummary;});return {items:items.slice(0,PAGE),more:items.length>PAGE};
     },
-    async canEdit(actor:string,production:string){const token=await bearer(actor);const r=await client.rpc('can_edit_production',{target_production_id:parseInvitationId(production)}).setHeader('Authorization',`Bearer ${token}`);fail(r.error,r.status);if(typeof r.data!=='boolean')throw new ScheduleRepositoryError('failed');return r.data;},
-    async send(attempt:LifecycleAttempt){
-      const repo=await adapter(attempt.actor);
+    async canEdit(actor:string,production:string,schedule?:string,action='edit'){const token=await bearer(actor);const r=await client.rpc('schedule_capability',{action,target_production_id:parseInvitationId(production),target_schedule_id:schedule?parseInvitationId(schedule):null}).setHeader('Authorization',`Bearer ${token}`);fail(r.error,r.status);if(typeof r.data!=='boolean')throw new ScheduleRepositoryError('failed');return r.data;},
+    async send(attempt:LifecycleAttempt,source?:{id:string;version:number;policy:string}){
+      const repo=await adapter(attempt.actor,source);
       if(attempt.kind==='create'){
         const token=await bearer(attempt.actor),day=await client.from('production_days').select('id').eq('id',attempt.dayId).eq('organization_id',attempt.organization).is('deleted_at',null).maybeSingle().setHeader('Authorization',`Bearer ${token}`);fail(day.error,day.status);if(!day.data)throw new ScheduleRepositoryError('unavailable');
       }
@@ -51,8 +51,13 @@ export function createLifecycleRepository(client:SupabaseClient){
       const record=attempt.kind==='create'?await repo.create(attempt.id,attempt.dayId,attempt.name,attempt.slug,attempt.document,1):await repo.mutate(attempt.id,attempt.expectedVersion,attempt.kind,{...attempt.payload});
       if(!acknowledgementMatches(attempt,record))throw new ScheduleRepositoryError('failed');return record;
     },
-    async probe(attempt:LifecycleAttempt):Promise<LifecycleResult>{
+    async probe(attempt:LifecycleAttempt,source?:{id:string;version:number;policy:string}):Promise<LifecycleResult>{
       let current:StoredSchedule;try{current=await read(attempt.actor,attempt.organization,attempt.id);}catch(error){if(error instanceof ScheduleRepositoryError&&error.kind==='unavailable')return {state:'unavailable',current:null,matchedVersion:null};throw error;}
+      if(source&&attempt.kind==='create'){
+        const token=await bearer(attempt.actor),receipt=await client.rpc('check_schedule_copy',{target_schedule_id:attempt.id,source_schedule_id:source.id,source_version:source.version,source_policy:source.policy,target_day_id:attempt.dayId,next_display_name:attempt.name,next_slug:attempt.slug,next_document:attempt.document}).setHeader('Authorization',`Bearer ${token}`);
+        fail(receipt.error,receipt.status);if(receipt.data===true)return {state:'matched',current,matchedVersion:1};
+        return {state:'different',current,matchedVersion:null};
+      }
       const target=attempt.expectedVersion+1,version=await historical(attempt.actor,attempt.organization,attempt.id,target);
       if(version&&historyMatches(attempt,version)){if(current.document_version<target)current=await read(attempt.actor,attempt.organization,attempt.id);return {state:'matched',current,matchedVersion:target};}
       return {state:current.document_version===attempt.expectedVersion?'retryable':'different',current,matchedVersion:null};

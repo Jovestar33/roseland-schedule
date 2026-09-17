@@ -7,7 +7,7 @@ import { ModalVisibilityContext } from '@/components/modals/Modal';
 import ContactSheetModal from '@/components/modals/ContactSheetModal';
 import CallSheetModal from '@/components/modals/CallSheetModal';
 
-export default function ShareDropdown({ readOnly = false, onModalChange }: { readOnly?: boolean; onModalChange?: (open: boolean) => void } = {}) {
+export default function ShareDropdown({ readOnly = false, onModalChange, authorizeOutput }: { readOnly?: boolean; onModalChange?: (open: boolean) => void; authorizeOutput?:()=>Promise<boolean> } = {}) {
   const local = useLocalEditor(), visible = useContext(ModalVisibilityContext);
   const scheduleName    = useScheduleStore((s) => s.scheduleName);
   const getScheduleData = useScheduleStore((s) => s.getScheduleData);
@@ -45,23 +45,27 @@ export default function ShareDropdown({ readOnly = false, onModalChange }: { rea
 
   function close() { setOpen(false); }
 
-  function handlePrint() {
+  async function handlePrint() {
+    if (authorizeOutput && !await authorizeOutput()) return;
     close();
     if (local) void printDocument(scheduleName ?? 'Schedule', 'schedule', true);
     else void printSchedule(scheduleName ?? 'Schedule');
   }
 
-  function handleContactSheet() {
+  async function handleContactSheet() {
+    if (authorizeOutput && !await authorizeOutput()) return;
     close();
     setContactSheetOpen(true);
   }
 
-  function handleCallSheet() {
+  async function handleCallSheet() {
+    if (authorizeOutput && !await authorizeOutput()) return;
     close();
     setCallSheetOpen(true);
   }
 
-  function handleExportJson() {
+  async function handleExportJson() {
+    if (authorizeOutput && !await authorizeOutput()) return;
     close();
     const data  = getScheduleData();
     const name  = scheduleName ?? 'Schedule';
@@ -101,10 +105,12 @@ export default function ShareDropdown({ readOnly = false, onModalChange }: { rea
       )}
     </div>
     <ContactSheetModal
+      authorizeOutput={authorizeOutput}
       open={contactSheetOpen}
       onClose={() => setContactSheetOpen(false)}
     />
     <CallSheetModal
+      authorizeOutput={authorizeOutput}
       open={callSheetOpen}
       readOnly={readOnly}
       onClose={() => setCallSheetOpen(false)}

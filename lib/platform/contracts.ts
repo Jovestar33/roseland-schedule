@@ -27,7 +27,7 @@ export type CreateInvitationInput = {
   email: string;
   organizationRole: 'owner' | 'admin' | 'member';
   productionId: string | null;
-  productionRole: 'editor' | 'viewer' | null;
+  productionRole: 'organizer' | 'editor' | 'viewer' | null;
   expiresInDays: number;
 };
 
@@ -143,7 +143,7 @@ export function parseCreateInvitationInput(value: unknown): CreateInvitationInpu
     : String(input.productionRole);
 
   if ((productionId === null) !== (productionRole === null)) throw new PlatformInputError();
-  if (productionRole !== null && !['editor', 'viewer'].includes(productionRole)) {
+  if (productionRole !== null && !['organizer','editor', 'viewer'].includes(productionRole)) {
     throw new PlatformInputError();
   }
 

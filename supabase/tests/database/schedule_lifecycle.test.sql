@@ -115,7 +115,11 @@ select extensions.throws_ok($q$select public.mutate_schedule('66000000-0000-4000
 select extensions.throws_ok($q$select public.mutate_schedule('66000000-0000-4000-a000-000000000001',1,'restore','{}')$q$,'PT404',null,'editor cannot undelete');
 select extensions.throws_ok($q$select public.create_schedule('66000000-0000-4000-a000-000000000003','65000000-0000-4000-a000-000000000002','Created','created','{"meta":{"town":"Origin"},"rows":[]}',1)$q$,'PT404',null,'cross tenant day substitution rejected');
 select extensions.throws_ok($q$select public.create_schedule('66000000-0000-4000-a000-000000000003','65000000-0000-4000-a000-000000000001','Created','created','{"meta":{},"rows":[{"dur":"00:99"}]}',1)$q$,'PT400',null,'create validates nested document');
-select extensions.lives_ok($q$select public.create_schedule('66000000-0000-4000-a000-000000000003','65000000-0000-4000-a000-000000000001','Created','created','{"meta":{"town":"Origin"},"rows":[]}',1)$q$,'editor creates version one with verified parent');
+-- B03: management scenarios use an explicitly assigned Organizer after Editor denial checks.
+set local role postgres;
+update public.production_memberships set role='organizer' where production_id='63000000-0000-4000-a000-000000000001' and user_id='61000000-0000-4000-a000-000000000002';
+set local role authenticated;
+select extensions.lives_ok($q$select public.create_schedule('66000000-0000-4000-a000-000000000003','65000000-0000-4000-a000-000000000001','Created','created','{"meta":{"town":"Origin"},"rows":[]}',1)$q$,'Organizer creates version one with verified parent');
 select extensions.throws_ok($q$select public.create_schedule('66000000-0000-4000-a000-000000000003','65000000-0000-4000-a000-000000000001','Created','created','{"meta":{"town":"Origin"},"rows":[]}',1)$q$,'PT409',null,'retry is create-only and cannot duplicate ID or slug');
 select extensions.is((public.read_schedule('66000000-0000-4000-a000-000000000003')->>'document_version')::bigint,1::bigint,'create starts at version one');
 select extensions.throws_ok($q$select public.mutate_schedule('66000000-0000-4000-a000-000000000003',null,'archive','{}')$q$,'PT400',null,'unsafe version null');
@@ -129,13 +133,13 @@ select extensions.throws_ok($q$select public.mutate_schedule('66000000-0000-4000
 select extensions.throws_ok($q$select public.mutate_schedule('66000000-0000-4000-a000-000000000003',1,'restore_version','{"version":1.5}')$q$,'PT400',null,'fractional history version rejected');
 select extensions.lives_ok($q$select public.mutate_schedule('66000000-0000-4000-a000-000000000003',1,'rename','{"display_name":"Renamed","slug":"renamed"}')$q$,'rename keeps stable ID');
 select extensions.throws_ok($q$select public.mutate_schedule('66000000-0000-4000-a000-000000000003',1,'archive','{}')$q$,'PT409',null,'stale lifecycle conflicts');
-select extensions.lives_ok($q$select public.mutate_schedule('66000000-0000-4000-a000-000000000003',2,'archive','{}')$q$,'editor archives');
+select extensions.lives_ok($q$select public.mutate_schedule('66000000-0000-4000-a000-000000000003',2,'archive','{}')$q$,'Organizer archives');
 select extensions.is(public.read_schedule('66000000-0000-4000-a000-000000000003')->>'archived_from_status','draft','archive saves previous status');
 select extensions.throws_ok($q$select public.mutate_schedule('66000000-0000-4000-a000-000000000003',3,'archive','{}')$q$,'PT409',null,'duplicate archive transition rejected');
-select extensions.lives_ok($q$select public.mutate_schedule('66000000-0000-4000-a000-000000000003',3,'unarchive','{}')$q$,'editor restores prior status');
+select extensions.lives_ok($q$select public.mutate_schedule('66000000-0000-4000-a000-000000000003',3,'unarchive','{}')$q$,'Organizer restores prior status');
 select extensions.is(public.read_schedule('66000000-0000-4000-a000-000000000003')->>'status','draft','unarchive restores exact previous status');
 select extensions.lives_ok($q$select public.update_schedule_document('66000000-0000-4000-a000-000000000003',4,'{"meta":{"town":"Changed"},"rows":[]}',1)$q$,'edit before restoring history');
-select extensions.lives_ok($q$select public.mutate_schedule('66000000-0000-4000-a000-000000000003',5,'restore_version','{"version":1}')$q$,'editor restores document as new version');
+select extensions.lives_ok($q$select public.mutate_schedule('66000000-0000-4000-a000-000000000003',5,'restore_version','{"version":1}')$q$,'Organizer restores document as new version');
 select extensions.is(public.read_schedule('66000000-0000-4000-a000-000000000003')->'document'->'meta'->>'town','Origin','old document restored');
 select extensions.is(public.read_schedule('66000000-0000-4000-a000-000000000003')->>'display_name','Renamed','version restore preserves current name');
 select extensions.is((select count(*) from public.schedule_versions where schedule_id='66000000-0000-4000-a000-000000000003'),6::bigint,'history remains append only');
@@ -146,6 +150,9 @@ select extensions.lives_ok($q$select public.mutate_schedule('66000000-0000-4000-
 select extensions.throws_ok($q$select public.read_schedule('66000000-0000-4000-a000-000000000003')$q$,'PT404',null,'deleted schedule hidden from normal read');
 select extensions.is((public.read_deleted_schedule('66000000-0000-4000-a000-000000000003')->>'document_version')::bigint,7::bigint,'admin can obtain deleted version for safe recovery');
 set local role authenticated; select set_config('request.jwt.claims','{"sub":"61000000-0000-4000-a000-000000000002","role":"authenticated"}',true);
+set local role postgres;
+update public.production_memberships set role='editor' where production_id='63000000-0000-4000-a000-000000000001' and user_id='61000000-0000-4000-a000-000000000002';
+set local role authenticated;
 select extensions.throws_ok($q$select public.read_deleted_schedule('66000000-0000-4000-a000-000000000003')$q$,'PT404',null,'editor cannot inspect deleted schedule');
 select extensions.throws_ok($q$select public.mutate_schedule('66000000-0000-4000-a000-000000000003',7,'restore','{}')$q$,'PT404',null,'editor cannot recover deleted schedule');
 set local role authenticated; select set_config('request.jwt.claims','{"sub":"61000000-0000-4000-a000-000000000001","role":"authenticated"}',true);

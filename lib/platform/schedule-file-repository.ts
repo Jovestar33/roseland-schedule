@@ -16,10 +16,11 @@ export function createScheduleFileRepository(client:SupabaseClient) {
   }
   async function destinations(actor:string,organization:string){const result:LifecycleDay[]=[];let after:string|undefined;for(;;){const page=await lifecycle.days(actor,organization,after);result.push(...page.items.filter(d=>d.editable));if(!page.more)return result;if(!page.cursor||page.cursor===after)throw new ScheduleRepositoryError('failed');after=page.cursor;}}
   return {lifecycle,inventory,destinations,
+    async copyPolicy(actor:string,id:string){const token=await bearer(actor);const r=await client.rpc('schedule_copy_policy',{target_schedule_id:parseInvitationId(id)}).setHeader('Authorization',`Bearer ${token}`);if(r.error||typeof r.data!=='string'||!/^[a-f0-9]{64}$/.test(r.data))throw new ScheduleRepositoryError(r.status===401?'unauthenticated':'unavailable');return r.data;},
     async exportAll(actor:string){
       const before=await inventory(actor),records:StoredSchedule[]=[];
-      for(const row of before){const r=await lifecycle.read(actor,row.organization_id,row.id);if(r.document_version!==row.document_version)throw new Error('A schedule changed during export. Retry; no partial file was produced.');records.push(r);}
-      unchangedInventory(before,await inventory(actor));return encodeScheduleFile(records);
+      for(const row of before){const token=await bearer(actor);const permission=await client.rpc('schedule_capability',{action:'export',target_production_id:row.production_id,target_schedule_id:row.id}).setHeader('Authorization',`Bearer ${token}`);if(permission.error||permission.data!==true)throw new Error('A readable schedule cannot be exported under current permissions. No partial file was produced.');const r=await lifecycle.read(actor,row.organization_id,row.id);if(r.document_version!==row.document_version)throw new Error('A schedule changed during export. Retry; no partial file was produced.');records.push(r);}
+      unchangedInventory(before,await inventory(actor));for(const row of before){const token=await bearer(actor);const permission=await client.rpc('schedule_capability',{action:'export',target_production_id:row.production_id,target_schedule_id:row.id}).setHeader('Authorization',`Bearer ${token}`);if(permission.error||permission.data!==true)throw new Error('Export permissions changed. No file was produced.');}return encodeScheduleFile(records);
     },
     async preflight(actor:string,organization:string,dayId:string,entries:CreateSelection[]){
       const day=(await destinations(actor,organization)).find(d=>d.id===dayId);if(!day)throw new Error('Choose an existing day you can edit.');

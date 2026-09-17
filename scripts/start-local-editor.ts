@@ -24,6 +24,7 @@ const port = portIndex >= 0 ? args[portIndex+1] : '3287';
 if (!port || !/^[1-9][0-9]{3,4}$/.test(port) || Number(port)>65535) throw new Error('Invalid local port');
 const config = readLocalEditorConfig(env,`127.0.0.1:${port}`);
 if (!config || new URL(config.supabaseUrl).port !== apiPort) throw new Error('Local API configuration mismatch');
+if(args.includes('--workspace'))Object.assign(env,{ROSELAND_LOCAL_WORKSPACE:'supabase',SUPABASE_PLATFORM_WORKFLOWS_ENABLED:'true',SUPABASE_URL:config.supabaseUrl,SUPABASE_PUBLISHABLE_KEY:config.anonymousKey,SUPABASE_SERVICE_ROLE_KEY:status.SERVICE_ROLE_KEY});
 const child = spawn(process.execPath,[resolve('node_modules/next/dist/bin/next'),args.includes('--dev')?'dev':'start','--hostname','127.0.0.1','--port',port],{env,stdio:'inherit'});
 process.on('SIGINT',()=>child.kill('SIGINT'));
 process.on('SIGTERM',()=>child.kill('SIGTERM'));

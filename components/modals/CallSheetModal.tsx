@@ -345,9 +345,9 @@ function PrintDoc({
 
 // ---- Modal ----
 
-interface Props { open: boolean; onClose: () => void; readOnly?: boolean; }
+interface Props { authorizeOutput?:()=>Promise<boolean>; open: boolean; onClose: () => void; readOnly?: boolean; }
 
-export default function CallSheetModal({ open, onClose, readOnly = false }: Props) {
+export default function CallSheetModal({ open, onClose, readOnly = false, authorizeOutput }: Props) {
   const rows         = useScheduleStore((s) => s.rows);
   const meta         = useScheduleStore((s) => s.meta);
   const scheduleName = useScheduleStore((s) => s.scheduleName) ?? '';
@@ -402,7 +402,7 @@ export default function CallSheetModal({ open, onClose, readOnly = false }: Prop
             <button
               type="button"
               className="btn btn-light btn-sm"
-              onClick={() => void printDocument(scheduleName, 'callsheet', local)}
+              onClick={async()=>{if(!authorizeOutput||await authorizeOutput())void printDocument(scheduleName,'callsheet',local);}}
             >
               🖨 Print
             </button>

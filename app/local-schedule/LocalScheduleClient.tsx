@@ -31,6 +31,7 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
   const workspace = useLocalWorkspace();
   const managed = !!workspace;
   const active = workspace?.active ?? true;
+  const activeRef=useRef(active);activeRef.current=active;
   const [client] = useState(() => workspace?.client ?? createClient(config.supabaseUrl, config.anonymousKey, {
     global: { fetch: (input, init) => {
       const url = new URL(typeof input === 'string' ? input : input instanceof URL ? input.href : input.url);
@@ -42,7 +43,7 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
   const [repository] = useState(() => createSessionScheduleRepository(client));
   const [directory] = useState(() => createWorkspaceRepository(client));
   const accountRef = useRef<string | null>(null);
-  const [permission, setPermission] = useState<{ recordId: string; token: string; allowed: boolean } | null>(null);
+  const [permission, setPermission] = useState<{ recordId: string; token: string; allowed: boolean; copy: boolean; output: boolean; read: boolean } | null>(null);
   const scopeRef = useRef<string | null>(null), listTicket = useRef(0);
   scopeRef.current = workspace?.organization?.id ?? null;
   const [itemsOrganization, setItemsOrganization] = useState<string | null>(null);
@@ -84,7 +85,7 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
   useWorkspacePanelState(hasLocalDraft, busy || fileState.busy);
   const ready = !!session && !authNeeded && !workspace?.authNeeded;
   const recordInScope = !workspace || (!!workspace.organization && controller.record?.organization_id === workspace.organization.id);
-  const canEdit = !workspace || (permission?.recordId === controller.record?.id && permission?.token === workspace.session?.access_token && permission?.allowed === true);
+  const canEdit = (permission?.recordId === controller.record?.id && permission?.token === session?.access_token && permission?.allowed === true);
 
   // A fresh provider identity invalidates pending selections when document/account scope changes.
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -151,12 +152,29 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
     setMore(page.length === 50);
     setMessage(page.length || append ? 'Schedules loaded.' : 'No schedules are available to this account.');
   }
+  useEffect(()=>{
+    if(!active||!ready)return;
+    const refresh=()=>{void refreshPermission().catch(()=>setPermission(null));};
+    const timer=setInterval(refresh,20000);window.addEventListener('focus',refresh);
+    return()=>{clearInterval(timer);window.removeEventListener('focus',refresh);};
+    // Scope and actor guards in refreshPermission reject stale results.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[active,ready,selected,session?.access_token,workspace?.organization?.id]);
   async function refreshPermission() {
     const record = controller.record, actor = accountRef.current, token = sessionRef.current?.access_token;
     const requestEpoch = epoch.current, organization = scopeRef.current;
-    if (!workspace || !record || !actor || !token || record.organization_id !== organization) return;
-    const allowed = await directory.canEdit(actor, record.production_id);
-    if (requestEpoch === epoch.current && controller.record?.id === record.id && sessionRef.current?.access_token === token && scopeRef.current === organization) setPermission({ recordId: record.id, token, allowed });
+    if (!record || !actor || !token || (workspace && record.organization_id !== organization)) return;
+    const [allowed,copy,output,read] = await Promise.all(['edit','create','export','read'].map(action=>directory.canEdit(actor, record.production_id, record.id,action)));
+    if (requestEpoch === epoch.current && controller.record?.id === record.id && sessionRef.current?.access_token === token && scopeRef.current === organization) setPermission({ recordId: record.id, token, allowed,copy,output,read });
+  }
+  async function authorizeOutput(){
+    const record=controller.record,actor=accountRef.current,token=sessionRef.current?.access_token;
+    if(!record||!actor||!token||!active||!ready)return false;
+    try{const allowed=await directory.canEdit(actor,record.production_id,record.id,'export');
+      if(!activeRef.current||controller.record?.id!==record.id||accountRef.current!==actor||sessionRef.current?.access_token!==token||(workspace&&scopeRef.current!==record.organization_id))return false;
+      if(!allowed)setMessage('Export and print are unavailable under current permissions. Your draft is retained.');
+      return allowed;
+    }catch{setMessage('Output permission could not be confirmed. Your draft is retained.');return false;}
   }
   async function open(id: string) {
     if (await controller.open(id)) {
@@ -231,8 +249,8 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
           <button className="btn btn-light" disabled={busy || !ready} onClick={() => void run(() => list(false))}>Refresh list</button>
         </div>
         {workspace && <LocalScheduleFiles client={client} actor={session?.user.id ?? accountRef.current} organization={workspace.organization?.id ?? null}
-          enabled={active && ready && !confirmation} copyEnabled={!busy && !!selected && recordInScope && canEdit && !documentDialogOpen && contact===null && notes===null && status===null}
-          getDraft={()=>state().getScheduleData()} name={state().scheduleName ?? 'Schedule'} onState={reportFiles} requireAuth={workspace.requireAuth}/>}
+          enabled={active && ready && !confirmation} copyEnabled={!busy && !!selected && recordInScope && canEdit && permission?.copy===true && !documentDialogOpen && contact===null && notes===null && status===null}
+          getSource={()=>controller.record} getDraft={()=>state().getScheduleData()} name={state().scheduleName ?? 'Schedule'} onState={reportFiles} requireAuth={workspace.requireAuth}/>}
         <nav aria-label="Local schedules" className={styles.list}>
           {workspace && !workspace.organization && <p>Choose an authorized organization above.</p>}
           {selected && !recordInScope && <p>A schedule draft is retained in another organization. Return to that organization to continue, or explicitly discard it when opening another schedule.</p>}
@@ -242,7 +260,7 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
           </button>)}
           {more && (!workspace || itemsOrganization === workspace.organization?.id) && <button className="btn btn-light" disabled={busy} onClick={() => void run(() => list(true))}>Load more schedules</button>}
         </nav>
-        {selected && <section className="panel" aria-label="Schedule editor" style={{display:recordInScope?undefined:'none'}}>
+        {selected && <section className="panel" aria-label="Schedule editor" style={{display:recordInScope&&permission?.read===true?undefined:'none'}}>
           <div className={styles.toolbar}>
             <strong>{state().scheduleName}</strong><span>Version {version} · {dirty ? 'Unsaved changes' : 'Saved'}</span>
             <button className="btn btn-primary" disabled={busy || !dirty || !ready || !canEdit || !!controller.attempt} onClick={() => void run(async () => {
@@ -252,7 +270,7 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
             {canEdit && ready && <UndoRedoButtons />}
           </div>
           <ModalVisibilityContext.Provider value={active && recordInScope && ready && !confirmation}>
-            <div className={styles.toolbar}><ShareDropdown key={documentSession} readOnly={!canEdit || !ready || !active || !recordInScope || !!confirmation} onModalChange={setDocumentDialogOpen} /></div>
+            <ModalVisibilityContext.Provider value={active&&recordInScope&&ready&&permission?.read===true&&!confirmation}><div className={styles.toolbar}><ShareDropdown authorizeOutput={authorizeOutput} key={documentSession} readOnly={!canEdit || (workspace && permission?.output!==true) || !ready || !active || !recordInScope || !!confirmation} onModalChange={setDocumentDialogOpen} /></div></ModalVisibilityContext.Provider>
           </ModalVisibilityContext.Provider>
           <LocalSchedulePrint visible={active && recordInScope && ready && !confirmation} />
           {(controller.attempt || controller.result) && <section className={styles.recovery} aria-label="Save recovery">

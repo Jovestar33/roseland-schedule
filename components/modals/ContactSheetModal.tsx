@@ -60,11 +60,12 @@ function ContactCards({ contacts }: { contacts: DocumentContact[] }) {
 }
 
 interface Props {
+  authorizeOutput?:()=>Promise<boolean>;
   open: boolean;
   onClose: () => void;
 }
 
-export default function ContactSheetModal({ open, onClose }: Props) {
+export default function ContactSheetModal({ open, onClose, authorizeOutput }: Props) {
   const rows         = useScheduleStore((s) => s.rows);
   const scheduleName = useScheduleStore((s) => s.scheduleName) ?? '';
   const meta         = useScheduleStore((s) => s.meta);
@@ -92,14 +93,14 @@ export default function ContactSheetModal({ open, onClose }: Props) {
             <button
               type="button"
               className="btn btn-light btn-sm"
-              onClick={() => void printDocument(scheduleName, 'contacts', local)}
+              onClick={async()=>{if(!authorizeOutput||await authorizeOutput())void printDocument(scheduleName,'contacts',local);}}
             >
               🖨 Print
             </button>
             <button
               type="button"
               className="btn btn-light btn-sm"
-              onClick={() => downloadCsv(contacts, scheduleName)}
+              onClick={async()=>{if(!authorizeOutput||await authorizeOutput())downloadCsv(contacts,scheduleName);}}
             >
               ⬇ Download CSV
             </button>

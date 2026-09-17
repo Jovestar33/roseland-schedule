@@ -1,0 +1,11 @@
+{
+  "copy_receipt": 1,
+  "copy_version": 1,
+  "copy_policies": 3,
+  "source_version": 6,
+  "source_policies": 3,
+  "source_unchanged": true,
+  "editor_capture_differs_at": [
+    "/savedAt"
+  ]
+}

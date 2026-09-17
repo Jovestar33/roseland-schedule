@@ -46,7 +46,7 @@ test('organization directory pins actor, active membership, undeleted parents an
 test('schedule listing fixes organization and permission check fixes production',async()=>{
   const h=harness();assert.deepEqual(await h.repo.schedules(actor,org,prod),[]);
   for(const step of [['eq','organization_id',org],['is','deleted_at',null],['gt','id',prod],['limit',50],['setHeader','Authorization','Bearer fictional-captured-token']])assert.ok(h.calls[0].steps.some(value=>JSON.stringify(value)===JSON.stringify(step)));
-  const p=harness(false);assert.equal(await p.repo.canEdit(actor,prod),false);assert.deepEqual(p.calls[0].steps[0],['args',{target_production_id:prod}]);
+  const p=harness(false);assert.equal(await p.repo.canEdit(actor,prod),false);assert.deepEqual(p.calls[0].steps[0],['args',{action:'edit',target_production_id:prod,target_schedule_id:null}]);
 });
 test('a mismatched account sends no directory or permission queries',async()=>{
   const h=harness();h.setActor(org);

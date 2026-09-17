@@ -64,26 +64,22 @@ select set_config('request.jwt.claims', '{"sub":"10000000-0000-4000-a000-0000000
 select extensions.results_eq('select slug from public.productions order by slug', $$values ('production-a'::text)$$, 'editor A sees only assigned production A');
 select extensions.ok(public.can_edit_production('30000000-0000-4000-a000-000000000001'), 'editor A can edit production A');
 select extensions.is(public.can_access_production('30000000-0000-4000-a000-000000000002'), false, 'editor A cannot access production B');
-select extensions.throws_ok(
-  $$update public.productions set organization_id = '20000000-0000-4000-a000-000000000002' where id = '30000000-0000-4000-a000-000000000001'$$,
-  'P0001',
-  'production identity fields cannot be changed',
+select extensions.is_empty(
+  $$update public.productions set organization_id = '20000000-0000-4000-a000-000000000002' where id = '30000000-0000-4000-a000-000000000001' returning id$$,
   'editor cannot move a production across organizations'
 );
-select extensions.throws_ok(
-  $$update public.productions set deleted_at = now() where id = '30000000-0000-4000-a000-000000000001'$$,
-  'P0001',
-  'only an organization owner or admin may change production deletion state',
+select extensions.is_empty(
+  $$update public.productions set deleted_at = now() where id = '30000000-0000-4000-a000-000000000001' returning id$$,
   'editor cannot soft-delete a production'
 );
-select extensions.lives_ok(
-  $$update public.productions set name = 'Production A edited' where id = '30000000-0000-4000-a000-000000000001'$$,
-  'editor may update ordinary production fields'
+select extensions.is_empty(
+  $$update public.productions set name = 'Production A edited' where id = '30000000-0000-4000-a000-000000000001' returning id$$,
+  'editor cannot rename production metadata'
 );
 select extensions.results_eq(
   $$select version from public.productions where id = '30000000-0000-4000-a000-000000000001'$$,
-  $$values (2::bigint)$$,
-  'successful production update increments its version'
+  $$values (1::bigint)$$,
+  'denied production update leaves version unchanged'
 );
 
 -- Viewer A: assigned read access but no edit access.

@@ -1,0 +1,7 @@
+{
+  "supabase/migrations/20260917040000_related_permission_paths.sql": "9d06786304532b831be7f7bd48bb52af066e7809429a2bb1eb99370587017e8a",
+  "supabase/migrations/20260917020000_schedule_permissions.sql": "9a46f110f28348bc0fa3d2f34ad00a30abcbd2fabdb09c6c8ffed154a8d6163e",
+  "supabase/migrations/20260917030000_schedule_copy_permissions.sql": "9e3a09b6964ac8159ea62e2a3583bc0c3929569b3172a71a2d436fbf34dc4d60",
+  "supabase/migrations/20260917010000_organizer_role.sql": "170fda9144094799fb74948cf2cd9737970276fb6a714274ce7637187f50ae6a",
+  "supabase/migrations/20260917050000_schedule_copy_receipts.sql": "06c92424401e45dbd5eebe28cdb63d7de0e7aed2ac7a3634d94b3043f8082c18"
+}
