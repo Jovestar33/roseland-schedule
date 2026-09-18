@@ -1,0 +1,4 @@
+Connecting to local database...
+Linting schema: public
+Linting schema: private
+{"results":[{"function":"public.mutate_schedule_snapshot","issues":[{"level":"warning extra","message":"never read variable \"restored\"","sqlState":"00000"}]}],"message":"db lint"}

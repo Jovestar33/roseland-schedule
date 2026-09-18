@@ -1,0 +1,45 @@
+PASS Membership change requires recent genuine MFA
+PASS Incorrect authenticator code leaves enrollment incomplete
+PASS Incorrect authenticator code leaves enrollment incomplete
+PASS Incorrect authenticator code leaves enrollment incomplete
+PASS Leadership can list scoped member controls
+PASS Ordinary member cannot list administration directory
+PASS Admin cannot suspend Organization Super Admin
+PASS Self-targeting is excluded
+PASS Invited membership cannot be activated by reinstatement
+PASS Named-member confirmation required
+PASS Admin cannot suspend peer Admin
+PASS Admin cannot reinstate peer Admin
+PASS Wrong-organization target denied
+PASS Member has baseline schedule read
+PASS Admin suspends lower-role membership with role retained
+PASS Existing member session loses subsequent organization access
+PASS Direct schedule RLS denies suspended member
+PASS Unrelated organization remains available
+PASS Suspension invalidates pending invitations
+PASS Invitation cannot reactivate suspended membership
+PASS Exact retry returns original membership receipt
+PASS Changed request payload cannot reuse receipt
+PASS Stale revision requires review
+PASS Exact retry creates one notification intent
+PASS Exact retry creates one membership audit
+PASS Admin reinstates lower role without granting privileges
+PASS Reinstatement restores ordinary allowed read
+PASS Retained schedule edit restriction remains effective
+PASS Reinstatement does not recreate expired invitations
+PASS Production restrictions, schedule/document, restrictions and unrelated membership are byte-identical
+PASS Already-active explicit request is unchanged with no notice
+PASS Super Admin can suspend Admin and retain role
+PASS Suspended actor cannot recover an old receipt
+PASS Super Admin can reinstate Admin with retained role
+PASS Restricted Admin cannot suspend
+PASS Admin cannot reinstate Super Admin
+PASS Reinstatement preserves independent global ban
+PASS Global ban remains effective after organization reinstatement
+PASS Competing peer suspensions yield one success and one current-authority denial
+PASS At least one active Super Admin survives
+PASS Database guard denies final-holder status='suspended'
+PASS Database guard denies final-holder role='member'
+PASS Database guard denies final-holder deletion
+PASS Peer reinstatement restores prior Super Admin role
+PASS 44 focused B10-A assertions; private browser fixture saved.

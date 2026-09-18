@@ -1,0 +1,13 @@
+✔ membership attempt freezes target, revision and reason for exact retry (0.4555ms)
+✔ actor switch sends no membership mutation (0.255584ms)
+✔ membership retry sends the identical actor-bound versioned request (0.285ms)
+✔ mismatched receipt is unconfirmed, preserving caller request (0.069667ms)
+✔ recent MFA and stale revisions remain distinct from unknown outcomes (0.425708ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 62.191542

@@ -14,6 +14,7 @@ import styles from './workspace.module.css';
 import { accountSessionStorage } from '@/lib/platform/account-session';
 import LocalMfaAccess from '@/components/local/LocalMfaAccess';
 import LocalOrganizationSecurity from '@/components/local/LocalOrganizationSecurity';
+import LocalOrganizationMembers from '@/components/local/LocalOrganizationMembers';
 import LocalAccountAccess from '@/components/local/LocalAccountAccess';
 import LocalSchedulePermissions from '@/components/local/LocalSchedulePermissions';
 import LocalLifecycleClient from './LocalLifecycleClient';
@@ -161,6 +162,7 @@ export default function LocalWorkspaceClient({config}:{config:LocalEditorConfig}
       </>}
     </div>
     {identity.actor&&<div key={accountEpoch} hidden={!accountReady||!mfaReady||scope?.access_state==='mfa_required'}>
+      {visited.filter(o=>o.role!=='member').map(o=><div key={'members:'+o.id} hidden={scope?.id!==o.id}><LocalWorkspaceContext.Provider value={panel('members:'+o.id,o,scope?.id===o.id)}><LocalOrganizationMembers/></LocalWorkspaceContext.Provider></div>)}
       {visited.map(o=><div key={'security:'+o.id} hidden={scope?.id!==o.id}><LocalWorkspaceContext.Provider value={panel('security:'+o.id,o,scope?.id===o.id)}><LocalOrganizationSecurity/></LocalWorkspaceContext.Provider></div>)}
       {visited.map(o=><div key={'presentation:'+o.id} hidden={scope?.id!==o.id}><LocalWorkspaceContext.Provider value={panel('presentation:'+o.id,o,scope?.id===o.id)}><LocalOrganizationSettings/></LocalWorkspaceContext.Provider></div>)}
       {visited.filter(o=>o.role!=='member').map(o=><div key={'permissions:'+o.id} hidden={scope?.id!==o.id}><LocalWorkspaceContext.Provider value={panel('permissions:'+o.id,o,scope?.id===o.id)}><LocalSchedulePermissions/></LocalWorkspaceContext.Provider></div>)}

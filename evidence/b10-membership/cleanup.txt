@@ -1,0 +1,6 @@
+B10-owned app launcher stopped with SIGTERM; child Next server exited.
+Owned browser test tab closed.
+Supabase stop completed for /private/tmp/roseland-b08-20260917.
+Verification: no running containers matching roseland-b08-20260917; no owned launcher process remains.
+Preserved volumes: supabase_db_roseland-b08-20260917, supabase_edge_runtime_roseland-b08-20260917, supabase_storage_roseland-b08-20260917.
+Private fictional fixture files retained; no database reset or --no-backup used.

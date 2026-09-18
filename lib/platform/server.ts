@@ -200,14 +200,16 @@ export async function authenticatePlatformRequest(
   }
 }
 
-export async function callPlatformRpc(
+export async function callPlatformJsonRpc(
   config: PlatformConfig,
   functionName: string,
   payload: Record<string, unknown>,
-): Promise<string> {
+): Promise<unknown> {
   if (
     !config.actor
     || ![
+      'claim_membership_notification',
+      'finish_membership_notification',
       'provision_customer_organization',
       'create_organization_invitation',
       'create_organization_invitation_with_days',
@@ -268,8 +270,13 @@ export async function callPlatformRpc(
   } catch {
     throw new PlatformHttpError(502, 'Workflow unavailable');
   }
-  if (typeof resourceId !== 'string') throw new PlatformHttpError(502, 'Workflow unavailable');
   return resourceId;
+}
+
+export async function callPlatformRpc(config: PlatformConfig, functionName: string, payload: Record<string, unknown>): Promise<string> {
+  const result = await callPlatformJsonRpc(config, functionName, payload);
+  if (typeof result !== 'string') throw new PlatformHttpError(502, 'Workflow unavailable');
+  return result;
 }
 
 export function platformJson(

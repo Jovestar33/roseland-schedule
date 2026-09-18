@@ -1,0 +1,17 @@
+{
+  "date": "2026-09-18T05:27:33.482Z",
+  "origin": "http://127.0.0.1:3435",
+  "checks": [
+    "Genuine fictional Admin password and TOTP sign-in",
+    "Only lower-role member has suspension action",
+    "Submit disabled until reason and named-member confirmation",
+    "Suspension shows suspended and notice delivered",
+    "Reinstatement explains retained restrictions",
+    "Reinstatement shows active and notice delivered",
+    "Older undelivered notices stay visible beneath a newer delivered notice",
+    "Retry of an older suspension notice succeeds without changing active membership"
+  ],
+  "finalActive": true,
+  "finalNoticeDelivered": true,
+  "olderNoticeRetryPassed": true
+}

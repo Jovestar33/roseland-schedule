@@ -1,0 +1,12 @@
+PASS Genuine fixture password sign-in
+PASS Notice delivery requires MFA
+PASS Genuine MFA for local delivery
+PASS Unavailable local mail is recorded as failed
+PASS Failed local notification retries successfully
+PASS Confirmed delivery retry is already delivered
+PASS Reinstatement notice delivered
+PASS Mail sink contains exactly suspension and reinstatement notices for fixture
+PASS Delivery failure/retry does not change membership
+PASS One failed and one successful claim; confirmed retry does not resend
+PASS Browser role cannot call service-only delivery claim
+PASS 11 focused B10-A notification assertions.

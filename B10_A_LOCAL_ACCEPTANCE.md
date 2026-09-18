@@ -1,0 +1,35 @@
+# B10-A membership suspension and reinstatement — local acceptance
+
+September 18, 2026. Implements the explicit bounded dispatch following `3788728`. B09-A remains accepted at `a662c69`. This closes B10-A locally, not B10-B deletion or exceptional recovery.
+
+## Implemented behavior
+
+- Organization Admins may suspend/reinstate lower-role members. Organization Super Admins may suspend/reinstate Admins and peer Super Admins. Current effective permission restrictions, active session and organization MFA apply on every request, including receipt retries. A genuine TOTP verification within 30 minutes, named-member confirmation and a reason are required. Self-targeting, invited-member activation and platform-operator targets are excluded from this peer workflow.
+- Each transition changes only the organization's membership status. Role, joined date, independent production membership/schedule restrictions, unrelated memberships, global bans, schedules and history remain intact. Suspension invalidates pending invitations through the existing trigger; reinstatement never recreates them. Invitation acceptance cannot reactivate suspended membership.
+- A revision, actor-bound immutable request receipt, audit event and affected-member notification intent commit in one transaction. Exact retries return the original result only after current authorization. Changed payloads and stale revisions conflict. An explicit request for the already-current status returns unchanged without another notification or audit.
+- Organization policy locking precedes actor/target membership locks. Invitation acceptance now uses the same organization-before-member order. A database trigger prevents removing, demoting or suspending the final active Organization Super Admin, excluding globally banned accounts from alternative eligible holders. Simultaneous authorized peer suspensions leave one active holder.
+- A private notification outbox records pending/sending/delivered/failed outcomes. The local adapter requires trusted actor/session/AAL2 admission and current organization administration authority. It only sends fictional `@example.test` mail through an explicitly configured loopback Mailpit endpoint; redirects are refused. Failure does not undo the membership change. Delivered retries do not resend. Older undelivered events remain visible after newer changes; five oldest are shown per member and delivery reveals the next pending events.
+- The workspace provides paginated member controls, named confirmation/reason, retained same-actor pending requests, explicit stale-state review, and notification retry. Different account state is fenced by the existing workspace identity boundary. No new role-editing, deletion or factor-recovery control was added.
+
+The source contract that previously deferred reinstatement is superseded by a forward SQL function comment and the explicit status operation, without rewriting migration history. Migrations are listed in [migrations.txt](./evidence/b10-membership/migrations.txt).
+
+## Validation
+
+| Check | Result |
+|---|---|
+| Genuine local Auth/SQL | **44 passed** in [runtime.log](./evidence/b10-membership/runtime.log): role/peer/tenant denial, confirmation, current authority, genuine MFA, suspension/direct RLS, reinstatement, retained effective edit restriction, unchanged production restrictions/document/unrelated membership, invitation non-reactivation, global ban preservation, exact receipts/audit/outbox, no-op, competing holders and explicit final-holder guard errors. |
+| Real local HTTP and mail sink | **11 passed** in [notifications.log](./evidence/b10-membership/notifications.log): MFA admission; stopped-mail-sink failure; restart/retry; confirmed retry without resend; suspension/reinstatement messages; unchanged membership; browser denial of service-only delivery RPC. |
+| Browser | [browser-evidence.json](./evidence/b10-membership/browser-evidence.json): genuine Admin password/TOTP, lower-role controls, disabled unconfirmed submission, suspend/reinstate with retained-role explanation and delivered notices, older undelivered event visible and successfully retried while member remains active. |
+| New request contracts | **5 passed** in [request-contract-tests.log](./evidence/b10-membership/request-contract-tests.log): immutable payload, actor-switch rejection before RPC construction, identical retry, mismatched receipt rejection, distinct MFA/conflict handling. |
+| Existing regressions | **205 platform** and **62 editor** tests passed in [platform-tests.log](./evidence/b10-membership/platform-tests.log) and [editor-tests.log](./evidence/b10-membership/editor-tests.log). No B08 race suite. |
+| Build and database | TypeScript/production build passed. Security advisors: no issues. DB lint: only the existing snapshot `restored` unused-variable warning. Existing `LocalScheduleLibrary` ref-cleanup build warning remains. See [build.log](./evidence/b10-membership/build.log), [types.log](./evidence/b10-membership/types.log), [db-lint.log](./evidence/b10-membership/db-lint.log), [db-advisors.log](./evidence/b10-membership/db-advisors.log). |
+
+The first notification/browser checks ran before the forward pending-notice listing improvement; the final built browser specifically verified older-event visibility/retry afterward. The final 44-case runtime run included all three forward migrations and verifies the actual last-holder error rather than accepting any database constraint failure. Browser testing used an earlier fictional fixture from the same batch; the final runtime run creates another fresh fixture. No broad matrix rerun was needed for the narrow listing change.
+
+## Limits and stop
+
+This is the preserved unlinked `roseland-b08-20260917` stack, API 56121, app 3435, Mailpit 56124. Fixture credentials/factor material stay in mode-600 temporary files, never evidence/Git. Reproducers: `scripts/test-membership-runtime.ts`, `scripts/serve-membership-user-flows.ts`, `scripts/test-membership-notifications.ts`. The owned browser tab is closed and owned services are stopped with volumes retained; see [cleanup.txt](./evidence/b10-membership/cleanup.txt).
+
+Notification intent and membership effects are idempotent; external mail delivery is **not claimed exactly once** across a send-success/ack-loss/crashed-worker ambiguity. A lease permits retry and may duplicate a message in that case. There is no background delivery worker or real-mail integration; leadership triggers local retries. Messages identify the historical change so a later delivery does not claim to describe current membership.
+
+Exact uncertain-response membership retry is proven at RPC/client-contract level, not by injecting a lost response in the browser. Same-account reauthentication uses the existing retained-panel mechanism; this batch did not repeat B09's full browser expiry scenario. Already admitted requests retain the established session boundary. Hosted parity/release, B10-B deletion/purge, exceptional recovery, B11 and reskin remain separate gates. No automatic next batch is dispatched by this result.

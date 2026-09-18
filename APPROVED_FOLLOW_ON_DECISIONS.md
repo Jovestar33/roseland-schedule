@@ -70,8 +70,12 @@ This development copy incorporates the shared planning approvals. Earlier implem
 
 - The user calls Development and Testing **Devtest**. Voice and Planning collects side-chat decisions and sends one consolidated handoff at completed-batch gaps, unless urgent steering or a stop is needed.
 - Stop routine “live app unchanged” status repetitions. If proposed work will affect the live app, prominently state **LIVE APP WILL BE CHANGED** before proceeding and preserve the applicable approval requirements. This wording is advance notice, not authorization by itself.
-- B09-A is locally complete at `a662c69`; [B10-A scoped membership suspension](./B09_B10_NEXT_TECHNICAL_PROPOSAL.md#b10-a-scoped-membership-suspension) is the next reviewed, ready implementation candidate. This handoff dispatches documentation only, not B10 or exceptional recovery.
+- B09-A is locally complete at `a662c69`; [B10-A scoped membership suspension](./B09_B10_NEXT_TECHNICAL_PROPOSAL.md#b10-a-scoped-membership-suspension-and-reinstatement) is the next reviewed, ready implementation candidate. This handoff dispatches documentation only, not B10 or exceptional recovery.
 
 ### Superseding B10-A dispatch
 
 The user explicitly authorized B10-A suspension **and reinstatement** after the completed-batch planning handoff. Reinstatement follows suspension authority: Organization Admins restore lower-role members; Organization Super Admins restore Admins/Super Admins. Restore the prior role and retained restrictions for that membership only, preserve independent production/schedule restrictions, and never recreate invalidated invitations, alter global bans or restore unrelated memberships. Preserve current authorization, versioned exact receipts, confirmation/notification and final-active-holder protection. Earlier “awaiting dispatch” text above is historical; B10-B and exceptional recovery are not dispatched.
+
+### B10-A local implementation checkpoint
+
+The authorized suspension/reinstatement slice is implemented with [bounded local acceptance](./B10_A_LOCAL_ACCEPTANCE.md). The role/restriction, current-authorization, notification, exact-retry and final-holder requirements above remain authoritative. No B10-B or exceptional recovery dispatch is implied.

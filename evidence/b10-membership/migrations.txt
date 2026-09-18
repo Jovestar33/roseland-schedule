@@ -1,0 +1,5 @@
+Forward migrations applied to preserved, unlinked local roseland stack (project roseland-b08-20260917; API 127.0.0.1:56121; names below).
+20260918050940_organization_membership_management.sql
+20260918051949_membership_lock_order_and_indexes.sql
+20260918052804_membership_pending_notices.sql
+No reset or applied-history rewrite. CLI migration up reported each applied successfully.

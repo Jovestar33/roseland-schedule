@@ -1,5 +1,7 @@
 # Technical migration acceptance audit
 
+> **B10-A local completion — September 18:** scoped membership suspension and reinstatement are implemented and locally accepted in [B10_A_LOCAL_ACCEPTANCE.md](./B10_A_LOCAL_ACCEPTANCE.md). This supersedes older pending-dispatch language for B10-A only. B10-B deletion/purge, exceptional recovery, hosted parity and release remain separately gated.
+
 > September 18 planning update: this remains the dated original audit inventory. Current B05/B08 local checkpoints and the [consolidated approvals](./APPROVED_FOLLOW_ON_DECISIONS.md) supersede older unanswered/status language without converting untested parity to Pass. B08's accepted same-account concurrency exception, failed evidence and direct-invitation-form/controlled-expiry limits remain intact. The next proposal is [B09/B10](./B09_B10_NEXT_TECHNICAL_PROPOSAL.md); no implementation is dispatched by this update.
 
 **Subsequent B01 dispatch/completion (September 16):** [LOCAL_SAVE_RECOVERY_REVIEW.md](./LOCAL_SAVE_RECOVERY_REVIEW.md) records the independently implemented ordinary-save recovery and all ten passing local acceptance cases after audit commit `8dde3a9`. It supersedes the B01 implementation gap below, without rewriting this source-`379e066` audit or changing its 45 paired-runtime parity totals. No hosted, SQL/RLS, dependency, real-data or deployment change occurred; B02–B18 remain separate work.
