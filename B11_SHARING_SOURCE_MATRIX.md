@@ -22,7 +22,7 @@ Source of the external allowlist: `netlify/lib/public-view.js:18–37`; complete
 | Production personnel names | `meta.prod`, `dir`, `dp` | Included | Existing external behavior. Include in reviewed Client-scope proposal; no reason to ask about every name field independently. |
 | Schedule rows and timing | All rows/fields | Nonempty action/time rows only; `action`, `otherText`, `desc`, `timeIn`, `dur`, `sunLocked`, `fixedOut`, `fixedOutTime` | Preserve existing readable running order and timing. Editing flags not expressly selected remain omitted. |
 | Locations | All location data | `loc`, `locLat`, `locLng`, `locName`, `locAddress`; sub-location `id`, `loc`, `locLat`, `locLng`, `desc`, `name`, `address` | Existing external scope includes precise coordinates/addresses. A public/unpublished-location distinction would require explicit approved semantics; the current row shape has no published-location flag. |
-| Row notes | `row.notes` | **Included** | Concrete conflict to resolve: new links are specified to omit internal notes unless a chosen scope explicitly requires them. Existing `notes` is one field, not separate client/internal fields. Do not silently strip a familiar client schedule column or silently call every note safe for unrestricted distribution. |
+| Row notes | `row.notes` | **Included** | Approved September 18: preserve ordinary legacy `row.notes` in the selected Client scope. This does not authorize separately protected/internal content or bypass inherited source restrictions; deny publication when effective restrictions prohibit it. |
 | Row contact details | `contactName`, `contactTitle`, `contactPhone`, `contactEmail` | Omitted | Keep omitted from default external response. Contact Sheet is a separate authenticated export, not evidence that client links disclose contacts. |
 | Call-sheet / emergency / safety data | `meta.callsheet`: basecamp, parking, hospital, emergency, mealNotes, safetyNotes, specialInstructions, notes | Omitted | Keep omitted from default external response; a richer selected scope would be a new explicit permission contract. |
 | Status and completion | `row.status`, `done`, `fixedIn`, sub-location `done` | Omitted | Preserve omission. No client-side hiding of a full document as a substitute for a server projection. |
@@ -30,7 +30,7 @@ Source of the external allowlist: `netlify/lib/public-view.js:18–37`; complete
 | Other metadata / future fields | Authorized document | `meta.lat/lng`, `savedAt`, unlisted weather fields and unknown future fields omitted | Deny by default. Add fields deliberately with projection tests. |
 | History, snapshots, permissions, audits, contacts outside rows | Separate authorized app features | Not in response | No external grant inferred. Team access still obeys effective history/export/content restrictions; token issuance must not bypass B06 source restrictions. |
 
-The proposed starting point is an authenticated **Team** link plus one explicitly reviewed **Client read-only** scope preserving the familiar existing external schedule layout. Do not add a separate Public mode or a new matrix editor merely because the roadmap used Team/Client/Public terminology. A distinct Public audience should exist only if the user wants different disclosure.
+The approved migration options are authenticated **Team** and scoped **Client read-only**, preserving the familiar existing external schedule layout. Do not add a separate Public mode or matrix editor. The approval does not widen access to protected content.
 
 ## Already settled security and continuity
 
@@ -40,7 +40,11 @@ Legacy route resolution is required for at least 12 months after cutover. **Rout
 
 Keep Share's existing Print/PDF, Contact Sheet and Call Sheet controls. Those use separately authorized internal output workflows and are not additional external audience presets. The target local editor already preserves those tools; B11 should add the scoped link workflow rather than redesign the toolbar or widen an export permission silently.
 
-## Only genuine remaining product choices
+## Product choices resolved September 18, 2026
+
+The user approved preserving the legacy Client projection including row notes and its existing exclusions; keeping only Team and Client link options for migration; allowing Editors and above to create Client links by default with leadership-configurable restrictions; and allowing the creator, authorized Organizers and organization leadership to revoke within their authorized scope. See APPROVED_FOLLOW_ON_DECISIONS.md, Consolidated approvals. These decisions supersede the unanswered recommendations below. Separately protected content and inherited restrictions remain enforced. No implementation is claimed here.
+
+## Original review questions and engineering follow-up
 
 1. **External row-note semantics and whether a distinct Public scope is needed.** Recommend preserving the existing schedule-oriented Client scope, including its ordinary visible row notes only after explicitly approving that as the selected external scope. Keep contacts/call sheets/status/history excluded. If the same field can contain internal notes, choose an explicit protected/internal distinction before implementation rather than silently exposing it or deleting client-visible content. A separate Public scope is optional, not a prerequisite to preserving the existing Client workflow.
 2. **Target authority to create/revoke external links under the new role model.** Legacy has one editor credential; it cannot resolve the newer Organizer/Editor split or imposed sharing restrictions. The older authorization design assigned share creation/revocation to Producer/Editor, while B03 has no dedicated share capability. Recommend retaining Editor-and-above link creation only with effective read/edit/output authorization and an explicit sharing restriction; allow the creator and authorized organizing/organization leadership to revoke, subject to higher restrictions. Submit this exact mapping for approval rather than assuming Organizer-only or that ordinary export grants publication. No authority is assigned by this recommendation.

@@ -14,13 +14,25 @@ Confirmed by the user on September 16, 2026. This is the shared decision record 
 ## Delivery order — user correction, September 16
 
 1. Complete technical functionality, account/recovery and related-data workflows. Verify functional and practical-usability parity, comprehensive internal security, and technical migration/rollback readiness, including separately authorized hosted checks. Local tests alone do not close hosted gates.
-2. Complete design research and obtain the user’s selection, then implement the neutral Production Command reskin, company theming and preserved Roseland preset. Preserve unfinished research as reference; it must not displace technical work now.
+2. Complete B15 hands-on user review in iterative rounds, resolve blocking functional/usability notes, and obtain acceptance. Then follow the staged B16 process below: preserve the approved current look, develop design directions, refine the selected direction, apply it, and make final refinements. Preserve unfinished research as reference; it must not displace technical work now.
 3. Revalidate the final reskinned candidate: functionality, security, mobile/accessibility, printing/PDF, data reconciliation and rollback. Earlier parity results are a baseline, not automatic acceptance of the changed interface.
 4. Only then seek explicit approval for real-data migration and cutover, keeping Netlify available as agreed.
 
 A protected synthetic-data pilot may be needed to clear technical hurdles before reskinning; it is distinct from real-data migration and still requires deployment authorization. Phase numbers are workstream labels, not an override of this execution order.
 
 ## Research and design decision before implementation
+
+### B16 stages — user refinement, September 17
+
+Keep the existing roadmap numbers. B16 is a staged design process after B15 technical and human acceptance:
+
+1. **Preserve the approved current look.** Capture the schedule appearance the user is happy with after B15 feedback, not merely today's unfinished state. Save it as a named, versioned, selectable Roseland production-schedule look covering the editor's schedule presentation, read-only output and print/PDF appearance. Preserve representative examples and configuration so it remains usable after the neutral design is applied. Keep visual presets distinct from schedule-content templates and private production data.
+2. **Develop the look and feel.** Conduct the planned research and explore comparable Production Command directions for the neutral interface and configurable schedule presentation. Include the option of a preserved Roseland interface look for the user's own organization/administrative workspace; this is an option to evaluate, not yet a final interface-preset choice or an additional privilege. Product default remains organization-neutral.
+3. **Refine the selected direction.** Review representative screens and document outputs with the user, collect notes, and iterate to an approved direction before broad application. Identify which choices belong to interface styling versus schedule/document styling so selecting one need not silently change the other.
+4. **Apply the approved design.** Implement in bounded sections across the actual app and its outputs, with organization-scoped branding and the preserved schedule preset available. Retain the approved baseline; do not silently restyle existing schedules or rebuild settled functionality.
+5. **Final refinements.** Let the user review the implemented design in use, resolve visual/usability notes in manageable rounds, and confirm the design is ready for B17. B17 remains the final candidate revalidation, and B18 remains separately approved migration.
+
+B15 and B16 each allow multiple human-review rounds with one shared notes log grouped by functional blockers, reskin work, and optional later features. This is not an unlimited requirement to implement every new idea before release; resolve blockers and obtain explicit user acceptance of the relevant phase. No reskin implementation is authorized merely by recording these stages.
 
 The neutral look and feel has **not yet been selected**. Conduct broad design research before implementing the visual system. Existing concept assets are exploratory unless an explicit approval is recorded here.
 

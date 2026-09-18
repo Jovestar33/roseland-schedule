@@ -82,6 +82,8 @@ Future people, locations, assignments, call sheets, documents, and itinerary tab
 
 ## Public links
 
+September 18 approved B11 mapping: Editors and above may create Client-view links by default only within effective schedule/output rights; organization leadership may restrict this through Settings. The creator, authorized Production Organizers and organization leadership may revoke within their authorized scope and effective restrictions. Read access or ordinary export alone is not a publication grant. Team remains authenticated; Client is a scoped read-only projection; no separate Public option is added. Preserve ordinary legacy Client row notes, while excluding contacts, call-sheet details, status/completion, history and unlisted fields. This explicit notes inclusion does not bypass separately protected/internal content or inherited source restrictions. See [the source matrix](./B11_SHARING_SOURCE_MATRIX.md). These are approved target rules, not a claim that B11 is implemented.
+
 Anonymous clients never receive broad table SELECT permission. A server route resolves a hashed token, checks resource, scope, expiry, revocation, and rate limits, then returns an allowlisted projection. Internal notes, personal contact details, audit data, unpublished locations, and unrelated schedule fields are excluded unless the selected share scope explicitly requires them.
 
 Legacy view URLs map to stable schedule IDs for at least 12 months after cutover. Tokens are not written to logs, analytics, referrers, or error reports. New links default to 30-day expiry, are revocable, and omit contact details and internal notes unless an explicit scope requires them. Responses use restrictive cache and referrer policies.
