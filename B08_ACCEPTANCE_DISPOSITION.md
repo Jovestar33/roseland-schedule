@@ -38,3 +38,5 @@ Source: the committed [original checkpoint](./B08_LOCAL_ACCOUNT_CHECKPOINT.md) a
 ## Ordinary user-flow follow-up — September 18, 2026
 
 See [B08_USER_FLOW_CHECKPOINT.md](./B08_USER_FLOW_CHECKPOINT.md) for new focused browser evidence. Remember me OFF/ON tab reopen, controlled expired-session reopen and same-actor draft recovery are now verified; a small cross-tab reauthentication email defect was fixed. The invited-account setup and reset browser journeys remain pending user password handoff and subsequent acceptance/sign-in checks. The original exception and failed evidence above remain unchanged; no concurrency investigation or race-suite rerun occurred.
+
+Invited-account follow-up: the user completed recovery-based password setup for the already-verified invited account, fresh sign-in, explicit invitation acceptance and organization schedule entry in the coordinator in-app browser. Dev/Test independently confirmed fresh sign-in with the authorized fictional credential. This does not establish direct invitation-password-form submission; the separate control-account reset handoff remains pending.
