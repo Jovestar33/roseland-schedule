@@ -1,0 +1,15 @@
+September 18, 2026
+Owned B08 launcher and web child exited; no listener remains on 3435.
+Launcher restored prior enforce_acceptance=false.
+Docker ps: no running containers.
+Preserved B08 named volumes:
+supabase_db_roseland-b08-20260917
+supabase_edge_runtime_roseland-b08-20260917
+supabase_storage_roseland-b08-20260917
+Standard stop output:
+Using workdir /private/tmp/roseland-b08-20260917
+Stopping containers...
+Stopped supabase local development setup.
+A new version of Supabase CLI is available: v2.117.0 (currently installed v2.109.1)
+We recommend updating regularly for new features and bug fixes: https://supabase.com/docs/guides/cli/getting-started#updating-the-supabase-cli
+Local data are backed up to docker volume. Use docker to show them: docker volume ls --filter label=com.supabase.cli.project=roseland-b08-20260917
