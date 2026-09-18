@@ -10,7 +10,7 @@ select extensions.plan(35);
 -- one-time path remains testable; rollback restores every pre-existing row.
 -- Clear the later schedule-domain children inside this rolled-back test only.
 -- TRUNCATE avoids immutable-history delete triggers; no cascade is needed.
-truncate private.organization_presentation_receipts, private.organization_presentation, private.schedule_template_browser_origins, private.schedule_template_save_receipts, private.schedule_template_bindings, private.schedule_template_receipts, private.schedule_template_sources, private.schedule_templates, private.schedule_transfers, private.schedule_copy_receipts, public.schedule_restrictions, public.schedule_versions, public.schedules, public.production_days, public.phases;
+truncate private.schedule_snapshot_imports, private.schedule_snapshot_copy_receipts, private.schedule_snapshot_policy_receipts, private.schedule_snapshot_receipts, private.schedule_snapshot_policy, private.schedule_snapshots, private.migration_record_versions, private.migration_records, private.organization_presentation_receipts, private.organization_presentation, private.schedule_template_browser_origins, private.schedule_template_save_receipts, private.schedule_template_bindings, private.schedule_template_receipts, private.schedule_template_sources, private.schedule_templates, private.schedule_transfers, private.schedule_copy_receipts, public.schedule_restrictions, public.schedule_versions, public.schedules, public.production_days, public.phases;
 delete from private.workflow_requests;
 delete from public.audit_events;
 delete from public.organization_invitations;

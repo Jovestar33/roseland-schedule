@@ -10,21 +10,22 @@ import {journalEntries,journalWrite,journalClear,type RequestJournalStorage} fro
 export const SNAPSHOT_INTERVAL_MS=5*60*1000;
 export type SnapshotKind='named'|'automatic'|'imported';
 export type SnapshotOperation='capture'|'name'|'trash'|'restore_trash'|'purge'|'restore_content';
-export interface ScheduleSnapshot {id:string;organization_id:string;schedule_id:string;name:string|null;kind:SnapshotKind;version:number;captured_at:string;deleted_at:string|null;row_count:number;can_name:boolean;can_trash:boolean;can_purge:boolean;document?:StoredSchedule['document'];original_id?:string|null}
-export interface SnapshotAttempt {actor:string;organization:string;schedule:string;id:string;request:string;version:number;operation:SnapshotOperation;name:string|null;document:StoredSchedule['document']|null;sourceVersion:number|null;automatic:boolean;templateUses:TemplateUse[];confirmedPurge:boolean}
+export interface ScheduleSnapshot {id:string;organization_id:string;schedule_id:string;name:string|null;kind:SnapshotKind;version:number;captured_at:string;deleted_at:string|null;row_count:number;can_name:boolean;can_trash:boolean;can_purge:boolean;document?:StoredSchedule['document'];original_id?:string|null;original_order?:number|null}
+export interface SnapshotAttempt {actor:string;organization:string;schedule:string;id:string;request:string;version:number;operation:SnapshotOperation;name:string|null;document:StoredSchedule['document']|null;sourceVersion:number|null;automatic:boolean;templateUses:TemplateUse[];confirmedPurge:boolean;previewLabel?:string}
 export interface SnapshotReceipt {confirmed:true;request_id:string;id:string;operation:SnapshotOperation;version:number;schedule_version?:number}
 export interface SnapshotPolicy {organization_id:string;version:number;retention_days:number|null;trash_min_role:'editor'|'organizer'|'admin';can_manage:boolean}
 function invalid():never{throw new ScheduleRepositoryError('invalid');}
 export function captureSnapshotAttempt(value:SnapshotAttempt):SnapshotAttempt{
- const v=structuredClone(value);[v.actor,v.organization,v.schedule,v.id,v.request].forEach(parseInvitationId);
- if(!['capture','name','trash','restore_trash','purge','restore_content'].includes(v.operation)||!Number.isSafeInteger(v.version)||v.version<0||(v.operation==='capture'?v.version!==0:v.version===0)||typeof v.automatic!=='boolean'||typeof v.confirmedPurge!=='boolean')invalid();
+ const v=structuredClone(value);if(v.previewLabel!==undefined&&typeof v.previewLabel!=='string')invalid();[v.actor,v.organization,v.schedule,v.id,v.request].forEach(parseInvitationId);
+ if(!['capture','name','trash','restore_trash','purge','restore_content'].includes(v.operation)||!Number.isSafeInteger(v.version)||v.version<0||v.version>=Number.MAX_SAFE_INTEGER||(v.operation==='capture'?v.version!==0:v.version===0)||typeof v.automatic!=='boolean'||typeof v.confirmedPurge!=='boolean')invalid();
  if((v.operation==='capture'&&!v.automatic)||v.operation==='name'){
   if(!v.name?.trim()||v.name.trim().length>150||/[\x00-\x1f\x7f]/.test(v.name))throw Error('Choose a snapshot name of 1 to 150 characters.');v.name=v.name.trim();
  }
- if(v.operation==='capture'){validateFileDocument(v.document);if(!Number.isSafeInteger(v.sourceVersion)||v.sourceVersion!<1)invalid();}
- if(v.operation==='restore_content'&&(!Number.isSafeInteger(v.sourceVersion)||v.sourceVersion!<1))invalid();
+ if(v.operation==='capture'&&v.automatic&&v.name!==null)invalid();
+ if(v.operation==='capture'){validateFileDocument(v.document);if(!Number.isSafeInteger(v.sourceVersion)||(v.sourceVersion!<1||v.sourceVersion!>=Number.MAX_SAFE_INTEGER))invalid();}
+ if(v.operation==='restore_content'&&(!Number.isSafeInteger(v.sourceVersion)||(v.sourceVersion!<1||v.sourceVersion!>=Number.MAX_SAFE_INTEGER)))invalid();
  if(v.operation==='purge'&&!v.confirmedPurge)throw Error('Review and confirm permanent deletion of this trashed snapshot.');
- if(!Array.isArray(v.templateUses))invalid();v.templateUses.forEach(validateTemplateUse);
+ if(!Array.isArray(v.templateUses)||v.templateUses.length>100)invalid();v.templateUses.forEach(validateTemplateUse);
  const freeze=(x:unknown)=>{if(x&&typeof x==='object'){Object.values(x).forEach(freeze);Object.freeze(x);}};freeze(v);return v;
 }
 function snapshot(value:unknown):ScheduleSnapshot{

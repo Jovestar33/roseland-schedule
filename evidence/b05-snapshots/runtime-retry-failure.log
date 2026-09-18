@@ -1,0 +1,11 @@
+file:///Users/johnsammon/.codex/worktrees/roseland-b02/roseland-schedule/scripts/test-snapshot-runtime.ts:9
+  if (!value) throw new Error(message);
+                    ^
+
+Error: Local synthetic signup failed: AuthRetryableFetchError status 504
+    at ensure (file:///Users/johnsammon/.codex/worktrees/roseland-b02/roseland-schedule/scripts/test-snapshot-runtime.ts:9:21)
+    at identity (file:///Users/johnsammon/.codex/worktrees/roseland-b02/roseland-schedule/scripts/test-snapshot-runtime.ts:62:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async file:///Users/johnsammon/.codex/worktrees/roseland-b02/roseland-schedule/scripts/test-snapshot-runtime.ts:79:14
+
+Node.js v24.15.0

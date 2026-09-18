@@ -1,0 +1,95 @@
+'use client';
+import {useEffect,useRef,useState} from 'react';
+import type {SupabaseClient} from '@supabase/supabase-js';
+import Modal,{ModalVisibilityContext} from '@/components/modals/Modal';
+import ScheduleReadView from '@/components/view/ScheduleReadView';
+import {useScheduleStore} from '@/lib/store/scheduleStore';
+import {makeMeta} from '@/lib/rowNormalizer';
+import {ScheduleRepositoryError,type StoredSchedule} from '@/lib/platform/schedule-repository';
+import {captureSnapshotAttempt,createSnapshotRepository,retainSnapshotRequest,readSnapshotRequest,clearSnapshotRequest,SnapshotTimer,type SnapshotOperation,type SnapshotReceipt,type ScheduleSnapshot,type RetainedSnapshotRequest,type SnapshotPolicy} from '@/lib/platform/schedule-snapshots';
+import {captureSnapshotExtra,createSnapshotExtras,retainSnapshotExtra,readSnapshotExtra,clearSnapshotExtra,type RetainedSnapshotExtra} from '@/lib/platform/schedule-snapshot-extras';
+import type {ProductionDestination} from '@/lib/platform/schedule-library';
+interface Props {client:SupabaseClient;actor:string|null;organization:string|null;schedule:string|null;enabled:boolean;canWrite:boolean;canCopy:boolean;getSource:()=>StoredSchedule|null;onState:(dirty:boolean,busy:boolean)=>void;requireAuth:()=>void;beforeRestore:(sourceVersion:number)=>unknown;onRestored:(receipt:SnapshotReceipt,context:unknown)=>Promise<boolean>;captureOpen:()=>unknown;onCopy:(id:string,context:unknown)=>Promise<boolean>}
+const labels:Record<SnapshotOperation,string>={capture:'Capture snapshot',name:'Name snapshot',trash:'Move snapshot to Trash',restore_trash:'Restore snapshot from Trash',purge:'Permanently delete snapshot',restore_content:'Restore snapshot content'};
+export default function LocalScheduleSnapshots(p:Props){
+ const [repo]=useState(()=>createSnapshotRepository(p.client)),[extras]=useState(()=>createSnapshotExtras(p.client));
+ const [open,setOpen]=useState(false),[busy,setBusy]=useState(false),[message,setMessage]=useState(''),[scope,setScope]=useState(''),[recoveryError,setRecoveryError]=useState(false);
+ const [items,setItems]=useState<ScheduleSnapshot[]>([]),[selected,setSelected]=useState<ScheduleSnapshot|null>(null),[trash,setTrash]=useState(false),[name,setName]=useState('');
+ const [pending,setPending]=useState<RetainedSnapshotRequest|null>(null),[extra,setExtra]=useState<RetainedSnapshotExtra|null>(null),[copied,setCopied]=useState<string|null>(null);
+ const [policy,setPolicy]=useState<SnapshotPolicy|null>(null),[retention,setRetention]=useState(''),[minimum,setMinimum]=useState<'editor'|'organizer'|'admin'>('organizer');
+ const [destinations,setDestinations]=useState<ProductionDestination[]>([]),[production,setProduction]=useState(''),[day,setDay]=useState(''),[copyName,setCopyName]=useState('');
+ const documentSession=useScheduleStore(s=>s.documentSession),dirty=useScheduleStore(s=>s.dirty);
+ const key=`${p.actor}:${p.organization}:${p.schedule}:${documentSession}`,latest=useRef({p,key});latest.current={p,key};
+ const ticket=useRef(0),busyRef=useRef(false),timer=useRef(new SnapshotTimer()),automatic=useRef<()=>void>(()=>{});
+ const ready=scope===key&&p.enabled&&!!p.actor&&!!p.organization&&!!p.schedule;
+ useEffect(()=>{ticket.current++;busyRef.current=false;setBusy(false);setOpen(false);setScope(key);setItems([]);setSelected(null);setPending(null);setExtra(null);setRecoveryError(false);setName('');setMessage('');setCopied(null);setPolicy(null);setDestinations([]);setProduction('');setDay('');setCopyName('');timer.current.bind(key,Date.now());
+  if(p.actor&&p.organization&&p.schedule){try{setPending(readSnapshotRequest(localStorage,p.actor,p.organization,p.schedule));setExtra(readSnapshotExtra(localStorage,p.actor,p.organization));}catch(e){setRecoveryError(true);setMessage(e instanceof Error?e.message:'Request recovery unavailable.');}}
+ },[key,p.actor,p.organization,p.schedule]);
+ const reportState=p.onState;
+ useEffect(()=>{reportState(open||!!pending||!!extra,busy);},[open,pending,extra,busy,reportState]);
+ useEffect(()=>{const requests=ticket;const id=setInterval(()=>automatic.current(),5000);return()=>{clearInterval(id);requests.current++;};},[]);
+ async function run(work:(current:()=>boolean)=>Promise<void>){if(!ready||busyRef.current)return;busyRef.current=true;setBusy(true);const seq=++ticket.current,k=key;
+  const current=()=>seq===ticket.current&&latest.current.key===k&&latest.current.p.enabled;
+  try{await work(current);}catch(e){if(current()){setMessage(e instanceof Error?e.message:'Snapshot operation failed. The request and draft are retained.');if(e instanceof ScheduleRepositoryError&&e.kind==='unauthenticated')p.requireAuth();}}
+  finally{if(seq===ticket.current){busyRef.current=false;setBusy(false);}}
+ }
+ async function refresh(current:()=>boolean,mode=trash){const a=p.actor!,o=p.organization!,s=p.schedule!;await repo.expire(a,s);const [rows,settings,dests]=await Promise.all([repo.list(a,o,s,mode),extras.policy(a,o),extras.destinations(a,o)]);if(!current())return;
+  rows.sort((a,b)=>a.kind==='imported'&&b.kind==='imported'?(a.original_order??0)-(b.original_order??0):b.captured_at.localeCompare(a.captured_at)||a.id.localeCompare(b.id));setItems(rows);setPolicy(settings);setRetention(settings.retention_days?.toString()??'');setMinimum(settings.trash_min_role);setDestinations(dests.filter(d=>d.create));
+ }
+ function begin(a:RetainedSnapshotRequest['attempt']){const v={attempt:captureSnapshotAttempt(a),started:false};retainSnapshotRequest(localStorage,v);setPending(v);return v;}
+ async function prepare(operation:SnapshotOperation,current:()=>boolean,auto=false){const s=p.getSource();if(!s||s.id!==p.schedule||pending||extra||recoveryError)return null;
+  const row=operation==='capture'?null:await repo.read(p.actor!,p.organization!,s.id,selected!.id);if(!current())return null;
+  if(row)setSelected(row);
+  return begin({actor:p.actor!,organization:p.organization!,schedule:s.id,id:row?.id??crypto.randomUUID(),request:crypto.randomUUID(),version:row?.version??0,operation,name:operation==='capture'?(auto?null:name):operation==='name'?name:null,document:operation==='capture'?useScheduleStore.getState().getScheduleData():null,sourceVersion:operation==='capture'||operation==='restore_content'?s.document_version:null,automatic:auto,templateUses:operation==='capture'?structuredClone(useScheduleStore.getState().templateUses):[],confirmedPurge:operation==='purge',previewLabel:row?.name??(auto?'Automatic snapshot':name)});
+ }
+ async function finish(v:RetainedSnapshotRequest,r:SnapshotReceipt,current:()=>boolean,context?:unknown){if(!current())return;
+  clearSnapshotRequest(localStorage,v.attempt);setPending(readSnapshotRequest(localStorage,p.actor!,p.organization!,p.schedule!));setSelected(null);setName('');timer.current.captured(key,Date.now());
+  let loaded=false;if(v.attempt.operation==='restore_content')loaded=await p.onRestored(r,context);
+  if(!current())return;
+  setMessage(v.attempt.operation==='restore_content'?(loaded?'Snapshot content restored. Your previous draft is retained for recovery.':'Snapshot restoration confirmed. Your current draft is retained; reload the saved schedule when ready.'):'Snapshot change confirmed. Your schedule draft is unchanged.');await refresh(current);
+ }
+ async function send(v:RetainedSnapshotRequest,current:()=>boolean,checkOnly=false){const a=v.attempt;
+  if(v.started){const r=await repo.probe(a);if(!current())return;if(r){await finish(v,r,current);return;}if(checkOnly){setMessage('No committed result is confirmed. Retry uses the same exact request.');return;}}
+  const context=a.operation==='restore_content'?p.beforeRestore(a.sourceVersion!):undefined;
+  const sent={attempt:a,started:true};retainSnapshotRequest(localStorage,sent);setPending(sent);
+  try{const r=await repo.send(a);await finish(sent,r,current,context);}catch(e){if(current()&&e instanceof ScheduleRepositoryError&&['invalid','conflict'].includes(e.kind)){clearSnapshotRequest(localStorage,a);setPending(readSnapshotRequest(localStorage,a.actor,a.organization,a.schedule));}throw e;}
+ }
+ automatic.current=()=>{if(!timer.current.due(key,Date.now(),dirty,ready&&p.canWrite)||busyRef.current||pending||extra||open||recoveryError)return;void run(async current=>{const v=await prepare('capture',current,true);if(v&&current())await send(v,current);});};
+ function beginExtra(v:RetainedSnapshotExtra){if(recoveryError)throw Error('Resolve stored request recovery before preparing another change.');v={...v,attempt:captureSnapshotExtra(v.attempt)};retainSnapshotExtra(localStorage,v);setExtra(v);}
+ async function sendExtra(current:()=>boolean,checkOnly=false){if(!extra)return;const a=extra.attempt;let r=extra.started?await extras.probe(a):null;if(!current())return;
+  if(!r&&checkOnly){setMessage(a.kind==='policy'?'Retry the exact settings request to recover its receipt.':'No copy result confirmed. Retry retains the original identity.');return;}
+  if(!r){const sent={attempt:a,started:true};retainSnapshotExtra(localStorage,sent);setExtra(sent);try{r=await extras.send(a);}catch(e){if(current()&&e instanceof ScheduleRepositoryError&&['invalid','conflict'].includes(e.kind)){clearSnapshotExtra(localStorage,a);setExtra(readSnapshotExtra(localStorage,a.actor,a.organization));}throw e;}}
+  if(!current())return;clearSnapshotExtra(localStorage,a);setExtra(readSnapshotExtra(localStorage,a.actor,a.organization));setSelected(null);if(a.kind==='copy')setCopied(a.id);setMessage(a.kind==='copy'?'Snapshot saved as a new schedule. Your current draft is unchanged.':'Snapshot organization settings saved.');await refresh(current);
+ }
+ const copyProduction=extra?.attempt.kind==='copy'?extra.attempt.production:null;
+ const disabled=busy||!!pending||!!extra||recoveryError,choice=destinations.find(d=>d.id===production);
+ return <section aria-label="Snapshots"><button className="btn btn-light" disabled={!ready||busy} onClick={()=>{setOpen(true);void run(current=>refresh(current));}}>Snapshots{pending||extra?' · request retained':''}</button>
+  {!open&&message&&<p role="status">{message}</p>}
+  <ModalVisibilityContext.Provider value={ready}><Modal open={open} onClose={()=>setOpen(false)} title="Snapshots" className="template-modal" retainWhenHidden>
+   <p>Capture the current draft without saving it. Automatic snapshots capture dirty drafts every five minutes while this schedule is active.</p><p role="status" aria-live="polite">{message}</p>
+   <fieldset disabled={disabled} style={{border:0,padding:0}}>
+    <label>Snapshot collection<select value={trash?'trash':'active'} onChange={e=>{const mode=e.target.value==='trash';setTrash(mode);setSelected(null);void run(current=>refresh(current,mode));}}><option value="active">Available snapshots</option><option value="trash">Snapshot Trash</option></select></label>
+    <button className="btn btn-light" onClick={()=>void run(current=>refresh(current))}>Refresh snapshots</button>
+    {!trash&&p.canWrite&&<div><label>Snapshot name<input value={name} maxLength={150} onChange={e=>setName(e.target.value)}/></label><button className="btn btn-primary" disabled={!name.trim()} onClick={()=>void run(async current=>{await prepare('capture',current);})}>Review capture of current draft</button></div>}
+    <p>{items.length} snapshots</p><ul className="template-list">{items.map(s=><li key={s.id}><button className="btn btn-light" onClick={()=>void run(async current=>{const x=await repo.read(p.actor!,p.organization!,p.schedule!,s.id);if(current()){setSelected(x);setName(x.name??'');setCopyName((x.name??'Snapshot')+' copy');}})}>{s.name||'Automatic snapshot'}</button> · {s.kind} · {new Date(s.captured_at).toLocaleString()} · {s.row_count} rows</li>)}</ul>
+   </fieldset>
+   {selected&&!pending&&!extra&&!recoveryError&&<fieldset disabled={busy} style={{border:0,padding:0}}><legend>{selected.name||'Automatic snapshot'}</legend>
+    {selected.original_id&&<p>Original ID: {selected.original_id} · original collection position {selected.original_order}</p>}
+    <details><summary>Preview complete snapshot</summary>{selected.document&&<ScheduleReadView data={{rows:selected.document.rows??[],meta:makeMeta(selected.document.meta),savedAt:selected.document.savedAt??0}} name={selected.name??'Automatic snapshot'}/>}</details>
+    {!selected.deleted_at&&selected.can_name&&p.canWrite&&<><label>Snapshot label<input value={name} maxLength={150} onChange={e=>setName(e.target.value)}/></label><button className="btn btn-light" disabled={!name.trim()||name===selected.name} onClick={()=>void run(async current=>{await prepare('name',current);})}>Review name and protect</button><button className="btn btn-primary" onClick={()=>void run(async current=>{await prepare('restore_content',current);})}>Review restore content</button></>}
+    {selected.can_trash&&<button className="btn btn-light" onClick={()=>void run(async current=>{await prepare(selected.deleted_at?'restore_trash':'trash',current);})}>{selected.deleted_at?'Review restore from Trash':'Review move to Trash'}</button>}
+    {selected.deleted_at&&selected.can_purge&&<button className="btn btn-light" onClick={()=>void run(async current=>{await prepare('purge',current);})}>Review permanent deletion</button>}
+    {!selected.deleted_at&&p.canCopy&&<details><summary>Save As New</summary><label>New schedule name<input value={copyName} onChange={e=>setCopyName(e.target.value)}/></label><label>Destination production<select value={production} onChange={e=>{setProduction(e.target.value);setDay('');}}><option value="">Choose production</option>{destinations.map(d=><option key={d.id} value={d.id}>{d.name}</option>)}</select></label><label>Destination day<select value={day} onChange={e=>setDay(e.target.value)}><option value="">Unassigned</option>{choice?.days.map(d=><option key={d.id} value={d.id}>Day {d.number??'—'} · {d.date??'No date'}</option>)}</select></label><button className="btn btn-light" disabled={!production||!copyName.trim()} onClick={()=>void run(async current=>{const r=await extras.reviewCopy(p.actor!,selected.id,production);if(!current()||r.schedule.id!==p.schedule)return;beginExtra({started:false,attempt:{kind:'copy',actor:p.actor!,organization:p.organization!,request:crypto.randomUUID(),schedule:p.schedule!,snapshot:selected.id,version:r.snapshot_version,id:crypto.randomUUID(),sourceVersion:r.schedule.document_version,policy:r.policy,production,day:day||null,phase:choice?.days.find(d=>d.id===day)?.phase??null,name:copyName.trim(),slug:'snapshot-'+crypto.randomUUID()}});})}>Review Save As New</button></details>}
+   </fieldset>}
+   {pending&&<section aria-label="Snapshot change review"><h3>{labels[pending.attempt.operation]}</h3><p>{pending.attempt.previewLabel??pending.attempt.name??'Selected snapshot'} · snapshot version {pending.attempt.version}</p><p>Snapshot ID: {pending.attempt.id}</p>
+    {pending.attempt.operation==='capture'&&<p>Captures {pending.attempt.document?.rows?.length??0} rows and all schedule details from the reviewed draft. Later edits remain in the editor.</p>}
+    {pending.attempt.operation==='restore_content'&&<p>This replaces saved content at schedule version {pending.attempt.sourceVersion}. Current identity and placement stay intact. Your current draft and undo history will be retained before sending. Newer edits will not be replaced.</p>}
+    {pending.attempt.operation==='purge'&&<p>Confirm permanent deletion of this selected, already-trashed snapshot. It cannot be restored from Snapshot Trash. Saved document history, copied schedules and retained import records remain separate. Copies may remain in backups under their retention policy.</p>}
+    <button className="btn btn-primary" disabled={busy} onClick={()=>void run(current=>send(pending,current))}>{pending.started?'Retry exact snapshot request':pending.attempt.operation==='purge'?'Confirm permanent deletion':`Confirm ${labels[pending.attempt.operation].toLowerCase()}`}</button>
+    {pending.started?<button className="btn btn-light" disabled={busy} onClick={()=>void run(current=>send(pending,current,true))}>Check snapshot result</button>:<button className="btn btn-light" disabled={busy} onClick={()=>{clearSnapshotRequest(localStorage,pending.attempt);setPending(readSnapshotRequest(localStorage,p.actor!,p.organization!,p.schedule!));}}>Cancel review</button>}
+   </section>}
+   {!pending&&!extra&&!recoveryError&&policy&&<details><summary>Organization snapshot settings</summary><p>Named and imported snapshots never expire automatically. Expired automatic snapshots move to recoverable Trash; nothing is automatically purged.</p><fieldset disabled={busy||!policy.can_manage} style={{border:0,padding:0}}><label>Automatic retention in days (blank means no expiry)<input type="number" min={1} max={36500} value={retention} onChange={e=>setRetention(e.target.value)}/></label><label>Who may Trash and restore snapshots<select value={minimum} onChange={e=>setMinimum(e.target.value as typeof minimum)}><option value="editor">Editors and above</option><option value="organizer">Organizers and above</option><option value="admin">Organization leadership</option></select></label>{policy.can_manage&&<button className="btn btn-light" onClick={()=>void run(async()=>beginExtra({started:false,attempt:{kind:'policy',actor:p.actor!,organization:p.organization!,request:crypto.randomUUID(),version:policy.version,retention:retention===''?null:Number(retention),trash:minimum}}))}>Review snapshot settings</button>}</fieldset></details>}
+   {extra&&<section aria-label="Snapshot settings or copy review"><h3>{extra.attempt.kind==='copy'?'Save snapshot as a new schedule':'Change organization snapshot settings'}</h3><p>{extra.attempt.kind==='copy'?`${extra.attempt.name} · ${destinations.find(d=>d.id===copyProduction)?.name??extra.attempt.production}`:`Automatic retention: ${extra.attempt.retention===null?'No expiry':extra.attempt.retention+' days'}. Trash authority: ${extra.attempt.trash} and above.`}</p><button className="btn btn-primary" disabled={busy} onClick={()=>void run(current=>sendExtra(current))}>{extra.started?'Retry exact request':'Confirm reviewed change'}</button>{extra.started&&extra.attempt.kind==='copy'&&<button className="btn btn-light" disabled={busy} onClick={()=>void run(current=>sendExtra(current,true))}>Check copy result</button>}{!extra.started&&<button className="btn btn-light" onClick={()=>{clearSnapshotExtra(localStorage,extra.attempt);setExtra(readSnapshotExtra(localStorage,p.actor!,p.organization!));}}>Cancel review</button>}</section>}
+   {copied&&!pending&&!extra&&<button className="btn btn-light" disabled={busy} onClick={()=>void run(async()=>{const context=p.captureOpen();if(await p.onCopy(copied,context))setOpen(false);})}>Open saved copy and retain current draft</button>}
+  </Modal></ModalVisibilityContext.Provider></section>;
+}

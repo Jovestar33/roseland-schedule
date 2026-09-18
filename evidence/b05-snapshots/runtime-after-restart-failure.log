@@ -1,0 +1,11 @@
+file:///Users/johnsammon/.codex/worktrees/roseland-b02/roseland-schedule/scripts/test-snapshot-runtime.ts:9
+  if (!value) throw new Error(message);
+                    ^
+
+Error: Auth could not verify the login-issued session
+    at ensure (file:///Users/johnsammon/.codex/worktrees/roseland-b02/roseland-schedule/scripts/test-snapshot-runtime.ts:9:21)
+    at identity (file:///Users/johnsammon/.codex/worktrees/roseland-b02/roseland-schedule/scripts/test-snapshot-runtime.ts:69:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async file:///Users/johnsammon/.codex/worktrees/roseland-b02/roseland-schedule/scripts/test-snapshot-runtime.ts:79:96
+
+Node.js v24.15.0

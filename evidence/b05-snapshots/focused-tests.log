@@ -1,0 +1,18 @@
+✔ snapshot capture freezes the complete draft without cleaning or truncating it (6.319791ms)
+✔ snapshot request recovery is actor, organization, schedule and exact-request bound (1.386709ms)
+✔ automatic capture observes the five-minute dirty interval and cannot cross document or account identity (0.173417ms)
+✔ permanent snapshot deletion requires a reviewed explicit confirmation (0.226041ms)
+✔ snapshot inventory preserves complete collections across pages above the old 25-item cap (1.752084ms)
+✔ snapshot transport rejects another account and mismatched schedule responses (2.364875ms)
+✔ snapshot policy validation preserves no-expiry and rejects invalid retention (0.644375ms)
+✔ settings and copy journals isolate actor and request, and cannot silently overwrite another tab (0.225291ms)
+✔ failed durable readback prevents a settings request from being prepared (0.131209ms)
+✔ copy response must match original request, snapshot, destination identity and version (0.239375ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 10
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 137.386917
