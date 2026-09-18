@@ -1,0 +1,15 @@
+{
+  "checks": [
+    "read_schedule",
+    "update_schedule_document",
+    "save_organization_presentation",
+    "mutate_schedule_template",
+    "mutate_schedule_snapshot",
+    "set_schedule_restriction",
+    "set_organization_member_status",
+    "request_organization_deletion"
+  ],
+  "version": 2,
+  "pendingDeletionOtherOrganization": true,
+  "revokedSessionCapturedPrivately": true
+}

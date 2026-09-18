@@ -1,0 +1,1 @@
+{"equal":true,"groups":{"columns":914,"constraints":427,"enums":68,"eventTriggers":6,"indexes":250,"rules":0,"triggers":52,"views":3},"normalization":"Dropped physical column slots compacted by logical dump; all remaining column order, types, defaults, nullability and definitions equal","sha256":"26a1707ba9ce5b24caab288f1796beb5228999c273b6d6e664e27c499c8afefc"}

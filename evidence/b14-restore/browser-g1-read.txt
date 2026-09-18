@@ -1,0 +1,345 @@
+Browser tab: 13, Title: "Roseland Schedule", URL: "http://127.0.0.1:3465/local-workspace?screen=schedule&org=2f75e684-eb3a-4951-9389-2df147812a8a".
+0 AXWebArea Roseland Schedule, URL: 127.0.0.1:3465/local-workspace?screen=schedule&org=2f75e684-eb3a-4951-9389-2df147812a8a
+	1 container
+		2 text LOCAL WORKSPACE
+		3 heading Roseland rehearsals, Value: 1
+			4 text Roseland rehearsals
+		5 text One account, with unfinished work kept in this tab.
+		6 text Fictional data only Switching local screens keeps drafts and request details. Closing or reloading loses tab-only requests. Duplicate source backups and template or appearance request receipts can be recovered by the original account on this computer.  Email stays in the local mail sink. Remember me retains sign-in only; idle expiry still applies. Signed in. Choose an organization or accept a fictional invitation.
+		7 container Account access
+			8 button Create invited account
+			9 button Forgot password
+		10 container Account security
+			11 button Account security
+		12 text b14-editor-92942e58-9d9a-4204-95ff-e9ef8fa78b25@example.test No unfinished work
+		13 button Sign out
+		14 text Workspace organization
+		15 pop up button (collapsed, settable) Workspace organization, Value: B14 Fictional Studio · member, Secondary Actions: Expand
+			16 menu
+				17 (disabled) Choose an organization
+				18 (disabled) B14 Fictional Studio · member
+		19 button Refresh organizations
+		20 container Workspace screens
+			21 button Schedules
+			22 button Schedule lifecycle
+			23 button (disabled) Manage invitations
+			24 button Accept invitation
+			25 button Restricted provisioning
+		26 container Organization deletion settings
+		27 container Organization security settings
+			28 button Organization security
+		29 container Organization presentation settings
+			30 button Organization appearance
+		31 container
+			32 heading Local schedule rehearsal, Value: 1
+				33 text Local schedule rehearsal
+			34 text Fictional data only · Supabase on this computer Authenticated editing and document tools with fictional location and weather responses. Library parity review remains open.
+		35 text Schedule loaded.
+		36 button Refresh list
+		37 container Schedule files
+			38 heading Copy and schedule files, Value: 2
+				39 text Copy and schedule files
+			40 text Schedule-only JSON includes saved documents readable by your account across organizations, including readable archived/deleted schedules. It excludes history, snapshots, templates, CMS, memberships, hierarchy definitions, aliases and browser-only data. Unsaved edits stay in this tab.
+			41 button Export all readable schedules
+			42 button (disabled) Copy / Save As current draft
+			43 container
+				44 text Import schedule-only JSON
+				45 button Import schedule-only JSON
+		46 container Snapshots
+			47 button Snapshots
+		48 container Templates
+			49 button Templates
+		50 container Schedule library
+			51 heading Schedules, Value: 2
+				52 text Schedules
+			53 button Refresh library
+			54 button (disabled) New schedule
+			55 container
+				56 text Search schedules
+				57 search text field (settable) Search schedules
+			58 container
+				59 text Production filter
+				60 pop up button (collapsed, settable) Production filter, Value: All productions, Secondary Actions: Expand
+					61 menu
+						62 (selected) All productions
+						63 B14 production
+			64 container
+				65 text Collection
+				66 pop up button (collapsed, settable) Collection, Value: Active, Secondary Actions: Expand
+					67 menu
+						68 (selected) Active
+						69 Archived
+						70 All saved
+						71 Trash
+			72 container
+				73 text Sort schedules
+				74 pop up button (collapsed, settable) Sort schedules, Value: Manual / day order, Secondary Actions: Expand
+					75 menu
+						76 (selected) Manual / day order
+						77 Name
+						78 Schedule date
+						79 Recently saved
+			80 button (collapsed) Date filter, Secondary Actions: Expand
+				81 text Date filter
+			82 container
+				83 text 1  visible schedules  · Search includes every loaded page
+			84 container
+				85 button (expanded) Recent schedules, Secondary Actions: Collapse
+					86 text Recent schedules
+				87 button B14 Fictional
+			88 container
+				89 button (expanded) B14 production 1 schedules, Secondary Actions: Collapse
+					90 text B14 production
+					91 text 1
+					92 text  schedules
+				93 button (expanded) Unassigned 1, Secondary Actions: Collapse
+					94 text Unassigned
+					95 text 1
+				96 container Description: Arrange B14 Fictional, Help: Drag within this section
+					97 text ≡
+				98 button B14 Fictional
+				99 container
+					100 text Unassigned  · 2026-09-20
+				101 button Organize B14 Fictional
+		102 container Schedule transfers
+			103 heading Move requests, Value: 2
+				104 text Move requests
+			105 button Refresh requests
+		106 container Schedule editor
+			107 text B14 latest organization labels
+			108 text B14 Fictional
+			109 text Version  2  ·  Saved
+			110 button (disabled) Save schedule
+			111 button Reload schedule
+			112 button (disabled) Description: Undo, Help: Undo (Ctrl+Z)
+				113 text ↩ Undo
+			114 button (disabled) Description: Redo, Help: Redo (Ctrl+Y)
+				115 text ↪ Redo
+			116 button ⬆ Share ▾, Help: Share
+				117 text ⬆
+				118 text Share
+				119 text ▾
+			120 button (collapsed) Team and Client links, Secondary Actions: Expand
+				121 text Team and Client links
+			122 container
+				123 text Project name
+				124 text Phase · Day — PRODUCER — DIRECTOR — CAMERA —
+				125 text TOWN / LOCATION
+				126 text field (settable) TOWN / LOCATION, Value: B14 newest source edit, ID: m-town
+				127 text DATE
+				128 date field (settable) DATE, Value: 2026-09-20, ID: m-date
+					129 container
+						130 stepper
+						131 stepper
+						132 stepper
+					133 pop up button Show date picker Show date picker
+				134 text CALL TIME
+				135 text — Fictional locations and forecasts only
+				136 button (disabled) Refresh weather
+				137 table
+					138 row
+						139 cell
+							140 text Action
+						141 cell
+							142 text Location
+						143 cell
+							144 text Description
+						145 cell
+							146 text Notes
+						147 cell
+							148 text Time In
+						149 cell
+							150 text Duration
+						151 cell
+							152 text Time Out
+						153 cell
+							154 text Done
+					155 row
+						156 cell
+							157 button ≡
+							158 text 1
+						159 cell
+							160 container
+								161 pop up button (collapsed, settable) Value: Shoot, Secondary Actions: Expand
+									162 menu
+										163 —
+										164 Crew Call
+										165 Cast Call
+										166 Briefing / Meeting
+										167 Breakfast
+										168 Move to Location
+										169 Set Up
+										170 Move / Set Up
+										171 (selected) Shoot
+										172 Tear Down / Pack Up
+										173 Move
+										174 LUNCH
+										175 Dinner
+										176 WRAP
+										177 Move to Hotel
+										178 Drive to Next Town
+										179 Location Scout
+										180 Time Off
+										181 Rest of Day Off
+										182 Day Off
+										183 Drive Home
+										184 Other
+								185 text ▾
+						186 cell
+							187 container
+								188 text entry area (settable)
+								189 button (collapsed) Description: Show full address, Help: Show / add full address, Secondary Actions: Expand
+								190 checkbox (settable, integer) Description: Mark done, Value: 0
+								191 text •
+								192 text entry area (settable) Test gate
+								193 button (collapsed) Description: Show full address, Help: Show / add full address, Secondary Actions: Expand
+								194 button (disabled) 📍, Help: Get directions
+								195 button ×, Help: Remove sub-location
+								196 text entry area (settable)
+								197 button + sub-location
+						198 cell
+							199 text entry area (settable)
+						200 cell
+							201 button ✓, Help: Add booking status
+							202 text entry area (settable) B14 latest recoverable note
+						203 cell
+							204 button ‹, Help: Lock time-in
+							205 pop up button (collapsed, settable) Value: — set —, Secondary Actions: Expand
+								206 menu
+									207 (selected) — set —
+									208 12:00 AM
+									209 12:15 AM
+									210 12:30 AM
+									211 12:45 AM
+									212 1:00 AM
+									213 1:15 AM
+									214 1:30 AM
+									215 1:45 AM
+									216 2:00 AM
+									217 2:15 AM
+									218 2:30 AM
+									219 2:45 AM
+									220 3:00 AM
+									221 3:15 AM
+									222 3:30 AM
+									223 3:45 AM
+									224 4:00 AM
+									225 4:15 AM
+									226 4:30 AM
+									227 4:45 AM
+									228 5:00 AM
+									229 5:15 AM
+									230 5:30 AM
+									231 5:45 AM
+									232 6:00 AM
+									233 6:15 AM
+									234 6:30 AM
+									235 6:45 AM
+									236 7:00 AM
+									237 7:15 AM
+									238 7:30 AM
+									239 7:45 AM
+									240 8:00 AM
+									241 8:15 AM
+									242 8:30 AM
+									243 8:45 AM
+									244 9:00 AM
+									245 9:15 AM
+									246 9:30 AM
+									247 9:45 AM
+									248 10:00 AM
+									249 10:15 AM
+									250 10:30 AM
+									251 10:45 AM
+									252 11:00 AM
+									253 11:15 AM
+									254 11:30 AM
+									255 11:45 AM
+									256 12:00 PM
+									257 12:15 PM
+									258 12:30 PM
+									259 12:45 PM
+									260 1:00 PM
+									261 1:15 PM
+									262 1:30 PM
+									263 1:45 PM
+									264 2:00 PM
+									265 2:15 PM
+									266 2:30 PM
+									267 2:45 PM
+									268 3:00 PM
+									269 3:15 PM
+									270 3:30 PM
+									271 3:45 PM
+									272 4:00 PM
+									273 4:15 PM
+									274 4:30 PM
+									275 4:45 PM
+									276 5:00 PM
+									277 5:15 PM
+									278 5:30 PM
+									279 5:45 PM
+									280 6:00 PM
+									281 6:15 PM
+									282 6:30 PM
+									283 6:45 PM
+									284 7:00 PM
+									285 7:15 PM
+									286 7:30 PM
+									287 7:45 PM
+									288 8:00 PM
+									289 8:15 PM
+									290 8:30 PM
+									291 8:45 PM
+									292 9:00 PM
+									293 9:15 PM
+									294 9:30 PM
+									295 9:45 PM
+									296 10:00 PM
+									297 10:15 PM
+									298 10:30 PM
+									299 10:45 PM
+									300 11:00 PM
+									301 11:15 PM
+									302 11:30 PM
+									303 11:45 PM
+						304 cell
+							305 pop up button (collapsed, settable) Value: 00:00, Secondary Actions: Expand
+								306 menu
+									307 —
+									308 (selected) 00:00
+									309 00:15
+									310 00:30
+									311 00:45
+									312 01:00
+									313 01:15
+									314 01:30
+									315 01:45
+									316 02:00
+									317 02:30
+									318 03:00
+									319 03:30
+									320 04:00
+									321 04:30
+									322 05:00
+									323 06:00
+									324 07:00
+									325 08:00
+						326 cell
+							327 text —
+							328 button ›, Help: Lock time-out
+						329 cell
+							330 checkbox (settable, integer) Description: Mark done, Value: 0
+							331 button 👤, Help: Edit contact
+						332 cell
+							333 button ✕, Help: Delete row
+					334 row
+						335 cell
+							336 text Total
+						337 cell
+							338 text 00:00
+				339 button + Add Row
+		340 container Notifications
+		341 text Roseland Schedule
+
+The focused UI element is 98 button B14 Fictional

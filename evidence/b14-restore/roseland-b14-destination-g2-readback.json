@@ -1,0 +1,22 @@
+{
+  "checks": [
+    "Restored owner password alone cannot bypass MFA",
+    "Restored original TOTP factor verifies genuinely",
+    "Complete latest document and version through owner",
+    "Complete latest document and version through editor",
+    "Restored suspended membership denies access",
+    "Restored cross-organization read remains hidden",
+    "Newest template/version/provenance readable",
+    "Restored newest source snapshot retains complete document",
+    "Newest organization presentation readable",
+    "Pending organization deletion state preserved",
+    "Restored pending-deletion organization rejects writes",
+    "Previously revoked genuine session remains denied",
+    "Previously revoked Client link remains denied",
+    "Restored current Client projection preserves allowlist",
+    "Reviewed application reads restored Client data",
+    "Original source API remains stopped and denies new writes"
+  ],
+  "version": 3,
+  "providerRaceInvestigation": false
+}

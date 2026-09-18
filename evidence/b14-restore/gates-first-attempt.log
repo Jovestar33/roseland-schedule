@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/private/tmp/roseland-b13-b14-cf4b0ee/scripts/recovery/b14-gates.py", line 25, in <module>
+    assert b.digest(b.metadata(project))==b.load(b.ROOT/(project+'-receipt.json'))['metadataDigest']
+AssertionError

@@ -1,0 +1,31 @@
+{
+  "stopped": [
+    {
+      "appPort": 3455,
+      "launcher": 51361
+    },
+    {
+      "appPort": 3465,
+      "launcher": 54491
+    },
+    {
+      "appPort": 3475,
+      "launcher": 55388
+    },
+    "supabase_inbucket_roseland-b13-source",
+    "supabase_db_roseland-b13-source",
+    "supabase_inbucket_roseland-b14-destination-g1",
+    "supabase_db_roseland-b14-destination-g1",
+    "supabase_kong_roseland-b14-destination-g2",
+    "supabase_rest_roseland-b14-destination-g2",
+    "supabase_auth_roseland-b14-destination-g2",
+    "supabase_inbucket_roseland-b14-destination-g2",
+    "supabase_db_roseland-b14-destination-g2"
+  ],
+  "batchPortsClosed": true,
+  "volumesRetained": true,
+  "b11PreviewRunning": true,
+  "b11PreviewHttpStatus": 200,
+  "b11PreviewBuild": "19acbce",
+  "productionChanged": false
+}

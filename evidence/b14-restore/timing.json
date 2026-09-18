@@ -1,0 +1,10 @@
+{
+  "g1": {
+    "restoreAndReconcileSeconds": 6.796,
+    "finalCaptureManifestToPassingReadbackSeconds": 251.493
+  },
+  "g2": {
+    "restoreAndReconcileSeconds": 6.758,
+    "finalCaptureManifestToPassingReadbackSeconds": 83.876
+  }
+}

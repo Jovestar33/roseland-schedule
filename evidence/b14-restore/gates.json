@@ -1,0 +1,12 @@
+{
+  "checks": [
+    "Reordered generations rejected",
+    "Wrong journal predecessor rejected",
+    "Missing services.json rejects activation input",
+    "Missing roles.sql rejects activation input",
+    "Semantically missing session admission hook rejected",
+    "Exact restore lost-ack retry returns existing receipt without replay",
+    "Missing effective application grant blocks activation"
+  ],
+  "failedArtifactsRetained": true
+}

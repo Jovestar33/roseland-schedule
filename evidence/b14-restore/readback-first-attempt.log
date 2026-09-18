@@ -1,0 +1,10 @@
+file:///private/tmp/roseland-b13-b14-cf4b0ee/scripts/recovery/b14-runtime.ts:8
+export async function login(u    ,mfa=false){const c=client();if((await c.auth.signInWithPassword({email:u.email,password:u.password})).error)throw Error('Restored password login failed');if(mfa&&(await c.auth.mfa.challengeAndVerify({factorId:u.factor.id,code:totp(u.factor.secret)})).error)throw Error('Restored MFA failed');return c;}
+                                                                                                                                                    ^
+
+Error: Restored password login failed
+    at login (file:///private/tmp/roseland-b13-b14-cf4b0ee/scripts/recovery/b14-runtime.ts:8:149)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async file:///private/tmp/roseland-b13-b14-cf4b0ee/scripts/recovery/b14-readback.ts:4:13
+
+Node.js v24.15.0

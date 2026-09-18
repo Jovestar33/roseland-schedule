@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/private/tmp/roseland-b13-b14-cf4b0ee/scripts/recovery/b14.py", line 150, in <module>
+    else:print(json.dumps(restore(a.project,a.names,a.fail)))
+  File "/private/tmp/roseland-b13-b14-cf4b0ee/scripts/recovery/b14.py", line 133, in restore
+    meta=metadata(project,'b14_stage');require(meta==load(ROOT/name/'metadata.json'),'Restored metadata/ACL/ownership reconciliation failed')
+  File "/private/tmp/roseland-b13-b14-cf4b0ee/scripts/migration/recovery_contract.py", line 27, in require
+    raise InvalidRecovery(message)
+recovery_contract.InvalidRecovery: Restored metadata/ACL/ownership reconciliation failed

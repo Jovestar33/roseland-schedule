@@ -1,0 +1,10 @@
+file:///private/tmp/roseland-b13-b14-cf4b0ee/scripts/recovery/b14-edit.ts:5
+async function rpc(c    ,n       ,a    ){const r=await c.rpc(n,a);if(r.error)throw Error(n+': '+r.error.message);checks.push(n);return r.data;}
+                                                                                   ^
+
+Error: update_schedule_document: Could not find the function public.update_schedule_document(next_document, schema_version, target_schedule_id) in the schema cache
+    at rpc (file:///private/tmp/roseland-b13-b14-cf4b0ee/scripts/recovery/b14-edit.ts:5:84)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async file:///private/tmp/roseland-b13-b14-cf4b0ee/scripts/recovery/b14-edit.ts:6:237
+
+Node.js v24.15.0

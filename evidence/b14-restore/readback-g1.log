@@ -1,0 +1,16 @@
+PASS Restored owner password alone cannot bypass MFA
+PASS Restored original TOTP factor verifies genuinely
+PASS Complete latest document and version through owner
+PASS Complete latest document and version through editor
+PASS Restored suspended membership denies access
+PASS Restored cross-organization read remains hidden
+PASS Newest template/version/provenance readable
+PASS Restored newest source snapshot retains complete document
+PASS Newest organization presentation readable
+PASS Pending organization deletion state preserved
+PASS Restored pending-deletion organization rejects writes
+PASS Previously revoked genuine session remains denied
+PASS Previously revoked Client link remains denied
+PASS Restored current Client projection preserves allowlist
+PASS Reviewed application reads restored Client data
+PASS Original source API remains stopped and denies new writes
