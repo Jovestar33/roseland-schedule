@@ -1,5 +1,7 @@
 # Technical migration acceptance audit
 
+> **September 18 planning consolidation after `f3450eb`:** [next ready bundle and exact retained gates](B11_B12_READY_BUNDLE.md). Early fictional review follows B11 and does not replace formal B15. Exceptional recovery/purge remain explicit; no worker or new implementation is dispatched here.
+
 > **B10-B local completion — September 18:** the approved 30-day organization deletion request, read-only period and cancellation are locally accepted in [B10_B_LOCAL_ACCEPTANCE.md](./B10_B_LOCAL_ACCEPTANCE.md). At the deadline, data remains frozen awaiting a separately approved purge. Operational deletion, exceptional recovery and release gates remain open.
 
 > **B10-A local completion — September 18:** scoped membership suspension and reinstatement are implemented and locally accepted in [B10_A_LOCAL_ACCEPTANCE.md](./B10_A_LOCAL_ACCEPTANCE.md). This supersedes older pending-dispatch language for B10-A only. B10-B deletion/purge, exceptional recovery, hosted parity and release remain separately gated.

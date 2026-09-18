@@ -4,7 +4,25 @@ Confirmed by the user on September 16, 2026. This is the shared decision record 
 
 ## Confirmed product decisions
 
-- **Production Command is the product brand from the scheduling release onward.** The name does not depend on completing the later production-management features. Scheduling is the first capability within the product; future tools extend the same product and design system.
+- **September 18 latest naming feedback:** the user likes both Rally and Huddle. Both remain favored exploratory candidates, with no final selection or availability screening. This supersedes the assistant's proposed Riff/Scoot comparison, not the product's existing working label. See shared decision BD-016.
+
+- **September 18 naming feedback:** Rally received a positive user response for suggesting acceleration, enjoyable work and achievable schedules/budgets/production plans. It is a favored reference, not a selected name. The user requested adjacent options, recorded in [naming round 02](./design/brand-and-design/NAMING_ROUND_02.md). Availability remains unchecked. See shared decision BD-015.
+
+- **September 18 central identity promise:** make production work fun. The user reports that users say the existing schedule app makes scheduling fun and wants that experience extended to budgets and multi-day master scheduling. The user authorized naming exploration including set-aside ideas; [round 01](./design/brand-and-design/NAMING_ROUND_01.md) is exploratory and unscreened, with no selected name. See shared decisions BD-013 and BD-014.
+
+- **September 18 personality refinement:** the user selected playful and friendly over bold and powerful for naming/brand personality. Retain the earlier bold/expressive visual preference; the combined direction is approachable, human, creative, catchy and fun with expressive visuals. No individual name or visual execution is selected. See shared decision BD-012.
+
+- **September 18 naming character:** the user requires the umbrella name to be catchy and fun, alongside human and creative and broad enough for the production suite. No replacement name is selected. See shared decision BD-011.
+
+- **September 18 umbrella scope clarification:** the user says budgets and master production scheduling across multiple days will be added very soon. Develop the identity for the broader production-management suite from the outset, including scheduling, budgeting and production direction; schedule-only naming is unsuitable. This records intended product scope, not a verified delivery date or expanded implementation authorization. See shared decision BD-010.
+
+- **September 18 personality selection:** the user explicitly prefers a human, creative name and identity over a technical, precise feel, alongside the initial bold/expressive direction. This informs creative exploration; no specific name or visual execution is selected. See shared decision BD-009.
+
+- **September 18 identity framing:** the user explicitly defines this work as an identity exercise: overarching name, personality and visual language developed together for the product, rather than naming alone or interface decoration. See shared decision BD-008.
+
+- **September 18 creative discovery:** the user leans toward a bold, expressive identity and prioritizes a new umbrella name for the complete future production-management product. Production Command feels very Gen X to the user and is no longer the creative anchor; it remains the existing working label until a replacement is chosen. This is a naming exploration direction, not approval of a name or authorization to rename code/routes. See shared decisions BD-006 and BD-007.
+
+- **September 18 correction: Production Command is a working title, not the final consumer brand.** The user reopened naming, logo and creative identity for the future Brand and Design chat. Earlier final-name wording is superseded. Scheduling remains the first capability of a broader production-management product.
 - Commercialization beyond Roseland is a core objective. The base interface must be company-neutral, suitable for new customer organizations without inherited Roseland branding.
 - Reskinning and organization theming remain required before real-data migration, but only after functionality, parity, security and technical migration/rollback readiness are verified. This September 16 sequencing correction supersedes the earlier instruction to start design immediately after the foundation batch.
 - Companies must be able to configure their identity, including company name, logo, colors, and fonts/typography. Configuration must be scoped to the correct organization.
@@ -42,13 +60,13 @@ The neutral look and feel has **not yet been selected**. Conduct broad design re
 4. Explain the usability, branding and implementation tradeoffs, recommend a direction, and obtain the user's design selection. Do not treat a preliminary mockup, logo concept or default styling choice as final approval.
 5. Record the selected direction, date, approved examples, typography/color/layout tokens and remaining decisions in Markdown; then implement a bounded slice and validate it before expanding.
 
-The product name is confirmed. Logo/wordmark, palette, typefaces, navigation styling, component appearance and exact customization controls remain design decisions. No trademark availability, domain ownership or font licensing has been established by this naming decision.
+The final product name, logo/wordmark, palette, typefaces, navigation styling, component appearance and exact customization controls remain design decisions. Production Command is a working title only. No trademark availability, domain ownership or font licensing has been established by this naming decision.
 
 ## Keep three concerns distinct
 
 | Concern | Requirement |
 | --- | --- |
-| Product identity and interface | Production Command, with a neutral default and a coherent component/navigation system. |
+| Product identity and interface | Working title Production Command; final name open, with a neutral default and a coherent component/navigation system. |
 | Organization and document branding | Tenant-specific company identity and controlled visual configuration for interface and generated documents, without cross-company leakage. |
 | Schedule and operational templates | Reusable layout/content choices, including the preserved Roseland schedule preset; selecting a template must not grant access to Roseland data or private assets. |
 
@@ -64,6 +82,12 @@ Use versioned presets and validated design tokens. Preserve the current Roseland
 - Retain all migration gates: comprehensive internal security review, complete latest-source reconciliation, parallel Netlify availability, one authoritative writer, and demonstrated rollback preserving newer edits.
 
 ## Continuity for every task
+
+**September 18 creative-role clarification:** Brand and Design is primarily and almost exclusively the graphic-design, visual-assistance and art-direction task. Its aesthetic objective is beautiful, modern website/application design that appeals to Gen Z and even Gen Alpha. Technical checks remain the responsibility of engineering/coordinating tasks. This clarification does not select a specific style, restrict the product to an age group, or change implementation approval gates. See decisions BD-004 and BD-005 in the [shared decision record](./design/brand-and-design/DECISIONS.md).
+
+**September 18 Brand and Design kickoff:** the user has started the dedicated creative task and authorized a discovery conversation, one clear question at a time, with decisions recorded in the shared workspace. See [discovery proposal and current question](./design/brand-and-design/DISCOVERY.md). This supersedes future-chat/setup-only wording: independent creative discussion and documentation can proceed now. Keep that work separate from Devtest's active engineering; do not change application code or interrupt Devtest. Reskin implementation remains subject to technical checks, explicit B15 functional approval and approval of the selected design. No new identity or existing concept has been approved by the kickoff.
+
+September 18: start the future creative chat with the shared [Brand and Design workspace](./design/brand-and-design/README.md). Voice and Planning coordinates, Brand and Design develops user-reviewed options, and Devtest implements approved work after existing gates. Folder setup does not start research or reskin implementation. Deliver its queued handoff only at Devtest's next completed-batch gap unless urgent. The user also approved an early fictional-data hands-on preview after B11, without renumbering or replacing formal B15 acceptance.
 
 Use this file as the canonical brief; link to it instead of creating divergent summaries. Tasks in separate checkouts must read this shared project copy and synchronize it deliberately with their own documentation. Chat memory alone is not the decision record. Update the brief when the user makes a design decision, distinguishing confirmed requirements from proposals and completed implementation from planned work.
 
