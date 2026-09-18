@@ -1,0 +1,49 @@
+PASS Preserved organization begins active
+PASS Admin cannot request organization deletion
+PASS Explicit organization confirmation required
+PASS Broad settings policy cannot directly change deletion field
+PASS Super Admin requests versioned deletion window
+PASS Request immediately enters read-only window
+PASS Database sets exactly 30 days
+PASS Exact retry does not extend the window
+PASS Receipt is actor-bound
+PASS Stale lifecycle revision conflicts
+PASS Ordinary reader gets read-only status without cancellation authority/deadline
+PASS Existing allowed read stays available
+PASS Existing owner export remains allowed
+PASS Independent export denial stays effective
+PASS Suspended member remains denied
+PASS Other organization remains available
+PASS Account security stays available
+PASS Read/export-only template review works while writes pause
+PASS Template Apply remains denied while read-only
+PASS Schedule save paused (HTTP 404)
+PASS Schedule lifecycle writes paused (HTTP 423)
+PASS Schedule creation/import destination paused (HTTP 404)
+PASS Cross-organization copy checks frozen source (HTTP 423)
+PASS Transfer request checks frozen source (HTTP 423)
+PASS Automatic snapshot capture paused (HTTP 423)
+PASS Snapshot purge paused (HTTP 423)
+PASS Automatic snapshot retention paused (HTTP 423)
+PASS Snapshot history read remains available
+PASS Template writes paused (HTTP 423)
+PASS Organization presentation writes paused (HTTP 423)
+PASS Role assignment paused (HTTP 423)
+PASS Permission restriction writes paused (HTTP 423)
+PASS Ordinary membership status writes paused (HTTP 423)
+PASS Invitation acceptance paused without membership changes
+PASS Direct hierarchy write denied or filtered by RLS
+PASS Service Data API write cannot bypass freeze
+PASS Privileged direct SQL also hits the shared frozen-write guard
+PASS Shared INSERT/UPDATE/DELETE guard installed across all 23 inventoried write tables including related imports
+PASS Read-only operations preserve schedules/history, snapshots, roles, restrictions and invitations
+PASS Request queues exactly one notice for every Super Admin
+PASS Ordinary Admin cannot cancel
+PASS Different active Super Admin cancels despite retained ordinary permission restriction
+PASS Cancellation restores active organization without reinstating or changing permissions/data
+PASS Exact cancellation retry returns original receipt
+PASS Ordinary authorized editing resumes after cancellation
+PASS At/past deadline derives awaiting purge
+PASS Cancellation at or after deadline denied
+PASS Deadline performs no physical or soft deletion
+PASS 48 focused B10-B assertions; private fixture saved.

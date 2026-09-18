@@ -1,0 +1,16 @@
+import type {SupabaseClient} from '@supabase/supabase-js';
+import {parseInvitationId} from './contracts.ts';
+export type OrganizationLifecycle={organization_id:string;version:number;state:'active'|'pending_deletion'|'awaiting_purge';read_only:boolean;cancel_before:string|null;can_request:boolean;can_cancel:boolean;can_manage:boolean;notifications:{event_id:string;recipient_id:string;recipient_name:string;event_kind:string;lifecycle_version:number;delivery_state:string}[]};
+export type LifecycleAttempt={actor:string;organization:string;request:string;version:number;operation:'request'|'cancel';confirmed:boolean};
+export function captureLifecycleAttempt(a:LifecycleAttempt):LifecycleAttempt{[a.actor,a.organization,a.request].forEach(parseInvitationId);if(!Number.isSafeInteger(a.version)||a.version<0||a.version>=Number.MAX_SAFE_INTEGER||!['request','cancel'].includes(a.operation)||!a.confirmed)throw Error('Confirm the organization');return Object.freeze({...a});}
+type ErrorKind='auth'|'mfa'|'conflict'|'denied'|'unknown';
+export class LifecycleError extends Error{kind:ErrorKind;constructor(kind:ErrorKind){super(kind);this.kind=kind;}}
+export function createOrganizationLifecycleRepository(client:SupabaseClient){
+ async function token(actor:string){const s=await client.auth.getSession();if(s.data.session?.user.id!==actor)throw new LifecycleError('auth');return s.data.session.access_token;}
+ async function rpc(actor:string,name:string,args:Record<string,unknown>){const bearer=await token(actor);const r=await client.rpc(name,args).setHeader('Authorization',`Bearer ${bearer}`);if(r.error)throw new LifecycleError(r.error.message?.startsWith('mfa_')?'mfa':r.status===401?'auth':r.status===409?'conflict':r.status===404?'denied':'unknown');return r.data;}
+ return {
+ async read(actor:string,org:string):Promise<OrganizationLifecycle>{const r=await rpc(actor,'read_organization_lifecycle',{target_organization_id:org});if(r?.organization_id!==org||!Number.isSafeInteger(r.version)||!['active','pending_deletion','awaiting_purge'].includes(r.state)||r.read_only!==(r.state!=='active')||typeof r.can_request!=='boolean'||typeof r.can_cancel!=='boolean'||typeof r.can_manage!=='boolean'||!Array.isArray(r.notifications))throw new LifecycleError('unknown');return r;},
+ async save(a:LifecycleAttempt){const args={target_organization_id:a.organization,request_id:a.request,expected_version:a.version};const r=await rpc(a.actor,a.operation==='request'?'request_organization_deletion':'cancel_organization_deletion',a.operation==='request'?{...args,confirmed:a.confirmed}:args);if(r?.confirmed!==true||r.request_id!==a.request||r.organization_id!==a.organization||r.operation!==a.operation||r.version!==a.version+1)throw new LifecycleError('unknown');return r;},
+ async notify(actor:string,org:string,event:string,recipient:string){const bearer=await token(actor);const r=await fetch('/api/platform/local-organization-notifications',{method:'POST',headers:{authorization:`Bearer ${bearer}`,'content-type':'application/json'},body:JSON.stringify({organizationId:org,eventId:event,recipientId:recipient})});if(!r.ok)throw new LifecycleError(r.status===401?'auth':'unknown');const data=await r.json();if(!['delivered','failed','sending'].includes(data.state))throw new LifecycleError('unknown');return data.state;}
+ };
+}

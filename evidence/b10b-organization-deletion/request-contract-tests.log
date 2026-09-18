@@ -1,0 +1,13 @@
+✔ lifecycle confirmation and version are immutable for exact retry (0.494833ms)
+✔ lifecycle account switch cannot send an old actor request (0.218583ms)
+✔ retries use identical request identity and do not change expected version (0.280083ms)
+✔ mismatched lifecycle receipt remains unconfirmed (0.068958ms)
+✔ malformed lifecycle state cannot silently enable writes (0.470875ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 61.98525

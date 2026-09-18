@@ -79,3 +79,7 @@ The user explicitly authorized B10-A suspension **and reinstatement** after the 
 ### B10-A local implementation checkpoint
 
 The authorized suspension/reinstatement slice is implemented with [bounded local acceptance](./B10_A_LOCAL_ACCEPTANCE.md). The role/restriction, current-authorization, notification, exact-retry and final-holder requirements above remain authoritative. No B10-B or exceptional recovery dispatch is implied.
+
+### Superseding B10-B dispatch and local completion — September 18
+
+Following B10-A `09e7553`, the user explicitly dispatched the bounded 30-day organization deletion-request/read-only/cancellation slice. It is implemented and locally accepted in [B10_B_LOCAL_ACCEPTANCE.md](./B10_B_LOCAL_ACCEPTANCE.md). Any active same-organization Super Admin may cancel strictly before the deadline without altering suspensions, roles, restrictions or invitations. At the deadline, the organization remains frozen awaiting separately approved purge work. This supersedes earlier B10-B-awaiting-dispatch wording only; permanent deletion, scheduler, billing, exceptional recovery, B11 and release/reskin remain outside the dispatch.

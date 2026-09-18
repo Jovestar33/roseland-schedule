@@ -1,6 +1,6 @@
 # B09/B10 concrete technical proposal
 
-September 18, 2026. Planning only, inspected against development commit `1accf5b`, following focused B08 acceptance at `5f05bd3`. Authority: [approved decisions](./APPROVED_FOLLOW_ON_DECISIONS.md) and [account/recovery decisions](./ACCOUNT_RECOVERY_ADMIN_DECISIONS.md). Proposed names below are new contracts, not claims of existing implementation. The ordinary B09-A slice was subsequently dispatched and locally accepted at `a662c69`; see [acceptance](./B09_A_LOCAL_ACCEPTANCE.md). B10-A suspension and reinstatement are now locally implemented and accepted; see [B10-A acceptance](./B10_A_LOCAL_ACCEPTANCE.md). The remaining contracts below are planning only.
+September 18, 2026. Planning only, inspected against development commit `1accf5b`, following focused B08 acceptance at `5f05bd3`. Authority: [approved decisions](./APPROVED_FOLLOW_ON_DECISIONS.md) and [account/recovery decisions](./ACCOUNT_RECOVERY_ADMIN_DECISIONS.md). Proposed names below are new contracts, not claims of existing implementation. The ordinary B09-A slice was subsequently dispatched and locally accepted at `a662c69`; see [acceptance](./B09_A_LOCAL_ACCEPTANCE.md). B10-A suspension and reinstatement are now locally implemented and accepted; see [B10-A acceptance](./B10_A_LOCAL_ACCEPTANCE.md). B10-B was subsequently explicitly dispatched and locally accepted; see [B10-B acceptance](./B10_B_LOCAL_ACCEPTANCE.md). Exceptional recovery and operational purge contracts below remain planning only.
 
 ## Source-to-contract map
 
@@ -87,7 +87,7 @@ The later technical contract must prove a one-use, expiring, actor/target-bound 
 
 ## Dispatch and evidence boundaries
 
-Current sequence: B09-A is locally accepted at `a662c69`; B10-A scoped membership suspension/reinstatement is locally accepted in [the bounded result](./B10_A_LOCAL_ACCEPTANCE.md). Review that result before a separate B10-B dispatch. Exceptional recovery and permanent purge each have the review stops above. No settled role, Settings authority, suspension, cancellation or pending read/export question needs asking again.
+Current sequence: B09-A is locally accepted at `a662c69`; B10-A scoped membership suspension/reinstatement is locally accepted in [the bounded result](./B10_A_LOCAL_ACCEPTANCE.md). B10-B was subsequently explicitly dispatched and is locally accepted in [its bounded result](./B10_B_LOCAL_ACCEPTANCE.md); operational purge remains open. Exceptional recovery and permanent purge each have the review stops above. No settled role, Settings authority, suspension, cancellation or pending read/export question needs asking again.
 
 Use forward migrations; preserve previous migrations, original failed evidence and fictional recovery volumes. This planning change starts no services and runs no application tests. Future implementation uses one minimal local fictional stack, relevant checks once after changes, and repetition only for a material failure/change. No actual schedules/accounts/mail, deployment, hosted configuration, provider investigation, B08 race rerun, B11 implementation or reskin is included. B15 functional approval, staged B16 work and B17/B18 revalidation/migration gates remain unchanged.
 

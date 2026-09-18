@@ -53,7 +53,8 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
   const [repository] = useState(() => createSessionScheduleRepository(client));
   const [directory] = useState(() => createWorkspaceRepository(client));
   const accountRef = useRef<string | null>(null);
-  const [permission, setPermission] = useState<{ recordId: string; token: string; allowed: boolean; copy: boolean; output: boolean; read: boolean } | null>(null);
+  const [permission, setPermission] = useState<{ recordId: string; token: string; lifecycleVersion?:number; allowed: boolean; copy: boolean; output: boolean; read: boolean } | null>(null);
+  const permissionRef=useRef(permission);permissionRef.current=permission;
   const scopeRef = useRef<string | null>(null), listTicket = useRef(0);
   scopeRef.current = workspace?.organization?.id ?? null;
   const [itemsOrganization, setItemsOrganization] = useState<string | null>(null);
@@ -110,7 +111,8 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
   useWorkspacePanelState(hasLocalDraft, snapshotState.busy || templateState.busy || busy || fileState.busy || libraryState.busy || transferState.busy);
   const ready = !!session && !authNeeded && !workspace?.authNeeded;
   const recordInScope = !workspace || (!!workspace.organization && controller.record?.organization_id === workspace.organization.id);
-  const canEdit = (permission?.recordId === controller.record?.id && permission?.token === session?.access_token && permission?.allowed === true);
+  const lifecycleVersion=workspace?.lifecycleVersion??0,lifecycleVersionRef=useRef(lifecycleVersion);lifecycleVersionRef.current=lifecycleVersion;
+  const canEdit = (!workspace?.readOnly && lifecycleVersion>=0 && permission?.lifecycleVersion===lifecycleVersion && permission?.recordId === controller.record?.id && permission?.token === session?.access_token && permission?.allowed === true);
 
   // A fresh provider identity invalidates pending selections when document/account scope changes.
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -180,23 +182,29 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
   useEffect(()=>{
     if(!active||!ready)return;
     const refresh=()=>{void refreshPermission().catch(()=>setPermission(null));};
-    const timer=setInterval(refresh,20000);window.addEventListener('focus',refresh);
+    refresh();const timer=setInterval(refresh,20000);window.addEventListener('focus',refresh);
     return()=>{clearInterval(timer);window.removeEventListener('focus',refresh);};
     // Scope and actor guards in refreshPermission reject stale results.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[active,ready,selected,session?.access_token,workspace?.organization?.id]);
+  },[active,ready,selected,session?.access_token,workspace?.organization?.id,lifecycleVersion,workspace?.readOnly]);
   async function refreshPermission() {
     const record = controller.record, actor = accountRef.current, token = sessionRef.current?.access_token;
-    const requestEpoch = epoch.current, organization = scopeRef.current;
+    const requestEpoch = epoch.current, organization = scopeRef.current, lifecycle=lifecycleVersionRef.current;
     if (!record || !actor || !token || (workspace && record.organization_id !== organization)) return;
     const [allowed,copy,output,read] = await Promise.all(['edit','create','export','read'].map(action=>directory.canEdit(actor, record.production_id, record.id,action)));
-    if (requestEpoch === epoch.current && controller.record?.id === record.id && sessionRef.current?.access_token === token && scopeRef.current === organization) setPermission({ recordId: record.id, token, allowed,copy,output,read });
+    const previousPermission=permissionRef.current;
+    const saved=allowed&&(previousPermission?.recordId!==record.id||previousPermission?.lifecycleVersion!==lifecycle||!previousPermission.allowed)?await repository.read(record.id):null;
+    if (requestEpoch === epoch.current && controller.record?.id === record.id && sessionRef.current?.access_token === token && scopeRef.current === organization&&lifecycleVersionRef.current===lifecycle){
+      const unchanged=!saved||saved.document_version===record.document_version;
+      setPermission({ recordId: record.id, token,lifecycleVersion:lifecycle,allowed:allowed&&unchanged,copy,output,read });
+      if(!unchanged)setMessage('Organization access resumed, but the saved schedule changed. Your draft is retained; review the current saved version before saving.');
+    }
   }
   async function authorizeOutput(){
     const record=controller.record,actor=accountRef.current,token=sessionRef.current?.access_token;
     if(!record||!actor||!token||!active||!ready)return false;
     try{const uses=structuredClone(state().templateUses),documentSession=state().documentSession,editRevision=state().editRevision;
-      for(const use of uses){const review=await templateRepository.reviewApply(actor,use.id,record.id,record.organization_id);if(review.template.version!==use.version||review.policy!==use.policy){setMessage('Template permissions changed. Review the application before exporting this draft.');return false;}}
+      for(const use of uses){const review=await templateRepository.reviewApply(actor,use.id,record.id,record.organization_id,'export');if(review.template.version!==use.version||review.policy!==use.policy){setMessage('Template permissions changed. Review the application before exporting this draft.');return false;}}
       const allowed=await directory.canEdit(actor,record.production_id,record.id,'export');
       if(documentSession!==state().documentSession||editRevision!==state().editRevision)return false;
       if(!activeRef.current||controller.record?.id!==record.id||accountRef.current!==actor||sessionRef.current?.access_token!==token||(workspace&&scopeRef.current!==record.organization_id))return false;
@@ -319,7 +327,7 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
         {workspace && <LocalScheduleFiles client={client} actor={session?.user.id ?? accountRef.current} organization={workspace.organization?.id ?? null}
           enabled={active && ready && !confirmation} copyEnabled={!templateUses.length && !busy && !!selected && recordInScope && canEdit && permission?.copy===true && !documentDialogOpen && contact===null && notes===null && status===null}
           getSource={()=>controller.record} getDraft={()=>state().getScheduleData()} name={state().scheduleName ?? 'Schedule'} onState={reportFiles} requireAuth={workspace.requireAuth} onCopy={()=>{if(selected)startTransfer(selected,true);}}/>}
-        {workspace&&<LocalScheduleSnapshots client={client} actor={session?.user.id??null} organization={workspace.organization?.id??null} schedule={selected} enabled={active&&ready&&recordInScope&&permission?.read===true&&!confirmation&&!busy&&!controller.attempt&&!documentDialogOpen&&contact===null&&status===null&&notes===null} canWrite={canEdit} canCopy={permission?.copy===true&&permission?.output===true} getSource={()=>controller.record} onState={reportSnapshots} requireAuth={workspace.requireAuth} beforeRestore={beforeSnapshotRestore} onRestored={onSnapshotRestored} captureOpen={captureCopyOpen} onCopy={openConfirmedCopy}/>}
+        {workspace&&<LocalScheduleSnapshots client={client} actor={session?.user.id??null} organization={workspace.organization?.id??null} schedule={selected} enabled={active&&ready&&recordInScope&&permission?.read===true&&!confirmation&&!busy&&!controller.attempt&&!documentDialogOpen&&contact===null&&status===null&&notes===null} readOnly={workspace.readOnly} canWrite={canEdit} canCopy={permission?.copy===true&&permission?.output===true} getSource={()=>controller.record} onState={reportSnapshots} requireAuth={workspace.requireAuth} beforeRestore={beforeSnapshotRestore} onRestored={onSnapshotRestored} captureOpen={captureCopyOpen} onCopy={openConfirmedCopy}/>}
         {workspace&&<LocalScheduleTemplates client={client} actor={session?.user.id??null} organization={workspace.organization?.id??null} enabled={active&&ready&&!confirmation&&!busy} canWriteCurrent={canEdit&&recordInScope&&permission?.output===true&&!controller.attempt} getSource={()=>controller.record} canApply={()=>!!controller.record&&canEdit&&recordInScope&&!controller.attempt&&!busyRef.current&&!documentDialogOpen&&contact===null&&status===null&&notes===null} onState={reportTemplates} requireAuth={workspace.requireAuth} onApply={(review,capture)=>{const st=state();if(!activeRef.current||!canEdit||!recordInScope||controller.attempt||busyRef.current||controller.record?.id!==capture.id||controller.record.document_version!==capture.version||st.documentSession!==capture.documentSession||st.editRevision!==capture.editRevision)return false;st.applyTemplateRows(review.template.rows,{id:review.template.id,version:review.template.version,policy:review.policy});setMessage('Template applied to draft. Save schedule retains its source restrictions.');return true;}}/>}
         {workspace&&<LocalScheduleLibrary client={client} actor={session?.user.id??accountRef.current} organization={workspace.organization?.id??null} enabled={active&&ready&&!confirmation} selected={selected} onOpen={id=>guarded(()=>void run(()=>open(id)),'Open schedule and discard unsaved changes')} onInspect={id=>workspace.openLifecycle?.(workspace.organization!.id,id)} onState={reportLibrary} onTransfer={startTransfer}/>}
         {workspace&&<LocalScheduleTransfers client={client} actor={session?.user.id??null} organization={workspace.organization?.id??null} enabled={active&&ready&&!confirmation} request={transferRequest} onState={reportTransfers} getDraft={id=>controller.record?.id===id?{record:controller.record,document:structuredClone(state().getScheduleData())}:null} captureOpen={captureCopyOpen} onCopy={openConfirmedCopy}/>}

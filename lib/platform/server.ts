@@ -208,6 +208,8 @@ export async function callPlatformJsonRpc(
   if (
     !config.actor
     || ![
+      'claim_organization_lifecycle_notice',
+      'finish_organization_lifecycle_notice',
       'claim_membership_notification',
       'finish_membership_notification',
       'provision_customer_organization',

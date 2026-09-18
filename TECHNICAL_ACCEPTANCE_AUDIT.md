@@ -1,5 +1,7 @@
 # Technical migration acceptance audit
 
+> **B10-B local completion — September 18:** the approved 30-day organization deletion request, read-only period and cancellation are locally accepted in [B10_B_LOCAL_ACCEPTANCE.md](./B10_B_LOCAL_ACCEPTANCE.md). At the deadline, data remains frozen awaiting a separately approved purge. Operational deletion, exceptional recovery and release gates remain open.
+
 > **B10-A local completion — September 18:** scoped membership suspension and reinstatement are implemented and locally accepted in [B10_A_LOCAL_ACCEPTANCE.md](./B10_A_LOCAL_ACCEPTANCE.md). This supersedes older pending-dispatch language for B10-A only. B10-B deletion/purge, exceptional recovery, hosted parity and release remain separately gated.
 
 > September 18 planning update: this remains the dated original audit inventory. Current B05/B08 local checkpoints and the [consolidated approvals](./APPROVED_FOLLOW_ON_DECISIONS.md) supersede older unanswered/status language without converting untested parity to Pass. B08's accepted same-account concurrency exception, failed evidence and direct-invitation-form/controlled-expiry limits remain intact. The next proposal is [B09/B10](./B09_B10_NEXT_TECHNICAL_PROPOSAL.md); no implementation is dispatched by this update.

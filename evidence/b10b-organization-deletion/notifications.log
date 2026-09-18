@@ -1,0 +1,16 @@
+PASS Genuine fixture password sign-in
+PASS Lifecycle delivery requires genuine MFA
+PASS Genuine MFA for lifecycle delivery
+PASS Notification fixture starts active
+PASS Request creates one notice per Super Admin
+PASS Mail outage records failed lifecycle delivery while organization stays frozen
+PASS All Super Admin request notices delivered after retry
+PASS Confirmed retry does not resend notice
+PASS Mail delivery does not cancel read-only state
+PASS Existing service invitation route cannot write into pending organization
+PASS Different Super Admin signs in with genuine MFA
+PASS All Super Admin cancellation notices delivered
+PASS Mail sink contains both lifecycle notice types
+PASS Organization remains active after cancellation notice delivery
+PASS Browser role cannot call service delivery claim directly
+PASS 15 focused B10-B HTTP/notification assertions.

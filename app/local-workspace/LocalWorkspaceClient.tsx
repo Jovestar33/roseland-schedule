@@ -14,6 +14,8 @@ import styles from './workspace.module.css';
 import { accountSessionStorage } from '@/lib/platform/account-session';
 import LocalMfaAccess from '@/components/local/LocalMfaAccess';
 import LocalOrganizationSecurity from '@/components/local/LocalOrganizationSecurity';
+import LocalOrganizationDeletion from '@/components/local/LocalOrganizationDeletion';
+import type {OrganizationLifecycle} from '@/lib/platform/organization-lifecycle';
 import LocalOrganizationMembers from '@/components/local/LocalOrganizationMembers';
 import LocalAccountAccess from '@/components/local/LocalAccountAccess';
 import LocalSchedulePermissions from '@/components/local/LocalSchedulePermissions';
@@ -25,6 +27,10 @@ const initial:WorkspaceLocation={screen:'schedule',organization:null};
 export default function LocalWorkspaceClient({config}:{config:LocalEditorConfig}){
   const [authStorage]=useState(()=>accountSessionStorage('rp-b08:'+config.supabaseUrl));
   const [rememberSession,setRememberSession]=useState(false),[accountReady,setAccountReady]=useState(!config.accountOnboarding);
+  const [organizationLifecycles,setOrganizationLifecycles]=useState<Record<string,OrganizationLifecycle>>({}),[lifecycleRevision,setLifecycleRevision]=useState(0);
+  const lifecycleDenied=useRef<()=>void>(()=>{});
+  lifecycleDenied.current=()=>setLifecycleRevision(v=>v+1);
+  const onLifecycleChange=useCallback((state:OrganizationLifecycle)=>setOrganizationLifecycles(old=>JSON.stringify(old[state.organization_id])===JSON.stringify(state)?old:{...old,[state.organization_id]:state}),[]);
   const [mfaReady,setMfaReady]=useState(false),[mfaRevision,setMfaRevision]=useState(0),[recentMfa,setRecentMfa]=useState(false);
   const mfaRequired=useRef<(token:string|null,recent:boolean)=>void>(()=>{});
   const mfaVerified=useCallback(()=>{setRecentMfa(false);setMfaRevision(v=>v+1);},[]);
@@ -39,6 +45,7 @@ export default function LocalWorkspaceClient({config}:{config:LocalEditorConfig}
       if(url.origin!==config.supabaseUrl)throw new Error('Local request required');
       const response=await fetch(input,{...init,cache:'no-store',redirect:'error',signal:AbortSignal.timeout(15000)});
       if((response.status===403||response.status===404)&&url.pathname.startsWith('/rest/v1/')){const body=await response.clone().json().catch(()=>null);mfaRequired.current(new Headers(init?.headers ?? (input instanceof Request ? input.headers : undefined)).get('authorization'),body?.message==='mfa_recent_required');}
+      if(response.status===423&&url.pathname.startsWith('/rest/v1/'))lifecycleDenied.current();
       if(response.status===428 && url.pathname.startsWith('/rest/v1/'))policyRequired.current(new Headers(init?.headers ?? (input instanceof Request ? input.headers : undefined)).get('authorization'));
       if(response.status===401 && url.pathname.startsWith('/rest/v1/'))expired.current(new Headers(init?.headers ?? (input instanceof Request ? input.headers : undefined)).get('authorization'));return response;
     }},
@@ -98,7 +105,7 @@ export default function LocalWorkspaceClient({config}:{config:LocalEditorConfig}
     const subscription=client.auth.onAuthStateChange((_event,next)=>{
       if(sessionRef.current?.access_token!==next?.access_token){navigationRequests.current++;directoryRequests.current++;}
       if(next&&identity.bind(next.user.id)){
-        navigationTicket.current++;directoryTicket.current++;useScheduleStore.getState().newSchedule();setPanels({});setVisited([]);setManagementPanels([]);setLifecyclePanels([]);setScheduleRequest(null);setOrganizations([]);setScope(null);setMore(false);setAccountEpoch(identity.generation);
+        navigationTicket.current++;directoryTicket.current++;useScheduleStore.getState().newSchedule();setPanels({});setVisited([]);setOrganizationLifecycles({});setManagementPanels([]);setLifecyclePanels([]);setScheduleRequest(null);setOrganizations([]);setScope(null);setMore(false);setAccountEpoch(identity.generation);
       }
       // Keep the known account address for reauthentication after a cross-tab sign-out.
       if(next)setEmail(next.user.email??'');
@@ -138,14 +145,14 @@ export default function LocalWorkspaceClient({config}:{config:LocalEditorConfig}
   async function signOut(){
     if(busyRef.current||working)return;busyRef.current=true;setBusy(true);
     try{if(sessionRef.current){const r=await client.auth.signOut({scope:'local'});if(r.error)throw new Error('Sign out unavailable');}
-      navigationTicket.current++;directoryTicket.current++;identity.clear();useScheduleStore.getState().newSchedule();setAccountEpoch(identity.generation);setPanels({});setVisited([]);setManagementPanels([]);setLifecyclePanels([]);setScheduleRequest(null);setOrganizations([]);setScope(null);setMore(false);setSession(null);sessionRef.current=null;setEmail('');setPassword('');setAuthNeeded(false);setConfirmSignOut(false);setLocation(initial);locationRef.current=initial;history.replaceState(null,'',workspaceHref(initial));setMessage('Signed out. Tab-only drafts and requests cleared. Retained source drafts, template requests and appearance requests remain available to their original account.');
+      navigationTicket.current++;directoryTicket.current++;identity.clear();useScheduleStore.getState().newSchedule();setAccountEpoch(identity.generation);setPanels({});setVisited([]);setOrganizationLifecycles({});setManagementPanels([]);setLifecyclePanels([]);setScheduleRequest(null);setOrganizations([]);setScope(null);setMore(false);setSession(null);sessionRef.current=null;setEmail('');setPassword('');setAuthNeeded(false);setConfirmSignOut(false);setLocation(initial);locationRef.current=initial;history.replaceState(null,'',workspaceHref(initial));setMessage('Signed out. Tab-only drafts and requests cleared. Retained source drafts, template requests and appearance requests remain available to their original account.');
     }catch{setMessage('Sign-out could not finish. Your workspace is retained.');}finally{busyRef.current=false;setBusy(false);}
   }
   const active=location.screen;
   const openOrganization=(id:string)=>{void navigate({screen:'schedule',organization:id});};
   const openSchedule=(organization:string,id:string)=>{const generation=identity.capture();void navigate({screen:'schedule',organization}).then(ok=>{if(ok&&identity.current(generation)&&locationRef.current.organization===organization&&locationRef.current.screen==='schedule')setScheduleRequest({id,organization,sequence:++scheduleSequence.current});});};
   const openLifecycle=(organization:string,id:string)=>{const generation=identity.capture();void navigate({screen:'lifecycle',organization}).then(ok=>{if(ok&&identity.current(generation)&&locationRef.current.organization===organization&&locationRef.current.screen==='lifecycle')setScheduleRequest({id,organization,sequence:++scheduleSequence.current,target:'lifecycle'});});};
-  const panel=(id:string,organization:WorkspaceOrganization|null,enabled:boolean)=>({client,session,authNeeded:authNeeded||!accountReady||!mfaReady||organization?.access_state==='mfa_required',organization,active:enabled&&accountReady&&mfaReady&&organization?.access_state!=='mfa_required',panelId:id,report,requireAuth,openOrganization,openSchedule,openLifecycle,scheduleRequest,consumeScheduleRequest});
+  const panel=(id:string,organization:WorkspaceOrganization|null,enabled:boolean)=>({client,session,authNeeded:authNeeded||!accountReady||!mfaReady||organization?.access_state==='mfa_required',organization,active:enabled&&accountReady&&mfaReady&&organization?.access_state!=='mfa_required',panelId:id,report,requireAuth,readOnly:!!organization&&organizationLifecycles[organization.id]?.read_only===true,lifecycleVersion:organization?organizationLifecycles[organization.id]?.version??-1:0,lifecycleRevision,onLifecycleChange,openOrganization,openSchedule,openLifecycle,scheduleRequest,consumeScheduleRequest});
   function tab(screen:WorkspaceScreen){if(authNeeded||!session||!accountReady){return;}void navigate({screen,organization:locationRef.current.organization});}
   return <div className={styles.page}>
     <header className={styles.header}><div><span className={styles.eyebrow}>LOCAL WORKSPACE</span><h1>Roseland rehearsals</h1><p>One account, with unfinished work kept in this tab.</p></div><span className={styles.badge}>Fictional data only</span></header>
@@ -162,6 +169,7 @@ export default function LocalWorkspaceClient({config}:{config:LocalEditorConfig}
       </>}
     </div>
     {identity.actor&&<div key={accountEpoch} hidden={!accountReady||!mfaReady||scope?.access_state==='mfa_required'}>
+      {visited.map(o=><div key={'deletion:'+o.id} hidden={scope?.id!==o.id}><LocalWorkspaceContext.Provider value={panel('deletion:'+o.id,o,scope?.id===o.id)}><LocalOrganizationDeletion/></LocalWorkspaceContext.Provider></div>)}
       {visited.filter(o=>o.role!=='member').map(o=><div key={'members:'+o.id} hidden={scope?.id!==o.id}><LocalWorkspaceContext.Provider value={panel('members:'+o.id,o,scope?.id===o.id)}><LocalOrganizationMembers/></LocalWorkspaceContext.Provider></div>)}
       {visited.map(o=><div key={'security:'+o.id} hidden={scope?.id!==o.id}><LocalWorkspaceContext.Provider value={panel('security:'+o.id,o,scope?.id===o.id)}><LocalOrganizationSecurity/></LocalWorkspaceContext.Provider></div>)}
       {visited.map(o=><div key={'presentation:'+o.id} hidden={scope?.id!==o.id}><LocalWorkspaceContext.Provider value={panel('presentation:'+o.id,o,scope?.id===o.id)}><LocalOrganizationSettings/></LocalWorkspaceContext.Provider></div>)}

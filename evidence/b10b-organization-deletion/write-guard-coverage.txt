@@ -1,0 +1,44 @@
+private.migration_record_versions | INSERT UPDATE DELETE | a_organization_writable
+private.migration_records | INSERT UPDATE DELETE | a_organization_writable
+private.organization_mfa_policy | INSERT UPDATE DELETE | a_organization_writable
+private.organization_presentation | INSERT UPDATE DELETE | a_organization_writable
+private.schedule_snapshot_imports | INSERT UPDATE DELETE | a_organization_writable
+private.schedule_snapshot_policy | INSERT UPDATE DELETE | a_organization_writable
+private.schedule_snapshots | INSERT UPDATE DELETE | a_organization_writable
+private.schedule_template_bindings | INSERT UPDATE DELETE | a_organization_writable
+private.schedule_template_browser_origins | INSERT UPDATE DELETE | a_organization_writable
+private.schedule_template_sources | INSERT UPDATE DELETE | a_organization_writable
+private.schedule_templates | INSERT UPDATE DELETE | a_organization_writable
+private.schedule_transfer_writes | INSERT UPDATE DELETE | a_organization_writable
+private.schedule_transfers | INSERT UPDATE DELETE | a_organization_writable
+public.organization_invitations | INSERT UPDATE DELETE | a_organization_writable
+public.organization_memberships | INSERT UPDATE DELETE | a_organization_writable
+public.organizations | INSERT UPDATE DELETE | a_organization_writable
+public.phases | INSERT UPDATE DELETE | a_organization_writable
+public.production_days | INSERT UPDATE DELETE | a_organization_writable
+public.production_memberships | INSERT UPDATE DELETE | a_organization_writable
+public.productions | INSERT UPDATE DELETE | a_organization_writable
+public.schedule_restrictions | INSERT UPDATE DELETE | a_organization_writable
+public.schedule_versions | INSERT UPDATE DELETE | a_organization_writable
+public.schedules | INSERT UPDATE DELETE | a_organization_writable
+Early RPC guard | assign_production_role
+Early RPC guard | close_schedule_transfer
+Early RPC guard | copy_schedule
+Early RPC guard | copy_schedule_snapshot
+Early RPC guard | copy_schedule_to_production
+Early RPC guard | expire_schedule_snapshots
+Early RPC guard | import_browser_schedule_template
+Early RPC guard | move_schedule
+Early RPC guard | mutate_schedule
+Early RPC guard | mutate_schedule_snapshot
+Early RPC guard | mutate_schedule_template
+Early RPC guard | order_schedule_library
+Early RPC guard | publish_schedule_template
+Early RPC guard | request_schedule_transfer
+Early RPC guard | save_organization_mfa_policy
+Early RPC guard | save_organization_presentation
+Early RPC guard | save_schedule_with_templates
+Early RPC guard | save_snapshot_policy
+Early RPC guard | set_organization_member_status
+Early RPC guard | set_schedule_restriction
+Early RPC guard | update_schedule_document

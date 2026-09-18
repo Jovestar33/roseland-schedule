@@ -1,0 +1,17 @@
+{
+  "date": "2026-09-18T05:53:24.054Z",
+  "origin": "http://127.0.0.1:3435",
+  "checks": [
+    "Genuine fictional Super Admin password/TOTP sign-in",
+    "Named organization and checkbox required for request",
+    "Unsaved town draft survives deletion request",
+    "Read-only banner and cancellation deadline displayed",
+    "Save disabled while pending",
+    "Exported one saved fictional schedule; draft unaffected",
+    "Snapshot history opens while retention is paused",
+    "Cancellation retains draft and revalidates saving",
+    "Retained draft saves as version 2",
+    "Fictional town restored to baseline and saved as version 3"
+  ],
+  "finalSaved": true
+}

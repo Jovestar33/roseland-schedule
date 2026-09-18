@@ -1,6 +1,7 @@
 'use client';
 import { createContext, useContext, useEffect } from 'react';
 import type { Session, SupabaseClient } from '@supabase/supabase-js';
+import type {OrganizationLifecycle} from '@/lib/platform/organization-lifecycle';
 import type { WorkspaceOrganization } from '@/lib/platform/workspace-repository';
 export interface WorkspacePanelState { dirty:boolean; busy:boolean }
 export interface WorkspaceScheduleRequest {id:string;organization:string;sequence:number;target?:'lifecycle'}
@@ -10,6 +11,10 @@ export interface WorkspacePanel {
   authNeeded:boolean;
   organization:WorkspaceOrganization|null;
   active:boolean;
+  readOnly?:boolean;
+  lifecycleVersion?:number;
+  lifecycleRevision?:number;
+  onLifecycleChange?:(state:OrganizationLifecycle)=>void;
   panelId:string;
   report:(id:string,state:WorkspacePanelState|null)=>void;
   requireAuth:()=>void;

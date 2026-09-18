@@ -1,0 +1,6 @@
+PASS Cancellation waits behind the organization policy lock
+PASS Cancellation rechecks deadline after waiting and rejects expired window
+PASS Serialized expiry remains frozen awaiting purge
+PASS No purge occurs at serialized expiry
+PASS Fictional deadline reset permits ordinary authorized cancellation
+PASS 5 focused B10-B serialized deadline checks.
