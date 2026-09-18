@@ -5,22 +5,11 @@ create extension if not exists pgtap with schema extensions;
 set local search_path = public, auth, extensions, pgtap;
 select extensions.plan(35);
 
--- The linked development database may already contain the completed real
--- bootstrap. Clear application state only inside this test transaction so the
--- one-time path remains testable; rollback restores every pre-existing row.
--- Clear the later schedule-domain children inside this rolled-back test only.
--- TRUNCATE avoids immutable-history delete triggers; no cascade is needed.
-truncate private.schedule_snapshot_imports, private.schedule_snapshot_copy_receipts, private.schedule_snapshot_policy_receipts, private.schedule_snapshot_receipts, private.schedule_snapshot_policy, private.schedule_snapshots, private.migration_record_versions, private.migration_records, private.organization_presentation_receipts, private.organization_presentation, private.schedule_template_browser_origins, private.schedule_template_save_receipts, private.schedule_template_bindings, private.schedule_template_receipts, private.schedule_template_sources, private.schedule_templates, private.schedule_transfers, private.schedule_copy_receipts, public.schedule_restrictions, public.schedule_versions, public.schedules, public.production_days, public.phases;
-delete from private.workflow_requests;
-delete from public.audit_events;
-delete from public.organization_invitations;
-delete from public.production_memberships;
-delete from public.productions;
-delete from public.organization_memberships;
-delete from public.organizations;
-delete from private.platform_operators;
-delete from public.profiles;
-delete from auth.users;
+-- Local fictional fixture reset only, entirely rolled back at test end.
+-- New lifecycle guards reject row deletion even for trusted fixture setup.
+-- TRUNCATE includes FK descendants (receipts/history/Auth) without invoking
+-- product deletion/purge workflows; no application guard is disabled.
+truncate auth.users, public.organizations cascade;
 
 select extensions.ok((select relrowsecurity from pg_class where oid = 'public.profiles'::regclass), 'profiles has RLS enabled');
 select extensions.ok((select relrowsecurity from pg_class where oid = 'private.platform_operators'::regclass), 'platform_operators has RLS enabled');
@@ -141,7 +130,7 @@ select
 from public.organizations o;
 
 set local role authenticated;
-select set_config('request.jwt.claims', '{"sub":"41000000-0000-4000-a000-000000000002","email":"invitee@example.test","role":"authenticated"}', true);
+select set_config('request.jwt.claims', '{"sub":"41000000-0000-4000-a000-000000000002","email":"invitee@example.test","role":"authenticated","aal":"aal2"}', true);
 select extensions.lives_ok(
   $$select public.accept_organization_invitation('44000000-0000-4000-a000-000000000001')$$,
   'matching authenticated recipient accepts invitation'
@@ -170,7 +159,7 @@ select extensions.is(
 );
 
 set local role authenticated;
-select set_config('request.jwt.claims', '{"sub":"41000000-0000-4000-a000-000000000002","email":"invitee@example.test","role":"authenticated"}', true);
+select set_config('request.jwt.claims', '{"sub":"41000000-0000-4000-a000-000000000002","email":"invitee@example.test","role":"authenticated","aal":"aal2"}', true);
 select extensions.throws_ok(
   $$select public.accept_organization_invitation('44000000-0000-4000-a000-000000000001')$$,
   'P0001',
@@ -197,7 +186,7 @@ select
 from public.organizations o;
 
 set local role authenticated;
-select set_config('request.jwt.claims', '{"sub":"41000000-0000-4000-a000-000000000003","email":"outsider@example.test","role":"authenticated"}', true);
+select set_config('request.jwt.claims', '{"sub":"41000000-0000-4000-a000-000000000003","email":"outsider@example.test","role":"authenticated","aal":"aal2"}', true);
 select extensions.throws_ok(
   $$select public.accept_organization_invitation('44000000-0000-4000-a000-000000000002')$$,
   'P0001',
@@ -240,7 +229,7 @@ select
 from public.organizations o;
 
 set local role authenticated;
-select set_config('request.jwt.claims', '{"sub":"41000000-0000-4000-a000-000000000004","email":"unverified@example.test","role":"authenticated"}', true);
+select set_config('request.jwt.claims', '{"sub":"41000000-0000-4000-a000-000000000004","email":"unverified@example.test","role":"authenticated","aal":"aal2"}', true);
 select extensions.throws_ok(
   $$select public.accept_organization_invitation('44000000-0000-4000-a000-000000000003')$$,
   'P0001',
@@ -255,11 +244,11 @@ select extensions.is(
 );
 
 set local role authenticated;
-select set_config('request.jwt.claims', '{"sub":"41000000-0000-4000-a000-000000000001","email":"owner@example.test","role":"authenticated"}', true);
+select set_config('request.jwt.claims', '{"sub":"41000000-0000-4000-a000-000000000001","email":"owner@example.test","role":"authenticated","aal":"aal2"}', true);
 select extensions.is((select count(*) from public.organization_invitations), 3::bigint, 'organization owner sees organization invitations');
 select extensions.is((select count(*) from public.audit_events), 2::bigint, 'organization owner sees organization audit events');
 
-select set_config('request.jwt.claims', '{"sub":"41000000-0000-4000-a000-000000000002","email":"invitee@example.test","role":"authenticated"}', true);
+select set_config('request.jwt.claims', '{"sub":"41000000-0000-4000-a000-000000000002","email":"invitee@example.test","role":"authenticated","aal":"aal2"}', true);
 select extensions.is((select count(*) from public.profiles), 1::bigint, 'authenticated user sees only own profile');
 select extensions.is((select count(*) from public.organization_invitations), 0::bigint, 'non-admin member cannot list invitations');
 select extensions.is((select count(*) from public.audit_events), 0::bigint, 'non-admin member cannot list audit events');

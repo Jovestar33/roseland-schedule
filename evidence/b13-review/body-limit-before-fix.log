@@ -1,0 +1,36 @@
+✔ verified Auth claims bind service workflow headers; inbound actor headers are ignored (9.476625ms)
+✔ failed Auth verification never reaches a service-role RPC (0.391333ms)
+✔ legacy JWT service keys get a bearer header; new secret keys never do (0.673917ms)
+✔ unbound, mismatched and unapproved service requests are refused before transport (0.3515ms)
+✔ revocation between Auth verification and SQL admission returns a bounded 401 (0.30475ms)
+✔ platform workflows stay disabled by default (0.089792ms)
+✔ workflow replay conflicts and rate caps have bounded, distinct responses (0.335375ms)
+✔ actual NextRequest loopback normalization preserves exact browser origin checks (10.0135ms)
+✖ platform JSON rejects oversized chunked bodies without buffering the remainder (1.365833ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 8
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 168.406334
+
+✖ failing tests:
+
+test at tests/platform/server-session.test.cjs:125:1
+✖ platform JSON rejects oversized chunked bodies without buffering the remainder (1.365833ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  false !== true
+  
+      at TestContext.<anonymous> (/private/tmp/roseland-b13-b14-cf4b0ee/tests/platform/server-session.test.cjs:130:10)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

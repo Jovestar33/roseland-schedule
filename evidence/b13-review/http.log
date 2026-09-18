@@ -1,0 +1,29 @@
+PASS Missing bearer denied /api/platform/invitations
+PASS Private response cache denied /api/platform/invitations
+PASS Foreign origin denied /api/platform/invitations
+PASS Missing bearer denied /api/platform/invitations/7d0baa89-a3e5-48fb-91a7-aff46e4ec165/revoke
+PASS Private response cache denied /api/platform/invitations/7d0baa89-a3e5-48fb-91a7-aff46e4ec165/revoke
+PASS Foreign origin denied /api/platform/invitations/7d0baa89-a3e5-48fb-91a7-aff46e4ec165/revoke
+PASS Missing bearer denied /api/platform/organizations
+PASS Private response cache denied /api/platform/organizations
+PASS Foreign origin denied /api/platform/organizations
+PASS Missing bearer denied /api/platform/local-membership-notifications
+PASS Private response cache denied /api/platform/local-membership-notifications
+PASS Foreign origin denied /api/platform/local-membership-notifications
+PASS Missing bearer denied /api/platform/local-organization-notifications
+PASS Private response cache denied /api/platform/local-organization-notifications
+PASS Foreign origin denied /api/platform/local-organization-notifications
+PASS Built Places route rejects forged UI flag without provider call
+PASS Malformed/guessed/revoked Client bearer hidden
+PASS Malformed/guessed/revoked Client bearer hidden
+PASS Malformed/guessed/revoked Client bearer hidden
+PASS Built Client allowlist survives current composition
+PASS Built Client cache/referrer protections
+PASS Public view response boundary /local-client
+PASS Public view response boundary /view
+PASS Public view response boundary /view/Fictional
+PASS Cross-origin mail request denied before provider
+PASS Forged actor header cannot cross organization through privileged server route
+PASS Actual client bundle contains no configured service key or fictional private access material
+PASS Built application log excludes tested secrets
+PASS 28 B13 built HTTP checks

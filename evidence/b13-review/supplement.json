@@ -1,0 +1,18 @@
+{
+  "checks": [
+    "GraphQL explicitly unavailable in this local stack; tenant filtering not claimed",
+    "Candidate tracked and untracked files exclude exact configured service key and private fixture material",
+    "Actual PostgREST role installs current session admission hook"
+  ],
+  "graphQL": {
+    "ownStatus": 200,
+    "foreignStatus": 200
+  },
+  "pins": {
+    "buildId": "ZljlieoK9yIbOA5a2CiFk",
+    "configSha256": "23d97aad8fe1a678e122e9b7765be12e6c316883b23ba9b5dc1b97b6496ba88b",
+    "lockSha256": "d53ca86c07f31319edbbeef266e830906fb27d70d0b63a3c11c3612f7226b500",
+    "migrationHistorySha256": "6a40af1639a4532d2154d9e00a5cd3ec276d8e95ab56ce73e341155ce2179673"
+  },
+  "secretScanScope": "Exact known local fixture secrets in candidate files; not a full entropy scanner or historical repository audit."
+}

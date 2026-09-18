@@ -96,7 +96,7 @@ select extensions.is((select count(*) from public.schedule_versions where schedu
 set local role authenticated;
 
 -- Organization A owner can see and administer only production A.
-select set_config('request.jwt.claims', '{"sub":"61000000-0000-4000-a000-000000000001","role":"authenticated"}', true);
+select set_config('request.jwt.claims', '{"sub":"61000000-0000-4000-a000-000000000001","role":"authenticated","aal":"aal2"}', true);
 select extensions.results_eq('select name from public.phases order by name', $$values ('Shoot A'::text)$$, 'owner A sees only phase A');
 select extensions.results_eq('select day_number from public.production_days', $$values (1::integer)$$, 'owner A sees only production day A');
 select extensions.results_eq('select slug from public.schedules', $$values ('schedule-a-day-1'::text)$$, 'owner A sees only schedule A');
@@ -104,7 +104,7 @@ select extensions.results_eq('select version from public.schedule_versions', $$v
 select extensions.is(public.can_access_production('63000000-0000-4000-a000-000000000002'), false, 'owner A cannot access production B schedule data');
 
 -- Editor A can edit the assigned production and produces immutable versions.
-select set_config('request.jwt.claims', '{"sub":"61000000-0000-4000-a000-000000000002","role":"authenticated"}', true);
+select set_config('request.jwt.claims', '{"sub":"61000000-0000-4000-a000-000000000002","role":"authenticated","aal":"aal2"}', true);
 select extensions.results_eq('select slug from public.schedules', $$values ('schedule-a-day-1'::text)$$, 'editor A sees assigned schedule A');
 select extensions.lives_ok(
   $$select public.update_schedule_document('66000000-0000-4000-a000-000000000001',1,'{"meta":{"town":"New York"},"rows":[{"action":"Crew Call"}]}'::jsonb,1)$$,
@@ -143,7 +143,7 @@ select extensions.throws_ok(
   'client cannot forge a schedule document version'
 );
 set local role postgres;
-select set_config('request.jwt.claims','{"sub":"61000000-0000-4000-a000-000000000001","role":"authenticated"}',true);
+select set_config('request.jwt.claims','{"sub":"61000000-0000-4000-a000-000000000001","role":"authenticated","aal":"aal2"}',true);
 select extensions.throws_ok(
   $$insert into public.schedules (
       organization_id, production_id, production_day_id, display_name, slug, created_by, updated_by
@@ -161,7 +161,7 @@ select extensions.throws_ok(
   'schedule cannot reference a day from another tenant or production'
 );
 set local role authenticated;
-select set_config('request.jwt.claims','{"sub":"61000000-0000-4000-a000-000000000002","role":"authenticated"}',true);
+select set_config('request.jwt.claims','{"sub":"61000000-0000-4000-a000-000000000002","role":"authenticated","aal":"aal2"}',true);
 select extensions.throws_ok(
   $$update public.schedules set deleted_at = now() where id = '66000000-0000-4000-a000-000000000001'$$,
   '42501',
@@ -203,7 +203,7 @@ select extensions.throws_ok(
 );
 
 -- Viewer A can read but cannot mutate schedule-domain rows or history.
-select set_config('request.jwt.claims', '{"sub":"61000000-0000-4000-a000-000000000003","role":"authenticated"}', true);
+select set_config('request.jwt.claims', '{"sub":"61000000-0000-4000-a000-000000000003","role":"authenticated","aal":"aal2"}', true);
 select extensions.results_eq('select slug from public.schedules', $$values ('schedule-a-day-1'::text)$$, 'viewer A sees assigned schedule A');
 select extensions.throws_ok(
   $$select public.update_schedule_document('66000000-0000-4000-a000-000000000001',2,'{"meta":{},"rows":[]}',1)$$,
@@ -239,18 +239,18 @@ select extensions.throws_ok(
 );
 
 -- Organization B and suspended users remain isolated.
-select set_config('request.jwt.claims', '{"sub":"61000000-0000-4000-a000-000000000004","role":"authenticated"}', true);
+select set_config('request.jwt.claims', '{"sub":"61000000-0000-4000-a000-000000000004","role":"authenticated","aal":"aal2"}', true);
 select extensions.results_eq('select slug from public.schedules', $$values ('schedule-b-day-1'::text)$$, 'owner B sees only schedule B');
 select extensions.results_eq('select version from public.schedule_versions', $$values (1::bigint)$$, 'owner B sees only schedule B history');
 
-select set_config('request.jwt.claims', '{"sub":"61000000-0000-4000-a000-000000000005","role":"authenticated"}', true);
+select set_config('request.jwt.claims', '{"sub":"61000000-0000-4000-a000-000000000005","role":"authenticated","aal":"aal2"}', true);
 select extensions.is((select count(*) from public.phases), 0::bigint, 'suspended member sees no phases');
 select extensions.is((select count(*) from public.production_days), 0::bigint, 'suspended member sees no production days');
 select extensions.is((select count(*) from public.schedules), 0::bigint, 'suspended member sees no schedules');
 select extensions.is((select count(*) from public.schedule_versions), 0::bigint, 'suspended member sees no schedule history');
 
 -- Trusted fixture deletion preserves history; user deletion awaits its own versioned contract.
-select set_config('request.jwt.claims', '{"sub":"61000000-0000-4000-a000-000000000001","role":"authenticated"}', true);
+select set_config('request.jwt.claims', '{"sub":"61000000-0000-4000-a000-000000000001","role":"authenticated","aal":"aal2"}', true);
 set local role postgres;
 select extensions.lives_ok(
   $$update public.schedules set deleted_at = now() where id = '66000000-0000-4000-a000-000000000001'$$,
@@ -267,7 +267,7 @@ select extensions.is(
   3::bigint,
   'soft deletion records another immutable recovery version'
 );
-select set_config('request.jwt.claims', '{"sub":"61000000-0000-4000-a000-000000000003","role":"authenticated"}', true);
+select set_config('request.jwt.claims', '{"sub":"61000000-0000-4000-a000-000000000003","role":"authenticated","aal":"aal2"}', true);
 select extensions.is(
   (select count(*) from public.schedule_versions where schedule_id = '66000000-0000-4000-a000-000000000001'),
   0::bigint,
@@ -276,7 +276,7 @@ select extensions.is(
 
 -- Database constraints and immutable-history triggers protect trusted paths too.
 set local role postgres;
-select set_config('request.jwt.claims','{"sub":"61000000-0000-4000-a000-000000000001","role":"authenticated"}',true);
+select set_config('request.jwt.claims','{"sub":"61000000-0000-4000-a000-000000000001","role":"authenticated","aal":"aal2"}',true);
 select extensions.throws_ok(
   $$update public.schedule_versions set label = 'Changed by owner' where schedule_id = '66000000-0000-4000-a000-000000000001'$$,
   'P0001',

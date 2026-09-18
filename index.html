@@ -1658,9 +1658,9 @@ function launchRowContactCall(){
 async function googlePlacesSearch(q){
   try{
     const res=await fetch('/api/places',{
-      method:'POST',
+      method:'POST',cache:'no-store',
       headers:{
-        'Content-Type':'application/json'
+        'Content-Type':'application/json',Authorization:'Bearer '+editorToken
       },
       body:JSON.stringify({input:q,languageCode:'en'})
     });
@@ -1699,7 +1699,7 @@ function formatGoogleAddress(details, fallbackName=''){
 
 async function googleGeocode(placeId, fallbackName=''){
   try{
-    const res=await fetch(`/api/places?placeId=${encodeURIComponent(placeId)}`);
+    const res=await fetch(`/api/places?placeId=${encodeURIComponent(placeId)}`,{headers:{Authorization:'Bearer '+editorToken},cache:'no-store'});
     const data=await res.json();
     if(data.location){
       return {

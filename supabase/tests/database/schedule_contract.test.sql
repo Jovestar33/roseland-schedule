@@ -89,7 +89,7 @@ select extensions.ok(not has_function_privilege('authenticated','private.validat
 set local role authenticated;
 select set_config('request.jwt.claims','{}',true);
 select extensions.throws_ok($$select public.read_schedule('66000000-0000-4000-a000-000000000001')$$,'PT401','Authentication required','missing identity fails closed');
-select set_config('request.jwt.claims','{"sub":"61000000-0000-4000-a000-000000000001","role":"authenticated"}',true);
+select set_config('request.jwt.claims','{"sub":"61000000-0000-4000-a000-000000000001","role":"authenticated","aal":"aal2"}',true);
 select extensions.is(public.read_schedule('66000000-0000-4000-a000-000000000001')->>'display_name','Schedule A Day 1','owner reads schedule through RLS');
 select extensions.throws_ok($$select public.read_schedule('66000000-0000-4000-a000-000000000002')$$,'PT404','Schedule unavailable','cross-organization read discloses no document');
 select extensions.throws_ok($$select public.update_schedule_document('66000000-0000-4000-a000-000000000002',1,'{"meta":{},"rows":[]}',1)$$,'PT404','Schedule unavailable','cross-organization update denied');
@@ -98,14 +98,14 @@ select extensions.throws_ok($$select public.update_schedule_document('66000000-0
 select extensions.throws_ok($$select public.update_schedule_document('66000000-0000-4000-a000-000000000001',0,'{"meta":{},"rows":[]}',1)$$,'PT400','Expected version is required','zero expected version denied');
 select extensions.throws_ok($$select public.update_schedule_document(target_schedule_id => '66000000-0000-4000-a000-000000000001', next_document => '{"meta":{},"rows":[]}', schema_version => 1)$$,'42883',null,'omitting expected version cannot select an unsafe overload');
 
-select set_config('request.jwt.claims','{"sub":"61000000-0000-4000-a000-000000000003","role":"authenticated"}',true);
+select set_config('request.jwt.claims','{"sub":"61000000-0000-4000-a000-000000000003","role":"authenticated","aal":"aal2"}',true);
 select extensions.is(public.read_schedule('66000000-0000-4000-a000-000000000001')->>'display_name','Schedule A Day 1','assigned viewer can read');
 select extensions.throws_ok($$select public.update_schedule_document('66000000-0000-4000-a000-000000000001',1,'{"meta":{},"rows":[]}',1)$$,'PT404','Schedule unavailable','viewer cannot update');
-select set_config('request.jwt.claims','{"sub":"61000000-0000-4000-a000-000000000005","role":"authenticated"}',true);
+select set_config('request.jwt.claims','{"sub":"61000000-0000-4000-a000-000000000005","role":"authenticated","aal":"aal2"}',true);
 select extensions.throws_ok($$select public.read_schedule('66000000-0000-4000-a000-000000000001')$$,'PT404','Schedule unavailable','suspended member cannot read');
 select extensions.throws_ok($$select public.update_schedule_document('66000000-0000-4000-a000-000000000001',1,'{"meta":{},"rows":[]}',1)$$,'PT404','Schedule unavailable','suspended member cannot update');
 
-select set_config('request.jwt.claims','{"sub":"61000000-0000-4000-a000-000000000002","role":"authenticated"}',true);
+select set_config('request.jwt.claims','{"sub":"61000000-0000-4000-a000-000000000002","role":"authenticated","aal":"aal2"}',true);
 select extensions.lives_ok($$select public.update_schedule_document('66000000-0000-4000-a000-000000000001',1,
 '{"meta":{"town":"Updated town","date":"2026-08-10","callsheet":{"safetyNotes":"Fictional safety note"},"wx":{"maxC":30,"noForecast":false}},"rows":[{"action":"Shoot","desc":"Fictional scene","timeIn":"9:00 AM","dur":"00:00","fixedIn":true,"locLat":90,"locLng":-180,"contactName":"Fictional contact","subLocations":[{"id":"test","loc":"Gate","done":false,"locLat":null}]}],"savedAt":100}',1)$$,
 'editor updates known legacy optional fields and zero duration');
@@ -165,7 +165,7 @@ drop trigger test_history_failure on public.schedule_versions;
 drop function private.test_history_failure();
 
 -- Deleted parents hide both the RPC and direct table/history paths.
-select set_config('request.jwt.claims','{"sub":"61000000-0000-4000-a000-000000000001","role":"authenticated"}',true);
+select set_config('request.jwt.claims','{"sub":"61000000-0000-4000-a000-000000000001","role":"authenticated","aal":"aal2"}',true);
 update public.production_days set deleted_at=now() where id='65000000-0000-4000-a000-000000000001';
 set local role authenticated;
 select extensions.throws_ok($$select public.read_schedule('66000000-0000-4000-a000-000000000001')$$,'PT404','Schedule unavailable','deleted day read denied');
@@ -174,7 +174,7 @@ select extensions.is((select count(*) from public.schedules),0::bigint,'direct R
 select extensions.is((select count(*) from public.schedule_versions),0::bigint,'history RLS follows deleted-parent restriction');
 set local role postgres;
 -- Trusted fixture administration uses an owner identity for deletion triggers.
-select set_config('request.jwt.claims','{"sub":"61000000-0000-4000-a000-000000000001","role":"authenticated"}',true);
+select set_config('request.jwt.claims','{"sub":"61000000-0000-4000-a000-000000000001","role":"authenticated","aal":"aal2"}',true);
 update public.production_days set deleted_at=null where id='65000000-0000-4000-a000-000000000001';
 update public.phases set deleted_at=now() where id='64000000-0000-4000-a000-000000000001';
 set local role authenticated;

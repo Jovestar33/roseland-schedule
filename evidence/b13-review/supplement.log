@@ -1,0 +1,3 @@
+PASS GraphQL explicitly unavailable in this local stack; tenant filtering not claimed
+PASS Candidate tracked and untracked files exclude exact configured service key and private fixture material
+PASS Actual PostgREST role installs current session admission hook

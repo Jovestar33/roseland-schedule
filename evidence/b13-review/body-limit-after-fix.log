@@ -1,0 +1,17 @@
+✔ verified Auth claims bind service workflow headers; inbound actor headers are ignored (9.225875ms)
+✔ failed Auth verification never reaches a service-role RPC (0.405833ms)
+✔ legacy JWT service keys get a bearer header; new secret keys never do (0.634416ms)
+✔ unbound, mismatched and unapproved service requests are refused before transport (0.8445ms)
+✔ revocation between Auth verification and SQL admission returns a bounded 401 (0.445333ms)
+✔ platform workflows stay disabled by default (0.106ms)
+✔ workflow replay conflicts and rate caps have bounded, distinct responses (0.312833ms)
+✔ actual NextRequest loopback normalization preserves exact browser origin checks (8.680583ms)
+✔ platform JSON rejects oversized chunked bodies without buffering the remainder (0.468208ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 158.492958

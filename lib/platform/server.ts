@@ -117,10 +117,22 @@ export async function readPlatformJson(request: NextRequest): Promise<Record<str
     throw new PlatformHttpError(413, 'Request too large');
   }
 
-  const raw = await request.text();
-  if (Buffer.byteLength(raw, 'utf8') > MAX_BODY_BYTES) {
-    throw new PlatformHttpError(413, 'Request too large');
+  const chunks: Uint8Array[] = [];
+  let total = 0;
+  const reader = request.body?.getReader();
+  if (reader) {
+    while (true) {
+      const chunk = await reader.read();
+      if (chunk.done) break;
+      total += chunk.value.byteLength;
+      if (total > MAX_BODY_BYTES) {
+        await reader.cancel();
+        throw new PlatformHttpError(413, 'Request too large');
+      }
+      chunks.push(chunk.value);
+    }
   }
+  const raw = Buffer.concat(chunks).toString('utf8');
 
   try {
     const parsed = JSON.parse(raw) as unknown;

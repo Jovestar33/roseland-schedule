@@ -1,0 +1,32 @@
+PASS Owner AAL1 denied before genuine enrollment
+PASS Genuine MFA owner reads complete B12-derived document
+PASS Direct REST scoped read owner
+PASS Direct REST scoped read editor
+PASS Direct REST scoped read viewer
+PASS Other organization direct REST does not disclose schedule
+PASS Viewer cannot mutate through write RPC
+PASS Unknown nested field refused without stripping
+PASS Editor cannot write organization presentation
+PASS Malicious/unknown CMS input refused colors
+PASS Malicious/unknown CMS input refused logo
+PASS Malicious/unknown CMS input refused labels
+PASS Malicious/unknown CMS input refused actionStyles
+PASS Template remains production scoped
+PASS Template outsider denied
+PASS Snapshot outsider denied
+PASS Client projection preserves notes and excludes contacts
+PASS Ordinary user cannot call trusted Client resolver
+PASS Current source export restriction blocks existing Client link
+PASS Source export restriction also blocks derived template
+PASS Frozen organization retains permitted scoped Client read
+PASS Frozen organization rejects share mutation
+file:///private/tmp/roseland-b13-b14-cf4b0ee/scripts/test-b13-composition.ts:2
+const checks         =[];function check(v        ,label       ){if(!v)throw Error(label);checks.push(label);console.log('PASS '+label);}
+                                                                            ^
+
+Error: Frozen organization rejects schedule write
+    at check (file:///private/tmp/roseland-b13-b14-cf4b0ee/scripts/test-b13-composition.ts:2:77)
+    at file:///private/tmp/roseland-b13-b14-cf4b0ee/scripts/test-b13-composition.ts:22:508
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+
+Node.js v24.15.0

@@ -1,0 +1,14 @@
+✔ Forged UI flag cannot use provider proxy (34.541541ms)
+✔ Valid existing editor token permits bounded private lookup (8.328208ms)
+✔ Wrong token and foreign origin never reach provider (6.338666ms)
+✔ Malformed and oversized bodies are refused before provider (6.497709ms)
+✔ Provider errors cannot enter response or logs (5.022708ms)
+✔ Process request budget is bounded and recovers after its window (1.3935ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 185.197

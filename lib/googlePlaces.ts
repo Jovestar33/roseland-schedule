@@ -1,3 +1,4 @@
+import {useAuthStore} from './store/authStore';
 export interface PlaceSuggestion {
   label: string;
   main: string;
@@ -8,16 +9,13 @@ export interface PlaceSuggestion {
 export async function searchPlaces(q: string): Promise<PlaceSuggestion[]> {
   if (!q.trim()) return [];
   try {
-    console.log('[places-client] searching:', q);
     const res = await fetch('/api/places', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json',Authorization:`Bearer ${useAuthStore.getState().token??''}` },
+      cache:'no-store',
       body: JSON.stringify({ input: q, languageCode: 'en' }),
     });
-    console.log('[places-client] /api/places status:', res.status);
     const data = await res.json() as { suggestions?: Array<{ placePrediction?: { text?: { text?: string }; structuredFormat?: { mainText?: { text?: string }; secondaryText?: { text?: string } }; placeId?: string } }>; error?: unknown };
-    console.log('[places-client] response:', JSON.stringify(data).slice(0, 300));
-    if (data.error) console.error('[places-client] error from server:', data.error);
     if (data.suggestions?.length) {
       return data.suggestions
         .filter(s => s.placePrediction)
@@ -29,7 +27,6 @@ export async function searchPlaces(q: string): Promise<PlaceSuggestion[]> {
         });
     }
   } catch (err) {
-    console.error('[places-client] fetch error:', err);
   }
   return [];
 }
@@ -68,7 +65,8 @@ function formatAddress(
 export async function geocodePlace(placeId: string, fallbackName = ''): Promise<GeoResult | null> {
   try {
     const res = await fetch(
-      `/api/places?placeId=${encodeURIComponent(placeId)}&fields=location,formattedAddress,addressComponents`
+      `/api/places?placeId=${encodeURIComponent(placeId)}&fields=location,formattedAddress,addressComponents`,
+      {headers:{Authorization:`Bearer ${useAuthStore.getState().token??''}`},cache:'no-store'}
     );
     const data = await res.json() as { location?: { latitude?: number; longitude?: number }; formattedAddress?: string; addressComponents?: Array<{ types?: string[]; longText?: string; long_name?: string; longName?: string; shortText?: string; short_name?: string; shortName?: string }> };
     if (data.location?.latitude !== undefined) {

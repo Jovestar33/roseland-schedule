@@ -1,26 +1,24 @@
 begin;
+-- SQL-only fixture for the trusted server's verified actor headers. Genuine
+-- Auth/MFA/HTTP acceptance is tested separately; this never signs a JWT.
+create function pg_temp.assured_actor(actor uuid) returns uuid language plpgsql as $assure$
+begin
+ perform set_config('request.jwt.claims','{"role":"service_role"}',true);
+ perform set_config('request.headers',jsonb_build_object('x-actor-user-id',actor,'x-actor-aal','aal2')::text,true);
+ return actor;
+end;$assure$;
+
 
 set local role postgres;
 create extension if not exists pgtap with schema extensions;
 set local search_path = public, auth, extensions, pgtap;
 select extensions.plan(36);
 
--- The linked development database may already contain the completed real
--- bootstrap. Clear application state only inside this test transaction so the
--- one-time path remains testable; rollback restores every pre-existing row.
--- Clear the later schedule-domain children inside this rolled-back test only.
--- TRUNCATE avoids immutable-history delete triggers; no cascade is needed.
-truncate private.schedule_snapshot_imports, private.schedule_snapshot_copy_receipts, private.schedule_snapshot_policy_receipts, private.schedule_snapshot_receipts, private.schedule_snapshot_policy, private.schedule_snapshots, private.migration_record_versions, private.migration_records, private.organization_presentation_receipts, private.organization_presentation, private.schedule_template_browser_origins, private.schedule_template_save_receipts, private.schedule_template_bindings, private.schedule_template_receipts, private.schedule_template_sources, private.schedule_templates, private.schedule_transfers, private.schedule_copy_receipts, public.schedule_restrictions, public.schedule_versions, public.schedules, public.production_days, public.phases;
-delete from private.workflow_requests;
-delete from public.audit_events;
-delete from public.organization_invitations;
-delete from public.production_memberships;
-delete from public.productions;
-delete from public.organization_memberships;
-delete from public.organizations;
-delete from private.platform_operators;
-delete from public.profiles;
-delete from auth.users;
+-- Local fictional fixture reset only, entirely rolled back at test end.
+-- New lifecycle guards reject row deletion even for trusted fixture setup.
+-- TRUNCATE includes FK descendants (receipts/history/Auth) without invoking
+-- product deletion/purge workflows; no application guard is disabled.
+truncate auth.users, public.organizations cascade;
 
 select extensions.ok(
   (select relrowsecurity from pg_class where oid = 'private.workflow_requests'::regclass),
@@ -142,7 +140,7 @@ begin
   );
 
   perform public.provision_customer_organization(
-    '51000000-0000-4000-a000-000000000001',
+    pg_temp.assured_actor('51000000-0000-4000-a000-000000000001'),
     '51000000-0000-4000-a000-000000000002',
     'Customer Studio',
     'customer-studio',
@@ -185,7 +183,7 @@ select extensions.is(
 set local role service_role;
 select extensions.throws_ok(
   $$select public.provision_customer_organization(
-    '51000000-0000-4000-a000-000000000001',
+    pg_temp.assured_actor('51000000-0000-4000-a000-000000000001'),
     '51000000-0000-4000-a000-000000000002',
     'Ignored Retry',
     'ignored-retry',
@@ -208,7 +206,7 @@ select extensions.is((select count(*) from public.organizations), 2::bigint, 'id
 set local role service_role;
 select extensions.throws_ok(
   $$select public.provision_customer_organization(
-    '51000000-0000-4000-a000-000000000002',
+    pg_temp.assured_actor('51000000-0000-4000-a000-000000000002'),
     '51000000-0000-4000-a000-000000000003',
     'Denied Studio', 'denied-studio', 'UTC', 'en', null, null,
     'Unauthorized attempt', 'aal2', now(), 'provision-0002'
@@ -219,7 +217,7 @@ select extensions.throws_ok(
 );
 select extensions.throws_ok(
   $$select public.provision_customer_organization(
-    '51000000-0000-4000-a000-000000000001',
+    pg_temp.assured_actor('51000000-0000-4000-a000-000000000001'),
     '51000000-0000-4000-a000-000000000003',
     'Weak Session', 'weak-session', 'UTC', 'en', null, null,
     'Weak session attempt', 'aal1', now(), 'provision-0003'
@@ -230,7 +228,7 @@ select extensions.throws_ok(
 );
 select extensions.throws_ok(
   $$select public.provision_customer_organization(
-    '51000000-0000-4000-a000-000000000001',
+    pg_temp.assured_actor('51000000-0000-4000-a000-000000000001'),
     '51000000-0000-4000-a000-000000000003',
     'Stale Session', 'stale-session', 'UTC', 'en', null, null,
     'Stale session attempt', 'aal2', now() - interval '16 minutes', 'provision-0004'
@@ -242,7 +240,7 @@ select extensions.throws_ok(
 
 select extensions.lives_ok(
   $$select public.create_organization_invitation(
-    '51000000-0000-4000-a000-000000000002',
+    pg_temp.assured_actor('51000000-0000-4000-a000-000000000002'),
     current_setting('test.customer_org_id')::uuid,
     'Admin@Example.Test',
     'admin',
@@ -275,7 +273,7 @@ select extensions.is(
 set local role service_role;
 select extensions.throws_ok(
   $$select public.create_organization_invitation(
-    '51000000-0000-4000-a000-000000000002',
+    pg_temp.assured_actor('51000000-0000-4000-a000-000000000002'),
     current_setting('test.customer_org_id')::uuid,
     'different@example.test',
     'member',
@@ -318,7 +316,7 @@ select extensions.is(
 set local role service_role;
 select extensions.throws_ok(
   $$select public.create_organization_invitation(
-    '51000000-0000-4000-a000-000000000003',
+    pg_temp.assured_actor('51000000-0000-4000-a000-000000000003'),
     current_setting('test.customer_org_id')::uuid,
     'outsider@example.test', 'owner', null, null,
     now() + interval '7 days', 'aal2', now(), 'invite-owner-denied-0001'
@@ -329,7 +327,7 @@ select extensions.throws_ok(
 );
 select extensions.lives_ok(
   $$select public.create_organization_invitation(
-    '51000000-0000-4000-a000-000000000003',
+    pg_temp.assured_actor('51000000-0000-4000-a000-000000000003'),
     current_setting('test.customer_org_id')::uuid,
     'member@example.test', 'member', null, null,
     now() + interval '7 days', 'aal2', now(), 'invite-member-0001'
@@ -345,7 +343,7 @@ select set_config(
 set local role service_role;
 select extensions.lives_ok(
   $$select public.revoke_organization_invitation(
-    '51000000-0000-4000-a000-000000000003',
+    pg_temp.assured_actor('51000000-0000-4000-a000-000000000003'),
     current_setting('test.member_invitation_id')::uuid,
     'Recipient no longer requires access',
     'aal2',
@@ -369,7 +367,7 @@ select extensions.is(
 set local role service_role;
 select extensions.lives_ok(
   $$select public.create_organization_invitation(
-    '51000000-0000-4000-a000-000000000002',
+    pg_temp.assured_actor('51000000-0000-4000-a000-000000000002'),
     current_setting('test.customer_org_id')::uuid,
     'outsider@example.test', 'owner', null, null,
     now() + interval '7 days', 'aal2', now(), 'invite-owner-0001'
@@ -385,7 +383,7 @@ select set_config(
 set local role service_role;
 select extensions.throws_ok(
   $$select public.revoke_organization_invitation(
-    '51000000-0000-4000-a000-000000000003',
+    pg_temp.assured_actor('51000000-0000-4000-a000-000000000003'),
     current_setting('test.owner_invitation_id')::uuid,
     'Unauthorized role revocation', 'aal2', now(), 'revoke-owner-denied-0001'
   )$$,
@@ -395,7 +393,7 @@ select extensions.throws_ok(
 );
 select extensions.throws_ok(
   $$select public.create_organization_invitation(
-    '51000000-0000-4000-a000-000000000005',
+    pg_temp.assured_actor('51000000-0000-4000-a000-000000000005'),
     current_setting('test.customer_org_id')::uuid,
     'second@example.test', 'member', null, null,
     now() + interval '7 days', 'aal2', now(), 'invite-outsider-0001'
@@ -420,7 +418,7 @@ where o.slug = 'roseland-pictures';
 set local role service_role;
 select extensions.throws_ok(
   $$select public.create_organization_invitation(
-    '51000000-0000-4000-a000-000000000002',
+    pg_temp.assured_actor('51000000-0000-4000-a000-000000000002'),
     current_setting('test.customer_org_id')::uuid,
     'second@example.test', 'member',
     '53000000-0000-4000-a000-000000000001', 'viewer',

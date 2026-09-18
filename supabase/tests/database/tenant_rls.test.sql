@@ -53,14 +53,14 @@ select extensions.ok((select relrowsecurity from pg_class where oid = 'public.pr
 set local role authenticated;
 
 -- Organization A owner: organization-wide administration, but no visibility into B.
-select set_config('request.jwt.claims', '{"sub":"10000000-0000-4000-a000-000000000001","role":"authenticated"}', true);
+select set_config('request.jwt.claims', '{"sub":"10000000-0000-4000-a000-000000000001","role":"authenticated","aal":"aal2"}', true);
 select extensions.results_eq('select slug from public.organizations order by slug', $$values ('organization-a'::text)$$, 'owner A sees only organization A');
 select extensions.results_eq('select slug from public.productions order by slug', $$values ('production-a'::text)$$, 'owner A sees production A without a production membership');
 select extensions.ok(public.can_edit_production('30000000-0000-4000-a000-000000000001'), 'owner A can edit production A');
 select extensions.is(public.can_access_production('30000000-0000-4000-a000-000000000002'), false, 'owner A cannot access production B');
 
 -- Editor A: assigned production only and may edit.
-select set_config('request.jwt.claims', '{"sub":"10000000-0000-4000-a000-000000000002","role":"authenticated"}', true);
+select set_config('request.jwt.claims', '{"sub":"10000000-0000-4000-a000-000000000002","role":"authenticated","aal":"aal2"}', true);
 select extensions.results_eq('select slug from public.productions order by slug', $$values ('production-a'::text)$$, 'editor A sees only assigned production A');
 select extensions.ok(public.can_edit_production('30000000-0000-4000-a000-000000000001'), 'editor A can edit production A');
 select extensions.is(public.can_access_production('30000000-0000-4000-a000-000000000002'), false, 'editor A cannot access production B');
@@ -83,7 +83,7 @@ select extensions.results_eq(
 );
 
 -- Viewer A: assigned read access but no edit access.
-select set_config('request.jwt.claims', '{"sub":"10000000-0000-4000-a000-000000000003","role":"authenticated"}', true);
+select set_config('request.jwt.claims', '{"sub":"10000000-0000-4000-a000-000000000003","role":"authenticated","aal":"aal2"}', true);
 select extensions.results_eq('select slug from public.productions order by slug', $$values ('production-a'::text)$$, 'viewer A sees assigned production A');
 select extensions.is(public.can_edit_production('30000000-0000-4000-a000-000000000001'), false, 'viewer A cannot edit production A');
 select extensions.results_eq(
@@ -93,12 +93,12 @@ select extensions.results_eq(
 );
 
 -- Organization B owner is isolated from A.
-select set_config('request.jwt.claims', '{"sub":"10000000-0000-4000-a000-000000000004","role":"authenticated"}', true);
+select set_config('request.jwt.claims', '{"sub":"10000000-0000-4000-a000-000000000004","role":"authenticated","aal":"aal2"}', true);
 select extensions.results_eq('select slug from public.productions order by slug', $$values ('production-b'::text)$$, 'owner B sees only production B');
 select extensions.is(public.can_access_production('30000000-0000-4000-a000-000000000001'), false, 'owner B cannot access production A');
 
 -- A production membership cannot outlive/sidestep a suspended organization membership.
-select set_config('request.jwt.claims', '{"sub":"10000000-0000-4000-a000-000000000005","role":"authenticated"}', true);
+select set_config('request.jwt.claims', '{"sub":"10000000-0000-4000-a000-000000000005","role":"authenticated","aal":"aal2"}', true);
 select extensions.results_eq('select slug from public.productions', $$select null::text where false$$, 'suspended organization member sees no productions');
 select extensions.is(public.can_access_production('30000000-0000-4000-a000-000000000001'), false, 'suspended member cannot use an active production membership');
 

@@ -1,0 +1,2914 @@
+{
+  "base": "cf4b0ee",
+  "functions": [
+    {
+      "schema": "private",
+      "name": "account_requires_mfa",
+      "arguments": "actor uuid",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": false,
+      "sha256": "0fde14eb8beba93d9fd9791faf5532c731dc4ec1b68b05c9b9d4506a848def2a",
+      "boundary_group": "accounts"
+    },
+    {
+      "schema": "private",
+      "name": "can_manage_organization_member",
+      "arguments": "actor uuid, org uuid, target uuid",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": false,
+      "sha256": "351c0bbdc6c527ab91fc9c2134a7c2505f587afbbedf3ce969a202cb362a2963",
+      "boundary_group": "administration"
+    },
+    {
+      "schema": "private",
+      "name": "capture_signup_policy",
+      "arguments": "",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": false,
+      "sha256": "2ff5aaccb48b458f27593b776ef30ac13dbc11ca84c6542a653c0e54bcde823d",
+      "boundary_group": "migration"
+    },
+    {
+      "schema": "private",
+      "name": "change_organization_lifecycle",
+      "arguments": "org uuid, request uuid, expected bigint, operation text, confirmed boolean",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": false,
+      "sha256": "d1a4c5355160a16587014b2de0bbaf599dd087398225756da81ef46d99e71414",
+      "boundary_group": "administration"
+    },
+    {
+      "schema": "private",
+      "name": "client_can_revoke",
+      "arguments": "actor uuid, creator uuid, s schedules",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": false,
+      "sha256": "a26222be468e75b4c12ce5c4cce3b66eebf52eeaf04dfd9e1cd02855d40a0184",
+      "boundary_group": "sharing"
+    },
+    {
+      "schema": "private",
+      "name": "client_pick",
+      "arguments": "value jsonb, keys text",
+      "security_definer": false,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": false,
+      "sha256": "28805433a81aaa4a22db82a11ea7e6dd467c1526f554dcf80d48a17380761fdc",
+      "boundary_group": "sharing"
+    },
+    {
+      "schema": "private",
+      "name": "client_projection",
+      "arguments": "d jsonb",
+      "security_definer": false,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": false,
+      "sha256": "66e01027322ed721411b2b32f0679de62c302be38bd0c8ea3b24c44051a2e65d",
+      "boundary_group": "sharing"
+    },
+    {
+      "schema": "private",
+      "name": "client_sponsor_allowed",
+      "arguments": "actor uuid, s schedules",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": false,
+      "sha256": "ad4822dfc4edc7df39a99430656baa93bd4b6aca9e61b8956ab5258d2832bd8f",
+      "boundary_group": "sharing"
+    },
+    {
+      "schema": "private",
+      "name": "create_organization_invitation_request",
+      "arguments": "p_actor_user_id uuid, p_organization_id uuid, p_email text, p_organization_role organization_role, p_production_id uuid, p_production_role production_role, p_expires_at timestamp with time zone, p_actor_aal text, p_actor_authenticated_at timestamp with time zone, p_request_id text, p_request_expiry jsonb",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": false,
+      "sha256": "f0ec319eb2fe4b5aa94ffb0a9405d1a647f526bd8599e3326b809393f578a945",
+      "boundary_group": "administration"
+    },
+    {
+      "schema": "private",
+      "name": "destination_document",
+      "arguments": "doc jsonb, prod uuid, day uuid, phase uuid",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": false,
+      "sha256": "b55f1add228e394a92bba54f82dd7670065b7af4b4f478001a735111f286332b",
+      "boundary_group": "foundation"
+    },
+    {
+      "schema": "private",
+      "name": "enforce_schedule_permissions",
+      "arguments": "",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": false,
+      "sha256": "6d4678d97167fa9e33d321e2a8e0cc8f7f37f1afa04720ca1859514580b705b3",
+      "boundary_group": "schedules"
+    },
+    {
+      "schema": "private",
+      "name": "expire_sessions_after_password_change",
+      "arguments": "",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": false,
+      "sha256": "4c6810674dfad56a2cd03272dc61b31f88616038cdab00b9af260f0b67779104",
+      "boundary_group": "accounts"
+    },
+    {
+      "schema": "private",
+      "name": "guard_organization_membership_change",
+      "arguments": "",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": false,
+      "sha256": "70fd352f02ba4f9796ad9de6363d74e15b1835a677c25cae42e416c408d45ade",
+      "boundary_group": "administration"
+    },
+    {
+      "schema": "private",
+      "name": "guard_organization_write",
+      "arguments": "",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": false,
+      "sha256": "f44313b1cfab47b8108bd2e6744d2eb0ac2451994d48934808bd3e60913cf35b",
+      "boundary_group": "administration"
+    },
+    {
+      "schema": "private",
+      "name": "import_related_record",
+      "arguments": "target_org uuid, source_env text, store_name text, blob_key text, item_key text, record_id uuid, revision bigint, value jsonb, refs jsonb, removed boolean, expected_version bigint, expected_fingerprint text, run_id uuid",
+      "security_definer": false,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": false,
+      "sha256": "792936c39e5c9ee8af2e42d03851af5acbcf046f0d4979dd6b182af2f77a5523",
+      "boundary_group": "migration"
+    },
+    {
+      "schema": "private",
+      "name": "invalidate_suspended_member_invitations",
+      "arguments": "",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": false,
+      "sha256": "70c7687f711266c4ade76543ced965b6588d932eda500b88ebd6d77b7876dbc6",
+      "boundary_group": "administration"
+    },
+    {
+      "schema": "private",
+      "name": "lock_schedule_permissions",
+      "arguments": "org uuid, prod uuid",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": false,
+      "sha256": "2b4905ee686bee8ac31930f6726b46918fe173284f9394d4e2f9c40c8426ac7d",
+      "boundary_group": "schedules"
+    },
+    {
+      "schema": "private",
+      "name": "lock_schedule_placement",
+      "arguments": "prod uuid, day uuid, phase uuid",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": false,
+      "sha256": "eb3267ac24bcdff27df1a64c4b4efdc5f8f4a70b17c1bada761907292ef10c32",
+      "boundary_group": "schedules"
+    },
+    {
+      "schema": "private",
+      "name": "lock_schedule_scope",
+      "arguments": "day_id uuid, admin_required boolean",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": false,
+      "sha256": "f66a219a06c59516fdcf62fdee9f2ddb10fd7f278173fc8e98efd6db307df0a0",
+      "boundary_group": "schedules"
+    },
+    {
+      "schema": "private",
+      "name": "lock_workflow_rate",
+      "arguments": "action text, actor uuid, organization uuid",
+      "security_definer": false,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": false,
+      "sha256": "3b319be371f6b3c42c544d9ecbdd4ff0ed0c4d9ba00e57dbbd4ac0c19a9b31f9",
+      "boundary_group": "administration"
+    },
+    {
+      "schema": "private",
+      "name": "materialize_snapshot_collection",
+      "arguments": "collection_id uuid",
+      "security_definer": false,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": false,
+      "sha256": "e1d1a6e5306066e7da6a4dbbcf127a6b2a1015b957199a35a5149f0d59159bb0",
+      "boundary_group": "snapshots"
+    },
+    {
+      "schema": "private",
+      "name": "migration_fingerprint",
+      "arguments": "value jsonb",
+      "security_definer": false,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": false,
+      "sha256": "f7488632f2bed5e631a33bfdc4e06e3778edb35f632d1081f4f912cbdf3b088e",
+      "boundary_group": "migration"
+    },
+    {
+      "schema": "private",
+      "name": "migration_record_state",
+      "arguments": "p private.migration_records",
+      "security_definer": false,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": false,
+      "sha256": "d0b4a81970dfb915c361de8160ad16639a2007be618def5eecd762f9b55061cf",
+      "boundary_group": "migration"
+    },
+    {
+      "schema": "private",
+      "name": "organization_lifecycle_owner",
+      "arguments": "actor uuid, org uuid",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": false,
+      "sha256": "4994dd64fe91342bd98ded220296d4c2488e8885072a84632d39ac82073383bd",
+      "boundary_group": "administration"
+    },
+    {
+      "schema": "private",
+      "name": "organization_lifecycle_result",
+      "arguments": "org uuid, actor uuid",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": false,
+      "sha256": "a71d7a8027517be9a9811bf71d92c66ec7ef15c670f904f27bd820de848cdab6",
+      "boundary_group": "administration"
+    },
+    {
+      "schema": "private",
+      "name": "organization_requires_mfa",
+      "arguments": "actor uuid, org uuid",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": false,
+      "sha256": "609334cf6e0a8a6012d90eea18fe72f2bae1228b077c1da0df07d70232760a26",
+      "boundary_group": "accounts"
+    },
+    {
+      "schema": "private",
+      "name": "organization_writable",
+      "arguments": "org uuid",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": false,
+      "sha256": "7c7d608d2bcc13fbbf8b5f46f1e930aca44471679090ec2ef4a7e2aba92882f8",
+      "boundary_group": "administration"
+    },
+    {
+      "schema": "private",
+      "name": "receiver_can_review",
+      "arguments": "t private.schedule_transfers, actor uuid",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": false,
+      "sha256": "77354f2f33473cc1e40924909c404077bbe0922e75f1dfff9eb5da1100d474d7",
+      "boundary_group": "foundation"
+    },
+    {
+      "schema": "private",
+      "name": "request_actor",
+      "arguments": "",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": false,
+      "sha256": "4ce07da5647602a9d8d064d51a682321c848c6d8ac4a8d2108a499be285da1a0",
+      "boundary_group": "foundation"
+    },
+    {
+      "schema": "private",
+      "name": "request_actor_aal",
+      "arguments": "actor uuid",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": false,
+      "sha256": "89af596b2364fde9c7a3ed7650be27c123a807b0f548af29c17166aeb0dcf32d",
+      "boundary_group": "foundation"
+    },
+    {
+      "schema": "private",
+      "name": "require_current_account_policies",
+      "arguments": "actor uuid",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": false,
+      "sha256": "f0d74dd1a8146515779a28e4e759771f4ccdd684ecdf38da0ff123a4122dedd5",
+      "boundary_group": "accounts"
+    },
+    {
+      "schema": "private",
+      "name": "require_organization_mfa",
+      "arguments": "org uuid",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": false,
+      "sha256": "b28a352b9afc78f0eb8b7f90b5c5cd26f74d9b52ef43195530ea49d3d52187e3",
+      "boundary_group": "accounts"
+    },
+    {
+      "schema": "private",
+      "name": "require_organization_writable",
+      "arguments": "org uuid",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": false,
+      "sha256": "7b5f3826d86d6924ccfd402c7690145f4f5851ac5e5c66c2a33bd03d8eb718aa",
+      "boundary_group": "administration"
+    },
+    {
+      "schema": "private",
+      "name": "require_recent_totp",
+      "arguments": "",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": false,
+      "sha256": "8cd41c7851f85ffbb00324d8f06e93a9b47862ba3a6f322c292cdcfdfad7519e",
+      "boundary_group": "accounts"
+    },
+    {
+      "schema": "private",
+      "name": "require_request_session",
+      "arguments": "actor uuid, session_id uuid, expires_at bigint",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": false,
+      "sha256": "da0539d0dff04a13e77ab4a329e5518f5670c23319201bcfe49ad2152752bd40",
+      "boundary_group": "accounts"
+    },
+    {
+      "schema": "private",
+      "name": "schedule_actor_can",
+      "arguments": "actor uuid, action text, org uuid, prod uuid, sched uuid",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": false,
+      "sha256": "e8d57a9ea6f643b167b27326564f4cd4a041b8a089ebc78550279145c212d25e",
+      "boundary_group": "schedules"
+    },
+    {
+      "schema": "private",
+      "name": "schedule_actor_can_without_template_bindings",
+      "arguments": "actor uuid, action text, org uuid, prod uuid, sched uuid",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": false,
+      "sha256": "d4fbb40024b6d8a3674c0461ec4b6c4b1d15997a6eb00ff8d5dcf0aee04b7139",
+      "boundary_group": "templates"
+    },
+    {
+      "schema": "private",
+      "name": "schedule_context_denied",
+      "arguments": "actor uuid, action text, org uuid, prod uuid, sched uuid, context_role text",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": false,
+      "sha256": "5ceb6dc23526f1dfbf44c79b338df27835767a7fc3f8efcc4d584c03105cda29",
+      "boundary_group": "schedules"
+    },
+    {
+      "schema": "private",
+      "name": "schedule_policy_stamp",
+      "arguments": "org uuid, prod uuid, sched uuid",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": false,
+      "sha256": "70fa72de6e6eab6ad495bf60ef5ba2bcc7afd6592ddf7bb12066dca085ce44b2",
+      "boundary_group": "schedules"
+    },
+    {
+      "schema": "private",
+      "name": "schedule_template_bindings_allow",
+      "arguments": "actor uuid, action text, org uuid, sched uuid",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": false,
+      "sha256": "f5bcc5faa8c4556b957a3e2d8da58f863bd58b1a502ff5972beddc08d86d1c7f",
+      "boundary_group": "templates"
+    },
+    {
+      "schema": "private",
+      "name": "snapshot_actor_can",
+      "arguments": "actor uuid, snapshot_id uuid, action text",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": false,
+      "sha256": "c1f5db63c42d4084510cb7be211b92893437b2ca451686ea15b6dbaaf5300806",
+      "boundary_group": "snapshots"
+    },
+    {
+      "schema": "private",
+      "name": "template_actor_can",
+      "arguments": "actor uuid, template_id uuid, action text",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": false,
+      "sha256": "97e1f59d55b235bc75024f96a63518b7da85968d17eafb74d442e42a93c718fa",
+      "boundary_group": "templates"
+    },
+    {
+      "schema": "private",
+      "name": "template_actor_can_publish",
+      "arguments": "actor uuid, template_id uuid",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": false,
+      "sha256": "4d9deb7c9b3fdea26e2b9d4daa2567398cc24bbf842ce2ec4bdfdd76b00f0769",
+      "boundary_group": "templates"
+    },
+    {
+      "schema": "private",
+      "name": "template_apply_contexts",
+      "arguments": "t private.schedule_templates",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": false,
+      "sha256": "ba4803c8a547cf24f01a090a0b7d87dc3468a3e18493b8f673dca5263b832d5d",
+      "boundary_group": "templates"
+    },
+    {
+      "schema": "private",
+      "name": "template_contexts_allow",
+      "arguments": "actor uuid, action text, org uuid, contexts jsonb",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": false,
+      "sha256": "c0392896bb2615d31f5b3c85e57bc802e265790a7e4909ecb50b89776e1b996e",
+      "boundary_group": "templates"
+    },
+    {
+      "schema": "private",
+      "name": "template_production_actor_can",
+      "arguments": "actor uuid, template_id uuid, action text",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": false,
+      "sha256": "00aa9b661d2bcba245ae1cb93b55644fb46c858206f8ed1f1efea9932587f679",
+      "boundary_group": "templates"
+    },
+    {
+      "schema": "private",
+      "name": "template_publication_source_readable",
+      "arguments": "actor uuid, source_id uuid",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": false,
+      "sha256": "2130d8a92c57d681c906761105bf36e3c2233995551fd9f96ffb57aa84987614",
+      "boundary_group": "templates"
+    },
+    {
+      "schema": "private",
+      "name": "transfer_stamp",
+      "arguments": "s schedules, destination uuid",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": false,
+      "sha256": "eee3860c499ec73d1981703ef13ba7be31085f2502902171586aac54757af06a",
+      "boundary_group": "schedules"
+    },
+    {
+      "schema": "private",
+      "name": "transfer_write_allowed",
+      "arguments": "s schedules, destination uuid",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": false,
+      "sha256": "5006725843da49f08ce5dc6e3aed215035b79c6067dbe5c76b454f405c315647",
+      "boundary_group": "schedules"
+    },
+    {
+      "schema": "private",
+      "name": "validate_organization_presentation",
+      "arguments": "cfg jsonb",
+      "security_definer": false,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": false,
+      "sha256": "a8302eef039b1fa2604db6896e7aba24f0897a41048f52f87c9b9122309ac4ae",
+      "boundary_group": "presentation"
+    },
+    {
+      "schema": "private",
+      "name": "validate_schedule_document",
+      "arguments": "doc jsonb, schema_version integer",
+      "security_definer": false,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": false,
+      "sha256": "3983be4830dc379751af948f5c13b72c21459bc7a8a5e9882dfe45f7b3de2b69",
+      "boundary_group": "schedules"
+    },
+    {
+      "schema": "private",
+      "name": "validate_schedule_name",
+      "arguments": "schedule_name text, schedule_slug text",
+      "security_definer": false,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": false,
+      "sha256": "8ab3f2ed1416b8f1094ec8c04620659fa0503073760d33e96620f03bf0d54e76",
+      "boundary_group": "schedules"
+    },
+    {
+      "schema": "private",
+      "name": "withdraw_changed_template_publication",
+      "arguments": "",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": false,
+      "sha256": "a8601245ac056bdcbdb5c9f5018d3c6dd8224aa1e4c3b4c87447623bf33693e3",
+      "boundary_group": "templates"
+    },
+    {
+      "schema": "private",
+      "name": "workflow_fingerprint",
+      "arguments": "input jsonb",
+      "security_definer": false,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": false,
+      "sha256": "9a2ea1d163b8e11d49a55cc73dfa2fbacfddbf23372ddb158e0e741433191583",
+      "boundary_group": "administration"
+    },
+    {
+      "schema": "public",
+      "name": "accept_account_policies",
+      "arguments": "terms_version text, privacy_version text",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "e97c6095749f7bdf9af86cf5ba79ece085eb972195f32808a8ac92303850ff86",
+      "boundary_group": "accounts"
+    },
+    {
+      "schema": "public",
+      "name": "accept_organization_invitation",
+      "arguments": "invitation_id uuid",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "487fe8b32b422553c3c8d0d9e8ea3dff695f4f1f121a8b689f09810ebdf09749",
+      "boundary_group": "administration"
+    },
+    {
+      "schema": "public",
+      "name": "admit_local_account_mail",
+      "arguments": "action text, email text, invitation_id uuid, ip_hash text",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": true,
+      "sha256": "6c79757588fd3a84cd0fbeb9e797b3003a2a7dba76c66f16a86222c18e78f38c",
+      "boundary_group": "accounts"
+    },
+    {
+      "schema": "public",
+      "name": "assign_production_role",
+      "arguments": "target_production_id uuid, target_user_id uuid, next_role text",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "358445150a50d2e243a30fdb74e9f316b0474eb9fd856509c077f707ba3973d1",
+      "boundary_group": "schedules"
+    },
+    {
+      "schema": "public",
+      "name": "bootstrap_first_organization",
+      "arguments": "target_user_id uuid, organization_name text, organization_slug text, organization_timezone text, organization_locale text, organization_country_code text, organization_currency text",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": true,
+      "sha256": "d10c0c44f1f17dc6ae50abc239125e62ea49a687307b113ea330e52781739b9b",
+      "boundary_group": "administration"
+    },
+    {
+      "schema": "public",
+      "name": "can_access_production",
+      "arguments": "target_production_id uuid",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "60e52e2f2b88f3b89a01753eb8c4a9d05d7a276cbd8eea754aba14a242db2bde",
+      "boundary_group": "schedules"
+    },
+    {
+      "schema": "public",
+      "name": "can_edit_production",
+      "arguments": "target_production_id uuid",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "e17e8ea8305d7c2946e04bc46dd6acd6919d42cff3aa3047fb39296b85379be9",
+      "boundary_group": "schedules"
+    },
+    {
+      "schema": "public",
+      "name": "cancel_organization_deletion",
+      "arguments": "target_organization_id uuid, request_id uuid, expected_version bigint",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "120836c034d2e874351a84bd166ccbc1009bef7475f26cfb03271b23dcddd3b4",
+      "boundary_group": "administration"
+    },
+    {
+      "schema": "public",
+      "name": "check_application_session",
+      "arguments": "",
+      "security_definer": false,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": true,
+      "authenticated": true,
+      "service": true,
+      "sha256": "f434a506f5af99fecc28a61daa7b82b54764be91017b497466e97d617fd36d9a",
+      "boundary_group": "accounts"
+    },
+    {
+      "schema": "public",
+      "name": "check_schedule_copy",
+      "arguments": "target_schedule_id uuid, source_schedule_id uuid, source_version bigint, source_policy text, target_day_id uuid, next_display_name text, next_slug text, next_document jsonb",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "3d6ec7de2598695000c15ba72d3c01c41efd79a93e3160cf369099fbb0332d1a",
+      "boundary_group": "schedules"
+    },
+    {
+      "schema": "public",
+      "name": "check_schedule_snapshot_request",
+      "arguments": "request_id uuid, target_schedule_id uuid",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "06673f7fcf8e7f1b6f17a595e124251158bc6172c85433b972264e170d57b84c",
+      "boundary_group": "snapshots"
+    },
+    {
+      "schema": "public",
+      "name": "check_schedule_template_request",
+      "arguments": "request_id uuid, target_production_id uuid",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "537116ee0bd12f50003a5e058fb86de28dc5911393db6ab345b4e8dfbc9a2182",
+      "boundary_group": "templates"
+    },
+    {
+      "schema": "public",
+      "name": "check_schedule_template_save",
+      "arguments": "target_schedule_id uuid, saved_version bigint, template_uses jsonb",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "290b07d2b903153822d159bc4034faf4ebed22211744425e0e7fcefc96472c81",
+      "boundary_group": "templates"
+    },
+    {
+      "schema": "public",
+      "name": "check_snapshot_copy",
+      "arguments": "request_id uuid, target_schedule_id uuid",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "8b5d8e8148fd346e84b7abf0a50b9b5872bb7bee460d1a538e10cd0c93a93ad1",
+      "boundary_group": "snapshots"
+    },
+    {
+      "schema": "public",
+      "name": "claim_membership_notification",
+      "arguments": "p_actor_user_id uuid, p_organization_id uuid, p_event_id uuid, p_claim_id uuid",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": true,
+      "sha256": "6f4576cb94db0121854b87c4ff95f7fe01defd702b3248270197b9d7d3d80fa5",
+      "boundary_group": "administration"
+    },
+    {
+      "schema": "public",
+      "name": "claim_organization_lifecycle_notice",
+      "arguments": "p_actor_user_id uuid, p_organization_id uuid, p_event_id uuid, p_recipient_id uuid, p_claim_id uuid",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": true,
+      "sha256": "43530661093302a65bbd0fa4f9b9991c320fb3363d85e315a20c237d5c622e9b",
+      "boundary_group": "administration"
+    },
+    {
+      "schema": "public",
+      "name": "close_schedule_transfer",
+      "arguments": "request_id uuid, decision text",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "872aef1a9b6b60c7e37f2095924fc01f8f237c5f6707bb140806c40304f867d4",
+      "boundary_group": "schedules"
+    },
+    {
+      "schema": "public",
+      "name": "copy_schedule",
+      "arguments": "target_schedule_id uuid, source_schedule_id uuid, source_version bigint, source_policy text, target_day_id uuid, next_display_name text, next_slug text, next_document jsonb, schema_version integer",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "cdf1fb6f483bc61f073719acbdb653549ac5005a1802257f808d286d0fa995ce",
+      "boundary_group": "schedules"
+    },
+    {
+      "schema": "public",
+      "name": "copy_schedule_snapshot",
+      "arguments": "request_id uuid, target_snapshot_id uuid, expected_version bigint, target_schedule_id uuid, source_version bigint, source_policy text, target_production_id uuid, target_day_id uuid, target_phase_id uuid, next_display_name text, next_slug text",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "1fc9c80df1eaec40013217bedb70bf1dac743daf6f44fedebdb969b45aaac40d",
+      "boundary_group": "snapshots"
+    },
+    {
+      "schema": "public",
+      "name": "copy_schedule_to_production",
+      "arguments": "target_schedule_id uuid, source_schedule_id uuid, source_version bigint, source_policy text, target_production_id uuid, target_day_id uuid, target_phase_id uuid, next_display_name text, next_slug text, next_document jsonb, schema_version integer",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "32f6443f9231967ea2382853188a5841e5fe7f7cd64ee5d3f6a01ed46da8a315",
+      "boundary_group": "schedules"
+    },
+    {
+      "schema": "public",
+      "name": "create_organization_invitation",
+      "arguments": "p_actor_user_id uuid, p_organization_id uuid, p_email text, p_organization_role organization_role, p_production_id uuid, p_production_role production_role, p_expires_at timestamp with time zone, p_actor_aal text, p_actor_authenticated_at timestamp with time zone, p_request_id text",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": true,
+      "sha256": "738651d1b7fa63e190d3a9922c8bc62b60a367bb2bdddc34f2ed58448844f94b",
+      "boundary_group": "administration"
+    },
+    {
+      "schema": "public",
+      "name": "create_organization_invitation_with_days",
+      "arguments": "p_actor_user_id uuid, p_organization_id uuid, p_email text, p_organization_role organization_role, p_production_id uuid, p_production_role production_role, p_expires_in_days integer, p_actor_aal text, p_actor_authenticated_at timestamp with time zone, p_request_id text",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": true,
+      "sha256": "88c2a04c07e38f872dddd244b398a1e0ea17d5b1db40d5365e794d1d7a5cc43f",
+      "boundary_group": "administration"
+    },
+    {
+      "schema": "public",
+      "name": "create_schedule",
+      "arguments": "target_schedule_id uuid, target_day_id uuid, next_display_name text, next_slug text, next_document jsonb, schema_version integer",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "49f99556f3c5bf59d11875e7e63564e88fec5f7c5e05320c7c6890850fb58e90",
+      "boundary_group": "schedules"
+    },
+    {
+      "schema": "public",
+      "name": "create_schedule_client_link",
+      "arguments": "target_schedule_id uuid, request_id uuid, token_hash text, expected_version bigint",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "55d4b6f70c57f19c6f848d3efdb4fda42867d02f6fd4767ee9baf508fca263be",
+      "boundary_group": "sharing"
+    },
+    {
+      "schema": "public",
+      "name": "create_schedule_in_production",
+      "arguments": "target_schedule_id uuid, target_production_id uuid, target_day_id uuid, target_phase_id uuid, next_display_name text, next_slug text, next_document jsonb, schema_version integer",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "ec888197f81db7586f2e452edeb28e68c6a3a18dd29786d06854310183270edf",
+      "boundary_group": "schedules"
+    },
+    {
+      "schema": "public",
+      "name": "expire_schedule_snapshots",
+      "arguments": "target_schedule_id uuid",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "f91e2542250ec15d038ccd2ecf6771c9373d0ed7aaf37fb09f64c3c8fc8f8596",
+      "boundary_group": "snapshots"
+    },
+    {
+      "schema": "public",
+      "name": "finish_membership_notification",
+      "arguments": "p_actor_user_id uuid, p_event_id uuid, p_claim_id uuid, p_delivered boolean",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": true,
+      "sha256": "0df4e4a6ab9caf6292db103e6251a74bd54aba5dcb74174db1d0c99897bfa792",
+      "boundary_group": "administration"
+    },
+    {
+      "schema": "public",
+      "name": "finish_organization_lifecycle_notice",
+      "arguments": "p_actor_user_id uuid, p_event_id uuid, p_recipient_id uuid, p_claim_id uuid, p_delivered boolean",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": true,
+      "sha256": "d8ea7b50cc8c754e7a39d81c39a835ad9ea09a2d1b6e069c817130e8fb53f2ed",
+      "boundary_group": "administration"
+    },
+    {
+      "schema": "public",
+      "name": "get_account_policy_status",
+      "arguments": "",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "086a1708d72c19147d4a76e901acf5e157daa3ee5917fb8d44a7c97aef8285bf",
+      "boundary_group": "accounts"
+    },
+    {
+      "schema": "public",
+      "name": "get_account_session_deadline",
+      "arguments": "",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "7d179b0b47975923c71fb18bbfea794756bbe8442d96034cac1180d6a75dac65",
+      "boundary_group": "accounts"
+    },
+    {
+      "schema": "public",
+      "name": "get_local_account_policy_configuration",
+      "arguments": "",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": true,
+      "sha256": "4efbf10ec07bd03f722e56ad7f4469153c87519f6862e989bfa3664e3945362c",
+      "boundary_group": "accounts"
+    },
+    {
+      "schema": "public",
+      "name": "get_my_invitation_acceptance",
+      "arguments": "invitation_id uuid",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "141e687b254110e60908f2e05762e5e9fb0c8cc803672c9bb227072b6b63650a",
+      "boundary_group": "administration"
+    },
+    {
+      "schema": "public",
+      "name": "get_my_mfa_status",
+      "arguments": "",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "3149159305801f6becc0ae8c82fd7d917ce30f8e8a56cc5319422ea7a429f9ac",
+      "boundary_group": "accounts"
+    },
+    {
+      "schema": "public",
+      "name": "handle_new_auth_user",
+      "arguments": "",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": false,
+      "sha256": "a1906eadc135139944e89dcad0221df6da8892cf4afef0da74d456d9bd5966e7",
+      "boundary_group": "accounts"
+    },
+    {
+      "schema": "public",
+      "name": "import_browser_schedule_template",
+      "arguments": "request_id uuid, target_template_id uuid, target_production_id uuid, next_name text, source_name text, source_rows jsonb, source_saved_at bigint, ownership_confirmed boolean",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "a164e40cc9c5a8612115cba203dde893a9908091ab3c160d0d6600fa61b9b39e",
+      "boundary_group": "templates"
+    },
+    {
+      "schema": "public",
+      "name": "is_active_org_member",
+      "arguments": "target_organization_id uuid",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "fc54342db6413b3ccb3605bb3d5137f7798c5609904c39f23e163d9d5ee8d7e8",
+      "boundary_group": "administration"
+    },
+    {
+      "schema": "public",
+      "name": "is_org_admin",
+      "arguments": "target_organization_id uuid",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "2285d8cd29b1b7db5761effe83e0e9b3ea172a7eb654aca90d0eb4541c488fbe",
+      "boundary_group": "foundation"
+    },
+    {
+      "schema": "public",
+      "name": "list_my_organization_access",
+      "arguments": "after_id uuid, target_organization_id uuid",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "013efdd2f8ae075eaa6ee0f81a729e2dc22f6abc93c69d5c66cac3a0c9e402af",
+      "boundary_group": "administration"
+    },
+    {
+      "schema": "public",
+      "name": "list_organization_members",
+      "arguments": "target_organization_id uuid, after_id uuid",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "2a9a006e861fd7127524f2ec236afd0ca69a9cad403fbe556e47a033250d035f",
+      "boundary_group": "administration"
+    },
+    {
+      "schema": "public",
+      "name": "list_organization_templates",
+      "arguments": "target_organization_id uuid, after_id uuid",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "f3425fd4a5300fca05bf400c163c939bbe93ca3f3af56b6dcec95f0ea8716404",
+      "boundary_group": "templates"
+    },
+    {
+      "schema": "public",
+      "name": "list_schedule_client_links",
+      "arguments": "target_schedule_id uuid, after_id uuid",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "2fccc8848481b2458332b3dc8d0bb480888648b17bf90d7d1f2e6eb6989ac0b9",
+      "boundary_group": "sharing"
+    },
+    {
+      "schema": "public",
+      "name": "list_schedule_library",
+      "arguments": "target_organization_id uuid, after_id uuid",
+      "security_definer": false,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "7ece853e2edb6e67e1026d8afc3288aadd5d5bd4e0d42dab83fec6962083a739",
+      "boundary_group": "schedules"
+    },
+    {
+      "schema": "public",
+      "name": "list_schedule_snapshots",
+      "arguments": "target_schedule_id uuid, include_deleted boolean, after_id uuid",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "8775762baf2246c79da4d491063432674fe007b95ff4e9993aaf6b3ef47388ca",
+      "boundary_group": "snapshots"
+    },
+    {
+      "schema": "public",
+      "name": "list_schedule_templates",
+      "arguments": "target_production_id uuid, include_deleted boolean, after_id uuid",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "362e3e1740686f868671565091870b68040278406bc8a8505bf83bd35bbe62ac",
+      "boundary_group": "templates"
+    },
+    {
+      "schema": "public",
+      "name": "list_schedule_transfers",
+      "arguments": "target_organization_id uuid",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "94440ff107510cb4cd6cfc0d24b82148c24c523fccd3ec13ef55189ad3305bde",
+      "boundary_group": "schedules"
+    },
+    {
+      "schema": "public",
+      "name": "mfa_organization_access",
+      "arguments": "target_organization_id uuid",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "3bf03da51ceb2de35c7ea16ed405566b871c9cb28c04ec55f15d0ae6889961cb",
+      "boundary_group": "accounts"
+    },
+    {
+      "schema": "public",
+      "name": "move_schedule",
+      "arguments": "request_id uuid, target_schedule_id uuid, target_production_id uuid, target_day_id uuid, target_phase_id uuid, expected_version bigint, expected_policy text, approve_request boolean",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "8f1933de88734be7f9267ee32ac9cae6de28f8f45555b7c7dac43511db20fbb4",
+      "boundary_group": "schedules"
+    },
+    {
+      "schema": "public",
+      "name": "mutate_schedule",
+      "arguments": "target_schedule_id uuid, expected_version bigint, operation text, payload jsonb",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "4f57bd481b88d0589dafedd40e8f56734ca1349140bfeed99d6d14cc2ac3f962",
+      "boundary_group": "schedules"
+    },
+    {
+      "schema": "public",
+      "name": "mutate_schedule_snapshot",
+      "arguments": "request_id uuid, target_snapshot_id uuid, target_schedule_id uuid, expected_version bigint, operation text, next_name text, next_document jsonb, source_version bigint, automatic boolean, template_uses jsonb, confirmed_purge boolean",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "1d8912b4958c9613a4be418ae6731f218c93eaaa6c898e46c9d7b25ec6072e0a",
+      "boundary_group": "snapshots"
+    },
+    {
+      "schema": "public",
+      "name": "mutate_schedule_template",
+      "arguments": "request_id uuid, target_template_id uuid, target_production_id uuid, expected_version bigint, operation text, next_name text, next_rows jsonb, source_schedule_id uuid, source_version bigint",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "2b850c0808aa60be2e6ef9cdf88686d473dcba6af06d8d404211d7c7ac35f4ae",
+      "boundary_group": "templates"
+    },
+    {
+      "schema": "public",
+      "name": "order_schedule_library",
+      "arguments": "target_production_id uuid, target_phase_id uuid, unassigned boolean, ordered_ids uuid[], expected_versions bigint[]",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "ebeae0f833c9fe6e4ba63987180715d052827bb4cffbb9947fc560cbfd6ce9db",
+      "boundary_group": "schedules"
+    },
+    {
+      "schema": "public",
+      "name": "place_schedule",
+      "arguments": "target_schedule_id uuid, expected_version bigint, target_day_id uuid, target_phase_id uuid",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "4df7ba9aaabc9f14419bb2a9399eb5fc0c2cf8d46701253cc131c6ebbf03c553",
+      "boundary_group": "schedules"
+    },
+    {
+      "schema": "public",
+      "name": "prevent_schedule_version_mutation",
+      "arguments": "",
+      "security_definer": false,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": false,
+      "sha256": "31c7c1fe2a0ec93ef6ca0c94f1a90002933e91cb0911f5e777b85176e0605025",
+      "boundary_group": "schedules"
+    },
+    {
+      "schema": "public",
+      "name": "preview_my_invitation",
+      "arguments": "invitation_id uuid",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "8faa0044fdf3c9d92f522858fbe4292f5b6758f019f9ea7311c606ecf4327e5f",
+      "boundary_group": "administration"
+    },
+    {
+      "schema": "public",
+      "name": "preview_schedule_transfer",
+      "arguments": "request_id uuid",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "18e6040b250ba6eff37384cebfe0a90eb845bd7d771e3d6e03069acb56593e30",
+      "boundary_group": "schedules"
+    },
+    {
+      "schema": "public",
+      "name": "protect_organization_identity",
+      "arguments": "",
+      "security_definer": false,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": false,
+      "sha256": "f4b27777ddb9a958eae915c2aaaca29d1ae28d370ee87468cdbcac38187f00a5",
+      "boundary_group": "administration"
+    },
+    {
+      "schema": "public",
+      "name": "protect_phase_identity",
+      "arguments": "",
+      "security_definer": false,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": false,
+      "sha256": "caf20dc577c151f919d2dd217929b571288e48ec5fd7fd9c0b1559bb408cb8b0",
+      "boundary_group": "schedules"
+    },
+    {
+      "schema": "public",
+      "name": "protect_production_day_identity",
+      "arguments": "",
+      "security_definer": false,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": false,
+      "sha256": "bab2049fc6e39b6d3f5b26695c08e51b7b180524fffc3bf6aa8abee68801e79f",
+      "boundary_group": "schedules"
+    },
+    {
+      "schema": "public",
+      "name": "protect_production_identity",
+      "arguments": "",
+      "security_definer": false,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": false,
+      "sha256": "2c97d4c5b070f61795b550c155ac273e2c4e2809048c259e6a5af8d3341bf05d",
+      "boundary_group": "schedules"
+    },
+    {
+      "schema": "public",
+      "name": "protect_profile_identity",
+      "arguments": "",
+      "security_definer": false,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": false,
+      "sha256": "975ec1fd95c5ffcc795dc10f77be2c5db0536f926d6c5fee301e865ad7357ebb",
+      "boundary_group": "accounts"
+    },
+    {
+      "schema": "public",
+      "name": "protect_schedule_identity",
+      "arguments": "",
+      "security_definer": false,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": false,
+      "sha256": "b7494e83b2322b3e487d8a5f93f323f88ac94e011f1608ee8a47c2502a76deea",
+      "boundary_group": "schedules"
+    },
+    {
+      "schema": "public",
+      "name": "provision_customer_organization",
+      "arguments": "p_actor_user_id uuid, p_owner_user_id uuid, p_organization_name text, p_organization_slug text, p_organization_timezone text, p_organization_locale text, p_organization_country_code text, p_organization_currency text, p_operator_reason text, p_actor_aal text, p_actor_authenticated_at timestamp with time zone, p_request_id text",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": true,
+      "sha256": "358deaeee253df9b4e3dedeb9fe96a3a9a5af25d7a56b733a6001e302cc564df",
+      "boundary_group": "administration"
+    },
+    {
+      "schema": "public",
+      "name": "publish_schedule_template",
+      "arguments": "request_id uuid, target_template_id uuid, target_production_id uuid, expected_version bigint, publish boolean",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "4ac16da8abf66ba05d9e0d385ce9f233557095052ea36b63b4c7e379e584fbba",
+      "boundary_group": "templates"
+    },
+    {
+      "schema": "public",
+      "name": "read_deleted_schedule",
+      "arguments": "target_schedule_id uuid",
+      "security_definer": false,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "3f5518588f8309a504699bd6b293f29842cf75019b16e220abcd1b67038bdafc",
+      "boundary_group": "schedules"
+    },
+    {
+      "schema": "public",
+      "name": "read_organization_lifecycle",
+      "arguments": "target_organization_id uuid",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "52d792e4438c9fd7f5f4ec0fc29918e9d7c7ed80d963a2a4de902657f951cdc9",
+      "boundary_group": "administration"
+    },
+    {
+      "schema": "public",
+      "name": "read_organization_mfa_policy",
+      "arguments": "target_organization_id uuid",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "7f03fdf1d8f27b2a28c8dd7ff93aa5cc8a9981efd2e6fa5e270710f5c2510a9d",
+      "boundary_group": "accounts"
+    },
+    {
+      "schema": "public",
+      "name": "read_organization_presentation",
+      "arguments": "target_organization_id uuid",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "562ea4fa866834bd6913fb7591a9de6393e2780937389bb65ce0204e4c86eee8",
+      "boundary_group": "presentation"
+    },
+    {
+      "schema": "public",
+      "name": "read_schedule",
+      "arguments": "target_schedule_id uuid",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "c394b24f1271cd1ed556ad2711c5106c1ea816acd8d8059435ead0208bbb91bd",
+      "boundary_group": "schedules"
+    },
+    {
+      "schema": "public",
+      "name": "read_schedule_client_view",
+      "arguments": "token_hash text, legacy_name text, legacy_expires bigint",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": true,
+      "sha256": "64e73cd5ad3db19a898efb42b24474f3abd77f8b99aa040e16a20c454fe33e98",
+      "boundary_group": "sharing"
+    },
+    {
+      "schema": "public",
+      "name": "read_schedule_permissions",
+      "arguments": "target_organization_id uuid, target_production_id uuid, target_schedule_id uuid",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "29959a4fb96546f625c666662889d7790216e1e4e415a4f04fbd25a75a0d1fad",
+      "boundary_group": "schedules"
+    },
+    {
+      "schema": "public",
+      "name": "read_schedule_snapshot",
+      "arguments": "target_snapshot_id uuid",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "6aa93022757e52d3638827e6686a5d9079d77339dd5268d74823bff0ea53f3a0",
+      "boundary_group": "snapshots"
+    },
+    {
+      "schema": "public",
+      "name": "read_schedule_template",
+      "arguments": "target_template_id uuid",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "cb053c51a04dcde67b32712ba82ac2267365b39d36795ec642ea95851e383ac9",
+      "boundary_group": "templates"
+    },
+    {
+      "schema": "public",
+      "name": "read_snapshot_policy",
+      "arguments": "target_organization_id uuid",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "90ba33204c79c3240284ab73458a1a56e4e5179cb13b3e03d9da2cc5d68e17c3",
+      "boundary_group": "snapshots"
+    },
+    {
+      "schema": "public",
+      "name": "record_account_activity",
+      "arguments": "",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "dee4ec7b7fd1f1bcb5ed8a0efcce40fd62288975de22608186fa2c255ad3dfe3",
+      "boundary_group": "accounts"
+    },
+    {
+      "schema": "public",
+      "name": "record_schedule_version",
+      "arguments": "",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": false,
+      "sha256": "812aaa7a5945773576d990ca2eff3719b19ddac5b8369f8b3e4e6d775f2fd2d2",
+      "boundary_group": "schedules"
+    },
+    {
+      "schema": "public",
+      "name": "request_organization_deletion",
+      "arguments": "target_organization_id uuid, request_id uuid, expected_version bigint, confirmed boolean",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "8c0113f8e72253e535943a8097bc819b5bf3d27422e9e50a474f2db6a408670c",
+      "boundary_group": "administration"
+    },
+    {
+      "schema": "public",
+      "name": "request_schedule_transfer",
+      "arguments": "request_id uuid, target_schedule_id uuid, target_production_id uuid, expected_version bigint, expected_policy text",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "d50e888e81075958e12fbb7b5877a84547e3186cc45ce1cb83fb3eaa50388603",
+      "boundary_group": "schedules"
+    },
+    {
+      "schema": "public",
+      "name": "require_active_schedule_session",
+      "arguments": "",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "b11106211e1c386702cba910c445615060475997a3e72fe1c9a952b0d03f44d9",
+      "boundary_group": "accounts"
+    },
+    {
+      "schema": "public",
+      "name": "require_service_actor_session",
+      "arguments": "actor uuid, session_id uuid, expires_at bigint",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": true,
+      "sha256": "e0bee5055e18cad19a7fff6aec0230133ceb498ad3f6405ecf99155197d7a5b4",
+      "boundary_group": "accounts"
+    },
+    {
+      "schema": "public",
+      "name": "review_schedule_copy",
+      "arguments": "target_schedule_id uuid, target_production_id uuid",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "1f4508b6cdfb73791211fc8f33406eb7aeeb3d95779495c2bd7caf7681177a80",
+      "boundary_group": "schedules"
+    },
+    {
+      "schema": "public",
+      "name": "review_schedule_template_apply",
+      "arguments": "target_template_id uuid, target_schedule_id uuid",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "47f4e0d08995cc444a6567ec5332a7a45a285c9924fed56d43352ab2dc78d04b",
+      "boundary_group": "templates"
+    },
+    {
+      "schema": "public",
+      "name": "review_schedule_template_export",
+      "arguments": "target_template_id uuid, target_schedule_id uuid",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "c9d3216cf7086e7942cb36988d920888eac9f2a48add013759e2e700535e0a2c",
+      "boundary_group": "templates"
+    },
+    {
+      "schema": "public",
+      "name": "review_schedule_transfer",
+      "arguments": "target_schedule_id uuid, target_production_id uuid",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "66c635b1498cfc489ba138972173d0ac1ed87a5b3edd8eb94f4dc8b018a53169",
+      "boundary_group": "schedules"
+    },
+    {
+      "schema": "public",
+      "name": "review_snapshot_copy",
+      "arguments": "target_snapshot_id uuid, target_production_id uuid",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "92c135a13a573cb1a001aa895ea9a0793733ad899d303883221521463fb90074",
+      "boundary_group": "snapshots"
+    },
+    {
+      "schema": "public",
+      "name": "revoke_organization_invitation",
+      "arguments": "p_actor_user_id uuid, p_invitation_id uuid, p_reason text, p_actor_aal text, p_actor_authenticated_at timestamp with time zone, p_request_id text",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": true,
+      "sha256": "54c32039841aaec3204abfc15aa2561307cd3294670e3d2c51a6b6bae28276f3",
+      "boundary_group": "administration"
+    },
+    {
+      "schema": "public",
+      "name": "revoke_schedule_client_link",
+      "arguments": "target_schedule_id uuid, target_link_id uuid, link_kind text",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "4ae01f8039e86a309915281c1af6436a8754c7c9e9ad59aaa487f358af6b69e1",
+      "boundary_group": "sharing"
+    },
+    {
+      "schema": "public",
+      "name": "save_organization_mfa_policy",
+      "arguments": "target_organization_id uuid, request_id uuid, expected_version bigint, required_roles text[]",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "bfb058fe439a1bf841bbc68fac2d9257025bb62a36a33f0a1ad6639da42b16f5",
+      "boundary_group": "accounts"
+    },
+    {
+      "schema": "public",
+      "name": "save_organization_presentation",
+      "arguments": "target_organization_id uuid, request_id uuid, expected_version bigint, next_config jsonb",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "af1f57dead05f710b3505caeaec4234ec508347ad59aba817538695df0750312",
+      "boundary_group": "presentation"
+    },
+    {
+      "schema": "public",
+      "name": "save_schedule_with_templates",
+      "arguments": "target_schedule_id uuid, expected_version bigint, next_document jsonb, schema_version integer, template_uses jsonb",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "9912d7cfadb90efa2d3484fce64a0d778e9cff74570218705958c904558f73ea",
+      "boundary_group": "templates"
+    },
+    {
+      "schema": "public",
+      "name": "save_snapshot_policy",
+      "arguments": "target_organization_id uuid, request_id uuid, expected_version bigint, retention_days integer, trash_min_role text",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "1f3ae246d3d464a16197753a2c70c12ed9548b3e054ae034e032452059a0f95b",
+      "boundary_group": "snapshots"
+    },
+    {
+      "schema": "public",
+      "name": "schedule_capability",
+      "arguments": "action text, target_production_id uuid, target_schedule_id uuid",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "06b3e0e5ce4d97f792cd5a7054323a54a074d65f0ad71794628560eae1032055",
+      "boundary_group": "schedules"
+    },
+    {
+      "schema": "public",
+      "name": "schedule_copy_policy",
+      "arguments": "target_schedule_id uuid",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "a6766e87d8dedb18406af80762201f2394fc524e59f54c8ee73c90f38f8fb405",
+      "boundary_group": "schedules"
+    },
+    {
+      "schema": "public",
+      "name": "schedule_creation_destinations",
+      "arguments": "target_organization_id uuid",
+      "security_definer": false,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "f6f14ec53e81f012fea56feba178d44d434f333c5dbc01db0b2d72a3a41421f3",
+      "boundary_group": "schedules"
+    },
+    {
+      "schema": "public",
+      "name": "schedule_permission_directory",
+      "arguments": "target_organization_id uuid",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "274e31a87778aee56f4869e4254d2a0b79f5111c849522acacf1ceb2dfb1ac3e",
+      "boundary_group": "schedules"
+    },
+    {
+      "schema": "public",
+      "name": "schedule_template_productions",
+      "arguments": "target_organization_id uuid",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "75b9859dd49abc6c8e9144767473b4a0e3f12e6983d8fe87eddc797156683524",
+      "boundary_group": "templates"
+    },
+    {
+      "schema": "public",
+      "name": "schedule_transfer_destinations",
+      "arguments": "target_schedule_id uuid",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "b6d88836f5baa80c1322d0678c8e4b890adc84c3790eb9192f6de8a8d9eddd66",
+      "boundary_group": "schedules"
+    },
+    {
+      "schema": "public",
+      "name": "schedule_visible",
+      "arguments": "target_schedule_id uuid, action text",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "d175d1b753c6495bffa8818be8ef11b19f6ed943a967c1a5b435a74faea18d05",
+      "boundary_group": "schedules"
+    },
+    {
+      "schema": "public",
+      "name": "session_list_schedules",
+      "arguments": "after_id uuid, page_size integer",
+      "security_definer": false,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "a9aa1988422fcd970f115bcfef3e60a0dde2b43b2f9a65da672bed84f6705c7f",
+      "boundary_group": "accounts"
+    },
+    {
+      "schema": "public",
+      "name": "session_read_schedule",
+      "arguments": "target_schedule_id uuid",
+      "security_definer": false,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "7aed1be0f10b656e66cee9fc3081b520fe76282670c3bf84733f666f20e7bc2e",
+      "boundary_group": "accounts"
+    },
+    {
+      "schema": "public",
+      "name": "session_update_schedule_document",
+      "arguments": "target_schedule_id uuid, expected_version bigint, next_document jsonb, schema_version integer",
+      "security_definer": false,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "de19a0defb851b12368e437bf35d3e06d35fe4b9a26fec5cfd2d7639228286aa",
+      "boundary_group": "accounts"
+    },
+    {
+      "schema": "public",
+      "name": "set_organization_member_status",
+      "arguments": "target_organization_id uuid, target_membership_id uuid, expected_revision bigint, request_id uuid, next_status text, confirmed boolean, reason text",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "1d1b0e3ae26a6a49282506365d3cfdb1ed89161295527338ae43e84cade2ed6e",
+      "boundary_group": "administration"
+    },
+    {
+      "schema": "public",
+      "name": "set_schedule_restriction",
+      "arguments": "target_id uuid, target_organization_id uuid, target_production_id uuid, target_schedule_id uuid, subject_role text, subject_user_id uuid, denied_actions text[], expected_revision bigint",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "2c979e76f6a8a96d381669c83edbcf3ab72ade14b2f05e807446668161f69c52",
+      "boundary_group": "schedules"
+    },
+    {
+      "schema": "public",
+      "name": "set_updated_at",
+      "arguments": "",
+      "security_definer": false,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": false,
+      "service": false,
+      "sha256": "59a4e66da5a44622a5b2b9e6e62b147273f7865a23c8763f92c83c3e1fa30703",
+      "boundary_group": "foundation"
+    },
+    {
+      "schema": "public",
+      "name": "update_schedule_document",
+      "arguments": "target_schedule_id uuid, expected_version bigint, next_document jsonb, schema_version integer",
+      "security_definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon": false,
+      "authenticated": true,
+      "service": false,
+      "sha256": "c873c29c8c5152f96f2131c46761fea70bb20447f2a338083eddf58c669f1a15",
+      "boundary_group": "schedules"
+    }
+  ],
+  "tables": [
+    {
+      "schema": "private",
+      "name": "account_mail_limits",
+      "rls": false,
+      "anon_select": false,
+      "authenticated_select": false,
+      "service_select": false,
+      "boundary_group": "accounts"
+    },
+    {
+      "schema": "private",
+      "name": "account_policy_acceptances",
+      "rls": false,
+      "anon_select": false,
+      "authenticated_select": false,
+      "service_select": false,
+      "boundary_group": "accounts"
+    },
+    {
+      "schema": "private",
+      "name": "account_policy_versions",
+      "rls": false,
+      "anon_select": false,
+      "authenticated_select": false,
+      "service_select": false,
+      "boundary_group": "accounts"
+    },
+    {
+      "schema": "private",
+      "name": "account_session_activity",
+      "rls": false,
+      "anon_select": false,
+      "authenticated_select": false,
+      "service_select": false,
+      "boundary_group": "accounts"
+    },
+    {
+      "schema": "private",
+      "name": "administration_notification_outbox",
+      "rls": true,
+      "anon_select": false,
+      "authenticated_select": false,
+      "service_select": false,
+      "boundary_group": "foundation"
+    },
+    {
+      "schema": "private",
+      "name": "client_view_rate",
+      "rls": true,
+      "anon_select": false,
+      "authenticated_select": false,
+      "service_select": false,
+      "boundary_group": "sharing"
+    },
+    {
+      "schema": "private",
+      "name": "membership_status_receipts",
+      "rls": true,
+      "anon_select": false,
+      "authenticated_select": false,
+      "service_select": false,
+      "boundary_group": "administration"
+    },
+    {
+      "schema": "private",
+      "name": "migration_capture_runs",
+      "rls": true,
+      "anon_select": false,
+      "authenticated_select": false,
+      "service_select": false,
+      "boundary_group": "migration"
+    },
+    {
+      "schema": "private",
+      "name": "migration_record_versions",
+      "rls": true,
+      "anon_select": false,
+      "authenticated_select": false,
+      "service_select": false,
+      "boundary_group": "migration"
+    },
+    {
+      "schema": "private",
+      "name": "migration_records",
+      "rls": true,
+      "anon_select": false,
+      "authenticated_select": false,
+      "service_select": false,
+      "boundary_group": "migration"
+    },
+    {
+      "schema": "private",
+      "name": "organization_lifecycle",
+      "rls": true,
+      "anon_select": false,
+      "authenticated_select": false,
+      "service_select": false,
+      "boundary_group": "administration"
+    },
+    {
+      "schema": "private",
+      "name": "organization_lifecycle_receipts",
+      "rls": true,
+      "anon_select": false,
+      "authenticated_select": false,
+      "service_select": false,
+      "boundary_group": "administration"
+    },
+    {
+      "schema": "private",
+      "name": "organization_mfa_policy",
+      "rls": true,
+      "anon_select": false,
+      "authenticated_select": false,
+      "service_select": false,
+      "boundary_group": "accounts"
+    },
+    {
+      "schema": "private",
+      "name": "organization_mfa_policy_receipts",
+      "rls": true,
+      "anon_select": false,
+      "authenticated_select": false,
+      "service_select": false,
+      "boundary_group": "accounts"
+    },
+    {
+      "schema": "private",
+      "name": "organization_presentation",
+      "rls": true,
+      "anon_select": false,
+      "authenticated_select": false,
+      "service_select": false,
+      "boundary_group": "presentation"
+    },
+    {
+      "schema": "private",
+      "name": "organization_presentation_receipts",
+      "rls": true,
+      "anon_select": false,
+      "authenticated_select": false,
+      "service_select": false,
+      "boundary_group": "presentation"
+    },
+    {
+      "schema": "private",
+      "name": "platform_operators",
+      "rls": true,
+      "anon_select": false,
+      "authenticated_select": false,
+      "service_select": false,
+      "boundary_group": "administration"
+    },
+    {
+      "schema": "private",
+      "name": "schedule_client_aliases",
+      "rls": true,
+      "anon_select": false,
+      "authenticated_select": false,
+      "service_select": false,
+      "boundary_group": "sharing"
+    },
+    {
+      "schema": "private",
+      "name": "schedule_client_links",
+      "rls": true,
+      "anon_select": false,
+      "authenticated_select": false,
+      "service_select": false,
+      "boundary_group": "sharing"
+    },
+    {
+      "schema": "private",
+      "name": "schedule_copy_receipts",
+      "rls": false,
+      "anon_select": false,
+      "authenticated_select": false,
+      "service_select": false,
+      "boundary_group": "schedules"
+    },
+    {
+      "schema": "private",
+      "name": "schedule_snapshot_copy_receipts",
+      "rls": true,
+      "anon_select": false,
+      "authenticated_select": false,
+      "service_select": false,
+      "boundary_group": "snapshots"
+    },
+    {
+      "schema": "private",
+      "name": "schedule_snapshot_imports",
+      "rls": true,
+      "anon_select": false,
+      "authenticated_select": false,
+      "service_select": false,
+      "boundary_group": "snapshots"
+    },
+    {
+      "schema": "private",
+      "name": "schedule_snapshot_policy",
+      "rls": true,
+      "anon_select": false,
+      "authenticated_select": false,
+      "service_select": false,
+      "boundary_group": "snapshots"
+    },
+    {
+      "schema": "private",
+      "name": "schedule_snapshot_policy_receipts",
+      "rls": true,
+      "anon_select": false,
+      "authenticated_select": false,
+      "service_select": false,
+      "boundary_group": "snapshots"
+    },
+    {
+      "schema": "private",
+      "name": "schedule_snapshot_receipts",
+      "rls": true,
+      "anon_select": false,
+      "authenticated_select": false,
+      "service_select": false,
+      "boundary_group": "snapshots"
+    },
+    {
+      "schema": "private",
+      "name": "schedule_snapshots",
+      "rls": true,
+      "anon_select": false,
+      "authenticated_select": false,
+      "service_select": false,
+      "boundary_group": "snapshots"
+    },
+    {
+      "schema": "private",
+      "name": "schedule_template_bindings",
+      "rls": true,
+      "anon_select": false,
+      "authenticated_select": false,
+      "service_select": false,
+      "boundary_group": "templates"
+    },
+    {
+      "schema": "private",
+      "name": "schedule_template_browser_origins",
+      "rls": true,
+      "anon_select": false,
+      "authenticated_select": false,
+      "service_select": false,
+      "boundary_group": "templates"
+    },
+    {
+      "schema": "private",
+      "name": "schedule_template_receipts",
+      "rls": true,
+      "anon_select": false,
+      "authenticated_select": false,
+      "service_select": false,
+      "boundary_group": "templates"
+    },
+    {
+      "schema": "private",
+      "name": "schedule_template_save_receipts",
+      "rls": true,
+      "anon_select": false,
+      "authenticated_select": false,
+      "service_select": false,
+      "boundary_group": "templates"
+    },
+    {
+      "schema": "private",
+      "name": "schedule_template_sources",
+      "rls": true,
+      "anon_select": false,
+      "authenticated_select": false,
+      "service_select": false,
+      "boundary_group": "templates"
+    },
+    {
+      "schema": "private",
+      "name": "schedule_templates",
+      "rls": true,
+      "anon_select": false,
+      "authenticated_select": false,
+      "service_select": false,
+      "boundary_group": "templates"
+    },
+    {
+      "schema": "private",
+      "name": "schedule_transfer_writes",
+      "rls": false,
+      "anon_select": false,
+      "authenticated_select": false,
+      "service_select": false,
+      "boundary_group": "schedules"
+    },
+    {
+      "schema": "private",
+      "name": "schedule_transfers",
+      "rls": false,
+      "anon_select": false,
+      "authenticated_select": false,
+      "service_select": false,
+      "boundary_group": "schedules"
+    },
+    {
+      "schema": "private",
+      "name": "workflow_requests",
+      "rls": true,
+      "anon_select": false,
+      "authenticated_select": false,
+      "service_select": false,
+      "boundary_group": "administration"
+    },
+    {
+      "schema": "public",
+      "name": "audit_events",
+      "rls": true,
+      "anon_select": false,
+      "authenticated_select": true,
+      "service_select": false,
+      "boundary_group": "foundation"
+    },
+    {
+      "schema": "public",
+      "name": "organization_invitations",
+      "rls": true,
+      "anon_select": false,
+      "authenticated_select": true,
+      "service_select": false,
+      "boundary_group": "administration"
+    },
+    {
+      "schema": "public",
+      "name": "organization_memberships",
+      "rls": true,
+      "anon_select": false,
+      "authenticated_select": true,
+      "service_select": false,
+      "boundary_group": "administration"
+    },
+    {
+      "schema": "public",
+      "name": "organizations",
+      "rls": true,
+      "anon_select": false,
+      "authenticated_select": true,
+      "service_select": false,
+      "boundary_group": "administration"
+    },
+    {
+      "schema": "public",
+      "name": "phases",
+      "rls": true,
+      "anon_select": false,
+      "authenticated_select": true,
+      "service_select": false,
+      "boundary_group": "schedules"
+    },
+    {
+      "schema": "public",
+      "name": "production_days",
+      "rls": true,
+      "anon_select": false,
+      "authenticated_select": true,
+      "service_select": false,
+      "boundary_group": "schedules"
+    },
+    {
+      "schema": "public",
+      "name": "production_memberships",
+      "rls": true,
+      "anon_select": false,
+      "authenticated_select": true,
+      "service_select": false,
+      "boundary_group": "administration"
+    },
+    {
+      "schema": "public",
+      "name": "productions",
+      "rls": true,
+      "anon_select": false,
+      "authenticated_select": true,
+      "service_select": false,
+      "boundary_group": "schedules"
+    },
+    {
+      "schema": "public",
+      "name": "profiles",
+      "rls": true,
+      "anon_select": false,
+      "authenticated_select": true,
+      "service_select": false,
+      "boundary_group": "accounts"
+    },
+    {
+      "schema": "public",
+      "name": "schedule_restrictions",
+      "rls": true,
+      "anon_select": false,
+      "authenticated_select": false,
+      "service_select": false,
+      "boundary_group": "schedules"
+    },
+    {
+      "schema": "public",
+      "name": "schedule_versions",
+      "rls": true,
+      "anon_select": false,
+      "authenticated_select": true,
+      "service_select": false,
+      "boundary_group": "schedules"
+    },
+    {
+      "schema": "public",
+      "name": "schedules",
+      "rls": true,
+      "anon_select": false,
+      "authenticated_select": true,
+      "service_select": false,
+      "boundary_group": "schedules"
+    }
+  ],
+  "files": [
+    {
+      "path": "app/(app)/page.tsx",
+      "sha256": "1bf5ebb667aeeac18ff49cd23d6937f96d385fc09c7beefab0404630b33ef3d2",
+      "boundary": "Next app/API: source inspection plus built HTTP/genuine Auth where enabled"
+    },
+    {
+      "path": "app/(app)/schedule/[name]/page.tsx",
+      "sha256": "e39667329f7eb82b5506f95b6a6d7763e979c15e8193bbdeda7b8cfd6e7c331a",
+      "boundary": "Next app/API: source inspection plus built HTTP/genuine Auth where enabled"
+    },
+    {
+      "path": "app/(auth)/login/page.tsx",
+      "sha256": "9301d691b5d1c3dc7beb10150ed1a4691b9344794ddf5d438db735548c1554a8",
+      "boundary": "Next app/API: source inspection plus built HTTP/genuine Auth where enabled"
+    },
+    {
+      "path": "app/api/places/route.ts",
+      "sha256": "877a6fa2bc97e33e89b3e2aacd7158d0cf3f86cd71eb3e5cfb55541be9583818",
+      "boundary": "Next app/API: source inspection plus built HTTP/genuine Auth where enabled"
+    },
+    {
+      "path": "app/api/platform/invitations/[invitationId]/revoke/route.ts",
+      "sha256": "5f95ae4ac3ad27982f51cc5d5bdc6f150a42a053c505da66cbd405dad2f29af1",
+      "boundary": "Next app/API: source inspection plus built HTTP/genuine Auth where enabled"
+    },
+    {
+      "path": "app/api/platform/invitations/route.ts",
+      "sha256": "99b4e7b297360184e23caad45c29b01b4539dcb816ea5120691f6a7678d0b7b4",
+      "boundary": "Next app/API: source inspection plus built HTTP/genuine Auth where enabled"
+    },
+    {
+      "path": "app/api/platform/local-account/mail/route.ts",
+      "sha256": "0d4c16003b6e17445db52f94f1c8be129b06996f84830de8c8b8ccdeb229a4e2",
+      "boundary": "Next app/API: source inspection plus built HTTP/genuine Auth where enabled"
+    },
+    {
+      "path": "app/api/platform/local-client-view/route.ts",
+      "sha256": "65c5c88a21e0a23ff283e395849caf29a3a6a8a6e95fed1f342b2fb8beead74a",
+      "boundary": "Next app/API: source inspection plus built HTTP/genuine Auth where enabled"
+    },
+    {
+      "path": "app/api/platform/local-membership-notifications/route.ts",
+      "sha256": "0890dbf5a1a125357660f3d2bda23707a34669cfa41fff6841de04e40ca07133",
+      "boundary": "Next app/API: source inspection plus built HTTP/genuine Auth where enabled"
+    },
+    {
+      "path": "app/api/platform/local-organization-notifications/route.ts",
+      "sha256": "e5567db12f3603f9e6569669ffe0dd941f310767370dc32e486000d7ada98880",
+      "boundary": "Next app/API: source inspection plus built HTTP/genuine Auth where enabled"
+    },
+    {
+      "path": "app/api/platform/organizations/route.ts",
+      "sha256": "ef33804d5c17e83ef29bfd2acf9414ee8e42850e13120e1c5a1da2425855f977",
+      "boundary": "Next app/API: source inspection plus built HTTP/genuine Auth where enabled"
+    },
+    {
+      "path": "app/local-accept-invitation/page.tsx",
+      "sha256": "96b4e83dda722ed04e7208082bfe989146e8a8e1f8eb52f1a2a690732da1d352",
+      "boundary": "Next app/API: source inspection plus built HTTP/genuine Auth where enabled"
+    },
+    {
+      "path": "app/local-client/page.tsx",
+      "sha256": "8539c89d5be58d1b54b6bee7c535acd1f99faf5f6f68d77e98436b23e3f266d2",
+      "boundary": "Next app/API: source inspection plus built HTTP/genuine Auth where enabled"
+    },
+    {
+      "path": "app/local-invitations/page.tsx",
+      "sha256": "4fbe21f0b62c98114dd652ec8f355cb74433757869b86361508446e0a1f46314",
+      "boundary": "Next app/API: source inspection plus built HTTP/genuine Auth where enabled"
+    },
+    {
+      "path": "app/local-schedule/page.tsx",
+      "sha256": "5c8d7b13c4642c3930dcea96eda148a222e3c5f9f9e1a19f7eaf817b8daf0c84",
+      "boundary": "Next app/API: source inspection plus built HTTP/genuine Auth where enabled"
+    },
+    {
+      "path": "app/local-workspace/page.tsx",
+      "sha256": "abe448efe5a59f5b0a33b8ea439d77d5657ad3f6668d313a473dcd7d9918bb60",
+      "boundary": "Next app/API: source inspection plus built HTTP/genuine Auth where enabled"
+    },
+    {
+      "path": "app/manifest.ts",
+      "sha256": "cfa41415b028ac261a43791b4847ef86dce5c80d3d568b10eac2cb549131df3d",
+      "boundary": "Next app/API: source inspection plus built HTTP/genuine Auth where enabled"
+    },
+    {
+      "path": "app/platform/setup/page.tsx",
+      "sha256": "c3d85755a22121cf8bb9a36f5e6ffde2bf987477030681afb6a835095a5ad620",
+      "boundary": "Next app/API: source inspection plus built HTTP/genuine Auth where enabled"
+    },
+    {
+      "path": "app/view/[name]/page.tsx",
+      "sha256": "8d9c021358cc6f985da85527fe5a70e2c67e8c3d9a72fa28012678ec65ce1074",
+      "boundary": "Next app/API: source inspection plus built HTTP/genuine Auth where enabled"
+    },
+    {
+      "path": "app/view/page.tsx",
+      "sha256": "6e61fade67a9833a63d5aaae03ecb25d020896c0c11ab663845448acdd74ac00",
+      "boundary": "Next app/API: source inspection plus built HTTP/genuine Auth where enabled"
+    },
+    {
+      "path": "middleware.ts",
+      "sha256": "8c22578b6f2549efad2a12dd663cc631b5145ae120e1c0d328915c700c47f332",
+      "boundary": "Next app/API: source inspection plus built HTTP/genuine Auth where enabled"
+    },
+    {
+      "path": "netlify/functions/auth.js",
+      "sha256": "d622a8bdaa679753a7fd801b97bd74dd84ce6f9dd7c9066ffb6b0411b37777eb",
+      "boundary": "legacy functions: fictional unit baseline; no hosted execution"
+    },
+    {
+      "path": "netlify/functions/cms-load.js",
+      "sha256": "35b66a4115f86066ec6833e1085b7e62e2d8d2bcbc355f5e7b72a459ac6365d1",
+      "boundary": "legacy functions: fictional unit baseline; no hosted execution"
+    },
+    {
+      "path": "netlify/functions/cms-save.js",
+      "sha256": "a4b355e768fe28689da82bbb9ace69f1e22db95f73924068fd1b8e6e3a75532e",
+      "boundary": "legacy functions: fictional unit baseline; no hosted execution"
+    },
+    {
+      "path": "netlify/functions/delete-schedule.js",
+      "sha256": "186192cf52e63e77c0b70d8fddd577238e6342c306ee6debcda221c3b65fda33",
+      "boundary": "legacy functions: fictional unit baseline; no hosted execution"
+    },
+    {
+      "path": "netlify/functions/library.js",
+      "sha256": "e2ea7efdb0d35c3484da3ffaf42a7591e73cbb46dd3f0a919bd350c53a0a8a85",
+      "boundary": "legacy functions: fictional unit baseline; no hosted execution"
+    },
+    {
+      "path": "netlify/functions/load.mjs",
+      "sha256": "cf134dfe82239a51e4b1b35915aed91c01c265ea4acad5dd0adaa829280e0a7c",
+      "boundary": "legacy functions: fictional unit baseline; no hosted execution"
+    },
+    {
+      "path": "netlify/functions/migrate-project-meta.js",
+      "sha256": "4465a919ca0a2e90d4010ba5dd0fe5866f0e40dbac490a2884ae5f3b73df09d5",
+      "boundary": "legacy functions: fictional unit baseline; no hosted execution"
+    },
+    {
+      "path": "netlify/functions/move-schedule.js",
+      "sha256": "158453e4615e70c641de32a18c99081aaa3446073c113b514713efa68aad8086",
+      "boundary": "legacy functions: fictional unit baseline; no hosted execution"
+    },
+    {
+      "path": "netlify/functions/rename-schedule.js",
+      "sha256": "4ece6f3ca2e547d1506a9b5c86626a19aa7902bcccfeaddb47ca3898e695fe40",
+      "boundary": "legacy functions: fictional unit baseline; no hosted execution"
+    },
+    {
+      "path": "netlify/functions/save.mjs",
+      "sha256": "7a1fb8b3f99e935f842258d36b4b0eaa7462b5fad787fac21765514cfa8865bd",
+      "boundary": "legacy functions: fictional unit baseline; no hosted execution"
+    },
+    {
+      "path": "netlify/functions/snapshots.mjs",
+      "sha256": "f6b6eed04d51e3760629c19417641b00cfa64ac090b084af84272adb168f0ae4",
+      "boundary": "legacy functions: fictional unit baseline; no hosted execution"
+    },
+    {
+      "path": "netlify/functions/templates.mjs",
+      "sha256": "00676abde8d794b95b4b366f2cecc489fa9e35f101359241b389d8068941e874",
+      "boundary": "legacy functions: fictional unit baseline; no hosted execution"
+    },
+    {
+      "path": "netlify/functions/view-link.js",
+      "sha256": "95a67c26029537304172e54f93bba313001926b08109458999bacccb0bbd97e1",
+      "boundary": "legacy functions: fictional unit baseline; no hosted execution"
+    },
+    {
+      "path": "netlify/lib/function-adapter.mjs",
+      "sha256": "216788439096e02db70b3b55bcf9be02344e33448f74de8f0459bf36f558c5e4",
+      "boundary": "legacy functions: fictional unit baseline; no hosted execution"
+    },
+    {
+      "path": "netlify/lib/load-handler.cjs",
+      "sha256": "4ce94757d67e081ebfb55bab44a1f2215f027db9b639ea9fd39a2db20b67dba7",
+      "boundary": "legacy functions: fictional unit baseline; no hosted execution"
+    },
+    {
+      "path": "netlify/lib/public-view.js",
+      "sha256": "14b11b6eb388708a33e25f4cd3738c56cd0fa57b7254ebdc0c7846547ba3cd80",
+      "boundary": "legacy functions: fictional unit baseline; no hosted execution"
+    },
+    {
+      "path": "netlify/lib/save-handler.cjs",
+      "sha256": "432b60393490267663baeca270dd15fddaf1623a56afb524bb2c02a753054bf5",
+      "boundary": "legacy functions: fictional unit baseline; no hosted execution"
+    },
+    {
+      "path": "netlify/lib/snapshots-handler.cjs",
+      "sha256": "896cb4ecc3edfdc0e8bf042c1c6b33ee471d8431d61fb80b3e5262b49467efa8",
+      "boundary": "legacy functions: fictional unit baseline; no hosted execution"
+    },
+    {
+      "path": "netlify/lib/templates-handler.cjs",
+      "sha256": "eaf093eedfb4117e72d6daa33222cac77ff3b27397e502c250e3ea043d5e1d91",
+      "boundary": "legacy functions: fictional unit baseline; no hosted execution"
+    },
+    {
+      "path": "netlify.toml",
+      "sha256": "0614da5d11ac3956f120bb32cfd761f1a977991cc941a5c1fc16876117ad829b",
+      "boundary": "Next app/API: source inspection plus built HTTP/genuine Auth where enabled"
+    },
+    {
+      "path": "public/apple-touch-icon.png",
+      "sha256": "03a7d60922bcde910a743b4bff1e4e388a518b2e2e01ebefea4fe8425b36fcca",
+      "boundary": "Next app/API: source inspection plus built HTTP/genuine Auth where enabled"
+    },
+    {
+      "path": "public/favicon-16x16.png",
+      "sha256": "eb2741fb81a2956f90f349f0257631db6afa6f9167ebfcb3f9a81f9a5d9e48cd",
+      "boundary": "Next app/API: source inspection plus built HTTP/genuine Auth where enabled"
+    },
+    {
+      "path": "public/favicon-32x32.png",
+      "sha256": "eb4ff2f5b3ed22869044063d9ba1eaacb7b4abd390941bb52952e4e3dabdb6c7",
+      "boundary": "Next app/API: source inspection plus built HTTP/genuine Auth where enabled"
+    },
+    {
+      "path": "public/favicon.ico",
+      "sha256": "4d09f342fdbd24f14cf316c5d4c8ed4b42708107325283515624e19c595d0242",
+      "boundary": "Next app/API: source inspection plus built HTTP/genuine Auth where enabled"
+    },
+    {
+      "path": "public/icon-192.png",
+      "sha256": "621d7f712c53e960f9181e8f92a848a33d8759eac1cc581158fdd89571c0a723",
+      "boundary": "Next app/API: source inspection plus built HTTP/genuine Auth where enabled"
+    },
+    {
+      "path": "public/icon-512.png",
+      "sha256": "174db6425b558ebe19937e6db65475c4a7dc7e5dcb2639cabe208c3cc85d4cc5",
+      "boundary": "Next app/API: source inspection plus built HTTP/genuine Auth where enabled"
+    },
+    {
+      "path": "public/logo-header.png",
+      "sha256": "b66d4d0cceef41dc7aa9ab06fa1730c6e615fcd3cc73c7d4199ec81c3733adf1",
+      "boundary": "Next app/API: source inspection plus built HTTP/genuine Auth where enabled"
+    },
+    {
+      "path": "public/logo-login.png",
+      "sha256": "1681bc2b92903dd3a67b61c98d5077038a3411a3b2632645c7293a3c2e8e666a",
+      "boundary": "Next app/API: source inspection plus built HTTP/genuine Auth where enabled"
+    }
+  ],
+  "checks": {
+    "security_definer_empty_search_path": true,
+    "no_private_function_execution_for_anon_or_authenticated": true,
+    "all_exposed_tables_rls_private_acl_exceptions_explicit": true
+  },
+  "private_acl_only_tables": [
+    "account_mail_limits",
+    "account_policy_acceptances",
+    "account_policy_versions",
+    "account_session_activity",
+    "schedule_copy_receipts",
+    "schedule_transfer_writes",
+    "schedule_transfers"
+  ],
+  "unavailable_services": [
+    "Storage",
+    "Realtime",
+    "Edge Functions"
+  ],
+  "GraphQL": "pg_graphql extension not enabled: explicitly unavailable, not evidence of working GraphQL tenant filtering; hosted enablement requires admission delta review",
+  "limits": [
+    "Per-boundary inventory is not a claim that every parameter combination was executed",
+    "B08 same-token concurrent-session exception retained; provider investigation excluded",
+    "Exceptional factor-loss execution and operational organization purge absent/pending"
+  ]
+}

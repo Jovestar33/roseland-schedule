@@ -1,4 +1,13 @@
 begin;
+-- SQL-only fixture for the trusted server's verified actor headers. Genuine
+-- Auth/MFA/HTTP acceptance is tested separately; this never signs a JWT.
+create function pg_temp.assured_actor(actor uuid) returns uuid language plpgsql as $assure$
+begin
+ perform set_config('request.jwt.claims','{"role":"service_role"}',true);
+ perform set_config('request.headers',jsonb_build_object('x-actor-user-id',actor,'x-actor-aal','aal2')::text,true);
+ return actor;
+end;$assure$;
+
 create extension if not exists pgtap with schema extensions;
 select no_plan();
 select ok(not has_function_privilege('authenticated','public.create_organization_invitation_with_days(uuid,uuid,text,public.organization_role,uuid,public.production_role,integer,text,timestamptz,text)','EXECUTE'), 'days endpoint is not callable by ordinary clients');
@@ -29,37 +38,37 @@ insert into public.organization_invitations(id,organization_id,email,organizatio
 
 set local role service_role;
 select set_config('test.workflow_org',public.provision_customer_organization(
- 'a6111111-1111-4111-8111-111111111111','a6222222-2222-4222-8222-222222222222',
+ pg_temp.assured_actor('a6111111-1111-4111-8111-111111111111'),'a6222222-2222-4222-8222-222222222222',
  'Fictional customer','workflow-sql-customer','UTC','en-US','US','USD','Reviewed','aal2',now(),'workflow-sql-provision')::text,true);
 select is(public.provision_customer_organization(
- 'a6111111-1111-4111-8111-111111111111','a6222222-2222-4222-8222-222222222222',
+ pg_temp.assured_actor('a6111111-1111-4111-8111-111111111111'),'a6222222-2222-4222-8222-222222222222',
  'Fictional customer','workflow-sql-customer','UTC','en-US','US','USD',' Reviewed ','aal2',now(),'workflow-sql-provision')::text,
  current_setting('test.workflow_org'),'normalized identical provisioning returns the first resource');
 select set_config('test.workflow_invitation',public.create_organization_invitation_with_days(
- 'a6111111-1111-4111-8111-111111111111','a6333333-3333-4333-8333-333333333333','Days@Example.Test','member',null,null,7,'aal2',now(),'workflow-sql-invite')::text,true);
+ pg_temp.assured_actor('a6111111-1111-4111-8111-111111111111'),'a6333333-3333-4333-8333-333333333333','Days@Example.Test','member',null,null,7,'aal2',now(),'workflow-sql-invite')::text,true);
 select is(public.create_organization_invitation_with_days(
- 'a6111111-1111-4111-8111-111111111111','a6333333-3333-4333-8333-333333333333',' days@example.test ','member',null,null,7,'aal2',now(),'workflow-sql-invite')::text,
+ pg_temp.assured_actor('a6111111-1111-4111-8111-111111111111'),'a6333333-3333-4333-8333-333333333333',' days@example.test ','member',null,null,7,'aal2',now(),'workflow-sql-invite')::text,
  current_setting('test.workflow_invitation'),'equivalent email and days replay the same invitation');
 select throws_ok($$select public.create_organization_invitation_with_days(
- 'a6111111-1111-4111-8111-111111111111','a6333333-3333-4333-8333-333333333333','days@example.test','member',null,null,8,'aal2',now(),'workflow-sql-invite')$$,
+ pg_temp.assured_actor('a6111111-1111-4111-8111-111111111111'),'a6333333-3333-4333-8333-333333333333','days@example.test','member',null,null,8,'aal2',now(),'workflow-sql-invite')$$,
  'PT409','Workflow request conflict','changed expiry duration conflicts');
 select lives_ok($$select public.revoke_organization_invitation(
- 'a6111111-1111-4111-8111-111111111111','a6444444-4444-4444-8444-444444444444','Reviewed','aal2',now(),'workflow-sql-revoke')$$,'pending invitation revocation succeeds');
+ pg_temp.assured_actor('a6111111-1111-4111-8111-111111111111'),'a6444444-4444-4444-8444-444444444444','Reviewed','aal2',now(),'workflow-sql-revoke')$$,'pending invitation revocation succeeds');
 select is(public.revoke_organization_invitation(
- 'a6111111-1111-4111-8111-111111111111','a6444444-4444-4444-8444-444444444444',' Reviewed ','aal2',now(),'workflow-sql-revoke')::text,
+ pg_temp.assured_actor('a6111111-1111-4111-8111-111111111111'),'a6444444-4444-4444-8444-444444444444',' Reviewed ','aal2',now(),'workflow-sql-revoke')::text,
  'a6444444-4444-4444-8444-444444444444','normalized revocation retry returns original terminal resource');
 select throws_ok($$select public.revoke_organization_invitation(
- 'a6111111-1111-4111-8111-111111111111','a6444444-4444-4444-8444-444444444444','Changed','aal2',now(),'workflow-sql-revoke')$$,
+ pg_temp.assured_actor('a6111111-1111-4111-8111-111111111111'),'a6444444-4444-4444-8444-444444444444','Changed','aal2',now(),'workflow-sql-revoke')$$,
  'PT409','Workflow request conflict','changed revocation reason conflicts');
 select throws_ok($$select public.provision_customer_organization(
- 'a6111111-1111-4111-8111-111111111111','a6222222-2222-4222-8222-222222222222',
+ pg_temp.assured_actor('a6111111-1111-4111-8111-111111111111'),'a6222222-2222-4222-8222-222222222222',
  'Fictional customer','workflow-sql-customer','UTC','en-US','US','USD','Reviewed',null,now(),'workflow-sql-provision')$$,
  'P0001','organization workflow unavailable','NULL AAL cannot replay provisioning');
 select throws_ok($$select public.create_organization_invitation_with_days(
- 'a6111111-1111-4111-8111-111111111111','a6333333-3333-4333-8333-333333333333','days@example.test','member',null,null,7,null,now(),'workflow-sql-invite')$$,
+ pg_temp.assured_actor('a6111111-1111-4111-8111-111111111111'),'a6333333-3333-4333-8333-333333333333','days@example.test','member',null,null,7,null,now(),'workflow-sql-invite')$$,
  'P0001','invitation workflow unavailable','NULL AAL cannot replay an invitation');
 select throws_ok($$select public.revoke_organization_invitation(
- 'a6111111-1111-4111-8111-111111111111','a6444444-4444-4444-8444-444444444444','Reviewed',null,now(),'workflow-sql-revoke')$$,
+ pg_temp.assured_actor('a6111111-1111-4111-8111-111111111111'),'a6444444-4444-4444-8444-444444444444','Reviewed',null,now(),'workflow-sql-revoke')$$,
  'P0001','invitation workflow unavailable','NULL AAL cannot replay revocation');
 reset role;
 select is((select count(*) from public.audit_events where actor_user_id='a6111111-1111-4111-8111-111111111111'),3::bigint,'three workflows produce exactly three audit events');
@@ -69,7 +78,7 @@ select is((select expires_at from public.organization_invitations where id=curre
 set local timezone='Pacific/Auckland';
 set local role service_role;
 select is(public.create_organization_invitation_with_days(
- 'a6111111-1111-4111-8111-111111111111','a6333333-3333-4333-8333-333333333333','days@example.test','member',null,null,7,'aal2',now(),'workflow-sql-invite')::text,
+ pg_temp.assured_actor('a6111111-1111-4111-8111-111111111111'),'a6333333-3333-4333-8333-333333333333','days@example.test','member',null,null,7,'aal2',now(),'workflow-sql-invite')::text,
  current_setting('test.workflow_invitation'),'recent authentication and identical retry are independent of database timezone');
 reset role;
 set local timezone='UTC';
@@ -79,14 +88,14 @@ set local timezone='UTC';
 update private.workflow_requests set request_fingerprint=null where actor_user_id='a6111111-1111-4111-8111-111111111111';
 set local role service_role;
 select throws_ok($$select public.provision_customer_organization(
- 'a6111111-1111-4111-8111-111111111111','a6222222-2222-4222-8222-222222222222',
+ pg_temp.assured_actor('a6111111-1111-4111-8111-111111111111'),'a6222222-2222-4222-8222-222222222222',
  'Fictional customer','workflow-sql-customer','UTC','en-US','US','USD','Reviewed','aal2',now(),'workflow-sql-provision')$$,
  'PT409','Workflow request conflict','legacy provisioning record with unknown input fails closed');
 select throws_ok($$select public.create_organization_invitation_with_days(
- 'a6111111-1111-4111-8111-111111111111','a6333333-3333-4333-8333-333333333333','days@example.test','member',null,null,7,'aal2',now(),'workflow-sql-invite')$$,
+ pg_temp.assured_actor('a6111111-1111-4111-8111-111111111111'),'a6333333-3333-4333-8333-333333333333','days@example.test','member',null,null,7,'aal2',now(),'workflow-sql-invite')$$,
  'PT409','Workflow request conflict','legacy invitation record with unknown input fails closed');
 select throws_ok($$select public.revoke_organization_invitation(
- 'a6111111-1111-4111-8111-111111111111','a6444444-4444-4444-8444-444444444444','Reviewed','aal2',now(),'workflow-sql-revoke')$$,
+ pg_temp.assured_actor('a6111111-1111-4111-8111-111111111111'),'a6444444-4444-4444-8444-444444444444','Reviewed','aal2',now(),'workflow-sql-revoke')$$,
  'PT409','Workflow request conflict','legacy revocation record with unknown input fails closed');
 reset role;
 select is((select count(*) from public.audit_events where actor_user_id='a6111111-1111-4111-8111-111111111111'),3::bigint,'failed legacy replays leave audit/state untouched');

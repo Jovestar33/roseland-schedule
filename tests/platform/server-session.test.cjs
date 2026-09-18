@@ -121,3 +121,11 @@ test('actual NextRequest loopback normalization preserves exact browser origin c
     await assert.rejects(server.authenticatePlatformRequest(cross, 900), isError(403));
   }
 });
+
+test('platform JSON rejects oversized chunked bodies without buffering the remainder', async () => {
+  let sent=0,cancelled=false;
+  const body=new ReadableStream({pull(controller){sent++;if(sent>100)controller.close();else controller.enqueue(new Uint8Array(8192).fill(32));},cancel(){cancelled=true;}});
+  const req=new Request('http://localhost/api/platform/local-client-view',{method:'POST',headers:{'content-type':'application/json'},body,duplex:'half'});
+  await assert.rejects(server.readPlatformJson(req),isError(413));
+  assert.equal(cancelled,true);assert.ok(sent<=4);
+});

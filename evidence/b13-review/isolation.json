@@ -1,0 +1,9 @@
+{
+  "base": "cf4b0ee35fee3c6ed9c3d0fc90c57f7ce07d64d9",
+  "checkout": "/private/tmp/roseland-b13-b14-cf4b0ee",
+  "independent_node_modules": true,
+  "sample_distinct_inodes": true,
+  "package_lock_sha256": "d53ca86c07f31319edbbeef266e830906fb27d70d0b63a3c11c3612f7226b500",
+  "preview_build": "19acbce",
+  "preview_untouched": true
+}

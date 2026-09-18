@@ -1,0 +1,48 @@
+Browser tab: 12, Title: "Shared schedule", URL: "http://127.0.0.1:3455/local-client".
+0 AXWebArea Shared schedule, URL: 127.0.0.1:3455/local-client
+	1 container
+		2 text Read-only Client schedule
+		3 button Print / Save PDF
+		4 text B13 Fictional
+		5 text TOWN / LOCATION
+		6 text B13 fictional source
+		7 text DATE
+		8 text Sunday, September 20, 2026
+		9 text CALL TIME
+		10 text —
+		11 text PRODUCER
+		12 text —
+		13 text DIRECTOR
+		14 text —
+		15 text CAMERA
+		16 text —
+		17 table
+			18 row
+				19 cell
+					20 text Action
+				21 cell
+					22 text Location
+				23 cell
+					24 text Description
+				25 cell
+					26 text Notes
+				27 cell
+					28 text Time In
+				29 cell
+					30 text Duration
+				31 cell
+					32 text Time Out
+			33 row
+				34 cell
+					35 text 1
+				36 cell
+					37 text Shoot
+				38 cell
+					39 text ↳ Test gate
+				40 cell
+					41 text B13 escaped <script>document.title="B13-EXECUTED"</script>
+				42 cell
+					43 text 00:00
+	44 container Notifications
+
+The focused UI element is 0 AXWebArea Shared schedule, URL: 127.0.0.1:3455/local-client

@@ -1,0 +1,10 @@
+file:///private/tmp/roseland-b13-b14-cf4b0ee/scripts/test-b13-http.ts:3
+function check(v        ,s       ){if(!v)throw Error(s);checks.push(s);console.log('PASS '+s);}
+                                               ^
+
+Error: Missing bearer denied /api/platform/invitations
+    at check (file:///private/tmp/roseland-b13-b14-cf4b0ee/scripts/test-b13-http.ts:3:48)
+    at file:///private/tmp/roseland-b13-b14-cf4b0ee/scripts/test-b13-http.ts:5:136
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+
+Node.js v24.15.0

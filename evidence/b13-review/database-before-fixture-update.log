@@ -1,0 +1,186 @@
+Connecting to local database...
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/account_onboarding.test.sql:2: NOTICE:  extension "pgtap" already exists, skipping
+/private/tmp/roseland-b13-source/supabase/tests/database/account_onboarding.test.sql .................... ok
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/auth_bootstrap.test.sql:4: NOTICE:  extension "pgtap" already exists, skipping
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/auth_bootstrap.test.sql:13: ERROR:  cannot truncate a table referenced in a foreign key constraint
+DETAIL:  Table "schedule_client_links" references "schedules".
+HINT:  Truncate table "schedule_client_links" at the same time, or use TRUNCATE ... CASCADE.
+/private/tmp/roseland-b13-source/supabase/tests/database/auth_bootstrap.test.sql ........................ 
+Dubious, test returned 3 (wstat 768, 0x300)
+Failed 35/35 subtests 
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/data_api_sessions.test.sql:2: NOTICE:  extension "pgtap" already exists, skipping
+/private/tmp/roseland-b13-source/supabase/tests/database/data_api_sessions.test.sql ..................... ok
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/function_privileges.test.sql:4: NOTICE:  extension "pgtap" already exists, skipping
+/private/tmp/roseland-b13-source/supabase/tests/database/function_privileges.test.sql ................... ok
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/invitation_acceptance_receipt.test.sql:2: NOTICE:  extension "pgtap" already exists, skipping
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/invitation_acceptance_receipt.test.sql:55: ERROR:  only an organization owner or admin may change production deletion state
+CONTEXT:  PL/pgSQL function public.protect_production_identity() line 12 at RAISE
+/private/tmp/roseland-b13-source/supabase/tests/database/invitation_acceptance_receipt.test.sql ......... 
+# Failed test 14: "replay and receipt add no duplicate audit"
+#         have: 0
+#         want: 1
+Dubious, test returned 3 (wstat 768, 0x300)
+Failed 1/18 subtests 
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/local_editor_sessions.test.sql:2: NOTICE:  extension "pgtap" already exists, skipping
+/private/tmp/roseland-b13-source/supabase/tests/database/local_editor_sessions.test.sql ................. ok
+/private/tmp/roseland-b13-source/supabase/tests/database/organization_presentation_privileges.test.sql .. ok
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/permission_lifecycle.test.sql:3: NOTICE:  extension "pgtap" already exists, skipping
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/permission_lifecycle.test.sql:34: ERROR:  Use the organization deletion request workflow
+CONTEXT:  PL/pgSQL function private.guard_organization_write() line 6 at RAISE
+/private/tmp/roseland-b13-source/supabase/tests/database/permission_lifecycle.test.sql .................. 
+# Failed test 1: "active organization membership works"
+# Failed test 2: "active organization owner works"
+# Failed test 3: "active owner can read invitations"
+#         have: 0
+#         want: 1
+# Failed test 4: "active owner can read audit"
+#         have: 0
+#         want: 1
+Dubious, test returned 3 (wstat 768, 0x300)
+Failed 4/4 subtests 
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/related_catalogue.test.sql:4: NOTICE:  extension "pgtap" already exists, skipping
+/private/tmp/roseland-b13-source/supabase/tests/database/related_catalogue.test.sql ..................... ok
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/schedule_contract.test.sql:4: NOTICE:  extension "pgtap" already exists, skipping
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/schedule_contract.test.sql:93: ERROR:  Schedule unavailable
+CONTEXT:  PL/pgSQL function public.read_schedule(uuid) line 6 at RAISE
+/private/tmp/roseland-b13-source/supabase/tests/database/schedule_contract.test.sql ..................... 
+Dubious, test returned 3 (wstat 768, 0x300)
+All 6 subtests passed 
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/schedule_domain_rls.test.sql:4: NOTICE:  extension "pgtap" already exists, skipping
+/private/tmp/roseland-b13-source/supabase/tests/database/schedule_domain_rls.test.sql ................... 
+# Failed test 7: "owner A sees only phase A"
+#     Results differ beginning at row 1:
+#         have: NULL
+#         want: ("Shoot A")
+# Failed test 8: "owner A sees only production day A"
+#     Results differ beginning at row 1:
+#         have: NULL
+#         want: (1)
+# Failed test 9: "owner A sees only schedule A"
+#     Results differ beginning at row 1:
+#         have: NULL
+#         want: (schedule-a-day-1)
+# Failed test 10: "owner A sees only schedule A history"
+#     Results differ beginning at row 1:
+#         have: NULL
+#         want: (1)
+# Failed test 20: "schedule cannot reference a day from another tenant or production"
+#       caught: PT403: mfa_required
+#       wanted: 23503: insert or update on table "schedules" violates foreign key constraint "schedules_production_day_fk"
+# Failed test 32: "owner B sees only schedule B"
+#     Results differ beginning at row 1:
+#         have: NULL
+#         want: (schedule-b-day-1)
+# Failed test 33: "owner B sees only schedule B history"
+#     Results differ beginning at row 1:
+#         have: NULL
+#         want: (1)
+# Failed test 38: "trusted fixture deletion records history"
+#     died: PT403: mfa_required
+#         CONTEXT:
+#             PL/pgSQL function private.require_organization_mfa(uuid) line 3 at RAISE
+#             SQL statement "SELECT private.require_organization_mfa(org)"
+#             PL/pgSQL function private.lock_schedule_permissions(uuid,uuid) line 5 at PERFORM
+#             SQL statement "SELECT private.lock_schedule_permissions(new.organization_id,new.production_id)"
+#             PL/pgSQL function private.enforce_schedule_permissions() line 9 at PERFORM
+#             SQL statement "update public.schedules set deleted_at = now() where id = '66000000-0000-4000-a000-000000000001'"
+#             PL/pgSQL function lives_ok(text,text) line 14 at EXECUTE
+# Failed test 40: "soft deletion records another immutable recovery version"
+#         have: 0
+#         want: 3
+# Failed test 41: "viewer cannot read history for a soft-deleted schedule"
+#         have: 2
+#         want: 0
+# Failed test 45: "database rejects a malformed top-level schedule document"
+#       caught: PT403: mfa_required
+#       wanted: 23514: new row for relation "schedules" violates check constraint "schedules_document_shape_check"
+# Looks like you failed 11 tests of 45
+Failed 11/45 subtests 
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/schedule_lifecycle.test.sql:4: NOTICE:  extension "pgtap" already exists, skipping
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/schedule_lifecycle.test.sql:151: ERROR:  Schedule unavailable
+CONTEXT:  PL/pgSQL function public.read_deleted_schedule(uuid) line 7 at RAISE
+/private/tmp/roseland-b13-source/supabase/tests/database/schedule_lifecycle.test.sql .................... 
+# Failed test 57: "admin soft deletes"
+#     died: PT403: mfa_required
+#         CONTEXT:
+#             PL/pgSQL function private.require_organization_mfa(uuid) line 3 at RAISE
+#             SQL statement "SELECT private.require_organization_mfa(org)"
+#             PL/pgSQL function private.lock_schedule_permissions(uuid,uuid) line 5 at PERFORM
+#             SQL statement "SELECT private.lock_schedule_permissions(org,prod)"
+#             PL/pgSQL function private.lock_schedule_placement(uuid,uuid,uuid) line 5 at PERFORM
+#             SQL statement "SELECT private.lock_schedule_placement(old_row.production_id,old_row.production_day_id,old_row.phase_id)"
+#             PL/pgSQL function public.mutate_schedule(uuid,bigint,text,jsonb) line 16 at PERFORM
+#             SQL statement "select public.mutate_schedule('66000000-0000-4000-a000-000000000003',6,'delete','{}')"
+#             PL/pgSQL function lives_ok(text,text) line 14 at EXECUTE
+Dubious, test returned 3 (wstat 768, 0x300)
+Failed 1/58 subtests 
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/schedule_transfer_privileges.test.sql:3: NOTICE:  extension "pgtap" already exists, skipping
+/private/tmp/roseland-b13-source/supabase/tests/database/schedule_transfer_privileges.test.sql .......... ok
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/server_workflows.test.sql:4: NOTICE:  extension "pgtap" already exists, skipping
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/server_workflows.test.sql:13: ERROR:  cannot truncate a table referenced in a foreign key constraint
+DETAIL:  Table "schedule_client_links" references "schedules".
+HINT:  Truncate table "schedule_client_links" at the same time, or use TRUNCATE ... CASCADE.
+/private/tmp/roseland-b13-source/supabase/tests/database/server_workflows.test.sql ...................... 
+Dubious, test returned 3 (wstat 768, 0x300)
+Failed 36/36 subtests 
+/private/tmp/roseland-b13-source/supabase/tests/database/snapshot_privileges.test.sql ................... ok
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/template_privileges.test.sql:3: NOTICE:  extension "pgtap" already exists, skipping
+/private/tmp/roseland-b13-source/supabase/tests/database/template_privileges.test.sql ................... ok
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/tenant_rls.test.sql:7: NOTICE:  extension "pgtap" already exists, skipping
+/private/tmp/roseland-b13-source/supabase/tests/database/tenant_rls.test.sql ............................ 
+# Failed test 5: "owner A sees only organization A"
+#     Results differ beginning at row 1:
+#         have: NULL
+#         want: (organization-a)
+# Failed test 6: "owner A sees production A without a production membership"
+#     Results differ beginning at row 1:
+#         have: NULL
+#         want: (production-a)
+# Failed test 7: "owner A can edit production A"
+# Failed test 19: "owner B sees only production B"
+#     Results differ beginning at row 1:
+#         have: NULL
+#         want: (production-b)
+# Looks like you failed 4 tests of 22
+Failed 4/22 subtests 
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/workflow_requests.test.sql:2: NOTICE:  extension "pgtap" already exists, skipping
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/workflow_requests.test.sql:39: ERROR:  invitation workflow unavailable
+CONTEXT:  PL/pgSQL function private.create_organization_invitation_request(uuid,uuid,text,public.organization_role,uuid,public.production_role,timestamp with time zone,text,timestamp with time zone,text,jsonb) line 31 at RAISE
+PL/pgSQL function public.create_organization_invitation_with_days(uuid,uuid,text,public.organization_role,uuid,public.production_role,integer,text,timestamp with time zone,text) line 6 at RETURN
+/private/tmp/roseland-b13-source/supabase/tests/database/workflow_requests.test.sql ..................... 
+Dubious, test returned 3 (wstat 768, 0x300)
+All 10 subtests passed 
+
+Test Summary Report
+-------------------
+/private/tmp/roseland-b13-source/supabase/tests/database/auth_bootstrap.test.sql                      (Wstat: 768 (exited 3) Tests: 0 Failed: 0)
+  Non-zero exit status: 3
+  Parse errors: Bad plan.  You planned 35 tests but ran 0.
+/private/tmp/roseland-b13-source/supabase/tests/database/invitation_acceptance_receipt.test.sql       (Wstat: 768 (exited 3) Tests: 18 Failed: 1)
+  Failed test:  14
+  Non-zero exit status: 3
+  Parse errors: No plan found in TAP output
+/private/tmp/roseland-b13-source/supabase/tests/database/permission_lifecycle.test.sql                (Wstat: 768 (exited 3) Tests: 4 Failed: 4)
+  Failed tests:  1-4
+  Non-zero exit status: 3
+  Parse errors: No plan found in TAP output
+/private/tmp/roseland-b13-source/supabase/tests/database/schedule_contract.test.sql                   (Wstat: 768 (exited 3) Tests: 6 Failed: 0)
+  Non-zero exit status: 3
+  Parse errors: No plan found in TAP output
+/private/tmp/roseland-b13-source/supabase/tests/database/schedule_domain_rls.test.sql                 (Wstat: 0 Tests: 45 Failed: 11)
+  Failed tests:  7-10, 20, 32-33, 38, 40-41, 45
+/private/tmp/roseland-b13-source/supabase/tests/database/schedule_lifecycle.test.sql                  (Wstat: 768 (exited 3) Tests: 58 Failed: 1)
+  Failed test:  57
+  Non-zero exit status: 3
+  Parse errors: No plan found in TAP output
+/private/tmp/roseland-b13-source/supabase/tests/database/server_workflows.test.sql                    (Wstat: 768 (exited 3) Tests: 0 Failed: 0)
+  Non-zero exit status: 3
+  Parse errors: Bad plan.  You planned 36 tests but ran 0.
+/private/tmp/roseland-b13-source/supabase/tests/database/tenant_rls.test.sql                          (Wstat: 0 Tests: 22 Failed: 4)
+  Failed tests:  5-7, 19
+/private/tmp/roseland-b13-source/supabase/tests/database/workflow_requests.test.sql                   (Wstat: 768 (exited 3) Tests: 10 Failed: 0)
+  Non-zero exit status: 3
+  Parse errors: No plan found in TAP output
+Files=18, Tests=285,  1 wallclock secs ( 0.03 usr  0.01 sys +  0.06 cusr  0.02 csys =  0.12 CPU)
+Result: FAIL
+error running container: exit 1

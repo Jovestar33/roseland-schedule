@@ -1,0 +1,33 @@
+{
+  "checks": [
+    "Missing bearer denied /api/platform/invitations",
+    "Private response cache denied /api/platform/invitations",
+    "Foreign origin denied /api/platform/invitations",
+    "Missing bearer denied /api/platform/invitations/7d0baa89-a3e5-48fb-91a7-aff46e4ec165/revoke",
+    "Private response cache denied /api/platform/invitations/7d0baa89-a3e5-48fb-91a7-aff46e4ec165/revoke",
+    "Foreign origin denied /api/platform/invitations/7d0baa89-a3e5-48fb-91a7-aff46e4ec165/revoke",
+    "Missing bearer denied /api/platform/organizations",
+    "Private response cache denied /api/platform/organizations",
+    "Foreign origin denied /api/platform/organizations",
+    "Missing bearer denied /api/platform/local-membership-notifications",
+    "Private response cache denied /api/platform/local-membership-notifications",
+    "Foreign origin denied /api/platform/local-membership-notifications",
+    "Missing bearer denied /api/platform/local-organization-notifications",
+    "Private response cache denied /api/platform/local-organization-notifications",
+    "Foreign origin denied /api/platform/local-organization-notifications",
+    "Built Places route rejects forged UI flag without provider call",
+    "Malformed/guessed/revoked Client bearer hidden",
+    "Malformed/guessed/revoked Client bearer hidden",
+    "Malformed/guessed/revoked Client bearer hidden",
+    "Built Client allowlist survives current composition",
+    "Built Client cache/referrer protections",
+    "Public view response boundary /local-client",
+    "Public view response boundary /view",
+    "Public view response boundary /view/Fictional",
+    "Cross-origin mail request denied before provider",
+    "Forged actor header cannot cross organization through privileged server route",
+    "Actual client bundle contains no configured service key or fictional private access material",
+    "Built application log excludes tested secrets"
+  ],
+  "realProviderCalls": 0
+}

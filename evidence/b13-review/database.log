@@ -1,0 +1,144 @@
+Connecting to local database...
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/account_onboarding.test.sql:2: NOTICE:  extension "pgtap" already exists, skipping
+/private/tmp/roseland-b13-source/supabase/tests/database/account_onboarding.test.sql .................... ok
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/auth_bootstrap.test.sql:4: NOTICE:  extension "pgtap" already exists, skipping
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/auth_bootstrap.test.sql:12: NOTICE:  truncate cascades to table "identities"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/auth_bootstrap.test.sql:12: NOTICE:  truncate cascades to table "sessions"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/auth_bootstrap.test.sql:12: NOTICE:  truncate cascades to table "mfa_factors"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/auth_bootstrap.test.sql:12: NOTICE:  truncate cascades to table "one_time_tokens"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/auth_bootstrap.test.sql:12: NOTICE:  truncate cascades to table "oauth_authorizations"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/auth_bootstrap.test.sql:12: NOTICE:  truncate cascades to table "oauth_consents"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/auth_bootstrap.test.sql:12: NOTICE:  truncate cascades to table "webauthn_credentials"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/auth_bootstrap.test.sql:12: NOTICE:  truncate cascades to table "webauthn_challenges"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/auth_bootstrap.test.sql:12: NOTICE:  truncate cascades to table "organization_memberships"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/auth_bootstrap.test.sql:12: NOTICE:  truncate cascades to table "productions"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/auth_bootstrap.test.sql:12: NOTICE:  truncate cascades to table "production_memberships"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/auth_bootstrap.test.sql:12: NOTICE:  truncate cascades to table "profiles"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/auth_bootstrap.test.sql:12: NOTICE:  truncate cascades to table "platform_operators"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/auth_bootstrap.test.sql:12: NOTICE:  truncate cascades to table "organization_invitations"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/auth_bootstrap.test.sql:12: NOTICE:  truncate cascades to table "audit_events"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/auth_bootstrap.test.sql:12: NOTICE:  truncate cascades to table "workflow_requests"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/auth_bootstrap.test.sql:12: NOTICE:  truncate cascades to table "phases"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/auth_bootstrap.test.sql:12: NOTICE:  truncate cascades to table "production_days"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/auth_bootstrap.test.sql:12: NOTICE:  truncate cascades to table "schedules"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/auth_bootstrap.test.sql:12: NOTICE:  truncate cascades to table "schedule_versions"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/auth_bootstrap.test.sql:12: NOTICE:  truncate cascades to table "migration_records"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/auth_bootstrap.test.sql:12: NOTICE:  truncate cascades to table "schedule_restrictions"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/auth_bootstrap.test.sql:12: NOTICE:  truncate cascades to table "schedule_copy_receipts"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/auth_bootstrap.test.sql:12: NOTICE:  truncate cascades to table "schedule_transfers"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/auth_bootstrap.test.sql:12: NOTICE:  truncate cascades to table "schedule_templates"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/auth_bootstrap.test.sql:12: NOTICE:  truncate cascades to table "schedule_template_receipts"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/auth_bootstrap.test.sql:12: NOTICE:  truncate cascades to table "schedule_template_save_receipts"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/auth_bootstrap.test.sql:12: NOTICE:  truncate cascades to table "schedule_template_browser_origins"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/auth_bootstrap.test.sql:12: NOTICE:  truncate cascades to table "organization_presentation"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/auth_bootstrap.test.sql:12: NOTICE:  truncate cascades to table "organization_presentation_receipts"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/auth_bootstrap.test.sql:12: NOTICE:  truncate cascades to table "account_policy_acceptances"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/auth_bootstrap.test.sql:12: NOTICE:  truncate cascades to table "account_session_activity"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/auth_bootstrap.test.sql:12: NOTICE:  truncate cascades to table "schedule_snapshots"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/auth_bootstrap.test.sql:12: NOTICE:  truncate cascades to table "schedule_snapshot_policy"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/auth_bootstrap.test.sql:12: NOTICE:  truncate cascades to table "schedule_snapshot_receipts"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/auth_bootstrap.test.sql:12: NOTICE:  truncate cascades to table "schedule_snapshot_policy_receipts"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/auth_bootstrap.test.sql:12: NOTICE:  truncate cascades to table "schedule_snapshot_copy_receipts"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/auth_bootstrap.test.sql:12: NOTICE:  truncate cascades to table "organization_mfa_policy"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/auth_bootstrap.test.sql:12: NOTICE:  truncate cascades to table "organization_mfa_policy_receipts"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/auth_bootstrap.test.sql:12: NOTICE:  truncate cascades to table "membership_status_receipts"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/auth_bootstrap.test.sql:12: NOTICE:  truncate cascades to table "administration_notification_outbox"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/auth_bootstrap.test.sql:12: NOTICE:  truncate cascades to table "organization_lifecycle"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/auth_bootstrap.test.sql:12: NOTICE:  truncate cascades to table "organization_lifecycle_receipts"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/auth_bootstrap.test.sql:12: NOTICE:  truncate cascades to table "schedule_client_links"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/auth_bootstrap.test.sql:12: NOTICE:  truncate cascades to table "schedule_client_aliases"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/auth_bootstrap.test.sql:12: NOTICE:  truncate cascades to table "migration_capture_runs"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/auth_bootstrap.test.sql:12: NOTICE:  truncate cascades to table "refresh_tokens"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/auth_bootstrap.test.sql:12: NOTICE:  truncate cascades to table "mfa_challenges"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/auth_bootstrap.test.sql:12: NOTICE:  truncate cascades to table "mfa_amr_claims"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/auth_bootstrap.test.sql:12: NOTICE:  truncate cascades to table "migration_record_versions"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/auth_bootstrap.test.sql:12: NOTICE:  truncate cascades to table "schedule_template_sources"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/auth_bootstrap.test.sql:12: NOTICE:  truncate cascades to table "schedule_template_bindings"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/auth_bootstrap.test.sql:12: NOTICE:  truncate cascades to table "schedule_snapshot_imports"
+/private/tmp/roseland-b13-source/supabase/tests/database/auth_bootstrap.test.sql ........................ ok
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/data_api_sessions.test.sql:2: NOTICE:  extension "pgtap" already exists, skipping
+/private/tmp/roseland-b13-source/supabase/tests/database/data_api_sessions.test.sql ..................... ok
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/function_privileges.test.sql:4: NOTICE:  extension "pgtap" already exists, skipping
+/private/tmp/roseland-b13-source/supabase/tests/database/function_privileges.test.sql ................... ok
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/invitation_acceptance_receipt.test.sql:2: NOTICE:  extension "pgtap" already exists, skipping
+/private/tmp/roseland-b13-source/supabase/tests/database/invitation_acceptance_receipt.test.sql ......... ok
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/local_editor_sessions.test.sql:2: NOTICE:  extension "pgtap" already exists, skipping
+/private/tmp/roseland-b13-source/supabase/tests/database/local_editor_sessions.test.sql ................. ok
+/private/tmp/roseland-b13-source/supabase/tests/database/organization_presentation_privileges.test.sql .. ok
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/permission_lifecycle.test.sql:3: NOTICE:  extension "pgtap" already exists, skipping
+/private/tmp/roseland-b13-source/supabase/tests/database/permission_lifecycle.test.sql .................. ok
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/related_catalogue.test.sql:4: NOTICE:  extension "pgtap" already exists, skipping
+/private/tmp/roseland-b13-source/supabase/tests/database/related_catalogue.test.sql ..................... ok
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/schedule_contract.test.sql:4: NOTICE:  extension "pgtap" already exists, skipping
+/private/tmp/roseland-b13-source/supabase/tests/database/schedule_contract.test.sql ..................... ok
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/schedule_domain_rls.test.sql:4: NOTICE:  extension "pgtap" already exists, skipping
+/private/tmp/roseland-b13-source/supabase/tests/database/schedule_domain_rls.test.sql ................... ok
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/schedule_lifecycle.test.sql:4: NOTICE:  extension "pgtap" already exists, skipping
+/private/tmp/roseland-b13-source/supabase/tests/database/schedule_lifecycle.test.sql .................... ok
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/schedule_transfer_privileges.test.sql:3: NOTICE:  extension "pgtap" already exists, skipping
+/private/tmp/roseland-b13-source/supabase/tests/database/schedule_transfer_privileges.test.sql .......... ok
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/server_workflows.test.sql:13: NOTICE:  extension "pgtap" already exists, skipping
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/server_workflows.test.sql:21: NOTICE:  truncate cascades to table "identities"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/server_workflows.test.sql:21: NOTICE:  truncate cascades to table "sessions"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/server_workflows.test.sql:21: NOTICE:  truncate cascades to table "mfa_factors"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/server_workflows.test.sql:21: NOTICE:  truncate cascades to table "one_time_tokens"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/server_workflows.test.sql:21: NOTICE:  truncate cascades to table "oauth_authorizations"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/server_workflows.test.sql:21: NOTICE:  truncate cascades to table "oauth_consents"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/server_workflows.test.sql:21: NOTICE:  truncate cascades to table "webauthn_credentials"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/server_workflows.test.sql:21: NOTICE:  truncate cascades to table "webauthn_challenges"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/server_workflows.test.sql:21: NOTICE:  truncate cascades to table "organization_memberships"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/server_workflows.test.sql:21: NOTICE:  truncate cascades to table "productions"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/server_workflows.test.sql:21: NOTICE:  truncate cascades to table "production_memberships"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/server_workflows.test.sql:21: NOTICE:  truncate cascades to table "profiles"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/server_workflows.test.sql:21: NOTICE:  truncate cascades to table "platform_operators"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/server_workflows.test.sql:21: NOTICE:  truncate cascades to table "organization_invitations"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/server_workflows.test.sql:21: NOTICE:  truncate cascades to table "audit_events"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/server_workflows.test.sql:21: NOTICE:  truncate cascades to table "workflow_requests"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/server_workflows.test.sql:21: NOTICE:  truncate cascades to table "phases"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/server_workflows.test.sql:21: NOTICE:  truncate cascades to table "production_days"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/server_workflows.test.sql:21: NOTICE:  truncate cascades to table "schedules"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/server_workflows.test.sql:21: NOTICE:  truncate cascades to table "schedule_versions"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/server_workflows.test.sql:21: NOTICE:  truncate cascades to table "migration_records"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/server_workflows.test.sql:21: NOTICE:  truncate cascades to table "schedule_restrictions"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/server_workflows.test.sql:21: NOTICE:  truncate cascades to table "schedule_copy_receipts"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/server_workflows.test.sql:21: NOTICE:  truncate cascades to table "schedule_transfers"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/server_workflows.test.sql:21: NOTICE:  truncate cascades to table "schedule_templates"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/server_workflows.test.sql:21: NOTICE:  truncate cascades to table "schedule_template_receipts"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/server_workflows.test.sql:21: NOTICE:  truncate cascades to table "schedule_template_save_receipts"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/server_workflows.test.sql:21: NOTICE:  truncate cascades to table "schedule_template_browser_origins"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/server_workflows.test.sql:21: NOTICE:  truncate cascades to table "organization_presentation"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/server_workflows.test.sql:21: NOTICE:  truncate cascades to table "organization_presentation_receipts"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/server_workflows.test.sql:21: NOTICE:  truncate cascades to table "account_policy_acceptances"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/server_workflows.test.sql:21: NOTICE:  truncate cascades to table "account_session_activity"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/server_workflows.test.sql:21: NOTICE:  truncate cascades to table "schedule_snapshots"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/server_workflows.test.sql:21: NOTICE:  truncate cascades to table "schedule_snapshot_policy"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/server_workflows.test.sql:21: NOTICE:  truncate cascades to table "schedule_snapshot_receipts"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/server_workflows.test.sql:21: NOTICE:  truncate cascades to table "schedule_snapshot_policy_receipts"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/server_workflows.test.sql:21: NOTICE:  truncate cascades to table "schedule_snapshot_copy_receipts"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/server_workflows.test.sql:21: NOTICE:  truncate cascades to table "organization_mfa_policy"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/server_workflows.test.sql:21: NOTICE:  truncate cascades to table "organization_mfa_policy_receipts"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/server_workflows.test.sql:21: NOTICE:  truncate cascades to table "membership_status_receipts"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/server_workflows.test.sql:21: NOTICE:  truncate cascades to table "administration_notification_outbox"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/server_workflows.test.sql:21: NOTICE:  truncate cascades to table "organization_lifecycle"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/server_workflows.test.sql:21: NOTICE:  truncate cascades to table "organization_lifecycle_receipts"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/server_workflows.test.sql:21: NOTICE:  truncate cascades to table "schedule_client_links"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/server_workflows.test.sql:21: NOTICE:  truncate cascades to table "schedule_client_aliases"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/server_workflows.test.sql:21: NOTICE:  truncate cascades to table "migration_capture_runs"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/server_workflows.test.sql:21: NOTICE:  truncate cascades to table "refresh_tokens"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/server_workflows.test.sql:21: NOTICE:  truncate cascades to table "mfa_challenges"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/server_workflows.test.sql:21: NOTICE:  truncate cascades to table "mfa_amr_claims"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/server_workflows.test.sql:21: NOTICE:  truncate cascades to table "migration_record_versions"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/server_workflows.test.sql:21: NOTICE:  truncate cascades to table "schedule_template_sources"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/server_workflows.test.sql:21: NOTICE:  truncate cascades to table "schedule_template_bindings"
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/server_workflows.test.sql:21: NOTICE:  truncate cascades to table "schedule_snapshot_imports"
+/private/tmp/roseland-b13-source/supabase/tests/database/server_workflows.test.sql ...................... ok
+/private/tmp/roseland-b13-source/supabase/tests/database/snapshot_privileges.test.sql ................... ok
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/template_privileges.test.sql:3: NOTICE:  extension "pgtap" already exists, skipping
+/private/tmp/roseland-b13-source/supabase/tests/database/template_privileges.test.sql ................... ok
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/tenant_rls.test.sql:7: NOTICE:  extension "pgtap" already exists, skipping
+/private/tmp/roseland-b13-source/supabase/tests/database/tenant_rls.test.sql ............................ ok
+psql:/private/tmp/roseland-b13-source/supabase/tests/database/workflow_requests.test.sql:11: NOTICE:  extension "pgtap" already exists, skipping
+/private/tmp/roseland-b13-source/supabase/tests/database/workflow_requests.test.sql ..................... ok
+All tests successful.
+Files=18, Tests=489,  1 wallclock secs ( 0.03 usr  0.02 sys +  0.06 cusr  0.02 csys =  0.13 CPU)
+Result: PASS

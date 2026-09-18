@@ -25,13 +25,16 @@ insert into public.audit_events(organization_id,action,resource_type)
 values(md5('permission-org')::uuid,'fixture.created','fixture');
 
 set local role authenticated;
-select set_config('request.jwt.claims',json_build_object('sub',md5('permission-user-1')::uuid,'role','authenticated')::text,true);
+select set_config('request.jwt.claims',json_build_object('sub',md5('permission-user-1')::uuid,'role','authenticated','aal','aal2')::text,true);
 select extensions.ok(public.is_active_org_member(md5('permission-org')::uuid),'active organization membership works');
 select extensions.ok(public.is_org_admin(md5('permission-org')::uuid),'active organization owner works');
 select extensions.is((select count(*) from public.organization_invitations where organization_id=md5('permission-org')::uuid),1::bigint,'active owner can read invitations');
 select extensions.is((select count(*) from public.audit_events where organization_id=md5('permission-org')::uuid),1::bigint,'active owner can read audit');
 set local role postgres;
+-- Legacy deleted-parent fixture only; this transaction rolls back. Current product deletion uses the B10 workflow.
+alter table public.organizations disable trigger a_organization_writable;
 update public.organizations set deleted_at=now() where id=md5('permission-org')::uuid;
+alter table public.organizations enable trigger a_organization_writable;
 set local role authenticated;
 select extensions.is(public.is_active_org_member(md5('permission-org')::uuid),false,'deleted organization denies membership helper');
 select extensions.is(public.is_org_admin(md5('permission-org')::uuid),false,'deleted organization denies admin helper');
@@ -43,22 +46,25 @@ select extensions.is((select count(*) from public.organization_memberships where
 select extensions.is((select count(*) from public.production_memberships where organization_id=md5('permission-org')::uuid),0::bigint,'deleted organization hides production memberships');
 select extensions.throws_ok($$insert into public.productions(organization_id,name,slug,created_by) values(md5('permission-org')::uuid,'Denied','denied',auth.uid())$$,'42501',null,'deleted organization rejects new productions');
 select extensions.results_eq($$update public.productions set name='Denied' where id=md5('permission-production')::uuid returning id$$,$$select null::uuid where false$$,'deleted organization owner update affects no children');
-select set_config('request.jwt.claims',json_build_object('sub',md5('permission-user-2')::uuid,'role','authenticated')::text,true);
+select set_config('request.jwt.claims',json_build_object('sub',md5('permission-user-2')::uuid,'role','authenticated','aal','aal2')::text,true);
 select extensions.is(public.can_access_production(md5('permission-production')::uuid),false,'deleted organization denies assigned editor read');
 select extensions.is(public.can_edit_production(md5('permission-production')::uuid),false,'deleted organization denies assigned editor write');
 select extensions.is((select count(*) from public.productions where id=md5('permission-production')::uuid),0::bigint,'deleted organization hides editor production');
-select set_config('request.jwt.claims',json_build_object('sub',md5('permission-user-3')::uuid,'role','authenticated')::text,true);
+select set_config('request.jwt.claims',json_build_object('sub',md5('permission-user-3')::uuid,'role','authenticated','aal','aal2')::text,true);
 select extensions.is((select count(*) from public.productions where id=md5('permission-production')::uuid),0::bigint,'deleted organization hides viewer production');
 
 set local role postgres;
+-- Legacy deleted-parent fixture only; this transaction rolls back. Current product deletion uses the B10 workflow.
+alter table public.organizations disable trigger a_organization_writable;
 update public.organizations set deleted_at=null where id=md5('permission-org')::uuid;
+alter table public.organizations enable trigger a_organization_writable;
 -- Existing strong roles must never be implicitly reactivated by an invitation.
 insert into public.organization_invitations(id,organization_id,email,organization_role,production_id,production_role,expires_at,created_by)
 values(md5('permission-suspension-invite')::uuid,md5('permission-org')::uuid,'permission-2@example.test','member',md5('permission-production')::uuid,'viewer',now()+interval '1 day',md5('permission-user-1')::uuid);
 update public.organization_memberships set status='suspended' where organization_id=md5('permission-org')::uuid and user_id=md5('permission-user-2')::uuid;
 select extensions.is((select status::text from public.organization_invitations where id=md5('permission-suspension-invite')::uuid),'expired','organization suspension invalidates pending invitation');
 set local role authenticated;
-select set_config('request.jwt.claims',json_build_object('sub',md5('permission-user-2')::uuid,'role','authenticated')::text,true);
+select set_config('request.jwt.claims',json_build_object('sub',md5('permission-user-2')::uuid,'role','authenticated','aal','aal2')::text,true);
 select extensions.throws_ok($$select public.accept_organization_invitation(md5('permission-suspension-invite')::uuid)$$,'P0001','invitation unavailable','old invite cannot reinstate organization membership');
 set local role postgres;
 select extensions.is((select status::text from public.organization_memberships where organization_id=md5('permission-org')::uuid and user_id=md5('permission-user-2')::uuid),'suspended','organization remains suspended');
@@ -86,16 +92,19 @@ values(md5('permission-production-new-invite')::uuid,md5('permission-org')::uuid
 set local role authenticated;
 select extensions.throws_ok($$select public.accept_organization_invitation(md5('permission-production-new-invite')::uuid)$$,'P0001','invitation unavailable','new invite cannot reinstate suspended production editor');
 select extensions.lives_ok($$select public.accept_organization_invitation(md5('permission-after-suspension')::uuid)$$,'organization-only invitation remains valid after explicit organization reinstatement');
-select set_config('request.jwt.claims',json_build_object('sub',md5('permission-user-4')::uuid,'role','authenticated')::text,true);
+select set_config('request.jwt.claims',json_build_object('sub',md5('permission-user-4')::uuid,'role','authenticated','aal','aal2')::text,true);
 select extensions.lives_ok($$select public.accept_organization_invitation(md5('permission-invite')::uuid)$$,'new unsuspended member can still accept invitation');
 set local role postgres;
+-- Retain an independent active owner under the approved final-holder rule.
+insert into auth.users(id,email,role,aud,email_confirmed_at)values(md5('permission-keeper')::uuid,'permission-keeper@example.test','authenticated','authenticated',now());
+insert into public.organization_memberships(organization_id,user_id,role,status,joined_at)values(md5('permission-org')::uuid,md5('permission-keeper')::uuid,'owner','active',now());
 -- A low-role invitation cannot restore an old suspended owner's stronger role.
 update public.organization_memberships set status='suspended'
 where organization_id=md5('permission-org')::uuid and user_id=md5('permission-user-1')::uuid;
 insert into public.organization_invitations(id,organization_id,email,organization_role,expires_at,created_by)
 values(md5('permission-owner-invite')::uuid,md5('permission-org')::uuid,'permission-1@example.test','member',now()+interval '1 day',md5('permission-user-4')::uuid);
 set local role authenticated;
-select set_config('request.jwt.claims',json_build_object('sub',md5('permission-user-1')::uuid,'role','authenticated')::text,true);
+select set_config('request.jwt.claims',json_build_object('sub',md5('permission-user-1')::uuid,'role','authenticated','aal','aal2')::text,true);
 select extensions.throws_ok($$select public.accept_organization_invitation(md5('permission-owner-invite')::uuid)$$,'P0001','invitation unavailable','member invitation cannot restore suspended owner');
 set local role postgres;
 select extensions.is((select role::text || ':' || status::text from public.organization_memberships where organization_id=md5('permission-org')::uuid and user_id=md5('permission-user-1')::uuid),'owner:suspended','denied acceptance preserves suspended owner state');

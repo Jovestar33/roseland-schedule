@@ -1,0 +1,10 @@
+// Shared fixture utilities restricted to the explicitly owned B13 source.
+import {execFileSync}from'node:child_process';import{readFileSync,existsSync}from'node:fs';import{resolve}from'node:path';import{createHmac}from'node:crypto';import{createClient}from'@supabase/supabase-js';
+export const project='roseland-b13-source',root='/private/tmp/'+project;
+if(existsSync(root+'/supabase/.temp/project-ref')||!readFileSync(root+'/supabase/config.toml','utf8').includes('project_id = "'+project+'"'))throw Error('Owned unlinked B13 stack required');
+export const config=JSON.parse(execFileSync(resolve('node_modules/.bin/supabase'),['status','--workdir',root,'--output','json'],{encoding:'utf8',stdio:['ignore','pipe','pipe']}));if(config.API_URL!=='http://127.0.0.1:56321')throw Error('B13 loopback required');
+export const options={auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false},global:{fetch:async(input:RequestInfo|URL,init?:RequestInit)=>{const u=new URL(typeof input==='string'?input:input instanceof URL?input.href:input.url);if(u.origin!==config.API_URL)throw Error('External API refused');return fetch(input,{...init,redirect:'error',signal:AbortSignal.timeout(15000)});}}};
+export const client=()=>createClient(config.API_URL,config.ANON_KEY,options),admin=createClient(config.API_URL,config.SERVICE_ROLE_KEY,options);
+export function sql(query:string){return execFileSync('docker',['exec','-i','supabase_db_'+project,'psql','-XqAt','-v','ON_ERROR_STOP=1','-U','postgres','-d','postgres'],{input:query,encoding:'utf8',stdio:['pipe','pipe','pipe']}).trim();}
+export function q(v:unknown){return "'"+String(v).replaceAll("'","''")+"'";}
+export function totp(secret:string){let bits='';for(const c of secret)bits+='ABCDEFGHIJKLMNOPQRSTUVWXYZ234567'.indexOf(c).toString(2).padStart(5,'0');const key=Buffer.from(bits.match(/.{8}/g)!.map(x=>parseInt(x,2))),n=Buffer.alloc(8);n.writeBigUInt64BE(BigInt(Math.floor(Date.now()/30000)));const h=createHmac('sha1',key).update(n).digest(),o=h.at(-1)!&15;return((h.readUInt32BE(o)&0x7fffffff)%1000000).toString().padStart(6,'0');}

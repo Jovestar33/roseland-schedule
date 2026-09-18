@@ -1,0 +1,10 @@
+file:///private/tmp/roseland-b13-b14-cf4b0ee/scripts/test-b13-supplement.ts:3
+const checks         =[];function check(v        ,s       ){if(!v)throw Error(s);checks.push(s);console.log('PASS '+s);}
+                                                                        ^
+
+Error: GraphQL valid query admits genuine scoped Editor
+    at check (file:///private/tmp/roseland-b13-b14-cf4b0ee/scripts/test-b13-supplement.ts:3:73)
+    at file:///private/tmp/roseland-b13-b14-cf4b0ee/scripts/test-b13-supplement.ts:6:59
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+
+Node.js v24.15.0

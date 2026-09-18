@@ -1,0 +1,108 @@
+[places:e6adb5af-1a18-4e76-bf26-f0172587279a] autocomplete request failed TypeError: body.input?.trim is not a function
+    at Object.POST (/private/tmp/roseland-b13-b14-cf4b0ee/app/api/places/route.ts:54:35)
+    at async /private/tmp/roseland-b13-b14-cf4b0ee/tests/platform/places-authorization.test.cjs:11:161
+    at async run (/private/tmp/roseland-b13-b14-cf4b0ee/tests/platform/places-authorization.test.cjs:6:319)
+    at async Test.run (node:internal/test_runner/test:1208:7)
+    at async Test.processPendingSubtests (node:internal/test_runner/test:831:7)
+✖ Forged UI flag cannot use provider proxy (29.097334ms)
+✖ Valid existing editor token permits bounded private lookup (5.30925ms)
+✖ Wrong token and foreign origin never reach provider (3.640167ms)
+✖ Malformed and oversized bodies are refused before provider (3.805625ms)
+✖ Provider errors cannot enter response or logs (7.276791ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 0
+ℹ fail 5
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 164.318791
+
+✖ failing tests:
+
+test at tests/platform/places-authorization.test.cjs:8:1
+✖ Forged UI flag cannot use provider proxy (29.097334ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  200 !== 401
+  
+      at /private/tmp/roseland-b13-b14-cf4b0ee/tests/platform/places-authorization.test.cjs:8:154
+      at async run (/private/tmp/roseland-b13-b14-cf4b0ee/tests/platform/places-authorization.test.cjs:6:319)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 200,
+    expected: 401,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/platform/places-authorization.test.cjs:9:1
+✖ Valid existing editor token permits bounded private lookup (5.30925ms)
+  AssertionError [ERR_ASSERTION]: The "string" argument must be of type string. Received type object (null)
+      at /private/tmp/roseland-b13-b14-cf4b0ee/tests/platform/places-authorization.test.cjs:9:265
+      at async run (/private/tmp/roseland-b13-b14-cf4b0ee/tests/platform/places-authorization.test.cjs:6:319)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: null,
+    expected: /no-store/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at tests/platform/places-authorization.test.cjs:10:1
+✖ Wrong token and foreign origin never reach provider (3.640167ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  200 !== 401
+  
+      at /private/tmp/roseland-b13-b14-cf4b0ee/tests/platform/places-authorization.test.cjs:10:101
+      at async run (/private/tmp/roseland-b13-b14-cf4b0ee/tests/platform/places-authorization.test.cjs:6:319)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 200,
+    expected: 401,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/platform/places-authorization.test.cjs:11:1
+✖ Malformed and oversized bodies are refused before provider (3.805625ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  502 !== 400
+  
+      at /private/tmp/roseland-b13-b14-cf4b0ee/tests/platform/places-authorization.test.cjs:11:154
+      at async run (/private/tmp/roseland-b13-b14-cf4b0ee/tests/platform/places-authorization.test.cjs:6:319)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 502,
+    expected: 400,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/platform/places-authorization.test.cjs:12:1
+✖ Provider errors cannot enter response or logs (7.276791ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(!logs.join(' ').includes('SECRET-'))
+  
+      at /private/tmp/roseland-b13-b14-cf4b0ee/tests/platform/places-authorization.test.cjs:12:402
+      at async run (/private/tmp/roseland-b13-b14-cf4b0ee/tests/platform/places-authorization.test.cjs:6:319)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
