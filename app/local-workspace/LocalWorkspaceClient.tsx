@@ -92,6 +92,8 @@ export default function LocalWorkspaceClient({config}:{config:LocalEditorConfig}
       if(next&&identity.bind(next.user.id)){
         navigationTicket.current++;directoryTicket.current++;useScheduleStore.getState().newSchedule();setPanels({});setVisited([]);setManagementPanels([]);setLifecyclePanels([]);setScheduleRequest(null);setOrganizations([]);setScope(null);setMore(false);setAccountEpoch(identity.generation);
       }
+      // Keep the known account address for reauthentication after a cross-tab sign-out.
+      if(next)setEmail(next.user.email??'');
       sessionRef.current=next;setSession(next);
       if(next&&_event==='INITIAL_SESSION')setMessage(previous=>previous==='Sign in once to use the local rehearsals.'?'Checking your remembered account.':previous);
       if(!next&&identity.actor)requireAuth();

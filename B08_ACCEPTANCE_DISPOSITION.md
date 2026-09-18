@@ -34,3 +34,7 @@ Keep `evidence/b08-accounts/runtime-results.json`, `runtime.log`, their two fail
 These are explicit limits on the bounded local statement. No additional user decision is needed for continuing B05. A hosted release or broader provider guarantee still requires its own completed evidence and authorization. Retain normal password/invitation/recovery UX and the previously approved MFA defaults; do not add hardware-key or Trusted Access requirements to the product on the basis of this finding.
 
 Source: the committed [original checkpoint](./B08_LOCAL_ACCOUNT_CHECKPOINT.md) and sanitized evidence already saved with it. No new vulnerability research or reproduction informed this review.
+
+## Ordinary user-flow follow-up — September 18, 2026
+
+See [B08_USER_FLOW_CHECKPOINT.md](./B08_USER_FLOW_CHECKPOINT.md) for new focused browser evidence. Remember me OFF/ON tab reopen, controlled expired-session reopen and same-actor draft recovery are now verified; a small cross-tab reauthentication email defect was fixed. The invited-account setup and reset browser journeys remain pending user password handoff and subsequent acceptance/sign-in checks. The original exception and failed evidence above remain unchanged; no concurrency investigation or race-suite rerun occurred.

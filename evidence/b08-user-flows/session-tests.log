@@ -1,0 +1,11 @@
+✔ email callbacks accept only explicit operation and hash; reject duplicates and redirect injection (0.549791ms)
+✔ Remember me persists authentication only and never changes draft journals (0.135125ms)
+✔ unremembered auth does not survive a new tab; origin namespaces and accounts do not share a key (0.054792ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 62.9365
