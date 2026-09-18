@@ -1,0 +1,2 @@
+PASS genuine second client saved a newer fictional version before requesting deletion; organization frozen.
+PASS authorized cancellation; browser must preserve stale draft and refuse Save across refreshes.

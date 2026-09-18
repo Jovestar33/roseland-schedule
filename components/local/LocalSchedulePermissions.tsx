@@ -2,7 +2,7 @@
 import { useRef, useState } from 'react';
 import { useLocalWorkspace, useWorkspacePanelState } from './LocalWorkspaceContext';
 import styles from '@/app/local-workspace/workspace.module.css';
-const actions={discover:'Find productions',read:'Read schedules',history:'Read history',edit:'Edit and save',create:'Create and copy',organize:'Rename, arrange and archive',trash:'Trash and recover',export:'Export and print',transfer:'Move schedules',permissions:'Manage permissions'};
+const actions={discover:'Find productions',read:'Read schedules',history:'Read history',edit:'Edit and save',create:'Create and copy',organize:'Rename, arrange and archive',trash:'Trash and recover',export:'Export and print',share:'Create and revoke Client links',transfer:'Move schedules',permissions:'Manage permissions'};
 type Action=keyof typeof actions;
 type Rule={id:string;organization_id:string;production_id:string|null;schedule_id:string|null;subject_role:string|null;subject_user_id:string|null;denied_actions:Action[];authority:string;revision:number};
 type Directory={productions:{id:string;name:string}[];schedules:{id:string;name:string;production:string}[];members:{id:string;name:string;role:string}[]};

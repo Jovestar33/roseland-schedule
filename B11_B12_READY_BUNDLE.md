@@ -1,5 +1,7 @@
 # B11 then B12 — ready-to-dispatch local bundle
 
+> **Explicit subsequent dispatch, September 18:** the user authorized B11 → isolated functional preview → B12 with 'do what you can without design redux.' Implement the recorded familiar workflows, commit B11 and B12 separately, and stop at B12. Retain only the designated review instance after test-service cleanup. No design/branding, hosted work, actual source export, exceptional factor recovery, permanent purge or B13/B14 implementation is included.
+
 September 18, 2026. Planning-only consolidation after B10-B commit `f3450eb`; no fresh implementation, services, hosted changes or application tests started. Authority: [accelerated handoff](ACCELERATED_PRE_RESKIN_HANDOFF.md), [sharing decisions](B11_SHARING_SOURCE_MATRIX.md), [technical gate inventory](TECHNICAL_ACCEPTANCE_AUDIT.md), [design brief](PRODUCTION_COMMAND_DESIGN_BRIEF.md). This proposal needs an explicit implementation dispatch. Preserve unrelated checkout edits and all fictional recovery artifacts.
 
 ## Current disposition

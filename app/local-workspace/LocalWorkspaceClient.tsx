@@ -58,7 +58,7 @@ export default function LocalWorkspaceClient({config}:{config:LocalEditorConfig}
   const [organizations,setOrganizations]=useState<WorkspaceOrganization[]>([]),[more,setMore]=useState(false);
   const [visited,setVisited]=useState<WorkspaceOrganization[]>([]),[managementPanels,setManagementPanels]=useState<string[]>([]);
   const [scope,setScope]=useState<WorkspaceOrganization|null>(null);
-  const [lifecyclePanels,setLifecyclePanels]=useState<string[]>([]),[scheduleRequest,setScheduleRequest]=useState<WorkspaceScheduleRequest|null>(null),scheduleSequence=useRef(0);
+  const [lifecyclePanels,setLifecyclePanels]=useState<string[]>([]),[scheduleRequest,setScheduleRequest]=useState<WorkspaceScheduleRequest|null>(null),scheduleSequence=useRef(0),teamRequest=useRef<string|null>(null);
   const consumeScheduleRequest=useCallback((sequence:number)=>setScheduleRequest(previous=>previous?.sequence===sequence?null:previous),[]);
   const [panels,setPanels]=useState<Record<string,WorkspacePanelState>>({});
   const [busy,setBusy]=useState(false),busyRef=useRef(false),navigationTicket=useRef(0),directoryTicket=useRef(0);
@@ -84,6 +84,7 @@ export default function LocalWorkspaceClient({config}:{config:LocalEditorConfig}
       if(next.screen==='invitations'&&(!organization||organization.role==='member')){next={...next,screen:'schedule'};setMessage('Invitation management requires an Owner or Admin organization.');}
       if(organization){remember(organization);setOrganizations(previous=>previous.map(item=>item.id===organization.id?organization:item));if(next.screen==='invitations')setManagementPanels(previous=>previous.includes(organization.id)?previous:[...previous,organization.id]);if(next.screen==='lifecycle')setLifecyclePanels(previous=>previous.includes(organization.id)?previous:[...previous,organization.id]);}
       setScope(organization);locationRef.current=next;setLocation(next);
+      if(organization&&next.schedule&&next.screen==='schedule'){const key=`${actor}:${organization.id}:${next.schedule}`;if(teamRequest.current!==key){teamRequest.current=key;setScheduleRequest({id:next.schedule,organization:organization.id,sequence:++scheduleSequence.current});}}else teamRequest.current=null;
       if(push)history.pushState(null,'',workspaceHref(next));else history.replaceState(null,'',workspaceHref(next));return true;
     }catch(error){
       if(ticket===navigationTicket.current&&identity.current(generation)){

@@ -1,5 +1,7 @@
 # Technical migration acceptance audit
 
+> **B11 local completion — September 18:** scoped Team/Client sharing and the queued B10-B stale-draft browser follow-up passed [bounded acceptance](B11_LOCAL_ACCEPTANCE.md). The authorized next checkpoint is the isolated fictional preview followed by B12 reconciliation; all later gates remain explicit.
+
 > **September 18 planning consolidation after `f3450eb`:** [next ready bundle and exact retained gates](B11_B12_READY_BUNDLE.md). Early fictional review follows B11 and does not replace formal B15. Exceptional recovery/purge remain explicit; no worker or new implementation is dispatched here.
 
 > **B10-B local completion — September 18:** the approved 30-day organization deletion request, read-only period and cancellation are locally accepted in [B10_B_LOCAL_ACCEPTANCE.md](./B10_B_LOCAL_ACCEPTANCE.md). At the deadline, data remains frozen awaiting a separately approved purge. Operational deletion, exceptional recovery and release gates remain open.

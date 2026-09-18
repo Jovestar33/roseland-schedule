@@ -1,0 +1,23 @@
+{
+  "environment": "Owned unlinked fictional local stack; app 3435, API 56121",
+  "checks": [
+    "Genuine fictional Editor sign-in; Team deep link opened correct schedule after ordinary authorization",
+    "Browser-created 30-day Client link opened saved allowlisted schedule with row notes, no private contact/call-sheet/status data",
+    "New bearer fragment removed from address; visible Print / Save PDF invokes existing print path after revalidation",
+    "Explicit revoke prompt and confirmation; reopening original token rendered generic unavailable",
+    "Final B10-B latch: draft A at version 1 retained; genuine second client saved version 2 before freeze",
+    "Freeze disabled Save and displayed retained draft; snapshot dialog showed capture/changes/retention paused",
+    "Cancellation kept stale draft with mismatch warning; repeated organization refresh and background polling left Save disabled",
+    "Explicit reload required discard confirmation and loaded version 2; baseline Town restored by browser save as version 3",
+    "Background Team-link refresh no longer reopens loaded schedule or clears the draft"
+  ],
+  "fixes": [
+    "Explicitly displayed existing Client print bar",
+    "Consumed Team deep-link request once per actor/target instead of replaying on background navigation"
+  ],
+  "limits": [
+    "No physical PDF artifact exported in this browser pass; full paired print/PDF parity remains B15",
+    "One desktop local browser scenario, not full hosted/device parity",
+    "Already downloaded copies cannot be recalled; background public view rechecks every 30 seconds/focus"
+  ]
+}

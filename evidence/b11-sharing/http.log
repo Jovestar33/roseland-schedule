@@ -1,0 +1,18 @@
+PASS Built endpoint resolves valid scoped bearer
+PASS Built response preserves allowlist exclusions
+PASS Response prevents caching and referrers
+PASS Cross-origin browser request denied
+PASS Malformed bearer gets generic unavailable
+PASS Guessed bearer gets generic unavailable
+PASS Original HMAC legacy link resolves through built server
+PASS Legacy signature cannot be moved to a different name
+PASS Response has only the explicit document sections
+PASS Database Client projection equals legacy field allowlist exactly
+PASS Current export restriction also blocks external dissemination
+PASS Inherited template source restriction blocks Client output
+PASS Shared read rate budget returns 429 without a document
+PASS Read-only route admits anonymous view with no-store headers: /local-client
+PASS Read-only route admits anonymous view with no-store headers: /view
+PASS Read-only route admits anonymous view with no-store headers: /view/Fictional
+PASS Application log contains neither new nor legacy bearer
+PASS 17 built HTTP sharing assertions.

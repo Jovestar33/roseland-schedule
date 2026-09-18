@@ -1,0 +1,36 @@
+(node:47706) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/johnsammon/.codex/worktrees/roseland-b02/roseland-schedule/scripts/test-client-links-runtime.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to /Users/johnsammon/.codex/worktrees/roseland-b02/roseland-schedule/package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS Owner genuine sign-in
+PASS Owner genuine MFA
+PASS Viewer cannot create Client link
+PASS Wrong organization cannot issue link
+PASS Stale saved version cannot issue link
+PASS Editor creates Client link
+PASS Default expiry exactly 30 days
+PASS Exact retry retains grant and expiry
+PASS Request ID is actor bound
+PASS Changed token conflicts
+PASS Client response preserves ordinary row notes
+PASS Actual projection omits contacts call sheet and status
+PASS Projection omits internal identity version and history
+PASS Anonymous role cannot bypass server projection route
+PASS Authenticated role cannot call service-only resolver
+PASS Guessed token returns no document
+PASS Unrelated Editor cannot revoke another creator link
+PASS New leadership sharing restriction invalidates existing reads
+PASS Share restriction also denies issuance
+PASS Creator role downgrade blocks existing grant
+PASS Existing scoped Client read survives pending organization deletion
+PASS Frozen organization denies link creation
+PASS Frozen organization denies ordinary link mutation
+PASS Authorized Organizer revokes link
+PASS Revocation retry is idempotent
+PASS Old issuance retry cannot revive revoked link
+PASS Expired token denied
+PASS Trusted original-expiry legacy alias resolves stable schedule
+PASS Legacy alias does not extend original expiry
+PASS Creator sees own grants and legacy alias without raw secrets
+PASS Database stores only token digest
+PASS 31 focused B11 Auth/SQL assertions; private fictional fixture saved.

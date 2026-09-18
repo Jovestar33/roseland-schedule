@@ -6,7 +6,8 @@ import type { NextRequest } from 'next/server';
 const AUTH_COOKIE = 'rp_auth_flag';
 
 function isPublicPath(pathname: string): boolean {
-  return pathname === '/login'
+  return pathname === '/local-client' // Independently gated loopback Client projection.
+    || pathname === '/login'
     || pathname === '/local-workspace' // Independent loopback/configuration gate.
     || pathname === '/local-schedule' // Independently gated server-side; disabled by default.
     || pathname === '/local-accept-invitation' // Independent loopback/configuration gate.
@@ -54,7 +55,11 @@ export function middleware(request: NextRequest) {
   }
 
   // Public paths need no cookie
-  if (isPublicPath(pathname)) return NextResponse.next();
+  if (isPublicPath(pathname)) {
+    const response=NextResponse.next();
+    if(pathname==='/local-client'||pathname.startsWith('/view')){response.headers.set('Referrer-Policy','no-referrer');response.headers.set('Cache-Control','private, no-store');response.headers.set('X-Robots-Tag','noindex, nofollow');response.headers.set('X-Frame-Options','DENY');}
+    return response;
+  }
 
   // All other app routes require the auth flag cookie
   if (!request.cookies.get(AUTH_COOKIE)?.value) {

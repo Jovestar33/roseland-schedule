@@ -1,0 +1,17 @@
+// Controlled genuine second-client actions for the queued browser scenario.
+import {readFileSync} from 'node:fs';import {execFileSync} from 'node:child_process';import {resolve} from 'node:path';import {createHmac,randomUUID} from 'node:crypto';import {createClient} from '@supabase/supabase-js';
+const f=JSON.parse(readFileSync('/private/tmp/roseland-b11-fixtures.json','utf8'));if(f.project!=='roseland-b08-20260917')throw Error('Fictional B11 fixture required');
+const s=JSON.parse(execFileSync(resolve('node_modules/.bin/supabase'),['status','--workdir','/private/tmp/roseland-b08-20260917','--output','json'],{encoding:'utf8',stdio:['ignore','pipe','pipe']}));if(s.API_URL!=='http://127.0.0.1:56121')throw Error('Owned loopback required');
+const c=createClient(s.API_URL,s.ANON_KEY,{auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false}});if((await c.auth.signInWithPassword({email:f.owner.email,password:f.owner.password})).error)throw Error('Sign-in failed');
+let bits='';for(const a of f.owner.factor.secret)bits+='ABCDEFGHIJKLMNOPQRSTUVWXYZ234567'.indexOf(a).toString(2).padStart(5,'0');const key=Buffer.from(bits.match(/.{8}/g)!.map(x=>parseInt(x,2))),counter=Buffer.alloc(8);counter.writeBigUInt64BE(BigInt(Math.floor(Date.now()/30000)));const h=createHmac('sha1',key).update(counter).digest(),o=h.at(-1)!&15,code=((h.readUInt32BE(o)&0x7fffffff)%1000000).toString().padStart(6,'0');if((await c.auth.mfa.challengeAndVerify({factorId:f.owner.factor.id,code})).error)throw Error('MFA failed');
+async function rpc(name:string,args:Record<string,unknown>){const r=await c.rpc(name,args);if(r.error)throw Error(name+': '+r.error.message);return r.data;}
+const orgArgs={target_organization_id:f.organization},lifecycle=await rpc('read_organization_lifecycle',orgArgs),step=process.argv[2];
+if(step==='save-and-freeze'){
+ if(lifecycle.state!=='active')throw Error('Expected active org');const r=await rpc('read_schedule',{target_schedule_id:f.schedule}),saved=Array.isArray(r)?r[0]:r;const document=structuredClone(saved.document);document.meta.town='B11 newer server version';
+ const next=await rpc('update_schedule_document',{target_schedule_id:f.schedule,expected_version:saved.document_version,next_document:document,schema_version:1});
+ await rpc('request_organization_deletion',{...orgArgs,request_id:randomUUID(),expected_version:lifecycle.version,confirmed:true});console.log('PASS genuine second client saved a newer fictional version before requesting deletion; organization frozen.');
+}else if(step==='cancel'){
+ if(lifecycle.state!=='pending_deletion')throw Error('Expected pending org');await rpc('cancel_organization_deletion',{...orgArgs,request_id:randomUUID(),expected_version:lifecycle.version});console.log('PASS authorized cancellation; browser must preserve stale draft and refuse Save across refreshes.');
+}else if(step==='restore'){
+ if(lifecycle.state!=='active')throw Error('Expected active org');const r=await rpc('read_schedule',{target_schedule_id:f.schedule}),saved=Array.isArray(r)?r[0]:r;const document=structuredClone(saved.document);document.meta.town='Fictional Sharing';await rpc('update_schedule_document',{target_schedule_id:f.schedule,expected_version:saved.document_version,next_document:document,schema_version:1});console.log('PASS fictional Town baseline restored through authorized versioned save.');
+}else throw Error('Choose save-and-freeze, cancel, or restore');

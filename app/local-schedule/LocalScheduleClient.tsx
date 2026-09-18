@@ -30,6 +30,7 @@ import {snapshotRestoreMatches,type SnapshotReceipt} from '@/lib/platform/schedu
 import {createTemplateRepository} from '@/lib/platform/schedule-templates';
 import LocalScheduleFiles from '@/components/local/LocalScheduleFiles';
 import ShareDropdown from '@/components/toolbar/ShareDropdown';
+import LocalScheduleSharing from '@/components/local/LocalScheduleSharing';
 import LocalWeatherControls from '@/components/local/LocalWeatherControls';
 import {useCmsStore,useCmsLabel} from '@/lib/store/cmsStore';
 import LocalSchedulePrint from '@/components/local/LocalSchedulePrint';
@@ -350,6 +351,7 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
           <ModalVisibilityContext.Provider value={active && recordInScope && ready && !confirmation}>
             <ModalVisibilityContext.Provider value={active&&recordInScope&&ready&&permission?.read===true&&!confirmation}><div className={styles.toolbar}><ShareDropdown authorizeOutput={authorizeOutput} key={documentSession} readOnly={!canEdit || (workspace && permission?.output!==true) || !ready || !active || !recordInScope || !!confirmation} onModalChange={setDocumentDialogOpen} /></div></ModalVisibilityContext.Provider>
           </ModalVisibilityContext.Provider>
+          {workspace&&controller.record&&<LocalScheduleSharing key={`${session?.user.id}:${controller.record.id}`} client={client} actor={session?.user.id??null} organization={controller.record.organization_id} schedule={controller.record.id} enabled={active&&recordInScope&&ready&&permission?.read===true&&!confirmation} readOnly={workspace.readOnly===true}/>}
           <LocalSchedulePrint visible={active && recordInScope && ready && !confirmation} />
           {(controller.attempt || controller.result) && <section className={styles.recovery} aria-label="Save recovery">
             <h2>{controller.result?.state === 'matched' ? 'Saved version confirmed' : 'Save needs review'}</h2>
