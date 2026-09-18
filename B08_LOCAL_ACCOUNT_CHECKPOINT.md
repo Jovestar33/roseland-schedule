@@ -1,6 +1,6 @@
 # B08 local account checkpoint — acceptance blocked
 
-September 17, 2026. Local implementation candidate; **B08 is not accepted or complete**. No hosted change, deployment, real email, actual account or actual schedule modification. B05/B09/B10/B11 remain separate planning work. Organization presentation writers remain Organization Super Admins/Admins only; B06 template-publishing authority is unchanged.
+September 17, 2026. Local implementation commit `bc5553e`; **B08 is not accepted or complete**. No hosted change, deployment, real email, actual account or actual schedule modification. B05/B09/B10/B11 remain separate planning work. Organization presentation writers remain Organization Super Admins/Admins only; B06 template-publishing authority is unchanged.
 
 ## Blocking finding: concurrent Auth token consumption
 

@@ -1,0 +1,49 @@
+# B11 sharing — source comparison and remaining product choices
+
+September 17, 2026. Planning only while B08 implementation continues. No B11 implementation, hosted inspection, actual schedule read/export, token issuance, message or deployment performed. This review inspected the current durable checkout and the previously recorded published-source audit; it is not a new live-user acceptance run.
+
+## What the existing product actually does
+
+The recorded live baseline is published `main@62eb261` in [LIVE_LEGACY_BEHAVIOR_AUDIT.md](./LIVE_LEGACY_BEHAVIOR_AUDIT.md). Current legacy source has **two library link actions**, not three independently configurable audience policies:
+
+- **Team:** `components/library/LibraryTree.tsx:486` copies `/schedule/{name}?auth=true`, an editor/application route. This is not an anonymous full-document token grant. The target counterpart should remain a normal authenticated schedule link subject to the recipient's effective read/edit rights.
+- **Client:** the next handler calls `lib/api/viewLink.ts`, which requests a signed view token and copies `/view?v={name}&vt={token}`. `netlify/functions/view-link.js` requires the legacy editor credential. Token possession permits the allowlisted read-only projection, with Print/PDF.
+- `app/view/[name]/page.tsx` renders `PublicViewer`, while `/view` renders `ReadOnlyViewer`; both call the load endpoint with a view token. The named route alone does not authorize access. `netlify/lib/load-handler.cjs:45–55` requires an editor credential or valid view token and returns the full document only to the editor. Both external viewers receive the same `publicSchedule` projection. “PublicViewer” is an implementation name, not evidence of a separate third audience contract.
+
+`netlify/lib/public-view.js:2–16` creates a name-bound HMAC token with a 30-day expiry and validates its expiry/signature. No individual token registry/revocation operation is implemented there. Do not claim the legacy link UI already supports per-link revocation or independent Client/Public field presets. B11's planned hashed, revocable tokens are an explicit target improvement, already required by the authorization model.
+
+## Exact response fields and proposed preservation mapping
+
+Source of the external allowlist: `netlify/lib/public-view.js:18–37`; complete document shape: `lib/types.ts:1–93`. Cells describe data delivered, not merely what the screen happens to render.
+
+| Field group | Authenticated legacy editor / target internal Team | Current legacy Client and PublicViewer token response | B11 disposition |
+|---|---|---|---|
+| Schedule identity / placement | Complete saved document and authorized app identity/context | Name comes from the link; `meta.town`, `date`, `projectName`, `phase`, `dayNumber`, `totalDays` | Preserve familiar schedule identification and layout, subject to approved external scope; do not expose internal IDs/memberships by copying a complete target row. |
+| Production personnel names | `meta.prod`, `dir`, `dp` | Included | Existing external behavior. Include in reviewed Client-scope proposal; no reason to ask about every name field independently. |
+| Schedule rows and timing | All rows/fields | Nonempty action/time rows only; `action`, `otherText`, `desc`, `timeIn`, `dur`, `sunLocked`, `fixedOut`, `fixedOutTime` | Preserve existing readable running order and timing. Editing flags not expressly selected remain omitted. |
+| Locations | All location data | `loc`, `locLat`, `locLng`, `locName`, `locAddress`; sub-location `id`, `loc`, `locLat`, `locLng`, `desc`, `name`, `address` | Existing external scope includes precise coordinates/addresses. A public/unpublished-location distinction would require explicit approved semantics; the current row shape has no published-location flag. |
+| Row notes | `row.notes` | **Included** | Concrete conflict to resolve: new links are specified to omit internal notes unless a chosen scope explicitly requires them. Existing `notes` is one field, not separate client/internal fields. Do not silently strip a familiar client schedule column or silently call every note safe for unrestricted distribution. |
+| Row contact details | `contactName`, `contactTitle`, `contactPhone`, `contactEmail` | Omitted | Keep omitted from default external response. Contact Sheet is a separate authenticated export, not evidence that client links disclose contacts. |
+| Call-sheet / emergency / safety data | `meta.callsheet`: basecamp, parking, hospital, emergency, mealNotes, safetyNotes, specialInstructions, notes | Omitted | Keep omitted from default external response; a richer selected scope would be a new explicit permission contract. |
+| Status and completion | `row.status`, `done`, `fixedIn`, sub-location `done` | Omitted | Preserve omission. No client-side hiding of a full document as a substitute for a server projection. |
+| Weather | Full stored `meta.wx` | `sunrise`, `sunset`, `maxF`, `minF`, `prec`, `code`, `cond`, `fetchedAt`, `noForecast` | Preserve current external weather/sun display; no real provider calls required in B11 local tests. |
+| Other metadata / future fields | Authorized document | `meta.lat/lng`, `savedAt`, unlisted weather fields and unknown future fields omitted | Deny by default. Add fields deliberately with projection tests. |
+| History, snapshots, permissions, audits, contacts outside rows | Separate authorized app features | Not in response | No external grant inferred. Team access still obeys effective history/export/content restrictions; token issuance must not bypass B06 source restrictions. |
+
+The proposed starting point is an authenticated **Team** link plus one explicitly reviewed **Client read-only** scope preserving the familiar existing external schedule layout. Do not add a separate Public mode or a new matrix editor merely because the roadmap used Team/Client/Public terminology. A distinct Public audience should exist only if the user wants different disclosure.
+
+## Already settled security and continuity
+
+[AUTHORIZATION_MODEL.md:83–87](./AUTHORIZATION_MODEL.md) requires anonymous access through a scoped server projection, no broad table SELECT, hashed target tokens, expiry/revocation/rate checks, default 30-day expiry, and no tokens in logs/referrers/analytics/errors. Internal notes and contact details are omitted unless an explicit selected scope requires them. Existing restrictions remain effective; being able to view a restricted schedule does not automatically approve anonymous dissemination.
+
+Legacy route resolution is required for at least 12 months after cutover. **Route compatibility is not a 12-month extension of a 30-day token.** Preserve valid links through a reviewed name/alias-to-stable-ID resolver without minting wider access or restoring revoked access. Current source does not support the old audit shorthand that every bare named URL exposes a full document. A later authorized legacy-link inventory must distinguish actual formats/signatures/expiry; this source review does not enumerate real links.
+
+Keep Share's existing Print/PDF, Contact Sheet and Call Sheet controls. Those use separately authorized internal output workflows and are not additional external audience presets. The target local editor already preserves those tools; B11 should add the scoped link workflow rather than redesign the toolbar or widen an export permission silently.
+
+## Only genuine remaining product choices
+
+1. **External row-note semantics and whether a distinct Public scope is needed.** Recommend preserving the existing schedule-oriented Client scope, including its ordinary visible row notes only after explicitly approving that as the selected external scope. Keep contacts/call sheets/status/history excluded. If the same field can contain internal notes, choose an explicit protected/internal distinction before implementation rather than silently exposing it or deleting client-visible content. A separate Public scope is optional, not a prerequisite to preserving the existing Client workflow.
+2. **Target authority to create/revoke external links under the new role model.** Legacy has one editor credential; it cannot resolve the newer Organizer/Editor split or imposed sharing restrictions. The older authorization design assigned share creation/revocation to Producer/Editor, while B03 has no dedicated share capability. Recommend retaining Editor-and-above link creation only with effective read/edit/output authorization and an explicit sharing restriction; allow the creator and authorized organizing/organization leadership to revoke, subject to higher restrictions. Submit this exact mapping for approval rather than assuming Organizer-only or that ordinary export grants publication. No authority is assigned by this recommendation.
+3. **Handling genuinely older incompatible link formats, if an authorized inventory finds any.** Recommend preserving existing valid scoped links until their original expiry and keeping routes/resolution available for the agreed window, with a clear unavailable/renewal path for expired or unverifiable links. Do not grandfather unrestricted full-document anonymous access. The compatibility requirement is settled; only a demonstrated legacy-format conflict needs another decision.
+
+Precise token storage, hashing, route names, minimal response schemas, copy feedback, failed/revoked states and audit implementation are engineering choices for the bounded B11 proposal. Preserve familiar behavior and current source restrictions; do not turn them into a long questionnaire. B11 local acceptance must prove omitted fields in actual responses, denied issuance, stale policy/source changes, expiry/revocation, cross-tenant isolation, malformed/guessed tokens, logs/cache/referrer behavior and fictional legacy alias continuity. No full parity or hosted delivery claim follows from this planning document.
