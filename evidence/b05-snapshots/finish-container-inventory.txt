@@ -1,0 +1,37 @@
+Running containers after bounded cleanup:
+supabase_rest_roseland-b05-finish-20260917
+supabase_inbucket_roseland-b05-finish-20260917
+supabase_auth_roseland-b05-finish-20260917
+supabase_kong_roseland-b05-finish-20260917
+supabase_db_roseland-b05-finish-20260917
+
+Preserved related named volumes:
+supabase_db_roseland-b03-20260917
+supabase_db_roseland-b03-replay-20260917
+supabase_db_roseland-b05-20260917
+supabase_db_roseland-b05-finish-20260917
+supabase_db_roseland-b08-20260917
+supabase_db_roseland-b08-auth197-20260917
+supabase_db_roseland-b08-replay-20260917
+supabase_db_roseland-template-replay-20260917
+supabase_db_roseland-templates-20260917
+supabase_edge_runtime_roseland-b03-20260917
+supabase_edge_runtime_roseland-b03-replay-20260917
+supabase_edge_runtime_roseland-b05-20260917
+supabase_edge_runtime_roseland-b05-finish-20260917
+supabase_edge_runtime_roseland-b08-20260917
+supabase_edge_runtime_roseland-b08-auth197-20260917
+supabase_edge_runtime_roseland-b08-replay-20260917
+supabase_edge_runtime_roseland-template-replay-20260917
+supabase_edge_runtime_roseland-templates-20260917
+supabase_storage_roseland-b03-20260917
+supabase_storage_roseland-b03-replay-20260917
+supabase_storage_roseland-b05-20260917
+supabase_storage_roseland-b05-finish-20260917
+supabase_storage_roseland-b08-20260917
+supabase_storage_roseland-b08-auth197-20260917
+supabase_storage_roseland-b08-replay-20260917
+supabase_storage_roseland-template-replay-20260917
+supabase_storage_roseland-templates-20260917
+
+Final cleanup: standard Supabase stop completed for roseland-b05-finish-20260917. Docker ps returned no running containers. All named volumes remain preserved. Owned B05 web processes were terminated; unrelated web processes were left alone.

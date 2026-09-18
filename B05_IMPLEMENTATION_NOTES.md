@@ -1,8 +1,8 @@
 # B05 local implementation notes
 
-Current checkpoint: snapshot database/API and local UI implementation is saved. Both migrations have applied through the standard CLI to the isolated B05 database. The code is not yet accepted: runtime and browser coverage remain incomplete because of local request timeouts. Earlier paused-checkpoint sections below are historical and are superseded by the authorized resume.
+Current checkpoint: the focused local finish has passed 48 genuine-session snapshot assertions, 489 database checks, 205 platform tests, 62 editor tests, TypeScript and the final build. Authenticated desktop/mobile browser workflows and the real five-minute automatic capture check pass. Focused local B05 acceptance is complete. See `B05_LOCAL_CHECKPOINT.md` and `evidence/b05-snapshots/FINISH_REVIEW.md` for current evidence and limits. Earlier blocked/paused sections below are retained as historical evidence and are superseded by the focused finish.
 
-Active ordinary product work; no B08 provider investigation. Current completed section: immutable snapshot request capture, actor/organization/schedule-bound recovery journal, full pagination and a five-minute active-document dirty timer (six focused tests passed, commit `43f0735`). Repository methods are contracts awaiting the database/UI implementation, not completed feature acceptance.
+Historical initial model checkpoint; no B08 provider investigation. Completed at that checkpoint: immutable snapshot request capture, actor/organization/schedule-bound recovery journal, full pagination and a five-minute active-document dirty timer (six focused tests passed, commit `43f0735`). Repository methods are contracts awaiting the database/UI implementation, not completed feature acceptance.
 
 ## Storage and authority
 
@@ -24,7 +24,7 @@ Content restore reviews snapshot and live schedule versions, explicitly handles 
 
 Imported collections are materialized only from the trusted private migration catalogue in a deliberate fictional migration test. Preserve original ID, label, saved timestamp, collection order and entire payload, with no count cap or browser normalizer. Original catalogue records remain unchanged even if an authorized local snapshot copy is later purged. No actual migration/export is authorized.
 
-Acceptance still requires database/runtime role and exact-retry checks, full UI integration, import preservation, naming/retention ordering, stale restores, copy restrictions, Trash/confirmed fictional purge and browser review. B05 is not complete yet.
+The original acceptance requirements were database/runtime role and exact-retry checks, full UI integration, import preservation, naming/retention ordering, stale restores, copy restrictions, Trash/confirmed fictional purge and browser review. See the current checkpoint above for verified results; the historical pause notes below do not describe the current status.
 
 ## Paused local migration checkpoint
 
@@ -38,6 +38,6 @@ The user approved diagnosing the standard migration connection without applying 
 
 Successful listings confirm migration `20260917233000` applied and `20260917234000` still pending. A proposed next action is the normal Supabase migration command against the same explicit loopback database with a ten-second connection timeout, subject to authorization to resume writes. The direct-container application route remains unused.
 
-## Current validation handoff
+## Historical validation handoff before the focused finish
 
 See `B05_LOCAL_CHECKPOINT.md` for the saved implementation and exact evidence limits. Standard local restart completed with data preserved, but the established fixture subsequently failed session verification. Runtime attempts stopped; no provider-security investigation or authentication workaround followed. B05 acceptance remains open.

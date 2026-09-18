@@ -1,0 +1,6 @@
+{"path":"/auth/v1/signup","status":200,"elapsedMs":140}
+{"path":"/auth/v1/logout","status":204,"elapsedMs":35}
+{"path":"/auth/v1/token","status":200,"elapsedMs":83}
+{"path":"/auth/v1/user","status":200,"elapsedMs":25}
+PASS ordinary fictional signup, password login and getUser identity verification
+{"path":"/auth/v1/logout","status":204,"elapsedMs":32}

@@ -26,7 +26,7 @@ import {retainSourceDraft,readSourceDraft} from '@/lib/platform/schedule-drafts'
 import LocalScheduleLibrary from '@/components/local/LocalScheduleLibrary';
 import LocalScheduleTemplates from '@/components/local/LocalScheduleTemplates';
 import LocalScheduleSnapshots from '@/components/local/LocalScheduleSnapshots';
-import type {SnapshotReceipt} from '@/lib/platform/schedule-snapshots';
+import {snapshotRestoreMatches,type SnapshotReceipt} from '@/lib/platform/schedule-snapshots';
 import {createTemplateRepository} from '@/lib/platform/schedule-templates';
 import LocalScheduleFiles from '@/components/local/LocalScheduleFiles';
 import ShareDropdown from '@/components/toolbar/ShareDropdown';
@@ -235,7 +235,7 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
   }
   async function onSnapshotRestored(receipt:SnapshotReceipt,context:unknown){
     const c=context as ReturnType<typeof beforeSnapshotRestore>|undefined;
-    const safe=()=>!!c&&activeRef.current&&accountRef.current===c.actor&&scopeRef.current===c.organization&&controller.record?.id===c.id&&controller.record.document_version===c.sourceVersion&&state().documentSession===c.documentSession&&state().editRevision===c.editRevision&&navigationEpoch.current===c.navigation&&!controller.attempt&&!busyRef.current;
+    const safe=()=>!!c&&activeRef.current&&!controller.attempt&&!busyRef.current&&snapshotRestoreMatches(c,{actor:accountRef.current??'',organization:scopeRef.current??'',id:controller.record?.id??'',sourceVersion:controller.record?.document_version??0,documentSession:state().documentSession,editRevision:state().editRevision,navigation:navigationEpoch.current});
     if(!safe()||!c)return false;
     const record=await repository.read(c.id);
     if(!safe()||record.document_version!==receipt.schedule_version)return false;

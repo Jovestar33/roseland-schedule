@@ -62,3 +62,7 @@ export class SnapshotTimer {
  due(identity:string,now:number,dirty:boolean,enabled:boolean){return enabled&&dirty&&identity===this.identity&&now-this.startedAt>=SNAPSHOT_INTERVAL_MS;}
  captured(identity:string,now:number){if(identity===this.identity)this.startedAt=now;}
 }
+
+export interface SnapshotRestoreContext {actor:string;organization:string;id:string;sourceVersion:number;documentSession:number;editRevision:number;navigation:number}
+/** A saved restore may replace the visible draft only if it is still the reviewed draft. */
+export function snapshotRestoreMatches(review:SnapshotRestoreContext,current:SnapshotRestoreContext){return review.actor===current.actor&&review.organization===current.organization&&review.id===current.id&&review.sourceVersion===current.sourceVersion&&review.documentSession===current.documentSession&&review.editRevision===current.editRevision&&review.navigation===current.navigation;}

@@ -34,7 +34,9 @@ ensure(typeof key === 'string' && key.length > 0, 'Local anonymous API key unava
 const guardedFetch: typeof fetch = async (input, init) => {
   const url = new URL(typeof input === 'string' ? input : input instanceof URL ? input.href : input.url);
   ensure(url.origin === base.origin, 'Non-local request refused');
+  const started=Date.now();
   const response = await fetch(url, { ...init, cache: 'no-store', redirect: 'error', signal: AbortSignal.timeout(45000) });
+  if(args.includes('--diagnose-login'))console.log(JSON.stringify({path:url.pathname,status:response.status,elapsedMs:Date.now()-started}));
   return response;
 };
 const clients: SupabaseClient[] = [];
@@ -66,11 +68,13 @@ async function identity(label: string) {
   const login = await c.auth.signInWithPassword({ email, password });
   ensure(!login.error && login.data.session && login.data.user.id === id, 'Password login failed');
   const verified = await c.auth.getUser();
-  ensure(!verified.error && verified.data.user.id === id, 'Auth could not verify the login-issued session');
+  ensure(!verified.error && verified.data.user.id === id, 'Auth could not verify the login-issued session: '+JSON.stringify({code:verified.error?.code??null,status:verified.error?.status??null,name:verified.error?.name??null,userMatches:verified.data.user?.id===id}));
+  console.log('Fixture verified: '+label);
   return { c, id, email, password };
 }
 
-ensure(project==='roseland-b05-20260917','Only the isolated B05 stack is allowed');
+ensure(['roseland-b05-20260917','roseland-b05-finish-20260917'].includes(project),'Only the isolated B05 stacks are allowed');
+if(args.includes('--diagnose-login')){try{const fixture=await identity('b05-diagnostic');console.log('PASS ordinary fictional signup, password login and getUser identity verification');writeFileSync('/private/tmp/b05-diagnostic-fixture.json',JSON.stringify({project,id:fixture.id,email:fixture.email,password:fixture.password}),{mode:0o600});}finally{await Promise.all(clients.map(c=>c.auth.signOut({scope:'local'}).catch(()=>undefined)));}process.exit(0);}
 let passed=0;const check=(v:unknown,label:string)=>{ensure(v,label);passed++;console.log('PASS '+label);};
 const quote=(v:unknown)=>"'"+JSON.stringify(v).replaceAll("'","''")+"'::jsonb";
 async function ok(c:SupabaseClient,name:string,args:Record<string,unknown>){let r=await c.rpc(name,args);if(r.error?.code===''&&/timeout/i.test(r.error.message))r=await c.rpc(name,args);ensure(!r.error,name+': '+JSON.stringify(r.error));return r.data;}
@@ -162,7 +166,8 @@ try{
  const templateSource=randomUUID(),templateTarget=randomUUID(),templateId=randomUUID();
  for(const [id,production] of [[templateSource,dest],[templateTarget,prod]])await ok(owner.c,'create_schedule_in_production',{target_schedule_id:id,target_production_id:production,target_day_id:null,target_phase_id:null,next_display_name:'Fictional inherited template source',next_slug:'template-'+id,next_document:saved,schema_version:1});
  await ok(owner.c,'mutate_schedule_template',{request_id:randomUUID(),target_template_id:templateId,target_production_id:dest,expected_version:0,operation:'create',next_name:'Fictional restricted snapshot template',next_rows:saved.rows,source_schedule_id:templateSource,source_version:1});
- const templateRule={target_id:randomUUID(),target_organization_id:org,target_production_id:dest,target_schedule_id:templateSource,subject_role:'editor',subject_user_id:null,denied_actions:['read'],expected_revision:0};await ok(owner.c,'set_schedule_restriction',templateRule);
+ const templateRule={target_id:randomUUID(),target_organization_id:org,target_production_id:dest,target_schedule_id:templateSource,subject_role:null,subject_user_id:editor.id,denied_actions:['read'],expected_revision:0};await ok(owner.c,'set_schedule_restriction',templateRule);
+ await ok(owner.c,'publish_schedule_template',{request_id:randomUUID(),target_template_id:templateId,target_production_id:dest,expected_version:1,publish:true});
  const templateReview=await ok(owner.c,'review_schedule_template_apply',{target_template_id:templateId,target_schedule_id:templateTarget});
  const templateCapture={...baseAttempt,request_id:randomUUID(),target_snapshot_id:randomUUID(),target_schedule_id:templateTarget,next_name:'Unsaved template draft',source_version:1,template_uses:[{id:templateId,version:templateReview.template.version,policy:templateReview.policy}]};
  await ok(owner.c,'mutate_schedule_snapshot',templateCapture);

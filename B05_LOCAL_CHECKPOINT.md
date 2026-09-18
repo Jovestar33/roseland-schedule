@@ -1,5 +1,15 @@
 # B05 local snapshot implementation checkpoint
 
+September 17, 2026. Focused B05 local acceptance is complete. The historical blocked checkpoint remains below so earlier failures are not erased.
+
+The fresh fictional stack passed 48 runtime assertions, 489 database assertions, 205 platform tests, 62 editor tests, TypeScript and the final build. SQL lint has one unused-variable warning; security advisor reports no issues. Authenticated desktop and phone-width checks verified capture/complete preview, content restoration with prior-draft recovery, Save As New, recoverable Trash, purge review/cancel and keyboard operation. The real five-minute automatic capture also passed with the panel open: 140 to 141 snapshots, complete dirty draft captured, source unchanged at unsaved version 3, unfinished snapshot label retained.
+
+See [focused finish review](evidence/b05-snapshots/FINISH_REVIEW.md) for exact changes, evidence and limits. Ordinary local login checks remain unchanged. All source/test changes are local; no actual schedules, hosted services, actual accounts or mail were changed. No push or deployment. B08 investigation remains paused.
+
+---
+
+# Historical checkpoint before focused finish
+
 September 17, 2026. **Implementation saved; acceptance incomplete.** No actual schedules, hosted services, exports, users or mail were changed. No push or deployment. The paused B08 provider investigation was not resumed.
 
 ## Implemented locally

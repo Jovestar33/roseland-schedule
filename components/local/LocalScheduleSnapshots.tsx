@@ -11,6 +11,17 @@ import {captureSnapshotExtra,createSnapshotExtras,retainSnapshotExtra,readSnapsh
 import type {ProductionDestination} from '@/lib/platform/schedule-library';
 interface Props {client:SupabaseClient;actor:string|null;organization:string|null;schedule:string|null;enabled:boolean;canWrite:boolean;canCopy:boolean;getSource:()=>StoredSchedule|null;onState:(dirty:boolean,busy:boolean)=>void;requireAuth:()=>void;beforeRestore:(sourceVersion:number)=>unknown;onRestored:(receipt:SnapshotReceipt,context:unknown)=>Promise<boolean>;captureOpen:()=>unknown;onCopy:(id:string,context:unknown)=>Promise<boolean>}
 const labels:Record<SnapshotOperation,string>={capture:'Capture snapshot',name:'Name snapshot',trash:'Move snapshot to Trash',restore_trash:'Restore snapshot from Trash',purge:'Permanently delete snapshot',restore_content:'Restore snapshot content'};
+function SnapshotPreview({document,name}:{document:NonNullable<ScheduleSnapshot['document']>;name:string}){
+ const labels:Record<string,string>={basecamp:'Basecamp',parking:'Parking',hospital:'Hospital',emergency:'Emergency contact',mealNotes:'Meal notes',safetyNotes:'Safety notes',specialInstructions:'Special instructions',notes:'Call-sheet notes'};
+ return <><ScheduleReadView data={{rows:document.rows??[],meta:makeMeta(document.meta),savedAt:document.savedAt??0}} name={name}/>
+ <h4>Contacts and row status</h4><ol style={{whiteSpace:'pre-wrap',overflowWrap:'anywhere'}}>{(document.rows??[]).map((row,i)=><li key={i}>
+  <strong>Row {i+1}</strong>: {row.status||'No booking status'} · {row.done?'Done':'Not done'}
+  <div>{[row.contactName,row.contactTitle,row.contactPhone,row.contactEmail].filter(Boolean).join(' · ')||'No contact recorded'}</div>
+  {!row.action&&!row.timeIn&&<div>{[row.locName||row.loc,row.locAddress,row.desc,row.notes].filter(Boolean).join('\n')}</div>}
+ </li>)}</ol>
+ {document.meta?.callsheet&&<><h4>Call sheet</h4><dl style={{whiteSpace:'pre-wrap',overflowWrap:'anywhere'}}>{Object.entries(document.meta.callsheet).filter(([,value])=>!!value).map(([key,value])=><div key={key}><dt><strong>{labels[key]??key}</strong></dt><dd>{value}</dd></div>)}</dl></>}
+ </>;
+}
 export default function LocalScheduleSnapshots(p:Props){
  const [repo]=useState(()=>createSnapshotRepository(p.client)),[extras]=useState(()=>createSnapshotExtras(p.client));
  const [open,setOpen]=useState(false),[busy,setBusy]=useState(false),[message,setMessage]=useState(''),[scope,setScope]=useState(''),[recoveryError,setRecoveryError]=useState(false);
@@ -43,7 +54,8 @@ export default function LocalScheduleSnapshots(p:Props){
   return begin({actor:p.actor!,organization:p.organization!,schedule:s.id,id:row?.id??crypto.randomUUID(),request:crypto.randomUUID(),version:row?.version??0,operation,name:operation==='capture'?(auto?null:name):operation==='name'?name:null,document:operation==='capture'?useScheduleStore.getState().getScheduleData():null,sourceVersion:operation==='capture'||operation==='restore_content'?s.document_version:null,automatic:auto,templateUses:operation==='capture'?structuredClone(useScheduleStore.getState().templateUses):[],confirmedPurge:operation==='purge',previewLabel:row?.name??(auto?'Automatic snapshot':name)});
  }
  async function finish(v:RetainedSnapshotRequest,r:SnapshotReceipt,current:()=>boolean,context?:unknown){if(!current())return;
-  clearSnapshotRequest(localStorage,v.attempt);setPending(readSnapshotRequest(localStorage,p.actor!,p.organization!,p.schedule!));setSelected(null);setName('');timer.current.captured(key,Date.now());
+  clearSnapshotRequest(localStorage,v.attempt);setPending(readSnapshotRequest(localStorage,p.actor!,p.organization!,p.schedule!));if(!v.attempt.automatic){setSelected(null);setName('');}timer.current.captured(key,Date.now());
+  if(v.attempt.automatic){const rows=await repo.list(p.actor!,p.organization!,p.schedule!,trash);if(current()){setItems(rows.sort((a,b)=>a.kind==='imported'&&b.kind==='imported'?(a.original_order??0)-(b.original_order??0):b.captured_at.localeCompare(a.captured_at)||a.id.localeCompare(b.id)));setMessage('Automatic snapshot captured. Your draft remains unsaved.');}return;}
   let loaded=false;if(v.attempt.operation==='restore_content')loaded=await p.onRestored(r,context);
   if(!current())return;
   setMessage(v.attempt.operation==='restore_content'?(loaded?'Snapshot content restored. Your previous draft is retained for recovery.':'Snapshot restoration confirmed. Your current draft is retained; reload the saved schedule when ready.'):'Snapshot change confirmed. Your schedule draft is unchanged.');await refresh(current);
@@ -54,7 +66,7 @@ export default function LocalScheduleSnapshots(p:Props){
   const sent={attempt:a,started:true};retainSnapshotRequest(localStorage,sent);setPending(sent);
   try{const r=await repo.send(a);await finish(sent,r,current,context);}catch(e){if(current()&&e instanceof ScheduleRepositoryError&&['invalid','conflict'].includes(e.kind)){clearSnapshotRequest(localStorage,a);setPending(readSnapshotRequest(localStorage,a.actor,a.organization,a.schedule));}throw e;}
  }
- automatic.current=()=>{if(!timer.current.due(key,Date.now(),dirty,ready&&p.canWrite)||busyRef.current||pending||extra||open||recoveryError)return;void run(async current=>{const v=await prepare('capture',current,true);if(v&&current())await send(v,current);});};
+ automatic.current=()=>{if(!timer.current.due(key,Date.now(),dirty,ready&&p.canWrite)||busyRef.current||pending||extra||recoveryError)return;void run(async current=>{const v=await prepare('capture',current,true);if(v&&current())await send(v,current);});};
  function beginExtra(v:RetainedSnapshotExtra){if(recoveryError)throw Error('Resolve stored request recovery before preparing another change.');v={...v,attempt:captureSnapshotExtra(v.attempt)};retainSnapshotExtra(localStorage,v);setExtra(v);}
  async function sendExtra(current:()=>boolean,checkOnly=false){if(!extra)return;const a=extra.attempt;let r=extra.started?await extras.probe(a):null;if(!current())return;
   if(!r&&checkOnly){setMessage(a.kind==='policy'?'Retry the exact settings request to recover its receipt.':'No copy result confirmed. Retry retains the original identity.');return;}
@@ -75,7 +87,7 @@ export default function LocalScheduleSnapshots(p:Props){
    </fieldset>
    {selected&&!pending&&!extra&&!recoveryError&&<fieldset disabled={busy} style={{border:0,padding:0}}><legend>{selected.name||'Automatic snapshot'}</legend>
     {selected.original_id&&<p>Original ID: {selected.original_id} · original collection position {selected.original_order}</p>}
-    <details><summary>Preview complete snapshot</summary>{selected.document&&<ScheduleReadView data={{rows:selected.document.rows??[],meta:makeMeta(selected.document.meta),savedAt:selected.document.savedAt??0}} name={selected.name??'Automatic snapshot'}/>}</details>
+    <details><summary>Preview complete snapshot</summary>{selected.document&&<SnapshotPreview document={selected.document} name={selected.name??'Automatic snapshot'}/>}</details>
     {!selected.deleted_at&&selected.can_name&&p.canWrite&&<><label>Snapshot label<input value={name} maxLength={150} onChange={e=>setName(e.target.value)}/></label><button className="btn btn-light" disabled={!name.trim()||name===selected.name} onClick={()=>void run(async current=>{await prepare('name',current);})}>Review name and protect</button><button className="btn btn-primary" onClick={()=>void run(async current=>{await prepare('restore_content',current);})}>Review restore content</button></>}
     {selected.can_trash&&<button className="btn btn-light" onClick={()=>void run(async current=>{await prepare(selected.deleted_at?'restore_trash':'trash',current);})}>{selected.deleted_at?'Review restore from Trash':'Review move to Trash'}</button>}
     {selected.deleted_at&&selected.can_purge&&<button className="btn btn-light" onClick={()=>void run(async current=>{await prepare('purge',current);})}>Review permanent deletion</button>}

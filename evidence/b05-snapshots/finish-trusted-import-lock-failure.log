@@ -1,0 +1,54 @@
+Fixture verified: snapshot-owner
+Fixture verified: snapshot-admin
+Fixture verified: snapshot-organizer
+Fixture verified: snapshot-editor
+Fixture verified: snapshot-viewer
+Fixture verified: snapshot-outsider
+PASS Viewer cannot capture (explicit server denial)
+PASS Foreign owner cannot capture (explicit server denial)
+PASS Editor captures unsaved full draft
+PASS Viewer reads all snapshot payload fields
+PASS Capture does not save or change source
+PASS Capture does not append saved history
+PASS Lost-ack exact retry returns same receipt
+PASS Request cannot substitute a new payload (explicit server denial)
+PASS Mutation receipt is actor-bound (explicit server denial)
+PASS Foreign owner cannot read snapshot (explicit server denial)
+PASS Foreign list hides snapshot metadata
+PASS No automatic retention by default
+PASS Old automatic snapshots retained with default policy
+PASS Organizer cannot change organization retention (explicit server denial)
+PASS Foreign leadership cannot change retention (explicit server denial)
+PASS Organization Admin configures retention
+PASS Settings exact retry does not duplicate version
+PASS Stale policy update rejected (explicit server denial)
+PASS Named automatic snapshot is protected from expiry
+PASS Concurrent naming and expiry resolve to one reviewed version without losing protected content
+PASS Configured expiry moves only unnamed automatic snapshot to Trash
+PASS Stale naming cannot reverse an expiry transition (explicit server denial)
+PASS Editor cannot Trash under default policy (explicit server denial)
+PASS Organizer restores from recoverable Trash
+PASS Organizer cannot permanently purge (explicit server denial)
+PASS Leadership purge requires explicit confirmation (explicit server denial)
+PASS Confirmed fictional purge has exact retry after record removal
+PASS Purge receipt survives content removal
+PASS Purged fictional record is unavailable (explicit server denial)
+PASS Content restore preserves current identity and placement
+PASS Restoration uses current production label
+PASS Stale source restoration cannot overwrite newer saved version (explicit server denial)
+PASS Snapshot authorship does not grant Editor Save As New (explicit server denial)
+PASS Organizer saves snapshot as a new schedule
+PASS Copy retries retain exactly the same created identity
+PASS Lost copy response is recoverable
+PASS Snapshot copy preserves full content
+PASS Source export restriction also blocks snapshot copy (explicit server denial)
+file:///Users/johnsammon/.codex/worktrees/roseland-b02/roseland-schedule/scripts/test-snapshot-runtime.ts:57
+  } catch { throw new Error('Local fixture SQL failed'); }
+                  ^
+
+Error: Local fixture SQL failed
+    at sql (file:///Users/johnsammon/.codex/worktrees/roseland-b02/roseland-schedule/scripts/test-snapshot-runtime.ts:57:19)
+    at file:///Users/johnsammon/.codex/worktrees/roseland-b02/roseland-schedule/scripts/test-snapshot-runtime.ts:155:2
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+
+Node.js v24.15.0

@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import type {SupabaseClient} from '@supabase/supabase-js';
-import {captureSnapshotAttempt,retainSnapshotRequest,readSnapshotRequest,clearSnapshotRequest,createSnapshotRepository,SnapshotTimer,SNAPSHOT_INTERVAL_MS,type SnapshotAttempt} from '../../lib/platform/schedule-snapshots.ts';
+import {captureSnapshotAttempt,retainSnapshotRequest,readSnapshotRequest,clearSnapshotRequest,createSnapshotRepository,snapshotRestoreMatches,SnapshotTimer,SNAPSHOT_INTERVAL_MS,type SnapshotAttempt} from '../../lib/platform/schedule-snapshots.ts';
 import {documentFixture} from '../fixtures/document-fixtures.ts';
 const actor='11111111-1111-4111-8111-111111111111',org='22222222-2222-4222-8222-222222222222',schedule='33333333-3333-4333-8333-333333333333',id='44444444-4444-4444-8444-444444444444',request='55555555-5555-4555-8555-555555555555';
 function attempt():SnapshotAttempt{return {actor,organization:org,schedule,id,request,version:0,operation:'capture',name:'Fictional take',document:documentFixture(2),sourceVersion:4,automatic:false,templateUses:[],confirmedPurge:false};}
@@ -46,3 +46,11 @@ test('snapshot transport rejects another account and mismatched schedule respons
  await assert.rejects(h.repo.send(attempt()),{kind:'unauthenticated'});assert.equal(h.calls.length,0);
  h.sign(actor);await assert.rejects(h.repo.read(actor,org,id,id),{kind:'invalid'});
 });
+test('an interrupted capture retains its identity across reload and confirms without another write',async()=>{
+ const a=attempt(),st=storage();let writes=0;const receipt={confirmed:true,request_id:a.request,id:a.id,operation:a.operation,version:1};
+ const client={auth:{getSession:async()=>({data:{session:{user:{id:actor},access_token:'fictional'}},error:null})},rpc:(name:string)=>({setHeader:async()=>{if(name==='mutate_schedule_snapshot'){writes++;throw Error('Fictional acknowledgement lost');}return{data:receipt,error:null};}})} as unknown as SupabaseClient;
+ retainSnapshotRequest(st,{attempt:a,started:true});await assert.rejects(createSnapshotRepository(client).send(a),/acknowledgement lost/);
+ const recovered=readSnapshotRequest(st,actor,org,schedule)!;assert.equal(recovered.attempt.request,a.request);assert.deepEqual(await createSnapshotRepository(client).probe(recovered.attempt),receipt);assert.equal(writes,1);clearSnapshotRequest(st,recovered.attempt);assert.equal(readSnapshotRequest(st,actor,org,schedule),null);
+});
+
+test('a late snapshot restore never replaces a newer draft or another account/document',()=>{const reviewed={actor,organization:org,id:schedule,sourceVersion:4,documentSession:8,editRevision:12,navigation:1};assert.equal(snapshotRestoreMatches(reviewed,{...reviewed}),true);for(const changed of [{editRevision:13},{documentSession:9},{actor:org},{sourceVersion:5},{navigation:2}])assert.equal(snapshotRestoreMatches(reviewed,{...reviewed,...changed}),false);});
