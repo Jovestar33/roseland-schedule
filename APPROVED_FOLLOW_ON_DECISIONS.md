@@ -18,9 +18,9 @@ Planning record from Voice and Planning. B08 implementation continues separately
 - MFA required for Platform Super Admins and Organization Super Admins.
 - Ordinary Admins, Organizers, Editors and Viewers have optional MFA by default; organization policy may require it.
 - Existing sensitive invitation-management actions retain recent-MFA requirements, including for ordinary Admins. No code prompt for ordinary schedule saves is implied.
-- An Organization Super Admin may assist a user in their organization after authenticator loss, with identity verification, audit record and affected-user notification.
+- September 18 refinement: Organization Admins and Organization Super Admins may approve authenticator-loss recovery for Production Organizers, Editors and Viewers within their organization. Recovery for Organization Admins and Organization Super Admins requires an Organization Super Admin. Verify identity through a previously known phone number or in person; email alone is insufficient. Retain the recovery audit and affected-user notification.
 - If no Organization Super Admin can sign in, escalate recovery to the Platform Super Admin, with verified identity, audit and notification to the organization's Super Admins.
-- These concepts do not grant unrestricted cross-organization access or an unverified reset mechanism. Exact proof, account-wide factor implications, revocation and safe recovery design remain technical review items.
+- These concepts do not grant unrestricted cross-organization access or an unverified reset mechanism. The ordinary proof method and approver roles are settled. Account-wide/cross-organization effects, the restricted execution mechanism, revocation and safe recovery design remain technical review items. This approval does not enable factor removal or a recovery bypass.
 - The proposed routine old-and-new authenticator verification process was not answered; do not mark it approved.
 
 ## B10 — Membership and organization deletion
@@ -65,3 +65,13 @@ User direction: “we want sanity everywhere. not overkill.” Use the simplest 
 ## Development checkpoint pointer — September 18
 
 This development copy incorporates the shared planning approvals. Earlier implementation-status sentences are dated context, not current acceptance: B05 is locally accepted at `c356573`; focused ordinary B08 acceptance is recorded at `5f05bd3` with its exact exception and evidence limits in [B08_USER_FLOW_CHECKPOINT.md](./B08_USER_FLOW_CHECKPOINT.md). These approvals do not dispatch B09/B10/B11 implementation. The next bounded technical proposal is [B09_B10_NEXT_TECHNICAL_PROPOSAL.md](./B09_B10_NEXT_TECHNICAL_PROPOSAL.md).
+
+## Coordination and next-slice handoff — September 18
+
+- The user calls Development and Testing **Devtest**. Voice and Planning collects side-chat decisions and sends one consolidated handoff at completed-batch gaps, unless urgent steering or a stop is needed.
+- Stop routine “live app unchanged” status repetitions. If proposed work will affect the live app, prominently state **LIVE APP WILL BE CHANGED** before proceeding and preserve the applicable approval requirements. This wording is advance notice, not authorization by itself.
+- B09-A is locally complete at `a662c69`; [B10-A scoped membership suspension](./B09_B10_NEXT_TECHNICAL_PROPOSAL.md#b10-a-scoped-membership-suspension) is the next reviewed, ready implementation candidate. This handoff dispatches documentation only, not B10 or exceptional recovery.
+
+### Superseding B10-A dispatch
+
+The user explicitly authorized B10-A suspension **and reinstatement** after the completed-batch planning handoff. Reinstatement follows suspension authority: Organization Admins restore lower-role members; Organization Super Admins restore Admins/Super Admins. Restore the prior role and retained restrictions for that membership only, preserve independent production/schedule restrictions, and never recreate invalidated invitations, alter global bans or restore unrelated memberships. Preserve current authorization, versioned exact receipts, confirmation/notification and final-active-holder protection. Earlier “awaiting dispatch” text above is historical; B10-B and exceptional recovery are not dispatched.
