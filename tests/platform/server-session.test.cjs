@@ -44,7 +44,7 @@ test('verified Auth claims bind service workflow headers; inbound actor headers 
   assert.equal(calls[0].init.headers.apikey, 'fictional-public');
   assert.deepEqual(calls[1].init.headers, {
     apikey: 'fictional-service', 'content-type': 'application/json',
-    'x-actor-user-id': userId, 'x-actor-session-id': sessionId, 'x-actor-session-exp': String(actor.expiresAt),
+    'x-actor-user-id': userId, 'x-actor-aal': 'aal2', 'x-actor-session-id': sessionId, 'x-actor-session-exp': String(actor.expiresAt),
   });
   assert.equal(calls[1].init.cache, 'no-store');
 });

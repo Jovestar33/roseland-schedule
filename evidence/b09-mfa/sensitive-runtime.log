@@ -1,0 +1,6 @@
+PASS Genuine fixture password sign-in
+PASS Existing sensitive invitation denied before MFA
+PASS Genuine ordinary MFA challenge
+PASS Retained exact sensitive request succeeds after MFA
+PASS Lost-acknowledgment retry returns same invitation
+PASS Missing trusted service assurance is false, not null

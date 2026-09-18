@@ -1,0 +1,10 @@
+{
+  "checkedAt": "2026-09-18T05:00:01.765Z",
+  "environment": "fictional loopback only",
+  "enrollment": "Required owner gate, QR/manual enrollment, wrong-code recovery, genuine TOTP verification observed",
+  "reauthentication": "Controlled expiration of fictional Auth session; same password plus existing authenticator challenge",
+  "retainedTown": "B09 unsaved draft survives MFA",
+  "policy": "Organization security\nOrganization security\n\nFictional B09 Studio. Organization Super Admins always require MFA; this cannot be disabled.\n\nOrganization MFA policy saved.\n\nAlso require MFA for\nOrganization Admin\nProduction Organizer\nEditor\nViewer\n\nChanges apply on the next protected request. Ordinary schedule saves do not ask for a new code.\n\nSave MFA policyReview current policy versionDiscard policy draft",
+  "schedule": "Fictional B09 retained draft\nVersion 2 · Saved\nSave schedule\nRelo",
+  "boundary": "Browser preserved unsaved schedule and policy drafts. Exact sensitive-operation retry is covered by separate HTTP runtime, not a claimed browser uncertain-ack test."
+}

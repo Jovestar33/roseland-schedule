@@ -1,0 +1,24 @@
+✔ verified Auth claims bind service workflow headers; inbound actor headers are ignored (9.511083ms)
+✔ failed Auth verification never reaches a service-role RPC (0.352208ms)
+✔ legacy JWT service keys get a bearer header; new secret keys never do (0.607625ms)
+✔ unbound, mismatched and unapproved service requests are refused before transport (0.331583ms)
+✔ revocation between Auth verification and SQL admission returns a bounded 401 (0.298417ms)
+✔ platform workflows stay disabled by default (0.0805ms)
+✔ workflow replay conflicts and rate caps have bounded, distinct responses (0.291ms)
+✔ actual NextRequest loopback normalization preserves exact browser origin checks (8.744958ms)
+✔ workspace gate requires independent opt-in, matching loopback config and server workflows (0.723875ms)
+✔ navigation serializes only known screens and UUID organization identifiers (0.212125ms)
+✔ session expiry and same-account reauthentication keep identity; sign-out invalidates outstanding work (0.075333ms)
+✔ an account switch invalidates a pending directory result (0.060666ms)
+✔ organization directory pins actor and uses narrow paginated MFA access RPC (0.287458ms)
+✔ schedule listing fixes organization and permission check fixes production (0.15575ms)
+✔ a mismatched account sends no directory or permission queries (0.248542ms)
+✔ directory distinguishes session expiry from forbidden or malformed responses (0.133292ms)
+ℹ tests 16
+ℹ suites 0
+ℹ pass 16
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 155.708709

@@ -37,11 +37,14 @@ function harness(data:unknown=[]){
     for(const method of ['select','eq','is','order','limit','gt','setHeader'])q[method]=(...values:unknown[])=>{call.steps.push([method,...values]);return q;};return q;}
   return {repo:createWorkspaceRepository(sdk as unknown as SupabaseClient),calls,setActor(value:string){currentActor=value;},fail(value:number){status=value;error={code:'fixture'};}};
 }
-test('organization directory pins actor, active membership, undeleted parents and cursor',async()=>{
-  const h=harness([{organization_id:org,role:'owner',organizations:{name:'Fictional organization'}}]);
-  assert.deepEqual(await h.repo.organizations(actor,prod),{items:[{id:org,name:'Fictional organization',role:'owner'}],more:false});
-  for(const step of [['eq','user_id',actor],['eq','status','active'],['is','organizations.deleted_at',null],['gt','organization_id',prod],['setHeader','Authorization','Bearer fictional-captured-token']])assert.ok(h.calls[0].steps.some(value=>JSON.stringify(value)===JSON.stringify(step)));
-  await h.repo.scope(actor,org);assert.ok(h.calls[1].steps.some(value=>value[0]==='eq'&&value[1]==='organization_id'&&value[2]===org));
+test('organization directory pins actor and uses narrow paginated MFA access RPC',async()=>{
+  const row={id:org,name:'Fictional organization',role:'owner',mfa_required:true,access_state:'mfa_required'};
+  const h=harness([row]);
+  assert.deepEqual(await h.repo.organizations(actor,prod),{items:[row],more:false});
+  assert.equal(h.calls[0].name,'list_my_organization_access');
+  assert.deepEqual(h.calls[0].steps[0],['args',{after_id:prod,target_organization_id:null}]);
+  assert.ok(h.calls[0].steps.some(v=>v[0]==='setHeader'&&v[2]==='Bearer fictional-captured-token'));
+  await h.repo.scope(actor,org);assert.deepEqual(h.calls[1].steps[0],['args',{after_id:null,target_organization_id:org}]);
 });
 test('schedule listing fixes organization and permission check fixes production',async()=>{
   const h=harness();assert.deepEqual(await h.repo.schedules(actor,org,prod),[]);

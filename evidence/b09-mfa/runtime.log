@@ -1,0 +1,39 @@
+(node:35036) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/johnsammon/.codex/worktrees/roseland-b02/roseland-schedule/scripts/test-mfa-runtime.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to /Users/johnsammon/.codex/worktrees/roseland-b02/roseland-schedule/package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS Owner sees only own organization enrollment status
+PASS Unenrolled owner cannot read schedule RPC
+PASS Direct table RLS denies unenrolled owner
+PASS Presentation read cannot bypass owner MFA
+PASS Snapshot policy read cannot bypass owner MFA
+PASS Platform Super Admin requires MFA
+PASS Platform account protected Data API admission denied at AAL1
+PASS Optional unenrolled editor retains ordinary read
+PASS Ordinary Admin can review security policy
+PASS Security policy change retains recent MFA gate
+PASS Incorrect authenticator code leaves enrollment incomplete
+PASS Genuine first TOTP enrollment upgrades session
+PASS Owner saves organization role requirement
+PASS Exact policy retry confirms same version
+PASS Changed payload cannot reuse policy request identity
+PASS Stale policy version requires review
+PASS Exact retry creates one policy audit
+PASS Policy change affects existing editor session without refresh
+PASS Existing editor session loses protected RPC access
+PASS Existing editor session loses direct schedule access
+PASS Unrelated organization remains available before enrollment
+PASS Unrelated organization ordinary RPC remains available
+PASS Outsider cannot read tenant security policy
+PASS Outsider cannot change tenant security policy
+PASS Browser actor headers cannot bypass MFA
+PASS Incorrect authenticator code leaves enrollment incomplete
+PASS Verified Admin can update optional role policy
+PASS Removing optional policy requirement restores ordinary admission
+PASS Live role promotion requires enrollment immediately
+PASS Enrolled account requires challenge on fresh login
+PASS Factor status remains available before challenge
+PASS Same-account challenge restores retained workspace access
+PASS Ordinary schedule read works after step-up
+PASS Private MFA helpers are not client-callable
+PASS 34 focused B09-A assertions; private browser fixture saved.

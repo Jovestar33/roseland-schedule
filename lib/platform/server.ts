@@ -225,6 +225,7 @@ export async function callPlatformRpc(
         ...serviceApiHeaders(config.secretKey),
         'content-type': 'application/json',
         'x-actor-user-id': config.actor.userId,
+        'x-actor-aal': config.actor.aal,
         'x-actor-session-id': config.actor.sessionId,
         'x-actor-session-exp': String(config.actor.expiresAt),
       },

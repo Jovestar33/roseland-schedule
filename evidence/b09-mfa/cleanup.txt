@@ -1,0 +1,7 @@
+Owned app port 3435: no listener
+Owned running Supabase containers: none
+Preserved volumes:
+supabase_db_roseland-b08-20260917
+supabase_edge_runtime_roseland-b08-20260917
+supabase_storage_roseland-b08-20260917
+Owned successful browser test tab closed. Earlier failed-navigation temporary tab is turn-scoped. Unrelated tabs/services untouched.

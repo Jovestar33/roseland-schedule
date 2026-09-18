@@ -224,6 +224,8 @@ Scope T1 editor save/controller plus a session-pinned read/history probe using e
 
 ### B09 — MFA and restricted operator/owner recovery
 
+September 18 implementation checkpoint: **B09-A ordinary enrollment and role/organization policy are accepted locally**; see [bounded evidence and limits](./B09_A_LOCAL_ACCEPTANCE.md). Exceptional factor-loss recovery remains open. This does not dispatch B10 or authorize hosted changes.
+
 September 18 next-slice proposal: review ordinary enrollment/rechallenge and approved role/organization MFA enforcement first; keep exceptional loss-of-factor proof and account-wide recovery as a separately reviewed contract. Routine old/new-factor replacement is not assumed approved. Use [B09_B10_NEXT_TECHNICAL_PROPOSAL.md](./B09_B10_NEXT_TECHNICAL_PROPOSAL.md) and the settled account decisions rather than reopening defaults.
 
 - **Scope:** D05-defined enrollment/rechallenge/removal/replacement and approved factor/owner-loss support procedure; existing setup/invitation/provisioning code may be reused after authority review.
