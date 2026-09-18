@@ -1,0 +1,38 @@
+PASS All seven stores captured with original bytes
+PASS Unknown schedule field rejected
+PASS Unsupported CMS palette rejected
+PASS Duplicate source entry rejected
+PASS Missing store rejected
+PASS Orphan alias rejected
+PASS Unconfirmed browser owner rejected
+PASS Pending browser queue rejected
+PASS Unreconciled browser cache rejected
+PASS Duplicate rename identity rejected
+PASS Non-frozen source rejected
+PASS Changed source without revision rejected
+PASS Non-atomic capture mutation detected
+PASS Uninventoried file rejected
+PASS Initial all-store import committed
+PASS Initial retry leaves all target rows/history unchanged
+PASS Atomic refusal after_schedules
+PASS Complete rollback after_schedules
+PASS Atomic refusal after_projections
+PASS Complete rollback after_projections
+PASS Newer target edit refused
+PASS Target conflict rollback preserves checkpoint
+PASS Wrong parent checkpoint refused
+PASS Unreviewed snapshot disappearance refused
+PASS Unreviewed removal rolls back preceding writes
+PASS Latest all-store delta committed
+PASS Latest retry leaves all target rows/history unchanged
+PASS schedules exact identity inventory
+PASS schedules 6240f547-9293-5294-ad87-74caf1752ef4 projection
+FAILED CHECKPOINT /private/tmp/roseland-b12-y_r4oxxt
+Traceback (most recent call last):
+  File "/Users/johnsammon/.codex/worktrees/roseland-b02/roseland-schedule/scripts/migration/complete_rehearsal.py", line 104, in <module>
+    reconcile('schedules',expected,final['public.schedules'],['document','display_name','slug','production_id','phase_id','status','library_position'])
+  File "/Users/johnsammon/.codex/worktrees/roseland-b02/roseland-schedule/scripts/migration/complete_rehearsal.py", line 101, in reconcile
+    a=am[ident];ev={k:e[k]for k in fields};av={k:a[k]for k in fields};check(ev==av,kind+' '+ident+' projection')
+  File "/Users/johnsammon/.codex/worktrees/roseland-b02/roseland-schedule/scripts/migration/complete_rehearsal.py", line 18, in check
+    assert v,label
+AssertionError: schedules c0ecd217-4dac-5fd3-a111-5df97e64b469 projection

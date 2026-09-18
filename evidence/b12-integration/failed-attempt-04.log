@@ -1,0 +1,35 @@
+PASS All seven stores captured with original bytes
+PASS Unknown schedule field rejected
+PASS Unsupported CMS palette rejected
+PASS Duplicate source entry rejected
+PASS Missing store rejected
+PASS Orphan alias rejected
+PASS Unconfirmed browser owner rejected
+PASS Pending browser queue rejected
+PASS Unreconciled browser cache rejected
+PASS Duplicate rename identity rejected
+PASS Non-frozen source rejected
+PASS Changed source without revision rejected
+PASS Non-atomic capture mutation detected
+PASS Uninventoried file rejected
+FAILED CHECKPOINT /private/tmp/roseland-b12-5mvdhzjd
+Traceback (most recent call last):
+  File "/Users/johnsammon/.codex/worktrees/roseland-b02/roseland-schedule/scripts/migration/complete_rehearsal.py", line 86, in <module>
+    first=imported(bp);check(first['status']=='imported','Initial all-store import committed');before=state();check(imported(bp)['status']=='already_imported'and state()==before,'Initial retry leaves all target rows/history unchanged')
+  File "/Users/johnsammon/.codex/worktrees/roseland-b02/roseland-schedule/scripts/migration/complete_rehearsal.py", line 29, in imported
+    def imported(p, fail=None):return result('begin;select pg_temp.import_capture('+j(p)+','+('null' if fail is None else q(fail))+');commit;')
+  File "/Users/johnsammon/.codex/worktrees/roseland-b02/roseland-schedule/scripts/migration/complete_rehearsal.py", line 27, in result
+    def result(query):return json.loads(sql(query).splitlines()[-1])
+  File "/Users/johnsammon/.codex/worktrees/roseland-b02/roseland-schedule/scripts/migration/complete_rehearsal.py", line 25, in sql
+    if r.returncode:raise RuntimeError(r.stderr.strip())
+RuntimeError: ERROR:  mfa_required
+CONTEXT:  PL/pgSQL function private.require_organization_mfa(uuid) line 3 at RAISE
+SQL statement "SELECT private.require_organization_mfa(org)"
+PL/pgSQL function private.lock_schedule_permissions(uuid,uuid) line 5 at PERFORM
+SQL statement "SELECT private.lock_schedule_permissions(new.organization_id,new.production_id)"
+PL/pgSQL function private.enforce_schedule_permissions() line 9 at PERFORM
+SQL statement "insert into public.schedules(id,organization_id,production_id,phase_id,display_name,slug,document,document_schema_version,status,archived_from_status,library_position,town,created_by,updated_by)
+  values((r->>'id')::uuid,org,(r->>'production_id')::uuid,(r->>'phase_id')::uuid,r->>'name',r->>'slug',r->'document',1,r->>'status',case when r->>'status'='archived' then 'draft' else null end,(r->>'position')::int,r->'document'->'meta'->>'town',actor,actor)
+  on conflict(id)do update set display_name=excluded.display_name,slug=excluded.slug,document=excluded.document,status=excluded.status,archived_from_status=excluded.archived_from_status,library_position=excluded.library_position,town=excluded.town
+  where(schedules.display_name,schedules.slug,schedules.document,schedules.status,schedules.library_position)is distinct from(excluded.display_name,excluded.slug,excluded.document,excluded.status,excluded.library_position)"
+PL/pgSQL function pg_temp_0.import_capture(jsonb,text) line 30 at SQL statement

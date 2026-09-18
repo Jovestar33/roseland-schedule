@@ -1,0 +1,522 @@
+{
+  "format": "b12.synthetic.acceptance.v1",
+  "organization": "6b115791-b287-4bce-9d6b-757f3319dd16",
+  "environment": "b12-fictional-6b115791-b287-4bce-9d6b-757f3319dd16",
+  "private_checkpoint": "/private/tmp/roseland-b12-k33pxhsg",
+  "checks": [
+    "All seven stores captured with original bytes",
+    "Unknown schedule field rejected",
+    "Unsupported CMS palette rejected",
+    "Duplicate source entry rejected",
+    "Missing store rejected",
+    "Orphan alias rejected",
+    "Unconfirmed browser owner rejected",
+    "Pending browser queue rejected",
+    "Unreconciled browser cache rejected",
+    "Duplicate rename identity rejected",
+    "Non-frozen source rejected",
+    "Changed source without revision rejected",
+    "Duplicate JSON object key rejected",
+    "Malformed JSON rejected",
+    "Non-JSON number rejected",
+    "Non-atomic capture mutation detected",
+    "Uninventoried file rejected",
+    "Initial all-store import committed",
+    "Initial retry leaves all target rows/history unchanged",
+    "Atomic refusal after_schedules",
+    "Complete rollback after_schedules",
+    "Atomic refusal after_projections",
+    "Complete rollback after_projections",
+    "Newer target edit refused",
+    "Target conflict rollback preserves checkpoint",
+    "Wrong parent checkpoint refused",
+    "Unreviewed snapshot disappearance refused",
+    "Unreviewed removal rolls back preceding writes",
+    "Malformed nested document refused",
+    "Malformed document refusal leaves target unchanged",
+    "Stale source boundary refused",
+    "Changed historical snapshot refused",
+    "Historical snapshot refusal atomic",
+    "Latest all-store delta committed",
+    "Latest retry leaves all target rows/history unchanged",
+    "schedules exact identity inventory",
+    "schedules fc71bc98-3107-5072-9f43-9be58755f141 projection",
+    "schedules f7086cfa-4f41-5546-ae19-0dc9e2260441 projection",
+    "schedules dec9ef56-1690-59a9-9601-9194671cdc5e projection",
+    "productions exact identity inventory",
+    "productions c4926761-18da-5cf2-a7c8-edf0d3454785 projection",
+    "phases exact identity inventory",
+    "phases 894846e8-c40e-5ad5-87f9-0b734a0ee6de projection",
+    "templates exact identity inventory",
+    "templates 0439e72f-cf61-5b1b-806b-45a7d21fe1ed projection",
+    "templates e7da2cfe-e507-5b82-a58a-14d0fe67c1e8 projection",
+    "templates e2d07ee1-804a-5111-8dce-bb28bb283f41 projection",
+    "templates 662006b7-875e-52a5-9194-bc7e7f894509 projection",
+    "aliases exact identity inventory",
+    "aliases 9b4782f1-000f-58c3-a672-7d33dd499e98 projection",
+    "aliases fd8e9426-8c84-52a6-ae85-637f5a085b6e projection",
+    "aliases bb09a625-7409-5e87-9137-6e39c16a238d projection",
+    "CMS exact application configuration",
+    "Related catalogue exact inventory including retained tombstone",
+    "Related record f35f7314-886a-5bcd-bb46-2577b6378dc9 revision/content/references",
+    "Related history f35f7314-886a-5bcd-bb46-2577b6378dc9 complete",
+    "Related record 0d7b2d79-bbbc-581f-b8e7-545be3682adf revision/content/references",
+    "Related history 0d7b2d79-bbbc-581f-b8e7-545be3682adf complete",
+    "Related record 69d0608d-de56-520a-9161-44b896980181 revision/content/references",
+    "Related history 69d0608d-de56-520a-9161-44b896980181 complete",
+    "Related record 2cb87265-eb98-5cb1-94f6-166c6e0366da revision/content/references",
+    "Related history 2cb87265-eb98-5cb1-94f6-166c6e0366da complete",
+    "Related record 5a37467f-6f25-5bab-ab22-090969256896 revision/content/references",
+    "Related history 5a37467f-6f25-5bab-ab22-090969256896 complete",
+    "Related record bb4a1ae2-563b-5ddc-a6cf-aedb8c366593 revision/content/references",
+    "Related history bb4a1ae2-563b-5ddc-a6cf-aedb8c366593 complete",
+    "Related record d8580932-d44c-5c16-aa68-09dbd80981b6 revision/content/references",
+    "Related history d8580932-d44c-5c16-aa68-09dbd80981b6 complete",
+    "Related record 74cf3007-1b34-53b7-baa7-021a911cc0d7 revision/content/references",
+    "Related history 74cf3007-1b34-53b7-baa7-021a911cc0d7 complete",
+    "Related record 8f1f49b5-d89b-5fae-8f8f-2e75f580e39a revision/content/references",
+    "Related history 8f1f49b5-d89b-5fae-8f8f-2e75f580e39a complete",
+    "Related record d069223e-c5c6-5fea-abf9-1775a162238e revision/content/references",
+    "Related history d069223e-c5c6-5fea-abf9-1775a162238e complete",
+    "Related record daec3f1d-0a4b-5545-8be3-61c03c7ee4d2 revision/content/references",
+    "Related history daec3f1d-0a4b-5545-8be3-61c03c7ee4d2 complete",
+    "Every related historical fingerprint verified",
+    "Snapshot projection retains reviewed source removal",
+    "Snapshot 5a37467f-6f25-5bab-ab22-090969256896 original bytes/document retained",
+    "Snapshot bb4a1ae2-563b-5ddc-a6cf-aedb8c366593 original bytes/document retained",
+    "Snapshot daec3f1d-0a4b-5545-8be3-61c03c7ee4d2 original bytes/document retained",
+    "Shared template provenance 0439e72f-cf61-5b1b-806b-45a7d21fe1ed",
+    "Shared template provenance e7da2cfe-e507-5b82-a58a-14d0fe67c1e8",
+    "Shared template provenance e2d07ee1-804a-5111-8dce-bb28bb283f41",
+    "Browser template ownership 662006b7-875e-52a5-9194-bc7e7f894509",
+    "Original fixture bytes unchanged after rehearsal",
+    "Two immutable capture receipts and final recovery checkpoint retained"
+  ],
+  "expected_refusals": [
+    {
+      "check": "Unknown schedule field rejected",
+      "error": "Unknown fields: unknown"
+    },
+    {
+      "check": "Unsupported CMS palette rejected",
+      "error": "Unsupported CMS palette mapping"
+    },
+    {
+      "check": "Duplicate source entry rejected",
+      "error": "Duplicate or unknown input"
+    },
+    {
+      "check": "Missing store rejected",
+      "error": "Incomplete source"
+    },
+    {
+      "check": "Orphan alias rejected",
+      "error": "Duplicate/orphan legacy alias"
+    },
+    {
+      "check": "Unconfirmed browser owner rejected",
+      "error": "Browser template ownership must be explicit"
+    },
+    {
+      "check": "Pending browser queue rejected",
+      "error": "Unreconciled browser queue/deletion blocks capture"
+    },
+    {
+      "check": "Unreconciled browser cache rejected",
+      "error": "Nonempty browser schedule/snapshot caches require explicit reconciliation"
+    },
+    {
+      "check": "Duplicate rename identity rejected",
+      "error": "Duplicate stable schedule identity"
+    },
+    {
+      "check": "Non-frozen source rejected",
+      "error": "Synthetic frozen capture required"
+    },
+    {
+      "check": "Changed source without revision rejected",
+      "error": "Changed schedule without revision"
+    },
+    {
+      "check": "Duplicate JSON object key rejected",
+      "error": "Duplicate JSON key"
+    },
+    {
+      "check": "Malformed JSON rejected",
+      "error": "Expecting property name enclosed in double quotes: line 1 column 2 (char 1)"
+    },
+    {
+      "check": "Non-JSON number rejected",
+      "error": "Non-JSON number: NaN"
+    },
+    {
+      "check": "Non-atomic capture mutation detected",
+      "error": "Source changed during non-atomic capture"
+    },
+    {
+      "check": "Uninventoried file rejected",
+      "error": "Uninventoried source file"
+    },
+    {
+      "check": "Atomic refusal after_schedules",
+      "error": "ERROR:  Injected partial import failure\nCONTEXT:  PL/pgSQL function pg_temp_43.import_capture(jsonb,text) line 40 at RAISE"
+    },
+    {
+      "check": "Atomic refusal after_projections",
+      "error": "ERROR:  Injected projection failure\nCONTEXT:  PL/pgSQL function pg_temp_45.import_capture(jsonb,text) line 78 at RAISE"
+    },
+    {
+      "check": "Newer target edit refused",
+      "error": "ERROR:  Newer or changed target state; explicit reconciliation required\nCONTEXT:  PL/pgSQL function pg_temp_47.import_capture(jsonb,text) line 10 at RAISE"
+    },
+    {
+      "check": "Wrong parent checkpoint refused",
+      "error": "ERROR:  Capture parent changed\nCONTEXT:  PL/pgSQL function pg_temp_49.import_capture(jsonb,text) line 12 at RAISE"
+    },
+    {
+      "check": "Unreviewed snapshot disappearance refused",
+      "error": "ERROR:  Unreviewed source disappearance\nCONTEXT:  PL/pgSQL function pg_temp_50.import_capture(jsonb,text) line 43 at RAISE"
+    },
+    {
+      "check": "Malformed nested document refused",
+      "error": "ERROR:  Invalid schedule document\nCONTEXT:  PL/pgSQL function private.validate_schedule_document(jsonb,integer) line 137 at RAISE\nSQL statement \"SELECT private.validate_schedule_document(r->'document',1)\"\nPL/pgSQL function pg_temp_51.import_capture(jsonb,text) line 18 at PERFORM"
+    },
+    {
+      "check": "Stale source boundary refused",
+      "error": "ERROR:  Stale or conflicting source boundary\nCONTEXT:  PL/pgSQL function pg_temp_21.import_capture(jsonb,text) line 13 at RAISE"
+    },
+    {
+      "check": "Changed historical snapshot refused",
+      "error": "ERROR:  Changed imported snapshot content needs explicit review\nCONTEXT:  PL/pgSQL function pg_temp_22.import_capture(jsonb,text) line 55 at RAISE"
+    }
+  ],
+  "records": [
+    {
+      "kind": "schedules",
+      "id": "fc71bc98-3107-5072-9f43-9be58755f141",
+      "source_sha256": "7a3ae9b223ce1e4d70b9401fb7568ec4f7739d3fce4a3b7911875a87e16fd243",
+      "target_sha256": "7a3ae9b223ce1e4d70b9401fb7568ec4f7739d3fce4a3b7911875a87e16fd243",
+      "source_revision": 2,
+      "raw_source_sha256": "3296e0f628e19c29a46b5c13a6ccc4ed20e8d50c795355252e46125fa0d2379b",
+      "target_version": 3,
+      "verified": true
+    },
+    {
+      "kind": "schedules",
+      "id": "f7086cfa-4f41-5546-ae19-0dc9e2260441",
+      "source_sha256": "e02d55e2d8fd570a06186ac7c151e87e6e6040b231358c2f737c6ba4cb56999b",
+      "target_sha256": "e02d55e2d8fd570a06186ac7c151e87e6e6040b231358c2f737c6ba4cb56999b",
+      "source_revision": 2,
+      "raw_source_sha256": "f341393fa6d02d6eac31fc98acf13efbd8838fd886bd0811efcd4050dba1870a",
+      "target_version": 3,
+      "verified": true
+    },
+    {
+      "kind": "schedules",
+      "id": "dec9ef56-1690-59a9-9601-9194671cdc5e",
+      "source_sha256": "6055b61471d9c5436d0c421705e0f1dea8917cd2b5035092c0786ebfa4cfeeb9",
+      "target_sha256": "6055b61471d9c5436d0c421705e0f1dea8917cd2b5035092c0786ebfa4cfeeb9",
+      "source_revision": 2,
+      "raw_source_sha256": "c888d71ad41aa608e09925ab98877ffe13e695d16afc6a6b464f871f07a32d03",
+      "target_version": 1,
+      "verified": true
+    },
+    {
+      "kind": "productions",
+      "id": "c4926761-18da-5cf2-a7c8-edf0d3454785",
+      "source_sha256": "8309ca72d6ca332cf9bfce476e32f81802422cd59e3ac2602697c28435f869f2",
+      "target_sha256": "8309ca72d6ca332cf9bfce476e32f81802422cd59e3ac2602697c28435f869f2",
+      "source_revision": 2,
+      "raw_source_sha256": null,
+      "target_version": 2,
+      "verified": true
+    },
+    {
+      "kind": "phases",
+      "id": "894846e8-c40e-5ad5-87f9-0b734a0ee6de",
+      "source_sha256": "3a76317ab2ad8ca7249b45cdb3f50c8643da04836c8f9311cbcbb2fcd07efd64",
+      "target_sha256": "3a76317ab2ad8ca7249b45cdb3f50c8643da04836c8f9311cbcbb2fcd07efd64",
+      "source_revision": 2,
+      "raw_source_sha256": null,
+      "target_version": 1,
+      "verified": true
+    },
+    {
+      "kind": "templates",
+      "id": "0439e72f-cf61-5b1b-806b-45a7d21fe1ed",
+      "source_sha256": "e4e1c743f9eeb3a8f55eacc0133e97eeef4279e51dec4fa802220618a1ffad8f",
+      "target_sha256": "e4e1c743f9eeb3a8f55eacc0133e97eeef4279e51dec4fa802220618a1ffad8f",
+      "source_revision": 2,
+      "raw_source_sha256": null,
+      "target_version": 2,
+      "verified": true
+    },
+    {
+      "kind": "templates",
+      "id": "e7da2cfe-e507-5b82-a58a-14d0fe67c1e8",
+      "source_sha256": "5fe92500eecdc2a27832da90f69cb21908dc96d0f4cba9cc0e985b00811cddc5",
+      "target_sha256": "5fe92500eecdc2a27832da90f69cb21908dc96d0f4cba9cc0e985b00811cddc5",
+      "source_revision": 2,
+      "raw_source_sha256": null,
+      "target_version": 1,
+      "verified": true
+    },
+    {
+      "kind": "templates",
+      "id": "e2d07ee1-804a-5111-8dce-bb28bb283f41",
+      "source_sha256": "6bd1a1c9e3f4d99f7bf6064fdd478b8604863ffab052632d67220b28e9586149",
+      "target_sha256": "6bd1a1c9e3f4d99f7bf6064fdd478b8604863ffab052632d67220b28e9586149",
+      "source_revision": 2,
+      "raw_source_sha256": null,
+      "target_version": 1,
+      "verified": true
+    },
+    {
+      "kind": "templates",
+      "id": "662006b7-875e-52a5-9194-bc7e7f894509",
+      "source_sha256": "8788817567471921f2f2704e77357cee4715fc0b0943057f2cf3b3145a5da885",
+      "target_sha256": "8788817567471921f2f2704e77357cee4715fc0b0943057f2cf3b3145a5da885",
+      "source_revision": 2,
+      "raw_source_sha256": null,
+      "target_version": 2,
+      "verified": true
+    },
+    {
+      "kind": "aliases",
+      "id": "9b4782f1-000f-58c3-a672-7d33dd499e98",
+      "source_sha256": "5b33eef4bc823220bdd1236e1fe90bcd8b85b46703ad3ed90bf4e6ecbcc5d64d",
+      "target_sha256": "5b33eef4bc823220bdd1236e1fe90bcd8b85b46703ad3ed90bf4e6ecbcc5d64d",
+      "source_revision": 2,
+      "raw_source_sha256": null,
+      "target_version": null,
+      "verified": true
+    },
+    {
+      "kind": "aliases",
+      "id": "fd8e9426-8c84-52a6-ae85-637f5a085b6e",
+      "source_sha256": "55c27e914c9f77d6eaddb3a1a5ae70de43bb98707fd45cfe19f67b0004cabfb2",
+      "target_sha256": "55c27e914c9f77d6eaddb3a1a5ae70de43bb98707fd45cfe19f67b0004cabfb2",
+      "source_revision": 2,
+      "raw_source_sha256": null,
+      "target_version": null,
+      "verified": true
+    },
+    {
+      "kind": "aliases",
+      "id": "bb09a625-7409-5e87-9137-6e39c16a238d",
+      "source_sha256": "34e8e0e880affefa2d205a91af4309739722c81e77a65fbf0021ef77238c353c",
+      "target_sha256": "34e8e0e880affefa2d205a91af4309739722c81e77a65fbf0021ef77238c353c",
+      "source_revision": 2,
+      "raw_source_sha256": null,
+      "target_version": null,
+      "verified": true
+    },
+    {
+      "kind": "cms",
+      "key": "rp_cms_config",
+      "item": "",
+      "id": "f35f7314-886a-5bcd-bb46-2577b6378dc9",
+      "source_revision": 2,
+      "target_version": 2,
+      "source_sha256": "e384c83efce4e30ba46d3641aa942a444bbf45259ba2df53f1861ba22f59e597",
+      "target_sha256": "e384c83efce4e30ba46d3641aa942a444bbf45259ba2df53f1861ba22f59e597",
+      "database_fingerprint": "50f5546578032c48e29f9ec909d227a6804eaaff3c63573b2d858a523da745d6",
+      "tombstone": false,
+      "verified": true
+    },
+    {
+      "kind": "schedule-library",
+      "key": "rp_library_index_v1",
+      "item": "",
+      "id": "0d7b2d79-bbbc-581f-b8e7-545be3682adf",
+      "source_revision": 2,
+      "target_version": 2,
+      "source_sha256": "6b4c7eefd5221ca6b0a7f7021c5d2ca0cd45b9474e22c6da9a08dded600edc3f",
+      "target_sha256": "6b4c7eefd5221ca6b0a7f7021c5d2ca0cd45b9474e22c6da9a08dded600edc3f",
+      "database_fingerprint": "59b9f12f4071b3b53e5988337532264affd42afddf69e543c51f7fd888aeeb92",
+      "tombstone": false,
+      "verified": true
+    },
+    {
+      "kind": "schedule-library",
+      "key": "rp_library_index_v1",
+      "item": "folder/folder-1",
+      "id": "69d0608d-de56-520a-9161-44b896980181",
+      "source_revision": 2,
+      "target_version": 2,
+      "source_sha256": "1093ccafc981012a1a7296d5c5213d4e74e7bff8857dbe375bc303d67e0f4b8c",
+      "target_sha256": "1093ccafc981012a1a7296d5c5213d4e74e7bff8857dbe375bc303d67e0f4b8c",
+      "database_fingerprint": "e64f096ed65b8feaa27fbe021eb51a9460908e7d4fe634c0951730d3ecc7c5b2",
+      "tombstone": false,
+      "verified": true
+    },
+    {
+      "kind": "schedule-snapshots",
+      "key": "snapshots_8ed3f6ad685b959ead7022518e1af76cd816f8e8ec7ccdda1ed4018e8f2223f8",
+      "item": "",
+      "id": "2cb87265-eb98-5cb1-94f6-166c6e0366da",
+      "source_revision": 2,
+      "target_version": 2,
+      "source_sha256": "cccebc83b9ffb7b7ce59f9d9e28134f851f38202504d26ca7923efe20ce5a7c6",
+      "target_sha256": "cccebc83b9ffb7b7ce59f9d9e28134f851f38202504d26ca7923efe20ce5a7c6",
+      "database_fingerprint": "a8bf2a60e466d62d87c815d4cb28fa3e641a3a8fcf402a48c6c942b4fd344f8d",
+      "tombstone": false,
+      "verified": true
+    },
+    {
+      "kind": "schedule-snapshots",
+      "key": "snapshots_8ed3f6ad685b959ead7022518e1af76cd816f8e8ec7ccdda1ed4018e8f2223f8",
+      "item": "keep",
+      "id": "5a37467f-6f25-5bab-ab22-090969256896",
+      "source_revision": 2,
+      "target_version": 2,
+      "source_sha256": "37bc57f971e02b61e620e28ffe77e79360ea1d9ae9f9c6fe591bc0bbfeb88dfe",
+      "target_sha256": "37bc57f971e02b61e620e28ffe77e79360ea1d9ae9f9c6fe591bc0bbfeb88dfe",
+      "database_fingerprint": "7c30aea2a48bbd3d10030637a00fc33071d071f6b3ffd9d3260a1d396bd60ecd",
+      "tombstone": false,
+      "verified": true
+    },
+    {
+      "kind": "schedule-snapshots",
+      "key": "snapshots_8ed3f6ad685b959ead7022518e1af76cd816f8e8ec7ccdda1ed4018e8f2223f8",
+      "item": "new",
+      "id": "bb4a1ae2-563b-5ddc-a6cf-aedb8c366593",
+      "source_revision": 2,
+      "target_version": 1,
+      "source_sha256": "a156f2aaa81b8a7a9b708ffcb4946c72d028f2590f57c1450641bf65a76a6c92",
+      "target_sha256": "a156f2aaa81b8a7a9b708ffcb4946c72d028f2590f57c1450641bf65a76a6c92",
+      "database_fingerprint": "e721000afa39791b7c8783682bda7388d335b4c15afedbc0f0dab29ced26aadc",
+      "tombstone": false,
+      "verified": true
+    },
+    {
+      "kind": "schedule-templates",
+      "key": "templates",
+      "item": "",
+      "id": "d8580932-d44c-5c16-aa68-09dbd80981b6",
+      "source_revision": 2,
+      "target_version": 2,
+      "source_sha256": "a5c5670d0ee8e55f18b6d4139d852c0e06af08fd58e30a711290f39d16d0c898",
+      "target_sha256": "a5c5670d0ee8e55f18b6d4139d852c0e06af08fd58e30a711290f39d16d0c898",
+      "database_fingerprint": "ba11daf79d6fa0307186d5a362e714e2c24d5ba34c95ab7bbb5ddf0920fdbcef",
+      "tombstone": false,
+      "verified": true
+    },
+    {
+      "kind": "schedule-templates",
+      "key": "templates",
+      "item": "Call template",
+      "id": "74cf3007-1b34-53b7-baa7-021a911cc0d7",
+      "source_revision": 2,
+      "target_version": 2,
+      "source_sha256": "dd0cbe1fb3ce3ea67f1f5d949483b3d4545a230472c3791f90b31c6ba24a697d",
+      "target_sha256": "dd0cbe1fb3ce3ea67f1f5d949483b3d4545a230472c3791f90b31c6ba24a697d",
+      "database_fingerprint": "f229f9bc47d3b3446d32fc82649b8d746b6073039eb90468fed1f22724dce1e6",
+      "tombstone": false,
+      "verified": true
+    },
+    {
+      "kind": "schedule-templates",
+      "key": "templates",
+      "item": "New template",
+      "id": "8f1f49b5-d89b-5fae-8f8f-2e75f580e39a",
+      "source_revision": 2,
+      "target_version": 1,
+      "source_sha256": "cff281ee51d6defdd15906096f976cea82916da061baebc5ab17121162a96564",
+      "target_sha256": "cff281ee51d6defdd15906096f976cea82916da061baebc5ab17121162a96564",
+      "database_fingerprint": "4ecb91f87f9e3b7611da113d23d2e3d4288b3b3f1bc7c1c8701663279dc78fdc",
+      "tombstone": false,
+      "verified": true
+    },
+    {
+      "kind": "schedule-templates",
+      "key": "templates",
+      "item": "Other template",
+      "id": "d069223e-c5c6-5fea-abf9-1775a162238e",
+      "source_revision": 2,
+      "target_version": 2,
+      "source_sha256": "47d42124225dc95e91882d0af21df5d147e6840481d2613d5314d2f0e532cec1",
+      "target_sha256": "47d42124225dc95e91882d0af21df5d147e6840481d2613d5314d2f0e532cec1",
+      "database_fingerprint": "71640b9ca8f6631c014958b5c07d6d8d1cbeb9a09923ee56a233da4c4af582e2",
+      "tombstone": false,
+      "verified": true
+    },
+    {
+      "kind": "schedule-snapshots",
+      "key": "snapshots_8ed3f6ad685b959ead7022518e1af76cd816f8e8ec7ccdda1ed4018e8f2223f8",
+      "item": "old",
+      "id": "daec3f1d-0a4b-5545-8be3-61c03c7ee4d2",
+      "source_revision": 2,
+      "target_version": 2,
+      "source_sha256": "4b6f13890c4bc28da4705f08608452fca01bec6d1dc800d842a437d8e81649c7",
+      "target_sha256": "4b6f13890c4bc28da4705f08608452fca01bec6d1dc800d842a437d8e81649c7",
+      "database_fingerprint": "c90d68196b298d5145f2a2d1412deff2237a89dee5bf9b0c7179d861d51e9f8d",
+      "tombstone": true,
+      "verified": true
+    }
+  ],
+  "capture_hashes": [
+    "2892c0fb1be6107a0c5b11f6e8d7577d7e574472871ff8824068e191179ba7a6",
+    "85b9966f6dccf85e46795a75ca468f4a74cea4b72f501a1d0704192636d4726f"
+  ],
+  "browser_dispositions": {
+    "rp_sync_meta": "derived_cache",
+    "rp_library_meta_v1": "derived_cache",
+    "rp_sched_snaps": "derived_cache",
+    "rp_scheds": "derived_cache",
+    "rp_sched_deleted": "derived_cache",
+    "rp_tpls": "import_reviewed_templates",
+    "rp_notif_dismissed": "derived_cache",
+    "rp_sched_queue": "derived_cache",
+    "rp_notif_fired": "derived_cache",
+    "rp_crew_names": "retain_private_original"
+  },
+  "missing": [],
+  "unexpected": [],
+  "mismatched": [],
+  "sql_reconciliation": true,
+  "application_readback": true,
+  "actual_source_migration": false,
+  "application_checks": [
+    "Schedule document alpha-new",
+    "Schedule version alpha-new",
+    "Schedule document bravo",
+    "Schedule version bravo",
+    "Schedule document charlie",
+    "Schedule version charlie",
+    "Library exact inventory",
+    "Library rename/order/archive/placement alpha-new",
+    "Library rename/order/archive/placement bravo",
+    "Library rename/order/archive/placement charlie",
+    "Production template Call template",
+    "Production template Other template",
+    "Production template New template",
+    "Production template Reviewed private call",
+    "Template exact inventory",
+    "Snapshots exact inventory alpha-new",
+    "Snapshots exact inventory bravo",
+    "Snapshots exact inventory charlie",
+    "Snapshot readback keep",
+    "Snapshot readback new",
+    "Snapshot readback old",
+    "CMS exact readback",
+    "Client alias resolves latest stable identity 9b4782f1-000f-58c3-a672-7d33dd499e98",
+    "Client alias excludes private contact",
+    "Client alias resolves latest stable identity fd8e9426-8c84-52a6-ae85-637f5a085b6e",
+    "Client alias excludes private contact",
+    "Client alias resolves latest stable identity bb09a625-7409-5e87-9137-6e39c16a238d",
+    "Client alias excludes private contact",
+    "Other organization cannot read imported schedule",
+    "Other organization cannot read imported template",
+    "Other organization cannot read imported snapshot"
+  ],
+  "application_evidence": "Genuine password login + MFA, current application RPCs; service-only alias projection readback. No simulated JWT used for API acceptance.",
+  "checkpoint_checks": [
+    "Original base and latest captures reconstruct identical plans including private browser dispositions",
+    "Application reads left captured organization state unchanged",
+    "Anon authenticated and service roles have no checkpoint table privileges",
+    "Checkpoint update and delete both refused by immutable-history trigger"
+  ],
+  "checkpoint_digest": "119f313ddbe5c6ec1696069df04326bdf3819e9e294c51ce78f68283b09c50a3",
+  "checkpoint_verified": true
+}

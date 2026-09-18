@@ -1,0 +1,88 @@
+PASS All seven stores captured with original bytes
+PASS Unknown schedule field rejected
+PASS Unsupported CMS palette rejected
+PASS Duplicate source entry rejected
+PASS Missing store rejected
+PASS Orphan alias rejected
+PASS Unconfirmed browser owner rejected
+PASS Pending browser queue rejected
+PASS Unreconciled browser cache rejected
+PASS Duplicate rename identity rejected
+PASS Non-frozen source rejected
+PASS Changed source without revision rejected
+PASS Duplicate JSON object key rejected
+PASS Malformed JSON rejected
+PASS Non-JSON number rejected
+PASS Non-atomic capture mutation detected
+PASS Uninventoried file rejected
+PASS Initial all-store import committed
+PASS Initial retry leaves all target rows/history unchanged
+PASS Atomic refusal after_schedules
+PASS Complete rollback after_schedules
+PASS Atomic refusal after_projections
+PASS Complete rollback after_projections
+PASS Newer target edit refused
+PASS Target conflict rollback preserves checkpoint
+PASS Wrong parent checkpoint refused
+PASS Unreviewed snapshot disappearance refused
+PASS Unreviewed removal rolls back preceding writes
+PASS Malformed nested document refused
+PASS Malformed document refusal leaves target unchanged
+PASS Stale source boundary refused
+PASS Changed historical snapshot refused
+PASS Historical snapshot refusal atomic
+PASS Latest all-store delta committed
+PASS Latest retry leaves all target rows/history unchanged
+PASS schedules exact identity inventory
+PASS schedules fc71bc98-3107-5072-9f43-9be58755f141 projection
+PASS schedules f7086cfa-4f41-5546-ae19-0dc9e2260441 projection
+PASS schedules dec9ef56-1690-59a9-9601-9194671cdc5e projection
+PASS productions exact identity inventory
+PASS productions c4926761-18da-5cf2-a7c8-edf0d3454785 projection
+PASS phases exact identity inventory
+PASS phases 894846e8-c40e-5ad5-87f9-0b734a0ee6de projection
+PASS templates exact identity inventory
+PASS templates 0439e72f-cf61-5b1b-806b-45a7d21fe1ed projection
+PASS templates e7da2cfe-e507-5b82-a58a-14d0fe67c1e8 projection
+PASS templates e2d07ee1-804a-5111-8dce-bb28bb283f41 projection
+PASS templates 662006b7-875e-52a5-9194-bc7e7f894509 projection
+PASS aliases exact identity inventory
+PASS aliases 9b4782f1-000f-58c3-a672-7d33dd499e98 projection
+PASS aliases fd8e9426-8c84-52a6-ae85-637f5a085b6e projection
+PASS aliases bb09a625-7409-5e87-9137-6e39c16a238d projection
+PASS CMS exact application configuration
+PASS Related catalogue exact inventory including retained tombstone
+PASS Related record f35f7314-886a-5bcd-bb46-2577b6378dc9 revision/content/references
+PASS Related history f35f7314-886a-5bcd-bb46-2577b6378dc9 complete
+PASS Related record 0d7b2d79-bbbc-581f-b8e7-545be3682adf revision/content/references
+PASS Related history 0d7b2d79-bbbc-581f-b8e7-545be3682adf complete
+PASS Related record 69d0608d-de56-520a-9161-44b896980181 revision/content/references
+PASS Related history 69d0608d-de56-520a-9161-44b896980181 complete
+PASS Related record 2cb87265-eb98-5cb1-94f6-166c6e0366da revision/content/references
+PASS Related history 2cb87265-eb98-5cb1-94f6-166c6e0366da complete
+PASS Related record 5a37467f-6f25-5bab-ab22-090969256896 revision/content/references
+PASS Related history 5a37467f-6f25-5bab-ab22-090969256896 complete
+PASS Related record bb4a1ae2-563b-5ddc-a6cf-aedb8c366593 revision/content/references
+PASS Related history bb4a1ae2-563b-5ddc-a6cf-aedb8c366593 complete
+PASS Related record d8580932-d44c-5c16-aa68-09dbd80981b6 revision/content/references
+PASS Related history d8580932-d44c-5c16-aa68-09dbd80981b6 complete
+PASS Related record 74cf3007-1b34-53b7-baa7-021a911cc0d7 revision/content/references
+PASS Related history 74cf3007-1b34-53b7-baa7-021a911cc0d7 complete
+PASS Related record 8f1f49b5-d89b-5fae-8f8f-2e75f580e39a revision/content/references
+PASS Related history 8f1f49b5-d89b-5fae-8f8f-2e75f580e39a complete
+PASS Related record d069223e-c5c6-5fea-abf9-1775a162238e revision/content/references
+PASS Related history d069223e-c5c6-5fea-abf9-1775a162238e complete
+PASS Related record daec3f1d-0a4b-5545-8be3-61c03c7ee4d2 revision/content/references
+PASS Related history daec3f1d-0a4b-5545-8be3-61c03c7ee4d2 complete
+PASS Every related historical fingerprint verified
+PASS Snapshot projection retains reviewed source removal
+PASS Snapshot 5a37467f-6f25-5bab-ab22-090969256896 original bytes/document retained
+PASS Snapshot bb4a1ae2-563b-5ddc-a6cf-aedb8c366593 original bytes/document retained
+PASS Snapshot daec3f1d-0a4b-5545-8be3-61c03c7ee4d2 original bytes/document retained
+PASS Shared template provenance 0439e72f-cf61-5b1b-806b-45a7d21fe1ed
+PASS Shared template provenance e7da2cfe-e507-5b82-a58a-14d0fe67c1e8
+PASS Shared template provenance e2d07ee1-804a-5111-8dce-bb28bb283f41
+PASS Browser template ownership 662006b7-875e-52a5-9194-bc7e7f894509
+PASS Original fixture bytes unchanged after rehearsal
+PASS Two immutable capture receipts and final recovery checkpoint retained
+CHECKPOINT /private/tmp/roseland-b12-k33pxhsg

@@ -1,0 +1,32 @@
+PASS Schedule document alpha-new
+PASS Schedule version alpha-new
+PASS Schedule document bravo
+PASS Schedule version bravo
+PASS Schedule document charlie
+PASS Schedule version charlie
+PASS Library exact inventory
+PASS Library rename/order/archive/placement alpha-new
+PASS Library rename/order/archive/placement bravo
+PASS Library rename/order/archive/placement charlie
+PASS Production template Call template
+PASS Production template Other template
+PASS Production template New template
+PASS Production template Reviewed private call
+PASS Template exact inventory
+PASS Snapshots exact inventory alpha-new
+PASS Snapshots exact inventory bravo
+PASS Snapshots exact inventory charlie
+PASS Snapshot readback keep
+PASS Snapshot readback new
+PASS Snapshot readback old
+PASS CMS exact readback
+PASS Client alias resolves latest stable identity 9b4782f1-000f-58c3-a672-7d33dd499e98
+PASS Client alias excludes private contact
+PASS Client alias resolves latest stable identity fd8e9426-8c84-52a6-ae85-637f5a085b6e
+PASS Client alias excludes private contact
+PASS Client alias resolves latest stable identity bb09a625-7409-5e87-9137-6e39c16a238d
+PASS Client alias excludes private contact
+PASS Other organization cannot read imported schedule
+PASS Other organization cannot read imported template
+PASS Other organization cannot read imported snapshot
+PASS 31 genuine application checks.

@@ -1,0 +1,28 @@
+{
+  "test_launchers_stopped": [
+    {
+      "pid": 48167,
+      "command": "node --experimental-strip-types scripts/serve-client-link-user-flows.ts"
+    },
+    {
+      "pid": 1742,
+      "command": "node node_modules/next/dist/bin/next dev --hostname 127.0.0.1 --port 3420"
+    }
+  ],
+  "test_ports_closed": [
+    3420,
+    3435
+  ],
+  "test_stack_stopped": "roseland-b08-20260917",
+  "test_volumes_retained": [
+    "supabase_db_roseland-b08-20260917",
+    "supabase_edge_runtime_roseland-b08-20260917",
+    "supabase_storage_roseland-b08-20260917"
+  ],
+  "review_project_running": "roseland-b11-review-19acbce",
+  "review_services": 5,
+  "review_url": "http://127.0.0.1:3445/local-workspace",
+  "review_http_status": 200,
+  "review_build": "19acbce",
+  "review_data_mutated": false
+}

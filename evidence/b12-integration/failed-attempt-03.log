@@ -1,0 +1,42 @@
+PASS All seven stores captured with original bytes
+PASS Unknown schedule field rejected
+PASS Unsupported CMS palette rejected
+PASS Duplicate source entry rejected
+PASS Missing store rejected
+PASS Orphan alias rejected
+PASS Unconfirmed browser owner rejected
+PASS Pending browser queue rejected
+PASS Unreconciled browser cache rejected
+PASS Duplicate rename identity rejected
+PASS Non-frozen source rejected
+PASS Changed source without revision rejected
+PASS Non-atomic capture mutation detected
+PASS Uninventoried file rejected
+PASS Initial all-store import committed
+PASS Initial retry leaves all target rows/history unchanged
+PASS Atomic refusal after_schedules
+PASS Complete rollback after_schedules
+PASS Atomic refusal after_projections
+PASS Complete rollback after_projections
+PASS Newer target edit refused
+PASS Target conflict rollback preserves checkpoint
+PASS Wrong parent checkpoint refused
+PASS Unreviewed snapshot disappearance refused
+PASS Unreviewed removal rolls back preceding writes
+FAILED CHECKPOINT /private/tmp/roseland-b12-pmrcgmcg
+Traceback (most recent call last):
+  File "/Users/johnsammon/.codex/worktrees/roseland-b02/roseland-schedule/scripts/migration/complete_rehearsal.py", line 94, in <module>
+    second=imported(lp);check(second['status']=='imported','Latest all-store delta committed');final=state();check(imported(lp)['status']=='already_imported'and state()==final,'Latest retry leaves all target rows/history unchanged')
+  File "/Users/johnsammon/.codex/worktrees/roseland-b02/roseland-schedule/scripts/migration/complete_rehearsal.py", line 29, in imported
+    def imported(p, fail=None):return result('begin;select pg_temp.import_capture('+j(p)+','+('null' if fail is None else q(fail))+');commit;')
+  File "/Users/johnsammon/.codex/worktrees/roseland-b02/roseland-schedule/scripts/migration/complete_rehearsal.py", line 27, in result
+    def result(query):return json.loads(sql(query).splitlines()[-1])
+  File "/Users/johnsammon/.codex/worktrees/roseland-b02/roseland-schedule/scripts/migration/complete_rehearsal.py", line 25, in sql
+    if r.returncode:raise RuntimeError(r.stderr.strip())
+RuntimeError: ERROR:  null value in column "updated_by" of relation "schedules" violates not-null constraint
+DETAIL:  Failing row contains (681aa9fa-d7a7-525a-9752-0684f214cf29, 84655dcb-1f1a-4fd8-a579-46dbb0c29e30, a0bd3a74-7866-5592-87c4-1e9f8607606a, null, alpha-new, alpha-new, draft, Latest fictional town, 1, {"meta": {"date": "2026-09-20", "town": "Latest fictional town",..., 2, 2026-09-18 07:18:30.771242+00, 2026-09-18 07:18:31.577543+00, c3729c0d-af41-49c8-8659-dae697bbc343, null, null, null, b2a4717d-5031-5d6e-9e7c-a734b25d59b2, 1).
+CONTEXT:  SQL statement "insert into public.schedules(id,organization_id,production_id,phase_id,display_name,slug,document,document_schema_version,status,archived_from_status,library_position,town,created_by,updated_by)
+  values((r->>'id')::uuid,org,(r->>'production_id')::uuid,(r->>'phase_id')::uuid,r->>'name',r->>'slug',r->'document',1,r->>'status',case when r->>'status'='archived' then 'draft' else null end,(r->>'position')::int,r->'document'->'meta'->>'town',actor,actor)
+  on conflict(id)do update set display_name=excluded.display_name,slug=excluded.slug,document=excluded.document,status=excluded.status,archived_from_status=excluded.archived_from_status,library_position=excluded.library_position,town=excluded.town
+  where(schedules.display_name,schedules.slug,schedules.document,schedules.status,schedules.library_position)is distinct from(excluded.display_name,excluded.slug,excluded.document,excluded.status,excluded.library_position)"
+PL/pgSQL function pg_temp_94.import_capture(jsonb,text) line 28 at SQL statement

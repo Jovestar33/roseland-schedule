@@ -1,0 +1,28 @@
+PASS All seven stores captured with original bytes
+PASS Unknown schedule field rejected
+PASS Unsupported CMS palette rejected
+PASS Duplicate source entry rejected
+PASS Missing store rejected
+PASS Orphan alias rejected
+PASS Unconfirmed browser owner rejected
+PASS Pending browser queue rejected
+PASS Unreconciled browser cache rejected
+PASS Duplicate rename identity rejected
+PASS Non-frozen source rejected
+PASS Changed source without revision rejected
+PASS Non-atomic capture mutation detected
+PASS Uninventoried file rejected
+FAILED CHECKPOINT /private/tmp/roseland-b12-u4nn1o6v
+Traceback (most recent call last):
+  File "/Users/johnsammon/.codex/worktrees/roseland-b02/roseland-schedule/scripts/migration/complete_rehearsal.py", line 86, in <module>
+    first=imported(bp);check(first['status']=='imported','Initial all-store import committed');before=state();check(imported(bp)['status']=='already_imported'and state()==before,'Initial retry leaves all target rows/history unchanged')
+  File "/Users/johnsammon/.codex/worktrees/roseland-b02/roseland-schedule/scripts/migration/complete_rehearsal.py", line 29, in imported
+    def imported(p, fail=None):return result('begin;select pg_temp.import_capture('+j(p)+','+('null' if fail is None else q(fail))+');commit;')
+  File "/Users/johnsammon/.codex/worktrees/roseland-b02/roseland-schedule/scripts/migration/complete_rehearsal.py", line 27, in result
+    def result(query):return json.loads(sql(query).splitlines()[-1])
+  File "/Users/johnsammon/.codex/worktrees/roseland-b02/roseland-schedule/scripts/migration/complete_rehearsal.py", line 25, in sql
+    if r.returncode:raise RuntimeError(r.stderr.strip())
+RuntimeError: ERROR:  Invalid schedule document
+CONTEXT:  PL/pgSQL function private.validate_schedule_document(jsonb,integer) line 13 at RAISE
+SQL statement "SELECT private.validate_schedule_document(jsonb_build_object('meta','{}','rows',r->'rows'),1)"
+PL/pgSQL function pg_temp_77.import_capture(jsonb,text) line 17 at PERFORM

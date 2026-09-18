@@ -1,0 +1,4175 @@
+[
+  {
+    "id": "a65baf78-f7d0-45ab-a965-0c2a82ba96ac",
+    "capture": {
+      "format": "roseland.complete-capture.v1",
+      "sha256": "2892c0fb1be6107a0c5b11f6e8d7577d7e574472871ff8824068e191179ba7a6",
+      "entries": [
+        {
+          "key": "snapshots_8ed3f6ad685b959ead7022518e1af76cd816f8e8ec7ccdda1ed4018e8f2223f8",
+          "file": "0.json",
+          "bytes": "ewogICJuYW1lIjogImFscGhhIiwKICAidXBkYXRlZEF0IjogMTAwLAogICJzbmFwc2hvdHMiOiBbCiAgICB7CiAgICAgICJpZCI6ICJvbGQiLAogICAgICAic2F2ZWRBdCI6IDkwLAogICAgICAibGFiZWwiOiAiT3JpZ2luYWwiLAogICAgICAiZGF0YSI6IHsKICAgICAgICAibWV0YSI6IHsKICAgICAgICAgICJ0b3duIjogIkZpY3Rpb25hbCB0b3duIiwKICAgICAgICAgICJkYXRlIjogIjIwMjYtMDktMjAiLAogICAgICAgICAgImNhbGxzaGVldCI6IHsKICAgICAgICAgICAgIm5vdGVzIjogIktlZXAgYWxsIGZpY3Rpb25hbCBub3RlcyIKICAgICAgICAgIH0KICAgICAgICB9LAogICAgICAgICJyb3dzIjogWwogICAgICAgICAgewogICAgICAgICAgICAiYWN0aW9uIjogIlNob290IiwKICAgICAgICAgICAgImR1ciI6ICIwMDowMCIsCiAgICAgICAgICAgICJjb250YWN0TmFtZSI6ICJUZXN0IFBlcnNvbiIsCiAgICAgICAgICAgICJzdWJMb2NhdGlvbnMiOiBbCiAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgImlkIjogImdhdGUiLAogICAgICAgICAgICAgICAgImxvYyI6ICJUZXN0IGdhdGUiCiAgICAgICAgICAgICAgfQogICAgICAgICAgICBdCiAgICAgICAgICB9CiAgICAgICAgXSwKICAgICAgICAic2F2ZWRBdCI6IDEwMAogICAgICB9CiAgICB9LAogICAgewogICAgICAiaWQiOiAia2VlcCIsCiAgICAgICJzYXZlZEF0IjogOTUsCiAgICAgICJsYWJlbCI6ICJLZWVwIiwKICAgICAgImRhdGEiOiB7CiAgICAgICAgIm1ldGEiOiB7CiAgICAgICAgICAidG93biI6ICJGaWN0aW9uYWwgdG93biIsCiAgICAgICAgICAiZGF0ZSI6ICIyMDI2LTA5LTIwIiwKICAgICAgICAgICJjYWxsc2hlZXQiOiB7CiAgICAgICAgICAgICJub3RlcyI6ICJLZWVwIGFsbCBmaWN0aW9uYWwgbm90ZXMiCiAgICAgICAgICB9CiAgICAgICAgfSwKICAgICAgICAicm93cyI6IFsKICAgICAgICAgIHsKICAgICAgICAgICAgImFjdGlvbiI6ICJTaG9vdCIsCiAgICAgICAgICAgICJkdXIiOiAiMDA6MDAiLAogICAgICAgICAgICAiY29udGFjdE5hbWUiOiAiVGVzdCBQZXJzb24iLAogICAgICAgICAgICAic3ViTG9jYXRpb25zIjogWwogICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICJpZCI6ICJnYXRlIiwKICAgICAgICAgICAgICAgICJsb2MiOiAiVGVzdCBnYXRlIgogICAgICAgICAgICAgIH0KICAgICAgICAgICAgXQogICAgICAgICAgfQogICAgICAgIF0sCiAgICAgICAgInNhdmVkQXQiOiAxMDAKICAgICAgfQogICAgfQogIF0KfQo=",
+          "store": "schedule-snapshots",
+          "sha256": "1e2a266f74ce91b7a874c9dabbe47b24f2983cb71c2833ce15fdfa02e6c8aa85",
+          "revision": 1
+        },
+        {
+          "key": "templates",
+          "file": "1.json",
+          "bytes": "ewogICJDYWxsIHRlbXBsYXRlIjogewogICAgInJvd3MiOiBbCiAgICAgIHsKICAgICAgICAiYWN0aW9uIjogIlNob290IiwKICAgICAgICAiZHVyIjogIjAwOjAwIiwKICAgICAgICAiY29udGFjdE5hbWUiOiAiVGVzdCBQZXJzb24iLAogICAgICAgICJzdWJMb2NhdGlvbnMiOiBbCiAgICAgICAgICB7CiAgICAgICAgICAgICJpZCI6ICJnYXRlIiwKICAgICAgICAgICAgImxvYyI6ICJUZXN0IGdhdGUiCiAgICAgICAgICB9CiAgICAgICAgXQogICAgICB9CiAgICBdLAogICAgInNhdmVkQXQiOiAxMDAKICB9LAogICJPdGhlciB0ZW1wbGF0ZSI6IHsKICAgICJyb3dzIjogW10sCiAgICAic2F2ZWRBdCI6IDEwMAogIH0KfQo=",
+          "store": "schedule-templates",
+          "sha256": "68b6ce188020b3c5a8134f82602ddfec8f392713929527287eafeca74d8b1d08",
+          "revision": 1
+        },
+        {
+          "key": "rp_library_index_v1",
+          "file": "2.json",
+          "bytes": "ewogICJ2ZXJzaW9uIjogMSwKICAidXBkYXRlZEF0IjogMTAwLAogICJmb2xkZXJzIjogWwogICAgewogICAgICAiaWQiOiAiZm9sZGVyLTEiLAogICAgICAibmFtZSI6ICJGaWN0aW9uYWwgZm9sZGVyIiwKICAgICAgImNyZWF0ZWRBdCI6IDUwLAogICAgICAidXBkYXRlZEF0IjogMTAwCiAgICB9CiAgXSwKICAic2NoZWR1bGVGb2xkZXJNYXAiOiB7CiAgICAiYWxwaGEiOiAiZm9sZGVyLTEiLAogICAgImJyYXZvIjogImZvbGRlci0xIgogIH0sCiAgInBoYXNlT3JkZXIiOiB7CiAgICAicHJvZHVjdGlvbiI6IHsKICAgICAgInNob290IjogWwogICAgICAgICJhbHBoYSIsCiAgICAgICAgImJyYXZvIgogICAgICBdCiAgICB9CiAgfSwKICAicHJvZHVjdGlvbkRpc3BsYXlOYW1lcyI6IHsKICAgICJwcm9kdWN0aW9uIjogIkZpY3Rpb25hbCBwcm9kdWN0aW9uIgogIH0sCiAgInBoYXNlRGlzcGxheU5hbWVzIjogewogICAgInByb2R1Y3Rpb24iOiB7CiAgICAgICJzaG9vdCI6ICJTaG9vdCIKICAgIH0KICB9LAogICJ0c2FyY2hpdmVkIjogWwogICAgImJyYXZvIgogIF0sCiAgInRvd25DYWNoZSI6IHsKICAgICJhbHBoYSI6ICJGaWN0aW9uYWwgdG93biIKICB9LAogICJkYXRlQ2FjaGUiOiB7CiAgICAiYWxwaGEiOiAiMjAyNi0wOS0yMCIKICB9Cn0K",
+          "store": "schedule-library",
+          "sha256": "8a515c5472a568f966ee0fab0cc3cda3a5fc047fb62ec4524feb1e7cda2a9e4e",
+          "revision": 1
+        },
+        {
+          "key": "rp_cms_config",
+          "file": "3.json",
+          "bytes": "ewogICJhY3Rpb25zIjogWwogICAgewogICAgICAibmFtZSI6ICJTaG9vdCIsCiAgICAgICJjb2xvciI6ICJhU2hvb3QiCiAgICB9CiAgXSwKICAiYWN0aW9uU3R5bGVzIjogewogICAgImFTaG9vdCI6IHsKICAgICAgImJnIjogIiNmZmZmZmYiLAogICAgICAidGV4dCI6ICIjMDAwMDAwIgogICAgfQogIH0sCiAgImNvbG9ycyI6IHsKICAgICItLXBpbmsiOiAiIzMzNDQ1NSIKICB9LAogICJsYWJlbHMiOiB7CiAgICAiaGRyVGl0bGUiOiAiRmljdGlvbmFsIHRpdGxlIgogIH0KfQo=",
+          "store": "cms",
+          "sha256": "ea1d2d9ef503a096c31a8b08031bb38e789a99f6428b27123d3c16b93359f446",
+          "revision": 1
+        },
+        {
+          "key": "alpha",
+          "file": "4.json",
+          "bytes": "ewogICJtZXRhIjogewogICAgInRvd24iOiAiRmljdGlvbmFsIGFscGhhIiwKICAgICJkYXRlIjogIjIwMjYtMDktMjAiLAogICAgImNhbGxzaGVldCI6IHsKICAgICAgIm5vdGVzIjogIktlZXAgYWxsIGZpY3Rpb25hbCBub3RlcyIKICAgIH0KICB9LAogICJyb3dzIjogWwogICAgewogICAgICAiYWN0aW9uIjogIlNob290IiwKICAgICAgImR1ciI6ICIwMDowMCIsCiAgICAgICJjb250YWN0TmFtZSI6ICJUZXN0IFBlcnNvbiIsCiAgICAgICJzdWJMb2NhdGlvbnMiOiBbCiAgICAgICAgewogICAgICAgICAgImlkIjogImdhdGUiLAogICAgICAgICAgImxvYyI6ICJUZXN0IGdhdGUiCiAgICAgICAgfQogICAgICBdLAogICAgICAibm90ZXMiOiAiT3JpZ2luYWwgbm90ZSIKICAgIH0KICBdLAogICJzYXZlZEF0IjogMTAwCn0K",
+          "store": "schedules",
+          "sha256": "1bd59b93872b59c017ca673ca9276c12dbf309d21e68c5c23b2554ace621dab6",
+          "revision": 1
+        },
+        {
+          "key": "bravo",
+          "file": "5.json",
+          "bytes": "ewogICJtZXRhIjogewogICAgInRvd24iOiAiRmljdGlvbmFsIGJyYXZvIiwKICAgICJkYXRlIjogIjIwMjYtMDktMjAiLAogICAgImNhbGxzaGVldCI6IHsKICAgICAgIm5vdGVzIjogIktlZXAgYWxsIGZpY3Rpb25hbCBub3RlcyIKICAgIH0KICB9LAogICJyb3dzIjogWwogICAgewogICAgICAiYWN0aW9uIjogIlNob290IiwKICAgICAgImR1ciI6ICIwMDowMCIsCiAgICAgICJjb250YWN0TmFtZSI6ICJUZXN0IFBlcnNvbiIsCiAgICAgICJzdWJMb2NhdGlvbnMiOiBbCiAgICAgICAgewogICAgICAgICAgImlkIjogImdhdGUiLAogICAgICAgICAgImxvYyI6ICJUZXN0IGdhdGUiCiAgICAgICAgfQogICAgICBdLAogICAgICAibm90ZXMiOiAiT3JpZ2luYWwgbm90ZSIKICAgIH0KICBdLAogICJzYXZlZEF0IjogMTAwCn0K",
+          "store": "schedules",
+          "sha256": "eaed8dff3be859df56b910ff5665ef5e38fc71e7b237026150edf5bd551f3567",
+          "revision": 1
+        },
+        {
+          "key": "reviewed-browser",
+          "file": "6.json",
+          "bytes": "ewogICJycF9zeW5jX21ldGEiOiB7fSwKICAicnBfbGlicmFyeV9tZXRhX3YxIjoge30sCiAgInJwX3NjaGVkX3NuYXBzIjoge30sCiAgInJwX3NjaGVkcyI6IHt9LAogICJycF9zY2hlZF9kZWxldGVkIjoge30sCiAgInJwX3RwbHMiOiB7CiAgICAiUHJpdmF0ZSBjYWxsIjogewogICAgICAicm93cyI6IFsKICAgICAgICB7CiAgICAgICAgICAiYWN0aW9uIjogIlNob290IiwKICAgICAgICAgICJub3RlcyI6ICJQcml2YXRlIHRlbXBsYXRlIgogICAgICAgIH0KICAgICAgXSwKICAgICAgInNhdmVkQXQiOiAxMDAKICAgIH0KICB9LAogICJycF9ub3RpZl9kaXNtaXNzZWQiOiB7fSwKICAicnBfc2NoZWRfcXVldWUiOiB7fSwKICAicnBfbm90aWZfZmlyZWQiOiB7fSwKICAicnBfY3Jld19uYW1lcyI6IFsKICAgICJGaWN0aW9uYWwgcHJpdmF0ZSBwZXJzb24iCiAgXQp9Cg==",
+          "store": "browser",
+          "sha256": "443e1e11d6c76970a02866c1f500b288fcf86fc9df51871adac444e4933d78ca",
+          "revision": 1
+        },
+        {
+          "key": "aliases",
+          "file": "7.json",
+          "bytes": "WwogIHsKICAgICJuYW1lIjogImIxMi1maWN0aW9uYWwtNmIxMTU3OTEtYjI4Ny00YmNlLTlkNmItNzU3ZjMzMTlkZDE2IG9sZCBhbHBoYSIsCiAgICAic2NoZWR1bGUiOiAiYWxwaGEiCiAgfSwKICB7CiAgICAibmFtZSI6ICJiMTItZmljdGlvbmFsLTZiMTE1NzkxLWIyODctNGJjZS05ZDZiLTc1N2YzMzE5ZGQxNiBicmF2byIsCiAgICAic2NoZWR1bGUiOiAiYnJhdm8iCiAgfQpdCg==",
+          "store": "legacy-aliases",
+          "sha256": "133b82147f5bcc88f6d357c8f6d2c5b13610a7d123c1100b4a91f94b2bc69b4a",
+          "revision": 1
+        }
+      ],
+      "manifest": {
+        "actor": "c3729c0d-af41-49c8-8659-dae697bbc343",
+        "format": "roseland.synthetic-source.v1",
+        "mapping": {
+          "phases": {
+            "shoot": {
+              "name": "Shoot",
+              "position": 1,
+              "production": "production"
+            }
+          },
+          "folders": {
+            "folder-1": "production"
+          },
+          "schedules": {
+            "alpha": {
+              "name": "alpha",
+              "slug": "alpha",
+              "phase": "shoot",
+              "aliases": [],
+              "identity": "alpha",
+              "production": "production"
+            },
+            "bravo": {
+              "name": "bravo",
+              "slug": "bravo",
+              "phase": "shoot",
+              "aliases": [],
+              "identity": "bravo",
+              "production": "production"
+            }
+          },
+          "templates": {
+            "Call template": {
+              "source": "alpha",
+              "production": "production"
+            },
+            "Other template": {
+              "source": "alpha",
+              "production": "production"
+            }
+          },
+          "productions": {
+            "production": {
+              "name": "Fictional production",
+              "slug": "fictional"
+            }
+          },
+          "browser_templates": {
+            "Private call": {
+              "name": "Reviewed private call",
+              "owner": "c3729c0d-af41-49c8-8659-dae697bbc343",
+              "confirmed": true,
+              "production": "production"
+            }
+          },
+          "reviewed_removals": [],
+          "browser_dispositions": {
+            "rp_tpls": "import_reviewed_templates",
+            "rp_scheds": "derived_cache",
+            "rp_sync_meta": "derived_cache",
+            "rp_crew_names": "retain_private_original",
+            "rp_notif_fired": "derived_cache",
+            "rp_sched_queue": "derived_cache",
+            "rp_sched_snaps": "derived_cache",
+            "rp_sched_deleted": "derived_cache",
+            "rp_library_meta_v1": "derived_cache",
+            "rp_notif_dismissed": "derived_cache"
+          }
+        },
+        "boundary": {
+          "epoch": 1,
+          "frozen": true
+        },
+        "inventory": [
+          {
+            "key": "snapshots_8ed3f6ad685b959ead7022518e1af76cd816f8e8ec7ccdda1ed4018e8f2223f8",
+            "file": "0.json",
+            "store": "schedule-snapshots",
+            "revision": 1
+          },
+          {
+            "key": "templates",
+            "file": "1.json",
+            "store": "schedule-templates",
+            "revision": 1
+          },
+          {
+            "key": "rp_library_index_v1",
+            "file": "2.json",
+            "store": "schedule-library",
+            "revision": 1
+          },
+          {
+            "key": "rp_cms_config",
+            "file": "3.json",
+            "store": "cms",
+            "revision": 1
+          },
+          {
+            "key": "alpha",
+            "file": "4.json",
+            "store": "schedules",
+            "revision": 1
+          },
+          {
+            "key": "bravo",
+            "file": "5.json",
+            "store": "schedules",
+            "revision": 1
+          },
+          {
+            "key": "reviewed-browser",
+            "file": "6.json",
+            "store": "browser",
+            "revision": 1
+          },
+          {
+            "key": "aliases",
+            "file": "7.json",
+            "store": "legacy-aliases",
+            "revision": 1
+          }
+        ],
+        "synthetic": true,
+        "environment": "b12-fictional-6b115791-b287-4bce-9d6b-757f3319dd16",
+        "organization": "6b115791-b287-4bce-9d6b-757f3319dd16"
+      },
+      "manifest_bytes": "ewogICJmb3JtYXQiOiAicm9zZWxhbmQuc3ludGhldGljLXNvdXJjZS52MSIsCiAgInN5bnRoZXRpYyI6IHRydWUsCiAgImVudmlyb25tZW50IjogImIxMi1maWN0aW9uYWwtNmIxMTU3OTEtYjI4Ny00YmNlLTlkNmItNzU3ZjMzMTlkZDE2IiwKICAib3JnYW5pemF0aW9uIjogIjZiMTE1NzkxLWIyODctNGJjZS05ZDZiLTc1N2YzMzE5ZGQxNiIsCiAgImFjdG9yIjogImMzNzI5YzBkLWFmNDEtNDljOC04NjU5LWRhZTY5N2JiYzM0MyIsCiAgImJvdW5kYXJ5IjogewogICAgImZyb3plbiI6IHRydWUsCiAgICAiZXBvY2giOiAxCiAgfSwKICAiaW52ZW50b3J5IjogWwogICAgewogICAgICAic3RvcmUiOiAic2NoZWR1bGUtc25hcHNob3RzIiwKICAgICAgImtleSI6ICJzbmFwc2hvdHNfOGVkM2Y2YWQ2ODViOTU5ZWFkNzAyMjUxOGUxYWY3NmNkODE2ZjhlOGVjN2NjZGRhMWVkNDAxOGU4ZjIyMjNmOCIsCiAgICAgICJyZXZpc2lvbiI6IDEsCiAgICAgICJmaWxlIjogIjAuanNvbiIKICAgIH0sCiAgICB7CiAgICAgICJzdG9yZSI6ICJzY2hlZHVsZS10ZW1wbGF0ZXMiLAogICAgICAia2V5IjogInRlbXBsYXRlcyIsCiAgICAgICJyZXZpc2lvbiI6IDEsCiAgICAgICJmaWxlIjogIjEuanNvbiIKICAgIH0sCiAgICB7CiAgICAgICJzdG9yZSI6ICJzY2hlZHVsZS1saWJyYXJ5IiwKICAgICAgImtleSI6ICJycF9saWJyYXJ5X2luZGV4X3YxIiwKICAgICAgInJldmlzaW9uIjogMSwKICAgICAgImZpbGUiOiAiMi5qc29uIgogICAgfSwKICAgIHsKICAgICAgInN0b3JlIjogImNtcyIsCiAgICAgICJrZXkiOiAicnBfY21zX2NvbmZpZyIsCiAgICAgICJyZXZpc2lvbiI6IDEsCiAgICAgICJmaWxlIjogIjMuanNvbiIKICAgIH0sCiAgICB7CiAgICAgICJzdG9yZSI6ICJzY2hlZHVsZXMiLAogICAgICAia2V5IjogImFscGhhIiwKICAgICAgInJldmlzaW9uIjogMSwKICAgICAgImZpbGUiOiAiNC5qc29uIgogICAgfSwKICAgIHsKICAgICAgInN0b3JlIjogInNjaGVkdWxlcyIsCiAgICAgICJrZXkiOiAiYnJhdm8iLAogICAgICAicmV2aXNpb24iOiAxLAogICAgICAiZmlsZSI6ICI1Lmpzb24iCiAgICB9LAogICAgewogICAgICAic3RvcmUiOiAiYnJvd3NlciIsCiAgICAgICJrZXkiOiAicmV2aWV3ZWQtYnJvd3NlciIsCiAgICAgICJyZXZpc2lvbiI6IDEsCiAgICAgICJmaWxlIjogIjYuanNvbiIKICAgIH0sCiAgICB7CiAgICAgICJzdG9yZSI6ICJsZWdhY3ktYWxpYXNlcyIsCiAgICAgICJrZXkiOiAiYWxpYXNlcyIsCiAgICAgICJyZXZpc2lvbiI6IDEsCiAgICAgICJmaWxlIjogIjcuanNvbiIKICAgIH0KICBdLAogICJtYXBwaW5nIjogewogICAgInNjaGVkdWxlcyI6IHsKICAgICAgImFscGhhIjogewogICAgICAgICJpZGVudGl0eSI6ICJhbHBoYSIsCiAgICAgICAgIm5hbWUiOiAiYWxwaGEiLAogICAgICAgICJzbHVnIjogImFscGhhIiwKICAgICAgICAicHJvZHVjdGlvbiI6ICJwcm9kdWN0aW9uIiwKICAgICAgICAicGhhc2UiOiAic2hvb3QiLAogICAgICAgICJhbGlhc2VzIjogW10KICAgICAgfSwKICAgICAgImJyYXZvIjogewogICAgICAgICJpZGVudGl0eSI6ICJicmF2byIsCiAgICAgICAgIm5hbWUiOiAiYnJhdm8iLAogICAgICAgICJzbHVnIjogImJyYXZvIiwKICAgICAgICAicHJvZHVjdGlvbiI6ICJwcm9kdWN0aW9uIiwKICAgICAgICAicGhhc2UiOiAic2hvb3QiLAogICAgICAgICJhbGlhc2VzIjogW10KICAgICAgfQogICAgfSwKICAgICJwcm9kdWN0aW9ucyI6IHsKICAgICAgInByb2R1Y3Rpb24iOiB7CiAgICAgICAgIm5hbWUiOiAiRmljdGlvbmFsIHByb2R1Y3Rpb24iLAogICAgICAgICJzbHVnIjogImZpY3Rpb25hbCIKICAgICAgfQogICAgfSwKICAgICJwaGFzZXMiOiB7CiAgICAgICJzaG9vdCI6IHsKICAgICAgICAicHJvZHVjdGlvbiI6ICJwcm9kdWN0aW9uIiwKICAgICAgICAibmFtZSI6ICJTaG9vdCIsCiAgICAgICAgInBvc2l0aW9uIjogMQogICAgICB9CiAgICB9LAogICAgImZvbGRlcnMiOiB7CiAgICAgICJmb2xkZXItMSI6ICJwcm9kdWN0aW9uIgogICAgfSwKICAgICJ0ZW1wbGF0ZXMiOiB7CiAgICAgICJDYWxsIHRlbXBsYXRlIjogewogICAgICAgICJwcm9kdWN0aW9uIjogInByb2R1Y3Rpb24iLAogICAgICAgICJzb3VyY2UiOiAiYWxwaGEiCiAgICAgIH0sCiAgICAgICJPdGhlciB0ZW1wbGF0ZSI6IHsKICAgICAgICAicHJvZHVjdGlvbiI6ICJwcm9kdWN0aW9uIiwKICAgICAgICAic291cmNlIjogImFscGhhIgogICAgICB9CiAgICB9LAogICAgImJyb3dzZXJfdGVtcGxhdGVzIjogewogICAgICAiUHJpdmF0ZSBjYWxsIjogewogICAgICAgICJwcm9kdWN0aW9uIjogInByb2R1Y3Rpb24iLAogICAgICAgICJvd25lciI6ICJjMzcyOWMwZC1hZjQxLTQ5YzgtODY1OS1kYWU2OTdiYmMzNDMiLAogICAgICAgICJjb25maXJtZWQiOiB0cnVlLAogICAgICAgICJuYW1lIjogIlJldmlld2VkIHByaXZhdGUgY2FsbCIKICAgICAgfQogICAgfSwKICAgICJicm93c2VyX2Rpc3Bvc2l0aW9ucyI6IHsKICAgICAgInJwX3N5bmNfbWV0YSI6ICJkZXJpdmVkX2NhY2hlIiwKICAgICAgInJwX2xpYnJhcnlfbWV0YV92MSI6ICJkZXJpdmVkX2NhY2hlIiwKICAgICAgInJwX3NjaGVkX3NuYXBzIjogImRlcml2ZWRfY2FjaGUiLAogICAgICAicnBfc2NoZWRzIjogImRlcml2ZWRfY2FjaGUiLAogICAgICAicnBfc2NoZWRfZGVsZXRlZCI6ICJkZXJpdmVkX2NhY2hlIiwKICAgICAgInJwX3RwbHMiOiAiaW1wb3J0X3Jldmlld2VkX3RlbXBsYXRlcyIsCiAgICAgICJycF9ub3RpZl9kaXNtaXNzZWQiOiAiZGVyaXZlZF9jYWNoZSIsCiAgICAgICJycF9zY2hlZF9xdWV1ZSI6ICJkZXJpdmVkX2NhY2hlIiwKICAgICAgInJwX25vdGlmX2ZpcmVkIjogImRlcml2ZWRfY2FjaGUiLAogICAgICAicnBfY3Jld19uYW1lcyI6ICJyZXRhaW5fcHJpdmF0ZV9vcmlnaW5hbCIKICAgIH0sCiAgICAicmV2aWV3ZWRfcmVtb3ZhbHMiOiBbXQogIH0KfQo="
+    },
+    "created_at": "2026-09-18T07:22:45.221295+00:00",
+    "capture_hash": "2892c0fb1be6107a0c5b11f6e8d7577d7e574472871ff8824068e191179ba7a6",
+    "source_epoch": 1,
+    "target_state": {
+      "public.phases": [
+        {
+          "id": "894846e8-c40e-5ad5-87f9-0b734a0ee6de",
+          "name": "Shoot",
+          "version": 1,
+          "position": 1,
+          "created_at": "2026-09-18T07:22:45.192742+00:00",
+          "created_by": "c3729c0d-af41-49c8-8659-dae697bbc343",
+          "deleted_at": null,
+          "phase_type": "other",
+          "updated_at": "2026-09-18T07:22:45.192742+00:00",
+          "updated_by": "c3729c0d-af41-49c8-8659-dae697bbc343",
+          "production_id": "c4926761-18da-5cf2-a7c8-edf0d3454785",
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+        }
+      ],
+      "public.schedules": [
+        {
+          "id": "f7086cfa-4f41-5546-ae19-0dc9e2260441",
+          "slug": "bravo",
+          "town": "Fictional bravo",
+          "status": "archived",
+          "document": {
+            "meta": {
+              "date": "2026-09-20",
+              "town": "Fictional bravo",
+              "callsheet": {
+                "notes": "Keep all fictional notes"
+              }
+            },
+            "rows": [
+              {
+                "dur": "00:00",
+                "notes": "Original note",
+                "action": "Shoot",
+                "contactName": "Test Person",
+                "subLocations": [
+                  {
+                    "id": "gate",
+                    "loc": "Test gate"
+                  }
+                ]
+              }
+            ],
+            "savedAt": 100
+          },
+          "phase_id": "894846e8-c40e-5ad5-87f9-0b734a0ee6de",
+          "created_at": "2026-09-18T07:22:45.192742+00:00",
+          "created_by": "c3729c0d-af41-49c8-8659-dae697bbc343",
+          "deleted_at": null,
+          "updated_at": "2026-09-18T07:22:45.192742+00:00",
+          "updated_by": "c3729c0d-af41-49c8-8659-dae697bbc343",
+          "display_name": "bravo",
+          "production_id": "c4926761-18da-5cf2-a7c8-edf0d3454785",
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16",
+          "document_version": 1,
+          "library_position": 1,
+          "production_day_id": null,
+          "archived_from_status": "draft",
+          "document_schema_version": 1
+        },
+        {
+          "id": "fc71bc98-3107-5072-9f43-9be58755f141",
+          "slug": "alpha",
+          "town": "Fictional alpha",
+          "status": "draft",
+          "document": {
+            "meta": {
+              "date": "2026-09-20",
+              "town": "Fictional alpha",
+              "callsheet": {
+                "notes": "Keep all fictional notes"
+              }
+            },
+            "rows": [
+              {
+                "dur": "00:00",
+                "notes": "Original note",
+                "action": "Shoot",
+                "contactName": "Test Person",
+                "subLocations": [
+                  {
+                    "id": "gate",
+                    "loc": "Test gate"
+                  }
+                ]
+              }
+            ],
+            "savedAt": 100
+          },
+          "phase_id": "894846e8-c40e-5ad5-87f9-0b734a0ee6de",
+          "created_at": "2026-09-18T07:22:45.192742+00:00",
+          "created_by": "c3729c0d-af41-49c8-8659-dae697bbc343",
+          "deleted_at": null,
+          "updated_at": "2026-09-18T07:22:45.192742+00:00",
+          "updated_by": "c3729c0d-af41-49c8-8659-dae697bbc343",
+          "display_name": "alpha",
+          "production_id": "c4926761-18da-5cf2-a7c8-edf0d3454785",
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16",
+          "document_version": 2,
+          "library_position": 0,
+          "production_day_id": null,
+          "archived_from_status": null,
+          "document_schema_version": 1
+        }
+      ],
+      "public.productions": [
+        {
+          "id": "c4926761-18da-5cf2-a7c8-edf0d3454785",
+          "name": "Fictional production",
+          "slug": "fictional",
+          "locale": "en",
+          "status": "planning",
+          "version": 1,
+          "currency": null,
+          "timezone": "UTC",
+          "created_at": "2026-09-18T07:22:45.192742+00:00",
+          "created_by": "c3729c0d-af41-49c8-8659-dae697bbc343",
+          "deleted_at": null,
+          "updated_at": "2026-09-18T07:22:45.192742+00:00",
+          "updated_by": "c3729c0d-af41-49c8-8659-dae697bbc343",
+          "country_code": null,
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+        }
+      ],
+      "public.audit_events": [],
+      "public.organizations": [
+        {
+          "id": "6b115791-b287-4bce-9d6b-757f3319dd16",
+          "name": "B12 fictional capture",
+          "slug": "b12-fictional-6b115791-b287-4bce-9d6b-757f3319dd16",
+          "created_at": "2026-09-18T07:22:45.132751+00:00",
+          "created_by": null,
+          "deleted_at": null,
+          "updated_at": "2026-09-18T07:22:45.132751+00:00",
+          "updated_by": null,
+          "default_locale": "en",
+          "default_currency": null,
+          "default_timezone": "UTC",
+          "default_country_code": null
+        }
+      ],
+      "public.production_days": [],
+      "public.schedule_versions": [
+        {
+          "id": "0f62144d-f646-45f3-a4bd-e59cf2689e96",
+          "label": null,
+          "version": 2,
+          "checksum": "23701c955f4010fbf7463c88046beca16acc43d60808c8d9ce914e5e5eab1fa4",
+          "document": {
+            "meta": {
+              "date": "2026-09-20",
+              "town": "Fictional alpha",
+              "callsheet": {
+                "notes": "Keep all fictional notes"
+              }
+            },
+            "rows": [
+              {
+                "dur": "00:00",
+                "notes": "Original note",
+                "action": "Shoot",
+                "contactName": "Test Person",
+                "subLocations": [
+                  {
+                    "id": "gate",
+                    "loc": "Test gate"
+                  }
+                ]
+              }
+            ],
+            "savedAt": 100
+          },
+          "metadata": {
+            "slug": "alpha",
+            "town": "Fictional alpha",
+            "status": "draft",
+            "phase_id": "894846e8-c40e-5ad5-87f9-0b734a0ee6de",
+            "deleted_at": null,
+            "display_name": "alpha",
+            "production_id": "c4926761-18da-5cf2-a7c8-edf0d3454785",
+            "library_position": 0,
+            "production_day_id": null,
+            "archived_from_status": null
+          },
+          "created_at": "2026-09-18T07:22:45.192742+00:00",
+          "created_by": "c3729c0d-af41-49c8-8659-dae697bbc343",
+          "schedule_id": "fc71bc98-3107-5072-9f43-9be58755f141",
+          "production_id": "c4926761-18da-5cf2-a7c8-edf0d3454785",
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16",
+          "metadata_checksum": "4ca42417a5d007cf6c31ce44c5c3e1ca0c355b31ad0deb2a66882935b9ba57a5",
+          "document_schema_version": 1
+        },
+        {
+          "id": "1070530a-09cc-4542-a068-e47e25f8a755",
+          "label": null,
+          "version": 1,
+          "checksum": "23701c955f4010fbf7463c88046beca16acc43d60808c8d9ce914e5e5eab1fa4",
+          "document": {
+            "meta": {
+              "date": "2026-09-20",
+              "town": "Fictional alpha",
+              "callsheet": {
+                "notes": "Keep all fictional notes"
+              }
+            },
+            "rows": [
+              {
+                "dur": "00:00",
+                "notes": "Original note",
+                "action": "Shoot",
+                "contactName": "Test Person",
+                "subLocations": [
+                  {
+                    "id": "gate",
+                    "loc": "Test gate"
+                  }
+                ]
+              }
+            ],
+            "savedAt": 100
+          },
+          "metadata": {
+            "slug": "alpha",
+            "town": "Fictional alpha",
+            "status": "draft",
+            "phase_id": "894846e8-c40e-5ad5-87f9-0b734a0ee6de",
+            "deleted_at": null,
+            "display_name": "alpha",
+            "production_id": "c4926761-18da-5cf2-a7c8-edf0d3454785",
+            "library_position": 1,
+            "production_day_id": null,
+            "archived_from_status": null
+          },
+          "created_at": "2026-09-18T07:22:45.192742+00:00",
+          "created_by": "c3729c0d-af41-49c8-8659-dae697bbc343",
+          "schedule_id": "fc71bc98-3107-5072-9f43-9be58755f141",
+          "production_id": "c4926761-18da-5cf2-a7c8-edf0d3454785",
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16",
+          "metadata_checksum": "16b19714689a93eeae502a0c91329f151a95a7a1182e9c0ccb1c1f4ddcfe756c",
+          "document_schema_version": 1
+        },
+        {
+          "id": "aec28fb5-6ecf-4b33-9343-9ae3523ccb24",
+          "label": null,
+          "version": 1,
+          "checksum": "c09f6d7e2e7c8e958c0b2bbe8d2ad320febc811d2aa6fd2678236b47d4e09f42",
+          "document": {
+            "meta": {
+              "date": "2026-09-20",
+              "town": "Fictional bravo",
+              "callsheet": {
+                "notes": "Keep all fictional notes"
+              }
+            },
+            "rows": [
+              {
+                "dur": "00:00",
+                "notes": "Original note",
+                "action": "Shoot",
+                "contactName": "Test Person",
+                "subLocations": [
+                  {
+                    "id": "gate",
+                    "loc": "Test gate"
+                  }
+                ]
+              }
+            ],
+            "savedAt": 100
+          },
+          "metadata": {
+            "slug": "bravo",
+            "town": "Fictional bravo",
+            "status": "archived",
+            "phase_id": "894846e8-c40e-5ad5-87f9-0b734a0ee6de",
+            "deleted_at": null,
+            "display_name": "bravo",
+            "production_id": "c4926761-18da-5cf2-a7c8-edf0d3454785",
+            "library_position": 1,
+            "production_day_id": null,
+            "archived_from_status": "draft"
+          },
+          "created_at": "2026-09-18T07:22:45.192742+00:00",
+          "created_by": "c3729c0d-af41-49c8-8659-dae697bbc343",
+          "schedule_id": "f7086cfa-4f41-5546-ae19-0dc9e2260441",
+          "production_id": "c4926761-18da-5cf2-a7c8-edf0d3454785",
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16",
+          "metadata_checksum": "aa9268a22c70e8bf977749e45ce71013914fc450f5054a48756af24719873a6c",
+          "document_schema_version": 1
+        }
+      ],
+      "private.migration_records": [
+        {
+          "id": "0d7b2d79-bbbc-581f-b8e7-545be3682adf",
+          "payload": {
+            "folders": [
+              {
+                "id": "folder-1",
+                "name": "Fictional folder",
+                "createdAt": 50,
+                "updatedAt": 100
+              }
+            ],
+            "version": 1,
+            "dateCache": {
+              "alpha": "2026-09-20"
+            },
+            "townCache": {
+              "alpha": "Fictional town"
+            },
+            "updatedAt": 100,
+            "phaseOrder": {
+              "production": {
+                "shoot": [
+                  "alpha",
+                  "bravo"
+                ]
+              }
+            },
+            "tsarchived": [
+              "bravo"
+            ],
+            "phaseDisplayNames": {
+              "production": {
+                "shoot": "Shoot"
+              }
+            },
+            "scheduleFolderMap": {
+              "alpha": "folder-1",
+              "bravo": "folder-1"
+            },
+            "productionDisplayNames": {
+              "production": "Fictional production"
+            }
+          },
+          "version": 1,
+          "tombstone": false,
+          "source_key": "rp_library_index_v1",
+          "updated_at": "2026-09-18T07:22:45.192742+00:00",
+          "fingerprint": "05a53d647f7b14cececc62eec0b2c7d03757fbf58ff789956fe52a08529f1965",
+          "source_item": "",
+          "source_store": "schedule-library",
+          "import_run_id": "a65baf78-f7d0-45ab-a965-0c2a82ba96ac",
+          "schedule_refs": {
+            "alpha": "fc71bc98-3107-5072-9f43-9be58755f141",
+            "bravo": "f7086cfa-4f41-5546-ae19-0dc9e2260441"
+          },
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16",
+          "source_revision": 1,
+          "source_environment": "b12-fictional-6b115791-b287-4bce-9d6b-757f3319dd16"
+        },
+        {
+          "id": "2cb87265-eb98-5cb1-94f6-166c6e0366da",
+          "payload": {
+            "name": "alpha",
+            "snapshots": [
+              {
+                "id": "old",
+                "data": {
+                  "meta": {
+                    "date": "2026-09-20",
+                    "town": "Fictional town",
+                    "callsheet": {
+                      "notes": "Keep all fictional notes"
+                    }
+                  },
+                  "rows": [
+                    {
+                      "dur": "00:00",
+                      "action": "Shoot",
+                      "contactName": "Test Person",
+                      "subLocations": [
+                        {
+                          "id": "gate",
+                          "loc": "Test gate"
+                        }
+                      ]
+                    }
+                  ],
+                  "savedAt": 100
+                },
+                "label": "Original",
+                "savedAt": 90
+              },
+              {
+                "id": "keep",
+                "data": {
+                  "meta": {
+                    "date": "2026-09-20",
+                    "town": "Fictional town",
+                    "callsheet": {
+                      "notes": "Keep all fictional notes"
+                    }
+                  },
+                  "rows": [
+                    {
+                      "dur": "00:00",
+                      "action": "Shoot",
+                      "contactName": "Test Person",
+                      "subLocations": [
+                        {
+                          "id": "gate",
+                          "loc": "Test gate"
+                        }
+                      ]
+                    }
+                  ],
+                  "savedAt": 100
+                },
+                "label": "Keep",
+                "savedAt": 95
+              }
+            ],
+            "updatedAt": 100
+          },
+          "version": 1,
+          "tombstone": false,
+          "source_key": "snapshots_8ed3f6ad685b959ead7022518e1af76cd816f8e8ec7ccdda1ed4018e8f2223f8",
+          "updated_at": "2026-09-18T07:22:45.192742+00:00",
+          "fingerprint": "84b939d72ee96d017379a0e929e911d37255a937a01816419f5c7c90c10f6571",
+          "source_item": "",
+          "source_store": "schedule-snapshots",
+          "import_run_id": "a65baf78-f7d0-45ab-a965-0c2a82ba96ac",
+          "schedule_refs": {
+            "alpha": "fc71bc98-3107-5072-9f43-9be58755f141"
+          },
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16",
+          "source_revision": 1,
+          "source_environment": "b12-fictional-6b115791-b287-4bce-9d6b-757f3319dd16"
+        },
+        {
+          "id": "5a37467f-6f25-5bab-ab22-090969256896",
+          "payload": {
+            "id": "keep",
+            "data": {
+              "meta": {
+                "date": "2026-09-20",
+                "town": "Fictional town",
+                "callsheet": {
+                  "notes": "Keep all fictional notes"
+                }
+              },
+              "rows": [
+                {
+                  "dur": "00:00",
+                  "action": "Shoot",
+                  "contactName": "Test Person",
+                  "subLocations": [
+                    {
+                      "id": "gate",
+                      "loc": "Test gate"
+                    }
+                  ]
+                }
+              ],
+              "savedAt": 100
+            },
+            "label": "Keep",
+            "savedAt": 95
+          },
+          "version": 1,
+          "tombstone": false,
+          "source_key": "snapshots_8ed3f6ad685b959ead7022518e1af76cd816f8e8ec7ccdda1ed4018e8f2223f8",
+          "updated_at": "2026-09-18T07:22:45.192742+00:00",
+          "fingerprint": "f9f3d10b0e8a273f2513be2580a6549f4969d3dfe54cb898d7327dd82d5508f5",
+          "source_item": "keep",
+          "source_store": "schedule-snapshots",
+          "import_run_id": "a65baf78-f7d0-45ab-a965-0c2a82ba96ac",
+          "schedule_refs": {
+            "alpha": "fc71bc98-3107-5072-9f43-9be58755f141"
+          },
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16",
+          "source_revision": 1,
+          "source_environment": "b12-fictional-6b115791-b287-4bce-9d6b-757f3319dd16"
+        },
+        {
+          "id": "69d0608d-de56-520a-9161-44b896980181",
+          "payload": {
+            "id": "folder-1",
+            "name": "Fictional folder",
+            "createdAt": 50,
+            "updatedAt": 100
+          },
+          "version": 1,
+          "tombstone": false,
+          "source_key": "rp_library_index_v1",
+          "updated_at": "2026-09-18T07:22:45.192742+00:00",
+          "fingerprint": "af60e1f9301ba8b7cc9779df9c6f49468d7c730f7917fdbddff15679c33d8ea0",
+          "source_item": "folder/folder-1",
+          "source_store": "schedule-library",
+          "import_run_id": "a65baf78-f7d0-45ab-a965-0c2a82ba96ac",
+          "schedule_refs": {
+            "alpha": "fc71bc98-3107-5072-9f43-9be58755f141",
+            "bravo": "f7086cfa-4f41-5546-ae19-0dc9e2260441"
+          },
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16",
+          "source_revision": 1,
+          "source_environment": "b12-fictional-6b115791-b287-4bce-9d6b-757f3319dd16"
+        },
+        {
+          "id": "74cf3007-1b34-53b7-baa7-021a911cc0d7",
+          "payload": {
+            "rows": [
+              {
+                "dur": "00:00",
+                "action": "Shoot",
+                "contactName": "Test Person",
+                "subLocations": [
+                  {
+                    "id": "gate",
+                    "loc": "Test gate"
+                  }
+                ]
+              }
+            ],
+            "savedAt": 100
+          },
+          "version": 1,
+          "tombstone": false,
+          "source_key": "templates",
+          "updated_at": "2026-09-18T07:22:45.192742+00:00",
+          "fingerprint": "cbca8105d3c43a425ee221a9d3a1a1dc1d28f2a9a384d2095f9864e7e30ca688",
+          "source_item": "Call template",
+          "source_store": "schedule-templates",
+          "import_run_id": "a65baf78-f7d0-45ab-a965-0c2a82ba96ac",
+          "schedule_refs": {},
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16",
+          "source_revision": 1,
+          "source_environment": "b12-fictional-6b115791-b287-4bce-9d6b-757f3319dd16"
+        },
+        {
+          "id": "d069223e-c5c6-5fea-abf9-1775a162238e",
+          "payload": {
+            "rows": [],
+            "savedAt": 100
+          },
+          "version": 1,
+          "tombstone": false,
+          "source_key": "templates",
+          "updated_at": "2026-09-18T07:22:45.192742+00:00",
+          "fingerprint": "698f0d16f1776bfefe43f6b3edfb0cc4db748da8d37fb476050ac75299a06f57",
+          "source_item": "Other template",
+          "source_store": "schedule-templates",
+          "import_run_id": "a65baf78-f7d0-45ab-a965-0c2a82ba96ac",
+          "schedule_refs": {},
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16",
+          "source_revision": 1,
+          "source_environment": "b12-fictional-6b115791-b287-4bce-9d6b-757f3319dd16"
+        },
+        {
+          "id": "d8580932-d44c-5c16-aa68-09dbd80981b6",
+          "payload": {
+            "Call template": {
+              "rows": [
+                {
+                  "dur": "00:00",
+                  "action": "Shoot",
+                  "contactName": "Test Person",
+                  "subLocations": [
+                    {
+                      "id": "gate",
+                      "loc": "Test gate"
+                    }
+                  ]
+                }
+              ],
+              "savedAt": 100
+            },
+            "Other template": {
+              "rows": [],
+              "savedAt": 100
+            }
+          },
+          "version": 1,
+          "tombstone": false,
+          "source_key": "templates",
+          "updated_at": "2026-09-18T07:22:45.192742+00:00",
+          "fingerprint": "11df0ca73474d9e9f708fe212f16385d5a2ac54cb4758088da9b51ddc6ea9a3f",
+          "source_item": "",
+          "source_store": "schedule-templates",
+          "import_run_id": "a65baf78-f7d0-45ab-a965-0c2a82ba96ac",
+          "schedule_refs": {},
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16",
+          "source_revision": 1,
+          "source_environment": "b12-fictional-6b115791-b287-4bce-9d6b-757f3319dd16"
+        },
+        {
+          "id": "daec3f1d-0a4b-5545-8be3-61c03c7ee4d2",
+          "payload": {
+            "id": "old",
+            "data": {
+              "meta": {
+                "date": "2026-09-20",
+                "town": "Fictional town",
+                "callsheet": {
+                  "notes": "Keep all fictional notes"
+                }
+              },
+              "rows": [
+                {
+                  "dur": "00:00",
+                  "action": "Shoot",
+                  "contactName": "Test Person",
+                  "subLocations": [
+                    {
+                      "id": "gate",
+                      "loc": "Test gate"
+                    }
+                  ]
+                }
+              ],
+              "savedAt": 100
+            },
+            "label": "Original",
+            "savedAt": 90
+          },
+          "version": 1,
+          "tombstone": false,
+          "source_key": "snapshots_8ed3f6ad685b959ead7022518e1af76cd816f8e8ec7ccdda1ed4018e8f2223f8",
+          "updated_at": "2026-09-18T07:22:45.192742+00:00",
+          "fingerprint": "0dab4c93d8cbd840d3eb9e3deccd5ccebbffb0839684e77f70ce11bcf5a8f515",
+          "source_item": "old",
+          "source_store": "schedule-snapshots",
+          "import_run_id": "a65baf78-f7d0-45ab-a965-0c2a82ba96ac",
+          "schedule_refs": {
+            "alpha": "fc71bc98-3107-5072-9f43-9be58755f141"
+          },
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16",
+          "source_revision": 1,
+          "source_environment": "b12-fictional-6b115791-b287-4bce-9d6b-757f3319dd16"
+        },
+        {
+          "id": "f35f7314-886a-5bcd-bb46-2577b6378dc9",
+          "payload": {
+            "colors": {
+              "--pink": "#334455"
+            },
+            "labels": {
+              "hdrTitle": "Fictional title"
+            },
+            "actions": [
+              {
+                "name": "Shoot",
+                "color": "aShoot"
+              }
+            ],
+            "actionStyles": {
+              "aShoot": {
+                "bg": "#ffffff",
+                "text": "#000000"
+              }
+            }
+          },
+          "version": 1,
+          "tombstone": false,
+          "source_key": "rp_cms_config",
+          "updated_at": "2026-09-18T07:22:45.192742+00:00",
+          "fingerprint": "65cf3737336012c324155fa92d5e3dab1c98cb84f1dadcf6e0770258fe0bc08d",
+          "source_item": "",
+          "source_store": "cms",
+          "import_run_id": "a65baf78-f7d0-45ab-a965-0c2a82ba96ac",
+          "schedule_refs": {},
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16",
+          "source_revision": 1,
+          "source_environment": "b12-fictional-6b115791-b287-4bce-9d6b-757f3319dd16"
+        }
+      ],
+      "private.schedule_snapshots": [
+        {
+          "id": "5a37467f-6f25-5bab-ab22-090969256896",
+          "kind": "imported",
+          "name": "Keep",
+          "version": 1,
+          "document": {
+            "meta": {
+              "date": "2026-09-20",
+              "town": "Fictional town",
+              "callsheet": {
+                "notes": "Keep all fictional notes"
+              }
+            },
+            "rows": [
+              {
+                "dur": "00:00",
+                "action": "Shoot",
+                "contactName": "Test Person",
+                "subLocations": [
+                  {
+                    "id": "gate",
+                    "loc": "Test gate"
+                  }
+                ]
+              }
+            ],
+            "savedAt": 100
+          },
+          "created_by": null,
+          "deleted_at": null,
+          "updated_at": "2026-09-18T07:22:45.211747+00:00",
+          "updated_by": null,
+          "captured_at": "1970-01-01T00:00:00.095+00:00",
+          "original_id": "keep",
+          "schedule_id": "fc71bc98-3107-5072-9f43-9be58755f141",
+          "original_order": 2,
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16",
+          "original_payload": {
+            "id": "keep",
+            "data": {
+              "meta": {
+                "date": "2026-09-20",
+                "town": "Fictional town",
+                "callsheet": {
+                  "notes": "Keep all fictional notes"
+                }
+              },
+              "rows": [
+                {
+                  "dur": "00:00",
+                  "action": "Shoot",
+                  "contactName": "Test Person",
+                  "subLocations": [
+                    {
+                      "id": "gate",
+                      "loc": "Test gate"
+                    }
+                  ]
+                }
+              ],
+              "savedAt": 100
+            },
+            "label": "Keep",
+            "savedAt": 95
+          },
+          "template_bindings": []
+        },
+        {
+          "id": "daec3f1d-0a4b-5545-8be3-61c03c7ee4d2",
+          "kind": "imported",
+          "name": "Original",
+          "version": 1,
+          "document": {
+            "meta": {
+              "date": "2026-09-20",
+              "town": "Fictional town",
+              "callsheet": {
+                "notes": "Keep all fictional notes"
+              }
+            },
+            "rows": [
+              {
+                "dur": "00:00",
+                "action": "Shoot",
+                "contactName": "Test Person",
+                "subLocations": [
+                  {
+                    "id": "gate",
+                    "loc": "Test gate"
+                  }
+                ]
+              }
+            ],
+            "savedAt": 100
+          },
+          "created_by": null,
+          "deleted_at": null,
+          "updated_at": "2026-09-18T07:22:45.211159+00:00",
+          "updated_by": null,
+          "captured_at": "1970-01-01T00:00:00.09+00:00",
+          "original_id": "old",
+          "schedule_id": "fc71bc98-3107-5072-9f43-9be58755f141",
+          "original_order": 1,
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16",
+          "original_payload": {
+            "id": "old",
+            "data": {
+              "meta": {
+                "date": "2026-09-20",
+                "town": "Fictional town",
+                "callsheet": {
+                  "notes": "Keep all fictional notes"
+                }
+              },
+              "rows": [
+                {
+                  "dur": "00:00",
+                  "action": "Shoot",
+                  "contactName": "Test Person",
+                  "subLocations": [
+                    {
+                      "id": "gate",
+                      "loc": "Test gate"
+                    }
+                  ]
+                }
+              ],
+              "savedAt": 100
+            },
+            "label": "Original",
+            "savedAt": 90
+          },
+          "template_bindings": []
+        }
+      ],
+      "private.schedule_templates": [
+        {
+          "id": "0439e72f-cf61-5b1b-806b-45a7d21fe1ed",
+          "name": "Call template",
+          "rows": [
+            {
+              "dur": "00:00",
+              "action": "Shoot",
+              "contactName": "Test Person",
+              "subLocations": [
+                {
+                  "id": "gate",
+                  "loc": "Test gate"
+                }
+              ]
+            }
+          ],
+          "version": 1,
+          "created_at": "2026-09-18T07:22:45.192742+00:00",
+          "created_by": "c3729c0d-af41-49c8-8659-dae697bbc343",
+          "deleted_at": null,
+          "updated_at": "2026-09-18T07:22:45.192742+00:00",
+          "updated_by": "c3729c0d-af41-49c8-8659-dae697bbc343",
+          "published_at": null,
+          "published_by": null,
+          "production_id": "c4926761-18da-5cf2-a7c8-edf0d3454785",
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+        },
+        {
+          "id": "662006b7-875e-52a5-9194-bc7e7f894509",
+          "name": "Reviewed private call",
+          "rows": [
+            {
+              "notes": "Private template",
+              "action": "Shoot"
+            }
+          ],
+          "version": 1,
+          "created_at": "2026-09-18T07:22:45.192742+00:00",
+          "created_by": "c3729c0d-af41-49c8-8659-dae697bbc343",
+          "deleted_at": null,
+          "updated_at": "2026-09-18T07:22:45.192742+00:00",
+          "updated_by": "c3729c0d-af41-49c8-8659-dae697bbc343",
+          "published_at": null,
+          "published_by": null,
+          "production_id": "c4926761-18da-5cf2-a7c8-edf0d3454785",
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+        },
+        {
+          "id": "e7da2cfe-e507-5b82-a58a-14d0fe67c1e8",
+          "name": "Other template",
+          "rows": [],
+          "version": 1,
+          "created_at": "2026-09-18T07:22:45.192742+00:00",
+          "created_by": "c3729c0d-af41-49c8-8659-dae697bbc343",
+          "deleted_at": null,
+          "updated_at": "2026-09-18T07:22:45.192742+00:00",
+          "updated_by": "c3729c0d-af41-49c8-8659-dae697bbc343",
+          "published_at": null,
+          "published_by": null,
+          "production_id": "c4926761-18da-5cf2-a7c8-edf0d3454785",
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+        }
+      ],
+      "private.schedule_transfers": [],
+      "public.schedule_restrictions": [],
+      "private.schedule_client_links": [],
+      "public.production_memberships": [],
+      "private.organization_lifecycle": [],
+      "private.organization_mfa_policy": [],
+      "private.schedule_client_aliases": [
+        {
+          "id": "9b4782f1-000f-58c3-a672-7d33dd499e98",
+          "created_at": "2026-09-18T07:22:45.214293+00:00",
+          "creator_id": "c3729c0d-af41-49c8-8659-dae697bbc343",
+          "revoked_at": null,
+          "revoked_by": null,
+          "legacy_name": "b12-fictional-6b115791-b287-4bce-9d6b-757f3319dd16 old alpha",
+          "schedule_id": "fc71bc98-3107-5072-9f43-9be58755f141",
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+        },
+        {
+          "id": "fd8e9426-8c84-52a6-ae85-637f5a085b6e",
+          "created_at": "2026-09-18T07:22:45.214915+00:00",
+          "creator_id": "c3729c0d-af41-49c8-8659-dae697bbc343",
+          "revoked_at": null,
+          "revoked_by": null,
+          "legacy_name": "b12-fictional-6b115791-b287-4bce-9d6b-757f3319dd16 bravo",
+          "schedule_id": "f7086cfa-4f41-5546-ae19-0dc9e2260441",
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+        }
+      ],
+      "public.organization_invitations": [],
+      "public.organization_memberships": [
+        {
+          "id": "1ef274fb-9d2c-4ee7-88cd-b182f44a49fe",
+          "role": "owner",
+          "status": "active",
+          "user_id": "c3729c0d-af41-49c8-8659-dae697bbc343",
+          "revision": 1,
+          "joined_at": "2026-09-18T07:22:45.132751+00:00",
+          "created_at": "2026-09-18T07:22:45.132751+00:00",
+          "invited_by": null,
+          "updated_at": "2026-09-18T07:22:45.132751+00:00",
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+        }
+      ],
+      "private.schedule_snapshot_policy": [],
+      "private.migration_record_versions": [
+        {
+          "version": 1,
+          "snapshot": {
+            "id": "0d7b2d79-bbbc-581f-b8e7-545be3682adf",
+            "key": "rp_library_index_v1",
+            "item": "",
+            "refs": {
+              "alpha": "fc71bc98-3107-5072-9f43-9be58755f141",
+              "bravo": "f7086cfa-4f41-5546-ae19-0dc9e2260441"
+            },
+            "store": "schedule-library",
+            "payload": {
+              "folders": [
+                {
+                  "id": "folder-1",
+                  "name": "Fictional folder",
+                  "createdAt": 50,
+                  "updatedAt": 100
+                }
+              ],
+              "version": 1,
+              "dateCache": {
+                "alpha": "2026-09-20"
+              },
+              "townCache": {
+                "alpha": "Fictional town"
+              },
+              "updatedAt": 100,
+              "phaseOrder": {
+                "production": {
+                  "shoot": [
+                    "alpha",
+                    "bravo"
+                  ]
+                }
+              },
+              "tsarchived": [
+                "bravo"
+              ],
+              "phaseDisplayNames": {
+                "production": {
+                  "shoot": "Shoot"
+                }
+              },
+              "scheduleFolderMap": {
+                "alpha": "folder-1",
+                "bravo": "folder-1"
+              },
+              "productionDisplayNames": {
+                "production": "Fictional production"
+              }
+            },
+            "version": 1,
+            "revision": 1,
+            "tombstone": false,
+            "environment": "b12-fictional-6b115791-b287-4bce-9d6b-757f3319dd16",
+            "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+          },
+          "record_id": "0d7b2d79-bbbc-581f-b8e7-545be3682adf",
+          "fingerprint": "05a53d647f7b14cececc62eec0b2c7d03757fbf58ff789956fe52a08529f1965",
+          "imported_at": "2026-09-18T07:22:45.192742+00:00",
+          "import_run_id": "a65baf78-f7d0-45ab-a965-0c2a82ba96ac",
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+        },
+        {
+          "version": 1,
+          "snapshot": {
+            "id": "2cb87265-eb98-5cb1-94f6-166c6e0366da",
+            "key": "snapshots_8ed3f6ad685b959ead7022518e1af76cd816f8e8ec7ccdda1ed4018e8f2223f8",
+            "item": "",
+            "refs": {
+              "alpha": "fc71bc98-3107-5072-9f43-9be58755f141"
+            },
+            "store": "schedule-snapshots",
+            "payload": {
+              "name": "alpha",
+              "snapshots": [
+                {
+                  "id": "old",
+                  "data": {
+                    "meta": {
+                      "date": "2026-09-20",
+                      "town": "Fictional town",
+                      "callsheet": {
+                        "notes": "Keep all fictional notes"
+                      }
+                    },
+                    "rows": [
+                      {
+                        "dur": "00:00",
+                        "action": "Shoot",
+                        "contactName": "Test Person",
+                        "subLocations": [
+                          {
+                            "id": "gate",
+                            "loc": "Test gate"
+                          }
+                        ]
+                      }
+                    ],
+                    "savedAt": 100
+                  },
+                  "label": "Original",
+                  "savedAt": 90
+                },
+                {
+                  "id": "keep",
+                  "data": {
+                    "meta": {
+                      "date": "2026-09-20",
+                      "town": "Fictional town",
+                      "callsheet": {
+                        "notes": "Keep all fictional notes"
+                      }
+                    },
+                    "rows": [
+                      {
+                        "dur": "00:00",
+                        "action": "Shoot",
+                        "contactName": "Test Person",
+                        "subLocations": [
+                          {
+                            "id": "gate",
+                            "loc": "Test gate"
+                          }
+                        ]
+                      }
+                    ],
+                    "savedAt": 100
+                  },
+                  "label": "Keep",
+                  "savedAt": 95
+                }
+              ],
+              "updatedAt": 100
+            },
+            "version": 1,
+            "revision": 1,
+            "tombstone": false,
+            "environment": "b12-fictional-6b115791-b287-4bce-9d6b-757f3319dd16",
+            "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+          },
+          "record_id": "2cb87265-eb98-5cb1-94f6-166c6e0366da",
+          "fingerprint": "84b939d72ee96d017379a0e929e911d37255a937a01816419f5c7c90c10f6571",
+          "imported_at": "2026-09-18T07:22:45.192742+00:00",
+          "import_run_id": "a65baf78-f7d0-45ab-a965-0c2a82ba96ac",
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+        },
+        {
+          "version": 1,
+          "snapshot": {
+            "id": "5a37467f-6f25-5bab-ab22-090969256896",
+            "key": "snapshots_8ed3f6ad685b959ead7022518e1af76cd816f8e8ec7ccdda1ed4018e8f2223f8",
+            "item": "keep",
+            "refs": {
+              "alpha": "fc71bc98-3107-5072-9f43-9be58755f141"
+            },
+            "store": "schedule-snapshots",
+            "payload": {
+              "id": "keep",
+              "data": {
+                "meta": {
+                  "date": "2026-09-20",
+                  "town": "Fictional town",
+                  "callsheet": {
+                    "notes": "Keep all fictional notes"
+                  }
+                },
+                "rows": [
+                  {
+                    "dur": "00:00",
+                    "action": "Shoot",
+                    "contactName": "Test Person",
+                    "subLocations": [
+                      {
+                        "id": "gate",
+                        "loc": "Test gate"
+                      }
+                    ]
+                  }
+                ],
+                "savedAt": 100
+              },
+              "label": "Keep",
+              "savedAt": 95
+            },
+            "version": 1,
+            "revision": 1,
+            "tombstone": false,
+            "environment": "b12-fictional-6b115791-b287-4bce-9d6b-757f3319dd16",
+            "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+          },
+          "record_id": "5a37467f-6f25-5bab-ab22-090969256896",
+          "fingerprint": "f9f3d10b0e8a273f2513be2580a6549f4969d3dfe54cb898d7327dd82d5508f5",
+          "imported_at": "2026-09-18T07:22:45.192742+00:00",
+          "import_run_id": "a65baf78-f7d0-45ab-a965-0c2a82ba96ac",
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+        },
+        {
+          "version": 1,
+          "snapshot": {
+            "id": "69d0608d-de56-520a-9161-44b896980181",
+            "key": "rp_library_index_v1",
+            "item": "folder/folder-1",
+            "refs": {
+              "alpha": "fc71bc98-3107-5072-9f43-9be58755f141",
+              "bravo": "f7086cfa-4f41-5546-ae19-0dc9e2260441"
+            },
+            "store": "schedule-library",
+            "payload": {
+              "id": "folder-1",
+              "name": "Fictional folder",
+              "createdAt": 50,
+              "updatedAt": 100
+            },
+            "version": 1,
+            "revision": 1,
+            "tombstone": false,
+            "environment": "b12-fictional-6b115791-b287-4bce-9d6b-757f3319dd16",
+            "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+          },
+          "record_id": "69d0608d-de56-520a-9161-44b896980181",
+          "fingerprint": "af60e1f9301ba8b7cc9779df9c6f49468d7c730f7917fdbddff15679c33d8ea0",
+          "imported_at": "2026-09-18T07:22:45.192742+00:00",
+          "import_run_id": "a65baf78-f7d0-45ab-a965-0c2a82ba96ac",
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+        },
+        {
+          "version": 1,
+          "snapshot": {
+            "id": "74cf3007-1b34-53b7-baa7-021a911cc0d7",
+            "key": "templates",
+            "item": "Call template",
+            "refs": {},
+            "store": "schedule-templates",
+            "payload": {
+              "rows": [
+                {
+                  "dur": "00:00",
+                  "action": "Shoot",
+                  "contactName": "Test Person",
+                  "subLocations": [
+                    {
+                      "id": "gate",
+                      "loc": "Test gate"
+                    }
+                  ]
+                }
+              ],
+              "savedAt": 100
+            },
+            "version": 1,
+            "revision": 1,
+            "tombstone": false,
+            "environment": "b12-fictional-6b115791-b287-4bce-9d6b-757f3319dd16",
+            "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+          },
+          "record_id": "74cf3007-1b34-53b7-baa7-021a911cc0d7",
+          "fingerprint": "cbca8105d3c43a425ee221a9d3a1a1dc1d28f2a9a384d2095f9864e7e30ca688",
+          "imported_at": "2026-09-18T07:22:45.192742+00:00",
+          "import_run_id": "a65baf78-f7d0-45ab-a965-0c2a82ba96ac",
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+        },
+        {
+          "version": 1,
+          "snapshot": {
+            "id": "d069223e-c5c6-5fea-abf9-1775a162238e",
+            "key": "templates",
+            "item": "Other template",
+            "refs": {},
+            "store": "schedule-templates",
+            "payload": {
+              "rows": [],
+              "savedAt": 100
+            },
+            "version": 1,
+            "revision": 1,
+            "tombstone": false,
+            "environment": "b12-fictional-6b115791-b287-4bce-9d6b-757f3319dd16",
+            "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+          },
+          "record_id": "d069223e-c5c6-5fea-abf9-1775a162238e",
+          "fingerprint": "698f0d16f1776bfefe43f6b3edfb0cc4db748da8d37fb476050ac75299a06f57",
+          "imported_at": "2026-09-18T07:22:45.192742+00:00",
+          "import_run_id": "a65baf78-f7d0-45ab-a965-0c2a82ba96ac",
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+        },
+        {
+          "version": 1,
+          "snapshot": {
+            "id": "d8580932-d44c-5c16-aa68-09dbd80981b6",
+            "key": "templates",
+            "item": "",
+            "refs": {},
+            "store": "schedule-templates",
+            "payload": {
+              "Call template": {
+                "rows": [
+                  {
+                    "dur": "00:00",
+                    "action": "Shoot",
+                    "contactName": "Test Person",
+                    "subLocations": [
+                      {
+                        "id": "gate",
+                        "loc": "Test gate"
+                      }
+                    ]
+                  }
+                ],
+                "savedAt": 100
+              },
+              "Other template": {
+                "rows": [],
+                "savedAt": 100
+              }
+            },
+            "version": 1,
+            "revision": 1,
+            "tombstone": false,
+            "environment": "b12-fictional-6b115791-b287-4bce-9d6b-757f3319dd16",
+            "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+          },
+          "record_id": "d8580932-d44c-5c16-aa68-09dbd80981b6",
+          "fingerprint": "11df0ca73474d9e9f708fe212f16385d5a2ac54cb4758088da9b51ddc6ea9a3f",
+          "imported_at": "2026-09-18T07:22:45.192742+00:00",
+          "import_run_id": "a65baf78-f7d0-45ab-a965-0c2a82ba96ac",
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+        },
+        {
+          "version": 1,
+          "snapshot": {
+            "id": "daec3f1d-0a4b-5545-8be3-61c03c7ee4d2",
+            "key": "snapshots_8ed3f6ad685b959ead7022518e1af76cd816f8e8ec7ccdda1ed4018e8f2223f8",
+            "item": "old",
+            "refs": {
+              "alpha": "fc71bc98-3107-5072-9f43-9be58755f141"
+            },
+            "store": "schedule-snapshots",
+            "payload": {
+              "id": "old",
+              "data": {
+                "meta": {
+                  "date": "2026-09-20",
+                  "town": "Fictional town",
+                  "callsheet": {
+                    "notes": "Keep all fictional notes"
+                  }
+                },
+                "rows": [
+                  {
+                    "dur": "00:00",
+                    "action": "Shoot",
+                    "contactName": "Test Person",
+                    "subLocations": [
+                      {
+                        "id": "gate",
+                        "loc": "Test gate"
+                      }
+                    ]
+                  }
+                ],
+                "savedAt": 100
+              },
+              "label": "Original",
+              "savedAt": 90
+            },
+            "version": 1,
+            "revision": 1,
+            "tombstone": false,
+            "environment": "b12-fictional-6b115791-b287-4bce-9d6b-757f3319dd16",
+            "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+          },
+          "record_id": "daec3f1d-0a4b-5545-8be3-61c03c7ee4d2",
+          "fingerprint": "0dab4c93d8cbd840d3eb9e3deccd5ccebbffb0839684e77f70ce11bcf5a8f515",
+          "imported_at": "2026-09-18T07:22:45.192742+00:00",
+          "import_run_id": "a65baf78-f7d0-45ab-a965-0c2a82ba96ac",
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+        },
+        {
+          "version": 1,
+          "snapshot": {
+            "id": "f35f7314-886a-5bcd-bb46-2577b6378dc9",
+            "key": "rp_cms_config",
+            "item": "",
+            "refs": {},
+            "store": "cms",
+            "payload": {
+              "colors": {
+                "--pink": "#334455"
+              },
+              "labels": {
+                "hdrTitle": "Fictional title"
+              },
+              "actions": [
+                {
+                  "name": "Shoot",
+                  "color": "aShoot"
+                }
+              ],
+              "actionStyles": {
+                "aShoot": {
+                  "bg": "#ffffff",
+                  "text": "#000000"
+                }
+              }
+            },
+            "version": 1,
+            "revision": 1,
+            "tombstone": false,
+            "environment": "b12-fictional-6b115791-b287-4bce-9d6b-757f3319dd16",
+            "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+          },
+          "record_id": "f35f7314-886a-5bcd-bb46-2577b6378dc9",
+          "fingerprint": "65cf3737336012c324155fa92d5e3dab1c98cb84f1dadcf6e0770258fe0bc08d",
+          "imported_at": "2026-09-18T07:22:45.192742+00:00",
+          "import_run_id": "a65baf78-f7d0-45ab-a965-0c2a82ba96ac",
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+        }
+      ],
+      "private.organization_presentation": [
+        {
+          "config": {
+            "colors": {
+              "--pink": "#334455"
+            },
+            "labels": {
+              "hdrTitle": "Fictional title"
+            },
+            "actions": [
+              {
+                "name": "Shoot",
+                "color": "aShoot"
+              }
+            ],
+            "actionStyles": {
+              "aShoot": {
+                "bg": "#ffffff",
+                "text": "#000000"
+              }
+            }
+          },
+          "version": 1,
+          "updated_at": "2026-09-18T07:22:45.192742+00:00",
+          "updated_by": "c3729c0d-af41-49c8-8659-dae697bbc343",
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+        }
+      ],
+      "private.schedule_snapshot_imports": [
+        {
+          "fingerprint": "f9f3d10b0e8a273f2513be2580a6549f4969d3dfe54cb898d7327dd82d5508f5",
+          "snapshot_id": "5a37467f-6f25-5bab-ab22-090969256896",
+          "source_record_id": "5a37467f-6f25-5bab-ab22-090969256896"
+        },
+        {
+          "fingerprint": "0dab4c93d8cbd840d3eb9e3deccd5ccebbffb0839684e77f70ce11bcf5a8f515",
+          "snapshot_id": "daec3f1d-0a4b-5545-8be3-61c03c7ee4d2",
+          "source_record_id": "daec3f1d-0a4b-5545-8be3-61c03c7ee4d2"
+        }
+      ],
+      "private.schedule_template_sources": [
+        {
+          "schedule_id": "fc71bc98-3107-5072-9f43-9be58755f141",
+          "template_id": "0439e72f-cf61-5b1b-806b-45a7d21fe1ed",
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+        },
+        {
+          "schedule_id": "fc71bc98-3107-5072-9f43-9be58755f141",
+          "template_id": "e7da2cfe-e507-5b82-a58a-14d0fe67c1e8",
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+        }
+      ],
+      "private.membership_status_receipts": [],
+      "private.schedule_snapshot_receipts": [],
+      "private.schedule_template_bindings": [],
+      "private.organization_lifecycle_receipts": [],
+      "private.schedule_snapshot_copy_receipts": [],
+      "private.schedule_template_save_receipts": [],
+      "private.organization_mfa_policy_receipts": [],
+      "private.schedule_snapshot_policy_receipts": [],
+      "private.schedule_template_browser_origins": [
+        {
+          "actor_id": "c3729c0d-af41-49c8-8659-dae697bbc343",
+          "created_at": "2026-09-18T07:22:45.192742+00:00",
+          "source_name": "Private call",
+          "template_id": "662006b7-875e-52a5-9194-bc7e7f894509",
+          "source_saved_at": 100,
+          "source_fingerprint": "ede2d5906c9f9632cc2c66a9ed25eb42cedcf29e6c61e1593734bc69d0e35aff"
+        }
+      ],
+      "private.administration_notification_outbox": [],
+      "private.organization_presentation_receipts": []
+    },
+    "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16",
+    "source_environment": "b12-fictional-6b115791-b287-4bce-9d6b-757f3319dd16"
+  },
+  {
+    "id": "edbee897-569f-4c92-ac6b-286df7234f06",
+    "capture": {
+      "format": "roseland.complete-capture.v1",
+      "sha256": "85b9966f6dccf85e46795a75ca468f4a74cea4b72f501a1d0704192636d4726f",
+      "entries": [
+        {
+          "key": "snapshots_8ed3f6ad685b959ead7022518e1af76cd816f8e8ec7ccdda1ed4018e8f2223f8",
+          "file": "0.json",
+          "bytes": "ewogICJuYW1lIjogImFscGhhIiwKICAidXBkYXRlZEF0IjogMjAwLAogICJzbmFwc2hvdHMiOiBbCiAgICB7CiAgICAgICJpZCI6ICJrZWVwIiwKICAgICAgInNhdmVkQXQiOiA5NSwKICAgICAgImxhYmVsIjogIktlZXAiLAogICAgICAiZGF0YSI6IHsKICAgICAgICAibWV0YSI6IHsKICAgICAgICAgICJ0b3duIjogIkZpY3Rpb25hbCB0b3duIiwKICAgICAgICAgICJkYXRlIjogIjIwMjYtMDktMjAiLAogICAgICAgICAgImNhbGxzaGVldCI6IHsKICAgICAgICAgICAgIm5vdGVzIjogIktlZXAgYWxsIGZpY3Rpb25hbCBub3RlcyIKICAgICAgICAgIH0KICAgICAgICB9LAogICAgICAgICJyb3dzIjogWwogICAgICAgICAgewogICAgICAgICAgICAiYWN0aW9uIjogIlNob290IiwKICAgICAgICAgICAgImR1ciI6ICIwMDowMCIsCiAgICAgICAgICAgICJjb250YWN0TmFtZSI6ICJUZXN0IFBlcnNvbiIsCiAgICAgICAgICAgICJzdWJMb2NhdGlvbnMiOiBbCiAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgImlkIjogImdhdGUiLAogICAgICAgICAgICAgICAgImxvYyI6ICJUZXN0IGdhdGUiCiAgICAgICAgICAgICAgfQogICAgICAgICAgICBdCiAgICAgICAgICB9CiAgICAgICAgXSwKICAgICAgICAic2F2ZWRBdCI6IDEwMAogICAgICB9CiAgICB9LAogICAgewogICAgICAiaWQiOiAibmV3IiwKICAgICAgInNhdmVkQXQiOiAyMDAsCiAgICAgICJsYWJlbCI6ICJOZXcgc25hcHNob3QiLAogICAgICAiZGF0YSI6IHsKICAgICAgICAibWV0YSI6IHsKICAgICAgICAgICJ0b3duIjogIkZpY3Rpb25hbCB0b3duIiwKICAgICAgICAgICJkYXRlIjogIjIwMjYtMDktMjAiLAogICAgICAgICAgImNhbGxzaGVldCI6IHsKICAgICAgICAgICAgIm5vdGVzIjogIktlZXAgYWxsIGZpY3Rpb25hbCBub3RlcyIKICAgICAgICAgIH0KICAgICAgICB9LAogICAgICAgICJyb3dzIjogWwogICAgICAgICAgewogICAgICAgICAgICAiYWN0aW9uIjogIlNob290IiwKICAgICAgICAgICAgImR1ciI6ICIwMDowMCIsCiAgICAgICAgICAgICJjb250YWN0TmFtZSI6ICJUZXN0IFBlcnNvbiIsCiAgICAgICAgICAgICJzdWJMb2NhdGlvbnMiOiBbCiAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgImlkIjogImdhdGUiLAogICAgICAgICAgICAgICAgImxvYyI6ICJUZXN0IGdhdGUiCiAgICAgICAgICAgICAgfQogICAgICAgICAgICBdCiAgICAgICAgICB9CiAgICAgICAgXSwKICAgICAgICAic2F2ZWRBdCI6IDEwMAogICAgICB9CiAgICB9CiAgXQp9Cg==",
+          "store": "schedule-snapshots",
+          "sha256": "55595dd0de48dec637b644ad604a82bb30d7123091391e1a760b784c3cca78fc",
+          "revision": 2
+        },
+        {
+          "key": "templates",
+          "file": "1.json",
+          "bytes": "ewogICJDYWxsIHRlbXBsYXRlIjogewogICAgInJvd3MiOiBbCiAgICAgIHsKICAgICAgICAiYWN0aW9uIjogIlNob290IiwKICAgICAgICAiZHVyIjogIjAwOjAwIiwKICAgICAgICAiY29udGFjdE5hbWUiOiAiVXBkYXRlZCBUZXN0IFBlcnNvbiIsCiAgICAgICAgInN1YkxvY2F0aW9ucyI6IFsKICAgICAgICAgIHsKICAgICAgICAgICAgImlkIjogImdhdGUiLAogICAgICAgICAgICAibG9jIjogIlRlc3QgZ2F0ZSIKICAgICAgICAgIH0KICAgICAgICBdCiAgICAgIH0KICAgIF0sCiAgICAic2F2ZWRBdCI6IDEwMAogIH0sCiAgIk90aGVyIHRlbXBsYXRlIjogewogICAgInJvd3MiOiBbXSwKICAgICJzYXZlZEF0IjogMTAwCiAgfSwKICAiTmV3IHRlbXBsYXRlIjogewogICAgInJvd3MiOiBbXSwKICAgICJzYXZlZEF0IjogMjAwCiAgfQp9Cg==",
+          "store": "schedule-templates",
+          "sha256": "fc536a06302529dfaf72885260bc45c8c29768196af1303568c4b37ea256a07f",
+          "revision": 2
+        },
+        {
+          "key": "rp_library_index_v1",
+          "file": "2.json",
+          "bytes": "ewogICJ2ZXJzaW9uIjogMSwKICAidXBkYXRlZEF0IjogMjAwLAogICJmb2xkZXJzIjogWwogICAgewogICAgICAiaWQiOiAiZm9sZGVyLTEiLAogICAgICAibmFtZSI6ICJSZW5hbWVkIGZvbGRlciIsCiAgICAgICJjcmVhdGVkQXQiOiA1MCwKICAgICAgInVwZGF0ZWRBdCI6IDIwMAogICAgfQogIF0sCiAgInNjaGVkdWxlRm9sZGVyTWFwIjogewogICAgImFscGhhLW5ldyI6ICJmb2xkZXItMSIsCiAgICAiYnJhdm8iOiAiZm9sZGVyLTEiLAogICAgImNoYXJsaWUiOiAiZm9sZGVyLTEiCiAgfSwKICAicGhhc2VPcmRlciI6IHsKICAgICJwcm9kdWN0aW9uIjogewogICAgICAic2hvb3QiOiBbCiAgICAgICAgImJyYXZvIiwKICAgICAgICAiYWxwaGEtbmV3IiwKICAgICAgICAiY2hhcmxpZSIKICAgICAgXQogICAgfQogIH0sCiAgInByb2R1Y3Rpb25EaXNwbGF5TmFtZXMiOiB7CiAgICAicHJvZHVjdGlvbiI6ICJGaWN0aW9uYWwgcHJvZHVjdGlvbiIKICB9LAogICJwaGFzZURpc3BsYXlOYW1lcyI6IHsKICAgICJwcm9kdWN0aW9uIjogewogICAgICAic2hvb3QiOiAiU2hvb3QiCiAgICB9CiAgfSwKICAidHNhcmNoaXZlZCI6IFtdLAogICJ0b3duQ2FjaGUiOiB7CiAgICAiYWxwaGEtbmV3IjogIkxhdGVzdCBmaWN0aW9uYWwgdG93biIKICB9LAogICJkYXRlQ2FjaGUiOiB7CiAgICAiYWxwaGEtbmV3IjogIjIwMjYtMDktMjAiCiAgfQp9Cg==",
+          "store": "schedule-library",
+          "sha256": "56fed1dd65a850c9bfdece3dfcc735c106b4adac6af493f2359939226d89cbd5",
+          "revision": 2
+        },
+        {
+          "key": "rp_cms_config",
+          "file": "3.json",
+          "bytes": "ewogICJhY3Rpb25zIjogWwogICAgewogICAgICAibmFtZSI6ICJTaG9vdCIsCiAgICAgICJjb2xvciI6ICJhU2hvb3QiCiAgICB9CiAgXSwKICAiYWN0aW9uU3R5bGVzIjogewogICAgImFTaG9vdCI6IHsKICAgICAgImJnIjogIiNmZmZmZmYiLAogICAgICAidGV4dCI6ICIjMDAwMDAwIgogICAgfQogIH0sCiAgImNvbG9ycyI6IHsKICAgICItLXBpbmsiOiAiIzMzNDQ1NSIKICB9LAogICJsYWJlbHMiOiB7CiAgICAiaGRyVGl0bGUiOiAiTGF0ZXN0IGZpY3Rpb25hbCB0aXRsZSIKICB9Cn0K",
+          "store": "cms",
+          "sha256": "f26c15bd6241165ff7ff120732e954c0f477a743fb7e6491dfc2d9ddce5f97dd",
+          "revision": 2
+        },
+        {
+          "key": "alpha-new",
+          "file": "4.json",
+          "bytes": "ewogICJtZXRhIjogewogICAgInRvd24iOiAiTGF0ZXN0IGZpY3Rpb25hbCB0b3duIiwKICAgICJkYXRlIjogIjIwMjYtMDktMjAiLAogICAgImNhbGxzaGVldCI6IHsKICAgICAgIm5vdGVzIjogIktlZXAgYWxsIGZpY3Rpb25hbCBub3RlcyIKICAgIH0KICB9LAogICJyb3dzIjogWwogICAgewogICAgICAiYWN0aW9uIjogIlNob290IiwKICAgICAgImR1ciI6ICIwMDowMCIsCiAgICAgICJjb250YWN0TmFtZSI6ICJUZXN0IFBlcnNvbiIsCiAgICAgICJzdWJMb2NhdGlvbnMiOiBbCiAgICAgICAgewogICAgICAgICAgImlkIjogImdhdGUiLAogICAgICAgICAgImxvYyI6ICJUZXN0IGdhdGUiCiAgICAgICAgfQogICAgICBdLAogICAgICAibm90ZXMiOiAiTGF0ZXN0IHNvdXJjZSBub3RlIgogICAgfQogIF0sCiAgInNhdmVkQXQiOiAxMDAKfQo=",
+          "store": "schedules",
+          "sha256": "3296e0f628e19c29a46b5c13a6ccc4ed20e8d50c795355252e46125fa0d2379b",
+          "revision": 2
+        },
+        {
+          "key": "bravo",
+          "file": "5.json",
+          "bytes": "ewogICJtZXRhIjogewogICAgInRvd24iOiAiRmljdGlvbmFsIGJyYXZvIiwKICAgICJkYXRlIjogIjIwMjYtMDktMjAiLAogICAgImNhbGxzaGVldCI6IHsKICAgICAgIm5vdGVzIjogIktlZXAgYWxsIGZpY3Rpb25hbCBub3RlcyIKICAgIH0KICB9LAogICJyb3dzIjogWwogICAgewogICAgICAiYWN0aW9uIjogIlNob290IiwKICAgICAgImR1ciI6ICIwMDowMCIsCiAgICAgICJjb250YWN0TmFtZSI6ICJUZXN0IFBlcnNvbiIsCiAgICAgICJzdWJMb2NhdGlvbnMiOiBbCiAgICAgICAgewogICAgICAgICAgImlkIjogImdhdGUiLAogICAgICAgICAgImxvYyI6ICJUZXN0IGdhdGUiCiAgICAgICAgfQogICAgICBdLAogICAgICAibm90ZXMiOiAiTGF0ZXN0IHNvdXJjZSBub3RlIgogICAgfQogIF0sCiAgInNhdmVkQXQiOiAxMDAKfQo=",
+          "store": "schedules",
+          "sha256": "f341393fa6d02d6eac31fc98acf13efbd8838fd886bd0811efcd4050dba1870a",
+          "revision": 2
+        },
+        {
+          "key": "charlie",
+          "file": "6.json",
+          "bytes": "ewogICJtZXRhIjogewogICAgInRvd24iOiAiRmljdGlvbmFsIGNoYXJsaWUiLAogICAgImRhdGUiOiAiMjAyNi0wOS0yMCIsCiAgICAiY2FsbHNoZWV0IjogewogICAgICAibm90ZXMiOiAiS2VlcCBhbGwgZmljdGlvbmFsIG5vdGVzIgogICAgfQogIH0sCiAgInJvd3MiOiBbCiAgICB7CiAgICAgICJhY3Rpb24iOiAiU2hvb3QiLAogICAgICAiZHVyIjogIjAwOjAwIiwKICAgICAgImNvbnRhY3ROYW1lIjogIlRlc3QgUGVyc29uIiwKICAgICAgInN1YkxvY2F0aW9ucyI6IFsKICAgICAgICB7CiAgICAgICAgICAiaWQiOiAiZ2F0ZSIsCiAgICAgICAgICAibG9jIjogIlRlc3QgZ2F0ZSIKICAgICAgICB9CiAgICAgIF0sCiAgICAgICJub3RlcyI6ICJMYXRlc3Qgc291cmNlIG5vdGUiCiAgICB9CiAgXSwKICAic2F2ZWRBdCI6IDEwMAp9Cg==",
+          "store": "schedules",
+          "sha256": "c888d71ad41aa608e09925ab98877ffe13e695d16afc6a6b464f871f07a32d03",
+          "revision": 2
+        },
+        {
+          "key": "reviewed-browser",
+          "file": "7.json",
+          "bytes": "ewogICJycF9zeW5jX21ldGEiOiB7fSwKICAicnBfbGlicmFyeV9tZXRhX3YxIjoge30sCiAgInJwX3NjaGVkX3NuYXBzIjoge30sCiAgInJwX3NjaGVkcyI6IHt9LAogICJycF9zY2hlZF9kZWxldGVkIjoge30sCiAgInJwX3RwbHMiOiB7CiAgICAiUHJpdmF0ZSBjYWxsIjogewogICAgICAicm93cyI6IFsKICAgICAgICB7CiAgICAgICAgICAiYWN0aW9uIjogIlNob290IiwKICAgICAgICAgICJub3RlcyI6ICJMYXRlc3QgcHJpdmF0ZSB0ZW1wbGF0ZSIKICAgICAgICB9CiAgICAgIF0sCiAgICAgICJzYXZlZEF0IjogMjAwCiAgICB9CiAgfSwKICAicnBfbm90aWZfZGlzbWlzc2VkIjoge30sCiAgInJwX3NjaGVkX3F1ZXVlIjoge30sCiAgInJwX25vdGlmX2ZpcmVkIjoge30sCiAgInJwX2NyZXdfbmFtZXMiOiBbCiAgICAiRmljdGlvbmFsIHByaXZhdGUgcGVyc29uIgogIF0KfQo=",
+          "store": "browser",
+          "sha256": "c429b7dbc69d56533089ea4bbbb7d95f96db582def54194e8a848b293318b441",
+          "revision": 2
+        },
+        {
+          "key": "aliases",
+          "file": "8.json",
+          "bytes": "WwogIHsKICAgICJuYW1lIjogImIxMi1maWN0aW9uYWwtNmIxMTU3OTEtYjI4Ny00YmNlLTlkNmItNzU3ZjMzMTlkZDE2IG9sZCBhbHBoYSIsCiAgICAic2NoZWR1bGUiOiAiYWxwaGEiCiAgfSwKICB7CiAgICAibmFtZSI6ICJiMTItZmljdGlvbmFsLTZiMTE1NzkxLWIyODctNGJjZS05ZDZiLTc1N2YzMzE5ZGQxNiBicmF2byIsCiAgICAic2NoZWR1bGUiOiAiYnJhdm8iCiAgfSwKICB7CiAgICAibmFtZSI6ICJiMTItZmljdGlvbmFsLTZiMTE1NzkxLWIyODctNGJjZS05ZDZiLTc1N2YzMzE5ZGQxNiByZW5hbWVkIGFscGhhIiwKICAgICJzY2hlZHVsZSI6ICJhbHBoYS1uZXciCiAgfQpdCg==",
+          "store": "legacy-aliases",
+          "sha256": "bed127670a9447be6da2620c420acc7188200ad6f119b006b8edb66fc16bacbb",
+          "revision": 2
+        }
+      ],
+      "manifest": {
+        "actor": "c3729c0d-af41-49c8-8659-dae697bbc343",
+        "format": "roseland.synthetic-source.v1",
+        "mapping": {
+          "phases": {
+            "shoot": {
+              "name": "Shoot",
+              "position": 1,
+              "production": "production"
+            }
+          },
+          "folders": {
+            "folder-1": "production"
+          },
+          "schedules": {
+            "bravo": {
+              "name": "bravo",
+              "slug": "bravo",
+              "phase": "shoot",
+              "aliases": [],
+              "identity": "bravo",
+              "production": "production"
+            },
+            "charlie": {
+              "name": "charlie",
+              "slug": "charlie",
+              "phase": "shoot",
+              "aliases": [],
+              "identity": "charlie",
+              "production": "production"
+            },
+            "alpha-new": {
+              "name": "alpha-new",
+              "slug": "alpha-new",
+              "phase": "shoot",
+              "aliases": [
+                "alpha"
+              ],
+              "identity": "alpha",
+              "production": "production"
+            }
+          },
+          "templates": {
+            "New template": {
+              "source": "alpha",
+              "production": "production"
+            },
+            "Call template": {
+              "source": "alpha",
+              "production": "production"
+            },
+            "Other template": {
+              "source": "alpha",
+              "production": "production"
+            }
+          },
+          "productions": {
+            "production": {
+              "name": "Latest fictional production",
+              "slug": "fictional"
+            }
+          },
+          "browser_templates": {
+            "Private call": {
+              "name": "Reviewed private call",
+              "owner": "c3729c0d-af41-49c8-8659-dae697bbc343",
+              "confirmed": true,
+              "production": "production"
+            }
+          },
+          "reviewed_removals": [
+            {
+              "key": "snapshots_8ed3f6ad685b959ead7022518e1af76cd816f8e8ec7ccdda1ed4018e8f2223f8",
+              "item": "old",
+              "store": "schedule-snapshots"
+            }
+          ],
+          "browser_dispositions": {
+            "rp_tpls": "import_reviewed_templates",
+            "rp_scheds": "derived_cache",
+            "rp_sync_meta": "derived_cache",
+            "rp_crew_names": "retain_private_original",
+            "rp_notif_fired": "derived_cache",
+            "rp_sched_queue": "derived_cache",
+            "rp_sched_snaps": "derived_cache",
+            "rp_sched_deleted": "derived_cache",
+            "rp_library_meta_v1": "derived_cache",
+            "rp_notif_dismissed": "derived_cache"
+          }
+        },
+        "boundary": {
+          "epoch": 2,
+          "frozen": true
+        },
+        "inventory": [
+          {
+            "key": "snapshots_8ed3f6ad685b959ead7022518e1af76cd816f8e8ec7ccdda1ed4018e8f2223f8",
+            "file": "0.json",
+            "store": "schedule-snapshots",
+            "revision": 2
+          },
+          {
+            "key": "templates",
+            "file": "1.json",
+            "store": "schedule-templates",
+            "revision": 2
+          },
+          {
+            "key": "rp_library_index_v1",
+            "file": "2.json",
+            "store": "schedule-library",
+            "revision": 2
+          },
+          {
+            "key": "rp_cms_config",
+            "file": "3.json",
+            "store": "cms",
+            "revision": 2
+          },
+          {
+            "key": "alpha-new",
+            "file": "4.json",
+            "store": "schedules",
+            "revision": 2
+          },
+          {
+            "key": "bravo",
+            "file": "5.json",
+            "store": "schedules",
+            "revision": 2
+          },
+          {
+            "key": "charlie",
+            "file": "6.json",
+            "store": "schedules",
+            "revision": 2
+          },
+          {
+            "key": "reviewed-browser",
+            "file": "7.json",
+            "store": "browser",
+            "revision": 2
+          },
+          {
+            "key": "aliases",
+            "file": "8.json",
+            "store": "legacy-aliases",
+            "revision": 2
+          }
+        ],
+        "synthetic": true,
+        "environment": "b12-fictional-6b115791-b287-4bce-9d6b-757f3319dd16",
+        "organization": "6b115791-b287-4bce-9d6b-757f3319dd16"
+      },
+      "manifest_bytes": "ewogICJmb3JtYXQiOiAicm9zZWxhbmQuc3ludGhldGljLXNvdXJjZS52MSIsCiAgInN5bnRoZXRpYyI6IHRydWUsCiAgImVudmlyb25tZW50IjogImIxMi1maWN0aW9uYWwtNmIxMTU3OTEtYjI4Ny00YmNlLTlkNmItNzU3ZjMzMTlkZDE2IiwKICAib3JnYW5pemF0aW9uIjogIjZiMTE1NzkxLWIyODctNGJjZS05ZDZiLTc1N2YzMzE5ZGQxNiIsCiAgImFjdG9yIjogImMzNzI5YzBkLWFmNDEtNDljOC04NjU5LWRhZTY5N2JiYzM0MyIsCiAgImJvdW5kYXJ5IjogewogICAgImZyb3plbiI6IHRydWUsCiAgICAiZXBvY2giOiAyCiAgfSwKICAiaW52ZW50b3J5IjogWwogICAgewogICAgICAic3RvcmUiOiAic2NoZWR1bGUtc25hcHNob3RzIiwKICAgICAgImtleSI6ICJzbmFwc2hvdHNfOGVkM2Y2YWQ2ODViOTU5ZWFkNzAyMjUxOGUxYWY3NmNkODE2ZjhlOGVjN2NjZGRhMWVkNDAxOGU4ZjIyMjNmOCIsCiAgICAgICJyZXZpc2lvbiI6IDIsCiAgICAgICJmaWxlIjogIjAuanNvbiIKICAgIH0sCiAgICB7CiAgICAgICJzdG9yZSI6ICJzY2hlZHVsZS10ZW1wbGF0ZXMiLAogICAgICAia2V5IjogInRlbXBsYXRlcyIsCiAgICAgICJyZXZpc2lvbiI6IDIsCiAgICAgICJmaWxlIjogIjEuanNvbiIKICAgIH0sCiAgICB7CiAgICAgICJzdG9yZSI6ICJzY2hlZHVsZS1saWJyYXJ5IiwKICAgICAgImtleSI6ICJycF9saWJyYXJ5X2luZGV4X3YxIiwKICAgICAgInJldmlzaW9uIjogMiwKICAgICAgImZpbGUiOiAiMi5qc29uIgogICAgfSwKICAgIHsKICAgICAgInN0b3JlIjogImNtcyIsCiAgICAgICJrZXkiOiAicnBfY21zX2NvbmZpZyIsCiAgICAgICJyZXZpc2lvbiI6IDIsCiAgICAgICJmaWxlIjogIjMuanNvbiIKICAgIH0sCiAgICB7CiAgICAgICJzdG9yZSI6ICJzY2hlZHVsZXMiLAogICAgICAia2V5IjogImFscGhhLW5ldyIsCiAgICAgICJyZXZpc2lvbiI6IDIsCiAgICAgICJmaWxlIjogIjQuanNvbiIKICAgIH0sCiAgICB7CiAgICAgICJzdG9yZSI6ICJzY2hlZHVsZXMiLAogICAgICAia2V5IjogImJyYXZvIiwKICAgICAgInJldmlzaW9uIjogMiwKICAgICAgImZpbGUiOiAiNS5qc29uIgogICAgfSwKICAgIHsKICAgICAgInN0b3JlIjogInNjaGVkdWxlcyIsCiAgICAgICJrZXkiOiAiY2hhcmxpZSIsCiAgICAgICJyZXZpc2lvbiI6IDIsCiAgICAgICJmaWxlIjogIjYuanNvbiIKICAgIH0sCiAgICB7CiAgICAgICJzdG9yZSI6ICJicm93c2VyIiwKICAgICAgImtleSI6ICJyZXZpZXdlZC1icm93c2VyIiwKICAgICAgInJldmlzaW9uIjogMiwKICAgICAgImZpbGUiOiAiNy5qc29uIgogICAgfSwKICAgIHsKICAgICAgInN0b3JlIjogImxlZ2FjeS1hbGlhc2VzIiwKICAgICAgImtleSI6ICJhbGlhc2VzIiwKICAgICAgInJldmlzaW9uIjogMiwKICAgICAgImZpbGUiOiAiOC5qc29uIgogICAgfQogIF0sCiAgIm1hcHBpbmciOiB7CiAgICAic2NoZWR1bGVzIjogewogICAgICAiYWxwaGEtbmV3IjogewogICAgICAgICJpZGVudGl0eSI6ICJhbHBoYSIsCiAgICAgICAgIm5hbWUiOiAiYWxwaGEtbmV3IiwKICAgICAgICAic2x1ZyI6ICJhbHBoYS1uZXciLAogICAgICAgICJwcm9kdWN0aW9uIjogInByb2R1Y3Rpb24iLAogICAgICAgICJwaGFzZSI6ICJzaG9vdCIsCiAgICAgICAgImFsaWFzZXMiOiBbCiAgICAgICAgICAiYWxwaGEiCiAgICAgICAgXQogICAgICB9LAogICAgICAiYnJhdm8iOiB7CiAgICAgICAgImlkZW50aXR5IjogImJyYXZvIiwKICAgICAgICAibmFtZSI6ICJicmF2byIsCiAgICAgICAgInNsdWciOiAiYnJhdm8iLAogICAgICAgICJwcm9kdWN0aW9uIjogInByb2R1Y3Rpb24iLAogICAgICAgICJwaGFzZSI6ICJzaG9vdCIsCiAgICAgICAgImFsaWFzZXMiOiBbXQogICAgICB9LAogICAgICAiY2hhcmxpZSI6IHsKICAgICAgICAiaWRlbnRpdHkiOiAiY2hhcmxpZSIsCiAgICAgICAgIm5hbWUiOiAiY2hhcmxpZSIsCiAgICAgICAgInNsdWciOiAiY2hhcmxpZSIsCiAgICAgICAgInByb2R1Y3Rpb24iOiAicHJvZHVjdGlvbiIsCiAgICAgICAgInBoYXNlIjogInNob290IiwKICAgICAgICAiYWxpYXNlcyI6IFtdCiAgICAgIH0KICAgIH0sCiAgICAicHJvZHVjdGlvbnMiOiB7CiAgICAgICJwcm9kdWN0aW9uIjogewogICAgICAgICJuYW1lIjogIkxhdGVzdCBmaWN0aW9uYWwgcHJvZHVjdGlvbiIsCiAgICAgICAgInNsdWciOiAiZmljdGlvbmFsIgogICAgICB9CiAgICB9LAogICAgInBoYXNlcyI6IHsKICAgICAgInNob290IjogewogICAgICAgICJwcm9kdWN0aW9uIjogInByb2R1Y3Rpb24iLAogICAgICAgICJuYW1lIjogIlNob290IiwKICAgICAgICAicG9zaXRpb24iOiAxCiAgICAgIH0KICAgIH0sCiAgICAiZm9sZGVycyI6IHsKICAgICAgImZvbGRlci0xIjogInByb2R1Y3Rpb24iCiAgICB9LAogICAgInRlbXBsYXRlcyI6IHsKICAgICAgIkNhbGwgdGVtcGxhdGUiOiB7CiAgICAgICAgInByb2R1Y3Rpb24iOiAicHJvZHVjdGlvbiIsCiAgICAgICAgInNvdXJjZSI6ICJhbHBoYSIKICAgICAgfSwKICAgICAgIk90aGVyIHRlbXBsYXRlIjogewogICAgICAgICJwcm9kdWN0aW9uIjogInByb2R1Y3Rpb24iLAogICAgICAgICJzb3VyY2UiOiAiYWxwaGEiCiAgICAgIH0sCiAgICAgICJOZXcgdGVtcGxhdGUiOiB7CiAgICAgICAgInByb2R1Y3Rpb24iOiAicHJvZHVjdGlvbiIsCiAgICAgICAgInNvdXJjZSI6ICJhbHBoYSIKICAgICAgfQogICAgfSwKICAgICJicm93c2VyX3RlbXBsYXRlcyI6IHsKICAgICAgIlByaXZhdGUgY2FsbCI6IHsKICAgICAgICAicHJvZHVjdGlvbiI6ICJwcm9kdWN0aW9uIiwKICAgICAgICAib3duZXIiOiAiYzM3MjljMGQtYWY0MS00OWM4LTg2NTktZGFlNjk3YmJjMzQzIiwKICAgICAgICAiY29uZmlybWVkIjogdHJ1ZSwKICAgICAgICAibmFtZSI6ICJSZXZpZXdlZCBwcml2YXRlIGNhbGwiCiAgICAgIH0KICAgIH0sCiAgICAiYnJvd3Nlcl9kaXNwb3NpdGlvbnMiOiB7CiAgICAgICJycF9zeW5jX21ldGEiOiAiZGVyaXZlZF9jYWNoZSIsCiAgICAgICJycF9saWJyYXJ5X21ldGFfdjEiOiAiZGVyaXZlZF9jYWNoZSIsCiAgICAgICJycF9zY2hlZF9zbmFwcyI6ICJkZXJpdmVkX2NhY2hlIiwKICAgICAgInJwX3NjaGVkcyI6ICJkZXJpdmVkX2NhY2hlIiwKICAgICAgInJwX3NjaGVkX2RlbGV0ZWQiOiAiZGVyaXZlZF9jYWNoZSIsCiAgICAgICJycF90cGxzIjogImltcG9ydF9yZXZpZXdlZF90ZW1wbGF0ZXMiLAogICAgICAicnBfbm90aWZfZGlzbWlzc2VkIjogImRlcml2ZWRfY2FjaGUiLAogICAgICAicnBfc2NoZWRfcXVldWUiOiAiZGVyaXZlZF9jYWNoZSIsCiAgICAgICJycF9ub3RpZl9maXJlZCI6ICJkZXJpdmVkX2NhY2hlIiwKICAgICAgInJwX2NyZXdfbmFtZXMiOiAicmV0YWluX3ByaXZhdGVfb3JpZ2luYWwiCiAgICB9LAogICAgInJldmlld2VkX3JlbW92YWxzIjogWwogICAgICB7CiAgICAgICAgInN0b3JlIjogInNjaGVkdWxlLXNuYXBzaG90cyIsCiAgICAgICAgImtleSI6ICJzbmFwc2hvdHNfOGVkM2Y2YWQ2ODViOTU5ZWFkNzAyMjUxOGUxYWY3NmNkODE2ZjhlOGVjN2NjZGRhMWVkNDAxOGU4ZjIyMjNmOCIsCiAgICAgICAgIml0ZW0iOiAib2xkIgogICAgICB9CiAgICBdCiAgfQp9Cg=="
+    },
+    "created_at": "2026-09-18T07:22:46.435763+00:00",
+    "capture_hash": "85b9966f6dccf85e46795a75ca468f4a74cea4b72f501a1d0704192636d4726f",
+    "source_epoch": 2,
+    "target_state": {
+      "public.phases": [
+        {
+          "id": "894846e8-c40e-5ad5-87f9-0b734a0ee6de",
+          "name": "Shoot",
+          "version": 1,
+          "position": 1,
+          "created_at": "2026-09-18T07:22:45.192742+00:00",
+          "created_by": "c3729c0d-af41-49c8-8659-dae697bbc343",
+          "deleted_at": null,
+          "phase_type": "other",
+          "updated_at": "2026-09-18T07:22:45.192742+00:00",
+          "updated_by": "c3729c0d-af41-49c8-8659-dae697bbc343",
+          "production_id": "c4926761-18da-5cf2-a7c8-edf0d3454785",
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+        }
+      ],
+      "public.schedules": [
+        {
+          "id": "dec9ef56-1690-59a9-9601-9194671cdc5e",
+          "slug": "charlie",
+          "town": "Fictional charlie",
+          "status": "draft",
+          "document": {
+            "meta": {
+              "date": "2026-09-20",
+              "town": "Fictional charlie",
+              "callsheet": {
+                "notes": "Keep all fictional notes"
+              }
+            },
+            "rows": [
+              {
+                "dur": "00:00",
+                "notes": "Latest source note",
+                "action": "Shoot",
+                "contactName": "Test Person",
+                "subLocations": [
+                  {
+                    "id": "gate",
+                    "loc": "Test gate"
+                  }
+                ]
+              }
+            ],
+            "savedAt": 100
+          },
+          "phase_id": "894846e8-c40e-5ad5-87f9-0b734a0ee6de",
+          "created_at": "2026-09-18T07:22:46.407936+00:00",
+          "created_by": "c3729c0d-af41-49c8-8659-dae697bbc343",
+          "deleted_at": null,
+          "updated_at": "2026-09-18T07:22:46.407936+00:00",
+          "updated_by": "c3729c0d-af41-49c8-8659-dae697bbc343",
+          "display_name": "charlie",
+          "production_id": "c4926761-18da-5cf2-a7c8-edf0d3454785",
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16",
+          "document_version": 1,
+          "library_position": 2,
+          "production_day_id": null,
+          "archived_from_status": null,
+          "document_schema_version": 1
+        },
+        {
+          "id": "f7086cfa-4f41-5546-ae19-0dc9e2260441",
+          "slug": "bravo",
+          "town": "Fictional bravo",
+          "status": "draft",
+          "document": {
+            "meta": {
+              "date": "2026-09-20",
+              "town": "Fictional bravo",
+              "callsheet": {
+                "notes": "Keep all fictional notes"
+              }
+            },
+            "rows": [
+              {
+                "dur": "00:00",
+                "notes": "Latest source note",
+                "action": "Shoot",
+                "contactName": "Test Person",
+                "subLocations": [
+                  {
+                    "id": "gate",
+                    "loc": "Test gate"
+                  }
+                ]
+              }
+            ],
+            "savedAt": 100
+          },
+          "phase_id": "894846e8-c40e-5ad5-87f9-0b734a0ee6de",
+          "created_at": "2026-09-18T07:22:45.192742+00:00",
+          "created_by": "c3729c0d-af41-49c8-8659-dae697bbc343",
+          "deleted_at": null,
+          "updated_at": "2026-09-18T07:22:46.407936+00:00",
+          "updated_by": "c3729c0d-af41-49c8-8659-dae697bbc343",
+          "display_name": "bravo",
+          "production_id": "c4926761-18da-5cf2-a7c8-edf0d3454785",
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16",
+          "document_version": 3,
+          "library_position": 0,
+          "production_day_id": null,
+          "archived_from_status": null,
+          "document_schema_version": 1
+        },
+        {
+          "id": "fc71bc98-3107-5072-9f43-9be58755f141",
+          "slug": "alpha-new",
+          "town": "Latest fictional town",
+          "status": "draft",
+          "document": {
+            "meta": {
+              "date": "2026-09-20",
+              "town": "Latest fictional town",
+              "callsheet": {
+                "notes": "Keep all fictional notes"
+              }
+            },
+            "rows": [
+              {
+                "dur": "00:00",
+                "notes": "Latest source note",
+                "action": "Shoot",
+                "contactName": "Test Person",
+                "subLocations": [
+                  {
+                    "id": "gate",
+                    "loc": "Test gate"
+                  }
+                ]
+              }
+            ],
+            "savedAt": 100
+          },
+          "phase_id": "894846e8-c40e-5ad5-87f9-0b734a0ee6de",
+          "created_at": "2026-09-18T07:22:45.192742+00:00",
+          "created_by": "c3729c0d-af41-49c8-8659-dae697bbc343",
+          "deleted_at": null,
+          "updated_at": "2026-09-18T07:22:46.407936+00:00",
+          "updated_by": "c3729c0d-af41-49c8-8659-dae697bbc343",
+          "display_name": "alpha-new",
+          "production_id": "c4926761-18da-5cf2-a7c8-edf0d3454785",
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16",
+          "document_version": 3,
+          "library_position": 1,
+          "production_day_id": null,
+          "archived_from_status": null,
+          "document_schema_version": 1
+        }
+      ],
+      "public.productions": [
+        {
+          "id": "c4926761-18da-5cf2-a7c8-edf0d3454785",
+          "name": "Latest fictional production",
+          "slug": "fictional",
+          "locale": "en",
+          "status": "planning",
+          "version": 2,
+          "currency": null,
+          "timezone": "UTC",
+          "created_at": "2026-09-18T07:22:45.192742+00:00",
+          "created_by": "c3729c0d-af41-49c8-8659-dae697bbc343",
+          "deleted_at": null,
+          "updated_at": "2026-09-18T07:22:46.407936+00:00",
+          "updated_by": "c3729c0d-af41-49c8-8659-dae697bbc343",
+          "country_code": null,
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+        }
+      ],
+      "public.audit_events": [],
+      "public.organizations": [
+        {
+          "id": "6b115791-b287-4bce-9d6b-757f3319dd16",
+          "name": "B12 fictional capture",
+          "slug": "b12-fictional-6b115791-b287-4bce-9d6b-757f3319dd16",
+          "created_at": "2026-09-18T07:22:45.132751+00:00",
+          "created_by": null,
+          "deleted_at": null,
+          "updated_at": "2026-09-18T07:22:45.132751+00:00",
+          "updated_by": null,
+          "default_locale": "en",
+          "default_currency": null,
+          "default_timezone": "UTC",
+          "default_country_code": null
+        }
+      ],
+      "public.production_days": [],
+      "public.schedule_versions": [
+        {
+          "id": "0f62144d-f646-45f3-a4bd-e59cf2689e96",
+          "label": null,
+          "version": 2,
+          "checksum": "23701c955f4010fbf7463c88046beca16acc43d60808c8d9ce914e5e5eab1fa4",
+          "document": {
+            "meta": {
+              "date": "2026-09-20",
+              "town": "Fictional alpha",
+              "callsheet": {
+                "notes": "Keep all fictional notes"
+              }
+            },
+            "rows": [
+              {
+                "dur": "00:00",
+                "notes": "Original note",
+                "action": "Shoot",
+                "contactName": "Test Person",
+                "subLocations": [
+                  {
+                    "id": "gate",
+                    "loc": "Test gate"
+                  }
+                ]
+              }
+            ],
+            "savedAt": 100
+          },
+          "metadata": {
+            "slug": "alpha",
+            "town": "Fictional alpha",
+            "status": "draft",
+            "phase_id": "894846e8-c40e-5ad5-87f9-0b734a0ee6de",
+            "deleted_at": null,
+            "display_name": "alpha",
+            "production_id": "c4926761-18da-5cf2-a7c8-edf0d3454785",
+            "library_position": 0,
+            "production_day_id": null,
+            "archived_from_status": null
+          },
+          "created_at": "2026-09-18T07:22:45.192742+00:00",
+          "created_by": "c3729c0d-af41-49c8-8659-dae697bbc343",
+          "schedule_id": "fc71bc98-3107-5072-9f43-9be58755f141",
+          "production_id": "c4926761-18da-5cf2-a7c8-edf0d3454785",
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16",
+          "metadata_checksum": "4ca42417a5d007cf6c31ce44c5c3e1ca0c355b31ad0deb2a66882935b9ba57a5",
+          "document_schema_version": 1
+        },
+        {
+          "id": "1070530a-09cc-4542-a068-e47e25f8a755",
+          "label": null,
+          "version": 1,
+          "checksum": "23701c955f4010fbf7463c88046beca16acc43d60808c8d9ce914e5e5eab1fa4",
+          "document": {
+            "meta": {
+              "date": "2026-09-20",
+              "town": "Fictional alpha",
+              "callsheet": {
+                "notes": "Keep all fictional notes"
+              }
+            },
+            "rows": [
+              {
+                "dur": "00:00",
+                "notes": "Original note",
+                "action": "Shoot",
+                "contactName": "Test Person",
+                "subLocations": [
+                  {
+                    "id": "gate",
+                    "loc": "Test gate"
+                  }
+                ]
+              }
+            ],
+            "savedAt": 100
+          },
+          "metadata": {
+            "slug": "alpha",
+            "town": "Fictional alpha",
+            "status": "draft",
+            "phase_id": "894846e8-c40e-5ad5-87f9-0b734a0ee6de",
+            "deleted_at": null,
+            "display_name": "alpha",
+            "production_id": "c4926761-18da-5cf2-a7c8-edf0d3454785",
+            "library_position": 1,
+            "production_day_id": null,
+            "archived_from_status": null
+          },
+          "created_at": "2026-09-18T07:22:45.192742+00:00",
+          "created_by": "c3729c0d-af41-49c8-8659-dae697bbc343",
+          "schedule_id": "fc71bc98-3107-5072-9f43-9be58755f141",
+          "production_id": "c4926761-18da-5cf2-a7c8-edf0d3454785",
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16",
+          "metadata_checksum": "16b19714689a93eeae502a0c91329f151a95a7a1182e9c0ccb1c1f4ddcfe756c",
+          "document_schema_version": 1
+        },
+        {
+          "id": "33c63d66-8f88-43e2-9dc8-3f633e9fa08a",
+          "label": null,
+          "version": 2,
+          "checksum": "aa42c21cc6d678ae6027eea1604c69e10db531ed18fbc15b948bb39d8b6c2def",
+          "document": {
+            "meta": {
+              "date": "2026-09-20",
+              "town": "Fictional bravo",
+              "callsheet": {
+                "notes": "Keep all fictional notes"
+              }
+            },
+            "rows": [
+              {
+                "dur": "00:00",
+                "notes": "Latest source note",
+                "action": "Shoot",
+                "contactName": "Test Person",
+                "subLocations": [
+                  {
+                    "id": "gate",
+                    "loc": "Test gate"
+                  }
+                ]
+              }
+            ],
+            "savedAt": 100
+          },
+          "metadata": {
+            "slug": "bravo",
+            "town": "Fictional bravo",
+            "status": "draft",
+            "phase_id": "894846e8-c40e-5ad5-87f9-0b734a0ee6de",
+            "deleted_at": null,
+            "display_name": "bravo",
+            "production_id": "c4926761-18da-5cf2-a7c8-edf0d3454785",
+            "library_position": 2,
+            "production_day_id": null,
+            "archived_from_status": null
+          },
+          "created_at": "2026-09-18T07:22:46.407936+00:00",
+          "created_by": "c3729c0d-af41-49c8-8659-dae697bbc343",
+          "schedule_id": "f7086cfa-4f41-5546-ae19-0dc9e2260441",
+          "production_id": "c4926761-18da-5cf2-a7c8-edf0d3454785",
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16",
+          "metadata_checksum": "4b07d2fefa1f28b828a6fcf87ee309d23c7e36c5a407476f00e50bc2f6013aec",
+          "document_schema_version": 1
+        },
+        {
+          "id": "89a89fc5-09f5-4ced-a2d2-7480e9aa2379",
+          "label": null,
+          "version": 1,
+          "checksum": "2a42e5c2324b5733ca25633f912de7340c41051137a9672c6b4c15d0eaf3fde6",
+          "document": {
+            "meta": {
+              "date": "2026-09-20",
+              "town": "Fictional charlie",
+              "callsheet": {
+                "notes": "Keep all fictional notes"
+              }
+            },
+            "rows": [
+              {
+                "dur": "00:00",
+                "notes": "Latest source note",
+                "action": "Shoot",
+                "contactName": "Test Person",
+                "subLocations": [
+                  {
+                    "id": "gate",
+                    "loc": "Test gate"
+                  }
+                ]
+              }
+            ],
+            "savedAt": 100
+          },
+          "metadata": {
+            "slug": "charlie",
+            "town": "Fictional charlie",
+            "status": "draft",
+            "phase_id": "894846e8-c40e-5ad5-87f9-0b734a0ee6de",
+            "deleted_at": null,
+            "display_name": "charlie",
+            "production_id": "c4926761-18da-5cf2-a7c8-edf0d3454785",
+            "library_position": 2,
+            "production_day_id": null,
+            "archived_from_status": null
+          },
+          "created_at": "2026-09-18T07:22:46.407936+00:00",
+          "created_by": "c3729c0d-af41-49c8-8659-dae697bbc343",
+          "schedule_id": "dec9ef56-1690-59a9-9601-9194671cdc5e",
+          "production_id": "c4926761-18da-5cf2-a7c8-edf0d3454785",
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16",
+          "metadata_checksum": "8f71c5a74801fa9645c3bfe98e997201227633a1d21614633a4b3c4a888480fa",
+          "document_schema_version": 1
+        },
+        {
+          "id": "aec28fb5-6ecf-4b33-9343-9ae3523ccb24",
+          "label": null,
+          "version": 1,
+          "checksum": "c09f6d7e2e7c8e958c0b2bbe8d2ad320febc811d2aa6fd2678236b47d4e09f42",
+          "document": {
+            "meta": {
+              "date": "2026-09-20",
+              "town": "Fictional bravo",
+              "callsheet": {
+                "notes": "Keep all fictional notes"
+              }
+            },
+            "rows": [
+              {
+                "dur": "00:00",
+                "notes": "Original note",
+                "action": "Shoot",
+                "contactName": "Test Person",
+                "subLocations": [
+                  {
+                    "id": "gate",
+                    "loc": "Test gate"
+                  }
+                ]
+              }
+            ],
+            "savedAt": 100
+          },
+          "metadata": {
+            "slug": "bravo",
+            "town": "Fictional bravo",
+            "status": "archived",
+            "phase_id": "894846e8-c40e-5ad5-87f9-0b734a0ee6de",
+            "deleted_at": null,
+            "display_name": "bravo",
+            "production_id": "c4926761-18da-5cf2-a7c8-edf0d3454785",
+            "library_position": 1,
+            "production_day_id": null,
+            "archived_from_status": "draft"
+          },
+          "created_at": "2026-09-18T07:22:45.192742+00:00",
+          "created_by": "c3729c0d-af41-49c8-8659-dae697bbc343",
+          "schedule_id": "f7086cfa-4f41-5546-ae19-0dc9e2260441",
+          "production_id": "c4926761-18da-5cf2-a7c8-edf0d3454785",
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16",
+          "metadata_checksum": "aa9268a22c70e8bf977749e45ce71013914fc450f5054a48756af24719873a6c",
+          "document_schema_version": 1
+        },
+        {
+          "id": "b424a1d2-714b-4f4a-87fc-311edb169b6b",
+          "label": null,
+          "version": 3,
+          "checksum": "aa42c21cc6d678ae6027eea1604c69e10db531ed18fbc15b948bb39d8b6c2def",
+          "document": {
+            "meta": {
+              "date": "2026-09-20",
+              "town": "Fictional bravo",
+              "callsheet": {
+                "notes": "Keep all fictional notes"
+              }
+            },
+            "rows": [
+              {
+                "dur": "00:00",
+                "notes": "Latest source note",
+                "action": "Shoot",
+                "contactName": "Test Person",
+                "subLocations": [
+                  {
+                    "id": "gate",
+                    "loc": "Test gate"
+                  }
+                ]
+              }
+            ],
+            "savedAt": 100
+          },
+          "metadata": {
+            "slug": "bravo",
+            "town": "Fictional bravo",
+            "status": "draft",
+            "phase_id": "894846e8-c40e-5ad5-87f9-0b734a0ee6de",
+            "deleted_at": null,
+            "display_name": "bravo",
+            "production_id": "c4926761-18da-5cf2-a7c8-edf0d3454785",
+            "library_position": 0,
+            "production_day_id": null,
+            "archived_from_status": null
+          },
+          "created_at": "2026-09-18T07:22:46.407936+00:00",
+          "created_by": "c3729c0d-af41-49c8-8659-dae697bbc343",
+          "schedule_id": "f7086cfa-4f41-5546-ae19-0dc9e2260441",
+          "production_id": "c4926761-18da-5cf2-a7c8-edf0d3454785",
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16",
+          "metadata_checksum": "663789699d9defc4c7812e8d475ba336526d2b5345dfa63a0fce1638422584b0",
+          "document_schema_version": 1
+        },
+        {
+          "id": "eb1042b4-f146-4c77-9999-2742e6cb86de",
+          "label": null,
+          "version": 3,
+          "checksum": "53938cc2951e83d417c978d7e044dc3d4de20230e3e23509bf05b9050cd65e85",
+          "document": {
+            "meta": {
+              "date": "2026-09-20",
+              "town": "Latest fictional town",
+              "callsheet": {
+                "notes": "Keep all fictional notes"
+              }
+            },
+            "rows": [
+              {
+                "dur": "00:00",
+                "notes": "Latest source note",
+                "action": "Shoot",
+                "contactName": "Test Person",
+                "subLocations": [
+                  {
+                    "id": "gate",
+                    "loc": "Test gate"
+                  }
+                ]
+              }
+            ],
+            "savedAt": 100
+          },
+          "metadata": {
+            "slug": "alpha-new",
+            "town": "Latest fictional town",
+            "status": "draft",
+            "phase_id": "894846e8-c40e-5ad5-87f9-0b734a0ee6de",
+            "deleted_at": null,
+            "display_name": "alpha-new",
+            "production_id": "c4926761-18da-5cf2-a7c8-edf0d3454785",
+            "library_position": 1,
+            "production_day_id": null,
+            "archived_from_status": null
+          },
+          "created_at": "2026-09-18T07:22:46.407936+00:00",
+          "created_by": "c3729c0d-af41-49c8-8659-dae697bbc343",
+          "schedule_id": "fc71bc98-3107-5072-9f43-9be58755f141",
+          "production_id": "c4926761-18da-5cf2-a7c8-edf0d3454785",
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16",
+          "metadata_checksum": "9f83f1144cfbcb78d92344f96555a13718a53307a1b0337e38454bc7c41a6545",
+          "document_schema_version": 1
+        }
+      ],
+      "private.migration_records": [
+        {
+          "id": "0d7b2d79-bbbc-581f-b8e7-545be3682adf",
+          "payload": {
+            "folders": [
+              {
+                "id": "folder-1",
+                "name": "Renamed folder",
+                "createdAt": 50,
+                "updatedAt": 200
+              }
+            ],
+            "version": 1,
+            "dateCache": {
+              "alpha-new": "2026-09-20"
+            },
+            "townCache": {
+              "alpha-new": "Latest fictional town"
+            },
+            "updatedAt": 200,
+            "phaseOrder": {
+              "production": {
+                "shoot": [
+                  "bravo",
+                  "alpha-new",
+                  "charlie"
+                ]
+              }
+            },
+            "tsarchived": [],
+            "phaseDisplayNames": {
+              "production": {
+                "shoot": "Shoot"
+              }
+            },
+            "scheduleFolderMap": {
+              "bravo": "folder-1",
+              "charlie": "folder-1",
+              "alpha-new": "folder-1"
+            },
+            "productionDisplayNames": {
+              "production": "Fictional production"
+            }
+          },
+          "version": 2,
+          "tombstone": false,
+          "source_key": "rp_library_index_v1",
+          "updated_at": "2026-09-18T07:22:46.407936+00:00",
+          "fingerprint": "59b9f12f4071b3b53e5988337532264affd42afddf69e543c51f7fd888aeeb92",
+          "source_item": "",
+          "source_store": "schedule-library",
+          "import_run_id": "edbee897-569f-4c92-ac6b-286df7234f06",
+          "schedule_refs": {
+            "bravo": "f7086cfa-4f41-5546-ae19-0dc9e2260441",
+            "charlie": "dec9ef56-1690-59a9-9601-9194671cdc5e",
+            "alpha-new": "fc71bc98-3107-5072-9f43-9be58755f141"
+          },
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16",
+          "source_revision": 2,
+          "source_environment": "b12-fictional-6b115791-b287-4bce-9d6b-757f3319dd16"
+        },
+        {
+          "id": "2cb87265-eb98-5cb1-94f6-166c6e0366da",
+          "payload": {
+            "name": "alpha",
+            "snapshots": [
+              {
+                "id": "keep",
+                "data": {
+                  "meta": {
+                    "date": "2026-09-20",
+                    "town": "Fictional town",
+                    "callsheet": {
+                      "notes": "Keep all fictional notes"
+                    }
+                  },
+                  "rows": [
+                    {
+                      "dur": "00:00",
+                      "action": "Shoot",
+                      "contactName": "Test Person",
+                      "subLocations": [
+                        {
+                          "id": "gate",
+                          "loc": "Test gate"
+                        }
+                      ]
+                    }
+                  ],
+                  "savedAt": 100
+                },
+                "label": "Keep",
+                "savedAt": 95
+              },
+              {
+                "id": "new",
+                "data": {
+                  "meta": {
+                    "date": "2026-09-20",
+                    "town": "Fictional town",
+                    "callsheet": {
+                      "notes": "Keep all fictional notes"
+                    }
+                  },
+                  "rows": [
+                    {
+                      "dur": "00:00",
+                      "action": "Shoot",
+                      "contactName": "Test Person",
+                      "subLocations": [
+                        {
+                          "id": "gate",
+                          "loc": "Test gate"
+                        }
+                      ]
+                    }
+                  ],
+                  "savedAt": 100
+                },
+                "label": "New snapshot",
+                "savedAt": 200
+              }
+            ],
+            "updatedAt": 200
+          },
+          "version": 2,
+          "tombstone": false,
+          "source_key": "snapshots_8ed3f6ad685b959ead7022518e1af76cd816f8e8ec7ccdda1ed4018e8f2223f8",
+          "updated_at": "2026-09-18T07:22:46.407936+00:00",
+          "fingerprint": "a8bf2a60e466d62d87c815d4cb28fa3e641a3a8fcf402a48c6c942b4fd344f8d",
+          "source_item": "",
+          "source_store": "schedule-snapshots",
+          "import_run_id": "edbee897-569f-4c92-ac6b-286df7234f06",
+          "schedule_refs": {
+            "alpha": "fc71bc98-3107-5072-9f43-9be58755f141"
+          },
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16",
+          "source_revision": 2,
+          "source_environment": "b12-fictional-6b115791-b287-4bce-9d6b-757f3319dd16"
+        },
+        {
+          "id": "5a37467f-6f25-5bab-ab22-090969256896",
+          "payload": {
+            "id": "keep",
+            "data": {
+              "meta": {
+                "date": "2026-09-20",
+                "town": "Fictional town",
+                "callsheet": {
+                  "notes": "Keep all fictional notes"
+                }
+              },
+              "rows": [
+                {
+                  "dur": "00:00",
+                  "action": "Shoot",
+                  "contactName": "Test Person",
+                  "subLocations": [
+                    {
+                      "id": "gate",
+                      "loc": "Test gate"
+                    }
+                  ]
+                }
+              ],
+              "savedAt": 100
+            },
+            "label": "Keep",
+            "savedAt": 95
+          },
+          "version": 2,
+          "tombstone": false,
+          "source_key": "snapshots_8ed3f6ad685b959ead7022518e1af76cd816f8e8ec7ccdda1ed4018e8f2223f8",
+          "updated_at": "2026-09-18T07:22:46.407936+00:00",
+          "fingerprint": "7c30aea2a48bbd3d10030637a00fc33071d071f6b3ffd9d3260a1d396bd60ecd",
+          "source_item": "keep",
+          "source_store": "schedule-snapshots",
+          "import_run_id": "edbee897-569f-4c92-ac6b-286df7234f06",
+          "schedule_refs": {
+            "alpha": "fc71bc98-3107-5072-9f43-9be58755f141"
+          },
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16",
+          "source_revision": 2,
+          "source_environment": "b12-fictional-6b115791-b287-4bce-9d6b-757f3319dd16"
+        },
+        {
+          "id": "69d0608d-de56-520a-9161-44b896980181",
+          "payload": {
+            "id": "folder-1",
+            "name": "Renamed folder",
+            "createdAt": 50,
+            "updatedAt": 200
+          },
+          "version": 2,
+          "tombstone": false,
+          "source_key": "rp_library_index_v1",
+          "updated_at": "2026-09-18T07:22:46.407936+00:00",
+          "fingerprint": "e64f096ed65b8feaa27fbe021eb51a9460908e7d4fe634c0951730d3ecc7c5b2",
+          "source_item": "folder/folder-1",
+          "source_store": "schedule-library",
+          "import_run_id": "edbee897-569f-4c92-ac6b-286df7234f06",
+          "schedule_refs": {
+            "bravo": "f7086cfa-4f41-5546-ae19-0dc9e2260441",
+            "charlie": "dec9ef56-1690-59a9-9601-9194671cdc5e",
+            "alpha-new": "fc71bc98-3107-5072-9f43-9be58755f141"
+          },
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16",
+          "source_revision": 2,
+          "source_environment": "b12-fictional-6b115791-b287-4bce-9d6b-757f3319dd16"
+        },
+        {
+          "id": "74cf3007-1b34-53b7-baa7-021a911cc0d7",
+          "payload": {
+            "rows": [
+              {
+                "dur": "00:00",
+                "action": "Shoot",
+                "contactName": "Updated Test Person",
+                "subLocations": [
+                  {
+                    "id": "gate",
+                    "loc": "Test gate"
+                  }
+                ]
+              }
+            ],
+            "savedAt": 100
+          },
+          "version": 2,
+          "tombstone": false,
+          "source_key": "templates",
+          "updated_at": "2026-09-18T07:22:46.407936+00:00",
+          "fingerprint": "f229f9bc47d3b3446d32fc82649b8d746b6073039eb90468fed1f22724dce1e6",
+          "source_item": "Call template",
+          "source_store": "schedule-templates",
+          "import_run_id": "edbee897-569f-4c92-ac6b-286df7234f06",
+          "schedule_refs": {},
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16",
+          "source_revision": 2,
+          "source_environment": "b12-fictional-6b115791-b287-4bce-9d6b-757f3319dd16"
+        },
+        {
+          "id": "8f1f49b5-d89b-5fae-8f8f-2e75f580e39a",
+          "payload": {
+            "rows": [],
+            "savedAt": 200
+          },
+          "version": 1,
+          "tombstone": false,
+          "source_key": "templates",
+          "updated_at": "2026-09-18T07:22:46.407936+00:00",
+          "fingerprint": "4ecb91f87f9e3b7611da113d23d2e3d4288b3b3f1bc7c1c8701663279dc78fdc",
+          "source_item": "New template",
+          "source_store": "schedule-templates",
+          "import_run_id": "edbee897-569f-4c92-ac6b-286df7234f06",
+          "schedule_refs": {},
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16",
+          "source_revision": 2,
+          "source_environment": "b12-fictional-6b115791-b287-4bce-9d6b-757f3319dd16"
+        },
+        {
+          "id": "bb4a1ae2-563b-5ddc-a6cf-aedb8c366593",
+          "payload": {
+            "id": "new",
+            "data": {
+              "meta": {
+                "date": "2026-09-20",
+                "town": "Fictional town",
+                "callsheet": {
+                  "notes": "Keep all fictional notes"
+                }
+              },
+              "rows": [
+                {
+                  "dur": "00:00",
+                  "action": "Shoot",
+                  "contactName": "Test Person",
+                  "subLocations": [
+                    {
+                      "id": "gate",
+                      "loc": "Test gate"
+                    }
+                  ]
+                }
+              ],
+              "savedAt": 100
+            },
+            "label": "New snapshot",
+            "savedAt": 200
+          },
+          "version": 1,
+          "tombstone": false,
+          "source_key": "snapshots_8ed3f6ad685b959ead7022518e1af76cd816f8e8ec7ccdda1ed4018e8f2223f8",
+          "updated_at": "2026-09-18T07:22:46.407936+00:00",
+          "fingerprint": "e721000afa39791b7c8783682bda7388d335b4c15afedbc0f0dab29ced26aadc",
+          "source_item": "new",
+          "source_store": "schedule-snapshots",
+          "import_run_id": "edbee897-569f-4c92-ac6b-286df7234f06",
+          "schedule_refs": {
+            "alpha": "fc71bc98-3107-5072-9f43-9be58755f141"
+          },
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16",
+          "source_revision": 2,
+          "source_environment": "b12-fictional-6b115791-b287-4bce-9d6b-757f3319dd16"
+        },
+        {
+          "id": "d069223e-c5c6-5fea-abf9-1775a162238e",
+          "payload": {
+            "rows": [],
+            "savedAt": 100
+          },
+          "version": 2,
+          "tombstone": false,
+          "source_key": "templates",
+          "updated_at": "2026-09-18T07:22:46.407936+00:00",
+          "fingerprint": "71640b9ca8f6631c014958b5c07d6d8d1cbeb9a09923ee56a233da4c4af582e2",
+          "source_item": "Other template",
+          "source_store": "schedule-templates",
+          "import_run_id": "edbee897-569f-4c92-ac6b-286df7234f06",
+          "schedule_refs": {},
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16",
+          "source_revision": 2,
+          "source_environment": "b12-fictional-6b115791-b287-4bce-9d6b-757f3319dd16"
+        },
+        {
+          "id": "d8580932-d44c-5c16-aa68-09dbd80981b6",
+          "payload": {
+            "New template": {
+              "rows": [],
+              "savedAt": 200
+            },
+            "Call template": {
+              "rows": [
+                {
+                  "dur": "00:00",
+                  "action": "Shoot",
+                  "contactName": "Updated Test Person",
+                  "subLocations": [
+                    {
+                      "id": "gate",
+                      "loc": "Test gate"
+                    }
+                  ]
+                }
+              ],
+              "savedAt": 100
+            },
+            "Other template": {
+              "rows": [],
+              "savedAt": 100
+            }
+          },
+          "version": 2,
+          "tombstone": false,
+          "source_key": "templates",
+          "updated_at": "2026-09-18T07:22:46.407936+00:00",
+          "fingerprint": "ba11daf79d6fa0307186d5a362e714e2c24d5ba34c95ab7bbb5ddf0920fdbcef",
+          "source_item": "",
+          "source_store": "schedule-templates",
+          "import_run_id": "edbee897-569f-4c92-ac6b-286df7234f06",
+          "schedule_refs": {},
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16",
+          "source_revision": 2,
+          "source_environment": "b12-fictional-6b115791-b287-4bce-9d6b-757f3319dd16"
+        },
+        {
+          "id": "daec3f1d-0a4b-5545-8be3-61c03c7ee4d2",
+          "payload": {
+            "id": "old",
+            "data": {
+              "meta": {
+                "date": "2026-09-20",
+                "town": "Fictional town",
+                "callsheet": {
+                  "notes": "Keep all fictional notes"
+                }
+              },
+              "rows": [
+                {
+                  "dur": "00:00",
+                  "action": "Shoot",
+                  "contactName": "Test Person",
+                  "subLocations": [
+                    {
+                      "id": "gate",
+                      "loc": "Test gate"
+                    }
+                  ]
+                }
+              ],
+              "savedAt": 100
+            },
+            "label": "Original",
+            "savedAt": 90
+          },
+          "version": 2,
+          "tombstone": true,
+          "source_key": "snapshots_8ed3f6ad685b959ead7022518e1af76cd816f8e8ec7ccdda1ed4018e8f2223f8",
+          "updated_at": "2026-09-18T07:22:46.407936+00:00",
+          "fingerprint": "c90d68196b298d5145f2a2d1412deff2237a89dee5bf9b0c7179d861d51e9f8d",
+          "source_item": "old",
+          "source_store": "schedule-snapshots",
+          "import_run_id": "edbee897-569f-4c92-ac6b-286df7234f06",
+          "schedule_refs": {
+            "alpha": "fc71bc98-3107-5072-9f43-9be58755f141"
+          },
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16",
+          "source_revision": 2,
+          "source_environment": "b12-fictional-6b115791-b287-4bce-9d6b-757f3319dd16"
+        },
+        {
+          "id": "f35f7314-886a-5bcd-bb46-2577b6378dc9",
+          "payload": {
+            "colors": {
+              "--pink": "#334455"
+            },
+            "labels": {
+              "hdrTitle": "Latest fictional title"
+            },
+            "actions": [
+              {
+                "name": "Shoot",
+                "color": "aShoot"
+              }
+            ],
+            "actionStyles": {
+              "aShoot": {
+                "bg": "#ffffff",
+                "text": "#000000"
+              }
+            }
+          },
+          "version": 2,
+          "tombstone": false,
+          "source_key": "rp_cms_config",
+          "updated_at": "2026-09-18T07:22:46.407936+00:00",
+          "fingerprint": "50f5546578032c48e29f9ec909d227a6804eaaff3c63573b2d858a523da745d6",
+          "source_item": "",
+          "source_store": "cms",
+          "import_run_id": "edbee897-569f-4c92-ac6b-286df7234f06",
+          "schedule_refs": {},
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16",
+          "source_revision": 2,
+          "source_environment": "b12-fictional-6b115791-b287-4bce-9d6b-757f3319dd16"
+        }
+      ],
+      "private.schedule_snapshots": [
+        {
+          "id": "5a37467f-6f25-5bab-ab22-090969256896",
+          "kind": "imported",
+          "name": "Keep",
+          "version": 1,
+          "document": {
+            "meta": {
+              "date": "2026-09-20",
+              "town": "Fictional town",
+              "callsheet": {
+                "notes": "Keep all fictional notes"
+              }
+            },
+            "rows": [
+              {
+                "dur": "00:00",
+                "action": "Shoot",
+                "contactName": "Test Person",
+                "subLocations": [
+                  {
+                    "id": "gate",
+                    "loc": "Test gate"
+                  }
+                ]
+              }
+            ],
+            "savedAt": 100
+          },
+          "created_by": null,
+          "deleted_at": null,
+          "updated_at": "2026-09-18T07:22:45.211747+00:00",
+          "updated_by": null,
+          "captured_at": "1970-01-01T00:00:00.095+00:00",
+          "original_id": "keep",
+          "schedule_id": "fc71bc98-3107-5072-9f43-9be58755f141",
+          "original_order": 2,
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16",
+          "original_payload": {
+            "id": "keep",
+            "data": {
+              "meta": {
+                "date": "2026-09-20",
+                "town": "Fictional town",
+                "callsheet": {
+                  "notes": "Keep all fictional notes"
+                }
+              },
+              "rows": [
+                {
+                  "dur": "00:00",
+                  "action": "Shoot",
+                  "contactName": "Test Person",
+                  "subLocations": [
+                    {
+                      "id": "gate",
+                      "loc": "Test gate"
+                    }
+                  ]
+                }
+              ],
+              "savedAt": 100
+            },
+            "label": "Keep",
+            "savedAt": 95
+          },
+          "template_bindings": []
+        },
+        {
+          "id": "bb4a1ae2-563b-5ddc-a6cf-aedb8c366593",
+          "kind": "imported",
+          "name": "New snapshot",
+          "version": 1,
+          "document": {
+            "meta": {
+              "date": "2026-09-20",
+              "town": "Fictional town",
+              "callsheet": {
+                "notes": "Keep all fictional notes"
+              }
+            },
+            "rows": [
+              {
+                "dur": "00:00",
+                "action": "Shoot",
+                "contactName": "Test Person",
+                "subLocations": [
+                  {
+                    "id": "gate",
+                    "loc": "Test gate"
+                  }
+                ]
+              }
+            ],
+            "savedAt": 100
+          },
+          "created_by": null,
+          "deleted_at": null,
+          "updated_at": "2026-09-18T07:22:46.430083+00:00",
+          "updated_by": null,
+          "captured_at": "1970-01-01T00:00:00.2+00:00",
+          "original_id": "new",
+          "schedule_id": "fc71bc98-3107-5072-9f43-9be58755f141",
+          "original_order": 2,
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16",
+          "original_payload": {
+            "id": "new",
+            "data": {
+              "meta": {
+                "date": "2026-09-20",
+                "town": "Fictional town",
+                "callsheet": {
+                  "notes": "Keep all fictional notes"
+                }
+              },
+              "rows": [
+                {
+                  "dur": "00:00",
+                  "action": "Shoot",
+                  "contactName": "Test Person",
+                  "subLocations": [
+                    {
+                      "id": "gate",
+                      "loc": "Test gate"
+                    }
+                  ]
+                }
+              ],
+              "savedAt": 100
+            },
+            "label": "New snapshot",
+            "savedAt": 200
+          },
+          "template_bindings": []
+        },
+        {
+          "id": "daec3f1d-0a4b-5545-8be3-61c03c7ee4d2",
+          "kind": "imported",
+          "name": "Original",
+          "version": 1,
+          "document": {
+            "meta": {
+              "date": "2026-09-20",
+              "town": "Fictional town",
+              "callsheet": {
+                "notes": "Keep all fictional notes"
+              }
+            },
+            "rows": [
+              {
+                "dur": "00:00",
+                "action": "Shoot",
+                "contactName": "Test Person",
+                "subLocations": [
+                  {
+                    "id": "gate",
+                    "loc": "Test gate"
+                  }
+                ]
+              }
+            ],
+            "savedAt": 100
+          },
+          "created_by": null,
+          "deleted_at": null,
+          "updated_at": "2026-09-18T07:22:45.211159+00:00",
+          "updated_by": null,
+          "captured_at": "1970-01-01T00:00:00.09+00:00",
+          "original_id": "old",
+          "schedule_id": "fc71bc98-3107-5072-9f43-9be58755f141",
+          "original_order": 1,
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16",
+          "original_payload": {
+            "id": "old",
+            "data": {
+              "meta": {
+                "date": "2026-09-20",
+                "town": "Fictional town",
+                "callsheet": {
+                  "notes": "Keep all fictional notes"
+                }
+              },
+              "rows": [
+                {
+                  "dur": "00:00",
+                  "action": "Shoot",
+                  "contactName": "Test Person",
+                  "subLocations": [
+                    {
+                      "id": "gate",
+                      "loc": "Test gate"
+                    }
+                  ]
+                }
+              ],
+              "savedAt": 100
+            },
+            "label": "Original",
+            "savedAt": 90
+          },
+          "template_bindings": []
+        }
+      ],
+      "private.schedule_templates": [
+        {
+          "id": "0439e72f-cf61-5b1b-806b-45a7d21fe1ed",
+          "name": "Call template",
+          "rows": [
+            {
+              "dur": "00:00",
+              "action": "Shoot",
+              "contactName": "Updated Test Person",
+              "subLocations": [
+                {
+                  "id": "gate",
+                  "loc": "Test gate"
+                }
+              ]
+            }
+          ],
+          "version": 2,
+          "created_at": "2026-09-18T07:22:45.192742+00:00",
+          "created_by": "c3729c0d-af41-49c8-8659-dae697bbc343",
+          "deleted_at": null,
+          "updated_at": "2026-09-18T07:22:46.430587+00:00",
+          "updated_by": "c3729c0d-af41-49c8-8659-dae697bbc343",
+          "published_at": null,
+          "published_by": null,
+          "production_id": "c4926761-18da-5cf2-a7c8-edf0d3454785",
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+        },
+        {
+          "id": "662006b7-875e-52a5-9194-bc7e7f894509",
+          "name": "Reviewed private call",
+          "rows": [
+            {
+              "notes": "Latest private template",
+              "action": "Shoot"
+            }
+          ],
+          "version": 2,
+          "created_at": "2026-09-18T07:22:45.192742+00:00",
+          "created_by": "c3729c0d-af41-49c8-8659-dae697bbc343",
+          "deleted_at": null,
+          "updated_at": "2026-09-18T07:22:46.431343+00:00",
+          "updated_by": "c3729c0d-af41-49c8-8659-dae697bbc343",
+          "published_at": null,
+          "published_by": null,
+          "production_id": "c4926761-18da-5cf2-a7c8-edf0d3454785",
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+        },
+        {
+          "id": "e2d07ee1-804a-5111-8dce-bb28bb283f41",
+          "name": "New template",
+          "rows": [],
+          "version": 1,
+          "created_at": "2026-09-18T07:22:46.407936+00:00",
+          "created_by": "c3729c0d-af41-49c8-8659-dae697bbc343",
+          "deleted_at": null,
+          "updated_at": "2026-09-18T07:22:46.407936+00:00",
+          "updated_by": "c3729c0d-af41-49c8-8659-dae697bbc343",
+          "published_at": null,
+          "published_by": null,
+          "production_id": "c4926761-18da-5cf2-a7c8-edf0d3454785",
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+        },
+        {
+          "id": "e7da2cfe-e507-5b82-a58a-14d0fe67c1e8",
+          "name": "Other template",
+          "rows": [],
+          "version": 1,
+          "created_at": "2026-09-18T07:22:45.192742+00:00",
+          "created_by": "c3729c0d-af41-49c8-8659-dae697bbc343",
+          "deleted_at": null,
+          "updated_at": "2026-09-18T07:22:45.192742+00:00",
+          "updated_by": "c3729c0d-af41-49c8-8659-dae697bbc343",
+          "published_at": null,
+          "published_by": null,
+          "production_id": "c4926761-18da-5cf2-a7c8-edf0d3454785",
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+        }
+      ],
+      "private.schedule_transfers": [],
+      "public.schedule_restrictions": [],
+      "private.schedule_client_links": [],
+      "public.production_memberships": [],
+      "private.organization_lifecycle": [],
+      "private.organization_mfa_policy": [],
+      "private.schedule_client_aliases": [
+        {
+          "id": "9b4782f1-000f-58c3-a672-7d33dd499e98",
+          "created_at": "2026-09-18T07:22:45.214293+00:00",
+          "creator_id": "c3729c0d-af41-49c8-8659-dae697bbc343",
+          "revoked_at": null,
+          "revoked_by": null,
+          "legacy_name": "b12-fictional-6b115791-b287-4bce-9d6b-757f3319dd16 old alpha",
+          "schedule_id": "fc71bc98-3107-5072-9f43-9be58755f141",
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+        },
+        {
+          "id": "bb09a625-7409-5e87-9137-6e39c16a238d",
+          "created_at": "2026-09-18T07:22:46.432144+00:00",
+          "creator_id": "c3729c0d-af41-49c8-8659-dae697bbc343",
+          "revoked_at": null,
+          "revoked_by": null,
+          "legacy_name": "b12-fictional-6b115791-b287-4bce-9d6b-757f3319dd16 renamed alpha",
+          "schedule_id": "fc71bc98-3107-5072-9f43-9be58755f141",
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+        },
+        {
+          "id": "fd8e9426-8c84-52a6-ae85-637f5a085b6e",
+          "created_at": "2026-09-18T07:22:45.214915+00:00",
+          "creator_id": "c3729c0d-af41-49c8-8659-dae697bbc343",
+          "revoked_at": null,
+          "revoked_by": null,
+          "legacy_name": "b12-fictional-6b115791-b287-4bce-9d6b-757f3319dd16 bravo",
+          "schedule_id": "f7086cfa-4f41-5546-ae19-0dc9e2260441",
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+        }
+      ],
+      "public.organization_invitations": [],
+      "public.organization_memberships": [
+        {
+          "id": "1ef274fb-9d2c-4ee7-88cd-b182f44a49fe",
+          "role": "owner",
+          "status": "active",
+          "user_id": "c3729c0d-af41-49c8-8659-dae697bbc343",
+          "revision": 1,
+          "joined_at": "2026-09-18T07:22:45.132751+00:00",
+          "created_at": "2026-09-18T07:22:45.132751+00:00",
+          "invited_by": null,
+          "updated_at": "2026-09-18T07:22:45.132751+00:00",
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+        }
+      ],
+      "private.schedule_snapshot_policy": [],
+      "private.migration_record_versions": [
+        {
+          "version": 1,
+          "snapshot": {
+            "id": "0d7b2d79-bbbc-581f-b8e7-545be3682adf",
+            "key": "rp_library_index_v1",
+            "item": "",
+            "refs": {
+              "alpha": "fc71bc98-3107-5072-9f43-9be58755f141",
+              "bravo": "f7086cfa-4f41-5546-ae19-0dc9e2260441"
+            },
+            "store": "schedule-library",
+            "payload": {
+              "folders": [
+                {
+                  "id": "folder-1",
+                  "name": "Fictional folder",
+                  "createdAt": 50,
+                  "updatedAt": 100
+                }
+              ],
+              "version": 1,
+              "dateCache": {
+                "alpha": "2026-09-20"
+              },
+              "townCache": {
+                "alpha": "Fictional town"
+              },
+              "updatedAt": 100,
+              "phaseOrder": {
+                "production": {
+                  "shoot": [
+                    "alpha",
+                    "bravo"
+                  ]
+                }
+              },
+              "tsarchived": [
+                "bravo"
+              ],
+              "phaseDisplayNames": {
+                "production": {
+                  "shoot": "Shoot"
+                }
+              },
+              "scheduleFolderMap": {
+                "alpha": "folder-1",
+                "bravo": "folder-1"
+              },
+              "productionDisplayNames": {
+                "production": "Fictional production"
+              }
+            },
+            "version": 1,
+            "revision": 1,
+            "tombstone": false,
+            "environment": "b12-fictional-6b115791-b287-4bce-9d6b-757f3319dd16",
+            "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+          },
+          "record_id": "0d7b2d79-bbbc-581f-b8e7-545be3682adf",
+          "fingerprint": "05a53d647f7b14cececc62eec0b2c7d03757fbf58ff789956fe52a08529f1965",
+          "imported_at": "2026-09-18T07:22:45.192742+00:00",
+          "import_run_id": "a65baf78-f7d0-45ab-a965-0c2a82ba96ac",
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+        },
+        {
+          "version": 1,
+          "snapshot": {
+            "id": "2cb87265-eb98-5cb1-94f6-166c6e0366da",
+            "key": "snapshots_8ed3f6ad685b959ead7022518e1af76cd816f8e8ec7ccdda1ed4018e8f2223f8",
+            "item": "",
+            "refs": {
+              "alpha": "fc71bc98-3107-5072-9f43-9be58755f141"
+            },
+            "store": "schedule-snapshots",
+            "payload": {
+              "name": "alpha",
+              "snapshots": [
+                {
+                  "id": "old",
+                  "data": {
+                    "meta": {
+                      "date": "2026-09-20",
+                      "town": "Fictional town",
+                      "callsheet": {
+                        "notes": "Keep all fictional notes"
+                      }
+                    },
+                    "rows": [
+                      {
+                        "dur": "00:00",
+                        "action": "Shoot",
+                        "contactName": "Test Person",
+                        "subLocations": [
+                          {
+                            "id": "gate",
+                            "loc": "Test gate"
+                          }
+                        ]
+                      }
+                    ],
+                    "savedAt": 100
+                  },
+                  "label": "Original",
+                  "savedAt": 90
+                },
+                {
+                  "id": "keep",
+                  "data": {
+                    "meta": {
+                      "date": "2026-09-20",
+                      "town": "Fictional town",
+                      "callsheet": {
+                        "notes": "Keep all fictional notes"
+                      }
+                    },
+                    "rows": [
+                      {
+                        "dur": "00:00",
+                        "action": "Shoot",
+                        "contactName": "Test Person",
+                        "subLocations": [
+                          {
+                            "id": "gate",
+                            "loc": "Test gate"
+                          }
+                        ]
+                      }
+                    ],
+                    "savedAt": 100
+                  },
+                  "label": "Keep",
+                  "savedAt": 95
+                }
+              ],
+              "updatedAt": 100
+            },
+            "version": 1,
+            "revision": 1,
+            "tombstone": false,
+            "environment": "b12-fictional-6b115791-b287-4bce-9d6b-757f3319dd16",
+            "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+          },
+          "record_id": "2cb87265-eb98-5cb1-94f6-166c6e0366da",
+          "fingerprint": "84b939d72ee96d017379a0e929e911d37255a937a01816419f5c7c90c10f6571",
+          "imported_at": "2026-09-18T07:22:45.192742+00:00",
+          "import_run_id": "a65baf78-f7d0-45ab-a965-0c2a82ba96ac",
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+        },
+        {
+          "version": 1,
+          "snapshot": {
+            "id": "5a37467f-6f25-5bab-ab22-090969256896",
+            "key": "snapshots_8ed3f6ad685b959ead7022518e1af76cd816f8e8ec7ccdda1ed4018e8f2223f8",
+            "item": "keep",
+            "refs": {
+              "alpha": "fc71bc98-3107-5072-9f43-9be58755f141"
+            },
+            "store": "schedule-snapshots",
+            "payload": {
+              "id": "keep",
+              "data": {
+                "meta": {
+                  "date": "2026-09-20",
+                  "town": "Fictional town",
+                  "callsheet": {
+                    "notes": "Keep all fictional notes"
+                  }
+                },
+                "rows": [
+                  {
+                    "dur": "00:00",
+                    "action": "Shoot",
+                    "contactName": "Test Person",
+                    "subLocations": [
+                      {
+                        "id": "gate",
+                        "loc": "Test gate"
+                      }
+                    ]
+                  }
+                ],
+                "savedAt": 100
+              },
+              "label": "Keep",
+              "savedAt": 95
+            },
+            "version": 1,
+            "revision": 1,
+            "tombstone": false,
+            "environment": "b12-fictional-6b115791-b287-4bce-9d6b-757f3319dd16",
+            "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+          },
+          "record_id": "5a37467f-6f25-5bab-ab22-090969256896",
+          "fingerprint": "f9f3d10b0e8a273f2513be2580a6549f4969d3dfe54cb898d7327dd82d5508f5",
+          "imported_at": "2026-09-18T07:22:45.192742+00:00",
+          "import_run_id": "a65baf78-f7d0-45ab-a965-0c2a82ba96ac",
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+        },
+        {
+          "version": 1,
+          "snapshot": {
+            "id": "69d0608d-de56-520a-9161-44b896980181",
+            "key": "rp_library_index_v1",
+            "item": "folder/folder-1",
+            "refs": {
+              "alpha": "fc71bc98-3107-5072-9f43-9be58755f141",
+              "bravo": "f7086cfa-4f41-5546-ae19-0dc9e2260441"
+            },
+            "store": "schedule-library",
+            "payload": {
+              "id": "folder-1",
+              "name": "Fictional folder",
+              "createdAt": 50,
+              "updatedAt": 100
+            },
+            "version": 1,
+            "revision": 1,
+            "tombstone": false,
+            "environment": "b12-fictional-6b115791-b287-4bce-9d6b-757f3319dd16",
+            "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+          },
+          "record_id": "69d0608d-de56-520a-9161-44b896980181",
+          "fingerprint": "af60e1f9301ba8b7cc9779df9c6f49468d7c730f7917fdbddff15679c33d8ea0",
+          "imported_at": "2026-09-18T07:22:45.192742+00:00",
+          "import_run_id": "a65baf78-f7d0-45ab-a965-0c2a82ba96ac",
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+        },
+        {
+          "version": 1,
+          "snapshot": {
+            "id": "74cf3007-1b34-53b7-baa7-021a911cc0d7",
+            "key": "templates",
+            "item": "Call template",
+            "refs": {},
+            "store": "schedule-templates",
+            "payload": {
+              "rows": [
+                {
+                  "dur": "00:00",
+                  "action": "Shoot",
+                  "contactName": "Test Person",
+                  "subLocations": [
+                    {
+                      "id": "gate",
+                      "loc": "Test gate"
+                    }
+                  ]
+                }
+              ],
+              "savedAt": 100
+            },
+            "version": 1,
+            "revision": 1,
+            "tombstone": false,
+            "environment": "b12-fictional-6b115791-b287-4bce-9d6b-757f3319dd16",
+            "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+          },
+          "record_id": "74cf3007-1b34-53b7-baa7-021a911cc0d7",
+          "fingerprint": "cbca8105d3c43a425ee221a9d3a1a1dc1d28f2a9a384d2095f9864e7e30ca688",
+          "imported_at": "2026-09-18T07:22:45.192742+00:00",
+          "import_run_id": "a65baf78-f7d0-45ab-a965-0c2a82ba96ac",
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+        },
+        {
+          "version": 1,
+          "snapshot": {
+            "id": "8f1f49b5-d89b-5fae-8f8f-2e75f580e39a",
+            "key": "templates",
+            "item": "New template",
+            "refs": {},
+            "store": "schedule-templates",
+            "payload": {
+              "rows": [],
+              "savedAt": 200
+            },
+            "version": 1,
+            "revision": 2,
+            "tombstone": false,
+            "environment": "b12-fictional-6b115791-b287-4bce-9d6b-757f3319dd16",
+            "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+          },
+          "record_id": "8f1f49b5-d89b-5fae-8f8f-2e75f580e39a",
+          "fingerprint": "4ecb91f87f9e3b7611da113d23d2e3d4288b3b3f1bc7c1c8701663279dc78fdc",
+          "imported_at": "2026-09-18T07:22:46.407936+00:00",
+          "import_run_id": "edbee897-569f-4c92-ac6b-286df7234f06",
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+        },
+        {
+          "version": 1,
+          "snapshot": {
+            "id": "bb4a1ae2-563b-5ddc-a6cf-aedb8c366593",
+            "key": "snapshots_8ed3f6ad685b959ead7022518e1af76cd816f8e8ec7ccdda1ed4018e8f2223f8",
+            "item": "new",
+            "refs": {
+              "alpha": "fc71bc98-3107-5072-9f43-9be58755f141"
+            },
+            "store": "schedule-snapshots",
+            "payload": {
+              "id": "new",
+              "data": {
+                "meta": {
+                  "date": "2026-09-20",
+                  "town": "Fictional town",
+                  "callsheet": {
+                    "notes": "Keep all fictional notes"
+                  }
+                },
+                "rows": [
+                  {
+                    "dur": "00:00",
+                    "action": "Shoot",
+                    "contactName": "Test Person",
+                    "subLocations": [
+                      {
+                        "id": "gate",
+                        "loc": "Test gate"
+                      }
+                    ]
+                  }
+                ],
+                "savedAt": 100
+              },
+              "label": "New snapshot",
+              "savedAt": 200
+            },
+            "version": 1,
+            "revision": 2,
+            "tombstone": false,
+            "environment": "b12-fictional-6b115791-b287-4bce-9d6b-757f3319dd16",
+            "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+          },
+          "record_id": "bb4a1ae2-563b-5ddc-a6cf-aedb8c366593",
+          "fingerprint": "e721000afa39791b7c8783682bda7388d335b4c15afedbc0f0dab29ced26aadc",
+          "imported_at": "2026-09-18T07:22:46.407936+00:00",
+          "import_run_id": "edbee897-569f-4c92-ac6b-286df7234f06",
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+        },
+        {
+          "version": 1,
+          "snapshot": {
+            "id": "d069223e-c5c6-5fea-abf9-1775a162238e",
+            "key": "templates",
+            "item": "Other template",
+            "refs": {},
+            "store": "schedule-templates",
+            "payload": {
+              "rows": [],
+              "savedAt": 100
+            },
+            "version": 1,
+            "revision": 1,
+            "tombstone": false,
+            "environment": "b12-fictional-6b115791-b287-4bce-9d6b-757f3319dd16",
+            "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+          },
+          "record_id": "d069223e-c5c6-5fea-abf9-1775a162238e",
+          "fingerprint": "698f0d16f1776bfefe43f6b3edfb0cc4db748da8d37fb476050ac75299a06f57",
+          "imported_at": "2026-09-18T07:22:45.192742+00:00",
+          "import_run_id": "a65baf78-f7d0-45ab-a965-0c2a82ba96ac",
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+        },
+        {
+          "version": 1,
+          "snapshot": {
+            "id": "d8580932-d44c-5c16-aa68-09dbd80981b6",
+            "key": "templates",
+            "item": "",
+            "refs": {},
+            "store": "schedule-templates",
+            "payload": {
+              "Call template": {
+                "rows": [
+                  {
+                    "dur": "00:00",
+                    "action": "Shoot",
+                    "contactName": "Test Person",
+                    "subLocations": [
+                      {
+                        "id": "gate",
+                        "loc": "Test gate"
+                      }
+                    ]
+                  }
+                ],
+                "savedAt": 100
+              },
+              "Other template": {
+                "rows": [],
+                "savedAt": 100
+              }
+            },
+            "version": 1,
+            "revision": 1,
+            "tombstone": false,
+            "environment": "b12-fictional-6b115791-b287-4bce-9d6b-757f3319dd16",
+            "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+          },
+          "record_id": "d8580932-d44c-5c16-aa68-09dbd80981b6",
+          "fingerprint": "11df0ca73474d9e9f708fe212f16385d5a2ac54cb4758088da9b51ddc6ea9a3f",
+          "imported_at": "2026-09-18T07:22:45.192742+00:00",
+          "import_run_id": "a65baf78-f7d0-45ab-a965-0c2a82ba96ac",
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+        },
+        {
+          "version": 1,
+          "snapshot": {
+            "id": "daec3f1d-0a4b-5545-8be3-61c03c7ee4d2",
+            "key": "snapshots_8ed3f6ad685b959ead7022518e1af76cd816f8e8ec7ccdda1ed4018e8f2223f8",
+            "item": "old",
+            "refs": {
+              "alpha": "fc71bc98-3107-5072-9f43-9be58755f141"
+            },
+            "store": "schedule-snapshots",
+            "payload": {
+              "id": "old",
+              "data": {
+                "meta": {
+                  "date": "2026-09-20",
+                  "town": "Fictional town",
+                  "callsheet": {
+                    "notes": "Keep all fictional notes"
+                  }
+                },
+                "rows": [
+                  {
+                    "dur": "00:00",
+                    "action": "Shoot",
+                    "contactName": "Test Person",
+                    "subLocations": [
+                      {
+                        "id": "gate",
+                        "loc": "Test gate"
+                      }
+                    ]
+                  }
+                ],
+                "savedAt": 100
+              },
+              "label": "Original",
+              "savedAt": 90
+            },
+            "version": 1,
+            "revision": 1,
+            "tombstone": false,
+            "environment": "b12-fictional-6b115791-b287-4bce-9d6b-757f3319dd16",
+            "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+          },
+          "record_id": "daec3f1d-0a4b-5545-8be3-61c03c7ee4d2",
+          "fingerprint": "0dab4c93d8cbd840d3eb9e3deccd5ccebbffb0839684e77f70ce11bcf5a8f515",
+          "imported_at": "2026-09-18T07:22:45.192742+00:00",
+          "import_run_id": "a65baf78-f7d0-45ab-a965-0c2a82ba96ac",
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+        },
+        {
+          "version": 1,
+          "snapshot": {
+            "id": "f35f7314-886a-5bcd-bb46-2577b6378dc9",
+            "key": "rp_cms_config",
+            "item": "",
+            "refs": {},
+            "store": "cms",
+            "payload": {
+              "colors": {
+                "--pink": "#334455"
+              },
+              "labels": {
+                "hdrTitle": "Fictional title"
+              },
+              "actions": [
+                {
+                  "name": "Shoot",
+                  "color": "aShoot"
+                }
+              ],
+              "actionStyles": {
+                "aShoot": {
+                  "bg": "#ffffff",
+                  "text": "#000000"
+                }
+              }
+            },
+            "version": 1,
+            "revision": 1,
+            "tombstone": false,
+            "environment": "b12-fictional-6b115791-b287-4bce-9d6b-757f3319dd16",
+            "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+          },
+          "record_id": "f35f7314-886a-5bcd-bb46-2577b6378dc9",
+          "fingerprint": "65cf3737336012c324155fa92d5e3dab1c98cb84f1dadcf6e0770258fe0bc08d",
+          "imported_at": "2026-09-18T07:22:45.192742+00:00",
+          "import_run_id": "a65baf78-f7d0-45ab-a965-0c2a82ba96ac",
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+        },
+        {
+          "version": 2,
+          "snapshot": {
+            "id": "0d7b2d79-bbbc-581f-b8e7-545be3682adf",
+            "key": "rp_library_index_v1",
+            "item": "",
+            "refs": {
+              "bravo": "f7086cfa-4f41-5546-ae19-0dc9e2260441",
+              "charlie": "dec9ef56-1690-59a9-9601-9194671cdc5e",
+              "alpha-new": "fc71bc98-3107-5072-9f43-9be58755f141"
+            },
+            "store": "schedule-library",
+            "payload": {
+              "folders": [
+                {
+                  "id": "folder-1",
+                  "name": "Renamed folder",
+                  "createdAt": 50,
+                  "updatedAt": 200
+                }
+              ],
+              "version": 1,
+              "dateCache": {
+                "alpha-new": "2026-09-20"
+              },
+              "townCache": {
+                "alpha-new": "Latest fictional town"
+              },
+              "updatedAt": 200,
+              "phaseOrder": {
+                "production": {
+                  "shoot": [
+                    "bravo",
+                    "alpha-new",
+                    "charlie"
+                  ]
+                }
+              },
+              "tsarchived": [],
+              "phaseDisplayNames": {
+                "production": {
+                  "shoot": "Shoot"
+                }
+              },
+              "scheduleFolderMap": {
+                "bravo": "folder-1",
+                "charlie": "folder-1",
+                "alpha-new": "folder-1"
+              },
+              "productionDisplayNames": {
+                "production": "Fictional production"
+              }
+            },
+            "version": 2,
+            "revision": 2,
+            "tombstone": false,
+            "environment": "b12-fictional-6b115791-b287-4bce-9d6b-757f3319dd16",
+            "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+          },
+          "record_id": "0d7b2d79-bbbc-581f-b8e7-545be3682adf",
+          "fingerprint": "59b9f12f4071b3b53e5988337532264affd42afddf69e543c51f7fd888aeeb92",
+          "imported_at": "2026-09-18T07:22:46.407936+00:00",
+          "import_run_id": "edbee897-569f-4c92-ac6b-286df7234f06",
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+        },
+        {
+          "version": 2,
+          "snapshot": {
+            "id": "2cb87265-eb98-5cb1-94f6-166c6e0366da",
+            "key": "snapshots_8ed3f6ad685b959ead7022518e1af76cd816f8e8ec7ccdda1ed4018e8f2223f8",
+            "item": "",
+            "refs": {
+              "alpha": "fc71bc98-3107-5072-9f43-9be58755f141"
+            },
+            "store": "schedule-snapshots",
+            "payload": {
+              "name": "alpha",
+              "snapshots": [
+                {
+                  "id": "keep",
+                  "data": {
+                    "meta": {
+                      "date": "2026-09-20",
+                      "town": "Fictional town",
+                      "callsheet": {
+                        "notes": "Keep all fictional notes"
+                      }
+                    },
+                    "rows": [
+                      {
+                        "dur": "00:00",
+                        "action": "Shoot",
+                        "contactName": "Test Person",
+                        "subLocations": [
+                          {
+                            "id": "gate",
+                            "loc": "Test gate"
+                          }
+                        ]
+                      }
+                    ],
+                    "savedAt": 100
+                  },
+                  "label": "Keep",
+                  "savedAt": 95
+                },
+                {
+                  "id": "new",
+                  "data": {
+                    "meta": {
+                      "date": "2026-09-20",
+                      "town": "Fictional town",
+                      "callsheet": {
+                        "notes": "Keep all fictional notes"
+                      }
+                    },
+                    "rows": [
+                      {
+                        "dur": "00:00",
+                        "action": "Shoot",
+                        "contactName": "Test Person",
+                        "subLocations": [
+                          {
+                            "id": "gate",
+                            "loc": "Test gate"
+                          }
+                        ]
+                      }
+                    ],
+                    "savedAt": 100
+                  },
+                  "label": "New snapshot",
+                  "savedAt": 200
+                }
+              ],
+              "updatedAt": 200
+            },
+            "version": 2,
+            "revision": 2,
+            "tombstone": false,
+            "environment": "b12-fictional-6b115791-b287-4bce-9d6b-757f3319dd16",
+            "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+          },
+          "record_id": "2cb87265-eb98-5cb1-94f6-166c6e0366da",
+          "fingerprint": "a8bf2a60e466d62d87c815d4cb28fa3e641a3a8fcf402a48c6c942b4fd344f8d",
+          "imported_at": "2026-09-18T07:22:46.407936+00:00",
+          "import_run_id": "edbee897-569f-4c92-ac6b-286df7234f06",
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+        },
+        {
+          "version": 2,
+          "snapshot": {
+            "id": "5a37467f-6f25-5bab-ab22-090969256896",
+            "key": "snapshots_8ed3f6ad685b959ead7022518e1af76cd816f8e8ec7ccdda1ed4018e8f2223f8",
+            "item": "keep",
+            "refs": {
+              "alpha": "fc71bc98-3107-5072-9f43-9be58755f141"
+            },
+            "store": "schedule-snapshots",
+            "payload": {
+              "id": "keep",
+              "data": {
+                "meta": {
+                  "date": "2026-09-20",
+                  "town": "Fictional town",
+                  "callsheet": {
+                    "notes": "Keep all fictional notes"
+                  }
+                },
+                "rows": [
+                  {
+                    "dur": "00:00",
+                    "action": "Shoot",
+                    "contactName": "Test Person",
+                    "subLocations": [
+                      {
+                        "id": "gate",
+                        "loc": "Test gate"
+                      }
+                    ]
+                  }
+                ],
+                "savedAt": 100
+              },
+              "label": "Keep",
+              "savedAt": 95
+            },
+            "version": 2,
+            "revision": 2,
+            "tombstone": false,
+            "environment": "b12-fictional-6b115791-b287-4bce-9d6b-757f3319dd16",
+            "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+          },
+          "record_id": "5a37467f-6f25-5bab-ab22-090969256896",
+          "fingerprint": "7c30aea2a48bbd3d10030637a00fc33071d071f6b3ffd9d3260a1d396bd60ecd",
+          "imported_at": "2026-09-18T07:22:46.407936+00:00",
+          "import_run_id": "edbee897-569f-4c92-ac6b-286df7234f06",
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+        },
+        {
+          "version": 2,
+          "snapshot": {
+            "id": "69d0608d-de56-520a-9161-44b896980181",
+            "key": "rp_library_index_v1",
+            "item": "folder/folder-1",
+            "refs": {
+              "bravo": "f7086cfa-4f41-5546-ae19-0dc9e2260441",
+              "charlie": "dec9ef56-1690-59a9-9601-9194671cdc5e",
+              "alpha-new": "fc71bc98-3107-5072-9f43-9be58755f141"
+            },
+            "store": "schedule-library",
+            "payload": {
+              "id": "folder-1",
+              "name": "Renamed folder",
+              "createdAt": 50,
+              "updatedAt": 200
+            },
+            "version": 2,
+            "revision": 2,
+            "tombstone": false,
+            "environment": "b12-fictional-6b115791-b287-4bce-9d6b-757f3319dd16",
+            "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+          },
+          "record_id": "69d0608d-de56-520a-9161-44b896980181",
+          "fingerprint": "e64f096ed65b8feaa27fbe021eb51a9460908e7d4fe634c0951730d3ecc7c5b2",
+          "imported_at": "2026-09-18T07:22:46.407936+00:00",
+          "import_run_id": "edbee897-569f-4c92-ac6b-286df7234f06",
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+        },
+        {
+          "version": 2,
+          "snapshot": {
+            "id": "74cf3007-1b34-53b7-baa7-021a911cc0d7",
+            "key": "templates",
+            "item": "Call template",
+            "refs": {},
+            "store": "schedule-templates",
+            "payload": {
+              "rows": [
+                {
+                  "dur": "00:00",
+                  "action": "Shoot",
+                  "contactName": "Updated Test Person",
+                  "subLocations": [
+                    {
+                      "id": "gate",
+                      "loc": "Test gate"
+                    }
+                  ]
+                }
+              ],
+              "savedAt": 100
+            },
+            "version": 2,
+            "revision": 2,
+            "tombstone": false,
+            "environment": "b12-fictional-6b115791-b287-4bce-9d6b-757f3319dd16",
+            "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+          },
+          "record_id": "74cf3007-1b34-53b7-baa7-021a911cc0d7",
+          "fingerprint": "f229f9bc47d3b3446d32fc82649b8d746b6073039eb90468fed1f22724dce1e6",
+          "imported_at": "2026-09-18T07:22:46.407936+00:00",
+          "import_run_id": "edbee897-569f-4c92-ac6b-286df7234f06",
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+        },
+        {
+          "version": 2,
+          "snapshot": {
+            "id": "d069223e-c5c6-5fea-abf9-1775a162238e",
+            "key": "templates",
+            "item": "Other template",
+            "refs": {},
+            "store": "schedule-templates",
+            "payload": {
+              "rows": [],
+              "savedAt": 100
+            },
+            "version": 2,
+            "revision": 2,
+            "tombstone": false,
+            "environment": "b12-fictional-6b115791-b287-4bce-9d6b-757f3319dd16",
+            "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+          },
+          "record_id": "d069223e-c5c6-5fea-abf9-1775a162238e",
+          "fingerprint": "71640b9ca8f6631c014958b5c07d6d8d1cbeb9a09923ee56a233da4c4af582e2",
+          "imported_at": "2026-09-18T07:22:46.407936+00:00",
+          "import_run_id": "edbee897-569f-4c92-ac6b-286df7234f06",
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+        },
+        {
+          "version": 2,
+          "snapshot": {
+            "id": "d8580932-d44c-5c16-aa68-09dbd80981b6",
+            "key": "templates",
+            "item": "",
+            "refs": {},
+            "store": "schedule-templates",
+            "payload": {
+              "New template": {
+                "rows": [],
+                "savedAt": 200
+              },
+              "Call template": {
+                "rows": [
+                  {
+                    "dur": "00:00",
+                    "action": "Shoot",
+                    "contactName": "Updated Test Person",
+                    "subLocations": [
+                      {
+                        "id": "gate",
+                        "loc": "Test gate"
+                      }
+                    ]
+                  }
+                ],
+                "savedAt": 100
+              },
+              "Other template": {
+                "rows": [],
+                "savedAt": 100
+              }
+            },
+            "version": 2,
+            "revision": 2,
+            "tombstone": false,
+            "environment": "b12-fictional-6b115791-b287-4bce-9d6b-757f3319dd16",
+            "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+          },
+          "record_id": "d8580932-d44c-5c16-aa68-09dbd80981b6",
+          "fingerprint": "ba11daf79d6fa0307186d5a362e714e2c24d5ba34c95ab7bbb5ddf0920fdbcef",
+          "imported_at": "2026-09-18T07:22:46.407936+00:00",
+          "import_run_id": "edbee897-569f-4c92-ac6b-286df7234f06",
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+        },
+        {
+          "version": 2,
+          "snapshot": {
+            "id": "daec3f1d-0a4b-5545-8be3-61c03c7ee4d2",
+            "key": "snapshots_8ed3f6ad685b959ead7022518e1af76cd816f8e8ec7ccdda1ed4018e8f2223f8",
+            "item": "old",
+            "refs": {
+              "alpha": "fc71bc98-3107-5072-9f43-9be58755f141"
+            },
+            "store": "schedule-snapshots",
+            "payload": {
+              "id": "old",
+              "data": {
+                "meta": {
+                  "date": "2026-09-20",
+                  "town": "Fictional town",
+                  "callsheet": {
+                    "notes": "Keep all fictional notes"
+                  }
+                },
+                "rows": [
+                  {
+                    "dur": "00:00",
+                    "action": "Shoot",
+                    "contactName": "Test Person",
+                    "subLocations": [
+                      {
+                        "id": "gate",
+                        "loc": "Test gate"
+                      }
+                    ]
+                  }
+                ],
+                "savedAt": 100
+              },
+              "label": "Original",
+              "savedAt": 90
+            },
+            "version": 2,
+            "revision": 2,
+            "tombstone": true,
+            "environment": "b12-fictional-6b115791-b287-4bce-9d6b-757f3319dd16",
+            "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+          },
+          "record_id": "daec3f1d-0a4b-5545-8be3-61c03c7ee4d2",
+          "fingerprint": "c90d68196b298d5145f2a2d1412deff2237a89dee5bf9b0c7179d861d51e9f8d",
+          "imported_at": "2026-09-18T07:22:46.407936+00:00",
+          "import_run_id": "edbee897-569f-4c92-ac6b-286df7234f06",
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+        },
+        {
+          "version": 2,
+          "snapshot": {
+            "id": "f35f7314-886a-5bcd-bb46-2577b6378dc9",
+            "key": "rp_cms_config",
+            "item": "",
+            "refs": {},
+            "store": "cms",
+            "payload": {
+              "colors": {
+                "--pink": "#334455"
+              },
+              "labels": {
+                "hdrTitle": "Latest fictional title"
+              },
+              "actions": [
+                {
+                  "name": "Shoot",
+                  "color": "aShoot"
+                }
+              ],
+              "actionStyles": {
+                "aShoot": {
+                  "bg": "#ffffff",
+                  "text": "#000000"
+                }
+              }
+            },
+            "version": 2,
+            "revision": 2,
+            "tombstone": false,
+            "environment": "b12-fictional-6b115791-b287-4bce-9d6b-757f3319dd16",
+            "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+          },
+          "record_id": "f35f7314-886a-5bcd-bb46-2577b6378dc9",
+          "fingerprint": "50f5546578032c48e29f9ec909d227a6804eaaff3c63573b2d858a523da745d6",
+          "imported_at": "2026-09-18T07:22:46.407936+00:00",
+          "import_run_id": "edbee897-569f-4c92-ac6b-286df7234f06",
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+        }
+      ],
+      "private.organization_presentation": [
+        {
+          "config": {
+            "colors": {
+              "--pink": "#334455"
+            },
+            "labels": {
+              "hdrTitle": "Latest fictional title"
+            },
+            "actions": [
+              {
+                "name": "Shoot",
+                "color": "aShoot"
+              }
+            ],
+            "actionStyles": {
+              "aShoot": {
+                "bg": "#ffffff",
+                "text": "#000000"
+              }
+            }
+          },
+          "version": 2,
+          "updated_at": "2026-09-18T07:22:46.43176+00:00",
+          "updated_by": "c3729c0d-af41-49c8-8659-dae697bbc343",
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+        }
+      ],
+      "private.schedule_snapshot_imports": [
+        {
+          "fingerprint": "7c30aea2a48bbd3d10030637a00fc33071d071f6b3ffd9d3260a1d396bd60ecd",
+          "snapshot_id": "5a37467f-6f25-5bab-ab22-090969256896",
+          "source_record_id": "5a37467f-6f25-5bab-ab22-090969256896"
+        },
+        {
+          "fingerprint": "e721000afa39791b7c8783682bda7388d335b4c15afedbc0f0dab29ced26aadc",
+          "snapshot_id": "bb4a1ae2-563b-5ddc-a6cf-aedb8c366593",
+          "source_record_id": "bb4a1ae2-563b-5ddc-a6cf-aedb8c366593"
+        },
+        {
+          "fingerprint": "0dab4c93d8cbd840d3eb9e3deccd5ccebbffb0839684e77f70ce11bcf5a8f515",
+          "snapshot_id": "daec3f1d-0a4b-5545-8be3-61c03c7ee4d2",
+          "source_record_id": "daec3f1d-0a4b-5545-8be3-61c03c7ee4d2"
+        }
+      ],
+      "private.schedule_template_sources": [
+        {
+          "schedule_id": "fc71bc98-3107-5072-9f43-9be58755f141",
+          "template_id": "0439e72f-cf61-5b1b-806b-45a7d21fe1ed",
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+        },
+        {
+          "schedule_id": "fc71bc98-3107-5072-9f43-9be58755f141",
+          "template_id": "e2d07ee1-804a-5111-8dce-bb28bb283f41",
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+        },
+        {
+          "schedule_id": "fc71bc98-3107-5072-9f43-9be58755f141",
+          "template_id": "e7da2cfe-e507-5b82-a58a-14d0fe67c1e8",
+          "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16"
+        }
+      ],
+      "private.membership_status_receipts": [],
+      "private.schedule_snapshot_receipts": [],
+      "private.schedule_template_bindings": [],
+      "private.organization_lifecycle_receipts": [],
+      "private.schedule_snapshot_copy_receipts": [],
+      "private.schedule_template_save_receipts": [],
+      "private.organization_mfa_policy_receipts": [],
+      "private.schedule_snapshot_policy_receipts": [],
+      "private.schedule_template_browser_origins": [
+        {
+          "actor_id": "c3729c0d-af41-49c8-8659-dae697bbc343",
+          "created_at": "2026-09-18T07:22:45.192742+00:00",
+          "source_name": "Private call",
+          "template_id": "662006b7-875e-52a5-9194-bc7e7f894509",
+          "source_saved_at": 200,
+          "source_fingerprint": "0a2d69df644ff130e6af8a9c1b597c9e84652ed3abfd90178989cb713208874c"
+        }
+      ],
+      "private.administration_notification_outbox": [],
+      "private.organization_presentation_receipts": []
+    },
+    "organization_id": "6b115791-b287-4bce-9d6b-757f3319dd16",
+    "source_environment": "b12-fictional-6b115791-b287-4bce-9d6b-757f3319dd16"
+  }
+]
