@@ -12,7 +12,7 @@ const errors: Record<AcceptanceFailure, string> = {
   unavailable: 'This invitation is unavailable for this account. If an earlier attempt may have completed, check its result.',
   unknown: 'Acceptance is uncertain. Check the result or retry the same invitation.',
 };
-export default function LocalAcceptanceClient({ config }: { config: LocalEditorConfig }) {
+export default function LocalAcceptanceClient({ config, pendingInvitation, onInvitationUsed }: { config: LocalEditorConfig; pendingInvitation?: {actor:string;id:string}|null; onInvitationUsed?():void }) {
   const workspace = useLocalWorkspace();
   const managed = !!workspace;
   const active = workspace?.active ?? true;
@@ -32,6 +32,7 @@ export default function LocalAcceptanceClient({ config }: { config: LocalEditorC
   const [session, setSession] = useState<Session | null>(null);
   const [email, setEmail] = useState(''), [password, setPassword] = useState('');
   const [invitationId, setInvitationId] = useState('');
+  const [preview,setPreview]=useState<{organizationName:string;productionName:string|null;organizationRole:string;productionRole:string|null;expiresAt:string}|null>(null);
   const [authNeeded, setAuthNeeded] = useState(false), [busy, setBusy] = useState(false);
   const [message, setMessage] = useState(managed ? 'Review the invitation ID supplied for this fictional account.' : 'Sign in with the fictional account that received the invitation.');
   const [confirmClear, setConfirmClear] = useState<'signout' | 'review' | null>(null);
@@ -40,7 +41,7 @@ export default function LocalAcceptanceClient({ config }: { config: LocalEditorC
   const ready = !!session && !authNeeded && !workspace?.authNeeded;
   useWorkspacePanelState(dirty, busy);
   function clearAccount() {
-    account.current = null; controller.bind(null); setInvitationId(''); setPassword(''); setEmail(''); setAuthNeeded(false); refresh();
+    account.current = null; setPreview(null); controller.bind(null); setInvitationId(''); setPassword(''); setEmail(''); setAuthNeeded(false); refresh();
   }
   useEffect(() => {
     if (managed) return () => { controller.bind(null); };
@@ -69,6 +70,11 @@ export default function LocalAcceptanceClient({ config }: { config: LocalEditorC
     // Shared session updates retain this actor's immutable invitation, including during reauthentication.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [workspace?.authNeeded, workspace?.session?.access_token, controller]);
+  useEffect(() => {
+    if (!active || !ready || !pendingInvitation || account.current !== pendingInvitation.actor || invitationId || controller.attempt) return;
+    setInvitationId(pendingInvitation.id); onInvitationUsed?.();
+    setMessage('Your verified email supplied this invitation. Review it before accepting.');
+  }, [active, ready, pendingInvitation, invitationId, controller, onInvitationUsed]);
   async function login(event: React.FormEvent) {
     event.preventDefault(); if (busyRef.current) return;
     busyRef.current = true; setBusy(true);
@@ -82,10 +88,31 @@ export default function LocalAcceptanceClient({ config }: { config: LocalEditorC
     } catch { setPassword(''); setMessage('Sign-in could not finish. Your draft is retained.'); }
     finally { busyRef.current = false; setBusy(false); }
   }
+  async function reviewInvitation() {
+    if (!ready || busyRef.current) return;
+    try { controller.prepare(invitationId); } catch { setMessage('Enter a valid invitation ID.'); return; }
+    setPreview(null); refresh();
+    if (!config.accountOnboarding) { setMessage('Review the invitation and account before confirming.'); return; }
+    const attempt=controller.attempt!,token=sessionRef.current!.access_token;
+    busyRef.current=true;setBusy(true);
+    try {
+      const result=await client.rpc('preview_my_invitation',{invitation_id:attempt.invitationId}).setHeader('Authorization',`Bearer ${token}`);
+      if(controller.attempt!==attempt||account.current!==attempt.actor)return;
+      setPreview(!result.error?result.data:null);
+      setMessage(result.data&&!result.error?'Review the organization, roles and expiry before accepting.':'This invitation is unavailable. Sign in with its verified matching account, or check a prior acceptance result.');
+    } catch { setMessage('Invitation review could not finish. Keep the same ID and try again.'); }
+    finally{busyRef.current=false;setBusy(false);}
+  }
   async function execute(checkOnly: boolean) {
     if (!ready || busyRef.current) return;
     busyRef.current = true; setBusy(true); const attempt = controller.attempt;
     try {
+      if(config.accountOnboarding&&!checkOnly&&controller.phase==='review'&&attempt){
+        const result=await client.rpc('preview_my_invitation',{invitation_id:attempt.invitationId}).setHeader('Authorization',`Bearer ${sessionRef.current!.access_token}`);
+        if(controller.attempt!==attempt||account.current!==attempt.actor)return;
+        if(result.error||!result.data){setPreview(null);setMessage('This invitation is unavailable. Check its result or sign in with the verified matching account.');return;}
+        setPreview(result.data);
+      }
       const operation = controller.execute(repository, checkOnly); refresh(); await operation;
       if (controller.attempt !== attempt) return;
       if (controller.failure) { setMessage(errors[controller.failure]); if (controller.failure === 'auth') { setAuthNeeded(true); workspace?.requireAuth(); } }
@@ -119,7 +146,7 @@ export default function LocalAcceptanceClient({ config }: { config: LocalEditorC
     {!workspace && session && <div className={styles.account}><span>{session.user.email}</span><button className={styles.secondary} disabled={busy} onClick={() => dirty ? setConfirmClear('signout') : void signOut()}>Sign out</button></div>}
     {account.current && <section className={styles.card} aria-label="Invitation draft"><h2>Invitation ID</h2>
       <p>Enter the ID supplied for this fictional account. Confirm the invitation with its sender before accepting.</p>
-      <form className={styles.form} onSubmit={event => { event.preventDefault(); if (!ready || busyRef.current) return; try { controller.prepare(invitationId); setMessage('Review the invitation and account before confirming.'); refresh(); } catch { setMessage('Enter a valid invitation ID. Your draft is retained.'); } }}>
+      <form className={styles.form} onSubmit={event => { event.preventDefault(); void reviewInvitation(); }}>
         <label>Fictional invitation ID<input required autoComplete="off" maxLength={36} disabled={!ready || busy || !!attempt} value={invitationId} onChange={event => setInvitationId(event.target.value)} /></label>
         <button disabled={!ready || busy || !!attempt}>Review invitation</button>
       </form>
@@ -127,12 +154,13 @@ export default function LocalAcceptanceClient({ config }: { config: LocalEditorC
     {attempt && <section ref={review} tabIndex={-1} className={`${styles.card} ${styles.review}`} aria-label="Acceptance review">
       <h2>{controller.phase === 'success' ? 'Acceptance confirmed' : 'Review acceptance'}</h2>
       <p>Account: <strong>{session?.user.email ?? email}</strong></p><p className={styles.identifier}>Invitation: {attempt.invitationId}</p>
+      {config.accountOnboarding&&preview&&<dl><dt>Organization</dt><dd>{preview.organizationName}</dd>{preview.productionName&&<><dt>Production</dt><dd>{preview.productionName}</dd></>}<dt>Organization role</dt><dd>{preview.organizationRole==='owner'?'Organization Super Admin':preview.organizationRole}</dd>{preview.productionRole&&<><dt>Production role</dt><dd>{preview.productionRole}</dd></>}<dt>Expires</dt><dd>{new Date(preview.expiresAt).toLocaleString()}</dd></dl>}
       {controller.failure && <p role="alert">{errors[controller.failure]}</p>}
       {controller.receipt && <><p>Invitation accepted. Access may change if an administrator changes your membership.</p><p className={styles.identifier}>Organization: {controller.receipt.organizationId}</p>{controller.receipt.acceptedAt && <p>Accepted {new Date(controller.receipt.acceptedAt).toLocaleString()}</p>}</>}
       <div className={styles.actions}>
         {workspace && controller.receipt && <button disabled={busy || !ready} onClick={() => workspace.openOrganization(controller.receipt!.organizationId)}>Open organization schedules</button>}
         {controller.phase === 'success' ? <button disabled={busy} onClick={() => { controller.clear(); setInvitationId(''); refresh(); setMessage('Result acknowledged. You can review another fictional invitation.'); }}>Acknowledge result</button> : <>
-          <button disabled={!ready || busy} onClick={() => void execute(false)}>{controller.phase === 'review' ? 'Confirm acceptance' : 'Retry same invitation'}</button>
+          <button disabled={!ready || busy || (config.accountOnboarding&&controller.phase==='review'&&!preview)} onClick={() => void execute(false)}>{controller.phase === 'review' ? 'Confirm acceptance' : 'Retry same invitation'}</button>
           <button className={styles.secondary} disabled={!ready || busy} onClick={() => void execute(true)}>Check acceptance result</button>
           {controller.phase !== 'review' && <button className={styles.secondary} disabled={busy} onClick={() => setConfirmClear('review')}>Discard local review</button>}
           {controller.phase === 'review' && <button className={styles.secondary} disabled={busy} onClick={() => { controller.clear(); refresh(); setMessage('Review closed. Your invitation ID is still here.'); }}>Back to draft</button>}

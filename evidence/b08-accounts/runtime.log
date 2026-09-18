@@ -1,0 +1,14 @@
+PASS provider public signup disabled; verification enabled
+PASS local route gates, no-store output, secret exclusion and hostile origin/redirect rejection
+FAIL Concurrent invitation verification issued 2 sessions; 1 admitted by application before password setup
+PASS real local signup mail, verified identity, sequential callback replay denial, generic wrong-account response, no automatic membership and immutable policy receipt
+PASS explicit invitation acceptance, recipient-only response recovery, replay denial and no repeated consent
+PASS no fixed absolute sign-out; rolling idle denial survives background refresh and cannot self-renew
+FAIL Concurrent recovery verification issued multiple sessions; 2 admitted by application before reset
+PASS real recovery mail, old/recovery issued-token denial, refresh denial, password replacement and fresh sign-in
+PASS password recovery cannot bypass an enrolled factor; genuine step-up permits reset
+PASS material terms version change, stale rejection and exact timestamp-preserving replay
+PASS revoked invitation signup denial and concurrent per-address abuse limit
+PASS dropped signup acknowledgement retains a delivered recoverable email and exactly one account
+PASS genuine expired recovery token denied
+PASS disabled account denied despite previously issued session

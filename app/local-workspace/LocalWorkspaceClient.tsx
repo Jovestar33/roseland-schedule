@@ -11,6 +11,8 @@ import LocalScheduleClient from '../local-schedule/LocalScheduleClient';
 import LocalInvitationsClient from '../local-invitations/LocalInvitationsClient';
 import LocalAcceptanceClient from '../local-accept-invitation/LocalAcceptanceClient';
 import styles from './workspace.module.css';
+import { accountSessionStorage } from '@/lib/platform/account-session';
+import LocalAccountAccess from '@/components/local/LocalAccountAccess';
 import LocalSchedulePermissions from '@/components/local/LocalSchedulePermissions';
 import LocalLifecycleClient from './LocalLifecycleClient';
 import LocalProvisioningClient from './LocalProvisioningClient';
@@ -18,13 +20,19 @@ import LocalOrganizationSettings from '@/components/local/LocalOrganizationSetti
 
 const initial:WorkspaceLocation={screen:'schedule',organization:null};
 export default function LocalWorkspaceClient({config}:{config:LocalEditorConfig}){
+  const [authStorage]=useState(()=>accountSessionStorage('rp-b08:'+config.supabaseUrl));
+  const [rememberSession,setRememberSession]=useState(false),[accountReady,setAccountReady]=useState(!config.accountOnboarding);
+  const [policyRevision,setPolicyRevision]=useState(0);
+  const policyRequired=useRef<(token:string|null)=>void>(()=>{});
+  const [pendingInvitation,setPendingInvitation]=useState<{actor:string;id:string}|null>(null);
   const expired=useRef<(token:string|null)=>void>(()=>{});
   const [client]=useState(()=>createClient(config.supabaseUrl,config.anonymousKey,{
-    auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false},
+    auth:config.accountOnboarding?{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false,storage:authStorage,storageKey:'account-session'}:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false},
     global:{async fetch(input,init){
       const url=new URL(typeof input==='string'?input:input instanceof URL?input.href:input.url);
       if(url.origin!==config.supabaseUrl)throw new Error('Local request required');
       const response=await fetch(input,{...init,cache:'no-store',redirect:'error',signal:AbortSignal.timeout(15000)});
+      if(response.status===428 && url.pathname.startsWith('/rest/v1/'))policyRequired.current(new Headers(init?.headers ?? (input instanceof Request ? input.headers : undefined)).get('authorization'));
       if(response.status===401 && url.pathname.startsWith('/rest/v1/'))expired.current(new Headers(init?.headers ?? (input instanceof Request ? input.headers : undefined)).get('authorization'));return response;
     }},
   }));
@@ -49,6 +57,7 @@ export default function LocalWorkspaceClient({config}:{config:LocalEditorConfig}
   }),[]);
   const requireAuth=useCallback(()=>{setAuthNeeded(true);setMessage('Sign in again with the same account. Retained drafts and requests are still in this workspace.');},[]);
   expired.current=token=>{if(token && token===`Bearer ${sessionRef.current?.access_token}`)requireAuth();};
+  policyRequired.current=token=>{if(token===`Bearer ${sessionRef.current?.access_token}`){setAccountReady(false);setPolicyRevision(value=>value+1);setMessage('Review the updated account notices. Your unfinished work is retained.');}};
   const remember=(organization:WorkspaceOrganization)=>setVisited(previous=>[...previous.filter(item=>item.id!==organization.id),organization]);
   async function navigate(next:WorkspaceLocation,push=true){
     const ticket=++navigationTicket.current,generation=identity.capture(),actor=identity.actor;
@@ -84,16 +93,18 @@ export default function LocalWorkspaceClient({config}:{config:LocalEditorConfig}
         navigationTicket.current++;directoryTicket.current++;useScheduleStore.getState().newSchedule();setPanels({});setVisited([]);setManagementPanels([]);setLifecyclePanels([]);setScheduleRequest(null);setOrganizations([]);setScope(null);setMore(false);setAccountEpoch(identity.generation);
       }
       sessionRef.current=next;setSession(next);
+      if(next&&_event==='INITIAL_SESSION')setMessage(previous=>previous==='Sign in once to use the local rehearsals.'?'Checking your remembered account.':previous);
       if(!next&&identity.actor)requireAuth();
     });
     return()=>{navigationRequests.current++;directoryRequests.current++;identity.clear();useScheduleStore.getState().newSchedule();subscription.data.subscription.unsubscribe();};
   },[client,identity,requireAuth]);
   useEffect(()=>{
-    if(!session || authNeeded)return;
+    if(!session || authNeeded || !accountReady)return;
+    setMessage(previous=>previous==='Checking your remembered account.'?'Your remembered account is ready. Choose an organization or review an invitation.':previous);
     void loadOrganizations().then(current=>current?navigate(locationRef.current,false):undefined).catch(()=>setMessage('Organizations could not be refreshed. Your drafts are retained.'));
     // Account epoch and navigation tickets guard asynchronous directory reads.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[session?.access_token,authNeeded]);
+  },[session?.access_token,authNeeded,accountReady]);
   useEffect(()=>{
     const pop=()=>{void navigate(parseWorkspaceLocation(window.location.search),false);};
     window.addEventListener('popstate',pop);return()=>window.removeEventListener('popstate',pop);
@@ -103,7 +114,7 @@ export default function LocalWorkspaceClient({config}:{config:LocalEditorConfig}
   useEffect(()=>{if(confirmSignOut)dialog.current?.showModal();else dialog.current?.close();},[confirmSignOut]);
   async function login(event:React.FormEvent){
     event.preventDefault();if(busyRef.current||working)return;busyRef.current=true;setBusy(true);
-    try{const r=await client.auth.signInWithPassword({email:sessionRef.current?.user.email??email,password});setPassword('');if(r.error||!r.data.session){setMessage('Sign-in failed. Check your fictional account details.');return;}setEmail(r.data.user.email??email);setAuthNeeded(false);setMessage('Signed in. Choose an organization or accept a fictional invitation.');}
+    try{if(config.accountOnboarding)authStorage.setRemember(rememberSession);const r=await client.auth.signInWithPassword({email:sessionRef.current?.user.email??email,password});setPassword('');if(r.error||!r.data.session){setMessage('Sign-in failed. Check your fictional account details.');return;}if(config.accountOnboarding)client.auth.startAutoRefresh();setEmail(r.data.user.email??email);setAuthNeeded(false);setMessage('Signed in. Choose an organization or accept a fictional invitation.');}
     catch{setPassword('');setMessage('Sign-in could not finish. Your drafts are retained.');}finally{busyRef.current=false;setBusy(false);}
   }
   async function signOut(){
@@ -116,24 +127,26 @@ export default function LocalWorkspaceClient({config}:{config:LocalEditorConfig}
   const openOrganization=(id:string)=>{void navigate({screen:'schedule',organization:id});};
   const openSchedule=(organization:string,id:string)=>{const generation=identity.capture();void navigate({screen:'schedule',organization}).then(ok=>{if(ok&&identity.current(generation)&&locationRef.current.organization===organization&&locationRef.current.screen==='schedule')setScheduleRequest({id,organization,sequence:++scheduleSequence.current});});};
   const openLifecycle=(organization:string,id:string)=>{const generation=identity.capture();void navigate({screen:'lifecycle',organization}).then(ok=>{if(ok&&identity.current(generation)&&locationRef.current.organization===organization&&locationRef.current.screen==='lifecycle')setScheduleRequest({id,organization,sequence:++scheduleSequence.current,target:'lifecycle'});});};
-  const panel=(id:string,organization:WorkspaceOrganization|null,enabled:boolean)=>({client,session,authNeeded,organization,active:enabled,panelId:id,report,requireAuth,openOrganization,openSchedule,openLifecycle,scheduleRequest,consumeScheduleRequest});
-  function tab(screen:WorkspaceScreen){if(authNeeded||!session){requireAuth();return;}void navigate({screen,organization:locationRef.current.organization});}
+  const panel=(id:string,organization:WorkspaceOrganization|null,enabled:boolean)=>({client,session,authNeeded:authNeeded||!accountReady,organization,active:enabled&&accountReady,panelId:id,report,requireAuth,openOrganization,openSchedule,openLifecycle,scheduleRequest,consumeScheduleRequest});
+  function tab(screen:WorkspaceScreen){if(authNeeded||!session||!accountReady){return;}void navigate({screen,organization:locationRef.current.organization});}
   return <div className={styles.page}>
     <header className={styles.header}><div><span className={styles.eyebrow}>LOCAL WORKSPACE</span><h1>Roseland rehearsals</h1><p>One account, with unfinished work kept in this tab.</p></div><span className={styles.badge}>Fictional data only</span></header>
     <div className={styles.shell}>
-      <p className={styles.notice}>Switching local screens keeps drafts and request details. Closing or reloading loses tab-only requests. Duplicate source backups and template or appearance request receipts can be recovered by the original account on this computer. No email is sent.</p>
+      <p className={styles.notice}>Switching local screens keeps drafts and request details. Closing or reloading loses tab-only requests. Duplicate source backups and template or appearance request receipts can be recovered by the original account on this computer. {config.accountOnboarding?'Email stays in the local mail sink. Remember me retains sign-in only; idle expiry still applies.':'No email is sent.'}</p>
       <p role="status" aria-live="polite" className={styles.status}>{message}</p>
-      {(!session||authNeeded)&&<form className={styles.login} onSubmit={login} aria-label="Workspace sign in"><h2>{identity.actor?'Sign in again':'Sign in'}</h2><label>Fictional account email<input type="email" required autoComplete="off" readOnly={!!identity.actor} value={session?.user.email??email} onChange={event=>setEmail(event.target.value)}/></label><label>Password<input type="password" required autoComplete="off" value={password} onChange={event=>setPassword(event.target.value)}/></label><button disabled={busy||working}>Sign in</button></form>}
+      {(!session||authNeeded)&&<form className={styles.login} onSubmit={login} aria-label="Workspace sign in"><h2>{identity.actor?'Sign in again':'Sign in'}</h2><label>Fictional account email<input type="email" required autoComplete="off" readOnly={!!identity.actor} value={session?.user.email??email} onChange={event=>setEmail(event.target.value)}/></label><label>Password<input type="password" required autoComplete="off" value={password} onChange={event=>setPassword(event.target.value)}/></label><button disabled={busy||working}>Sign in</button>{config.accountOnboarding&&<label><input type="checkbox" checked={rememberSession} onChange={event=>setRememberSession(event.target.checked)}/> Remember me on this personal device</label>}</form>}
+      {config.accountOnboarding&&<LocalAccountAccess config={config} client={client} session={session} authNeeded={authNeeded} onReady={setAccountReady} requireAuth={requireAuth} policyRevision={policyRevision} onInvitation={setPendingInvitation}/>}
+      {pendingInvitation?.actor===session?.user.id&&accountReady&&<p>Verified invitation ready. <button onClick={()=>tab('acceptance')}>Review verified invitation</button></p>}
       {identity.actor&&<><div className={styles.account}><span>{session?.user.email??email}{authNeeded?' · Sign-in required':''}</span><span>{dirty?'Unfinished work retained':'No unfinished work'}</span><button disabled={busy||working} onClick={()=>dirty?setConfirmSignOut(true):void signOut()}>Sign out</button></div>
-        <div className={styles.directory}><label>Workspace organization<select value={scope?.id??''} disabled={busy||authNeeded||!session} onChange={event=>void navigate({screen:active,organization:event.target.value||null})}><option value="">Choose an organization</option>{scope&&!organizations.some(item=>item.id===scope.id)&&<option value={scope.id}>{scope.name} · {scope.role}</option>}{organizations.map(item=><option key={item.id} value={item.id}>{item.name} · {item.role==='owner'?'Organization Super Admin':item.role}</option>)}</select></label><button disabled={busy||authNeeded||!session} onClick={()=>void loadOrganizations().then(current=>current?navigate(locationRef.current,false):undefined).catch(()=>setMessage('Organizations could not be refreshed.'))}>Refresh organizations</button>{more&&<button disabled={busy||authNeeded||!session} onClick={()=>void loadOrganizations(true).catch(()=>setMessage('More organizations could not be loaded.'))}>Load more organizations</button>}</div>
+        <div className={styles.directory}><label>Workspace organization<select value={scope?.id??''} disabled={busy||authNeeded||!session||!accountReady} onChange={event=>void navigate({screen:active,organization:event.target.value||null})}><option value="">Choose an organization</option>{scope&&!organizations.some(item=>item.id===scope.id)&&<option value={scope.id}>{scope.name} · {scope.role}</option>}{organizations.map(item=><option key={item.id} value={item.id}>{item.name} · {item.role==='owner'?'Organization Super Admin':item.role}</option>)}</select></label><button disabled={busy||authNeeded||!session||!accountReady} onClick={()=>void loadOrganizations().then(current=>current?navigate(locationRef.current,false):undefined).catch(()=>setMessage('Organizations could not be refreshed.'))}>Refresh organizations</button>{more&&<button disabled={busy||authNeeded||!session||!accountReady} onClick={()=>void loadOrganizations(true).catch(()=>setMessage('More organizations could not be loaded.'))}>Load more organizations</button>}</div>
         <nav aria-label="Workspace screens" className={styles.tabs}><button aria-current={active==='schedule'?'page':undefined} onClick={()=>tab('schedule')}>Schedules</button><button aria-current={active==='lifecycle'?'page':undefined} disabled={!scope} onClick={()=>tab('lifecycle')}>Schedule lifecycle</button><button aria-current={active==='invitations'?'page':undefined} disabled={!scope||scope.role==='member'} onClick={()=>tab('invitations')}>Manage invitations</button><button aria-current={active==='acceptance'?'page':undefined} onClick={()=>tab('acceptance')}>Accept invitation</button><button aria-current={active==='provisioning'?'page':undefined} onClick={()=>tab('provisioning')}>Restricted provisioning</button></nav>
       </>}
     </div>
-    {identity.actor&&<div key={accountEpoch}>
+    {identity.actor&&<div key={accountEpoch} hidden={!accountReady}>
       {visited.map(o=><div key={'presentation:'+o.id} hidden={scope?.id!==o.id}><LocalWorkspaceContext.Provider value={panel('presentation:'+o.id,o,scope?.id===o.id)}><LocalOrganizationSettings/></LocalWorkspaceContext.Provider></div>)}
       {visited.filter(o=>o.role!=='member').map(o=><div key={'permissions:'+o.id} hidden={scope?.id!==o.id}><LocalWorkspaceContext.Provider value={panel('permissions:'+o.id,o,scope?.id===o.id)}><LocalSchedulePermissions/></LocalWorkspaceContext.Provider></div>)}
       <div hidden={active!=='schedule'}><LocalWorkspaceContext.Provider value={panel('schedule',scope,active==='schedule')}><LocalScheduleClient config={config}/></LocalWorkspaceContext.Provider></div>
-      <div hidden={active!=='acceptance'}><LocalWorkspaceContext.Provider value={panel('acceptance',null,active==='acceptance')}><LocalAcceptanceClient config={config}/></LocalWorkspaceContext.Provider></div>
+      <div hidden={active!=='acceptance'}><LocalWorkspaceContext.Provider value={panel('acceptance',null,active==='acceptance')}><LocalAcceptanceClient config={config} pendingInvitation={pendingInvitation?.actor===session?.user.id?pendingInvitation:null} onInvitationUsed={()=>setPendingInvitation(null)}/></LocalWorkspaceContext.Provider></div>
       <div hidden={active!=='provisioning'}><LocalWorkspaceContext.Provider value={panel('provisioning',null,active==='provisioning')}><LocalProvisioningClient/></LocalWorkspaceContext.Provider></div>
       {lifecyclePanels.map(id=>{const organization=visited.find(item=>item.id===id)!;const enabled=active==='lifecycle'&&scope?.id===id;return <div key={id} hidden={!enabled}><LocalWorkspaceContext.Provider value={panel('lifecycle:'+id,organization,enabled)}><LocalLifecycleClient/></LocalWorkspaceContext.Provider></div>;})}
       {managementPanels.map(id=>{const organization=visited.find(item=>item.id===id)!;const enabled=active==='invitations'&&scope?.id===id&&scope.role!=='member';return <div key={id} hidden={!enabled}><LocalWorkspaceContext.Provider value={panel('invitations:'+id,organization,enabled)}><LocalInvitationsClient config={config}/></LocalWorkspaceContext.Provider></div>;})}

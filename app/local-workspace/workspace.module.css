@@ -22,3 +22,5 @@
 .dialog { margin:auto; max-width:520px; width:calc(100% - 40px); border:1px solid #7d98a5; border-radius:14px; padding:24px; background:white; color:#173848; }
 .dialog h2 { margin-bottom:16px; font-size:21px; }.dialog p { line-height:1.6; }.dialog div { display:flex; flex-wrap:wrap; gap:10px; margin-top:20px; }.dialog::backdrop { background:#06121bc9; }
 @media(max-width:760px){.header{padding:24px 16px;flex-wrap:wrap;}.shell{padding:16px;}.directory{align-items:stretch;}.directory label{flex-basis:100%;}.tabs{gap:8px;}}
+
+.login label:has(input[type="checkbox"]) { display:flex; align-items:center; }

@@ -1,0 +1,21 @@
+{
+  "project": "roseland-b08-replay-20260917",
+  "checks": [
+    "provider public signup disabled; verification enabled",
+    "local route gates, no-store output, secret exclusion and hostile origin/redirect rejection",
+    "real local signup mail, verified identity, sequential callback replay denial, generic wrong-account response, no automatic membership and immutable policy receipt",
+    "explicit invitation acceptance, recipient-only response recovery, replay denial and no repeated consent",
+    "no fixed absolute sign-out; rolling idle denial survives background refresh and cannot self-renew",
+    "real recovery mail, old/recovery issued-token denial, refresh denial, password replacement and fresh sign-in",
+    "password recovery cannot bypass an enrolled factor; genuine step-up permits reset",
+    "material terms version change, stale rejection and exact timestamp-preserving replay",
+    "revoked invitation signup denial and concurrent per-address abuse limit",
+    "dropped signup acknowledgement retains a delivered recoverable email and exactly one account",
+    "genuine expired recovery token denied",
+    "disabled account denied despite previously issued session"
+  ],
+  "failures": [
+    "Concurrent invitation verification issued 2 sessions; 1 admitted by application before password setup",
+    "Concurrent recovery verification issued multiple sessions; 2 admitted by application before reset"
+  ]
+}

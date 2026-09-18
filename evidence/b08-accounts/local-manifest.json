@@ -1,0 +1,14 @@
+{
+  "date": "2026-09-17",
+  "authImage": "public.ecr.aws/supabase/gotrue:v2.192.0",
+  "cliVersion": "2.109.1",
+  "primaryProject": "roseland-b08-20260917",
+  "replayProject": "roseland-b08-replay-20260917",
+  "browserOrigin": "http://127.0.0.1:3435",
+  "mailDelivery": "local Mailpit only",
+  "publicSignup": false,
+  "emailConfirmation": true,
+  "providerConcurrentTokenGate": "FAILED",
+  "actualSchedulesChanged": false,
+  "hostedChanges": false
+}
