@@ -1,6 +1,6 @@
-# B05 snapshot catch-up — approved policy, implementation not dispatched
+# B05 snapshot catch-up — local implementation authorized
 
-September 17, 2026. This reconciles the unfinished B05 checkpoint and subsequent explicit user decisions. B08 remains the active implementation batch. No snapshot implementation, real data change or actual deletion is authorized by these planning decisions.
+September 17, 2026. The user has now authorized this independent local B05 product implementation. B08 provider investigation is paused at the user’s request and its original concurrent-token tests remain failed, with the subsequent narrow local acceptance exception recorded in B08_ACCEPTANCE_DISPOSITION.md. This dispatch supersedes the planning-only language below for fictional local B05 implementation and tests. No actual data, users, schedules, mail, hosted changes, deployment or migration are authorized. Use established login fixtures; do not resume provider vulnerability or MFA/recovery investigation.
 
 ## Current evidence and scope
 

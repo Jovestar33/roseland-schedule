@@ -100,3 +100,7 @@ Required evidence includes RLS/role tests, auth failure-path tests, OWASP ASVS-b
 ### B08 local verification race — open acceptance gate
 
 September 17, 2026: installed local Auth v2.192.0 returned two sessions from concurrent verification of one recovery token; both passed application admission before reset. Reset then invalidated both. Sequential replay is denied, but atomic token consumption is not proven and B08 remains unaccepted. The default-off local candidate and exact evidence are recorded in [B08_LOCAL_ACCOUNT_CHECKPOINT.md](./B08_LOCAL_ACCOUNT_CHECKPOINT.md). No hosted configuration or actual account was changed.
+
+### B08 user-approved local exception disposition
+
+The user subsequently accepted only the observed same-verified-account concurrent-redemption session-count limitation. Original failed tests and the paused investigation remain intact. Bounded local acceptance with this exception, essential access/reset/MFA requirements and unverified release gaps are recorded in [B08_ACCEPTANCE_DISPOSITION.md](./B08_ACCEPTANCE_DISPOSITION.md). This supersedes the blanket local acceptance block above, not any tenant boundary, reset guarantee, MFA requirement or hosted release gate.

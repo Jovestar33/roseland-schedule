@@ -1,6 +1,12 @@
+> Current disposition: the user accepted the narrow same-account concurrent-session limitation. See [B08_ACCEPTANCE_DISPOSITION.md](./B08_ACCEPTANCE_DISPOSITION.md) for bounded local acceptance with exception and retained gaps. The original failed checkpoint below is historical evidence; its tests remain failed and the investigation remains paused.
+
 # B08 local account checkpoint — acceptance blocked
 
 September 17, 2026. Local implementation commit `bc5553e`; **B08 is not accepted or complete**. No hosted change, deployment, real email, actual account or actual schedule modification. B05/B09/B10/B11 remain separate planning work. Organization presentation writers remain Organization Super Admins/Admins only; B06 template-publishing authority is unchanged.
+
+## Investigation paused by user
+
+The user requested stopping the provider investigation and continuing independent B05 ordinary product development without Trusted Access enrollment. Preserve this failed checkpoint and evidence. Do not retry or route around the flagged investigation; no B08 acceptance is claimed.
 
 ## Blocking finding: concurrent Auth token consumption
 

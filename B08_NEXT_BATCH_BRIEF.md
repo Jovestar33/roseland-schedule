@@ -2,7 +2,11 @@
 
 Planning checkpoint: September 17, 2026. Reviewed implementation: `47aa557` on `codex/migration-schedule-contract`, in `/Users/johnsammon/.codex/worktrees/roseland-b02/roseland-schedule`. **Current status: bounded local B08 implementation authorized** on September 17, 2026, after all product decisions below were approved. Use fictional users, isolated local Auth and a mail sink with verification enabled; test and commit meaningful local sections with durable evidence. No actual credentials/users/mail/schedules, hosted changes, push/deployment, reskin or new platform privileges. Preserve B06/B07, old migrations, recovery volumes and unrelated dirty source. Earlier planning-only statements below describe decision-recording scope, not a current stop on authorized B08 work.
 
-## September 17 local implementation checkpoint
+## Current disposition — user-approved narrow exception
+
+Bounded local B08 acceptance is recorded with the explicitly accepted same-account concurrent-token session limitation. Original test failures remain intact, the investigation stays paused, and hosted release is not authorized. See [B08_ACCEPTANCE_DISPOSITION.md](./B08_ACCEPTANCE_DISPOSITION.md) for essential criteria and unverified limits. B05 is the active independent implementation batch.
+
+## Historical September 17 checkpoint before the exception
 
 The local B08 candidate is implemented, but acceptance is blocked by a reproduced provider race: one recovery token verified concurrently issued two application-admitted sessions before reset. Password reset revokes both, and the other local checks pass. See [B08_LOCAL_ACCOUNT_CHECKPOINT.md](./B08_LOCAL_ACCOUNT_CHECKPOINT.md) for evidence, limits and reproduction. Do not mark B08 complete or advance deployment.
 
