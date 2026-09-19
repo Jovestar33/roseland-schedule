@@ -34,7 +34,7 @@ function nodes(tree,visible=true,result=[]){
 const config={accountOnboarding:true,supabaseUrl:'http://127.0.0.1:56521',anonymousKey:'fictional'};
 const session={user:{id:'fixture-actor',email:'fixture@example.test'},access_token:'fixture-not-a-token'};
 const org={id:'fictional-org',role:'member',name:'Fictional Studio'};
-const base={session,accountReady:true,mfaReady:true,scope:org,visited:[org],location:{screen:'schedule',organization:org.id,schedule:'fictional-draft'},message:'Sign in again with the same account. Retained drafts and requests are still in this workspace.'};
+const base={session,accountReady:true,mfaReady:true,mfaStage:'ready',directoryState:'ready',scope:org,visited:[org],location:{screen:'schedule',organization:org.id,schedule:'fictional-draft'},message:'Sign in again with the same account. Retained drafts and requests are still in this workspace.'};
 const workspace=state=>nodes(render('app/local-workspace/LocalWorkspaceClient.tsx',{...base,...state},{config,review:true}));
 test('expired session has one sign-in task and no visible workspace controls, retaining mounted draft panels',()=>{
  const all=workspace({authNeeded:true,showSettings:true});
@@ -72,4 +72,27 @@ test('expired child notice is suppressed while callback errors remain visible an
  assert.ok(all.some(({node,shown})=>shown&&node.props?.role==='status'));
  assert.equal(all.filter(({node,shown})=>shown&&node.type==='form').length,0);
  assert.ok(all.some(({node,shown})=>shown&&node.type==='button'&&node.props.children==='Close email action'));
+});
+
+test('unavailable organization and MFA checks form one recovery task and preserve mounted disabled drafts',()=>{
+ const all=workspace({mfaReady:false,mfaStage:'unavailable',directoryState:'error',showSettings:true,message:'Organizations could not be refreshed. Your drafts are retained.'});
+ const visible=all.filter(v=>v.shown);
+ assert.equal(visible.filter(({node})=>node.props?.role==='status').length,1);
+ assert.ok(visible.some(({node})=>node.type==='h1'&&node.props.children==='Unable to check your access'));
+ assert.equal(visible.filter(({node})=>node.type==='button'&&node.props.children==='Try again').length,1);
+ assert.ok(all.some(({node,shown})=>!shown&&node.props?.value?.panelId==='schedule'&&!node.props.value.active&&node.props.value.authNeeded));
+ assert.ok(visible.some(({node})=>node.type==='span'&&node.props.children===org.name));
+});
+test('checking has no competing retry, and directory-only failure also disables retained panels',()=>{
+ let all=workspace({mfaReady:false,mfaStage:'checking',directoryState:'loading'});
+ assert.ok(all.some(({node,shown})=>shown&&node.type==='button'&&node.props.children==='Checking…'&&node.props.disabled));
+ assert.equal(all.filter(({node,shown})=>shown&&node.type==='form').length,0);
+ all=workspace({directoryState:'error'});
+ assert.ok(all.some(({node,shown})=>!shown&&node.props?.value?.panelId==='schedule'&&!node.props.value.active));
+});
+
+test('password maintenance stays hidden outside account settings while account checks remain available',()=>{
+ const all=nodes(render('components/local/LocalAccountAccess.tsx',{}, {config,review:true,showMaintenance:false,session,authNeeded:false,onReady:()=>{},requireAuth:()=>{},onInvitation:()=>{}}));
+ assert.ok(all.some(({node,shown})=>!shown&&node.type==='button'&&node.props.children==='Reset password'));
+ assert.ok(all.some(({node,shown})=>shown&&node.type==='button'&&node.props.children==='Retry account checks'));
 });

@@ -1,0 +1,25 @@
+- img "Roseland Pictures"
+- generic: B14 latest organization labels
+- navigation "Organization context":
+  - generic: Organization
+  - strong: B14 Fictional Studio
+  - button "Back to schedules" [active]
+- heading "Account & settings" [level=1]
+- paragraph: Manage your account and the organizations you work with.
+- navigation "Account navigation":
+  - button "Your account"
+  - button "Invitations for you"
+- banner:
+  - heading "Sign-in and security" [level=2]
+  - paragraph: Manage your password and two-step verification.
+- region "Account access":
+  - button "Reset password"
+- region "Account security":
+  - button "Two-step verification"
+- generic: [private fictional account]
+- generic: No unfinished work
+- button "Sign out"
+- region "Organization deletion settings"
+- text: ▸ ▾ ▾
+- generic "Notifications"
+- alert: Roseland Schedule

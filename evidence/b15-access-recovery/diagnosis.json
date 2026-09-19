@@ -1,0 +1,23 @@
+{
+  "originalScreenshotCause": "Unknown; runtime and failed response not supplied",
+  "frozenCandidate": {
+    "runtime": "http://127.0.0.1:3504/review",
+    "commit": "3470509f4bbc3c3fd2afda757be2dc31831b288d",
+    "build": "N58VrGih-TndBPa3zM7OO",
+    "ordinaryFictionalSignIn": "Succeeded; populated 15-schedule library",
+    "authHealth": 200,
+    "restHealth": 200
+  },
+  "controlledTests": {
+    "proxy": "http://127.0.0.1:3507",
+    "candidate": "http://127.0.0.1:3508/review",
+    "copiedBaseline": "http://127.0.0.1:3510/review",
+    "upstream": "http://127.0.0.1:56521",
+    "failures": "Only task-owned connections; read RPC 503, 401, delay and challenge response fixtures",
+    "noSharedServiceRestart": true,
+    "initialProxyCorsOmission": "Corrected before matched baseline captures"
+  },
+  "credentialChanges": false,
+  "mailSubmissions": 0,
+  "savedDocumentChanges": 0
+}

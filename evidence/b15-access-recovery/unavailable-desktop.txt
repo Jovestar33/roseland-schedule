@@ -1,0 +1,13 @@
+- img "Roseland Pictures"
+- generic: Production Schedule
+- navigation "Organization context":
+  - generic: Workspace
+  - button "Account & settings" [disabled]
+- region "Unable to check your access":
+  - heading "Unable to check your access" [active] [level=1]
+  - status: We couldn’t confirm your organization or account security. Try again to continue.
+  - paragraph: Your open drafts and pending requests are retained in this tab.
+  - button "Try again"
+- text: ▸
+- generic "Notifications"
+- alert

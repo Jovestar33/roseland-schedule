@@ -1,0 +1,14 @@
+{
+  "build": "MHUgjmypvtTEGaJZIcLt-",
+  "startingCommit": "3470509f4bbc3c3fd2afda757be2dc31831b288d",
+  "sourceHashes": {
+    "app/local-workspace/LocalWorkspaceClient.tsx": "82e7638b62f77c829041489ae09c461f283542776a5ed539ba6067f4f4e4ced0",
+    "app/local-workspace/workspace.module.css": "b52924b3c69ac21e9a3f742f4e786f7122d9d70710bd6fcee6b7f45d76b13867",
+    "components/local/LocalMfaAccess.tsx": "d757a48cded108b95b3ead74ef4da079ed121d9e0aee4a2631aeacb547f054ca",
+    "components/local/LocalAccountAccess.tsx": "179dd3a6b248724aed205bd7100fa7c607157c178fff36546ae3be924b1086ba"
+  },
+  "review": "http://127.0.0.1:3506/review",
+  "controlledFailureRuntime": "http://127.0.0.1:3508/review",
+  "frozenCopiedBuild": "N58VrGih-TndBPa3zM7OO",
+  "baseline": "http://127.0.0.1:3510/review"
+}

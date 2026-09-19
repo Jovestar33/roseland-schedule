@@ -1,0 +1,13 @@
+- img "Roseland Pictures"
+- generic: Production Schedule
+- navigation "Organization context":
+  - generic: Workspace
+  - button "Account & settings" [disabled]
+- region "Checking your access…":
+  - heading "Checking your access…" [active] [level=1]
+  - status: Checking your organization and account security.
+  - paragraph: Your open drafts and pending requests are retained in this tab.
+  - button "Checking…" [disabled]
+- text: ▸
+- generic "Notifications"
+- alert

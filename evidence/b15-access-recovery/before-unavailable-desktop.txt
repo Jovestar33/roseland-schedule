@@ -1,0 +1,19 @@
+- img "Roseland Pictures"
+- generic: Production Schedule
+- navigation "Organization context":
+  - status: Organization access could not be checked.
+  - button "Try again" [disabled]
+  - button "Account & settings"
+- status: Organizations could not be refreshed. Your drafts are retained.
+- region "Account access":
+  - button "Reset password"
+- region "Account security":
+  - button "Two-step verification" [disabled]
+  - heading "Verify your authenticator" [level=2]
+  - paragraph: Required for Organization Super Admins and Platform Super Admins. Organization policy can require other roles. Once enabled, your authenticator protects this account across organizations.
+  - status: MFA checks could not finish. Your unfinished work is retained. Retry when connected.
+  - button "Retry MFA checks"
+  - paragraph: Your open drafts and pending requests are retained. Lost-authenticator recovery is not available in this local batch.
+- text: ▸
+- generic "Notifications"
+- alert

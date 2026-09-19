@@ -14,7 +14,7 @@ import LocalInvitationsClient from '../local-invitations/LocalInvitationsClient'
 import LocalAcceptanceClient from '../local-accept-invitation/LocalAcceptanceClient';
 import styles from './workspace.module.css';
 import { accountSessionStorage } from '@/lib/platform/account-session';
-import LocalMfaAccess from '@/components/local/LocalMfaAccess';
+import LocalMfaAccess, {type MfaAccessStage} from '@/components/local/LocalMfaAccess';
 import LocalOrganizationSecurity from '@/components/local/LocalOrganizationSecurity';
 import LocalOrganizationDeletion from '@/components/local/LocalOrganizationDeletion';
 import type {OrganizationLifecycle} from '@/lib/platform/organization-lifecycle';
@@ -36,6 +36,8 @@ export default function LocalWorkspaceClient({config,review=false}:{config:Local
   const lifecycleDenied=useRef<()=>void>(()=>{});
   lifecycleDenied.current=()=>setLifecycleRevision(v=>v+1);
   const onLifecycleChange=useCallback((state:OrganizationLifecycle)=>setOrganizationLifecycles(old=>JSON.stringify(old[state.organization_id])===JSON.stringify(state)?old:{...old,[state.organization_id]:state}),[]);
+  const [mfaStage,setMfaStage]=useState<MfaAccessStage>('checking');
+  const sessionHeading=useRef<HTMLHeadingElement>(null),recoveryHeading=useRef<HTMLHeadingElement>(null),accountNavigation=useRef<HTMLButtonElement>(null),wasRecovering=useRef(false);
   const [mfaReady,setMfaReady]=useState(false),[mfaRevision,setMfaRevision]=useState(0),[recentMfa,setRecentMfa]=useState(false);
   const mfaRequired=useRef<(token:string|null,recent:boolean)=>void>(()=>{});
   const mfaVerified=useCallback(()=>{setRecentMfa(false);setMfaRevision(v=>v+1);},[]);
@@ -98,7 +100,7 @@ export default function LocalWorkspaceClient({config,review=false}:{config:Local
     }catch(error){
       if(ticket===navigationTicket.current&&identity.current(generation)){
         if(error instanceof ScheduleRepositoryError && error.kind==='unauthenticated')requireAuth();
-        else setMessage('Navigation could not finish. Your current workspace and drafts are retained.');
+        else {setDirectoryState('error');setMessage('Navigation could not finish. Your current workspace and drafts are retained.');}
         history.replaceState(null,'',href(locationRef.current));
       }
     }
@@ -115,8 +117,9 @@ export default function LocalWorkspaceClient({config,review=false}:{config:Local
     const next=locationRef.current;
     return review&&!next.organization&&next.screen==='schedule'&&page.items.length===1&&!page.more?{...next,organization:page.items[0].id}:next;
   }
-  async function loadOrganizations(append=false){
+  async function loadOrganizations(append=false,foreground=false){
     const actor=identity.actor,generation=identity.capture(),ticket=++directoryTicket.current;if(!actor)return null;
+    if(foreground)setDirectoryState('loading');
     try{const page=await repository.organizations(actor,append?organizations.at(-1)?.id:undefined);
       if(!identity.current(generation)||ticket!==directoryTicket.current)return null;
       setOrganizations(previous=>append?[...previous,...page.items]:page.items);setMore(page.more);setDirectoryState('ready');return page;
@@ -141,7 +144,7 @@ export default function LocalWorkspaceClient({config,review=false}:{config:Local
   useEffect(()=>{
     if(!session || authNeeded || !accountReady)return;
     setMessage(previous=>previous==='Checking your remembered account.'?'Your remembered account is ready. Choose an organization or review an invitation.':previous);
-    void loadOrganizations().then(current=>current?navigate(directoryLocation(current),false):undefined).catch(()=>setMessage('Organizations could not be refreshed. Your drafts are retained.'));
+    void loadOrganizations().then(current=>current?navigate(directoryLocation(current),false):undefined).catch(()=>{});
     // Account epoch and navigation tickets guard asynchronous directory reads.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[session?.access_token,authNeeded,accountReady]);
@@ -183,35 +186,58 @@ export default function LocalWorkspaceClient({config,review=false}:{config:Local
   const openOrganization=(id:string)=>{requestNavigation({screen:'schedule',organization:id});};
   const openSchedule=(organization:string,id:string)=>{const generation=identity.capture();void navigate({screen:'schedule',organization}).then(ok=>{if(ok&&identity.current(generation)&&locationRef.current.organization===organization&&locationRef.current.screen==='schedule')setScheduleRequest({id,organization,sequence:++scheduleSequence.current});});};
   const openLifecycle=(organization:string,id:string)=>{void navigate({screen:'lifecycle',organization,schedule:id});};
-  const panel=(id:string,organization:WorkspaceOrganization|null,enabled:boolean)=>({review,openSettings:()=>setShowSettings(true),client,session,authNeeded:authNeeded||!accountReady||!mfaReady||organization?.access_state==='mfa_required',organization,active:enabled&&accountReady&&mfaReady&&organization?.access_state!=='mfa_required',panelId:id,report,requireAuth,readOnly:!!organization&&organizationLifecycles[organization.id]?.read_only===true,lifecycleVersion:organization?organizationLifecycles[organization.id]?.version??-1:0,lifecycleRevision,onLifecycleChange,openOrganization,openSchedule,onScheduleSelection,openLifecycle,scheduleRequest,consumeScheduleRequest});
+  const checksReady=directoryState==='ready';
+  const panel=(id:string,organization:WorkspaceOrganization|null,enabled:boolean)=>({review,openSettings:()=>setShowSettings(true),client,session,authNeeded:authNeeded||!checksReady||!accountReady||!mfaReady||organization?.access_state==='mfa_required',organization,active:enabled&&checksReady&&accountReady&&mfaReady&&organization?.access_state!=='mfa_required',panelId:id,report,requireAuth,readOnly:!!organization&&organizationLifecycles[organization.id]?.read_only===true,lifecycleVersion:organization?organizationLifecycles[organization.id]?.version??-1:0,lifecycleRevision,onLifecycleChange,openOrganization,openSchedule,onScheduleSelection,openLifecycle,scheduleRequest,consumeScheduleRequest});
   const entryActive=review&&(!session||authNeeded||accountTask);
-  const settingsVisible=review&&showSettings&&!entryActive;
+  const accessRecovery=review&&!!session&&!entryActive&&accountReady&&(!checksReady||mfaStage==='checking'||mfaStage==='unavailable');
+  const accessChallenge=review&&!!session&&!entryActive&&accountReady&&!accessRecovery&&!mfaReady;
+  const checkingAccess=directoryState==='loading'||mfaStage==='checking';
+  const settingsVisible=review&&showSettings&&!entryActive&&!accessRecovery&&!accessChallenge;
+  useEffect(()=>{
+    if(accessRecovery&&!wasRecovering.current)recoveryHeading.current?.focus();
+    if(!accessRecovery&&wasRecovering.current&&!entryActive&&!accessChallenge)accountNavigation.current?.focus();
+    wasRecovering.current=accessRecovery;
+  },[accessRecovery,entryActive,accessChallenge]);
+  useEffect(()=>{if(authNeeded&&!accountTask)sessionHeading.current?.focus();},[authNeeded,accountTask]);
+  async function retryAccess(){
+    if(checkingAccess)return;
+    recoveryHeading.current?.focus();
+    setMfaReady(false);setMfaRevision(value=>value+1);
+    const page=await loadOrganizations(false,true).catch(()=>null);
+    if(page)await navigate(directoryLocation(page),false);
+  }
   const entryMessage=review&&authNeeded&&message.startsWith('Sign in again with the same account.')?'Your session has expired. Sign in again with the same account to continue. Your unfinished work is retained.':message;
   function tab(screen:WorkspaceScreen){if(authNeeded||!session||!accountReady){return;}void navigate({screen,organization:locationRef.current.organization});}
-  return <div className={review?undefined:styles.page}>
+  return <div className={review?(accessRecovery||accessChallenge?styles.accessPage:undefined):styles.page}>
     {review?<AppHeader/>:<header className={styles.header}><div><span className={styles.eyebrow}>LOCAL WORKSPACE</span><h1>Roseland rehearsals</h1><p>One account, with unfinished work kept in this tab.</p></div><span className={styles.badge}>Fictional data only</span></header>}
     {review&&session&&!entryActive&&<nav className={styles.organizationBar} aria-label="Organization context">
-      <div className={styles.organizationIdentity}>{authNeeded?<span role="status">Sign in again to continue.</span>:<WorkspaceOrganizationContext organizations={organizations} current={scope} state={!accountReady?'loading':directoryState} more={more} disabled={busy||working||!accountReady||!mfaReady} onChange={id=>requestNavigation({screen:'schedule',organization:id})} onRetry={()=>void loadOrganizations().then(page=>page?navigate(directoryLocation(page),false):undefined).catch(()=>{})} onMore={()=>void loadOrganizations(true).catch(()=>{})}/>}</div>
-      <button className="btn btn-light btn-sm" onClick={()=>{if(showSettings&&active!=='schedule')tab('schedule');setShowSettings(v=>!v);}}>{showSettings?'Back to schedules':'Account & settings'}</button>
+      <div className={styles.organizationIdentity}>{accessRecovery?<span>{scope?.name??'Workspace'}</span>:authNeeded?<span role="status">Sign in again to continue.</span>:<WorkspaceOrganizationContext organizations={organizations} current={scope} state={!accountReady?'loading':directoryState} more={more} disabled={busy||working||!accountReady||!mfaReady} onChange={id=>requestNavigation({screen:'schedule',organization:id})} onRetry={()=>void loadOrganizations().then(page=>page?navigate(directoryLocation(page),false):undefined).catch(()=>{})} onMore={()=>void loadOrganizations(true).catch(()=>{})}/>}</div>
+      <button ref={accountNavigation} disabled={accessRecovery||accessChallenge} className="btn btn-light btn-sm" onClick={()=>{if(showSettings&&active!=='schedule')tab('schedule');setShowSettings(v=>!v);}}>{showSettings?'Back to schedules':'Account & settings'}</button>
     </nav>}
-    <div className={`${styles.shell} ${review?styles.reviewShell:''} ${settingsVisible?styles.settingsShell:''} ${entryActive?styles.entryShell:''}`} style={review&&!entryActive&&!!location.schedule&&!showSettings?{padding:0}:undefined}>
+    <div className={`${styles.shell} ${review?styles.reviewShell:''} ${settingsVisible?styles.settingsShell:''} ${entryActive?styles.entryShell:''} ${accessRecovery||accessChallenge?styles.accessShell:''}`} style={review&&!entryActive&&!accessRecovery&&!accessChallenge&&!!location.schedule&&!showSettings?{padding:0}:undefined}>
       {!review&&<p className={styles.notice}>Switching local screens keeps drafts and request details. Closing or reloading loses tab-only requests. Duplicate source backups and template or appearance request receipts can be recovered by the original account on this computer. {config.accountOnboarding?'Email stays in the local mail sink. Remember me retains sign-in only; idle expiry still applies.':'No email is sent.'}</p>}
-      {(!review||((!accountTask||authNeeded)&&! /^(Your remembered|Checking your remembered|Signed in|Sign in once)/.test(message)))&&<p role="status" aria-live="polite" className={styles.status}>{entryMessage}</p>}
-      {(!session||authNeeded)&&<form hidden={review&&accountTask} className={styles.login} aria-busy={busy} onSubmit={login} aria-label="Workspace sign in"><h2>{identity.actor?'Sign in again':'Sign in'}</h2><label>{review?'Email address':'Fictional account email'}<input type="email" required autoComplete="off" readOnly={!!identity.actor} value={session?.user.email??email} onChange={event=>setEmail(event.target.value)}/></label><label>Password<input type="password" required autoComplete="off" value={password} onChange={event=>setPassword(event.target.value)}/></label><button disabled={busy||working}>{busy?'Signing in…':'Sign in'}</button>{config.accountOnboarding&&<label><input type="checkbox" checked={rememberSession} onChange={event=>setRememberSession(event.target.checked)}/> Remember me on this personal device</label>}</form>}
+      {!accessRecovery&&!accessChallenge&&(!review||((!accountTask||authNeeded)&&! /^(Your remembered|Checking your remembered|Signed in|Sign in once)/.test(message)))&&<p role="status" aria-live="polite" className={styles.status}>{entryMessage}</p>}
+      {accessRecovery&&<section className={styles.accessRecovery} aria-labelledby="access-recovery-title" aria-busy={checkingAccess}>
+        <h1 id="access-recovery-title" tabIndex={-1} ref={recoveryHeading}>{checkingAccess?'Checking your access…':'Unable to check your access'}</h1>
+        <p role="status" aria-live="polite">{checkingAccess?'Checking your organization and account security.':'We couldn’t confirm your organization or account security. Try again to continue.'}</p>
+        <p className={styles.retainedWork}>Your open drafts and pending requests are retained in this tab.</p>
+        <button disabled={checkingAccess} onClick={()=>void retryAccess()}>{checkingAccess?'Checking…':'Try again'}</button>
+      </section>}
+      {(!session||authNeeded)&&<form hidden={review&&accountTask} className={styles.login} aria-busy={busy} onSubmit={login} aria-label="Workspace sign in"><h2 ref={sessionHeading} tabIndex={-1}>{identity.actor?'Sign in again':'Sign in'}</h2><label>{review?'Email address':'Fictional account email'}<input type="email" required autoComplete="off" readOnly={!!identity.actor} value={session?.user.email??email} onChange={event=>setEmail(event.target.value)}/></label><label>Password<input type="password" required autoComplete="off" value={password} onChange={event=>setPassword(event.target.value)}/></label><button disabled={busy||working}>{busy?'Signing in…':'Sign in'}</button>{config.accountOnboarding&&<label><input type="checkbox" checked={rememberSession} onChange={event=>setRememberSession(event.target.checked)}/> Remember me on this personal device</label>}</form>}
         {settingsVisible&&<section className={styles.settingsIntro}><h1>Account &amp; settings</h1><p>Manage your account and the organizations you work with.</p><nav aria-label="Account navigation" className={styles.settingsNavigation}><button className="btn btn-light" aria-current={active==='schedule'?'page':undefined} onClick={()=>tab('schedule')}>Your account</button><button className="btn btn-light" aria-current={active==='acceptance'?'page':undefined} onClick={()=>tab('acceptance')}>Invitations for you</button>{scope&&scope.role!=='member'&&<button className="btn btn-light" aria-current={active==='invitations'?'page':undefined} onClick={()=>tab('invitations')}>Manage invitations</button>}</nav></section>}
-      <div className={settingsVisible?styles.accountPanels:undefined} hidden={review&&!entryActive&&((showSettings&&active!=='schedule')||(!showSettings&&!!session&&accountReady&&mfaReady&&!authNeeded))}>
+      <div className={settingsVisible?styles.accountPanels:undefined} hidden={accessRecovery||(review&&!entryActive&&!accessChallenge&&((showSettings&&active!=='schedule')||(!showSettings&&!!session&&accountReady&&mfaReady&&!authNeeded)))}>
       {settingsVisible&&<header className={styles.securityHeading}><h2>Sign-in and security</h2><p>Manage your password and two-step verification.</p></header>}
-      {config.accountOnboarding&&<LocalAccountAccess review={review} onEntryTaskChange={setAccountTask} config={config} client={client} session={session} authNeeded={authNeeded} onReady={setAccountReady} requireAuth={requireAuth} policyRevision={policyRevision} onInvitation={setPendingInvitation}/>}
-      <div hidden={entryActive}><LocalMfaAccess review={review} key={accountEpoch} client={client} session={session} authNeeded={authNeeded} organization={scope?.id??null} revision={mfaRevision} recentRequired={recentMfa} onReady={setMfaReady} onVerified={mfaVerified}/></div>
+      <div hidden={accessRecovery||accessChallenge}>{config.accountOnboarding&&<LocalAccountAccess review={review} showMaintenance={!review||settingsVisible||entryActive} onEntryTaskChange={setAccountTask} config={config} client={client} session={session} authNeeded={authNeeded} onReady={setAccountReady} requireAuth={requireAuth} policyRevision={policyRevision} onInvitation={setPendingInvitation}/>}</div>
+      <div hidden={entryActive}><LocalMfaAccess review={review} managedRecovery={review} focusActive={!entryActive&&!accessRecovery} onStageChange={setMfaStage} key={accountEpoch} client={client} session={session} authNeeded={authNeeded} organization={scope?.id??null} revision={mfaRevision} recentRequired={recentMfa} onReady={setMfaReady} onVerified={mfaVerified}/></div>
       </div>
       {pendingInvitation?.actor===session?.user.id&&accountReady&&!entryActive&&<p>Verified invitation ready. <button onClick={()=>tab('acceptance')}>Review verified invitation</button></p>}
-      {identity.actor&&<><div hidden={review&&(entryActive||!showSettings||active!=='schedule')}><div className={styles.account}><span>{session?.user.email??email}{authNeeded?' · Sign-in required':''}</span><span>{dirty?'Unfinished work retained':'No unfinished work'}</span><button disabled={busy||working} onClick={()=>dirty?setConfirmSignOut(true):void signOut()}>Sign out</button></div></div>
+      {identity.actor&&<><div hidden={review&&(entryActive||accessRecovery||accessChallenge||!showSettings||active!=='schedule')}><div className={styles.account}><span>{session?.user.email??email}{authNeeded?' · Sign-in required':''}</span><span>{dirty?'Unfinished work retained':'No unfinished work'}</span><button disabled={busy||working} onClick={()=>dirty?setConfirmSignOut(true):void signOut()}>Sign out</button></div></div>
         <div hidden={review} className={styles.directory}><label>{review?'Organization':'Workspace organization'}<select value={scope?.id??''} disabled={busy||authNeeded||!session||!accountReady} onChange={event=>requestNavigation({screen:active,organization:event.target.value||null})}><option value="">Choose an organization</option>{scope&&!organizations.some(item=>item.id===scope.id)&&<option value={scope.id}>{scope.name}{!review&&<> · {scope.role}</>}</option>}{organizations.map(item=><option key={item.id} value={item.id}>{item.name}{!review&&<> · {item.role==='owner'?'Organization Super Admin':item.role}</>}</option>)}</select></label><button hidden={review&&!showSettings} disabled={busy||authNeeded||!session||!accountReady} onClick={()=>void loadOrganizations().then(current=>current?navigate(directoryLocation(current),false):undefined).catch(()=>setMessage('Organizations could not be refreshed.'))}>Refresh organizations</button>{more&&<button disabled={busy||authNeeded||!session||!accountReady} onClick={()=>void loadOrganizations(true).catch(()=>setMessage('More organizations could not be loaded.'))}>Load more organizations</button>}</div>
         <nav hidden={review} aria-label="Workspace screens" className={styles.tabs}><button aria-current={active==='schedule'?'page':undefined} onClick={()=>tab('schedule')}>Schedules</button><button aria-current={active==='lifecycle'?'page':undefined} disabled={!scope} onClick={()=>tab('lifecycle')}>Schedule lifecycle</button><button aria-current={active==='invitations'?'page':undefined} disabled={!scope||scope.role==='member'} onClick={()=>tab('invitations')}>Manage invitations</button><button aria-current={active==='acceptance'?'page':undefined} onClick={()=>tab('acceptance')}>Accept invitation</button><button aria-current={active==='provisioning'?'page':undefined} onClick={()=>tab('provisioning')}>Restricted provisioning</button></nav>
 
       </>}
     </div>
-    {identity.actor&&<div key={accountEpoch} hidden={entryActive||!accountReady||!mfaReady||scope?.access_state==='mfa_required'}>
+    {identity.actor&&<div key={accountEpoch} hidden={entryActive||!checksReady||!accountReady||!mfaReady||scope?.access_state==='mfa_required'}>
       {visited.map(o=><div key={'deletion:'+o.id} hidden={scope?.id!==o.id}><LocalWorkspaceContext.Provider value={panel('deletion:'+o.id,o,scope?.id===o.id)}><LocalOrganizationDeletion showControls={!review||(showSettings&&active==='schedule')}/></LocalWorkspaceContext.Provider></div>)}
       {review&&showSettings&&active==='schedule'&&scope&&scope.role!=='member'&&<header className={styles.administrationHeading}><h2>Administration</h2><p>{scope.name}</p></header>}
       {visited.filter(o=>o.role!=='member').map(o=><div className={review?styles.administrationCard:undefined} key={'members:'+o.id} hidden={scope?.id!==o.id||(review&&(!showSettings||active!=='schedule'||o.role==='member'))}><LocalWorkspaceContext.Provider value={panel('members:'+o.id,o,scope?.id===o.id)}><LocalOrganizationMembers/></LocalWorkspaceContext.Provider></div>)}

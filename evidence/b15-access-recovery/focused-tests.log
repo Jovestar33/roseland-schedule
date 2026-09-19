@@ -1,0 +1,22 @@
+✔ expired session has one sign-in task and no visible workspace controls, retaining mounted draft panels (102.774625ms)
+✔ account subtask hides sign-in even after expiry and preserves its entered values and route (27.161458ms)
+✔ invitation error/loading presentation keeps one form, original required fields and cancel protection (11.101083ms)
+✔ expired child notice is suppressed while callback errors remain visible and callback excludes invitation form (24.818833ms)
+✔ unavailable organization and MFA checks form one recovery task and preserve mounted disabled drafts (18.897458ms)
+✔ checking has no competing retry, and directory-only failure also disables retained panels (37.227416ms)
+✔ password maintenance stays hidden outside account settings while account checks remain available (8.412583ms)
+✔ initial unavailable checks never become an authenticator task; explicit retry can recover (44.173583ms)
+✔ failed background check revokes ready state; repeated failure remains unavailable (10.640167ms)
+✔ only a successful required-factor check shows a code challenge (9.27625ms)
+✔ required access without a factor shows setup, not a code prompt (6.888208ms)
+✔ late success for an old organization cannot restore access after new-context failure (7.182333ms)
+✔ expired session invalidates pending checks and excludes the authenticator task (8.575292ms)
+✔ successful retry clears unavailable copy before showing a required challenge (6.68225ms)
+ℹ tests 14
+ℹ suites 0
+ℹ pass 14
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 349.144416

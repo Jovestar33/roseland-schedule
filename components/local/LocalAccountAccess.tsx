@@ -5,9 +5,9 @@ import type { LocalEditorConfig } from '@/lib/platform/local-editor-config';
 import { FICTIONAL_PRIVACY, FICTIONAL_TERMS, parseAccountCallback, type AccountCallback } from '@/lib/platform/account-session';
 
 type Policy = { termsVersion: string; privacyVersion: string; accepted: boolean };
-type Props = { review?:boolean; config: LocalEditorConfig; client: SupabaseClient; session: Session | null; authNeeded: boolean;
+type Props = { review?:boolean; showMaintenance?:boolean; config: LocalEditorConfig; client: SupabaseClient; session: Session | null; authNeeded: boolean;
   onEntryTaskChange?(active:boolean):void; onReady(ready: boolean): void; requireAuth(): void; policyRevision: number; onInvitation(value: {actor:string;id:string}): void };
-export default function LocalAccountAccess({ review=false, onEntryTaskChange, config, client, session, authNeeded, onReady, requireAuth, policyRevision, onInvitation }: Props) {
+export default function LocalAccountAccess({ review=false, showMaintenance=true, onEntryTaskChange, config, client, session, authNeeded, onReady, requireAuth, policyRevision, onInvitation }: Props) {
   const [mode, setMode] = useState<'signup' | 'recovery' | null>(null);
   const taskHeading=useRef<HTMLHeadingElement>(null), returnEntry=useRef<'signup'|'recovery'|null>(null);
   const invitationEntry=useRef<HTMLButtonElement>(null), recoveryEntry=useRef<HTMLButtonElement>(null);
@@ -149,7 +149,7 @@ export default function LocalAccountAccess({ review=false, onEntryTaskChange, co
         <p><button disabled={busy}>Save password and sign out existing sessions</button></p>
       </form>}
       <button disabled={busy} onClick={() => void run(async () => { await callbackClient.auth.signOut({ scope: 'local' }); callbackActive.current=false; returnEntry.current='recovery'; setCallback(null); setCallbackEmail(''); setFactor(null); setPassword(''); setConfirmation(''); setCode(''); setMessage(''); })}>Close email action</button>
-    </div> : <>
+    </div> : <div hidden={!showMaintenance}>
       {review&&(!session||authNeeded)?<div data-account-entry hidden={!!mode}>
         <button ref={recoveryEntry} type="button" disabled={busy} aria-expanded={mode==='recovery'} onClick={()=>setMode(mode==='recovery'?null:'recovery')}>Forgot password?</button>
         <button ref={invitationEntry} type="button" disabled={busy} aria-expanded={mode==='signup'} onClick={()=>setMode(mode==='signup'?null:'signup')}>Have an invitation?</button>
@@ -169,7 +169,7 @@ export default function LocalAccountAccess({ review=false, onEntryTaskChange, co
         <p>Local fictional testing only. Messages stay in the local mail sink. A sent request may complete even if its reply is lost.</p>
         {review&&(!session||authNeeded)&&<div data-account-entry><button type="button" disabled={busy} onClick={()=>{returnEntry.current=mode;setMode(null);}}>Back to sign in</button></div>}
       </form>}
-    </>}
+    </div>}
   </section>;
 }
 function FictionalNotices({ terms, privacy }: { terms: string; privacy: string }) {

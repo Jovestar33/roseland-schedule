@@ -1,0 +1,17 @@
+- img "Roseland Pictures"
+- generic: Production Schedule
+- navigation "Organization context":
+  - generic: Organization
+  - strong: B14 Fictional Studio
+  - button "Account & settings" [disabled]
+- region "Account security":
+  - heading "Verify your authenticator" [active] [level=2]
+  - paragraph: Enter the current six-digit code from your authenticator to continue.
+  - text: Authenticator code
+  - textbox "Authenticator code"
+  - button "Verify authenticator"
+  - paragraph: Your open drafts and pending requests are retained.
+  - generic "Can’t use your authenticator?"
+- text: ▸
+- generic "Notifications"
+- alert

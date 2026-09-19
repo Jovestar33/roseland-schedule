@@ -1,0 +1,17 @@
+- img "Roseland Pictures"
+- status: Your session has expired. Sign in again with the same account to continue. Your unfinished work is retained.
+- form "Workspace sign in":
+  - heading "Sign in again" [active] [level=2]
+  - text: Email address
+  - textbox "Email address"
+  - text: Password
+  - textbox "Password"
+  - button "Sign in"
+  - checkbox "Remember me on this personal device"
+  - text: Remember me on this personal device
+- region "Account access":
+  - button "Forgot password?"
+  - button "Have an invitation?"
+- text: ▸
+- generic "Notifications"
+- alert
