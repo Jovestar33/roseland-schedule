@@ -83,6 +83,7 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
   const [version, setVersion] = useState<number | null>(null);
   const [confirmation, setConfirmation] = useState<{ label: string; action: () => void; scope: string | null } | null>(null);
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const libraryReturnRef = useRef<HTMLButtonElement>(null);
   const [contact, setContact] = useState<number | null>(null);
   const [status, setStatus] = useState<number | null>(null);
   const [notes, setNotes] = useState<number | null>(null);
@@ -158,6 +159,15 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
 
   function guarded(action: () => void, label: string) {
     if (state().dirty || documentDialogOpen || contact !== null || status !== null || notes !== null || controller.attempt) setConfirmation({ label, action, scope: scopeRef.current }); else action();
+  }
+  function closeSchedule() {
+    epoch.current++; navigationEpoch.current++;
+    controller.close(); state().newSchedule();
+    setSelected(null); setVersion(null); setPermission(null); setDraftAvailable(false);
+    setContact(null); setStatus(null); setNotes(null); setDocumentDialogOpen(false);
+    setMessage('Schedule closed. Choose a schedule from the library.');
+    dialogRef.current?.close();
+    libraryReturnRef.current?.focus();
   }
   async function run(action: () => Promise<void>) {
     if (busyRef.current) return;
@@ -323,7 +333,7 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
             controller.invalidate(); accountRef.current = null; setSelected(null); setVersion(null); setContact(null); setStatus(null); setNotes(null); state().newSchedule(); setAuthNeeded(false);
             setMessage('Signed out.');
           }), 'Sign out and discard unsaved changes')}>Sign out</button>}
-          <button className="btn btn-light" disabled={busy || !ready} onClick={() => void run(() => list(false))}>Refresh list</button>
+          <button ref={libraryReturnRef} className="btn btn-light" disabled={busy || !ready} onClick={() => void run(() => list(false))}>Refresh list</button>
         </div>
         {workspace && <LocalScheduleFiles client={client} actor={session?.user.id ?? accountRef.current} organization={workspace.organization?.id ?? null}
           enabled={active && ready && !confirmation} copyEnabled={!templateUses.length && !busy && !!selected && recordInScope && canEdit && permission?.copy===true && !documentDialogOpen && contact===null && notes===null && status===null}
@@ -345,6 +355,7 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
               if (await controller.save()) { setVersion(controller.record!.document_version); setMessage(state().dirty ? 'Saved earlier edits. Newer edits remain unsaved.' : 'Schedule saved.'); }
             })}>Save schedule</button>
             <button className="btn btn-light" disabled={busy} onClick={() => guarded(() => void run(() => open(selected)), 'Reload and discard unsaved changes')}>Reload schedule</button>
+            <button className="btn btn-light" disabled={busy} onClick={() => guarded(closeSchedule, 'Close schedule and discard unsaved changes')}>Close schedule</button>
             {canEdit && ready && <UndoRedoButtons />}
             {draftAvailable&&canEdit&&ready&&<button className="btn btn-light" disabled={busy||!!controller.attempt} onClick={()=>guarded(()=>void run(recoverSourceDraft),'Recover retained source draft and replace current edits')}>Recover retained source draft</button>}
           </div>

@@ -23,7 +23,9 @@ export class LocalEditorController {
     this.repository = repository; this.store = store;
   }
   bind(actor: string) { if (actor !== this.actor) { this.invalidate(); this.actor = actor; } }
-  invalidate() { this.generation++; this.actor = null; this.record = null; this.attempt = null; this.result = null; this.busy = false; }
+  invalidate() { this.close(); this.actor = null; }
+  /** Discard document state and fence pending replies without signing out. */
+  close() { this.generation++; this.record = null; this.attempt = null; this.result = null; this.busy = false; }
   /** Same-actor token changes invalidate callbacks, retaining any possibly sent attempt. */
   suspend() { this.generation++; this.busy = false; }
   private current(attempt: SaveAttempt, generation: number) {

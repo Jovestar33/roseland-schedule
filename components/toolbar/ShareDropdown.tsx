@@ -100,7 +100,7 @@ export default function ShareDropdown({ readOnly = false, onModalChange, authori
           style={{ position: 'fixed', top: dropPos.top, right: dropPos.right, left: 'auto', zIndex: 9999 }}
         >
           <button className="tbar-drop-item" onClick={handlePrint}>🖨 Print / PDF</button>
-          {!local && <button className="tbar-drop-item" onClick={handleExportJson}>⬇ Export JSON</button>}
+          <button className="tbar-drop-item" onClick={handleExportJson}>⬇ Export JSON</button>
           <button className="tbar-drop-item" onClick={handleContactSheet}>📋 Contact Sheet</button>
           <button className="tbar-drop-item" onClick={handleCallSheet}>📄 Call Sheet</button>
         </div>

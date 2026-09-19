@@ -68,6 +68,24 @@ test('late save and load cannot cross a session boundary or overwrite edits made
   assert.equal(await pending,false);assert.equal(h.loads(),0);
 });
 
+test('closing fences late save/load replies while retaining the signed-in actor for reopening', async () => {
+  for (const operation of ['save', 'open'] as const) {
+    const h = harness();
+    const pending = operation === 'save' ? h.controller.save() : h.controller.open(h.record.id);
+    h.controller.close();
+    h.response.resolve({...h.record, document_version: 4});
+    assert.equal(await pending, false);
+    assert.equal(h.controller.record, null);
+    assert.equal(h.controller.attempt, null);
+    assert.equal(h.controller.result, null);
+    assert.equal(h.loads(), 0);
+    assert.equal(h.isDirty(), true);
+    assert.equal(await h.controller.open(h.record.id), true);
+    assert.equal(h.loads(), 1);
+    assert.equal(h.controller.record!.document_version, 4);
+  }
+});
+
 test('Template recovery releases only a freshly verified unchanged baseline and preserves newer edits', async()=>{
  const h=harness();(h.state as typeof h.state & {templateUses:unknown[]}).templateUses=[{id:h.record.id,version:1,policy:'policy'}];
  const pending=h.controller.save();h.response.reject(new Error('lost reply'));await assert.rejects(pending);h.state.editRevision++;
