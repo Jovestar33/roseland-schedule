@@ -31,3 +31,11 @@
 .reviewTools { padding:10px 18px; order:1; }
 .reviewMain > .toolbar { padding:8px 0; }
 .reviewLibrary > section { margin:0 auto; }
+
+.toolMenu { display:grid; gap:8px; }
+.toolMenu button { display:grid; gap:5px; width:100%; border:1px solid var(--g200); border-radius:10px; background:white; padding:14px 16px; color:var(--ink); text-align:left; cursor:pointer; font:inherit; }
+.toolMenu button strong { font-size:14px; font-weight:600; }
+.toolMenu button span { color:var(--g500); font-size:12px; line-height:1.5; }
+.toolMenu button:hover { background:var(--g50); border-color:var(--g300); }
+.toolMenu button:focus-visible { outline:2px solid var(--pink); outline-offset:2px; }
+.toolMenu button:disabled { opacity:.45; cursor:not-allowed; }

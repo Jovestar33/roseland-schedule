@@ -1,0 +1,227 @@
+- img "Roseland Pictures"
+- region "Organization deletion settings"
+- main:
+  - text: ▸ ▾ ▾
+  - region "Schedule editor":
+    - generic: B15 ordinary fictional day
+    - generic: Unsaved
+    - button "Save"
+    - button "More save options":
+      - generic: ▾
+    - button "Undo": ↩
+    - button "Redo" [disabled]: ↪
+    - button "⬆ Share ▾":
+      - generic: ⬆
+      - generic: Share
+      - generic: ▾
+    - button "Tools":
+    - button "Close":
+      - generic: ✕
+    - generic: Fictional production – document acceptance
+    - generic: Principal photography
+    - generic: ·
+    - generic: Day
+    - generic: 2 of 12
+    - generic: PRODUCER
+    - generic: Fictional producer with complete long credit
+    - generic: DIRECTOR
+    - generic: Fictional director
+    - generic: CAMERA
+    - generic: Fictional camera lead
+    - generic: Town / Location
+    - textbox "Town / Location":
+      - /placeholder: e.g. Garner, NC
+      - text: Fictional Harbor Studio
+    - button "📍"
+    - generic: Date
+    - textbox "Date": 2026-10-20
+    - generic: Call Time
+    - generic: 9:00 AM
+    - generic: Sunrise
+    - generic: 🌅 6:30 AM
+    - generic: Sunset
+    - generic: 🌇 7:15 PM
+    - generic: High / Low
+    - generic: 75°F / 54°F
+    - generic: Conditions
+    - generic: ⛅ Partly Cloudy
+    - generic: Precip
+    - text: 35%
+    - link "Google Weather ↗":
+      - /url: https://www.google.com/search?q=Fictional%20Harbor%20Studio%20weather
+    - generic: Updated
+    - generic: Fictional forecast
+    - button "↻ Refresh"
+    - button "✕ Clear"
+    - link "Weather by Open-Meteo":
+      - /url: https://open-meteo.com/
+    - generic: ← Scroll to see all columns →
+    - table:
+      - rowgroup:
+        - row "Action Location Description Notes Time In Duration Time Out Done":
+          - columnheader
+          - columnheader "Action"
+          - columnheader "Location"
+          - columnheader "Description"
+          - columnheader "Notes"
+          - columnheader
+          - columnheader "Time In"
+          - columnheader "Duration"
+          - columnheader "Time Out"
+          - columnheader "Done"
+          - columnheader
+      - rowgroup:
+        - row "🌅 Sunrise 6:30 AM":
+          - cell
+          - cell "🌅 Sunrise":
+            - generic: 🌅 Sunrise
+          - cell
+          - cell
+          - cell
+          - cell
+          - cell "6:30 AM":
+            - generic: 6:30 AM
+          - cell
+          - cell
+          - cell
+          - cell
+        - row "▲ ▼ 2 Crew Call ▾ Fictional location 1 Show full address 📍 Mark done • Annex 1 Show full address 📍 × SUB-1 Fictional nested description END-SUB-1 + sub-location DESC-1 Fictional detail with a comma, \"quoted text\", and multiple lines. Second line remains visible. END-DESC-1 ✓ NOTE-1 Fictional instructions END-NOTE-1 ‹🔒 9:00 AM 00:00 9:00 AM › Mark done 👤 ✕":
+          - cell "▲ ▼ 2":
+            - button "▲" [disabled]
+            - button "▼"
+            - text: "2"
+          - cell "Crew Call ▾":
+            - combobox:
+            - text: ▾
+          - cell "Fictional location 1 Show full address 📍 Mark done • Annex 1 Show full address 📍 × SUB-1 Fictional nested description END-SUB-1 + sub-location":
+            - textbox "Location…": Fictional location 1
+            - button "Show full address": ▸
+            - button "📍"
+            - checkbox "Mark done"
+            - generic: •
+            - textbox "Sub-location…": Annex 1
+            - button "Show full address": ▸
+            - button "📍"
+            - button "×"
+            - textbox "Description…": SUB-1 Fictional nested description END-SUB-1
+            - button "+ sub-location"
+          - cell "DESC-1 Fictional detail with a comma, \"quoted text\", and multiple lines. Second line remains visible. END-DESC-1":
+            - textbox "Description…": DESC-1 Fictional detail with a comma, "quoted text", and multiple lines. Second line remains visible. END-DESC-1
+          - cell "✓ NOTE-1 Fictional instructions END-NOTE-1":
+            - button "✓"
+            - textbox "Notes…": NOTE-1 Fictional instructions END-NOTE-1
+          - cell
+          - cell "‹🔒 9:00 AM":
+            - button "‹🔒"
+            - combobox:
+          - cell "00:00":
+            - combobox:
+          - cell "9:00 AM ›":
+            - generic: 9:00 AM
+            - button "›"
+          - cell "Mark done 👤":
+            - checkbox "Mark done"
+            - button "👤"
+          - cell "✕":
+            - button "✕"
+        - row "▲ ▼ 3 Fictional scene 2 ↩ Fictional location 2 Show full address 📍 Mark done • Annex 2 Show full address 📍 × SUB-2 Fictional nested description END-SUB-2 + sub-location DESC-2 Fictional detail with a comma, \"quoted text\", and multiple lines. Second line remains visible. END-DESC-2 ✓ NOTE-2 Fictional instructions END-NOTE-2 ‹ 9:00 AM 00:15 9:15 AM › Mark done 👤 ✕":
+          - cell "▲ ▼ 3":
+            - button "▲"
+            - button "▼"
+            - text: "3"
+          - cell "Fictional scene 2 ↩":
+            - textbox "Describe…": Fictional scene 2
+            - button "↩"
+          - cell "Fictional location 2 Show full address 📍 Mark done • Annex 2 Show full address 📍 × SUB-2 Fictional nested description END-SUB-2 + sub-location":
+            - textbox "Location…": Fictional location 2
+            - button "Show full address": ▸
+            - button "📍"
+            - checkbox "Mark done"
+            - generic: •
+            - textbox "Sub-location…": Annex 2
+            - button "Show full address": ▸
+            - button "📍"
+            - button "×"
+            - textbox "Description…": SUB-2 Fictional nested description END-SUB-2
+            - button "+ sub-location"
+          - cell "DESC-2 Fictional detail with a comma, \"quoted text\", and multiple lines. Second line remains visible. END-DESC-2":
+            - textbox "Description…": DESC-2 Fictional detail with a comma, "quoted text", and multiple lines. Second line remains visible. END-DESC-2
+          - cell "✓ NOTE-2 Fictional instructions END-NOTE-2":
+            - button "✓"
+            - textbox "Notes…": NOTE-2 Fictional instructions END-NOTE-2
+          - cell
+          - cell "‹ 9:00 AM":
+            - button "‹"
+            - generic: 9:00 AM
+          - cell "00:15":
+            - combobox:
+          - cell "9:15 AM ›":
+            - generic: 9:15 AM
+            - button "›"
+          - cell "Mark done 👤":
+            - checkbox "Mark done" [checked]
+            - button "👤"
+          - cell "✕":
+            - button "✕"
+        - row "▲ ▼ 4 Wrap (existing value) ▾ Fictional location 3 Show full address 📍 Mark done • Annex 3 Show full address 📍 × SUB-3 Fictional nested description END-SUB-3 + sub-location DESC-3 Fictional detail with a comma, \"quoted text\", and multiple lines. Second line remains visible. END-DESC-3 ✓ NOTE-3 Fictional instructions END-NOTE-3 ‹ 9:15 AM 00:15 9:30 AM › Mark done 👤 ✕":
+          - cell "▲ ▼ 4":
+            - button "▲"
+            - button "▼"
+            - text: "4"
+          - cell "Wrap (existing value) ▾":
+            - combobox:
+            - text: ▾
+          - cell "Fictional location 3 Show full address 📍 Mark done • Annex 3 Show full address 📍 × SUB-3 Fictional nested description END-SUB-3 + sub-location":
+            - textbox "Location…": Fictional location 3
+            - button "Show full address": ▸
+            - button "📍"
+            - checkbox "Mark done"
+            - generic: •
+            - textbox "Sub-location…": Annex 3
+            - button "Show full address": ▸
+            - button "📍"
+            - button "×"
+            - textbox "Description…": SUB-3 Fictional nested description END-SUB-3
+            - button "+ sub-location"
+          - cell "DESC-3 Fictional detail with a comma, \"quoted text\", and multiple lines. Second line remains visible. END-DESC-3":
+            - textbox "Description…": DESC-3 Fictional detail with a comma, "quoted text", and multiple lines. Second line remains visible. END-DESC-3
+          - cell "✓ NOTE-3 Fictional instructions END-NOTE-3":
+            - button "✓"
+            - textbox "Notes…": NOTE-3 Fictional instructions END-NOTE-3
+          - cell
+          - cell "‹ 9:15 AM":
+            - button "‹"
+            - generic: 9:15 AM
+          - cell "00:15":
+            - combobox:
+          - cell "9:30 AM ›":
+            - generic: 9:30 AM
+            - button "›"
+          - cell "Mark done 👤":
+            - checkbox "Mark done"
+            - button "👤"
+          - cell "✕":
+            - button "✕"
+        - row "🌇 Sunset 7:15 PM":
+          - cell
+          - cell "🌇 Sunset":
+            - generic: 🌇 Sunset
+          - cell
+          - cell
+          - cell
+          - cell
+          - cell "7:15 PM":
+            - generic: 7:15 PM
+          - cell
+          - cell
+          - cell
+          - cell
+      - rowgroup:
+        - row "Total 00:30":
+          - cell
+          - cell "Total"
+          - cell "00:30"
+          - cell
+    - button "+ Add Row"
+- generic "Notifications"
+- alert: Roseland Schedule

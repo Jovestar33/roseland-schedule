@@ -1,0 +1,25 @@
+Backup and import
+← All tools
+Copy and schedule files
+
+Schedule-only JSON includes saved documents readable by your account across organizations, including readable archived/deleted schedules. It excludes history, snapshots, templates, CMS, memberships, hierarchy definitions, aliases and browser-only data. Unsaved edits stay in this tab.
+
+Export all readable schedules
+Copy / Save As current draft
+Import schedule-only JSON
+
+Review names, destination and complete documents before importing.
+
+Review new schedules — no writes yet
+
+All items become new drafts in the selected production. A production day is optional for file imports. Source IDs, status, deleted state and hierarchy are not imported. Document metadata stays exactly as supplied. Existing schedules are never overwritten.
+
+Destination production
+Choose a production
+B14 production
+Destination production day
+No production day
+New schedule name 1
+New schedule slug 1
+Review full document 1 (2 rows)
+Prepare create-only reviewCancel review

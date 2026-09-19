@@ -1,0 +1,109 @@
+{
+  "id": "fb364386-23b0-4518-ad3c-e005df7a1b6a",
+  "slug": "b15-import-round-trip-fictional-copy",
+  "town": null,
+  "status": "draft",
+  "document": {
+    "meta": {
+      "dp": "",
+      "wx": null,
+      "dir": "",
+      "lat": null,
+      "lng": null,
+      "date": "",
+      "prod": "",
+      "town": "",
+      "phase": "",
+      "callsheet": {
+        "notes": "Fictional call sheet notes\nSecond line",
+        "parking": "Fictional parking",
+        "basecamp": "Fictional basecamp, 100 Example Lane",
+        "hospital": "Fictional hospital — not medical guidance",
+        "emergency": "Fictional coordinator +1 202 555 0100",
+        "mealNotes": "Fictional meal notes\nVegetarian option",
+        "safetyNotes": "Fictional safety notes\nKeep routes clear",
+        "specialInstructions": "Fictional special instructions\nBring sample badge"
+      },
+      "dayNumber": null,
+      "totalDays": null,
+      "projectName": "B14 production"
+    },
+    "rows": [
+      {
+        "dur": "00:30",
+        "loc": "Fictional audit studio",
+        "desc": "Fictional long description\nSecond line of the shot plan\nThird line remains visible",
+        "done": false,
+        "notes": "Unsaved fictional snapshot marker\nSecond note",
+        "action": "Crew Call",
+        "locLat": null,
+        "locLng": null,
+        "status": "Fictional confirmation complete",
+        "timeIn": "11:45 PM",
+        "fixedIn": false,
+        "locName": "Fictional audit studio",
+        "fixedOut": false,
+        "otherText": "",
+        "sunLocked": false,
+        "contactName": "Fictional Audit Contact",
+        "contactEmail": "audit@example.test",
+        "contactPhone": "+1 202 555 0142",
+        "contactTitle": "Fictional coordinator",
+        "fixedOutTime": "",
+        "subLocations": [
+          {
+            "id": "8zirci",
+            "loc": "Fictional annex",
+            "desc": "Nested fictional instructions\nSecond line",
+            "done": true,
+            "name": "Fictional annex",
+            "locLat": null,
+            "locLng": null,
+            "address": "100 Fictional Example Lane"
+          }
+        ]
+      },
+      {
+        "dur": "00:00",
+        "loc": "",
+        "desc": "Zero-duration fictional marker",
+        "done": false,
+        "notes": "",
+        "action": "Shoot",
+        "locLat": null,
+        "locLng": null,
+        "status": "",
+        "timeIn": "12:15 AM",
+        "fixedIn": false,
+        "fixedOut": false,
+        "otherText": "",
+        "sunLocked": false,
+        "contactName": "",
+        "contactEmail": "",
+        "contactPhone": "",
+        "contactTitle": "",
+        "fixedOutTime": ""
+      }
+    ],
+    "savedAt": 1789791946874
+  },
+  "phase_id": null,
+  "created_at": "2026-09-19T04:54:14.749779+00:00",
+  "created_by": "8f2c1dd0-d3fc-47c7-94b6-22bf3dde1ff6",
+  "deleted_at": null,
+  "updated_at": "2026-09-19T04:54:14.749779+00:00",
+  "updated_by": "8f2c1dd0-d3fc-47c7-94b6-22bf3dde1ff6",
+  "display_name": "B15 import round trip — fictional copy",
+  "production_id": "64b12765-4d49-4420-8ff1-4705e8844610",
+  "organization_id": "2f75e684-eb3a-4951-9389-2df147812a8a",
+  "document_version": 1,
+  "library_position": 5,
+  "production_day_id": null,
+  "destination_labels": {
+    "phase": "",
+    "projectName": "B14 production"
+  },
+  "archived_from_status": null,
+  "last_transfer_version": 0,
+  "document_schema_version": 1
+}

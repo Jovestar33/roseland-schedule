@@ -1,0 +1,227 @@
+[
+  {
+    "case": "NAV-01",
+    "coverage": "Partial",
+    "boundary": "Local library/editor open, Close, refresh and direct copy handoff observed; full paired navigation/back/forward coverage remains."
+  },
+  {
+    "case": "NAV-02",
+    "coverage": "Partial",
+    "boundary": "Dirty Close and Keep editing observed; retained import review survives Tools dismissal. Concurrent navigation/save permutations remain."
+  },
+  {
+    "case": "IN-01",
+    "coverage": "Partial",
+    "boundary": "Main/nested textarea clipping repaired at1280/390; phone creation dialog fits. Remaining field/fixture matrix remains."
+  },
+  {
+    "case": "IN-02",
+    "coverage": "Partial",
+    "boundary": "Keyboard row reorder, time and date entry, dialog Escape/focus observed. Native IAB date-picker crashed; physical keyboard/touch coverage remains."
+  },
+  {
+    "case": "IN-03",
+    "coverage": "Partial",
+    "boundary": "Tools native dialog, Escape return focus and clear rename confirmation observed. Full accessibility audit remains."
+  },
+  {
+    "case": "LIB-01",
+    "coverage": "Partial",
+    "boundary": "Search, filters/reset, Recent suppression, production tree and archive/Trash collections observed. Multiple-production and ordering permutations remain."
+  },
+  {
+    "case": "LIB-02",
+    "coverage": "Partial",
+    "boundary": "Single-step blank creation, file import, Duplicate and direct copy opening observed. Name collision and full paired Save As permutations remain."
+  },
+  {
+    "case": "LIB-03",
+    "coverage": "Partial",
+    "boundary": "Rename and rename-back preserve identity/document. Cross-production Move has no authorized destination in this fixture and was cancelled."
+  },
+  {
+    "case": "LIB-04",
+    "coverage": "Partial",
+    "boundary": "Fictional archive/unarchive and Trash/restore complete; saved document/name/slug/status restored exactly. Broader role coverage remains."
+  },
+  {
+    "case": "ED-01",
+    "coverage": "Partial",
+    "boundary": "Add/delete and keyboard reorder observed on audit fixture. Complete action permutations remain."
+  },
+  {
+    "case": "ED-02",
+    "coverage": "Partial",
+    "boundary": "Midnight/zero-duration and sunrise/sunset insertion order tested. Remaining anchors and invalid-input matrix remain."
+  },
+  {
+    "case": "ED-03",
+    "coverage": "Partial",
+    "boundary": "Contact/status and nested completion observed. Not all action/style variants executed."
+  },
+  {
+    "case": "ED-04",
+    "coverage": "Partial",
+    "boundary": "Duration/reorder/delete and weather Undo/Redo observed. Full saved-baseline permutations remain."
+  },
+  {
+    "case": "ED-05",
+    "coverage": "Partial",
+    "boundary": "Town/date and call-sheet fields saved/read back. Complete header fixture set remains."
+  },
+  {
+    "case": "SAVE-01",
+    "coverage": "Partial",
+    "boundary": "Ordinary saves and reopen verified with authenticated readback. Broader paired paths remain."
+  },
+  {
+    "case": "SAVE-02",
+    "coverage": "Not executed in this local parity pass",
+    "boundary": "Earlier unit/database suites do not substitute for this runtime parity execution."
+  },
+  {
+    "case": "SNAP-01",
+    "coverage": "Partial",
+    "boundary": "Unsaved named capture and expanded contents verified without saving source. Restore/copy/delete semantics remain."
+  },
+  {
+    "case": "TOOL-01",
+    "coverage": "Partial",
+    "boundary": "Tools drawer, Snapshots direct opening, file review retention, phone sheet and duplicate handoff observed. Full command inventory remains."
+  },
+  {
+    "case": "TPL-01",
+    "coverage": "Partial",
+    "boundary": "Production-only create/full preview and Apply cancellation observed. Publishing/update/delete and role matrix remain."
+  },
+  {
+    "case": "TPL-02",
+    "coverage": "Not executed in this local parity pass",
+    "boundary": "Earlier unit/database suites do not substitute for this runtime parity execution."
+  },
+  {
+    "case": "BKP-01",
+    "coverage": "Partial",
+    "boundary": "Actual single JSON/CSV downloads parsed and verified. Full library and complete export matrix remain."
+  },
+  {
+    "case": "BKP-02",
+    "coverage": "Partial",
+    "boundary": "Actual fictional JSON parsed/imported at production level; exact authenticated readback. Invalid/recovery permutations remain."
+  },
+  {
+    "case": "LOC-01",
+    "coverage": "Partial",
+    "boundary": "Approved live public Google suggestions/details and restored buttons observed. Manual/provider-error/map-navigation matrix remains."
+  },
+  {
+    "case": "LOC-02",
+    "coverage": "Partial",
+    "boundary": "Nested fields/completion and saved preservation observed; full reorder/remove/print matrix remains."
+  },
+  {
+    "case": "WX-01",
+    "coverage": "Partial",
+    "boundary": "Live public forecast, Clear/Undo, refresh order and saved-weather initial restoration observed. Broader failure/time cases remain."
+  },
+  {
+    "case": "CON-01",
+    "coverage": "Partial",
+    "boundary": "Fictional full contact saved/read back. Complete long/international/suggestion fixtures remain."
+  },
+  {
+    "case": "CON-02",
+    "coverage": "Partial",
+    "boundary": "Actual eight-column/two-record CSV checked, including escaping. Full contact sheet sorting/output remains."
+  },
+  {
+    "case": "CALL-01",
+    "coverage": "Partial",
+    "boundary": "All eight fields saved/read back and shown in preview. Actual printed pagination remains."
+  },
+  {
+    "case": "SHARE-01",
+    "coverage": "Partial",
+    "boundary": "Team link copied with correct review path; no Client link or recipient journey performed."
+  },
+  {
+    "case": "SHARE-02",
+    "coverage": "Not executed in this local parity pass",
+    "boundary": "Earlier unit/database suites do not substitute for this runtime parity execution."
+  },
+  {
+    "case": "SHARE-03",
+    "coverage": "Not executed in this local parity pass",
+    "boundary": "Earlier unit/database suites do not substitute for this runtime parity execution."
+  },
+  {
+    "case": "PDF-01",
+    "coverage": "Blocked output/device evidence",
+    "boundary": "Native print/PDF output is not exposed by the available browser surface; physical device evidence is unavailable."
+  },
+  {
+    "case": "PRINT-01",
+    "coverage": "Blocked output/device evidence",
+    "boundary": "Native print/PDF output is not exposed by the available browser surface; physical device evidence is unavailable."
+  },
+  {
+    "case": "PDF-02",
+    "coverage": "Blocked output/device evidence",
+    "boundary": "Native print/PDF output is not exposed by the available browser surface; physical device evidence is unavailable."
+  },
+  {
+    "case": "PDF-03",
+    "coverage": "Blocked output/device evidence",
+    "boundary": "Native print/PDF output is not exposed by the available browser surface; physical device evidence is unavailable."
+  },
+  {
+    "case": "PRINT-02",
+    "coverage": "Blocked output/device evidence",
+    "boundary": "Native print/PDF output is not exposed by the available browser surface; physical device evidence is unavailable."
+  },
+  {
+    "case": "UI-01",
+    "coverage": "Partial",
+    "boundary": "Matched desktop panel/header/grid geometry and polished dialogs/drawer observed. Full long/empty/overflow fixture set remains."
+  },
+  {
+    "case": "UI-02",
+    "coverage": "Partial",
+    "boundary": "390px library/editor/tool sheet and dialog fit observed without horizontal overflow; physical touch remains."
+  },
+  {
+    "case": "UI-03",
+    "coverage": "Blocked output/device evidence",
+    "boundary": "Native print/PDF output is not exposed by the available browser surface; physical device evidence is unavailable."
+  },
+  {
+    "case": "CMS-01",
+    "coverage": "Not executed in this local parity pass",
+    "boundary": "Earlier unit/database suites do not substitute for this runtime parity execution."
+  },
+  {
+    "case": "AUTH-01",
+    "coverage": "Not executed in this local parity pass",
+    "boundary": "Earlier unit/database suites do not substitute for this runtime parity execution."
+  },
+  {
+    "case": "DATA-01",
+    "coverage": "Partial",
+    "boundary": "Full fictional JSON/import/duplicate equality and lifecycle round-trip preservation verified. Complete legacy fixture inventory remains."
+  },
+  {
+    "case": "DATA-02",
+    "coverage": "Not executed in this local parity pass",
+    "boundary": "Earlier unit/database suites do not substitute for this runtime parity execution."
+  },
+  {
+    "case": "MIG-01",
+    "coverage": "Not executed in this local parity pass",
+    "boundary": "Earlier unit/database suites do not substitute for this runtime parity execution."
+  },
+  {
+    "case": "INV-01",
+    "coverage": "Partial",
+    "boundary": "Source control inventory expanded and linked to observations; not a completed all-controls execution."
+  }
+]

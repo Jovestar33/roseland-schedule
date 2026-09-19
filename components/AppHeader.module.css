@@ -1,0 +1,6 @@
+@media (max-width:760px) {
+  .withActions:global(.hdr) { flex-direction:row !important; flex-wrap:nowrap !important; justify-content:space-between !important; gap:16px !important; padding:10px 16px !important; }
+  .withActions:global(.hdr) img { height:68px !important; width:auto !important; max-height:68px !important; max-width:96px !important; margin:0 !important; }
+  .withActions:global(.hdr) :global(.hdr-right) { display:flex !important; width:auto !important; max-width:65% !important; flex:0 1 auto !important; contain:none !important; }
+  .withActions:global(.hdr) :global(.hdr-right .btn) { width:auto !important; min-height:44px !important; }
+}

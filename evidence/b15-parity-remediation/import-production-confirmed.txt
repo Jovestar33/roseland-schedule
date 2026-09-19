@@ -1,0 +1,17 @@
+Copy and schedule files
+
+Schedule-only JSON includes saved documents readable by your account across organizations, including readable archived/deleted schedules. It excludes history, snapshots, templates, CMS, memberships, hierarchy definitions, aliases and browser-only data. Unsaved edits stay in this tab.
+
+Export all readable schedules
+Copy / Save As current draft
+Import schedule-only JSON
+
+Creation confirmed. Source and newer draft edits are unchanged.
+
+New schedules confirmed
+
+Destination: B14 production · No production day. 1 of 1 confirmed. Keep this tab for recovery; closing or reloading loses request details. Download the receipt to retain IDs.
+
+B15 import round trip — fictional · success
+43599fac-2cd4-4eef-baf7-14dbe1a8a80c
+Retry unconfirmed original IDsDownload creation receiptClose completed review

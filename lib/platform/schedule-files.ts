@@ -89,12 +89,12 @@ export interface CreateSelection { name:string;slug:string;data:Doc }
 export class ScheduleFileImport {
   readonly items:ScheduleLifecycleController[];
   busy=false;
-  readonly actor:string; readonly organization:string; readonly day:string;
-  constructor(actor:string,organization:string,day:string,entries:CreateSelection[],uuid:()=>string=()=>crypto.randomUUID()) {
-    this.actor=actor;this.organization=organization;this.day=day;
+  readonly actor:string; readonly organization:string; readonly day:string|null; readonly placement?:{productionId:string;phaseId:string|null};
+  constructor(actor:string,organization:string,day:string|null,entries:CreateSelection[],uuid:()=>string=()=>crypto.randomUUID(),placement?:{productionId:string;phaseId:string|null}) {
+    this.actor=actor;this.organization=organization;this.day=day;this.placement=placement?Object.freeze({...placement}):undefined;
     if(!entries.length||entries.length>FILE_COUNT) invalid('Choose 1–500 schedules.');
     const names=new Set<string>(),slugs=new Set<string>(),ids=new Set<string>();
-    this.items=entries.map(e=>{validateFileName(e.name,e.slug);validateFileDocument(e.data);const n=e.name.toLowerCase();if(names.has(n)||slugs.has(e.slug)) invalid('Duplicate names or slugs in this destination. Edit the review first.');names.add(n);slugs.add(e.slug);const id=uuid();if(ids.has(id)) invalid('Duplicate generated identity.');ids.add(id);const c=new ScheduleLifecycleController();c.bind(actor);c.prepareCreate(organization,id,day,e.name,e.slug,e.data);return c;});
+    this.items=entries.map(e=>{validateFileName(e.name,e.slug);validateFileDocument(e.data);const n=e.name.toLowerCase();if(names.has(n)||slugs.has(e.slug)) invalid('Duplicate names or slugs in this destination. Edit the review first.');names.add(n);slugs.add(e.slug);const id=uuid();if(ids.has(id)) invalid('Duplicate generated identity.');ids.add(id);const c=new ScheduleLifecycleController();c.bind(actor);c.prepareCreate(organization,id,day,e.name,e.slug,e.data,this.placement);return c;});
   }
   get complete(){return this.items.every(c=>c.phase==='success');}
   get started(){return this.items.some(c=>c.phase!=='review');}
@@ -103,6 +103,6 @@ export class ScheduleFileImport {
     try {for(const c of this.items){if(!allowed())break;if(c.phase==='success')continue;await c.execute(transport,checkOnly);if(c.result?.state!=='matched')break;}}
     finally{this.busy=false;}
   }
-  receipt(){return this.items.map(c=>({id:c.attempt!.id,name:c.attempt!.name,slug:c.attempt!.slug,organization:this.organization,day:this.day,state:c.phase,failure:c.failure,matchedVersion:c.result?.matchedVersion??null}));}
+  receipt(){return this.items.map(c=>({id:c.attempt!.id,name:c.attempt!.name,slug:c.attempt!.slug,organization:this.organization,day:this.day,...(this.placement?{production:this.placement.productionId,phase:this.placement.phaseId}:{}),state:c.phase,failure:c.failure,matchedVersion:c.result?.matchedVersion??null}));}
 }
 export function unchangedInventory(a:unknown,b:unknown){if(!sameJson(a,b))invalid('Schedules changed while exporting. No partial file was produced. Retry the export.');}

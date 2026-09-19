@@ -36,3 +36,7 @@
 
 .directory[hidden] { display:none; }
 .reviewShell:empty { padding:0; }
+
+.reviewLibraryContext { max-width:900px; padding:12px 20px 0; }
+.reviewLibraryContext .directory { margin:0; }
+.reviewLibraryContext .directory label { font-size:12px; color:var(--g600); }

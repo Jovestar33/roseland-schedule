@@ -1,0 +1,39 @@
+- img "Roseland Pictures"
+- generic: B14 latest organization labels
+- button "Account & settings"
+- text: Organization
+- combobox "Organization":
+  - option "Choose an organization"
+  - option "B14 Fictional Studio" [selected]
+- region "Organization deletion settings"
+- main:
+  - region "Schedule library":
+    - heading "Library" [level=1]
+    - button "+ New Schedule"
+    - button "↻ Refresh"
+    - button "📁 Library"
+    - button "★ Templates"
+    - button "🔗 Backup"
+    - button "Move requests"
+    - generic: ⌕
+    - textbox "Search schedules…" [active]: library rename check
+    - button "✕"
+    - button "Filter"
+    - text: ▸
+    - status: Saved action confirmed. Any open editor draft is retained; reload it explicitly when ready.
+    - status: 1 schedule
+    - generic "▾ B14 production 1 schedules":
+      - text: ▾
+      - generic: B14 production
+      - generic: 1 schedules
+    - generic "▾ No production day 1":
+      - text: ▾
+      - generic: No production day
+      - generic: "1"
+    - generic "Arrange B15 library rename check — fictional": ≡
+    - button "B15 library rename check — fictional"
+    - generic: 2026-09-19
+    - button "Organize B15 library rename check — fictional": ⋯
+    - button "+ New schedule in B14 production"
+- generic "Notifications"
+- alert: Roseland Schedule

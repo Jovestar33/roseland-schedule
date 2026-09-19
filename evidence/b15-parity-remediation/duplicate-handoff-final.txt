@@ -1,0 +1,139 @@
+- img "Roseland Pictures"
+- generic: B14 latest organization labels
+- region "Organization deletion settings"
+- main:
+  - text: ▸ ▾ ▾
+  - region "Schedule editor":
+    - generic: B15 duplicate handoff — fictional
+    - generic: Saved
+    - button "Save"
+    - button "More save options":
+      - generic: ▾
+    - button "Undo" [disabled]:
+      - text: ↩
+      - generic: Undo
+    - button "Redo" [disabled]:
+      - text: ↪
+      - generic: Redo
+    - button "⬆ Share ▾":
+      - generic: ⬆
+      - generic: Share
+      - generic: ▾
+    - button "Tools":
+      - generic: Tools
+    - button "Close":
+      - generic: Close
+    - generic: B14 production
+    - generic: Phase
+    - generic: ·
+    - generic: Day
+    - generic: —
+    - generic: PRODUCER
+    - generic: —
+    - generic: DIRECTOR
+    - generic: —
+    - generic: CAMERA
+    - generic: —
+    - generic: Town / Location
+    - textbox "Town / Location":
+      - /placeholder: e.g. Garner, NC
+    - generic: Date
+    - textbox "Date"
+    - generic: — pick a date —
+    - generic: Call Time
+    - generic: 11:45 PM
+    - link "Weather by Open-Meteo":
+      - /url: https://open-meteo.com/
+    - button "Refresh weather" [disabled]
+    - table:
+      - rowgroup:
+        - row "Action Location Description Notes Time In Duration Time Out Done":
+          - columnheader
+          - columnheader "Action"
+          - columnheader "Location"
+          - columnheader "Description"
+          - columnheader "Notes"
+          - columnheader
+          - columnheader "Time In"
+          - columnheader "Duration"
+          - columnheader "Time Out"
+          - columnheader "Done"
+          - columnheader
+      - rowgroup:
+        - row "≡ 1 Crew Call ▾ Fictional audit studio Show full address 📍 Mark done • Fictional annex Show full address 📍 × Nested fictional instructions Second line + sub-location Fictional long description Second line of the shot plan Third line remains visible ✓ Unsaved fictional snapshot marker Second note ‹ 11:45 PM 00:30 12:15 AM › Mark done 👤 ✕":
+          - cell "≡ 1":
+            - button "≡"
+            - text: "1"
+          - cell "Crew Call ▾":
+            - combobox:
+            - text: ▾
+          - cell "Fictional audit studio Show full address 📍 Mark done • Fictional annex Show full address 📍 × Nested fictional instructions Second line + sub-location":
+            - textbox "Location…": Fictional audit studio
+            - button "Show full address": ▸
+            - button "📍"
+            - checkbox "Mark done" [checked]
+            - generic: •
+            - textbox "Sub-location…": Fictional annex
+            - button "Show full address": ▸
+            - button "📍"
+            - button "×"
+            - textbox "Description…": Nested fictional instructions Second line
+            - button "+ sub-location"
+          - cell "Fictional long description Second line of the shot plan Third line remains visible":
+            - textbox "Description…": Fictional long description Second line of the shot plan Third line remains visible
+          - cell "✓ Unsaved fictional snapshot marker Second note":
+            - button "✓"
+            - textbox "Notes…": Unsaved fictional snapshot marker Second note
+          - cell
+          - cell "‹ 11:45 PM":
+            - button "‹"
+            - combobox:
+          - cell "00:30":
+            - combobox:
+          - cell "12:15 AM ›":
+            - generic: 12:15 AM
+            - button "›"
+          - cell "Mark done 👤":
+            - checkbox "Mark done"
+            - button "👤"
+          - cell "✕":
+            - button "✕"
+        - row "≡ 2 Shoot ▾ Show full address + sub-location Zero-duration fictional marker ✓ ‹ 12:15 AM 00:00 12:15 AM › Mark done 👤 ✕":
+          - cell "≡ 2":
+            - button "≡"
+            - text: "2"
+          - cell "Shoot ▾":
+            - combobox:
+            - text: ▾
+          - cell "Show full address + sub-location":
+            - textbox "Location…"
+            - button "Show full address": ▸
+            - button "+ sub-location"
+          - cell "Zero-duration fictional marker":
+            - textbox "Description…": Zero-duration fictional marker
+          - cell "✓":
+            - button "✓"
+            - textbox "Notes…"
+          - cell
+          - cell "‹ 12:15 AM":
+            - button "‹"
+            - generic: 12:15 AM
+          - cell "00:00":
+            - combobox:
+          - cell "12:15 AM ›":
+            - generic: 12:15 AM
+            - button "›"
+          - cell "Mark done 👤":
+            - checkbox "Mark done"
+            - button "👤"
+          - cell "✕":
+            - button "✕"
+      - rowgroup:
+        - row "Total 00:30":
+          - cell
+          - cell "Total"
+          - cell "00:30"
+          - cell
+    - button "+ Add Row"
+- generic "Notifications"
+- alert: Roseland Schedule

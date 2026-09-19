@@ -24,3 +24,18 @@ test('conflicting identity blocks retry rather than allocating a replacement',as
 test('changed export inventory rejects incomplete or mixed output',()=>{assert.doesNotThrow(()=>unchangedInventory([{id:'1',v:1}],[{v:1,id:'1'}]));assert.throws(()=>unchangedInventory([{id:'1',v:1}],[{id:'1',v:2}]),/changed/);assert.throws(()=>unchangedInventory([{id:'1'}],[]),/changed/);});
 
 test('overwrite instructions are rejected rather than silently discarded',async()=>{const file=await encodeScheduleFile([record()]);await assert.rejects(parseScheduleFile(JSON.stringify({...file,overwrite:true}),''));await assert.rejects(parseScheduleFile(JSON.stringify({...file,schedules:[{...file.schedules[0],targetId:randomUUID()}]}),''));await assert.rejects(parseScheduleFile(JSON.stringify({format:'roseland-schedules',version:1,schedules:[{name:'Overwrite',data:documentFixture(),overwrite:true}]}),''),/create-only/);});
+
+test('production-only import retains its reviewed destination and document through lost acknowledgement',async()=>{
+  const placement={productionId:randomUUID(),phaseId:null};
+  const entry=selection('Production import'),before=structuredClone(entry.data);
+  const review=new ScheduleFileImport(actor,org,null,[entry],undefined,placement);
+  const attempt=review.items[0].attempt!;
+  placement.productionId=randomUUID();entry.data.rows[0].notes='Later source edit';
+  assert.equal(attempt.dayId,null);assert.equal(attempt.productionId,review.placement!.productionId);
+  assert.notEqual(attempt.productionId,placement.productionId);assert.deepEqual(attempt.document,before);
+  let sent=0;const result={...saved(attempt),production_id:attempt.productionId!,production_day_id:null,phase_id:null};
+  const transport:LifecycleTransport={async send(){sent++;throw new ScheduleRepositoryError('failed');},async probe(){return {state:'matched',current:result,matchedVersion:1};}};
+  await review.execute(transport,()=>true);assert.equal(review.complete,false);
+  await review.execute(transport,()=>true);assert.equal(review.complete,true);assert.equal(sent,1);
+  assert.equal(review.receipt()[0].production,attempt.productionId);assert.equal(review.receipt()[0].day,null);
+});

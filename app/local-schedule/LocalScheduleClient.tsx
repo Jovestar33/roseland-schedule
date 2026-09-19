@@ -32,6 +32,7 @@ import LocalScheduleSnapshots from '@/components/local/LocalScheduleSnapshots';
 import {snapshotRestoreMatches,type SnapshotReceipt} from '@/lib/platform/schedule-snapshots';
 import {createTemplateRepository} from '@/lib/platform/schedule-templates';
 import LocalScheduleFiles from '@/components/local/LocalScheduleFiles';
+import ReviewToolPanel from '@/components/local/ReviewToolPanel';
 import ShareDropdown from '@/components/toolbar/ShareDropdown';
 import LocalScheduleSharing from '@/components/local/LocalScheduleSharing';
 import LocalWeatherControls from '@/components/local/LocalWeatherControls';
@@ -268,7 +269,7 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
       catch{setMessage('Copy saved. Source draft persistence could not be verified, so opening is deferred.');return false;}
     }
     if(!safe())return false;
-    await open(id);return controller.record?.id===id;
+    await open(id);const opened=controller.record?.id===id;if(opened&&review)setReviewTool(null);return opened;
   }
   function beforeSnapshotRestore(sourceVersion:number){
     const record=controller.record,actor=accountRef.current,st=state();
@@ -348,7 +349,7 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
         <p>Fictional data only · Supabase on this computer</p>
         <p>Authenticated editing and document tools with fictional location and weather responses. Library parity review remains open.</p>
       </header>}
-      {(!review||! /^(Schedules loaded\.|Schedule loaded\.|Choose an authorized organization above\.)$/.test(message))&&<p role="status" aria-live="polite">{message}</p>}
+      {(!review||! /^(Schedules loaded\.|Schedule loaded\.|Choose an authorized organization above\.|Schedule closed\. Choose a schedule from the library\.)$/.test(message))&&<p role="status" aria-live="polite">{message}</p>}
       {!workspace && (!session || authNeeded) && <form className={styles.login} onSubmit={login}>
         {authNeeded && <p>Sign in again to continue. Your edits are still here.</p>}
         <label>Email<input type="email" autoComplete="off" required readOnly={!!session} value={session?.user.email ?? email} onChange={e => setEmail(e.target.value)} /></label>
@@ -356,7 +357,7 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
         <button className="btn btn-primary" disabled={busy}>Sign in</button>
       </form>}
       {(session || (managed && accountRef.current)) && <>
-        <div hidden={review&&(!selected||!reviewTool)} className={styles.toolbar}>
+        <div hidden={review} className={styles.toolbar}>
           {!workspace && session && <span>Signed in as {session.user.email}</span>}
           {!workspace && <button className="btn btn-light" disabled={busy} onClick={() => guarded(() => void run(async () => {
             const result = await client.auth.signOut({ scope: 'local' });
@@ -365,15 +366,24 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
             setMessage('Signed out.');
           }), 'Sign out and discard unsaved changes')}>Sign out</button>}
           <button ref={libraryReturnRef} className="btn btn-light" disabled={busy || !ready} onClick={() => review?guarded(closeSchedule,'Return to library and discard unsaved changes'):void run(() => list(false))}>{review?'Library':'Refresh list'}</button>
-          {review&&<><button className="btn btn-light" onClick={()=>openReviewTool('templates')}>Templates</button><button className="btn btn-light" disabled={!selected} onClick={()=>openReviewTool('snapshots')}>Snapshots</button><button className="btn btn-light" onClick={()=>setReviewTool(reviewTool==='files'?null:'files')}>Backup / Import</button><button className="btn btn-light" onClick={()=>setReviewTool(reviewTool==='transfers'?null:'transfers')}>Move requests</button></>}
+
         </div>
-        {workspace && <div hidden={review&&reviewTool!=='files'}><LocalScheduleFiles client={client} actor={session?.user.id ?? accountRef.current} organization={workspace.organization?.id ?? null}
+        {review&&<ReviewToolPanel enabled open={active&&reviewTool==='menu'} title="Tools" onClose={()=>setReviewTool(null)}><nav className={styles.toolMenu} aria-label="Schedule tools">
+          <button onClick={()=>openReviewTool('templates')}><strong>Templates</strong><span>Reuse rows and saved layouts</span></button>
+          <button disabled={!selected} onClick={()=>openReviewTool('snapshots')}><strong>Snapshots</strong><span>Save or restore a schedule checkpoint</span></button>
+          <button onClick={()=>setReviewTool('files')}><strong>Backup and import</strong><span>Download schedules or import a JSON backup</span></button>
+          <button onClick={()=>setReviewTool('transfers')}><strong>Move requests</strong><span>Review moves between productions</span></button>
+          <button disabled={!selected} onClick={()=>setReviewTool('sharing')}><strong>Team and Client links</strong><span>Manage access to this schedule</span></button>
+          <button disabled={busy||!selected} onClick={()=>{setReviewTool(null);guarded(()=>void run(()=>open(selected!)),'Reload and discard unsaved changes');}}><strong>Reload schedule</strong><span>Return to the latest saved version</span></button>
+          <button onClick={()=>{setReviewTool(null);workspace?.openSettings?.();}}><strong>Account & settings</strong><span>Your account and organization settings</span></button>
+        </nav></ReviewToolPanel>}
+        {workspace && <ReviewToolPanel enabled={review} open={active&&reviewTool==='files'} title="Backup and import" onClose={()=>setReviewTool(null)} onBack={selected?()=>setReviewTool('menu'):undefined}><div><LocalScheduleFiles client={client} actor={session?.user.id ?? accountRef.current} organization={workspace.organization?.id ?? null}
           enabled={active && ready && !confirmation} copyEnabled={!templateUses.length && !busy && !!selected && recordInScope && canEdit && permission?.copy===true && !documentDialogOpen && contact===null && notes===null && status===null}
-          getSource={()=>controller.record} getDraft={()=>state().getScheduleData()} name={state().scheduleName ?? 'Schedule'} onState={reportFiles} requireAuth={workspace.requireAuth} onCopy={()=>{if(selected)startTransfer(selected,true);}}/></div>}
+          getSource={()=>controller.record} getDraft={()=>state().getScheduleData()} name={state().scheduleName ?? 'Schedule'} onState={reportFiles} requireAuth={workspace.requireAuth} onCopy={()=>{if(selected)startTransfer(selected,true);}}/></div></ReviewToolPanel>}
         {workspace&&<div hidden={review&&reviewTool!=='snapshots'}><LocalScheduleSnapshots onClose={review?()=>setReviewTool(null):undefined} review={review} openRequest={review&&reviewTool==='snapshots'?toolRequest:undefined} client={client} actor={session?.user.id??null} organization={workspace.organization?.id??null} schedule={selected} enabled={active&&ready&&recordInScope&&permission?.read===true&&!confirmation&&!busy&&!controller.attempt&&!documentDialogOpen&&contact===null&&status===null&&notes===null} readOnly={workspace.readOnly} canWrite={canEdit} canCopy={permission?.copy===true&&permission?.output===true} getSource={()=>controller.record} onState={reportSnapshots} requireAuth={workspace.requireAuth} beforeRestore={beforeSnapshotRestore} onRestored={onSnapshotRestored} captureOpen={captureCopyOpen} onCopy={openConfirmedCopy}/></div>}
         {workspace&&<div hidden={review&&reviewTool!=='templates'}><LocalScheduleTemplates onClose={review?()=>setReviewTool(null):undefined} openRequest={review&&reviewTool==='templates'?toolRequest:undefined} client={client} actor={session?.user.id??null} organization={workspace.organization?.id??null} enabled={active&&ready&&!confirmation&&!busy} canWriteCurrent={canEdit&&recordInScope&&permission?.output===true&&!controller.attempt} getSource={()=>controller.record} canApply={()=>!!controller.record&&canEdit&&recordInScope&&!controller.attempt&&!busyRef.current&&!documentDialogOpen&&contact===null&&status===null&&notes===null} onState={reportTemplates} requireAuth={workspace.requireAuth} onApply={(review,capture)=>{const st=state();if(!activeRef.current||!canEdit||!recordInScope||controller.attempt||busyRef.current||controller.record?.id!==capture.id||controller.record.document_version!==capture.version||st.documentSession!==capture.documentSession||st.editRevision!==capture.editRevision)return false;st.applyTemplateRows(review.template.rows,{id:review.template.id,version:review.template.version,policy:review.policy});setMessage('Template applied to draft. Save schedule retains its source restrictions.');return true;}}/></div>}
         {workspace&&<div className={review?styles.reviewLibrary:undefined} hidden={review&&!!selected&&recordInScope}><LocalScheduleLibrary review={review} navigation={review?<div className="mtabs lib-tabs"><button className={`mtab${!reviewTool?' active':''}`} onClick={()=>setReviewTool(null)}>📁 Library</button><button className={`mtab${reviewTool==='templates'?' active':''}`} onClick={()=>openReviewTool('templates')}>★ Templates</button><button className={`mtab${reviewTool==='files'?' active':''}`} onClick={()=>setReviewTool('files')}>🔗 Backup</button><button className={`mtab${reviewTool==='transfers'?' active':''}`} onClick={()=>setReviewTool('transfers')}>Move requests</button></div>:undefined} client={client} actor={session?.user.id??accountRef.current} organization={workspace.organization?.id??null} enabled={active&&ready&&!confirmation} selected={selected} onOpen={id=>guarded(()=>void run(()=>open(id)),'Open schedule and discard unsaved changes')} onInspect={id=>workspace.openLifecycle?.(workspace.organization!.id,id)} onState={reportLibrary} onTransfer={startTransfer}/></div>}
-        {workspace&&<div hidden={review&&reviewTool!=='transfers'}><LocalScheduleTransfers client={client} actor={session?.user.id??null} organization={workspace.organization?.id??null} enabled={active&&ready&&!confirmation} request={transferRequest} onState={reportTransfers} getDraft={id=>controller.record?.id===id?{record:controller.record,document:structuredClone(state().getScheduleData())}:null} captureOpen={captureCopyOpen} onCopy={openConfirmedCopy}/></div>}
+        {workspace&&<ReviewToolPanel enabled={review} open={active&&reviewTool==='transfers'} title="Move and duplicate" onClose={()=>setReviewTool(null)} onBack={selected?()=>setReviewTool('menu'):undefined}><div><LocalScheduleTransfers client={client} actor={session?.user.id??null} organization={workspace.organization?.id??null} enabled={active&&ready&&!confirmation} request={transferRequest} onState={reportTransfers} getDraft={id=>controller.record?.id===id?{record:controller.record,document:structuredClone(state().getScheduleData())}:null} captureOpen={captureCopyOpen} onCopy={openConfirmedCopy}/></div></ReviewToolPanel>}
         {workspace&&selected&&!recordInScope&&<p>A schedule draft is retained in another organization. Return there to continue, or explicitly discard it when opening another schedule.</p>}
         {!workspace&&<nav aria-label="Local schedules" className={styles.list}>
           {items.map(item=><button key={item.id} className="btn btn-light" disabled={busy||!ready} aria-current={selected===item.id?'page':undefined} onClick={()=>guarded(()=>void run(()=>open(item.id)),'Open schedule and discard unsaved changes')}>{item.display_name} · {item.status}</button>)}
@@ -395,9 +405,9 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
             {draftAvailable&&canEdit&&ready&&<button className="btn btn-light" disabled={busy||!!controller.attempt} onClick={()=>guarded(()=>void run(recoverSourceDraft),'Recover retained source draft and replace current edits')}>Recover retained source draft</button>}
             </div>
           </div>
-          {review&&reviewTool&&<div className={styles.reviewTools}><button className="btn btn-light btn-sm" disabled={busy} onClick={()=>guarded(()=>void run(()=>open(selected)),'Reload and discard unsaved changes')}>Reload schedule</button> <button className="btn btn-light btn-sm" onClick={()=>setReviewTool('sharing')}>Team and Client links</button> <button className="btn btn-light btn-sm" onClick={()=>setReviewTool(null)}>Close tools</button> <button className="btn btn-light btn-sm" onClick={workspace?.openSettings}>Account & settings</button></div>}
+
           {!review&&<div className={styles.toolbar}>{shareTools}</div>}
-          {workspace&&controller.record&&<div hidden={review&&reviewTool!=='sharing'} className={review?styles.reviewTools:undefined}><LocalScheduleSharing workspacePath={review?'/review':'/local-workspace'} key={`${session?.user.id}:${controller.record.id}`} client={client} actor={session?.user.id??null} organization={controller.record.organization_id} schedule={controller.record.id} enabled={active&&recordInScope&&ready&&permission?.read===true&&!confirmation} readOnly={workspace.readOnly===true}/></div>}
+          {workspace&&controller.record&&<ReviewToolPanel enabled={review} open={active&&reviewTool==='sharing'} title="Team and Client links" onClose={()=>setReviewTool(null)} onBack={()=>setReviewTool('menu')}><div><LocalScheduleSharing workspacePath={review?'/review':'/local-workspace'} key={`${session?.user.id}:${controller.record.id}`} client={client} actor={session?.user.id??null} organization={controller.record.organization_id} schedule={controller.record.id} enabled={active&&recordInScope&&ready&&permission?.read===true&&!confirmation} readOnly={workspace.readOnly===true}/></div></ReviewToolPanel>}
           <LocalSchedulePrint visible={active && recordInScope && ready && !confirmation} />
           {(controller.attempt || controller.result) && <section className={styles.recovery} aria-label="Save recovery">
             <h2>{controller.result?.state === 'matched' ? 'Saved version confirmed' : 'Save needs review'}</h2>

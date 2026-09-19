@@ -1,0 +1,54 @@
+- img "Roseland Pictures"
+- generic: B14 latest organization labels
+- button "Account & settings"
+- text: Organization
+- combobox "Organization":
+  - option "Choose an organization"
+  - option "B14 Fictional Studio" [selected]
+- region "Organization deletion settings"
+- main:
+  - region "Schedule library":
+    - heading "Library" [level=1]
+    - button "+ New Schedule"
+    - button "↻ Refresh"
+    - button "📁 Library"
+    - button "★ Templates"
+    - button "🔗 Backup"
+    - button "Move requests"
+    - generic: ⌕
+    - textbox "Search schedules…"
+    - button "Filter (1)" [expanded] [active]
+    - text: Production filter
+    - combobox "Production filter":
+      - option "All productions" [selected]
+      - option "B14 production"
+    - text: Collection
+    - combobox "Collection":
+      - option "Active"
+      - option "Archived" [selected]
+      - option "All saved"
+      - option "Trash"
+    - text: Sort schedules
+    - combobox "Sort schedules":
+      - option "Manual / day order" [selected]
+      - option "Name"
+      - option "Schedule date"
+      - option "Recently saved"
+    - generic "▸Date filter"
+    - button "Clear filters"
+    - status: Saved action confirmed. Any open editor draft is retained; reload it explicitly when ready.
+    - generic "▾ B14 production 1 schedules":
+      - text: ▾
+      - generic: B14 production
+      - generic: 1 schedules
+    - generic "▾ No production day 1":
+      - text: ▾
+      - generic: No production day
+      - generic: "1"
+    - generic "Arrange B15 comprehensive parity — fictional": ≡
+    - button "B15 comprehensive parity — fictional"
+    - generic: 2026-09-19 · Archived
+    - button "Organize B15 comprehensive parity — fictional": ⋯
+    - button "+ New schedule in B14 production"
+- generic "Notifications"
+- alert: Roseland Schedule

@@ -1,0 +1,21 @@
+import {readFileSync,writeFileSync} from 'node:fs';
+import {createClient} from '@supabase/supabase-js';
+import {parseScheduleFile} from '../lib/platform/schedule-files.ts';
+import {sameJson} from '../lib/platform/schedule-lifecycle-controller.ts';
+const config=JSON.parse(readFileSync('/private/tmp/roseland-b14-destination-g2-live-status.json','utf8'));
+const access=JSON.parse(readFileSync('/private/tmp/roseland-b15-review-access.json','utf8'));
+if(config.API_URL!=='http://127.0.0.1:56521')throw Error('Fictional loopback required');
+const client=createClient(config.API_URL,config.ANON_KEY,{auth:{persistSession:false,autoRefreshToken:false}});
+const login=await client.auth.signInWithPassword({email:access.email,password:access.password});if(login.error)throw Error('Login failed');
+const result=await client.rpc('session_read_schedule',{target_schedule_id:'43599fac-2cd4-4eef-baf7-14dbe1a8a80c'});
+if(result.error||result.data?.display_name!=='B15 import round trip — fictional')throw Error('Fictional document read failed');
+const source=(await parseScheduleFile(readFileSync('evidence/b15-parity-remediation/fictional-schedule-export.json','utf8'),'B15 comprehensive parity — fictional'))[0];
+if(!sameJson(result.data.document,source.data))throw Error('Imported document differs');
+if(result.data.production_day_id!==null||result.data.document_version!==1)throw Error('Unexpected imported placement/version');
+writeFileSync('evidence/b15-parity-remediation/import-readback.json',JSON.stringify(result.data,null,2));
+console.log(JSON.stringify({id:result.data.id,version:result.data.document_version,rows:result.data.document.rows.length,exactDocumentMatch:true,productionDay:null}));
+
+const copy=await client.rpc('session_read_schedule',{target_schedule_id:'fb364386-23b0-4518-ad3c-e005df7a1b6a'});
+if(copy.error||copy.data?.display_name!=='B15 import round trip — fictional copy'||!sameJson(copy.data.document,result.data.document))throw Error('Fictional duplicate differs');
+writeFileSync('evidence/b15-parity-remediation/duplicate-readback.json',JSON.stringify(copy.data,null,2));
+console.log(JSON.stringify({copyId:copy.data.id,sourceId:result.data.id,distinctIdentity:copy.data.id!==result.data.id,exactDocumentMatch:true,sourceVersion:result.data.document_version,copyVersion:copy.data.document_version}));
