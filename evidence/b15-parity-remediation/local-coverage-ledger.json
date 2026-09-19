@@ -2,12 +2,12 @@
   {
     "case": "NAV-01",
     "coverage": "Partial",
-    "boundary": "Local library/editor open, Close, refresh and direct copy handoff observed; full paired navigation/back/forward coverage remains."
+    "boundary": "Local library/editor open, Close, refresh and direct copy handoff observed. History selection survives refresh and Back/Forward. Genuine Admin dirty switch/cancel/return and Editor/Viewer organization switching now verified; full fixture/role permutations remain."
   },
   {
     "case": "NAV-02",
     "coverage": "Partial",
-    "boundary": "Dirty Close and Keep editing observed; retained import review survives Tools dismissal. Concurrent navigation/save permutations remain."
+    "boundary": "Dirty Close and Keep editing observed; ordinary copy is contextual. Retained import and template reviews survive Tools dismissal; template cancellation sends nothing. Concurrent navigation/save permutations remain."
   },
   {
     "case": "IN-01",
@@ -32,7 +32,7 @@
   {
     "case": "LIB-02",
     "coverage": "Partial",
-    "boundary": "Single-step blank creation, file import, Duplicate and direct copy opening observed. Name collision and full paired Save As permutations remain."
+    "boundary": "Single-step blank creation, file import, Duplicate and direct copy opening observed. Duplicate-name conflict now offers an actionable recovery message; discarded review clears its error. Full paired Save As permutations remain."
   },
   {
     "case": "LIB-03",
@@ -47,7 +47,7 @@
   {
     "case": "ED-01",
     "coverage": "Partial",
-    "boundary": "Add/delete and keyboard reorder observed on audit fixture. Complete action permutations remain."
+    "boundary": "Add/delete and keyboard reorder observed on audit fixture. Done/normal custom-action chooser and Undo verified; overlap/fixed utility columns corrected at1200/1440/390. Complete action permutations remain."
   },
   {
     "case": "ED-02",
@@ -76,13 +76,13 @@
   },
   {
     "case": "SAVE-02",
-    "coverage": "Not executed in this local parity pass",
-    "boundary": "Earlier unit/database suites do not substitute for this runtime parity execution."
+    "coverage": "Partial",
+    "boundary": "Two ordinary tabs exercised a genuine stale-write conflict, preserved the second draft, checked the different saved result, and explicitly reloaded the first writer. Lost-acknowledgement and network-loss browser paths remain."
   },
   {
     "case": "SNAP-01",
     "coverage": "Partial",
-    "boundary": "Unsaved named capture and expanded contents verified without saving source. Restore/copy/delete semantics remain."
+    "boundary": "Unsaved named capture and expanded contents verified without saving source. Restore content, retained newer draft recovery, and clean editor return now observed on a separate fictional schedule; authenticated saved readback verifies content. Snapshot copy opens a separate schedule with matching rows/metadata; rename, Trash and restore preserve snapshot identity. Wider role/fixture matrix remains."
   },
   {
     "case": "TOOL-01",
@@ -92,17 +92,17 @@
   {
     "case": "TPL-01",
     "coverage": "Partial",
-    "boundary": "Production-only create/full preview and Apply cancellation observed. Publishing/update/delete and role matrix remain."
+    "boundary": "Production-only create/readable complete preview, Apply/Undo/Redo/Save, Apply cancellation, retained review reopening and cancellation observed. Confirmation buttons stay visible at1280/390. Publication, withdrawal, rename, replacement, Trash and restore verified on new fictional templates. C06 browse-first layout, contextual creation, cancel/return/focus and draft preservation verified at1280/390. Broader role/fixture matrix remains."
   },
   {
     "case": "TPL-02",
-    "coverage": "Not executed in this local parity pass",
-    "boundary": "Earlier unit/database suites do not substitute for this runtime parity execution."
+    "coverage": "Partial",
+    "boundary": "Browser discovery/file review, production-only import and byte-exact untouched-source export observed; malformed input rejected with actionable copy. Full browser-storage and role matrix remains."
   },
   {
     "case": "BKP-01",
     "coverage": "Partial",
-    "boundary": "Actual single JSON/CSV downloads parsed and verified. Full library and complete export matrix remain."
+    "boundary": "Actual single JSON/CSV downloads parsed and verified. Actual full library download contains15 schedules, each exactly matched to authenticated readback. Remaining format/fixture/output matrix remains."
   },
   {
     "case": "BKP-02",
@@ -122,7 +122,7 @@
   {
     "case": "WX-01",
     "coverage": "Partial",
-    "boundary": "Live public forecast, Clear/Undo, refresh order and saved-weather initial restoration observed. Broader failure/time cases remain."
+    "boundary": "Live public forecast, Clear/Undo, refresh order and saved-weather restoration observed. Matched desktop/phone field and button geometry equals legacy; detached Refresh/status and stale Undo feedback corrected. Controlled refresh/error/late-response cases pass. Broader live failure/time and physical-device cases remain."
   },
   {
     "case": "CON-01",
@@ -142,47 +142,47 @@
   {
     "case": "SHARE-01",
     "coverage": "Partial",
-    "boundary": "Team link copied with correct review path; no Client link or recipient journey performed."
+    "boundary": "Team link copied with correct review path. New recipient tab required ordinary sign-in, then opened the intended schedule. Sharing drawer opens directly and Escape returns focus. Client-link and separate-role recipient journeys remain."
   },
   {
     "case": "SHARE-02",
-    "coverage": "Not executed in this local parity pass",
-    "boundary": "Earlier unit/database suites do not substitute for this runtime parity execution."
+    "coverage": "Partial",
+    "boundary": "Client Reload regression corrected by bounded HttpOnly recipient cookie; two distinct browser shares and same-tab navigation/reload verified. Original grant expiry/revocation still denies existing cookies; no-cookie and cross-link/origin denial verified. Full legacy-route/hosted/device variants remain; see B15_CLIENT_REFRESH.md."
   },
   {
     "case": "SHARE-03",
-    "coverage": "Not executed in this local parity pass",
-    "boundary": "Earlier unit/database suites do not substitute for this runtime parity execution."
+    "coverage": "Partial",
+    "boundary": "Client projection visibly omits fixture contacts/call-sheet/status while retaining notes; new fictional link revoked and original denied. Other roles, expiry and full raw-response/log matrix remain."
   },
   {
     "case": "PDF-01",
-    "coverage": "Blocked output/device evidence",
-    "boundary": "Native print/PDF output is not exposed by the available browser surface; physical device evidence is unavailable."
+    "coverage": "Partial",
+    "boundary": "Actual native Chrome schedule/contact/call PDFs produced and inspected for ordinary/long/empty fixtures; six legacy comparison PDFs. Full text and page rendering verified. Physical printer/device, other browser and hosted variants remain. See B15_OUTPUT_VERIFICATION.md."
   },
   {
     "case": "PRINT-01",
-    "coverage": "Blocked output/device evidence",
-    "boundary": "Native print/PDF output is not exposed by the available browser surface; physical device evidence is unavailable."
+    "coverage": "Partial",
+    "boundary": "Actual native Chrome schedule/contact/call PDFs produced and inspected for ordinary/long/empty fixtures; six legacy comparison PDFs. Full text and page rendering verified. Physical printer/device, other browser and hosted variants remain. See B15_OUTPUT_VERIFICATION.md."
   },
   {
     "case": "PDF-02",
-    "coverage": "Blocked output/device evidence",
-    "boundary": "Native print/PDF output is not exposed by the available browser surface; physical device evidence is unavailable."
+    "coverage": "Partial",
+    "boundary": "Actual native Chrome schedule/contact/call PDFs produced and inspected for ordinary/long/empty fixtures; six legacy comparison PDFs. Full text and page rendering verified. Physical printer/device, other browser and hosted variants remain. See B15_OUTPUT_VERIFICATION.md."
   },
   {
     "case": "PDF-03",
-    "coverage": "Blocked output/device evidence",
-    "boundary": "Native print/PDF output is not exposed by the available browser surface; physical device evidence is unavailable."
+    "coverage": "Partial",
+    "boundary": "Actual native Chrome schedule/contact/call PDFs produced and inspected for ordinary/long/empty fixtures; six legacy comparison PDFs. Full text and page rendering verified. Physical printer/device, other browser and hosted variants remain. See B15_OUTPUT_VERIFICATION.md."
   },
   {
     "case": "PRINT-02",
-    "coverage": "Blocked output/device evidence",
-    "boundary": "Native print/PDF output is not exposed by the available browser surface; physical device evidence is unavailable."
+    "coverage": "Partial",
+    "boundary": "Actual native Chrome schedule/contact/call PDFs produced and inspected for ordinary/long/empty fixtures; six legacy comparison PDFs. Full text and page rendering verified. Physical printer/device, other browser and hosted variants remain. See B15_OUTPUT_VERIFICATION.md."
   },
   {
     "case": "UI-01",
     "coverage": "Partial",
-    "boundary": "Matched desktop panel/header/grid geometry and polished dialogs/drawer observed. Full long/empty/overflow fixture set remains."
+    "boundary": "Matched desktop panel/header/grid geometry and polished dialogs/drawer observed. Long/empty fixtures and nested template previews checked; long1280/390 has no clipped textareas or page overflow. Legacy long desktop captured; sun-row differences prevent exact screenshot equivalence. Broader states remain."
   },
   {
     "case": "UI-02",
@@ -191,18 +191,18 @@
   },
   {
     "case": "UI-03",
-    "coverage": "Blocked output/device evidence",
-    "boundary": "Native print/PDF output is not exposed by the available browser surface; physical device evidence is unavailable."
+    "coverage": "Partial",
+    "boundary": "Actual native Chrome schedule/contact/call PDFs produced and inspected for ordinary/long/empty fixtures; six legacy comparison PDFs. Full text and page rendering verified. Physical printer/device, other browser and hosted variants remain. See B15_OUTPUT_VERIFICATION.md."
   },
   {
     "case": "CMS-01",
-    "coverage": "Not executed in this local parity pass",
-    "boundary": "Earlier unit/database suites do not substitute for this runtime parity execution."
+    "coverage": "Partial",
+    "boundary": "Genuine Admin label preview/cancel/save/fresh reload and action reorder/cancel verified in new disposable North organization; South unchanged. Colors/Actions/Logo discovery and phone keyboard reachability checked. Full configuration/upload/conflict variants remain. See B15_ROLE_JOURNEYS.md."
   },
   {
     "case": "AUTH-01",
-    "coverage": "Not executed in this local parity pass",
-    "boundary": "Earlier unit/database suites do not substitute for this runtime parity execution."
+    "coverage": "Partial",
+    "boundary": "Fresh Team-link tab required ordinary sign-in and preserved the schedule destination. C09 adds rendered organization/MFA unavailable, retry/loading, recovery and controlled-expiry coverage with retained drafts; challenge rendering uses controlled read fixtures. Overnight genuine Admin MFA, two-organization Editor/Viewer and outsider journeys now verified. Recovery delivery, invitation grant and full role permutations remain."
   },
   {
     "case": "DATA-01",
@@ -211,8 +211,8 @@
   },
   {
     "case": "DATA-02",
-    "coverage": "Not executed in this local parity pass",
-    "boundary": "Earlier unit/database suites do not substitute for this runtime parity execution."
+    "coverage": "Partial",
+    "boundary": "New template identity survives rename/Trash/restore/publication/withdrawal/replacement; snapshot identity survives rename/Trash/restore, then copy opens a separate schedule. Complete related-state/legacy mappings remain."
   },
   {
     "case": "MIG-01",
@@ -222,6 +222,6 @@
   {
     "case": "INV-01",
     "coverage": "Partial",
-    "boundary": "Source control inventory expanded and linked to observations; not a completed all-controls execution."
+    "boundary": "All44 legacy inventory files/436 anchors reconciled;610 current static control nodes across67 files enumerated with source hashes. Family-by-family runtime/source/test boundaries recorded in B15_CONTROL_RECONCILIATION.md. Exhaustive runtime permutations are not promoted to Pass."
   }
 ]

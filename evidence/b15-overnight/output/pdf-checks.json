@@ -1,0 +1,270 @@
+[
+  {
+    "file": "output/pdf/legacy-long-callsheet.pdf",
+    "sha256": "2a9610ad7c2dcdc33c078cd7ac1fd2c4196eee46c53d68f6fe985af7525fddfe",
+    "pages": 3,
+    "pageSizes": [
+      [
+        612.0,
+        792.0
+      ],
+      [
+        612.0,
+        792.0
+      ],
+      [
+        612.0,
+        792.0
+      ]
+    ],
+    "checkedMarkers": 33,
+    "missingMarkers": []
+  },
+  {
+    "file": "output/pdf/legacy-long-contacts.pdf",
+    "sha256": "08d81a93daeed71be9be49481e4a42e0cbca732effe363250477dc7e54b28900",
+    "pages": 5,
+    "pageSizes": [
+      [
+        612.0,
+        792.0
+      ],
+      [
+        612.0,
+        792.0
+      ],
+      [
+        612.0,
+        792.0
+      ],
+      [
+        612.0,
+        792.0
+      ],
+      [
+        612.0,
+        792.0
+      ]
+    ],
+    "checkedMarkers": 32,
+    "missingMarkers": []
+  },
+  {
+    "file": "output/pdf/legacy-long-schedule.pdf",
+    "sha256": "bfc2851725ee8106ac7e997612d97de203d847d8922d4115c056716f70c07e11",
+    "pages": 3,
+    "pageSizes": [
+      [
+        612.0,
+        792.0
+      ],
+      [
+        612.0,
+        792.0
+      ],
+      [
+        612.0,
+        792.0
+      ]
+    ],
+    "checkedMarkers": 96,
+    "missingMarkers": []
+  },
+  {
+    "file": "output/pdf/legacy-ordinary-callsheet.pdf",
+    "sha256": "951d8e19e72af0bc90929ace9da5a2e10a209ba2264fbf1163cf32f8687533aa",
+    "pages": 1,
+    "pageSizes": [
+      [
+        612.0,
+        792.0
+      ]
+    ],
+    "checkedMarkers": 4,
+    "missingMarkers": []
+  },
+  {
+    "file": "output/pdf/legacy-ordinary-contacts.pdf",
+    "sha256": "df85d3476f7798431e1b6e50c0b9174414f4f28da38b53bd11def1fff08905c6",
+    "pages": 1,
+    "pageSizes": [
+      [
+        612.0,
+        792.0
+      ]
+    ],
+    "checkedMarkers": 3,
+    "missingMarkers": []
+  },
+  {
+    "file": "output/pdf/legacy-ordinary-schedule.pdf",
+    "sha256": "5958dd0c321a7de5706a9fa5d40204d9bf465ea6490fc6f10346d6408b1c6cf0",
+    "pages": 1,
+    "pageSizes": [
+      [
+        612.0,
+        792.0
+      ]
+    ],
+    "checkedMarkers": 9,
+    "missingMarkers": []
+  },
+  {
+    "file": "output/pdf/target-long-callsheet.pdf",
+    "sha256": "b128025440b50720a70a95f97212d6beba3431776afdf55f96035727d61824b8",
+    "pages": 3,
+    "pageSizes": [
+      [
+        612.0,
+        792.0
+      ],
+      [
+        612.0,
+        792.0
+      ],
+      [
+        612.0,
+        792.0
+      ]
+    ],
+    "checkedMarkers": 33,
+    "missingMarkers": []
+  },
+  {
+    "file": "output/pdf/target-long-contacts.pdf",
+    "sha256": "e365d09a5e73b03438115e395525680d6667db95cab363e8dbad9276c5c8df48",
+    "pages": 6,
+    "pageSizes": [
+      [
+        612.0,
+        792.0
+      ],
+      [
+        612.0,
+        792.0
+      ],
+      [
+        612.0,
+        792.0
+      ],
+      [
+        612.0,
+        792.0
+      ],
+      [
+        612.0,
+        792.0
+      ],
+      [
+        612.0,
+        792.0
+      ]
+    ],
+    "checkedMarkers": 32,
+    "missingMarkers": []
+  },
+  {
+    "file": "output/pdf/target-long-schedule.pdf",
+    "sha256": "a20a8ee94a443c518638d441e48eb9cb52e6ae1b2b83f1bdbf9139f799ab4969",
+    "pages": 5,
+    "pageSizes": [
+      [
+        792.0,
+        612.0
+      ],
+      [
+        792.0,
+        612.0
+      ],
+      [
+        792.0,
+        612.0
+      ],
+      [
+        792.0,
+        612.0
+      ],
+      [
+        792.0,
+        612.0
+      ]
+    ],
+    "checkedMarkers": 96,
+    "missingMarkers": []
+  },
+  {
+    "file": "output/pdf/target-ordinary-callsheet.pdf",
+    "sha256": "e8b19ccacd31f203bd78738adf605b7fc52e5f1b122c4905ab56356fa92de25d",
+    "pages": 1,
+    "pageSizes": [
+      [
+        612.0,
+        792.0
+      ]
+    ],
+    "checkedMarkers": 4,
+    "missingMarkers": []
+  },
+  {
+    "file": "output/pdf/target-ordinary-contacts.pdf",
+    "sha256": "bb3251abc1500dffa9160008249b432b4d060f3b0bf13cc6142edbe048958dff",
+    "pages": 1,
+    "pageSizes": [
+      [
+        612.0,
+        792.0
+      ]
+    ],
+    "checkedMarkers": 3,
+    "missingMarkers": []
+  },
+  {
+    "file": "output/pdf/target-ordinary-schedule.pdf",
+    "sha256": "7ba849f994acb46588a3a4d2e8559093c43ce205361516dadb545be4e594e563",
+    "pages": 1,
+    "pageSizes": [
+      [
+        792.0,
+        612.0
+      ]
+    ],
+    "checkedMarkers": 9,
+    "missingMarkers": []
+  },
+  {
+    "file": "output/pdf/target-empty-callsheet.pdf",
+    "sha256": "7d845af882a6b6096e39984999d6c0acb2fec6670969256ba00bd20d6b2cfd3e",
+    "pages": 1,
+    "pageSizes": [
+      [
+        612.0,
+        792.0
+      ]
+    ],
+    "emptyStateText": "Call Sheet\nB15 empty fictional day"
+  },
+  {
+    "file": "output/pdf/target-empty-contacts.pdf",
+    "sha256": "f252d2250502ea477d301260b77aef83c247554e56ef525dc4c788e83f7af823",
+    "pages": 1,
+    "pageSizes": [
+      [
+        612.0,
+        792.0
+      ]
+    ],
+    "emptyStateText": "B15 em pty fictional day\nContact Sheet\nN o contacts found. Add contacts using the \ud83d\udc64  button on any row."
+  },
+  {
+    "file": "output/pdf/target-empty-schedule.pdf",
+    "sha256": "25770271bd5e4695fc052d54813bc880fe1898a72d33734a99a7104b208358e1",
+    "pages": 1,
+    "pageSizes": [
+      [
+        792.0,
+        612.0
+      ]
+    ],
+    "emptyStateText": "B15 empty fi cti onal day\nActionAction LocationLocation DescriptionDescription NotesNotes Time InTime In DurationDuration Time OutTime Out\nB 1 4  LATEST O R GAN IZATIO N  LAB ELS\nTOWN / LOCATION\n\u2014\nDATE\n\u2014\nCALL TIME\n\u2014\nPRODUCER\n\u2014\nDIRECTOR\n\u2014\nCAMERA\n\u2014"
+  }
+]

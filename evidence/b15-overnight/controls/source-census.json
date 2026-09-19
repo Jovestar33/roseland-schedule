@@ -1,0 +1,5381 @@
+{
+  "baseline": "62eb261 (historical provenance; fresh private dashboard verification blocked)",
+  "kind": "Source census, not a claim of runtime execution; see B15_CONTROL_RECONCILIATION.md",
+  "legacyFiles": [
+    {
+      "file": "components/cms/CmsModal.tsx",
+      "legacyAnchors": 34,
+      "baselineSha256": "361738e9175746dc73921ddac8aad2554c1e202a540342dc9c2e42e33d7ff555",
+      "currentSha256": "361738e9175746dc73921ddac8aad2554c1e202a540342dc9c2e42e33d7ff555",
+      "unchanged": true
+    },
+    {
+      "file": "components/library/BackupTab.tsx",
+      "legacyAnchors": 8,
+      "baselineSha256": "af8550fce8afb4e0a456ccde84d4b0febf9cc54002a99cfb8b77fec5067523d1",
+      "currentSha256": "eb09835c18bb0a637380d65e4314cc706d79d116c093d25ae5b78f62e1589882",
+      "unchanged": false
+    },
+    {
+      "file": "components/library/LibraryPage.tsx",
+      "legacyAnchors": 76,
+      "baselineSha256": "b61412d202f6dea6168b35bfcc2823ee8dcf0cb1473edd14da08316fe3a403ca",
+      "currentSha256": "b61412d202f6dea6168b35bfcc2823ee8dcf0cb1473edd14da08316fe3a403ca",
+      "unchanged": true
+    },
+    {
+      "file": "components/library/LibrarySearch.tsx",
+      "legacyAnchors": 7,
+      "baselineSha256": "0c6ac076f0423a2722e214d45fc729cf3b6181d65df3cc23aadffb74f9cdf52e",
+      "currentSha256": "0c6ac076f0423a2722e214d45fc729cf3b6181d65df3cc23aadffb74f9cdf52e",
+      "unchanged": true
+    },
+    {
+      "file": "components/library/LibraryTree.tsx",
+      "legacyAnchors": 64,
+      "baselineSha256": "aca874708238962b5fe2369edf6ce53cae46c8792796750a0ccbdd60fa09aaeb",
+      "currentSha256": "ca52e6303f7b9eae971ef71bf9585e292cfe97a20df4f73579533183ae4c01ef",
+      "unchanged": false
+    },
+    {
+      "file": "components/library/TemplatesTab.tsx",
+      "legacyAnchors": 3,
+      "baselineSha256": "8f697c241f61cb16bc2fb9caf341b4cdc14d3c7a95e144715933c422915cbf5e",
+      "currentSha256": "4b1ee0c92b7d7d2ce69e408f9d796ef4855b14229b4f8898a03aa931c91fcee1",
+      "unchanged": false
+    },
+    {
+      "file": "components/library/VersionsTab.tsx",
+      "legacyAnchors": 11,
+      "baselineSha256": "6cfc96d519e6d1e35e007efa2371bd1009479b1f038eaab6630e80e7bd4aca9e",
+      "currentSha256": "6cfc96d519e6d1e35e007efa2371bd1009479b1f038eaab6630e80e7bd4aca9e",
+      "unchanged": true
+    },
+    {
+      "file": "components/modals/CallSheetModal.tsx",
+      "legacyAnchors": 18,
+      "baselineSha256": "d4d6f3003434bd894f809fc667785b6bdd3a5e5eb0002ace123c7fc66d9d337b",
+      "currentSha256": "ac62372f2646a6707874e0da97cb8784240cef322dd83aff0eae8ba80b74ffc3",
+      "unchanged": false
+    },
+    {
+      "file": "components/modals/ConflictModal.tsx",
+      "legacyAnchors": 4,
+      "baselineSha256": "f195359dc3cf1a8d5b0ab97685d5c920750c73a151a25c26942083d7f2f1fa6d",
+      "currentSha256": "f195359dc3cf1a8d5b0ab97685d5c920750c73a151a25c26942083d7f2f1fa6d",
+      "unchanged": true
+    },
+    {
+      "file": "components/modals/ContactModal.tsx",
+      "legacyAnchors": 7,
+      "baselineSha256": "e501d51e3ff7024d766673e3d1c7cee7690a6fe55148f84415277dfa6d40d985",
+      "currentSha256": "1c74dc1f409479e66dd7caf89c4fe38fea1b4fdbfa0ff4f5f73625888d4aa90f",
+      "unchanged": false
+    },
+    {
+      "file": "components/modals/ContactSheetModal.tsx",
+      "legacyAnchors": 5,
+      "baselineSha256": "467bf60306b0fb99826b51795dcd8214d468efe5f8c81141f35efbd8de9e957d",
+      "currentSha256": "2c5ecbc7e3b862976bb5cb7890fab82a2a19de9628107ad28666f29744e61767",
+      "unchanged": false
+    },
+    {
+      "file": "components/modals/Modal.tsx",
+      "legacyAnchors": 3,
+      "baselineSha256": "9e9752076a9302516d20ebb825fa045044918579c74b5c7e5354266cfa626c5c",
+      "currentSha256": "c5f938649247416d02d3c75c0b03751d2be889a3a01a8ae1a5b98e0d8df7ca42",
+      "unchanged": false
+    },
+    {
+      "file": "components/modals/NotesModal.tsx",
+      "legacyAnchors": 4,
+      "baselineSha256": "d9edc07c5a6bcc62679036ffc4085ddded240a2f1916042a6bc122dea485de33",
+      "currentSha256": "d9edc07c5a6bcc62679036ffc4085ddded240a2f1916042a6bc122dea485de33",
+      "unchanged": true
+    },
+    {
+      "file": "components/modals/SaveAsModal.tsx",
+      "legacyAnchors": 5,
+      "baselineSha256": "3dce9d1baf032bc5239148a62e6cfb0e4db45b13efd0d3d88d530fe2c7c8d7dc",
+      "currentSha256": "f4d35825698b11f97d1a5a21164e61264f1a58dd2891e6a0db4db2b67f14c05a",
+      "unchanged": false
+    },
+    {
+      "file": "components/modals/StatusModal.tsx",
+      "legacyAnchors": 5,
+      "baselineSha256": "7a5c5b3706e80a05d8f0825514fbe16fa132f814373a26c6bceec7f4f396ae91",
+      "currentSha256": "7a5c5b3706e80a05d8f0825514fbe16fa132f814373a26c6bceec7f4f396ae91",
+      "unchanged": true
+    },
+    {
+      "file": "components/schedule/ActionCell.tsx",
+      "legacyAnchors": 6,
+      "baselineSha256": "98a71e4f1d32429ab0402b7e31ac18c98ed723897ee512d85aa0db5036b96e7b",
+      "currentSha256": "fcb75dc269a5f2ca1d184759bf391656c60a0b2bc864159e85ed2b98ac5843b8",
+      "unchanged": false
+    },
+    {
+      "file": "components/schedule/AutoResizeTextarea.tsx",
+      "legacyAnchors": 6,
+      "baselineSha256": "884144be9c7292e03b46822afbba3883b7740adba06f373d15dd01daf603533c",
+      "currentSha256": "7c4882112596d30b27d429d6e877d44bb5c98f4a234ac8f30f85485f979b609e",
+      "unchanged": false
+    },
+    {
+      "file": "components/schedule/ComboInput.tsx",
+      "legacyAnchors": 15,
+      "baselineSha256": "c5fd62bc3fa1b8a40ef792572c63b40d2790394a11d1a64b04726e754b25be7c",
+      "currentSha256": "c5fd62bc3fa1b8a40ef792572c63b40d2790394a11d1a64b04726e754b25be7c",
+      "unchanged": true
+    },
+    {
+      "file": "components/schedule/CrewIdentityBlock.tsx",
+      "legacyAnchors": 6,
+      "baselineSha256": "b378de8157dcca13a27f01c8d2afef0469d12117fd4f034a174e579ac9f2cc4e",
+      "currentSha256": "6619736c4ebffd1753496d8d5afdd3a6da21aacb22d38759f4bf45f62c9aa575",
+      "unchanged": false
+    },
+    {
+      "file": "components/schedule/CrewInput.tsx",
+      "legacyAnchors": 8,
+      "baselineSha256": "5ae677d247537cbb4bcd0d7eb158ca5a19f711e82239a16199742a11616fa06a",
+      "currentSha256": "5ae677d247537cbb4bcd0d7eb158ca5a19f711e82239a16199742a11616fa06a",
+      "unchanged": true
+    },
+    {
+      "file": "components/schedule/DescriptionCell.tsx",
+      "legacyAnchors": 2,
+      "baselineSha256": "e49e9e96b21aa9993223c0aa34bf1cafb243bdcfda0a907baa86869a73187abf",
+      "currentSha256": "e49e9e96b21aa9993223c0aa34bf1cafb243bdcfda0a907baa86869a73187abf",
+      "unchanged": true
+    },
+    {
+      "file": "components/schedule/DoneContactCell.tsx",
+      "legacyAnchors": 4,
+      "baselineSha256": "2e4216aded46845b94ec34462b9df3dfc971067f26aa74bb0468ac8d3fecd770",
+      "currentSha256": "2e4216aded46845b94ec34462b9df3dfc971067f26aa74bb0468ac8d3fecd770",
+      "unchanged": true
+    },
+    {
+      "file": "components/schedule/DurationCell.tsx",
+      "legacyAnchors": 2,
+      "baselineSha256": "9e737490e3fbdf866d2c9383840b788b8bb1d885a09b4b363dd3a66772ed63e6",
+      "currentSha256": "9e737490e3fbdf866d2c9383840b788b8bb1d885a09b4b363dd3a66772ed63e6",
+      "unchanged": true
+    },
+    {
+      "file": "components/schedule/HeaderIdentityLine.tsx",
+      "legacyAnchors": 11,
+      "baselineSha256": "0856ed8c4491b9b566688fa2cc98484438624f4ec1302c32d8078f9039efb800",
+      "currentSha256": "9eb63161aaac2bb14075da265af0e5902d04660d34ec35c66fe37678d3a6d4b2",
+      "unchanged": false
+    },
+    {
+      "file": "components/schedule/LocationCell.tsx",
+      "legacyAnchors": 29,
+      "baselineSha256": "5cf70717cd52498058f4d237e8708af20ba29e2b4b482832bbfce7d650ab69ae",
+      "currentSha256": "0b5d6cf59f3d74e71106fd4819473ce63da7d82fe11874ed6b8df2c2e442cc04",
+      "unchanged": false
+    },
+    {
+      "file": "components/schedule/NotesCell.tsx",
+      "legacyAnchors": 4,
+      "baselineSha256": "d5d77e58634a28a2ab900433506c7ff82d3072ab80ec1ec2ddde5865cc84b00c",
+      "currentSha256": "d5d77e58634a28a2ab900433506c7ff82d3072ab80ec1ec2ddde5865cc84b00c",
+      "unchanged": true
+    },
+    {
+      "file": "components/schedule/PlacesAutocomplete.tsx",
+      "legacyAnchors": 15,
+      "baselineSha256": "a8b7f6b4a2ed9bb0c22be2cf6d8b58993f4bccc17788243beed7e4452b9b5d85",
+      "currentSha256": "30775fb3c14f056ed303295795721cb0ec7ef77f93eb21d14e867b452b81e4e9",
+      "unchanged": false
+    },
+    {
+      "file": "components/schedule/RowControls.tsx",
+      "legacyAnchors": 2,
+      "baselineSha256": "5cd35d745d8eedaa035cbc6cb16bc18730c8a855d9a7112873c67daab8ccd5a5",
+      "currentSha256": "5cd35d745d8eedaa035cbc6cb16bc18730c8a855d9a7112873c67daab8ccd5a5",
+      "unchanged": true
+    },
+    {
+      "file": "components/schedule/ScheduleEditor.tsx",
+      "legacyAnchors": 2,
+      "baselineSha256": "272e487be6a89ebbe7ccc759862ce12c76684ff28b49b2e55404b9e9de9436b2",
+      "currentSha256": "328c0f56f0c44b79fdb10baa4b88c0aad5b91bc9de7db114d545a8eba3cd4170",
+      "unchanged": false
+    },
+    {
+      "file": "components/schedule/ScheduleGrid.tsx",
+      "legacyAnchors": 1,
+      "baselineSha256": "13c1eaf977de65473912b628f68b004ae6afbd3716b929f0a8f811bc5a322440",
+      "currentSha256": "13c1eaf977de65473912b628f68b004ae6afbd3716b929f0a8f811bc5a322440",
+      "unchanged": true
+    },
+    {
+      "file": "components/schedule/ScheduleHeader.tsx",
+      "legacyAnchors": 4,
+      "baselineSha256": "892b803e947eb0fa1b8dac237e674aa122b0bbb1e00c0acc3fdd53a5b77c4d19",
+      "currentSha256": "05615c930be88c03d8da28d9c55d8402915d1649f94a84bc7a360940cd4e9524",
+      "unchanged": false
+    },
+    {
+      "file": "components/schedule/ScheduleRow.tsx",
+      "legacyAnchors": 1,
+      "baselineSha256": "711dc7505c1faf23d6a7b9f1eee549715426b67c53c9085fb68888bcb9202d35",
+      "currentSha256": "711dc7505c1faf23d6a7b9f1eee549715426b67c53c9085fb68888bcb9202d35",
+      "unchanged": true
+    },
+    {
+      "file": "components/schedule/TimeInCell.tsx",
+      "legacyAnchors": 4,
+      "baselineSha256": "db56c393d8e610f8abbaf187668c964c23740054220509c82aeb2226371c5fff",
+      "currentSha256": "db56c393d8e610f8abbaf187668c964c23740054220509c82aeb2226371c5fff",
+      "unchanged": true
+    },
+    {
+      "file": "components/schedule/TimeOutCell.tsx",
+      "legacyAnchors": 4,
+      "baselineSha256": "b1492ebd3f23396634bff806c23ee563e326a4269f9f5fb491fe30ca32f21261",
+      "currentSha256": "b1492ebd3f23396634bff806c23ee563e326a4269f9f5fb491fe30ca32f21261",
+      "unchanged": true
+    },
+    {
+      "file": "components/schedule/WxStrip.tsx",
+      "legacyAnchors": 2,
+      "baselineSha256": "00d77a969c5e68cabbdd462fc448084f57b0941d39e67c7ab44df496c52e7aca",
+      "currentSha256": "29a29c66f539a100cc9d302c03166cb7a946ff5812145a52ceb90799a7e006de",
+      "unchanged": false
+    },
+    {
+      "file": "components/toolbar/EditorToolbar.tsx",
+      "legacyAnchors": 3,
+      "baselineSha256": "8cfdf07da8c889e20828c3a2edaee4246c33c4fe092c355ebc2933bf258e28cc",
+      "currentSha256": "8cfdf07da8c889e20828c3a2edaee4246c33c4fe092c355ebc2933bf258e28cc",
+      "unchanged": true
+    },
+    {
+      "file": "components/toolbar/SaveDropdown.tsx",
+      "legacyAnchors": 7,
+      "baselineSha256": "2bd3493957f024d54e6e39de03a5b75c22f8270d389f742098d1d7d27a230ecd",
+      "currentSha256": "ccde73bc27569d394f2786f24ca621926250147e98d93004acdf12e103b67168",
+      "unchanged": false
+    },
+    {
+      "file": "components/toolbar/ShareDropdown.tsx",
+      "legacyAnchors": 8,
+      "baselineSha256": "1aa400ef6efe16bc757e963a66333b9afd45ceb0e599a8588f68513648f26751",
+      "currentSha256": "1060f68c5ba5d84a0c10f4abb5d49f308ab05afa0c3adb6dacb33d8e6b0d1ea5",
+      "unchanged": false
+    },
+    {
+      "file": "components/toolbar/ToolsPanel.tsx",
+      "legacyAnchors": 23,
+      "baselineSha256": "3ea874529ac7bf89deffafb45d7ce25f1e11957d55367a591f07d706d23c62a9",
+      "currentSha256": "ff1ba28c32a7293f191190eb261d7d7a8d246701e85c43a667f3f4d12e85cfa7",
+      "unchanged": false
+    },
+    {
+      "file": "components/toolbar/UndoRedoButtons.tsx",
+      "legacyAnchors": 4,
+      "baselineSha256": "3e3944bc44c2fb21d9327bc12dee224ea78c6683138b01b3d11cb3818410f718",
+      "currentSha256": "3e3944bc44c2fb21d9327bc12dee224ea78c6683138b01b3d11cb3818410f718",
+      "unchanged": true
+    },
+    {
+      "file": "components/ui/Toast.tsx",
+      "legacyAnchors": 1,
+      "baselineSha256": "ec5ad5b69f5b78f67792428c165711c45657049e8f3875d0e61a480a09f0b124",
+      "currentSha256": "ec5ad5b69f5b78f67792428c165711c45657049e8f3875d0e61a480a09f0b124",
+      "unchanged": true
+    },
+    {
+      "file": "components/view/PublicViewer.tsx",
+      "legacyAnchors": 1,
+      "baselineSha256": "edb8a0f6114b48e51ded3227e45941628302e8325f1936a2496ef8b06747f769",
+      "currentSha256": "8588d328dbb84ad94514f5492c5f0df30506e5e45c31aa17c4c6d3b42584f069",
+      "unchanged": false
+    },
+    {
+      "file": "components/view/ReadOnlyViewer.tsx",
+      "legacyAnchors": 1,
+      "baselineSha256": "b0cc025cfe642afe035e858370845d530548f52595ee0bb6f0f027b3e411fc41",
+      "currentSha256": "b0cc025cfe642afe035e858370845d530548f52595ee0bb6f0f027b3e411fc41",
+      "unchanged": true
+    },
+    {
+      "file": "app/(auth)/login/page.tsx",
+      "legacyAnchors": 6,
+      "baselineSha256": "9301d691b5d1c3dc7beb10150ed1a4691b9344794ddf5d438db735548c1554a8",
+      "currentSha256": "9301d691b5d1c3dc7beb10150ed1a4691b9344794ddf5d438db735548c1554a8",
+      "unchanged": true
+    }
+  ],
+  "currentFiles": [
+    {
+      "file": "components/view/ScheduleReadView.tsx",
+      "sha256": "7b21bef3bc2b93d40ae66227699bb3db6578889996986e47ff3050ef1943fcbe",
+      "controls": [
+        {
+          "line": 46,
+          "tag": "a",
+          "attrs": {}
+        },
+        {
+          "line": 226,
+          "tag": "a",
+          "attrs": {}
+        }
+      ]
+    },
+    {
+      "file": "components/view/LocalClientViewer.tsx",
+      "sha256": "51b99598efcc46dc29f20331cf11e385597b452bdee6576e192238e56d2c12f4",
+      "controls": [
+        {
+          "line": 36,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy}",
+            "onClick": "{async()=>{const current=await refresh();if(current)await printSchedule(current.name);}}"
+          }
+        },
+        {
+          "line": 36,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy}",
+            "onClick": "{()=>void refresh()}"
+          }
+        }
+      ]
+    },
+    {
+      "file": "components/view/PublicViewer.tsx",
+      "sha256": "8588d328dbb84ad94514f5492c5f0df30506e5e45c31aa17c4c6d3b42584f069",
+      "controls": [
+        {
+          "line": 72,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{() => printSchedule(name)}"
+          }
+        }
+      ]
+    },
+    {
+      "file": "components/view/ReadOnlyViewer.tsx",
+      "sha256": "b0cc025cfe642afe035e858370845d530548f52595ee0bb6f0f027b3e411fc41",
+      "controls": [
+        {
+          "line": 58,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{() => printSchedule(name)}"
+          }
+        }
+      ]
+    },
+    {
+      "file": "app/local-workspace/LocalProvisioningClient.tsx",
+      "sha256": "9829dba5c89f69c8147c0b5db969baee71709f97c7b7754d83d68057d87c7234",
+      "controls": [
+        {
+          "line": 68,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy||!factor}",
+            "onClick": "{()=>{setCode('');setMfa('code');}}"
+          }
+        },
+        {
+          "line": 74,
+          "tag": "input",
+          "attrs": {
+            "onChange": "{event=>setCode(event.target.value)}"
+          }
+        },
+        {
+          "line": 74,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy}"
+          }
+        },
+        {
+          "line": 78,
+          "tag": "input",
+          "attrs": {
+            "onChange": "{event=>setDraft(previous=>({...previous,[key]:event.target.value}))}"
+          }
+        },
+        {
+          "line": 79,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!ready||busy||!!attempt}"
+          }
+        },
+        {
+          "line": 79,
+          "tag": "button",
+          "attrs": {
+            "type": "\"button\"",
+            "disabled": "{busy||!!attempt}",
+            "onClick": "{()=>setDraft({...blank})}"
+          }
+        },
+        {
+          "line": 85,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!ready||busy}",
+            "onClick": "{()=>workspace.openOrganization(controller.result!)}"
+          }
+        },
+        {
+          "line": 86,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy}",
+            "onClick": "{()=>{controller.clear();setDraft({...blank});refresh();setMessage('Result acknowledged.');}}"
+          }
+        },
+        {
+          "line": 87,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!ready||mfa!=='ready'||busy||controller.phase==='conflict'}",
+            "onClick": "{()=>void submit()}"
+          }
+        },
+        {
+          "line": 88,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy}",
+            "onClick": "{()=>controller.phase==='review'?clearReview():setDiscard(true)}"
+          }
+        },
+        {
+          "line": 91,
+          "tag": "dialog",
+          "attrs": {
+            "aria-label": "\"Discard provisioning review\""
+          }
+        },
+        {
+          "line": 91,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{()=>setDiscard(false)}"
+          }
+        },
+        {
+          "line": 91,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{clearReview}"
+          }
+        }
+      ]
+    },
+    {
+      "file": "app/local-workspace/LocalLifecycleClient.tsx",
+      "sha256": "26162eded3acd587772c081b3c1d9d7f87f2b07ad3bc39b06ac3cf57d60a9eea",
+      "controls": [
+        {
+          "line": 65,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy}",
+            "onClick": "{()=>workspace.openOrganization(workspace.organization!.id)}"
+          }
+        },
+        {
+          "line": 66,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!ready||busy||!!record.deleted_at}",
+            "onClick": "{()=>workspace.openSchedule(workspace.organization!.id,record.id)}"
+          }
+        },
+        {
+          "line": 66,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!ready||busy||!!attempt}",
+            "onClick": "{()=>choose(record.id)}"
+          }
+        },
+        {
+          "line": 69,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!ready||busy}",
+            "onClick": "{()=>workspace.openLifecycle?.(workspace.organization!.id,item.id)}"
+          }
+        },
+        {
+          "line": 69,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!ready||busy}",
+            "onClick": "{()=>void run(()=>list(filter,true))}"
+          }
+        },
+        {
+          "line": 73,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!ready||busy||!!attempt}",
+            "onClick": "{()=>void run(async()=>{const value=await repo.historical(actor.current!,workspace.organization!.id,record.id,item.version);if(!value)throw new ScheduleRepositoryError('unavailable');setPreview(value);})}"
+          }
+        },
+        {
+          "line": 73,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!ready||busy||!!attempt}",
+            "onClick": "{()=>void run(()=>loadHistory(record,true))}"
+          }
+        },
+        {
+          "line": 75,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!ready||busy||!!attempt||!canEdit||!!record.deleted_at||preview.version===record.document_version}",
+            "onClick": "{()=>prepare('restore_version')}"
+          }
+        },
+        {
+          "line": 79,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy}",
+            "onClick": "{()=>{controller.clear();refresh();setMessage('Restoration complete. Choose Open schedule to view the saved result.');}}"
+          }
+        },
+        {
+          "line": 79,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!ready||busy||controller.phase==='conflict'}",
+            "onClick": "{()=>void execute()}"
+          }
+        },
+        {
+          "line": 79,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!ready||busy}",
+            "onClick": "{()=>void execute(true)}"
+          }
+        },
+        {
+          "line": 79,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy}",
+            "onClick": "{discard}"
+          }
+        },
+        {
+          "line": 80,
+          "tag": "dialog",
+          "attrs": {
+            "aria-label": "{confirmation?.title??'Confirm history action'}"
+          }
+        },
+        {
+          "line": 80,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{()=>setConfirmation(null)}"
+          }
+        },
+        {
+          "line": 80,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{()=>{const action=confirmation?.action;setConfirmation(null);action?.();}}"
+          }
+        },
+        {
+          "line": 88,
+          "tag": "select",
+          "attrs": {
+            "onChange": "{event=>setDay(event.target.value)}"
+          }
+        },
+        {
+          "line": 89,
+          "tag": "input",
+          "attrs": {
+            "onChange": "{event=>setCreateName(event.target.value)}"
+          }
+        },
+        {
+          "line": 89,
+          "tag": "input",
+          "attrs": {
+            "placeholder": "\"harbour-day\"",
+            "onChange": "{event=>setCreateSlug(event.target.value)}"
+          }
+        },
+        {
+          "line": 90,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!ready||busy||!!attempt||!days.some(item=>item.id===day&&item.editable)}"
+          }
+        },
+        {
+          "line": 91,
+          "tag": "button",
+          "attrs": {
+            "type": "\"button\"",
+            "disabled": "{!ready||busy||!!attempt}",
+            "onClick": "{()=>void run(()=>destinations(true))}"
+          }
+        },
+        {
+          "line": 92,
+          "tag": "button",
+          "attrs": {
+            "type": "\"button\"",
+            "disabled": "{busy||!!attempt}",
+            "onClick": "{()=>{setDay('');setCreateName('');setCreateSlug('');}}"
+          }
+        },
+        {
+          "line": 95,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!ready||busy}",
+            "onClick": "{()=>void run(()=>list())}"
+          }
+        },
+        {
+          "line": 96,
+          "tag": "select",
+          "attrs": {
+            "disabled": "{!ready||busy}",
+            "onChange": "{event=>{const value=event.target.value as LifecycleFilter;setFilter(value);void run(()=>list(value));}}"
+          }
+        },
+        {
+          "line": 97,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!ready||busy||!!attempt}",
+            "onClick": "{()=>choose(item.id)}"
+          }
+        },
+        {
+          "line": 98,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!ready||busy}",
+            "onClick": "{()=>void run(()=>list(filter,true))}"
+          }
+        },
+        {
+          "line": 102,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!ready||busy||!!record.deleted_at}",
+            "onClick": "{()=>workspace.openSchedule(workspace.organization!.id,record.id)}"
+          }
+        },
+        {
+          "line": 102,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!ready||busy||!!attempt}",
+            "onClick": "{()=>choose(record.id)}"
+          }
+        },
+        {
+          "line": 104,
+          "tag": "input",
+          "attrs": {
+            "onChange": "{event=>setRenameName(event.target.value)}"
+          }
+        },
+        {
+          "line": 104,
+          "tag": "input",
+          "attrs": {
+            "onChange": "{event=>setRenameSlug(event.target.value)}"
+          }
+        },
+        {
+          "line": 104,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!ready||busy||!!attempt||!canOrganize}"
+          }
+        },
+        {
+          "line": 106,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!ready||busy||!!attempt||!canOrganize||(record.status==='archived'&&!record.archived_from_status)}",
+            "onClick": "{()=>prepare(record.status==='archived'?'unarchive':'archive')}"
+          }
+        },
+        {
+          "line": 107,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!ready||busy||!!attempt||!canTrash}",
+            "onClick": "{()=>prepare(record.deleted_at?'restore':'delete')}"
+          }
+        },
+        {
+          "line": 111,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!ready||busy||!!attempt}",
+            "onClick": "{()=>void run(async()=>{const value=await repo.historical(actor.current!,workspace.organization!.id,record.id,item.version);if(!value)throw new ScheduleRepositoryError('unavailable');setPreview(value);})}"
+          }
+        },
+        {
+          "line": 111,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!ready||busy||!!attempt}",
+            "onClick": "{()=>void run(()=>loadHistory(record,true))}"
+          }
+        },
+        {
+          "line": 112,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!ready||busy||!!attempt||!canEdit||!!record.deleted_at}",
+            "onClick": "{()=>prepare('restore_version')}"
+          }
+        },
+        {
+          "line": 121,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy}",
+            "onClick": "{()=>{if(attempt.kind==='create'){setCreateName('');setCreateSlug('');setDay('');}controller.clear();refresh();setMessage('Result acknowledged. Review current saved details before another action.');}}"
+          }
+        },
+        {
+          "line": 122,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!ready||busy||controller.phase==='conflict'}",
+            "onClick": "{()=>void execute()}"
+          }
+        },
+        {
+          "line": 123,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!ready||busy}",
+            "onClick": "{()=>void execute(true)}"
+          }
+        },
+        {
+          "line": 124,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy}",
+            "onClick": "{discard}"
+          }
+        },
+        {
+          "line": 127,
+          "tag": "dialog",
+          "attrs": {
+            "aria-label": "{confirmation?.title??'Confirm lifecycle action'}"
+          }
+        },
+        {
+          "line": 127,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{()=>setConfirmation(null)}"
+          }
+        },
+        {
+          "line": 127,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{()=>{const action=confirmation?.action;setConfirmation(null);action?.();}}"
+          }
+        }
+      ]
+    },
+    {
+      "file": "app/local-workspace/LocalWorkspaceClient.tsx",
+      "sha256": "0c39afce0bc0e03dbfc02835386aa9cd405122e47d637127dd80f778bbe68727",
+      "controls": [
+        {
+          "line": 215,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{accessRecovery||accessChallenge}",
+            "onClick": "{()=>{if(showSettings&&active!=='schedule')tab('schedule');setShowSettings(v=>!v);}}"
+          }
+        },
+        {
+          "line": 224,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{checkingAccess}",
+            "onClick": "{()=>void retryAccess()}"
+          }
+        },
+        {
+          "line": 226,
+          "tag": "input",
+          "attrs": {
+            "type": "\"email\"",
+            "onChange": "{event=>setEmail(event.target.value)}"
+          }
+        },
+        {
+          "line": 226,
+          "tag": "input",
+          "attrs": {
+            "type": "\"password\"",
+            "onChange": "{event=>setPassword(event.target.value)}"
+          }
+        },
+        {
+          "line": 226,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy||working}"
+          }
+        },
+        {
+          "line": 226,
+          "tag": "input",
+          "attrs": {
+            "type": "\"checkbox\"",
+            "onChange": "{event=>setRememberSession(event.target.checked)}"
+          }
+        },
+        {
+          "line": 227,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{()=>tab('schedule')}"
+          }
+        },
+        {
+          "line": 227,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{()=>tab('acceptance')}"
+          }
+        },
+        {
+          "line": 227,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{()=>tab('invitations')}"
+          }
+        },
+        {
+          "line": 233,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{()=>tab('acceptance')}"
+          }
+        },
+        {
+          "line": 234,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy||working}",
+            "onClick": "{()=>dirty?setConfirmSignOut(true):void signOut()}"
+          }
+        },
+        {
+          "line": 235,
+          "tag": "select",
+          "attrs": {
+            "disabled": "{busy||authNeeded||!session||!accountReady}",
+            "onChange": "{event=>requestNavigation({screen:active,organization:event.target.value||null})}"
+          }
+        },
+        {
+          "line": 235,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy||authNeeded||!session||!accountReady}",
+            "onClick": "{()=>void loadOrganizations().then(current=>current?navigate(directoryLocation(current),false):undefined).catch(()=>setMessage('Organizations could not be refreshed.'))}"
+          }
+        },
+        {
+          "line": 235,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy||authNeeded||!session||!accountReady}",
+            "onClick": "{()=>void loadOrganizations(true).catch(()=>setMessage('More organizations could not be loaded.'))}"
+          }
+        },
+        {
+          "line": 236,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{()=>tab('schedule')}"
+          }
+        },
+        {
+          "line": 236,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!scope}",
+            "onClick": "{()=>tab('lifecycle')}"
+          }
+        },
+        {
+          "line": 236,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!scope||scope.role==='member'}",
+            "onClick": "{()=>tab('invitations')}"
+          }
+        },
+        {
+          "line": 236,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{()=>tab('acceptance')}"
+          }
+        },
+        {
+          "line": 236,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{()=>tab('provisioning')}"
+          }
+        },
+        {
+          "line": 253,
+          "tag": "dialog",
+          "attrs": {
+            "aria-label": "\"Switch organization\""
+          }
+        },
+        {
+          "line": 253,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{()=>setOrganizationSwitch(null)}"
+          }
+        },
+        {
+          "line": 253,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{working||busy||authNeeded||!session}",
+            "onClick": "{()=>{const request=organizationSwitch;setOrganizationSwitch(null);if(request)void navigate(request.next,request.push);}}"
+          }
+        },
+        {
+          "line": 254,
+          "tag": "dialog",
+          "attrs": {
+            "aria-label": "\"Clear workspace\""
+          }
+        },
+        {
+          "line": 254,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy||working}",
+            "onClick": "{()=>setConfirmSignOut(false)}"
+          }
+        },
+        {
+          "line": 254,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy||working}",
+            "onClick": "{()=>void signOut()}"
+          }
+        }
+      ]
+    },
+    {
+      "file": "components/cms/CmsModal.tsx",
+      "sha256": "361738e9175746dc73921ddac8aad2554c1e202a540342dc9c2e42e33d7ff555",
+      "controls": [
+        {
+          "line": 89,
+          "tag": "input",
+          "attrs": {
+            "type": "\"color\"",
+            "onChange": "{e => onChange(e.target.value)}"
+          }
+        },
+        {
+          "line": 92,
+          "tag": "input",
+          "attrs": {
+            "type": "\"text\"",
+            "onChange": "{e => { if (/^#[0-9a-fA-F]{6}$/.test(e.target.value)) onChange(e.target.value); }}"
+          }
+        },
+        {
+          "line": 96,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{() => onChange(def)}",
+            "title": "{`Reset to ${def}`}"
+          }
+        },
+        {
+          "line": 216,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{closeModal}"
+          }
+        },
+        {
+          "line": 222,
+          "tag": "input",
+          "attrs": {
+            "type": "\"password\"",
+            "placeholder": "\"CMS passcode\"",
+            "onChange": "{e => setPin(e.target.value)}"
+          }
+        },
+        {
+          "line": 235,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{closeModal}"
+          }
+        },
+        {
+          "line": 236,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{handlePinSubmit}",
+            "disabled": "{verifying}"
+          }
+        },
+        {
+          "line": 253,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{closeModal}"
+          }
+        },
+        {
+          "line": 259,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{() => setTab(t)}"
+          }
+        },
+        {
+          "line": 279,
+          "tag": "input",
+          "attrs": {
+            "type": "\"text\"",
+            "placeholder": "\"Action name…\"",
+            "onChange": "{e => setActions(prev => prev.map((a, j) => j === i ? { ...a, name: e.target.value } : a))}"
+          }
+        },
+        {
+          "line": 286,
+          "tag": "select",
+          "attrs": {
+            "onChange": "{e => setActions(prev => prev.map((a, j) => j === i ? { ...a, color: e.target.value } : a))}"
+          }
+        },
+        {
+          "line": 293,
+          "tag": "button",
+          "attrs": {
+            "title": "\"Remove\"",
+            "onClick": "{() => setActions(prev => prev.filter((_, j) => j !== i))}"
+          }
+        },
+        {
+          "line": 299,
+          "tag": "input",
+          "attrs": {
+            "type": "\"text\"",
+            "placeholder": "\"New action name…\"",
+            "onChange": "{e => setNAName(e.target.value)}"
+          }
+        },
+        {
+          "line": 313,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{() => {\n                  const name = newActionName.trim();\n                  if (!name || actions.some(a => a.name === name)) return;\n                  setActions(prev => [...prev, { name, color: '' }]);\n                  setNAName('');\n                }}"
+          }
+        },
+        {
+          "line": 382,
+          "tag": "input",
+          "attrs": {
+            "type": "\"file\"",
+            "onChange": "{e => handleLogoFile(e.target.files?.[0] ?? null)}"
+          }
+        },
+        {
+          "line": 387,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{() => setLogo(null)}"
+          }
+        },
+        {
+          "line": 401,
+          "tag": "input",
+          "attrs": {
+            "type": "\"text\"",
+            "placeholder": "{def}",
+            "onChange": "{e => setLabels(prev => ({ ...prev, [key]: e.target.value }))}"
+          }
+        },
+        {
+          "line": 418,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{closeModal}"
+          }
+        },
+        {
+          "line": 419,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{handleSave}",
+            "disabled": "{saving}"
+          }
+        }
+      ]
+    },
+    {
+      "file": "app/local-schedule/LocalScheduleClient.tsx",
+      "sha256": "3c888b451161c9a301493108d6afd7cffeee3439254562829a4447485696e1cd",
+      "controls": [
+        {
+          "line": 355,
+          "tag": "input",
+          "attrs": {
+            "type": "\"email\"",
+            "onChange": "{e => setEmail(e.target.value)}"
+          }
+        },
+        {
+          "line": 356,
+          "tag": "input",
+          "attrs": {
+            "type": "\"password\"",
+            "onChange": "{e => setPassword(e.target.value)}"
+          }
+        },
+        {
+          "line": 357,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy}"
+          }
+        },
+        {
+          "line": 362,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy}",
+            "onClick": "{() => guarded(() => void run(async () => {\n            const result = await client.auth.signOut({ scope: 'local' });\n            if (result.error) throw new Error('Sign-out failed');\n            controller.invalidate(); accountRef.current = null; setSelected(null); setVersion(null); setContact(null); setStatus(null); setNotes(null); state().newSchedule(); setAuthNeeded(false);\n            setMessage('Signed out.');\n          }), 'Sign out and discard unsaved changes')}"
+          }
+        },
+        {
+          "line": 368,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy || !ready}",
+            "onClick": "{() => review?guarded(closeSchedule,'Return to library and discard unsaved changes'):void run(() => list(false))}"
+          }
+        },
+        {
+          "line": 372,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{()=>openReviewTool('templates')}"
+          }
+        },
+        {
+          "line": 373,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!selected}",
+            "onClick": "{()=>openReviewTool('snapshots')}"
+          }
+        },
+        {
+          "line": 374,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{()=>setReviewTool('files')}"
+          }
+        },
+        {
+          "line": 375,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{()=>setReviewTool('transfers')}"
+          }
+        },
+        {
+          "line": 376,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!selected}",
+            "onClick": "{()=>setReviewTool('sharing')}"
+          }
+        },
+        {
+          "line": 377,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy||!selected}",
+            "onClick": "{()=>{setReviewTool(null);guarded(()=>void run(()=>open(selected!)),'Reload and discard unsaved changes');}}"
+          }
+        },
+        {
+          "line": 378,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{()=>{setReviewTool(null);workspace?.openSettings?.();}}"
+          }
+        },
+        {
+          "line": 385,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{()=>setReviewTool(null)}"
+          }
+        },
+        {
+          "line": 385,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{()=>openReviewTool('templates')}"
+          }
+        },
+        {
+          "line": 385,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{()=>setReviewTool('files')}"
+          }
+        },
+        {
+          "line": 385,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{()=>setReviewTool('transfers')}"
+          }
+        },
+        {
+          "line": 389,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy||!ready}",
+            "onClick": "{()=>guarded(()=>void run(()=>open(item.id)),'Open schedule and discard unsaved changes')}"
+          }
+        },
+        {
+          "line": 390,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy}",
+            "onClick": "{()=>void run(()=>list(true))}"
+          }
+        },
+        {
+          "line": 397,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy || !dirty || !ready || !canEdit || !!controller.attempt}",
+            "onClick": "{() => void run(async () => {\n              if (await controller.save()) { setVersion(controller.record!.document_version); setMessage(state().dirty ? 'Saved earlier edits. Newer edits remain unsaved.' : 'Schedule saved.'); }\n            })}"
+          }
+        },
+        {
+          "line": 400,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy}",
+            "onClick": "{() => guarded(() => void run(() => open(selected)), 'Reload and discard unsaved changes')}"
+          }
+        },
+        {
+          "line": 403,
+          "tag": "button",
+          "attrs": {
+            "aria-label": "\"Tools\"",
+            "onClick": "{()=>setReviewTool(reviewTool?null:'menu')}"
+          }
+        },
+        {
+          "line": 404,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy}",
+            "aria-label": "{review?'Close':'Close schedule'}",
+            "onClick": "{() => guarded(closeSchedule, 'Close schedule and discard unsaved changes')}"
+          }
+        },
+        {
+          "line": 405,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy||!!controller.attempt}",
+            "onClick": "{()=>guarded(()=>void run(recoverSourceDraft),'Recover retained source draft and replace current edits')}"
+          }
+        },
+        {
+          "line": 421,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy || !ready}",
+            "onClick": "{() => void run(async () => { if (await controller.recover()) { setVersion(controller.record!.document_version); setMessage('Saved-result check completed. Review the recovery status.'); } })}"
+          }
+        },
+        {
+          "line": 422,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy || !ready || !canEdit || controller.result?.state !== 'retryable'}",
+            "onClick": "{() => void run(async () => { if (await controller.recover(true)) { setVersion(controller.record!.document_version); setMessage('Retry checked against the original saved version. Review the recovery status.'); } })}"
+          }
+        },
+        {
+          "line": 423,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy || !ready || !canEdit}",
+            "onClick": "{() => void run(async () => { if (await controller.resumeTemplateEditing()) setMessage('Draft retained. Undo the earlier Apply or review and apply a current template before saving. Reapplying replaces all rows; metadata stays intact.'); })}"
+          }
+        },
+        {
+          "line": 432,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{() => { state().pushUndo(); state().addRowAfter(rows.length - 1); }}"
+          }
+        },
+        {
+          "line": 444,
+          "tag": "dialog",
+          "attrs": {
+            "aria-label": "\"Discard unsaved changes\""
+          }
+        },
+        {
+          "line": 449,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{() => setConfirmation(null)}"
+          }
+        },
+        {
+          "line": 450,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{() => { const action = confirmation?.action; setConfirmation(null); action?.(); }}"
+          }
+        }
+      ]
+    },
+    {
+      "file": "app/(auth)/login/page.tsx",
+      "sha256": "9301d691b5d1c3dc7beb10150ed1a4691b9344794ddf5d438db735548c1554a8",
+      "controls": [
+        {
+          "line": 109,
+          "tag": "input",
+          "attrs": {
+            "type": "\"text\""
+          }
+        },
+        {
+          "line": 110,
+          "tag": "input",
+          "attrs": {
+            "type": "\"password\""
+          }
+        },
+        {
+          "line": 113,
+          "tag": "input",
+          "attrs": {
+            "type": "\"password\"",
+            "placeholder": "\"Password…\"",
+            "onChange": "{(e) => setPassword(e.target.value)}",
+            "disabled": "{loading}"
+          }
+        },
+        {
+          "line": 138,
+          "tag": "button",
+          "attrs": {
+            "type": "\"submit\"",
+            "disabled": "{loading || !password.trim()}"
+          }
+        }
+      ]
+    },
+    {
+      "file": "components/local/LocalScheduleSharing.tsx",
+      "sha256": "7390dc189935e9c67cdc1c32c52f67d59bf1b204d93f7840b1011d5afa9fe12f",
+      "controls": [
+        {
+          "line": 13,
+          "tag": "summary",
+          "attrs": {}
+        },
+        {
+          "line": 13,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!enabled||busy}",
+            "onClick": "{()=>void copy(`${window.location.origin}${workspacePath}?screen=schedule&org=${organization}&schedule=${schedule}`)}"
+          }
+        },
+        {
+          "line": 13,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!enabled||readOnly||busy||!review?.can_create}",
+            "onClick": "{()=>void run(create)}"
+          }
+        },
+        {
+          "line": 13,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!enabled||busy}",
+            "onClick": "{()=>void run(async()=>{pending.current=null;await load();})}"
+          }
+        },
+        {
+          "line": 14,
+          "tag": "input",
+          "attrs": {}
+        },
+        {
+          "line": 14,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{()=>void copy(url)}"
+          }
+        },
+        {
+          "line": 15,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy||readOnly||!enabled}",
+            "onClick": "{()=>setConfirm(link)}"
+          }
+        },
+        {
+          "line": 16,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy}",
+            "onClick": "{()=>void run(()=>load(true))}"
+          }
+        },
+        {
+          "line": 17,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy||readOnly||!enabled}",
+            "onClick": "{()=>void run(async()=>{await repository.revoke(actor!,schedule,confirm);if(same()){setConfirm(null);setUrl('');setMessage('Revoked. Future requests are denied.');await load();}})}"
+          }
+        },
+        {
+          "line": 17,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy}",
+            "onClick": "{()=>setConfirm(null)}"
+          }
+        }
+      ]
+    },
+    {
+      "file": "components/local/LocalAccountAccess.tsx",
+      "sha256": "179dd3a6b248724aed205bd7100fa7c607157c178fff36546ae3be924b1086ba",
+      "controls": [
+        {
+          "line": 128,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy}",
+            "onClick": "{() => setRetry(value => value + 1)}"
+          }
+        },
+        {
+          "line": 138,
+          "tag": "input",
+          "attrs": {
+            "type": "\"checkbox\"",
+            "onChange": "{e => setPolicyChecked(e.target.checked)}"
+          }
+        },
+        {
+          "line": 139,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy || !policyChecked}"
+          }
+        },
+        {
+          "line": 143,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy}",
+            "onClick": "{() => void verifyLink()}"
+          }
+        },
+        {
+          "line": 145,
+          "tag": "input",
+          "attrs": {
+            "type": "\"password\"",
+            "onChange": "{e => setPassword(e.target.value)}"
+          }
+        },
+        {
+          "line": 147,
+          "tag": "input",
+          "attrs": {
+            "type": "\"password\"",
+            "onChange": "{e => setConfirmation(e.target.value)}"
+          }
+        },
+        {
+          "line": 148,
+          "tag": "input",
+          "attrs": {
+            "onChange": "{e => setCode(e.target.value)}"
+          }
+        },
+        {
+          "line": 149,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy}"
+          }
+        },
+        {
+          "line": 151,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy}",
+            "onClick": "{() => void run(async () => { await callbackClient.auth.signOut({ scope: 'local' }); callbackActive.current=false; returnEntry.current='recovery'; setCallback(null); setCallbackEmail(''); setFactor(null); setPassword(''); setConfirmation(''); setCode(''); setMessage(''); })}"
+          }
+        },
+        {
+          "line": 154,
+          "tag": "button",
+          "attrs": {
+            "type": "\"button\"",
+            "disabled": "{busy}",
+            "onClick": "{()=>setMode(mode==='recovery'?null:'recovery')}"
+          }
+        },
+        {
+          "line": 155,
+          "tag": "button",
+          "attrs": {
+            "type": "\"button\"",
+            "disabled": "{busy}",
+            "onClick": "{()=>setMode(mode==='signup'?null:'signup')}"
+          }
+        },
+        {
+          "line": 157,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy}",
+            "onClick": "{() => setMode(mode === 'signup' ? null : 'signup')}"
+          }
+        },
+        {
+          "line": 158,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy}",
+            "onClick": "{() => setMode(mode === 'recovery' ? null : 'recovery')}"
+          }
+        },
+        {
+          "line": 162,
+          "tag": "input",
+          "attrs": {
+            "type": "\"email\"",
+            "onChange": "{e => setEmail(e.target.value)}"
+          }
+        },
+        {
+          "line": 164,
+          "tag": "input",
+          "attrs": {
+            "onChange": "{e => setInvitation(e.target.value)}"
+          }
+        },
+        {
+          "line": 166,
+          "tag": "input",
+          "attrs": {
+            "type": "\"checkbox\"",
+            "onChange": "{e => setAccepted(e.target.checked)}"
+          }
+        },
+        {
+          "line": 168,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy || (mode === 'signup' && !accepted)}"
+          }
+        },
+        {
+          "line": 170,
+          "tag": "button",
+          "attrs": {
+            "type": "\"button\"",
+            "disabled": "{busy}",
+            "onClick": "{()=>{returnEntry.current=mode;setMode(null);}}"
+          }
+        },
+        {
+          "line": 177,
+          "tag": "summary",
+          "attrs": {}
+        },
+        {
+          "line": 178,
+          "tag": "summary",
+          "attrs": {}
+        }
+      ]
+    },
+    {
+      "file": "components/local/LocalWeatherControls.tsx",
+      "sha256": "69eda1fb9f5f53358abfb6f73b00050aa7a6674fdc5b83a167e011776e3c7daa",
+      "controls": [
+        {
+          "line": 56,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!enabled || !provider || busy || !meta.date || meta.lat === null || meta.lng === null}",
+            "onClick": "{() => void refresh()}"
+          }
+        }
+      ]
+    },
+    {
+      "file": "components/local/LocalScheduleFiles.tsx",
+      "sha256": "1a5fb0a9675ae1e0704a4dc68a711aaba88509bc2a84f144161a5fae41233696",
+      "controls": [
+        {
+          "line": 44,
+          "tag": "summary",
+          "attrs": {}
+        },
+        {
+          "line": 46,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!enabled||busy}",
+            "onClick": "{()=>void run(async current=>{const file=await repo.exportAll(actor!);if(current()){download(file,safeDownloadName('All-authorized-schedules',new Date().toISOString().slice(0,10)+'.json'));setMessage(`Exported ${file.schedules.length} saved schedules. Draft edits were not changed.`);}})}"
+          }
+        },
+        {
+          "line": 47,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!enabled||!copyEnabled||!organization||busy||entries.length>0||!!review}",
+            "onClick": "{()=>{if(onCopy){onCopy();return;}const data=structuredClone(getDraft()),record=getSource();if(!record)return;void run(async current=>{const policy=await repo.copyPolicy(actor!,record.id);if(!current())return;setSource({id:record.id,version:record.document_version,policy});await loadEntries([{name:`${name} copy`,slug:suggestedSlug(`${name} copy`),data}],current,true);});}}"
+          }
+        },
+        {
+          "line": 48,
+          "tag": "input",
+          "attrs": {
+            "type": "\"file\"",
+            "disabled": "{!enabled||!organization||busy||entries.length>0||!!review}",
+            "onChange": "{e=>{const file=e.target.files?.[0];if(!file)return;void run(async current=>{if(file.size>FILE_BYTES)throw new Error('File exceeds 20 MB.');setSource(null);setMessage(`Reading ${file.name}…`);const contents=await file.text();const next=await parseScheduleFile(contents,file.name.replace(/\\.json$/i,''));await loadEntries(next,current);});e.target.value='';}}"
+          }
+        },
+        {
+          "line": 55,
+          "tag": "select",
+          "attrs": {
+            "onChange": "{e=>{setProduction(e.target.value);setDay('');}}"
+          }
+        },
+        {
+          "line": 56,
+          "tag": "select",
+          "attrs": {
+            "onChange": "{e=>setDay(e.target.value)}"
+          }
+        },
+        {
+          "line": 58,
+          "tag": "input",
+          "attrs": {
+            "onChange": "{e=>setEntries(all=>all.map((v,j)=>j===i?{...v,name:e.target.value}:v))}"
+          }
+        },
+        {
+          "line": 59,
+          "tag": "input",
+          "attrs": {
+            "onChange": "{e=>setEntries(all=>all.map((v,j)=>j===i?{...v,slug:e.target.value}:v))}"
+          }
+        },
+        {
+          "line": 60,
+          "tag": "summary",
+          "attrs": {}
+        },
+        {
+          "line": 62,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{source?!day:!selectedProduction}",
+            "onClick": "{()=>void run(async current=>{const placement=source?undefined:{productionId:production,phaseId:null};const proposed=new ScheduleFileImport(actor!,organization!,day||null,entries,undefined,placement);await repo.preflight(actor!,organization!,day||null,entries,placement);if(current()){setReview(proposed);setMessage('Review locked. Confirm to create these exact documents; later source edits remain in your draft.');}})}"
+          }
+        },
+        {
+          "line": 63,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{clear}"
+          }
+        },
+        {
+          "line": 69,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!enabled||busy||review.complete}",
+            "onClick": "{()=>void run(async current=>{await review.execute({...repo.lifecycle,send:attempt=>repo.lifecycle.send(attempt,source??undefined),probe:attempt=>repo.lifecycle.probe(attempt,source??undefined)},current);if(current()){setMessage(review.complete?'Creation confirmed. Source and newer draft edits are unchanged.':'Stopped at an unconfirmed item. Check the original IDs before retrying.');if(review.items.some(c=>c.failure==='unauthenticated'))requireAuth();}})}"
+          }
+        },
+        {
+          "line": 70,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!enabled||busy}",
+            "onClick": "{()=>void run(async current=>{await review.execute({...repo.lifecycle,send:attempt=>repo.lifecycle.send(attempt,source??undefined),probe:attempt=>repo.lifecycle.probe(attempt,source??undefined)},current,true);if(current())setMessage('Original IDs checked. Review the recorded results.');})}"
+          }
+        },
+        {
+          "line": 71,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy}",
+            "onClick": "{()=>download({format:'schedule-create-receipt',fictional:true,items:review.receipt()},safeDownloadName('Schedule-create','receipt.json'))}"
+          }
+        },
+        {
+          "line": 72,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy}",
+            "onClick": "{clear}"
+          }
+        }
+      ]
+    },
+    {
+      "file": "components/local/ReviewToolPanel.tsx",
+      "sha256": "322457a34275fcbb4c3ecbd515ee389949dede85983a68402e14e0551ae01ddf",
+      "controls": [
+        {
+          "line": 15,
+          "tag": "dialog",
+          "attrs": {
+            "aria-label": "{title}"
+          }
+        },
+        {
+          "line": 16,
+          "tag": "button",
+          "attrs": {
+            "aria-label": "{`Close ${title}`}",
+            "onClick": "{onClose}"
+          }
+        },
+        {
+          "line": 17,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{onBack}"
+          }
+        }
+      ]
+    },
+    {
+      "file": "components/local/LocalOrganizationSecurity.tsx",
+      "sha256": "0e8281cb02d420196eda32d4ed9e10e0b60a3057364d4d9ae114c98b956a0f9b",
+      "controls": [
+        {
+          "line": 24,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!ready||busy}",
+            "onClick": "{()=>setOpen(v=>!v)}"
+          }
+        },
+        {
+          "line": 26,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy}",
+            "onClick": "{()=>void run(async current=>{const r=await repo.read(actor!,org!);if(current()){setRecord(r);setRoles(r.required_roles);}})}"
+          }
+        },
+        {
+          "line": 27,
+          "tag": "input",
+          "attrs": {
+            "type": "\"checkbox\"",
+            "onChange": "{e=>setRoles(e.target.checked?[...roles,role]:roles.filter(r=>r!==role))}"
+          }
+        },
+        {
+          "line": 29,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!ready||busy||!dirty}",
+            "onClick": "{()=>void run(async current=>{\n  const a=pending??captureMfaAttempt({actor:actor!,organization:org!,request:crypto.randomUUID(),version:record.version,roles});setPending(a);\n  try{await repo.save(a);}catch(e){if(current()&&e instanceof MfaPolicyError&&e.kind==='conflict')setPending(null);throw e;}\n  if(!current())return;setPending(null);const r=await repo.read(actor!,org!);if(current()){setRecord(r);setRoles(r.required_roles);setMessage('Organization MFA policy saved.');}\n })}"
+          }
+        },
+        {
+          "line": 34,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!ready||busy||!!pending}",
+            "onClick": "{()=>void run(async current=>{const r=await repo.read(actor!,org!);if(current()){setRecord(r);setMessage('Current policy version reviewed. Your draft is retained; save deliberately to replace this version.');}})}"
+          }
+        },
+        {
+          "line": 35,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!ready||busy||!!pending}",
+            "onClick": "{()=>{if(record)setRoles(record.required_roles);setMessage('Saved policy restored.');}}"
+          }
+        }
+      ]
+    },
+    {
+      "file": "components/local/LocalOrganizationDeletion.tsx",
+      "sha256": "bbb340369b290e7b1c7428321b8baa22ece68268a4c7b43a68d9e1cbbeead5a1",
+      "controls": [
+        {
+          "line": 29,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!ready||busy}",
+            "onClick": "{()=>setOpen(v=>!v)}"
+          }
+        },
+        {
+          "line": 31,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!ready||busy||!!pending}",
+            "onClick": "{()=>void run(async()=>{await load();setConfirmed(false);setMessage('Current lifecycle reviewed. Confirm again before requesting deletion.');})}"
+          }
+        },
+        {
+          "line": 32,
+          "tag": "input",
+          "attrs": {
+            "onChange": "{e=>setName(e.target.value)}"
+          }
+        },
+        {
+          "line": 32,
+          "tag": "input",
+          "attrs": {
+            "type": "\"checkbox\"",
+            "onChange": "{e=>setConfirmed(e.target.checked)}"
+          }
+        },
+        {
+          "line": 33,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!ready||busy||(!pending&&(!confirmed||name!==organization?.name))}",
+            "onClick": "{()=>void run(()=>submit('request'))}"
+          }
+        },
+        {
+          "line": 34,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!ready||busy}",
+            "onClick": "{()=>void run(()=>submit('cancel'))}"
+          }
+        },
+        {
+          "line": 35,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy}",
+            "onClick": "{()=>{setName('');setConfirmed(false);}}"
+          }
+        },
+        {
+          "line": 36,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!ready||busy}",
+            "onClick": "{()=>void run(async()=>{const state=await repo.notify(actor!,org!,n.event_id,n.recipient_id);setMessage(state==='delivered'?'Notice delivered to the local mail sink.':'Notice needs retry.');await load();})}"
+          }
+        }
+      ]
+    },
+    {
+      "file": "components/local/LocalSchedulePermissions.tsx",
+      "sha256": "80e3d51836438fda899a5713b1476222b52dd892a7f5398f9ad66b224b8c777a",
+      "controls": [
+        {
+          "line": 23,
+          "tag": "summary",
+          "attrs": {}
+        },
+        {
+          "line": 24,
+          "tag": "select",
+          "attrs": {
+            "disabled": "{!ready||busy||dirty}",
+            "onChange": "{e=>{const p=e.target.value;setProduction(p);setSchedule('');reset();void run(()=>load(p,''));}}"
+          }
+        },
+        {
+          "line": 24,
+          "tag": "select",
+          "attrs": {
+            "disabled": "{!ready||busy||dirty||!production}",
+            "onChange": "{e=>{const s=e.target.value;setSchedule(s);reset();void run(()=>load(production,s));}}"
+          }
+        },
+        {
+          "line": 26,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!ready||busy||dirty}",
+            "onClick": "{()=>choose(rule)}"
+          }
+        },
+        {
+          "line": 28,
+          "tag": "select",
+          "attrs": {
+            "disabled": "{!!selected}",
+            "onChange": "{e=>{setSubject(e.target.value);setDirty(true);}}"
+          }
+        },
+        {
+          "line": 29,
+          "tag": "summary",
+          "attrs": {}
+        },
+        {
+          "line": 29,
+          "tag": "input",
+          "attrs": {
+            "type": "\"checkbox\"",
+            "onChange": "{e=>{setDenied(v=>e.target.checked?[...v,key as Action]:v.filter(a=>a!==key));setDirty(true);}}"
+          }
+        },
+        {
+          "line": 30,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!dirty||(!selected&&!denied.length)}"
+          }
+        },
+        {
+          "line": 32,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy}",
+            "onClick": "{reset}"
+          }
+        },
+        {
+          "line": 32,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!ready||busy||dirty}",
+            "onClick": "{()=>void run(()=>load())}"
+          }
+        },
+        {
+          "line": 33,
+          "tag": "summary",
+          "attrs": {}
+        },
+        {
+          "line": 33,
+          "tag": "select",
+          "attrs": {
+            "disabled": "{busy}",
+            "onChange": "{e=>setMember(e.target.value)}"
+          }
+        },
+        {
+          "line": 33,
+          "tag": "select",
+          "attrs": {
+            "disabled": "{busy}",
+            "onChange": "{e=>setRole(e.target.value)}"
+          }
+        },
+        {
+          "line": 33,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!ready||busy||!member}"
+          }
+        }
+      ]
+    },
+    {
+      "file": "components/local/LocalOrganizationMembers.tsx",
+      "sha256": "2f8810b343cebad17bb8901c2f58bea37c5070d4765e9d2a3cd9311be77eb3ed",
+      "controls": [
+        {
+          "line": 26,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!ready||busy}",
+            "onClick": "{()=>{setOpen(v=>!v);if(!open)void run(c=>load(c));}}"
+          }
+        },
+        {
+          "line": 28,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!ready||busy||!!pending}",
+            "onClick": "{()=>void run(async c=>{await load(c);if(c()&&selected){const rows=await repo.list(actor!,org!);const row=rows.find(m=>m.id===selected.id);if(row){setSelected(row);setConfirmed(false);}else{setSelected(null);setReason('');}setMessage('Current membership reviewed. Confirm the named member again before submitting.');}})}"
+          }
+        },
+        {
+          "line": 30,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!ready||busy||!!pending}",
+            "onClick": "{()=>{setSelected(m);setReason('');setConfirmed(false);setMessage('');}}"
+          }
+        },
+        {
+          "line": 32,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!ready||busy}",
+            "onClick": "{()=>void run(async c=>{await deliver(n.event_id,c);await load(c);})}"
+          }
+        },
+        {
+          "line": 34,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!ready||busy}",
+            "onClick": "{()=>void run(c=>load(c,true))}"
+          }
+        },
+        {
+          "line": 37,
+          "tag": "textarea",
+          "attrs": {
+            "onChange": "{e=>setReason(e.target.value)}"
+          }
+        },
+        {
+          "line": 38,
+          "tag": "input",
+          "attrs": {
+            "type": "\"checkbox\"",
+            "onChange": "{e=>setConfirmed(e.target.checked)}"
+          }
+        },
+        {
+          "line": 39,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!ready||busy||(!pending&&(!confirmed||!reason.trim()))}",
+            "onClick": "{()=>void run(async c=>{\n  const a=pending??captureMembershipAttempt({actor:actor!,organization:org!,member:selected!.id,revision:selected!.revision,request:crypto.randomUUID(),status:selected!.status==='active'?'suspended':'active',reason,confirmed});setPending(a);\n  let result;try{result=await repo.save(a);}catch(e){if(c()&&e instanceof MembershipError&&e.kind==='conflict'){setPending(null);setConfirmed(false);}throw e;}\n  if(!c())return;setPending(null);setSelected(null);setReason('');setConfirmed(false);setMessage('Membership request confirmed.');\n  if(result.notification_id)await deliver(result.notification_id,c);await load(c);\n })}"
+          }
+        },
+        {
+          "line": 45,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy}",
+            "onClick": "{()=>{setSelected(null);setReason('');setConfirmed(false);}}"
+          }
+        }
+      ]
+    },
+    {
+      "file": "components/local/LocalScheduleLibrary.tsx",
+      "sha256": "0aea3d0739e4d2b9c1a1453864cc645f7d559c0e3561c3b7d40375f6ac18e5ca",
+      "controls": [
+        {
+          "line": 64,
+          "tag": "summary",
+          "attrs": {}
+        },
+        {
+          "line": 64,
+          "tag": "button",
+          "attrs": {
+            "title": "{item.display_name}",
+            "disabled": "{!enabled||busy||!!item.deleted_at}",
+            "onClick": "{()=>openSchedule(item.id)}"
+          }
+        },
+        {
+          "line": 64,
+          "tag": "button",
+          "attrs": {
+            "title": "{'Organize '+item.display_name}",
+            "aria-label": "{'Organize '+item.display_name}",
+            "disabled": "{!enabled||busy||!!modal||!!order}",
+            "onClick": "{()=>void run(()=>organize(item))}"
+          }
+        },
+        {
+          "line": 66,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!enabled||busy||loading||!inventoryInScope||!!modal||!!order||!destinations.some(p=>p.create)}",
+            "onClick": "{()=>create(destinations.find(p=>p.create)!.id)}"
+          }
+        },
+        {
+          "line": 66,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!enabled||busy||!!order}",
+            "onClick": "{()=>void run(load)}"
+          }
+        },
+        {
+          "line": 68,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{()=>setShowFilters(v=>!v)}"
+          }
+        },
+        {
+          "line": 69,
+          "tag": "input",
+          "attrs": {
+            "type": "\"search\"",
+            "onChange": "{e=>setQuery(e.target.value)}",
+            "placeholder": "\"Name, production, phase or town\""
+          }
+        },
+        {
+          "line": 69,
+          "tag": "select",
+          "attrs": {
+            "onChange": "{e=>setProduction(e.target.value)}"
+          }
+        },
+        {
+          "line": 69,
+          "tag": "select",
+          "attrs": {
+            "onChange": "{e=>setStatus(e.target.value as LibraryFilter)}"
+          }
+        },
+        {
+          "line": 69,
+          "tag": "select",
+          "attrs": {
+            "onChange": "{e=>setSort(e.target.value as LibrarySort)}"
+          }
+        },
+        {
+          "line": 70,
+          "tag": "summary",
+          "attrs": {}
+        },
+        {
+          "line": 70,
+          "tag": "input",
+          "attrs": {
+            "type": "\"date\"",
+            "onChange": "{e=>setFrom(e.target.value)}"
+          }
+        },
+        {
+          "line": 70,
+          "tag": "input",
+          "attrs": {
+            "type": "\"date\"",
+            "onChange": "{e=>setTo(e.target.value)}"
+          }
+        },
+        {
+          "line": 71,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{()=>{setProduction('');setStatus('active');setSort('manual');setFrom('');setTo('');}}"
+          }
+        },
+        {
+          "line": 73,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy||!enabled}",
+            "onClick": "{()=>void run(checkOrder)}"
+          }
+        },
+        {
+          "line": 73,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy||!enabled}",
+            "onClick": "{()=>void run(()=>arrange(order))}"
+          }
+        },
+        {
+          "line": 73,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy}",
+            "onClick": "{()=>{setOrder(null);setMessage('Order review discarded. Refresh before another arrangement.');}}"
+          }
+        },
+        {
+          "line": 74,
+          "tag": "button",
+          "attrs": {
+            "title": "{r.display_name}",
+            "disabled": "{!enabled||busy}",
+            "onClick": "{()=>openSchedule(r.id)}"
+          }
+        },
+        {
+          "line": 75,
+          "tag": "summary",
+          "attrs": {}
+        },
+        {
+          "line": 75,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy||!!modal||!!order}",
+            "onClick": "{()=>create(p.id)}"
+          }
+        },
+        {
+          "line": 77,
+          "tag": "dialog",
+          "attrs": {
+            "aria-label": "{modal==='create'?'New schedule':'Organize schedule'}"
+          }
+        },
+        {
+          "line": 79,
+          "tag": "input",
+          "attrs": {
+            "disabled": "{busy||modal==='organize'&&!row?.can_organize}",
+            "onChange": "{e=>{setName(e.target.value);if(modal==='create')setSlug(suggestedSlug(e.target.value));}}"
+          }
+        },
+        {
+          "line": 79,
+          "tag": "input",
+          "attrs": {
+            "disabled": "{busy||modal==='organize'&&!row?.can_organize}",
+            "onChange": "{e=>setSlug(e.target.value)}"
+          }
+        },
+        {
+          "line": 79,
+          "tag": "select",
+          "attrs": {
+            "disabled": "{busy||modal==='organize'}",
+            "onChange": "{e=>{const p=destinations.find(p=>p.id===e.target.value);setDestination(e.target.value);setPhase(previous=>p?.phases.some(f=>f.id===previous)?previous:'');setDay('');}}"
+          }
+        },
+        {
+          "line": 79,
+          "tag": "select",
+          "attrs": {
+            "disabled": "{busy||!!day||modal==='organize'&&!row?.can_organize}",
+            "onChange": "{e=>setPhase(e.target.value)}"
+          }
+        },
+        {
+          "line": 79,
+          "tag": "select",
+          "attrs": {
+            "disabled": "{busy||modal==='organize'&&!row?.can_organize}",
+            "onChange": "{e=>{setDay(e.target.value);if(e.target.value)setPhase(selectedDestination?.days.find(d=>d.id===e.target.value)?.phase??'');}}"
+          }
+        },
+        {
+          "line": 80,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy||!name.trim()||!slug||!selectedDestination?.create}",
+            "onClick": "{()=>void run(async()=>{controller.prepareCreate(organization!,crypto.randomUUID(),day||null,name.trim(),slug.trim(),{meta:{projectName:selectedDestination!.name,phase:selectedDestination!.phases.find(p=>p.id===phase)?.name??''},rows:[]} as unknown as StoredSchedule['document'],{productionId:destination,phaseId:phase||null});redraw(n=>n+1);if(review)await confirm();})}"
+          }
+        },
+        {
+          "line": 81,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy||!row?.can_organize}",
+            "onClick": "{()=>prepare('rename')}"
+          }
+        },
+        {
+          "line": 81,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy||!row?.can_organize}",
+            "onClick": "{()=>{if(row)setPlacement({row,day:day||null,phase:phase||null});}}"
+          }
+        },
+        {
+          "line": 81,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy||!row?.can_organize}",
+            "onClick": "{()=>prepare(record?.status==='archived'?'unarchive':'archive')}"
+          }
+        },
+        {
+          "line": 82,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy||!row?.can_trash}",
+            "onClick": "{()=>prepare(record?.deleted_at?'restore':'delete')}"
+          }
+        },
+        {
+          "line": 82,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy||!row?.can_transfer||!!record?.deleted_at}",
+            "onClick": "{()=>{const id=record!.id;clear();onTransfer(id,false);}}"
+          }
+        },
+        {
+          "line": 82,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy||!row?.can_copy||!!record?.deleted_at}",
+            "onClick": "{()=>{const id=record!.id;clear();onTransfer(id,true);}}"
+          }
+        },
+        {
+          "line": 82,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy}",
+            "onClick": "{()=>{const id=record!.id;clear();onInspect(id);}}"
+          }
+        },
+        {
+          "line": 85,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy||!enabled||controller.phase==='conflict'}",
+            "onClick": "{()=>void run(()=>confirm())}"
+          }
+        },
+        {
+          "line": 85,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy||!enabled}",
+            "onClick": "{()=>void run(()=>confirm(true))}"
+          }
+        },
+        {
+          "line": 86,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy||!enabled}",
+            "onClick": "{()=>void run(()=>place())}"
+          }
+        },
+        {
+          "line": 86,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy||!enabled}",
+            "onClick": "{()=>void run(()=>place(true))}"
+          }
+        },
+        {
+          "line": 87,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy||!enabled}",
+            "onClick": "{()=>{const id=controller.attempt!.id;clear();openSchedule(id);}}"
+          }
+        },
+        {
+          "line": 88,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy}",
+            "onClick": "{clear}"
+          }
+        }
+      ]
+    },
+    {
+      "file": "components/local/LocalScheduleTemplates.tsx",
+      "sha256": "22533062923f4bf2cf77df9bd86df111689114335a448a915ef926a61ea8c803",
+      "controls": [
+        {
+          "line": 59,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy}",
+            "onClick": "{()=>void run(async current=>{const fresh=await repo.reviewApply(actor!,apply.review.template.id,apply.context.id,organization!);if(!current())return;if(fresh.template.version!==apply.review.template.version||fresh.policy!==apply.review.policy||fresh.target_version!==apply.context.version)throw Error('The template, source permissions or receiving schedule changed. Cancel and review again; your draft is retained.');if(!onApply(fresh,apply.context))throw Error('The current document changed during review. Cancel and review again; your newer edits are retained.');setApply(null);setOpen(false);onClose?.();setMessage('Template applied to the draft. Metadata is retained. Undo is available; Save schedule commits it.');})}"
+          }
+        },
+        {
+          "line": 59,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy}",
+            "onClick": "{()=>{setApply(null);setMessage('Apply cancelled. Your draft is unchanged.');}}"
+          }
+        },
+        {
+          "line": 59,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy}",
+            "onClick": "{()=>void run(current=>send(current))}"
+          }
+        },
+        {
+          "line": 60,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy}",
+            "onClick": "{()=>void run(current=>send(current,true))}"
+          }
+        },
+        {
+          "line": 60,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy}",
+            "onClick": "{()=>{clearTemplateRequest(localStorage,pending.attempt);setPending(null);setMessage('Review cancelled. Nothing was sent.');}}"
+          }
+        },
+        {
+          "line": 62,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!enabled||busy||!actor||!organization}",
+            "onClick": "{()=>{visibility.current++;setOpen(true);void run(current=>refresh(current));}}"
+          }
+        },
+        {
+          "line": 69,
+          "tag": "select",
+          "attrs": {
+            "onChange": "{e=>{const m=e.target.value as typeof mode;setMode(m);setSelected(null);void run(current=>refresh(current,production,m));}}"
+          }
+        },
+        {
+          "line": 70,
+          "tag": "select",
+          "attrs": {
+            "onChange": "{e=>{const p=e.target.value;setProduction(p);setSelected(null);void run(current=>refresh(current,p));}}"
+          }
+        },
+        {
+          "line": 71,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{()=>void run(current=>refresh(current))}"
+          }
+        },
+        {
+          "line": 74,
+          "tag": "button",
+          "attrs": {
+            "aria-label": "{t.name}",
+            "onClick": "{()=>void run(async current=>{const v=await repo.read(actor!,t.id,organization!);if(current()){setSelected(v);setName(v.name);}})}"
+          }
+        },
+        {
+          "line": 78,
+          "tag": "summary",
+          "attrs": {}
+        },
+        {
+          "line": 79,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!canApply()}",
+            "onClick": "{()=>void run(async current=>{const s=getSource(),st=useScheduleStore.getState();if(!s||!canApply())return;const context={id:s.id,version:s.document_version,documentSession:st.documentSession,editRevision:st.editRevision};const review=await repo.reviewApply(actor!,selected.id,s.id,organization!);if(current()){setApply({review,context});setMessage('Review application to the currently open schedule. Nothing has been saved.');}})}"
+          }
+        },
+        {
+          "line": 80,
+          "tag": "summary",
+          "attrs": {}
+        },
+        {
+          "line": 81,
+          "tag": "input",
+          "attrs": {
+            "onChange": "{e=>setName(e.target.value)}"
+          }
+        },
+        {
+          "line": 81,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!name.trim()||name.trim()===selected.name}",
+            "onClick": "{()=>void run(async current=>{const fresh=await repo.read(actor!,selected.id,organization!);if(!current())return;begin(captureTemplateAttempt({actor:actor!,organization:organization!,production:fresh.production_id,id:fresh.id,request:crypto.randomUUID(),version:fresh.version,operation:'rename',name:name.trim(),rows:null,source:null,sourceVersion:null,previewName:fresh.name,previewRows:fresh.rows}));})}"
+          }
+        },
+        {
+          "line": 81,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!canWriteCurrent||!!pendingUses||getSource()?.production_id!==selected.production_id}",
+            "onClick": "{()=>void run(current=>prepare(selected,'replace',current))}"
+          }
+        },
+        {
+          "line": 82,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{()=>void run(current=>prepare(selected,selected.deleted_at?'restore':'trash',current))}"
+          }
+        },
+        {
+          "line": 83,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{()=>void run(current=>prepare(selected,selected.published_at?'unpublish':'publish',current))}"
+          }
+        },
+        {
+          "line": 86,
+          "tag": "summary",
+          "attrs": {}
+        },
+        {
+          "line": 86,
+          "tag": "input",
+          "attrs": {
+            "disabled": "{busy}",
+            "onChange": "{e=>setNewName(e.target.value)}"
+          }
+        },
+        {
+          "line": 86,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy||!newName.trim()||!canCapture}",
+            "onClick": "{()=>void run(async()=>{const s=getSource();if(!s||!canCapture)return;begin(captureTemplateAttempt({actor:actor!,organization:organization!,production,id:crypto.randomUUID(),request:crypto.randomUUID(),version:0,operation:'create',name:newName.trim(),rows:templateDraftRows(useScheduleStore.getState().rows),source:s.id,sourceVersion:s.document_version,previewName:newName.trim(),previewRows:templateDraftRows(useScheduleStore.getState().rows)}));})}"
+          }
+        },
+        {
+          "line": 91,
+          "tag": "summary",
+          "attrs": {}
+        },
+        {
+          "line": 95,
+          "tag": "summary",
+          "attrs": {}
+        }
+      ]
+    },
+    {
+      "file": "components/local/LocalOrganizationSettings.tsx",
+      "sha256": "238f0703796dbabf572cb10ef62f82d367b0484704000c4fc5f35086c35cf533",
+      "controls": [
+        {
+          "line": 50,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!ready||busy||!record}",
+            "onClick": "{()=>setOpen(true)}"
+          }
+        },
+        {
+          "line": 51,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy}",
+            "onClick": "{()=>void run(async current=>{const saved=await repo.read(actor!,org!);if(current()){setRecord(saved);setDraft(saved.config);setMessage('Organization appearance loaded.');}})}"
+          }
+        },
+        {
+          "line": 58,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{()=>setTab(t)}"
+          }
+        },
+        {
+          "line": 60,
+          "tag": "input",
+          "attrs": {
+            "placeholder": "{def}",
+            "onChange": "{e=>change({...draft,labels:{...draft.labels,[key]:e.target.value}})}"
+          }
+        },
+        {
+          "line": 61,
+          "tag": "input",
+          "attrs": {
+            "aria-label": "{`${key.slice(2)} color picker`}",
+            "type": "\"color\"",
+            "onChange": "{e=>change({...draft,colors:{...draft.colors,[key]:e.target.value}})}"
+          }
+        },
+        {
+          "line": 61,
+          "tag": "input",
+          "attrs": {
+            "aria-label": "{`${key.slice(2)} hex color`}",
+            "onChange": "{e=>change({...draft,colors:{...draft.colors,[key]:e.target.value}})}"
+          }
+        },
+        {
+          "line": 61,
+          "tag": "input",
+          "attrs": {
+            "type": "\"color\"",
+            "onChange": "{e=>change({...draft,actionStyles:{...draft.actionStyles,[cls]:{bg:e.target.value,text:draft.actionStyles?.[cls]?.text??defText}}})}"
+          }
+        },
+        {
+          "line": 61,
+          "tag": "input",
+          "attrs": {
+            "type": "\"color\"",
+            "onChange": "{e=>change({...draft,actionStyles:{...draft.actionStyles,[cls]:{bg:draft.actionStyles?.[cls]?.bg??defBg,text:e.target.value}}})}"
+          }
+        },
+        {
+          "line": 62,
+          "tag": "input",
+          "attrs": {
+            "onChange": "{e=>change({...draft,actions:actions.map((v,n)=>n===i?{...v,name:e.target.value}:v)})}"
+          }
+        },
+        {
+          "line": 62,
+          "tag": "select",
+          "attrs": {
+            "onChange": "{e=>change({...draft,actions:actions.map((v,n)=>n===i?{...v,color:e.target.value}:v)})}"
+          }
+        },
+        {
+          "line": 62,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{i===0}",
+            "onClick": "{()=>{const next=[...actions];[next[i-1],next[i]]=[next[i],next[i-1]];change({...draft,actions:next});}}"
+          }
+        },
+        {
+          "line": 62,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{()=>change({...draft,actions:actions.filter((_,n)=>n!==i)})}"
+          }
+        },
+        {
+          "line": 62,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{()=>change({...draft,actions:[...actions,{name:'New action',color:''}]})}"
+          }
+        },
+        {
+          "line": 63,
+          "tag": "input",
+          "attrs": {
+            "type": "\"file\"",
+            "onChange": "{async e=>{const file=e.target.files?.[0];e.target.value='';if(!file)return;if(file.size>2000000){setMessage('Logo must be at most 2 MB. Nothing changed.');return;}const seq=++ticket.current;try{const data=await new Promise<string>((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(String(reader.result));reader.onerror=()=>reject(Error('Logo could not be read'));reader.readAsDataURL(file);});if(seq===ticket.current&&latest.current.ready)change({...draftRef.current,logo:data});}catch{setMessage('Logo could not be read. Your draft is retained.');}}}"
+          }
+        },
+        {
+          "line": 63,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{()=>change({...draft,logo:null})}"
+          }
+        },
+        {
+          "line": 66,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy||!dirty}",
+            "onClick": "{()=>void run(save)}"
+          }
+        },
+        {
+          "line": 67,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy||!!pending}",
+            "onClick": "{()=>{if(record)setDraft(record.config);setComparison(null);setOpen(false);setMessage('Preview cancelled. Saved settings restored.');}}"
+          }
+        },
+        {
+          "line": 68,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy||!!pending}",
+            "onClick": "{()=>void run(async current=>{const saved=await repo.read(actor!,org!);if(current()){setComparison(saved);setMessage('Review the latest saved configuration below. Your draft is retained.');}})}"
+          }
+        },
+        {
+          "line": 69,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy}",
+            "onClick": "{()=>{setRecord(comparison);setDraft(comparison.config);setComparison(null);setMessage('Current saved settings loaded; previous preview discarded.');}}"
+          }
+        },
+        {
+          "line": 69,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy}",
+            "onClick": "{()=>{setRecord(comparison);setComparison(null);setMessage('Current version reviewed. Your draft is retained; Save explicitly replaces that version.');}}"
+          }
+        }
+      ]
+    },
+    {
+      "file": "components/local/LocalBrowserTemplates.tsx",
+      "sha256": "4c28d66e6eed1d2f1c1f394088dba4137155b8ca6b51e05e4e4780f7948ae20c",
+      "controls": [
+        {
+          "line": 14,
+          "tag": "summary",
+          "attrs": {}
+        },
+        {
+          "line": 17,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{()=>{readTicket.current++;try{inspect(localStorage.getItem(LS_TEMPLATES_KEY)??'{}','This browser');}catch{setMessage('Browser storage is unavailable. Nothing was changed.');}}}"
+          }
+        },
+        {
+          "line": 18,
+          "tag": "input",
+          "attrs": {
+            "type": "\"file\"",
+            "onChange": "{async e=>{const file=e.target.files?.[0],ticket=++readTicket.current;e.target.value='';if(!file)return;if(file.size>20_000_000){setMessage('File exceeds 20 MB. Nothing was imported.');return;}try{const raw=await file.text();if(ticket===readTicket.current)inspect(raw,file.name);}catch{setMessage('File could not be read. Nothing was imported.');}}}"
+          }
+        },
+        {
+          "line": 19,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{()=>{const url=URL.createObjectURL(new Blob([raw],{type:'application/json'})),link=document.createElement('a');link.href=url;link.download='Browser-template-originals.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}}"
+          }
+        },
+        {
+          "line": 21,
+          "tag": "select",
+          "attrs": {
+            "onChange": "{e=>{const n=Number(e.target.value);if(e.target.value===''){setSelected(null);return;}setSelected(n);setName(items[n].name);setClaimed(false);}}"
+          }
+        },
+        {
+          "line": 22,
+          "tag": "summary",
+          "attrs": {}
+        },
+        {
+          "line": 23,
+          "tag": "select",
+          "attrs": {
+            "onChange": "{e=>{setDestination(e.target.value);setClaimed(false);}}"
+          }
+        },
+        {
+          "line": 24,
+          "tag": "input",
+          "attrs": {
+            "onChange": "{e=>setName(e.target.value)}"
+          }
+        },
+        {
+          "line": 25,
+          "tag": "input",
+          "attrs": {
+            "type": "\"checkbox\"",
+            "onChange": "{e=>setClaimed(e.target.checked)}"
+          }
+        },
+        {
+          "line": 27,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!destination||!claimed||!name.trim()}",
+            "onClick": "{()=>{try{onPrepare(captureTemplateAttempt({actor,organization,production:destination,id:crypto.randomUUID(),request:crypto.randomUUID(),version:0,operation:'import',name:name.trim(),rows:null,source:null,sourceVersion:null,browserSource:chosen,ownershipConfirmed:claimed,previewName:name.trim(),previewRows:templateDraftRows(chosen.rows)}));}catch(e){setMessage(e instanceof Error?e.message:'Import review could not be prepared.');}}}"
+          }
+        }
+      ]
+    },
+    {
+      "file": "components/local/LocalScheduleSnapshots.tsx",
+      "sha256": "3892f4c970f2a1df1a8b12446e3e5dea606a4dc96d678da49c56ff3045567e3e",
+      "controls": [
+        {
+          "line": 71,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy||p.readOnly}",
+            "onClick": "{()=>void run(current=>send(pending,current))}"
+          }
+        },
+        {
+          "line": 72,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy}",
+            "onClick": "{()=>void run(current=>send(pending,current,true))}"
+          }
+        },
+        {
+          "line": 72,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy}",
+            "onClick": "{()=>{clearSnapshotRequest(localStorage,pending.attempt);setPending(readSnapshotRequest(localStorage,p.actor!,p.organization!,p.schedule!));setMessage('Review cancelled. Nothing was sent.');}}"
+          }
+        },
+        {
+          "line": 73,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!ready||busy}",
+            "onClick": "{()=>{setOpen(true);void run(current=>refresh(current));}}"
+          }
+        },
+        {
+          "line": 78,
+          "tag": "select",
+          "attrs": {
+            "onChange": "{e=>{const mode=e.target.value==='trash';setTrash(mode);setSelected(null);void run(current=>refresh(current,mode));}}"
+          }
+        },
+        {
+          "line": 79,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{()=>void run(current=>refresh(current))}"
+          }
+        },
+        {
+          "line": 80,
+          "tag": "input",
+          "attrs": {
+            "onChange": "{e=>setName(e.target.value)}"
+          }
+        },
+        {
+          "line": 80,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!name.trim()}",
+            "onClick": "{()=>void run(async current=>{const request=await prepare('capture',current);if(p.review&&request)await send(request,current);})}"
+          }
+        },
+        {
+          "line": 81,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{()=>void run(async current=>{const x=await repo.read(p.actor!,p.organization!,p.schedule!,s.id);if(current()){setSelected(x);setName(x.name??'');setCopyName((x.name??'Snapshot')+' copy');}})}"
+          }
+        },
+        {
+          "line": 85,
+          "tag": "summary",
+          "attrs": {}
+        },
+        {
+          "line": 86,
+          "tag": "input",
+          "attrs": {
+            "onChange": "{e=>setName(e.target.value)}"
+          }
+        },
+        {
+          "line": 86,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!name.trim()||name===selected.name}",
+            "onClick": "{()=>void run(async current=>{await prepare('name',current);})}"
+          }
+        },
+        {
+          "line": 86,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{()=>void run(async current=>{await prepare('restore_content',current);})}"
+          }
+        },
+        {
+          "line": 87,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{()=>void run(async current=>{await prepare(selected.deleted_at?'restore_trash':'trash',current);})}"
+          }
+        },
+        {
+          "line": 88,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{()=>void run(async current=>{await prepare('purge',current);})}"
+          }
+        },
+        {
+          "line": 89,
+          "tag": "summary",
+          "attrs": {}
+        },
+        {
+          "line": 89,
+          "tag": "input",
+          "attrs": {
+            "onChange": "{e=>setCopyName(e.target.value)}"
+          }
+        },
+        {
+          "line": 89,
+          "tag": "select",
+          "attrs": {
+            "onChange": "{e=>{setProduction(e.target.value);setDay('');}}"
+          }
+        },
+        {
+          "line": 89,
+          "tag": "select",
+          "attrs": {
+            "onChange": "{e=>setDay(e.target.value)}"
+          }
+        },
+        {
+          "line": 89,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!production||!copyName.trim()}",
+            "onClick": "{()=>void run(async current=>{const r=await extras.reviewCopy(p.actor!,selected.id,production);if(!current()||r.schedule.id!==p.schedule)return;beginExtra({started:false,attempt:{kind:'copy',actor:p.actor!,organization:p.organization!,request:crypto.randomUUID(),schedule:p.schedule!,snapshot:selected.id,version:r.snapshot_version,id:crypto.randomUUID(),sourceVersion:r.schedule.document_version,policy:r.policy,production,day:day||null,phase:choice?.days.find(d=>d.id===day)?.phase??null,name:copyName.trim(),slug:'snapshot-'+crypto.randomUUID()}});})}"
+          }
+        },
+        {
+          "line": 97,
+          "tag": "summary",
+          "attrs": {}
+        },
+        {
+          "line": 97,
+          "tag": "input",
+          "attrs": {
+            "type": "\"number\"",
+            "onChange": "{e=>setRetention(e.target.value)}"
+          }
+        },
+        {
+          "line": 97,
+          "tag": "select",
+          "attrs": {
+            "onChange": "{e=>setMinimum(e.target.value as typeof minimum)}"
+          }
+        },
+        {
+          "line": 97,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{()=>void run(async()=>beginExtra({started:false,attempt:{kind:'policy',actor:p.actor!,organization:p.organization!,request:crypto.randomUUID(),version:policy.version,retention:retention===''?null:Number(retention),trash:minimum}}))}"
+          }
+        },
+        {
+          "line": 98,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy||p.readOnly}",
+            "onClick": "{()=>void run(current=>sendExtra(current))}"
+          }
+        },
+        {
+          "line": 98,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy}",
+            "onClick": "{()=>void run(current=>sendExtra(current,true))}"
+          }
+        },
+        {
+          "line": 98,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{()=>{clearSnapshotExtra(localStorage,extra.attempt);setExtra(readSnapshotExtra(localStorage,p.actor!,p.organization!));}}"
+          }
+        },
+        {
+          "line": 99,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy}",
+            "onClick": "{()=>void run(async()=>{const context=p.captureOpen();if(await p.onCopy(copied,context))setOpen(false);})}"
+          }
+        }
+      ]
+    },
+    {
+      "file": "components/local/LocalMfaAccess.tsx",
+      "sha256": "d757a48cded108b95b3ead74ef4da079ed121d9e0aee4a2631aeacb547f054ca",
+      "controls": [
+        {
+          "line": 44,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{()=>setRetry(v=>v+1)}"
+          }
+        },
+        {
+          "line": 46,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{()=>setOpen(v=>!v)}",
+            "disabled": "{busy}"
+          }
+        },
+        {
+          "line": 52,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy}",
+            "onClick": "{()=>void run(async current=>{\n    const result=await client.auth.mfa.enroll({factorType:'totp',friendlyName:'Roseland '+crypto.randomUUID().slice(0,8)});\n    if(!current())return;\n    if(result.error||!result.data){setMessage('Enrollment could not start. Retry when connected. Existing authenticators are unchanged.');return;}\n    pendingFactor.current=true;setFactor(result.data.id);setSecret(result.data.totp.secret);setQr(result.data.totp.qr_code);setStage('code');onReady(false);setMessage('Scan the code, then enter the six-digit code from your authenticator.');\n   })}"
+          }
+        },
+        {
+          "line": 64,
+          "tag": "input",
+          "attrs": {
+            "onChange": "{e=>setCode(e.target.value)}"
+          }
+        },
+        {
+          "line": 64,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy}"
+          }
+        },
+        {
+          "line": 66,
+          "tag": "summary",
+          "attrs": {}
+        }
+      ]
+    },
+    {
+      "file": "components/local/WorkspaceOrganizationContext.tsx",
+      "sha256": "4973822032eac28514d1eeaef5c367bcd66d6bd781ba97a05dd1c30332ff0660",
+      "controls": [
+        {
+          "line": 7,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{disabled}",
+            "onClick": "{onRetry}"
+          }
+        },
+        {
+          "line": 11,
+          "tag": "select",
+          "attrs": {
+            "aria-label": "\"Switch organization\"",
+            "disabled": "{disabled}",
+            "onChange": "{event=>onChange(event.target.value)}"
+          }
+        },
+        {
+          "line": 11,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{disabled}",
+            "onClick": "{onMore}"
+          }
+        }
+      ]
+    },
+    {
+      "file": "components/local/LocalScheduleTransfers.tsx",
+      "sha256": "7db04c335705f4e9b7a54e9be21c8e9a9a1a9cda16998b3e9e34dc4c44be0d9b",
+      "controls": [
+        {
+          "line": 61,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!enabled||busy}",
+            "onClick": "{()=>void run(load)}"
+          }
+        },
+        {
+          "line": 62,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy||!!source||!!attempt}",
+            "onClick": "{()=>void run(g=>receive(item,g))}"
+          }
+        },
+        {
+          "line": 62,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy}",
+            "onClick": "{()=>void run(async g=>{await repo.close(actor!,item.id,'cancelled');if(current(g))await load(g);})}"
+          }
+        },
+        {
+          "line": 64,
+          "tag": "dialog",
+          "attrs": {
+            "aria-label": "\"Move or Duplicate schedule\""
+          }
+        },
+        {
+          "line": 65,
+          "tag": "select",
+          "attrs": {
+            "disabled": "{busy}",
+            "onChange": "{e=>{const p=placements.find(v=>v.id===e.target.value);setDestination(e.target.value);setPhase(previous=>p?.phases.some(f=>f.id===previous)?previous:'');setDay('');setPreview(null);}}"
+          }
+        },
+        {
+          "line": 66,
+          "tag": "select",
+          "attrs": {
+            "disabled": "{busy||!!day}",
+            "onChange": "{e=>setPhase(e.target.value)}"
+          }
+        },
+        {
+          "line": 66,
+          "tag": "select",
+          "attrs": {
+            "disabled": "{busy}",
+            "onChange": "{e=>{setDay(e.target.value);if(e.target.value)setPhase(placement?.days.find(d=>d.id===e.target.value)?.phase??'');}}"
+          }
+        },
+        {
+          "line": 67,
+          "tag": "input",
+          "attrs": {
+            "onChange": "{e=>{setName(e.target.value);setSlug(suggestedSlug(e.target.value));}}"
+          }
+        },
+        {
+          "line": 67,
+          "tag": "input",
+          "attrs": {
+            "onChange": "{e=>setSlug(e.target.value)}"
+          }
+        },
+        {
+          "line": 68,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy}",
+            "onClick": "{()=>void run(async g=>{const next=await repo.preview(actor!,incoming!.id);if(current(g)){setPreview(next);setSource(next.schedule);setMessage('Current saved schedule loaded for review.');}})}"
+          }
+        },
+        {
+          "line": 69,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy||!destination||(mode==='approve'&&!preview)}",
+            "onClick": "{()=>void run(prepare)}"
+          }
+        },
+        {
+          "line": 70,
+          "tag": "summary",
+          "attrs": {}
+        },
+        {
+          "line": 70,
+          "tag": "summary",
+          "attrs": {}
+        },
+        {
+          "line": 71,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy}",
+            "onClick": "{()=>void run(confirm)}"
+          }
+        },
+        {
+          "line": 72,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy}",
+            "onClick": "{()=>void run(async g=>{await repo.close(actor!,incoming.id,'declined');if(current(g)){clear();await load(g);}})}"
+          }
+        },
+        {
+          "line": 73,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy}",
+            "onClick": "{clear}"
+          }
+        }
+      ]
+    },
+    {
+      "file": "components/library/LibraryPage.tsx",
+      "sha256": "b61412d202f6dea6168b35bfcc2823ee8dcf0cb1473edd14da08316fe3a403ca",
+      "controls": [
+        {
+          "line": 1247,
+          "tag": "input",
+          "attrs": {
+            "type": "\"password\"",
+            "placeholder": "\"Enter passcode…\"",
+            "disabled": "{deleteModal.submitting}",
+            "onChange": "{(e) => setDeleteModal((m) => m ? { ...m, passcode: e.target.value } : null)}"
+          }
+        },
+        {
+          "line": 1261,
+          "tag": "input",
+          "attrs": {
+            "type": "\"text\"",
+            "placeholder": "\"DELETE\"",
+            "disabled": "{deleteModal.submitting}",
+            "onChange": "{(e) => setDeleteModal((m) => m ? { ...m, confirmText: e.target.value } : null)}"
+          }
+        },
+        {
+          "line": 1282,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{() => setDeleteModal(null)}",
+            "disabled": "{deleteModal.submitting}"
+          }
+        },
+        {
+          "line": 1289,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{handleDeleteConfirm}",
+            "disabled": "{\n                  deleteModal.submitting ||\n                  !deleteModal.passcode.trim() ||\n                  deleteModal.confirmText !== 'DELETE'\n                }"
+          }
+        },
+        {
+          "line": 1314,
+          "tag": "input",
+          "attrs": {
+            "type": "\"text\"",
+            "disabled": "{renameModal.submitting}",
+            "onChange": "{(e) => setRenameModal((m) => m ? { ...m, draft: e.target.value, error: null } : null)}"
+          }
+        },
+        {
+          "line": 1338,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{() => setRenameModal(null)}",
+            "disabled": "{renameModal.submitting}"
+          }
+        },
+        {
+          "line": 1345,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{handleRenameConfirm}",
+            "disabled": "{\n                  renameModal.submitting ||\n                  !renameModal.draft.trim() ||\n                  renameModal.draft.trim() === renameModal.name ||\n                  isRenameDuplicate\n                }"
+          }
+        },
+        {
+          "line": 1374,
+          "tag": "select",
+          "attrs": {
+            "disabled": "{moveModal.submitting}",
+            "onChange": "{(e) => {\n                const newProd = e.target.value;\n                setMoveModal((m) => {\n                  if (!m) return m;\n                  // Keep current phase only if it exists in the new production\n                  const newProdKey = newProd === '__new__' ? '' : newProd.toLowerCase();\n                  const phasesForNewProd = !newProdKey ? [] : [...new Set(\n                    schedules\n                      .filter((s) => (s.data?.meta?.projectName?.trim().toLowerCase() ?? '') === newProdKey)\n                      .flatMap((s) => { const p = s.data?.meta?.phase?.trim(); return p ? [p] : []; })\n                  )];\n                  const keepPhase = m.selectedPhase !== '__new__' && phasesForNewProd.includes(m.selectedPhase);\n                  return {\n                    ...m,\n                    selectedProd: newProd,\n                    customProdText: '',\n                    selectedPhase: keepPhase ? m.selectedPhase : '',\n                    customPhaseText: '',\n                    error: null,\n                  };\n                });\n              }}"
+          }
+        },
+        {
+          "line": 1411,
+          "tag": "input",
+          "attrs": {
+            "type": "\"text\"",
+            "placeholder": "\"Enter production name…\"",
+            "disabled": "{moveModal.submitting}",
+            "onChange": "{(e) => setMoveModal((m) => m ? { ...m, customProdText: e.target.value, error: null } : null)}"
+          }
+        },
+        {
+          "line": 1428,
+          "tag": "select",
+          "attrs": {
+            "disabled": "{moveModal.submitting}",
+            "onChange": "{(e) => setMoveModal((m) => m ? {\n                ...m, selectedPhase: e.target.value, customPhaseText: '', error: null,\n              } : null)}"
+          }
+        },
+        {
+          "line": 1456,
+          "tag": "input",
+          "attrs": {
+            "type": "\"text\"",
+            "placeholder": "\"Enter phase name…\"",
+            "disabled": "{moveModal.submitting}",
+            "onChange": "{(e) => setMoveModal((m) => m ? { ...m, customPhaseText: e.target.value, error: null } : null)}"
+          }
+        },
+        {
+          "line": 1475,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{() => setMoveModal(null)}",
+            "disabled": "{moveModal.submitting}"
+          }
+        },
+        {
+          "line": 1482,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{handleMoveConfirm}",
+            "disabled": "{moveModal.submitting || isMoveNoOp}"
+          }
+        },
+        {
+          "line": 1498,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{() => router.push('/schedule/Untitled')}"
+          }
+        },
+        {
+          "line": 1502,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{handleRefresh}",
+            "disabled": "{isRefreshing}",
+            "title": "\"Re-fetch the latest schedules from the cloud\""
+          }
+        },
+        {
+          "line": 1510,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{() => setFilterStatus(showArchived ? 'active' : 'all')}",
+            "title": "{showArchived ? 'Hide archived schedules' : 'Show archived schedules'}"
+          }
+        },
+        {
+          "line": 1520,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{toggleMore}",
+            "title": "\"More options\""
+          }
+        },
+        {
+          "line": 1531,
+          "tag": "button",
+          "attrs": {
+            "type": "\"button\"",
+            "onClick": "{() => { openCmsModal(); setMoreOpen(false); }}"
+          }
+        },
+        {
+          "line": 1538,
+          "tag": "button",
+          "attrs": {
+            "type": "\"button\"",
+            "onClick": "{handleLogout}"
+          }
+        },
+        {
+          "line": 1553,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{() => setRefreshError(null)}"
+          }
+        },
+        {
+          "line": 1559,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{() => setSuccessMessage(null)}"
+          }
+        },
+        {
+          "line": 1565,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{() => setTab('schedules')}"
+          }
+        },
+        {
+          "line": 1568,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{() => setTab('templates')}"
+          }
+        },
+        {
+          "line": 1571,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{() => setTab('backup')}"
+          }
+        },
+        {
+          "line": 1574,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{() => setTab('versions')}"
+          }
+        },
+        {
+          "line": 1590,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{() => setShowFilterPanel((v) => !v)}"
+          }
+        },
+        {
+          "line": 1597,
+          "tag": "select",
+          "attrs": {
+            "onChange": "{(e) => setSortMode(e.target.value as SortMode)}"
+          }
+        },
+        {
+          "line": 1616,
+          "tag": "select",
+          "attrs": {
+            "onChange": "{(e) => setFilterProd(e.target.value)}"
+          }
+        },
+        {
+          "line": 1630,
+          "tag": "input",
+          "attrs": {
+            "type": "\"date\"",
+            "onChange": "{(e) => setFilterDateFrom(e.target.value)}"
+          }
+        },
+        {
+          "line": 1637,
+          "tag": "input",
+          "attrs": {
+            "type": "\"date\"",
+            "onChange": "{(e) => setFilterDateTo(e.target.value)}"
+          }
+        },
+        {
+          "line": 1649,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{() => setFilterStatus(s)}"
+          }
+        },
+        {
+          "line": 1660,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{() => {\n                      setFilterProd('');\n                      setFilterDateFrom('');\n                      setFilterDateTo('');\n                      setFilterStatus('active');\n                    }}"
+          }
+        },
+        {
+          "line": 1696,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{() => router.push(`/schedule/${encodeURIComponent(s.name)}`)}"
+          }
+        },
+        {
+          "line": 1722,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{() => router.push(`/schedule/${encodeURIComponent(r.name)}`)}"
+          }
+        }
+      ]
+    },
+    {
+      "file": "components/library/VersionsTab.tsx",
+      "sha256": "6cfc96d519e6d1e35e007efa2371bd1009479b1f038eaab6630e80e7bd4aca9e",
+      "controls": [
+        {
+          "line": 96,
+          "tag": "select",
+          "attrs": {
+            "onChange": "{(e) => setSelectedName(e.target.value)}"
+          }
+        },
+        {
+          "line": 142,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{() => setPreview(snap)}"
+          }
+        },
+        {
+          "line": 143,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{() => handleSaveAsNew(snap)}"
+          }
+        },
+        {
+          "line": 144,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{() => handleRestore(snap)}"
+          }
+        },
+        {
+          "line": 145,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{() => handleDelete(snap)}"
+          }
+        },
+        {
+          "line": 164,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{() => setPreview(null)}"
+          }
+        },
+        {
+          "line": 203,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{() => handleSaveAsNew(preview)}"
+          }
+        },
+        {
+          "line": 204,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{() => { handleRestore(preview); setPreview(null); }}"
+          }
+        },
+        {
+          "line": 205,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{() => setPreview(null)}"
+          }
+        }
+      ]
+    },
+    {
+      "file": "components/library/LibrarySearch.tsx",
+      "sha256": "0c6ac076f0423a2722e214d45fc729cf3b6181d65df3cc23aadffb74f9cdf52e",
+      "controls": [
+        {
+          "line": 27,
+          "tag": "input",
+          "attrs": {
+            "type": "\"text\"",
+            "placeholder": "\"Search schedules…\"",
+            "onChange": "{(e) => setDraft(e.target.value)}"
+          }
+        },
+        {
+          "line": 35,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{clear}",
+            "title": "\"Clear search\""
+          }
+        }
+      ]
+    },
+    {
+      "file": "components/library/LibraryTree.tsx",
+      "sha256": "ca52e6303f7b9eae971ef71bf9585e292cfe97a20df4f73579533183ae4c01ef",
+      "controls": [
+        {
+          "line": 269,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{() => onOpen(s.name)}",
+            "title": "{isSyncing ? 'Still syncing — please wait a moment' : s.name}"
+          }
+        },
+        {
+          "line": 284,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{toggleMenu}",
+            "title": "\"Copy schedule links\""
+          }
+        },
+        {
+          "line": 293,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{() => { onCopyTeam(s.name); setMenuOpen(false); }}"
+          }
+        },
+        {
+          "line": 299,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{() => { onCopyClient(s.name); setMenuOpen(false); }}"
+          }
+        },
+        {
+          "line": 314,
+          "tag": "button",
+          "attrs": {
+            "type": "\"button\"",
+            "onClick": "{() => !isSyncing && onMoveTo(s.name)}",
+            "disabled": "{isSyncing}",
+            "title": "{isSyncing ? 'Still syncing — please wait a moment' : 'Move to another production or phase'}"
+          }
+        },
+        {
+          "line": 323,
+          "tag": "button",
+          "attrs": {
+            "type": "\"button\"",
+            "onClick": "{() => !isSyncing && onRename(s.name)}",
+            "disabled": "{isSyncing}",
+            "title": "{isSyncing ? 'Still syncing — please wait a moment' : 'Rename schedule'}"
+          }
+        },
+        {
+          "line": 332,
+          "tag": "button",
+          "attrs": {
+            "type": "\"button\"",
+            "onClick": "{() => onArchive(s.name)}",
+            "title": "\"Archive schedule\""
+          }
+        },
+        {
+          "line": 341,
+          "tag": "button",
+          "attrs": {
+            "type": "\"button\"",
+            "onClick": "{toggleCtx}",
+            "title": "\"More actions\""
+          }
+        },
+        {
+          "line": 355,
+          "tag": "button",
+          "attrs": {
+            "type": "\"button\"",
+            "onClick": "{() => onRestore(s.name)}",
+            "title": "\"Restore from archive\""
+          }
+        },
+        {
+          "line": 363,
+          "tag": "button",
+          "attrs": {
+            "type": "\"button\"",
+            "onClick": "{() => onDeletePermanently(s.name)}",
+            "title": "\"Delete permanently\""
+          }
+        },
+        {
+          "line": 378,
+          "tag": "button",
+          "attrs": {
+            "type": "\"button\"",
+            "onClick": "{() => { if (!isSyncing) { onRename(s.name); setCtxOpen(false); } }}",
+            "disabled": "{isSyncing}"
+          }
+        },
+        {
+          "line": 386,
+          "tag": "button",
+          "attrs": {
+            "type": "\"button\"",
+            "onClick": "{() => { onArchive(s.name); setCtxOpen(false); }}"
+          }
+        },
+        {
+          "line": 745,
+          "tag": "input",
+          "attrs": {
+            "onChange": "{(e) => setEditModal((m) => m ? { ...m, draft: e.target.value } : null)}",
+            "disabled": "{editModal.saving}"
+          }
+        },
+        {
+          "line": 758,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{() => setEditModal(null)}",
+            "disabled": "{editModal.saving}"
+          }
+        },
+        {
+          "line": 765,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{handleEditSave}",
+            "disabled": "{editModal.saving || !editModal.draft.trim()}"
+          }
+        },
+        {
+          "line": 780,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{() => setDndMessage(null)}"
+          }
+        },
+        {
+          "line": 809,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{(e) => { e.stopPropagation(); openEditProd(prod); }}",
+            "title": "\"Rename production\""
+          }
+        },
+        {
+          "line": 839,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{(e) => { e.stopPropagation(); openEditPhase(prod, ph); }}",
+            "title": "\"Rename phase\""
+          }
+        },
+        {
+          "line": 889,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{() => handleNewSchedule(prod.productionDisplay, ph.phaseDisplay)}"
+          }
+        },
+        {
+          "line": 904,
+          "tag": "input",
+          "attrs": {
+            "placeholder": "\"Phase name…\"",
+            "onChange": "{(e) => setNewPhaseDraft(e.target.value)}"
+          }
+        },
+        {
+          "line": 915,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{() => confirmCreatePhase(prod.productionKey)}"
+          }
+        },
+        {
+          "line": 916,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{() => { setCreatingPhaseFor(null); setNewPhaseDraft(''); }}"
+          }
+        },
+        {
+          "line": 919,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{() => { setCreatingPhaseFor(prod.productionKey); setNewPhaseDraft(''); }}"
+          }
+        },
+        {
+          "line": 981,
+          "tag": "input",
+          "attrs": {
+            "placeholder": "\"Production name…\"",
+            "onChange": "{(e) => setNewProdDraft(e.target.value)}"
+          }
+        },
+        {
+          "line": 992,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{confirmCreateProd}"
+          }
+        },
+        {
+          "line": 993,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{() => { setCreatingProd(false); setNewProdDraft(''); }}"
+          }
+        },
+        {
+          "line": 996,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{() => { setCreatingProd(true); setNewProdDraft(''); }}"
+          }
+        }
+      ]
+    },
+    {
+      "file": "components/library/TemplatesTab.tsx",
+      "sha256": "4b1ee0c92b7d7d2ce69e408f9d796ef4855b14229b4f8898a03aa931c91fcee1",
+      "controls": [
+        {
+          "line": 68,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{() => handleDelete(name)}",
+            "title": "\"Delete template\""
+          }
+        }
+      ]
+    },
+    {
+      "file": "components/library/BackupTab.tsx",
+      "sha256": "eb09835c18bb0a637380d65e4314cc706d79d116c093d25ae5b78f62e1589882",
+      "controls": [
+        {
+          "line": 106,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{handleSyncNow}"
+          }
+        },
+        {
+          "line": 107,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{() => { onRefresh(); setSyncMsg('Retried — library reloaded.'); }}"
+          }
+        },
+        {
+          "line": 108,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{() => setSyncMsg('No local cache to clear.')}"
+          }
+        },
+        {
+          "line": 115,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{exportLibraryJson}",
+            "disabled": "{backupBusy}"
+          }
+        },
+        {
+          "line": 118,
+          "tag": "input",
+          "attrs": {
+            "type": "\"file\"",
+            "disabled": "{backupBusy}",
+            "onChange": "{e => { handleImportFile(e.target.files?.[0] ?? null); e.target.value = ''; }}"
+          }
+        },
+        {
+          "line": 133,
+          "tag": "input",
+          "attrs": {
+            "disabled": "{backupBusy}",
+            "onChange": "{event => setPendingImport(items => items.map((item, i) => i === index ? { ...item, name: event.target.value } : item))}"
+          }
+        },
+        {
+          "line": 136,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{backupBusy}",
+            "onClick": "{confirmImport}"
+          }
+        },
+        {
+          "line": 137,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{backupBusy}",
+            "onClick": "{() => setPendingImport([])}"
+          }
+        },
+        {
+          "line": 142,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{handleMigrateProjectMeta}",
+            "disabled": "{migrateState === 'running'}"
+          }
+        }
+      ]
+    },
+    {
+      "file": "components/modals/Modal.tsx",
+      "sha256": "c5f938649247416d02d3c75c0b03751d2be889a3a01a8ae1a5b98e0d8df7ca42",
+      "controls": [
+        {
+          "line": 98,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{onClose}",
+            "aria-label": "\"Close\""
+          }
+        }
+      ]
+    },
+    {
+      "file": "components/modals/StatusModal.tsx",
+      "sha256": "7a5c5b3706e80a05d8f0825514fbe16fa132f814373a26c6bceec7f4f396ae91",
+      "controls": [
+        {
+          "line": 39,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{handleClear}"
+          }
+        },
+        {
+          "line": 40,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{onClose}"
+          }
+        },
+        {
+          "line": 41,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{handleSave}"
+          }
+        },
+        {
+          "line": 45,
+          "tag": "textarea",
+          "attrs": {
+            "onChange": "{(e) => setValue(e.target.value)}",
+            "placeholder": "\"Add booking progress, outreach status, confirmations, issues, next steps, or other status notes.\""
+          }
+        }
+      ]
+    },
+    {
+      "file": "components/modals/ContactSheetModal.tsx",
+      "sha256": "2c5ecbc7e3b862976bb5cb7890fab82a2a19de9628107ad28666f29744e61767",
+      "controls": [
+        {
+          "line": 38,
+          "tag": "a",
+          "attrs": {}
+        },
+        {
+          "line": 39,
+          "tag": "a",
+          "attrs": {}
+        },
+        {
+          "line": 93,
+          "tag": "button",
+          "attrs": {
+            "type": "\"button\"",
+            "onClick": "{async()=>{if(!authorizeOutput||await authorizeOutput())void printDocument(scheduleName,'contacts',local);}}"
+          }
+        },
+        {
+          "line": 100,
+          "tag": "button",
+          "attrs": {
+            "type": "\"button\"",
+            "onClick": "{async()=>{if(!authorizeOutput||await authorizeOutput())downloadCsv(contacts,scheduleName);}}"
+          }
+        }
+      ]
+    },
+    {
+      "file": "components/modals/SaveAsModal.tsx",
+      "sha256": "f4d35825698b11f97d1a5a21164e61264f1a58dd2891e6a0db4db2b67f14c05a",
+      "controls": [
+        {
+          "line": 58,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{onClose}"
+          }
+        },
+        {
+          "line": 59,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{handleSave}",
+            "disabled": "{saving || !value.trim()}"
+          }
+        },
+        {
+          "line": 65,
+          "tag": "input",
+          "attrs": {
+            "type": "\"text\"",
+            "placeholder": "\"Schedule name\"",
+            "disabled": "{saving}",
+            "onChange": "{(e) => setValue(e.target.value)}"
+          }
+        }
+      ]
+    },
+    {
+      "file": "components/modals/NotesModal.tsx",
+      "sha256": "d9edc07c5a6bcc62679036ffc4085ddded240a2f1916042a6bc122dea485de33",
+      "controls": [
+        {
+          "line": 31,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{onClose}"
+          }
+        },
+        {
+          "line": 32,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{handleSave}"
+          }
+        },
+        {
+          "line": 36,
+          "tag": "textarea",
+          "attrs": {
+            "onChange": "{(e) => setValue(e.target.value)}",
+            "placeholder": "\"Notes…\""
+          }
+        }
+      ]
+    },
+    {
+      "file": "components/modals/ContactModal.tsx",
+      "sha256": "1c74dc1f409479e66dd7caf89c4fe38fea1b4fdbfa0ff4f5f73625888d4aa90f",
+      "controls": [
+        {
+          "line": 59,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{() => { window.location.href = `mailto:${email}`; }}"
+          }
+        },
+        {
+          "line": 60,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{() => { window.location.href = `tel:${phone}`; }}"
+          }
+        },
+        {
+          "line": 61,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{handleSave}"
+          }
+        },
+        {
+          "line": 68,
+          "tag": "input",
+          "attrs": {
+            "type": "\"text\"",
+            "placeholder": "\"Contact name\"",
+            "onChange": "{(e) => setName(e.target.value)}"
+          }
+        },
+        {
+          "line": 72,
+          "tag": "input",
+          "attrs": {
+            "type": "\"text\"",
+            "placeholder": "\"Role / title\"",
+            "onChange": "{(e) => setTitle(e.target.value)}"
+          }
+        },
+        {
+          "line": 76,
+          "tag": "input",
+          "attrs": {
+            "type": "\"tel\"",
+            "placeholder": "\"Phone\"",
+            "onChange": "{(e) => setPhone(e.target.value)}"
+          }
+        },
+        {
+          "line": 80,
+          "tag": "input",
+          "attrs": {
+            "type": "\"email\"",
+            "placeholder": "\"Email\"",
+            "onChange": "{(e) => setEmail(e.target.value)}"
+          }
+        }
+      ]
+    },
+    {
+      "file": "components/modals/ConflictModal.tsx",
+      "sha256": "f195359dc3cf1a8d5b0ab97685d5c920750c73a151a25c26942083d7f2f1fa6d",
+      "controls": [
+        {
+          "line": 35,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{onClose}"
+          }
+        },
+        {
+          "line": 36,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{onSaveAs}"
+          }
+        },
+        {
+          "line": 37,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{onReload}"
+          }
+        },
+        {
+          "line": 38,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{onOverwrite}"
+          }
+        }
+      ]
+    },
+    {
+      "file": "components/modals/CallSheetModal.tsx",
+      "sha256": "ac62372f2646a6707874e0da97cb8784240cef322dd83aff0eae8ba80b74ffc3",
+      "controls": [
+        {
+          "line": 79,
+          "tag": "input",
+          "attrs": {
+            "aria-label": "{label}",
+            "disabled": "{readOnly}",
+            "onChange": "{(e) => setDraft(e.target.value)}"
+          }
+        },
+        {
+          "line": 158,
+          "tag": "a",
+          "attrs": {
+            "aria-label": "\"Open in Maps\""
+          }
+        },
+        {
+          "line": 192,
+          "tag": "textarea",
+          "attrs": {
+            "aria-label": "{label}",
+            "disabled": "{readOnly}",
+            "onChange": "{(e) => setDraft(e.target.value)}"
+          }
+        },
+        {
+          "line": 398,
+          "tag": "input",
+          "attrs": {
+            "type": "\"checkbox\"",
+            "onChange": "{(e) => setShowContacts(e.target.checked)}"
+          }
+        },
+        {
+          "line": 405,
+          "tag": "button",
+          "attrs": {
+            "type": "\"button\"",
+            "onClick": "{async()=>{if(!authorizeOutput||await authorizeOutput())void printDocument(scheduleName,'callsheet',local);}}"
+          }
+        }
+      ]
+    },
+    {
+      "file": "components/toolbar/SaveDropdown.tsx",
+      "sha256": "ccde73bc27569d394f2786f24ca621926250147e98d93004acdf12e103b67168",
+      "controls": [
+        {
+          "line": 43,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{disabled}",
+            "onClick": "{onSave}",
+            "title": "\"Save\""
+          }
+        },
+        {
+          "line": 46,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{disabled}",
+            "onClick": "{toggle}",
+            "aria-label": "\"More save options\"",
+            "title": "\"More save options\""
+          }
+        },
+        {
+          "line": 61,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{() => pick(onSaveAs)}"
+          }
+        },
+        {
+          "line": 62,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{() => pick(onSnapshot)}"
+          }
+        }
+      ]
+    },
+    {
+      "file": "components/toolbar/ShareDropdown.tsx",
+      "sha256": "1060f68c5ba5d84a0c10f4abb5d49f308ab05afa0c3adb6dacb33d8e6b0d1ea5",
+      "controls": [
+        {
+          "line": 87,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{toggle}",
+            "title": "\"Share\""
+          }
+        },
+        {
+          "line": 102,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{handlePrint}"
+          }
+        },
+        {
+          "line": 103,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{handleExportJson}"
+          }
+        },
+        {
+          "line": 104,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{handleContactSheet}"
+          }
+        },
+        {
+          "line": 105,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{handleCallSheet}"
+          }
+        }
+      ]
+    },
+    {
+      "file": "components/toolbar/UndoRedoButtons.tsx",
+      "sha256": "3e3944bc44c2fb21d9327bc12dee224ea78c6683138b01b3d11cb3818410f718",
+      "controls": [
+        {
+          "line": 9,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{undo}",
+            "disabled": "{!canUndo}",
+            "title": "\"Undo (Ctrl+Z)\"",
+            "aria-label": "\"Undo\""
+          }
+        },
+        {
+          "line": 18,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{redo}",
+            "disabled": "{!canRedo}",
+            "title": "\"Redo (Ctrl+Y)\"",
+            "aria-label": "\"Redo\""
+          }
+        }
+      ]
+    },
+    {
+      "file": "components/toolbar/EditorToolbar.tsx",
+      "sha256": "8cfdf07da8c889e20828c3a2edaee4246c33c4fe092c355ebc2933bf258e28cc",
+      "controls": [
+        {
+          "line": 33,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{() => setToolsOpen((o) => !o)}",
+            "title": "\"Tools\"",
+            "aria-label": "\"Tools\""
+          }
+        },
+        {
+          "line": 42,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{onClose}",
+            "title": "\"Close\"",
+            "aria-label": "\"Close\""
+          }
+        }
+      ]
+    },
+    {
+      "file": "components/toolbar/ToolsPanel.tsx",
+      "sha256": "ff1ba28c32a7293f191190eb261d7d7a8d246701e85c43a667f3f4d12e85cfa7",
+      "controls": [
+        {
+          "line": 70,
+          "tag": "input",
+          "attrs": {
+            "type": "\"text\"",
+            "placeholder": "\"Template name…\"",
+            "onChange": "{(e) => setNameInput(e.target.value)}"
+          }
+        },
+        {
+          "line": 79,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{handleSave}",
+            "disabled": "{!nameInput.trim() || status !== 'ready'}"
+          }
+        },
+        {
+          "line": 108,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{() => handleDelete(name)}",
+            "title": "\"Delete template\""
+          }
+        },
+        {
+          "line": 144,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{handleExport}"
+          }
+        },
+        {
+          "line": 260,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{() => setPreview(snap)}"
+          }
+        },
+        {
+          "line": 261,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{() => handleSaveAsNew(snap)}"
+          }
+        },
+        {
+          "line": 262,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{() => handleRestore(snap)}"
+          }
+        },
+        {
+          "line": 263,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{() => handleDelete(snap)}"
+          }
+        },
+        {
+          "line": 286,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{() => setPreview(null)}"
+          }
+        },
+        {
+          "line": 329,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{() => handleSaveAsNew(preview)}"
+          }
+        },
+        {
+          "line": 330,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{() => { handleRestore(preview); setPreview(null); }}"
+          }
+        },
+        {
+          "line": 331,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{() => setPreview(null)}"
+          }
+        },
+        {
+          "line": 367,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{onClose}",
+            "aria-label": "\"Close tools panel\""
+          }
+        },
+        {
+          "line": 373,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{() => setTab('templates')}"
+          }
+        },
+        {
+          "line": 374,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{() => setTab('backup')}"
+          }
+        },
+        {
+          "line": 375,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{() => setTab('restore')}"
+          }
+        }
+      ]
+    },
+    {
+      "file": "components/schedule/NotesCell.tsx",
+      "sha256": "d5d77e58634a28a2ab900433506c7ff82d3072ab80ec1ec2ddde5865cc84b00c",
+      "controls": [
+        {
+          "line": 22,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{onOpenStatus}",
+            "title": "{hasStatus ? 'Edit booking status' : 'Add booking status'}"
+          }
+        }
+      ]
+    },
+    {
+      "file": "components/schedule/ComboInput.tsx",
+      "sha256": "c5fd62bc3fa1b8a40ef792572c63b40d2790394a11d1a64b04726e754b25be7c",
+      "controls": [
+        {
+          "line": 80,
+          "tag": "input",
+          "attrs": {
+            "placeholder": "{placeholder}",
+            "onChange": "{(e) => { onChange(e.target.value); setTyped(true); setActiveIdx(-1); }}"
+          }
+        },
+        {
+          "line": 94,
+          "tag": "button",
+          "attrs": {}
+        }
+      ]
+    },
+    {
+      "file": "components/schedule/ScheduleHeader.tsx",
+      "sha256": "05615c930be88c03d8da28d9c55d8402915d1649f94a84bc7a360940cd4e9524",
+      "controls": [
+        {
+          "line": 64,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{openTownMap}",
+            "title": "\"Open in Google Maps\""
+          }
+        },
+        {
+          "line": 77,
+          "tag": "input",
+          "attrs": {
+            "type": "\"date\"",
+            "onChange": "{(e) => updateMeta({ date: e.target.value })}"
+          }
+        }
+      ]
+    },
+    {
+      "file": "components/schedule/DoneContactCell.tsx",
+      "sha256": "2e4216aded46845b94ec34462b9df3dfc971067f26aa74bb0468ac8d3fecd770",
+      "controls": [
+        {
+          "line": 24,
+          "tag": "input",
+          "attrs": {
+            "type": "\"checkbox\"",
+            "onChange": "{(e) => handleDoneChange(e.target.checked)}",
+            "title": "\"Mark done\""
+          }
+        },
+        {
+          "line": 31,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{onOpenContact}",
+            "title": "{hasContact ? 'Edit contact' : 'Add contact'}"
+          }
+        }
+      ]
+    },
+    {
+      "file": "components/schedule/AutoResizeTextarea.tsx",
+      "sha256": "7c4882112596d30b27d429d6e877d44bb5c98f4a234ac8f30f85485f979b609e",
+      "controls": [
+        {
+          "line": 24,
+          "tag": "textarea",
+          "attrs": {
+            "onChange": "{(e) => onChange(e.target.value)}",
+            "placeholder": "{placeholder}"
+          }
+        }
+      ]
+    },
+    {
+      "file": "components/schedule/ScheduleRow.tsx",
+      "sha256": "711dc7505c1faf23d6a7b9f1eee549715426b67c53c9085fb68888bcb9202d35",
+      "controls": [
+        {
+          "line": 84,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{handleDelete}",
+            "title": "\"Delete row\""
+          }
+        }
+      ]
+    },
+    {
+      "file": "components/schedule/DurationCell.tsx",
+      "sha256": "9e737490e3fbdf866d2c9383840b788b8bb1d885a09b4b363dd3a66772ed63e6",
+      "controls": [
+        {
+          "line": 28,
+          "tag": "select",
+          "attrs": {
+            "disabled": "{disabled}",
+            "onChange": "{(e) => handleChange(e.target.value)}"
+          }
+        }
+      ]
+    },
+    {
+      "file": "components/schedule/ActionCell.tsx",
+      "sha256": "fcb75dc269a5f2ca1d184759bf391656c60a0b2bc864159e85ed2b98ac5843b8",
+      "controls": [
+        {
+          "line": 36,
+          "tag": "input",
+          "attrs": {
+            "type": "\"text\"",
+            "onChange": "{(e) => updateRow(index, { otherText: e.target.value })}",
+            "placeholder": "\"Describe…\""
+          }
+        },
+        {
+          "line": 44,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{handleBackClick}",
+            "title": "\"Change action\"",
+            "aria-label": "\"Change action\""
+          }
+        },
+        {
+          "line": 55,
+          "tag": "select",
+          "attrs": {
+            "onChange": "{(e) => handleSelectChange(e.target.value)}"
+          }
+        }
+      ]
+    },
+    {
+      "file": "components/schedule/LocationCell.tsx",
+      "sha256": "0b5d6cf59f3d74e71106fd4819473ce63da7d82fe11874ed6b8df2c2e442cc04",
+      "controls": [
+        {
+          "line": 32,
+          "tag": "textarea",
+          "attrs": {
+            "placeholder": "\"Description…\"",
+            "onChange": "{(e) => onChange(e.target.value)}"
+          }
+        },
+        {
+          "line": 148,
+          "tag": "button",
+          "attrs": {
+            "type": "\"button\"",
+            "onClick": "{() => setAddrOpen(v => !v)}",
+            "aria-label": "{addrOpen ? 'Hide full address' : 'Show full address'}",
+            "title": "{addrOpen ? 'Hide address' : 'Show / add full address'}"
+          }
+        },
+        {
+          "line": 159,
+          "tag": "button",
+          "attrs": {
+            "type": "\"button\"",
+            "onClick": "{openMainMap}",
+            "disabled": "{!linksEnabled}",
+            "title": "\"Get directions\""
+          }
+        },
+        {
+          "line": 189,
+          "tag": "input",
+          "attrs": {
+            "type": "\"checkbox\"",
+            "onChange": "{(e) => patchSubLoc(i, { done: e.target.checked })}",
+            "title": "\"Mark done\""
+          }
+        },
+        {
+          "line": 214,
+          "tag": "button",
+          "attrs": {
+            "type": "\"button\"",
+            "onClick": "{() => setSubAddrOpen(prev => ({ ...prev, [sl.id]: !prev[sl.id] }))}",
+            "aria-label": "{subAddrIsOpen ? 'Hide full address' : 'Show full address'}",
+            "title": "{subAddrIsOpen ? 'Hide address' : 'Show / add full address'}"
+          }
+        },
+        {
+          "line": 225,
+          "tag": "button",
+          "attrs": {
+            "type": "\"button\"",
+            "onClick": "{() => openSubMap(sl)}",
+            "disabled": "{!linksEnabled}",
+            "title": "\"Get directions\""
+          }
+        },
+        {
+          "line": 229,
+          "tag": "button",
+          "attrs": {
+            "type": "\"button\"",
+            "onClick": "{() => removeSubLoc(i)}",
+            "title": "\"Remove sub-location\""
+          }
+        },
+        {
+          "line": 262,
+          "tag": "button",
+          "attrs": {
+            "type": "\"button\"",
+            "onClick": "{addSubLoc}"
+          }
+        }
+      ]
+    },
+    {
+      "file": "components/schedule/CrewInput.tsx",
+      "sha256": "5ae677d247537cbb4bcd0d7eb158ca5a19f711e82239a16199742a11616fa06a",
+      "controls": [
+        {
+          "line": 57,
+          "tag": "input",
+          "attrs": {
+            "type": "\"text\"",
+            "placeholder": "{placeholder}",
+            "onChange": "{e => onChange(e.target.value)}"
+          }
+        }
+      ]
+    },
+    {
+      "file": "components/schedule/RowControls.tsx",
+      "sha256": "5cd35d745d8eedaa035cbc6cb16bc18730c8a855d9a7112873c67daab8ccd5a5",
+      "controls": [
+        {
+          "line": 54,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{moveUp}",
+            "disabled": "{index < firstReorderable}",
+            "title": "\"Move up\""
+          }
+        },
+        {
+          "line": 55,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{moveDown}",
+            "disabled": "{index >= total - 1}",
+            "title": "\"Move down\""
+          }
+        }
+      ]
+    },
+    {
+      "file": "components/schedule/HeaderIdentityLine.tsx",
+      "sha256": "9eb63161aaac2bb14075da265af0e5902d04660d34ec35c66fe37678d3a6d4b2",
+      "controls": [
+        {
+          "line": 257,
+          "tag": "input",
+          "attrs": {
+            "type": "\"text\"",
+            "placeholder": "\"1/5\"",
+            "onChange": "{handleDayChange}"
+          }
+        }
+      ]
+    },
+    {
+      "file": "components/schedule/TimeOutCell.tsx",
+      "sha256": "b1492ebd3f23396634bff806c23ee563e326a4269f9f5fb491fe30ca32f21261",
+      "controls": [
+        {
+          "line": 34,
+          "tag": "select",
+          "attrs": {
+            "onChange": "{(e) => handleTimeChange(e.target.value)}"
+          }
+        },
+        {
+          "line": 49,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{toggleFixedOut}",
+            "title": "{row.fixedOut ? 'Unlock time-out' : 'Lock time-out'}"
+          }
+        }
+      ]
+    },
+    {
+      "file": "components/schedule/TimeInCell.tsx",
+      "sha256": "db56c393d8e610f8abbaf187668c964c23740054220509c82aeb2226371c5fff",
+      "controls": [
+        {
+          "line": 43,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{toggleFixedIn}",
+            "title": "{row.fixedIn ? 'Unlock time-in' : 'Lock time-in'}"
+          }
+        },
+        {
+          "line": 49,
+          "tag": "select",
+          "attrs": {
+            "onChange": "{(e) => handleTimeChange(e.target.value)}"
+          }
+        }
+      ]
+    },
+    {
+      "file": "components/schedule/WxStrip.tsx",
+      "sha256": "29a29c66f539a100cc9d302c03166cb7a946ff5812145a52ceb90799a7e006de",
+      "controls": [
+        {
+          "line": 54,
+          "tag": "a",
+          "attrs": {}
+        },
+        {
+          "line": 79,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{readOnly}",
+            "onClick": "{onRefresh}",
+            "title": "\"Refresh weather\""
+          }
+        },
+        {
+          "line": 80,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{readOnly}",
+            "onClick": "{onClear}",
+            "title": "\"Clear weather\""
+          }
+        }
+      ]
+    },
+    {
+      "file": "components/schedule/ScheduleEditor.tsx",
+      "sha256": "328c0f56f0c44b79fdb10baa4b88c0aad5b91bc9de7db114d545a8eba3cd4170",
+      "controls": [
+        {
+          "line": 229,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{() => { pushUndo(); addRowAfter(rows.length - 1); }}"
+          }
+        }
+      ]
+    },
+    {
+      "file": "components/schedule/CrewIdentityBlock.tsx",
+      "sha256": "6619736c4ebffd1753496d8d5afdd3a6da21aacb22d38759f4bf45f62c9aa575",
+      "controls": [
+        {
+          "line": 55,
+          "tag": "input",
+          "attrs": {
+            "onChange": "{(e) => setDraft(e.target.value)}"
+          }
+        }
+      ]
+    },
+    {
+      "file": "components/schedule/PlacesAutocomplete.tsx",
+      "sha256": "30775fb3c14f056ed303295795721cb0ec7ef77f93eb21d14e867b452b81e4e9",
+      "controls": [
+        {
+          "line": 171,
+          "tag": "textarea",
+          "attrs": {}
+        },
+        {
+          "line": 178,
+          "tag": "input",
+          "attrs": {
+            "type": "\"text\""
+          }
+        }
+      ]
+    },
+    {
+      "file": "app/local-accept-invitation/LocalAcceptanceClient.tsx",
+      "sha256": "ba14a2b439fc061a78732ffaf6e1ca469840e71297bb24dfb9874cf4932b82a4",
+      "controls": [
+        {
+          "line": 141,
+          "tag": "input",
+          "attrs": {
+            "type": "\"email\"",
+            "onChange": "{event => setEmail(event.target.value)}"
+          }
+        },
+        {
+          "line": 142,
+          "tag": "input",
+          "attrs": {
+            "type": "\"password\"",
+            "onChange": "{event => setPassword(event.target.value)}"
+          }
+        },
+        {
+          "line": 142,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy}"
+          }
+        },
+        {
+          "line": 144,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy}",
+            "onClick": "{() => setConfirmClear('signout')}"
+          }
+        },
+        {
+          "line": 146,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy}",
+            "onClick": "{() => dirty ? setConfirmClear('signout') : void signOut()}"
+          }
+        },
+        {
+          "line": 150,
+          "tag": "input",
+          "attrs": {
+            "disabled": "{!ready || busy || !!attempt}",
+            "onChange": "{event => setInvitationId(event.target.value)}"
+          }
+        },
+        {
+          "line": 151,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!ready || busy || !!attempt}"
+          }
+        },
+        {
+          "line": 161,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy || !ready}",
+            "onClick": "{() => workspace.openOrganization(controller.receipt!.organizationId)}"
+          }
+        },
+        {
+          "line": 162,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy}",
+            "onClick": "{() => { controller.clear(); setInvitationId(''); refresh(); setMessage('Result acknowledged. You can review another fictional invitation.'); }}"
+          }
+        },
+        {
+          "line": 163,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!ready || busy || (config.accountOnboarding&&controller.phase==='review'&&!preview)}",
+            "onClick": "{() => void execute(false)}"
+          }
+        },
+        {
+          "line": 164,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!ready || busy}",
+            "onClick": "{() => void execute(true)}"
+          }
+        },
+        {
+          "line": 165,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy}",
+            "onClick": "{() => setConfirmClear('review')}"
+          }
+        },
+        {
+          "line": 166,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy}",
+            "onClick": "{() => { controller.clear(); refresh(); setMessage('Review closed. Your invitation ID is still here.'); }}"
+          }
+        },
+        {
+          "line": 171,
+          "tag": "dialog",
+          "attrs": {
+            "aria-label": "\"Clear local acceptance details\""
+          }
+        },
+        {
+          "line": 171,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy}",
+            "onClick": "{() => setConfirmClear(null)}"
+          }
+        },
+        {
+          "line": 171,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy}",
+            "onClick": "{() => { if (confirmClear === 'review') { controller.clear(); setConfirmClear(null); refresh(); setMessage('Local review discarded. Your invitation ID is still here. Any accepted access is unchanged.'); } else void signOut(); }}"
+          }
+        }
+      ]
+    },
+    {
+      "file": "app/platform/setup/AuthSetupClient.tsx",
+      "sha256": "28b9a9e06159722f8ae07f17b4500248efbbbf39f255a54d55bfe373ca35b7ea",
+      "controls": [
+        {
+          "line": 305,
+          "tag": "input",
+          "attrs": {
+            "type": "\"email\"",
+            "onChange": "{(event) => setEmail(event.target.value)}",
+            "disabled": "{busy}"
+          }
+        },
+        {
+          "line": 316,
+          "tag": "input",
+          "attrs": {
+            "type": "\"password\"",
+            "onChange": "{(event) => setPassword(event.target.value)}",
+            "disabled": "{busy}"
+          }
+        },
+        {
+          "line": 325,
+          "tag": "button",
+          "attrs": {
+            "type": "\"submit\"",
+            "disabled": "{busy}"
+          }
+        },
+        {
+          "line": 337,
+          "tag": "button",
+          "attrs": {
+            "type": "\"button\"",
+            "onClick": "{signOut}",
+            "disabled": "{busy}"
+          }
+        },
+        {
+          "line": 352,
+          "tag": "button",
+          "attrs": {
+            "type": "\"button\"",
+            "onClick": "{beginEnrollment}",
+            "disabled": "{busy}"
+          }
+        },
+        {
+          "line": 383,
+          "tag": "input",
+          "attrs": {
+            "type": "{showSecret ? 'text' : 'password'}",
+            "aria-label": "\"Manual authenticator setup key\""
+          }
+        },
+        {
+          "line": 390,
+          "tag": "button",
+          "attrs": {
+            "type": "\"button\"",
+            "onClick": "{() => setShowSecret((visible) => !visible)}"
+          }
+        },
+        {
+          "line": 402,
+          "tag": "input",
+          "attrs": {
+            "onChange": "{(event) => setCode(normalizeCode(event.target.value))}",
+            "placeholder": "\"000000\"",
+            "disabled": "{busy}"
+          }
+        },
+        {
+          "line": 414,
+          "tag": "button",
+          "attrs": {
+            "type": "\"submit\"",
+            "disabled": "{busy}"
+          }
+        },
+        {
+          "line": 434,
+          "tag": "input",
+          "attrs": {
+            "onChange": "{(event) => setCode(normalizeCode(event.target.value))}",
+            "placeholder": "\"000000\"",
+            "disabled": "{busy}"
+          }
+        },
+        {
+          "line": 447,
+          "tag": "button",
+          "attrs": {
+            "type": "\"submit\"",
+            "disabled": "{busy}"
+          }
+        },
+        {
+          "line": 473,
+          "tag": "button",
+          "attrs": {
+            "type": "\"button\"",
+            "onClick": "{signOut}",
+            "disabled": "{busy}"
+          }
+        }
+      ]
+    },
+    {
+      "file": "app/local-invitations/LocalInvitationsClient.tsx",
+      "sha256": "c0640f13ac5927444accad24165f16b363b9ec5443a7010c54b11ec9edf13906",
+      "controls": [
+        {
+          "line": 190,
+          "tag": "input",
+          "attrs": {
+            "type": "\"email\"",
+            "onChange": "{event => setEmail(event.target.value)}"
+          }
+        },
+        {
+          "line": 191,
+          "tag": "input",
+          "attrs": {
+            "type": "\"password\"",
+            "onChange": "{event => setPassword(event.target.value)}"
+          }
+        },
+        {
+          "line": 192,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy}"
+          }
+        },
+        {
+          "line": 193,
+          "tag": "button",
+          "attrs": {
+            "type": "\"button\"",
+            "disabled": "{busy}",
+            "onClick": "{() => setConfirmation({\n          title: 'Clear this account’s local drafts?', text: 'Any request already sent may have completed. Check its result before clearing this tab.', label: 'Clear and use another account',\n          action: () => { clearAccount(); setEmail(''); setPassword(''); setAuthNeeded(false); setMessage('Local drafts cleared. Sign in with another fictional account.'); },\n        })}"
+          }
+        },
+        {
+          "line": 199,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy}",
+            "onClick": "{() => {\n        const action = () => void run(async () => {\n          const result = await client.auth.signOut({ scope: 'local' });\n          if (result.error) { setMessage('Sign-out could not finish. Retry before leaving this account.'); return; }\n          clearAccount(); setEmail(''); setPassword(''); setAuthNeeded(false); setMessage('Signed out. Local drafts cleared.');\n        });\n        if (dirty) setConfirmation({ title: 'Sign out and clear drafts?', text: 'Local drafts and request details will be cleared. A request already sent may have completed; check its result first.', label: 'Sign out and clear', action }); else action();\n      }}"
+          }
+        },
+        {
+          "line": 208,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy}",
+            "onClick": "{() => void run(async () => {\n        const result = await client.auth.mfa.enroll({ factorType: 'totp', friendlyName: 'Local invitation rehearsal' });\n        if (result.error || result.data.type !== 'totp') { setMessage('Authenticator setup failed. Retry or sign in again.'); return; }\n        setFactor(result.data.id); setSetupKey(result.data.totp.secret); setMfa('code'); setMessage('Add the setup key to your authenticator, then verify its six-digit code.');\n      })}"
+          }
+        },
+        {
+          "line": 213,
+          "tag": "input",
+          "attrs": {}
+        },
+        {
+          "line": 219,
+          "tag": "input",
+          "attrs": {
+            "onChange": "{event => setCode(event.target.value.replace(/\\D/g, '').slice(0, 6))}"
+          }
+        },
+        {
+          "line": 219,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy || code.length !== 6}"
+          }
+        },
+        {
+          "line": 221,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy || !ready}",
+            "onClick": "{() => void run(() => loadOrganizations())}"
+          }
+        },
+        {
+          "line": 222,
+          "tag": "select",
+          "attrs": {
+            "disabled": "{busy || !ready || !!attempt}",
+            "onChange": "{event => chooseOrganization(event.target.value)}"
+          }
+        },
+        {
+          "line": 224,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy || !ready}",
+            "onClick": "{() => void run(() => loadOrganizations(true))}"
+          }
+        },
+        {
+          "line": 228,
+          "tag": "textarea",
+          "attrs": {
+            "disabled": "{busy || !!attempt || !ready}",
+            "onChange": "{event => setReason(event.target.value)}"
+          }
+        },
+        {
+          "line": 229,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy || !!attempt || !ready || !currentOrg}"
+          }
+        },
+        {
+          "line": 229,
+          "tag": "button",
+          "attrs": {
+            "type": "\"button\"",
+            "disabled": "{busy || !!attempt}",
+            "onClick": "{() => { setRevoking(null); setReason(''); }}"
+          }
+        },
+        {
+          "line": 232,
+          "tag": "input",
+          "attrs": {
+            "type": "\"email\"",
+            "onChange": "{event => setRecipient(event.target.value)}"
+          }
+        },
+        {
+          "line": 233,
+          "tag": "select",
+          "attrs": {
+            "onChange": "{event => setRole(event.target.value)}"
+          }
+        },
+        {
+          "line": 234,
+          "tag": "select",
+          "attrs": {
+            "onChange": "{event => setProduction(event.target.value)}"
+          }
+        },
+        {
+          "line": 235,
+          "tag": "select",
+          "attrs": {
+            "onChange": "{event => setProductionRole(event.target.value)}"
+          }
+        },
+        {
+          "line": 236,
+          "tag": "button",
+          "attrs": {
+            "type": "\"button\"",
+            "onClick": "{() => void run(() => loadProductions(selected, true))}"
+          }
+        },
+        {
+          "line": 237,
+          "tag": "input",
+          "attrs": {
+            "type": "\"number\"",
+            "onChange": "{event => setDays(Number(event.target.value))}"
+          }
+        },
+        {
+          "line": 238,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{!roleAvailable || !productionAvailable}"
+          }
+        },
+        {
+          "line": 241,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy || !ready}",
+            "onClick": "{() => void run(() => loadInvitations())}"
+          }
+        },
+        {
+          "line": 244,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy || !!attempt || !ready || !currentOrg || (currentOrg.role === 'admin' && item.role !== 'member')}",
+            "onClick": "{() => { setRevoking(item); setReason(''); }}"
+          }
+        },
+        {
+          "line": 245,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy || !ready}",
+            "onClick": "{() => void run(() => loadInvitations(selected, true))}"
+          }
+        },
+        {
+          "line": 250,
+          "tag": "summary",
+          "attrs": {}
+        },
+        {
+          "line": 254,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy || !ready}",
+            "onClick": "{() => void run(async () => {\n          const operation = controller.submit(value => sendInvitationAttempt(value, sessionRef.current)); redraw(); await operation;\n          if (controller.failure) showFailure(controller.failure);\n          if (controller.phase === 'success') { setMessage('Operation confirmed. Review the result below.'); await loadInvitations(); }\n        })}"
+          }
+        },
+        {
+          "line": 259,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy || !ready}",
+            "onClick": "{() => void run(async () => {\n          const operation = controller.check(value => repository.result(value)); redraw(); await operation;\n          if (controller.failure === 'auth' || controller.failure === 'mfa') showFailure(controller.failure);\n          else setMessage(controller.result ? 'Completed result found. Review it below.' : 'No matching completed result is visible. Keep the same request when retrying.');\n          if (controller.phase === 'success') await loadInvitations();\n        })}"
+          }
+        },
+        {
+          "line": 265,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy}",
+            "onClick": "{() => {\n          if (attempt.kind === 'create') { setRecipient(''); setRole('member'); setProduction(''); setDays(7); }\n          else { setRevoking(null); setReason(''); }\n          controller.clear(); redraw(); setMessage('Result acknowledged. You can prepare another request.');\n        }}"
+          }
+        },
+        {
+          "line": 269,
+          "tag": "button",
+          "attrs": {
+            "disabled": "{busy}",
+            "onClick": "{discardRequest}"
+          }
+        },
+        {
+          "line": 272,
+          "tag": "dialog",
+          "attrs": {
+            "aria-label": "{confirmation?.title ?? 'Confirm action'}"
+          }
+        },
+        {
+          "line": 272,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{() => setConfirmation(null)}"
+          }
+        },
+        {
+          "line": 272,
+          "tag": "button",
+          "attrs": {
+            "onClick": "{() => { const action = confirmation?.action; setConfirmation(null); action?.(); }}"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+B15 empty fi cti onal day
+ActionAction LocationLocation DescriptionDescription NotesNotes Time InTime In DurationDuration Time OutTime Out
+B 1 4  LATEST O R GAN IZATIO N  LAB ELS
+TOWN / LOCATION
+—
+DATE
+—
+CALL TIME
+—
+PRODUCER
+—
+DIRECTOR
+—
+CAMERA
+—

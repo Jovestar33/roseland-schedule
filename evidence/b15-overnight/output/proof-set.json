@@ -1,0 +1,53 @@
+{
+  "file": "output/pdf/overnight-native-proof-set.pdf",
+  "sha256": "37c881820bf38ded72521c0d9a585cd8b7eb6a6bbac8cc677dbec9255269eab3",
+  "pages": 20,
+  "unchangedPageText": true,
+  "sections": [
+    {
+      "source": "output/pdf/target-ordinary-schedule.pdf",
+      "firstPage": 1,
+      "pages": 1
+    },
+    {
+      "source": "output/pdf/target-ordinary-contacts.pdf",
+      "firstPage": 2,
+      "pages": 1
+    },
+    {
+      "source": "output/pdf/target-ordinary-callsheet.pdf",
+      "firstPage": 3,
+      "pages": 1
+    },
+    {
+      "source": "output/pdf/target-long-schedule.pdf",
+      "firstPage": 4,
+      "pages": 5
+    },
+    {
+      "source": "output/pdf/target-long-contacts.pdf",
+      "firstPage": 9,
+      "pages": 6
+    },
+    {
+      "source": "output/pdf/target-long-callsheet.pdf",
+      "firstPage": 15,
+      "pages": 3
+    },
+    {
+      "source": "output/pdf/target-empty-schedule.pdf",
+      "firstPage": 18,
+      "pages": 1
+    },
+    {
+      "source": "output/pdf/target-empty-contacts.pdf",
+      "firstPage": 19,
+      "pages": 1
+    },
+    {
+      "source": "output/pdf/target-empty-callsheet.pdf",
+      "firstPage": 20,
+      "pages": 1
+    }
+  ]
+}

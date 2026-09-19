@@ -1,0 +1,281 @@
+SUNRISE🌅  6:30 AM
+SUNSET🌇  7:15 PM
+HIGH / LOW75°F / 54°F
+CONDITIONS⛅  Partly Cloudy
+PRECIP35%
+Fictional production – document acceptancePrincipal photography·Day2 of 12
+PRODUCER
+Fictional producer with complete long credit
+DIRECTOR
+Fictional director
+CAMERA
+Fictional camera lead
+1 DESC-1 Fictional detail with a comma, "quoted text", and multiple lines.Second line remains visible. Fictional detail with a comma, "quoted text", andmultiple lines.Second line remains visible.  END-DESC-1
+NOTE-1Fictional instructions END-NOTE-1 9:00 AM 00:00
+3
+Fictional scene 3
+DESC-3 Fictional detail with a comma, "quoted text", and multiple lines.Second line remains visible. Fictional detail with a comma, "quoted text", and multiplelines.Second line remains visible.  END-DESC-3
+NOTE-3Fictional instructions END-NOTE-3 9:15 AM
+00:15
+4
+Fictional scene 4
+DESC-4 Fictional detail with a comma, "quoted text", and multiple lines.Second line remains visible. Fictional detail with a comma, "quoted text", and multiplelines.Second line remains visible.  END-DESC-4
+NOTE-4Fictional instructions END-NOTE-4 9:30 AM
+00:15
+5
+Fictional scene 5
+DESC-5 Fictional detail with a comma, "quoted text", and multiple lines.Second line remains visible. Fictional detail with a comma, "quoted text", and multiplelines.Second line remains visible.  END-DESC-5
+NOTE-5Fictional instructions END-NOTE-5 9:45 AM
+00:15
+6
+Fictional scene 6
+DESC-6 Fictional detail with a comma, "quoted text", and multiple lines.Second line remains visible. Fictional detail with a comma, "quoted text", and multiplelines.Second line remains visible.  END-DESC-6
+NOTE-6Fictional instructions END-NOTE-6 10:00 AM
+00:15
+7
+Fictional scene 7
+DESC-7 Fictional detail with a comma, "quoted text", and multiple lines.Second line remains visible. Fictional detail with a comma, "quoted text", and multiplelines.Second line remains visible.  END-DESC-7
+NOTE-7Fictional instructions END-NOTE-7 10:15 AM
+00:15
+8
+Fictional scene 8
+DESC-8 Fictional detail with a comma, "quoted text", and multiple lines.Second line remains visible. Fictional detail with a comma, "quoted text", and multiplelines.Second line remains visible.  END-DESC-8
+NOTE-8Fictional instructions END-NOTE-8 10:30 AM
+00:15
+9
+Fictional scene 9
+DESC-9 Fictional detail with a comma, "quoted text", and multiple lines.Second line remains visible. Fictional detail with a comma, "quoted text", and multiplelines.Second line remains visible.  END-DESC-9
+NOTE-9Fictional instructions END-NOTE-9 10:45 AM
+00:15
+10
+Fictional scene 10
+DESC-10 Fictional detail with a comma, "quoted text", and multiple lines.Second line remains visible. Fictional detail with a comma, "quoted text", and multiplelines.Second line remains visible.  END-DESC-10
+NOTE-10Fictional instructions END-NOTE-10 11:00 AM
+00:15
+11
+Fictional scene 11
+DESC-11 Fictional detail with a comma, "quoted text", and multiple lines.Second line remains visible. Fictional detail with a comma, "quoted text", and multiplelines.Second line remains visible.  END-DESC-11
+NOTE-11Fictional instructions END-NOTE-11 11:15 AM
+00:15
+12
+Fictional scene 12
+DESC-12 Fictional detail with a comma, "quoted text", and multiple lines.Second line remains visible. Fictional detail with a comma, "quoted text", and multiplelines.Second line remains visible.  END-DESC-12
+NOTE-12Fictional instructions END-NOTE-12 11:30 AM
+00:15
+13
+Fictional scene 13
+DESC-13 Fictional detail with a comma, "quoted text", and multiple lines.Second line remains visible. Fictional detail with a comma, "quoted text", and multiplelines.Second line remains visible.  END-DESC-13
+NOTE-13Fictional instructions END-NOTE-13 11:45 AM
+00:15
+B14 LATEST ORGANIZATION LABELS
+TOWN / LOCATIONFictional Harbor Studio
+DATE10/20/2026
+CALL TIME9:00 AM
+Crew Call ▾
+Fictional location 1
+•Annex 1
+SUB-1 Fictional nested description END-SUB-1
+2
+F ic t io n a l s c e n e  2
+D E SC-2 Fictio n al detail with  a co mma, "qu o ted text", an d mu ltiple lin es.
+Seco n d lin e remain s v isible. Fictio n al detail with  a co mma, "qu o ted text", an d mu ltiple
+lin es.
+Seco n d lin e remain s v isible.  E ND -D E SC-2
+NOTE -2
+Fictio n al in stru ctio n s E ND -NOTE -2
+9:00 AM
+0 0 :15
+Fictio n al lo catio n  2
+•
+An n ex 2
+SUB-2 Fictio n al n ested descriptio n  E ND -SUB-2
+Fictional location 3
+•Annex 3
+SUB-3 Fictional nested description END-SUB-3
+Fictional location 4
+•Annex 4
+SUB-4 Fictional nested description END-SUB-4
+Fictional location 5
+•Annex 5
+SUB-5 Fictional nested description END-SUB-5
+Fictional location 6
+•Annex 6
+SUB-6 Fictional nested description END-SUB-6
+Fictional location 7
+•Annex 7
+SUB-7 Fictional nested description END-SUB-7
+Fictional location 8
+•Annex 8
+SUB-8 Fictional nested description END-SUB-8
+Fictional location 9
+•Annex 9
+SUB-9 Fictional nested description END-SUB-9
+Fictional location 10
+•Annex 10
+SUB-10 Fictional nested description END-SUB-10
+Fictional location 11
+•Annex 11
+SUB-11 Fictional nested description END-SUB-11
+Fictional location 12
+•Annex 12
+SUB-12 Fictional nested description END-SUB-12
+Fictional location 13
+•Annex 13
+SUB-13 Fictional nested description END-SUB-13
+ActionAction LocationLocation DescriptionDescription NotesNotes Time InTime In DuratDurat
+
+
+14
+Fictional scene 14
+DESC-14 Fictional detail with a comma, "quoted text", and multiple lines.Second line remains visible. Fictional detail with a comma, "quoted text", and multiplelines.Second line remains visible.  END-DESC-14
+NOTE-14Fictional instructions END-NOTE-14 12:00 PM
+00:15
+15
+Fictional scene 15
+DESC-15 Fictional detail with a comma, "quoted text", and multiple lines.Second line remains visible. Fictional detail with a comma, "quoted text", and multiplelines.Second line remains visible.  END-DESC-15
+NOTE-15Fictional instructions END-NOTE-15 12:15 PM
+00:15
+16
+Fictional scene 16
+DESC-16 Fictional detail with a comma, "quoted text", and multiple lines.Second line remains visible. Fictional detail with a comma, "quoted text", and multiplelines.Second line remains visible.  END-DESC-16
+NOTE-16Fictional instructions END-NOTE-16 12:30 PM
+00:15
+17
+Fictional scene 17
+DESC-17 Fictional detail with a comma, "quoted text", and multiple lines.Second line remains visible. Fictional detail with a comma, "quoted text", and multiplelines.Second line remains visible.  END-DESC-17
+NOTE-17Fictional instructions END-NOTE-17 12:45 PM
+00:15
+18
+Fictional scene 18
+DESC-18 Fictional detail with a comma, "quoted text", and multiple lines.Second line remains visible. Fictional detail with a comma, "quoted text", and multiplelines.Second line remains visible.  END-DESC-18
+NOTE-18Fictional instructions END-NOTE-18 1:00 PM
+00:15
+19
+Fictional scene 19
+DESC-19 Fictional detail with a comma, "quoted text", and multiple lines.Second line remains visible. Fictional detail with a comma, "quoted text", and multiplelines.Second line remains visible.  END-DESC-19
+NOTE-19Fictional instructions END-NOTE-19 1:15 PM
+00:15
+20
+Fictional scene 20
+DESC-20 Fictional detail with a comma, "quoted text", and multiple lines.Second line remains visible. Fictional detail with a comma, "quoted text", and multiplelines.Second line remains visible.  END-DESC-20
+NOTE-20Fictional instructions END-NOTE-20 1:30 PM
+00:15
+21
+Fictional scene 21
+DESC-21 Fictional detail with a comma, "quoted text", and multiple lines.Second line remains visible. Fictional detail with a comma, "quoted text", and multiplelines.Second line remains visible.  END-DESC-21
+NOTE-21Fictional instructions END-NOTE-21 1:45 PM
+00:15
+22
+Fictional scene 22
+DESC-22 Fictional detail with a comma, "quoted text", and multiple lines.Second line remains visible. Fictional detail with a comma, "quoted text", and multiplelines.Second line remains visible.  END-DESC-22
+NOTE-22Fictional instructions END-NOTE-22 2:00 PM
+00:15
+23
+Fictional scene 23
+DESC-23 Fictional detail with a comma, "quoted text", and multiple lines.Second line remains visible. Fictional detail with a comma, "quoted text", and multiplelines.Second line remains visible.  END-DESC-23
+NOTE-23Fictional instructions END-NOTE-23 2:15 PM
+00:15
+24
+Fictional scene 24
+DESC-24 Fictional detail with a comma, "quoted text", and multiple lines.Second line remains visible. Fictional detail with a comma, "quoted text", and multiplelines.Second line remains visible.  END-DESC-24
+NOTE-24Fictional instructions END-NOTE-24 2:30 PM
+00:15
+25
+Fictional scene 25
+DESC-25 Fictional detail with a comma, "quoted text", and multiple lines.Second line remains visible. Fictional detail with a comma, "quoted text", and multiplelines.Second line remains visible.  END-DESC-25
+NOTE-25Fictional instructions END-NOTE-25 2:45 PM
+00:15
+26
+Fictional scene 26
+DESC-26 Fictional detail with a comma, "quoted text", and multiple lines.Second line remains visible. Fictional detail with a comma, "quoted text", and multiplelines.Second line remains visible.  END-DESC-26
+NOTE-26Fictional instructions END-NOTE-26 3:00 PM
+00:15
+27
+Fictional scene 27
+DESC-27 Fictional detail with a comma, "quoted text", and multiple lines.Second line remains visible. Fictional detail with a comma, "quoted text", and multiplelines.Second line remains visible.  END-DESC-27
+NOTE-27Fictional instructions END-NOTE-27 3:15 PM
+00:15
+28
+Fictional scene 28
+DESC-28 Fictional detail with a comma, "quoted text", and multiple lines.Second line remains visible. Fictional detail with a comma, "quoted text", and multiplelines.Second line remains visible.  END-DESC-28
+NOTE-28Fictional instructions END-NOTE-28 3:30 PM
+00:15
+29
+Fictional scene 29
+DESC-29 Fictional detail with a comma, "quoted text", and multiple lines.Second line remains visible. Fictional detail with a comma, "quoted text", and multiplelines.Second line remains visible.  END-DESC-29
+NOTE-29Fictional instructions END-NOTE-29 3:45 PM
+00:15
+30
+Fictional scene 30
+DESC-30 Fictional detail with a comma, "quoted text", and multiple lines.Second line remains visible. Fictional detail with a comma, "quoted text", and multiplelines.Second line remains visible.  END-DESC-30
+NOTE-30Fictional instructions END-NOTE-30 4:00 PM
+00:15
+31
+Fictional scene 31
+DESC-31 Fictional detail with a comma, "quoted text", and multiple lines.Second line remains visible. Fictional detail with a comma, "quoted text", and multiplelines.Second line remains visible.  END-DESC-31
+NOTE-31Fictional instructions END-NOTE-31 4:15 PM
+00:15
+Fictional location 14
+•Annex 14
+SUB-14 Fictional nested description END-SUB-14
+Fictional location 15
+•Annex 15
+SUB-15 Fictional nested description END-SUB-15
+Fictional location 16
+•Annex 16
+SUB-16 Fictional nested description END-SUB-16
+Fictional location 17
+•Annex 17
+SUB-17 Fictional nested description END-SUB-17
+Fictional location 18
+•Annex 18
+SUB-18 Fictional nested description END-SUB-18
+Fictional location 19
+•Annex 19
+SUB-19 Fictional nested description END-SUB-19
+Fictional location 20
+•Annex 20
+SUB-20 Fictional nested description END-SUB-20
+Fictional location 21
+•Annex 21
+SUB-21 Fictional nested description END-SUB-21
+Fictional location 22
+•Annex 22
+SUB-22 Fictional nested description END-SUB-22
+Fictional location 23
+•Annex 23
+SUB-23 Fictional nested description END-SUB-23
+Fictional location 24
+•Annex 24
+SUB-24 Fictional nested description END-SUB-24
+Fictional location 25
+•Annex 25
+SUB-25 Fictional nested description END-SUB-25
+Fictional location 26
+•Annex 26
+SUB-26 Fictional nested description END-SUB-26
+Fictional location 27
+•Annex 27
+SUB-27 Fictional nested description END-SUB-27
+Fictional location 28
+•Annex 28
+SUB-28 Fictional nested description END-SUB-28
+Fictional location 29
+•Annex 29
+SUB-29 Fictional nested description END-SUB-29
+Fictional location 30
+•Annex 30
+SUB-30 Fictional nested description END-SUB-30
+Fictional location 31
+•Annex 31
+SUB-31 Fictional nested description END-SUB-31
+ActionAction LocationLocation DescriptionDescription NotesNotes Time InTime In DuratDurat
+
+
+32 DESC-32 Fictional detail with a comma, "quoted text", and multiple lines.Second line remains visible. Fictional detail with a comma, "quoted text", and multiplelines.Second line remains visible.  END-DESC-32
+NOTE-32Fictional instructions END-NOTE-32 4:30 PM
+00:15— ▾
+Fictional location 32
+•Annex 32
+SUB-32 Fictional nested description END-SUB-32
+ActionAction LocationLocation DescriptionDescription NotesNotes Time InTime In DuratDurat
