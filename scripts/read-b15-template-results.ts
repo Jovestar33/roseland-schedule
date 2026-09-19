@@ -1,0 +1,36 @@
+import {readFileSync,writeFileSync} from 'node:fs';
+import assert from 'node:assert/strict';
+import {createClient} from '@supabase/supabase-js';
+import {createTemplateRepository} from '../lib/platform/schedule-templates.ts';
+
+// Read-only reconciliation of fictional loopback fixtures using the ordinary account.
+const config=JSON.parse(readFileSync('/private/tmp/roseland-b14-destination-g2-live-status.json','utf8'));
+const access=JSON.parse(readFileSync('/private/tmp/roseland-b15-review-access.json','utf8'));
+assert.equal(config.API_URL,'http://127.0.0.1:56521');
+const client=createClient(config.API_URL,config.ANON_KEY,{auth:{persistSession:false,autoRefreshToken:false}});
+const login=await client.auth.signInWithPassword({email:access.email,password:access.password});
+if(login.error)throw Error('Fictional login failed');
+const actor=login.data.user!.id;
+const result=await client.rpc('session_read_schedule',{target_schedule_id:'619b6591-65f8-4fbd-a1b6-238825c186b0'});
+if(result.error)throw Error('Fictional source read failed');
+const source=result.data;
+assert.equal(source.display_name,'B15 concurrent editing — fictional');
+assert.equal(source.document_version,5);
+assert.equal(source.document.rows[0].desc,'First writer fictional saved change');
+assert.equal(source.document.rows[0].notes,'');
+const repo=createTemplateRepository(client);
+const inventory=await repo.inventory(actor,source.organization_id,source.production_id);
+assert.equal(inventory.filter(t=>t.name==='B15 C06 phone cancelled — fictional').length,0);
+assert.equal(inventory.filter(t=>t.name==='B15 C06 import cancelled — fictional').length,0);
+const item=inventory.find(t=>t.name==='B15 C06 reviewed — fictional');
+assert.ok(item);
+const template=await repo.read(actor,item.id,source.organization_id);
+assert.equal(template.version,7);
+assert.equal(template.published_at,null);
+assert.equal(template.deleted_at,null);
+assert.equal(template.rows?.length,1);
+assert.equal(template.rows?.[0].notes,'C06 newer draft must survive cancellation');
+assert.equal(template.rows?.[0].desc,source.document.rows[0].desc);
+const summary={source:{id:source.id,version:source.document_version,savedNotesUnchanged:true},template:{id:template.id,name:template.name,version:template.version,rows:template.rows?.length,productionOnly:true,notTrashed:true,replacementMatchesReviewedDraft:true},cancelledPhoneTemplateAbsent:true,cancelledBrowserImportAbsent:true};
+writeFileSync('evidence/b15-template-integration/saved-readback.json',JSON.stringify(summary,null,2));
+console.log(JSON.stringify(summary));

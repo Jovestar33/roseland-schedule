@@ -1,0 +1,43 @@
+B15 parity rows — fictional
+Review all template rows, including notes and contacts
+1
+Crew Call
+11:45 PM · 00:30
+
+Fictional audit studio
+
+Fictional long description
+Second line of the shot plan
+Third line remains visible
+
+NOTES
+
+Unsaved fictional snapshot marker
+Second note
+
+CONTACT
+
+Fictional Audit Contact
+Fictional coordinator
++1 202 555 0142
+audit@example.test
+
+Not done
+Fictional confirmation complete
+ADDITIONAL LOCATIONS
+Fictional annex
+100 Fictional Example Lane
+
+Nested fictional instructions
+Second line
+
+Done
+2
+Shoot
+12:15 AM · 00:00
+
+Zero-duration fictional marker
+
+Not done
+Review Apply to current schedule
+Manage name, sharing and Trash

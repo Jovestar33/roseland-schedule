@@ -1,0 +1,18 @@
+{
+  "source": {
+    "id": "619b6591-65f8-4fbd-a1b6-238825c186b0",
+    "version": 5,
+    "savedNotesUnchanged": true
+  },
+  "template": {
+    "id": "284b256a-5b2f-41ef-a7bd-35fe26fae439",
+    "name": "B15 C06 reviewed — fictional",
+    "version": 7,
+    "rows": 1,
+    "productionOnly": true,
+    "notTrashed": true,
+    "replacementMatchesReviewedDraft": true
+  },
+  "cancelledPhoneTemplateAbsent": true,
+  "cancelledBrowserImportAbsent": true
+}

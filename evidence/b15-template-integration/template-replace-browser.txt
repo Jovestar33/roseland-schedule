@@ -1,0 +1,49 @@
+Templates
+✕
+
+Browse reusable schedule rows for your production, or templates shared across your organization.
+
+Template change confirmed. Your schedule draft is unchanged.
+
+Template library
+Production templates
+Published to organization
+Production Trash
+Template production
+Choose production
+B14 production
+Refresh templates
+B14 newest template name
+1 row · Production only
+›
+B15 C06 reviewed — fictional
+1 row · Production only
+›
+B15 parity rows — fictional
+2 rows · Production only
+›
+B15 browser recovery — fictional
+1 row · Production only
+›
+B15 C06 reviewed — fictional
+Review all template rows, including notes and contacts
+1
+Crew Call
+No start time
+
+First writer fictional saved change
+
+NOTES
+
+C06 newer draft must survive cancellation
+
+Not done
+Review Apply to current schedule
+Manage name, sharing and Trash
+Save rows from the current schedule as a template
+Browser templates — discover, export or import
+
+Browser data has no organization ownership attached. Import one reviewed template into a production you choose. Existing templates are never overwritten; original browser data and files are retained.
+
+Find templates in this browser
+Import browser-template JSON

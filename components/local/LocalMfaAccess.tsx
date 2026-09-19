@@ -3,9 +3,9 @@
 import {useEffect,useRef,useState} from 'react';
 import type {Session,SupabaseClient} from '@supabase/supabase-js';
 
-type Props={client:SupabaseClient;session:Session|null;authNeeded:boolean;organization:string|null;revision:number;recentRequired:boolean;onReady(ready:boolean):void;onVerified():void};
+type Props={review?:boolean;client:SupabaseClient;session:Session|null;authNeeded:boolean;organization:string|null;revision:number;recentRequired:boolean;onReady(ready:boolean):void;onVerified():void};
 // Secrets live only in this account-scoped component; no factor removal is exposed.
-export default function LocalMfaAccess({client,session,authNeeded,organization,revision,recentRequired,onReady,onVerified}:Props){
+export default function LocalMfaAccess({review=false,client,session,authNeeded,organization,revision,recentRequired,onReady,onVerified}:Props){
  const [stage,setStage]=useState<'checking'|'enroll'|'code'|'ready'>('checking');
  const [factor,setFactor]=useState(''),[secret,setSecret]=useState(''),[qr,setQr]=useState(''),[code,setCode]=useState('');
  const [message,setMessage]=useState(''),[busy,setBusy]=useState(false),[open,setOpen]=useState(false),[retry,setRetry]=useState(0);
@@ -37,9 +37,9 @@ export default function LocalMfaAccess({client,session,authNeeded,organization,r
  }
  if(!session||authNeeded)return null;
  return <section aria-label="Account security" style={{margin:'12px 0',maxWidth:720}}>
-  <button onClick={()=>setOpen(v=>!v)} disabled={busy||stage!=='ready'}>Account security</button>
+  <button onClick={()=>setOpen(v=>!v)} disabled={busy||stage!=='ready'}>{review?'Two-step verification':'Account security'}</button>
   {(open||stage!=='ready')&&<div>
-   <h2>{stage==='ready'?'Account security':'Verify your authenticator'}</h2>
+   <h2>{stage==='ready'?(review?'Two-step verification':'Account security'):'Verify your authenticator'}</h2>
    <p>Required for Organization Super Admins and Platform Super Admins. Organization policy can require other roles. Once enabled, your authenticator protects this account across organizations.</p>
    <p role="status">{message}</p>
    {stage==='checking'&&<button onClick={()=>setRetry(v=>v+1)}>Retry MFA checks</button>}

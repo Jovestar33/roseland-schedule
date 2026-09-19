@@ -1,0 +1,17 @@
+Templates
+✕
+
+Browse reusable schedule rows for your production, or templates shared across your organization.
+
+Review the exact change below before confirming.
+
+Import browser template: B15 C06 import cancelled — fictional
+
+Destination production: B14 production
+
+Import the reviewed browser content into the selected production only. Original browser data and files stay untouched.
+
+Name: B15 C06 import cancelled — fictional
+
+Review exact rows (3)
+Confirm template changeCancel template change

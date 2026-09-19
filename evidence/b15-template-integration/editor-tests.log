@@ -1,0 +1,22 @@
+✔ Changing organization or cancelling preview clears absent palette tokens and action styles (39.909167ms)
+✔ A late legacy configuration load cannot overwrite an organization-scoped configuration (7.860875ms)
+✔ Apply preserves all receiving metadata, document identity and unsaved status with independent row keys (59.800875ms)
+✔ Undo and redo preserve row count, nested content and the matching Apply provenance (21.052417ms)
+✔ Confirming an earlier Apply save removes only acknowledged uses from current, undo and redo drafts (14.343042ms)
+✔ Applying a newer review replaces obsolete pending provenance while Undo restores the exact earlier draft (13.42275ms)
+✔ template recovery preserves collisions and is idempotent (2.655875ms)
+✔ local template copies survive failure unless fully acknowledged and unchanged (40.024666ms)
+✔ local template copies survive incomplete unless fully acknowledged and unchanged (5.974167ms)
+✔ local template copies survive changed locally unless fully acknowledged and unchanged (5.88025ms)
+✔ local template copies survive success unless fully acknowledged and unchanged (4.162667ms)
+✔ only resolved single-organization access is presented as static identity (3.845042ms)
+✔ multiple and paginated memberships retain a labeled switcher and current scope (1.21225ms)
+✔ switch selection forwards the organization identity without mutating memberships (0.131708ms)
+ℹ tests 14
+ℹ suites 0
+ℹ pass 14
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 229.829084

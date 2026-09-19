@@ -1,0 +1,12 @@
+{
+  "baseCommit": "78343940378287d1a715454f4421bd41b0342aa3",
+  "buildId": "OSrsuSnfOJ2U5mggulEmZ",
+  "sourceSHA256": {
+    "app/local-schedule/LocalScheduleClient.tsx": "3c888b451161c9a301493108d6afd7cffeee3439254562829a4447485696e1cd",
+    "app/local-workspace/LocalWorkspaceClient.tsx": "f16e39fa240a78682d22f6362bd81ba23ec0d07ffd1a709c7a3fab4e016aa19c",
+    "app/local-workspace/workspace.module.css": "c5541fed17b2fd36dfa49b5e2eb9eafbef67b40a40340c7d660af49a36663d24",
+    "components/local/LocalMfaAccess.tsx": "a0f62fe118123b1b9629723db5b01a17abdca9730609471f57b933f62b59c9d3",
+    "components/local/LocalScheduleTemplates.tsx": "22533062923f4bf2cf77df9bd86df111689114335a448a915ef926a61ea8c803",
+    "components/local/template-library.module.css": "5e47887fe5e3501e8b70e8aadaa23cd769d8c50f4c2d54a95c5eae245fa34096"
+  }
+}

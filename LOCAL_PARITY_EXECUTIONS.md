@@ -4,7 +4,7 @@ This ledger indexes actual local observations. It does not change the production
 
 | Case | Local coverage | Evidence boundary |
 |---|---|---|
-| NAV-01 | Partial | Local library/editor open, Close, refresh and direct copy handoff observed; full paired navigation/back/forward coverage remains. |
+| NAV-01 | Partial | Local library/editor open, Close, refresh and direct copy handoff observed. History selection survives refresh and Back/Forward. Full fixture/role navigation coverage remains. |
 | NAV-02 | Partial | Dirty Close and Keep editing observed; ordinary copy is contextual. Retained import and template reviews survive Tools dismissal; template cancellation sends nothing. Concurrent navigation/save permutations remain. |
 | IN-01 | Partial | Main/nested textarea clipping repaired at1280/390; phone creation dialog fits. Remaining field/fixture matrix remains. |
 | IN-02 | Partial | Keyboard row reorder, time and date entry, dialog Escape/focus observed. Native IAB date-picker crashed; physical keyboard/touch coverage remains. |
@@ -20,11 +20,11 @@ This ledger indexes actual local observations. It does not change the production
 | ED-05 | Partial | Town/date and call-sheet fields saved/read back. Complete header fixture set remains. |
 | SAVE-01 | Partial | Ordinary saves and reopen verified with authenticated readback. Broader paired paths remain. |
 | SAVE-02 | Partial | Two ordinary tabs exercised a genuine stale-write conflict, preserved the second draft, checked the different saved result, and explicitly reloaded the first writer. Lost-acknowledgement and network-loss browser paths remain. |
-| SNAP-01 | Partial | Unsaved named capture and expanded contents verified without saving source. Restore content, retained newer draft recovery, and clean editor return now observed on a separate fictional schedule; authenticated saved readback verifies content. Copy/delete semantics remain. |
+| SNAP-01 | Partial | Unsaved named capture and expanded contents verified without saving source. Restore content, retained newer draft recovery, and clean editor return now observed on a separate fictional schedule; authenticated saved readback verifies content. Snapshot copy opens a separate schedule with matching rows/metadata; rename, Trash and restore preserve snapshot identity. Wider role/fixture matrix remains. |
 | TOOL-01 | Partial | Tools drawer, Snapshots direct opening, file review retention, phone sheet and duplicate handoff observed. Full command inventory remains. |
-| TPL-01 | Partial | Production-only create/readable complete preview, Apply/Undo/Redo/Save, Apply cancellation, retained review reopening and cancellation observed. Confirmation buttons stay visible at1280/390. Publishing/update/delete and role matrix remain. |
+| TPL-01 | Partial | Production-only create/readable complete preview, Apply/Undo/Redo/Save, Apply cancellation, retained review reopening and cancellation observed. Confirmation buttons stay visible at1280/390. Publication, withdrawal, rename, replacement, Trash and restore verified on new fictional templates. C06 browse-first layout, contextual creation, cancel/return/focus and draft preservation verified at1280/390. Broader role/fixture matrix remains. |
 | TPL-02 | Partial | Browser discovery/file review, production-only import and byte-exact untouched-source export observed; malformed input rejected with actionable copy. Full browser-storage and role matrix remains. |
-| BKP-01 | Partial | Actual single JSON/CSV downloads parsed and verified. Full library and complete export matrix remain. |
+| BKP-01 | Partial | Actual single JSON/CSV downloads parsed and verified. Actual full library download contains15 schedules, each exactly matched to authenticated readback. Remaining format/fixture/output matrix remains. |
 | BKP-02 | Partial | Actual fictional JSON parsed/imported at production level; exact authenticated readback. Invalid/recovery permutations remain. |
 | LOC-01 | Partial | Approved live public Google suggestions/details and restored buttons observed. Manual/provider-error/map-navigation matrix remains. |
 | LOC-02 | Partial | Nested fields/completion and saved preservation observed; full reorder/remove/print matrix remains. |
@@ -55,3 +55,5 @@ Evidence: B15_PARITY_REMEDIATION.md and evidence/b15-parity-remediation/. No act
 September 19 quality-pass delta: B15_QUALITY_PASS.md and evidence/b15-quality-pass/. C01/C02 verified locally. Coverage totals are now 32 Partial, 7 Not executed, 6 Blocked; no complete group is promoted to Pass.
 
 September 19 workflow continuation: B15_WORKFLOW_COMPLETION.md and evidence/b15-workflow-completion/. History refresh/restore, snapshot copy/Trash/recovery, template publication/withdrawal/replacement, exact15-document library download and C05 single-organization product navigation are verified local slices. C04 matched-input check resolves the dirty-state discrepancy; no indicator suppression. Coverage:36 Partial,1 observed local Fail (Client recipient refresh),2 Not executed (CMS-01, MIG-01),6 Blocked. Multi-organization genuine account journey and leadership Administration UI remain unverified; component tests do not replace them. No full group Pass.
+
+September 19 C06 integration checkpoint: B15_TEMPLATE_INTEGRATION.md and evidence/b15-template-integration/. Browse-first template library, contextual creation, complete management lifecycle, apply/cancel/undo, browser import cancellation, keyboard return and390px layout verified. Account security entries are grouped and their disclosures/return work. Existing full backend/export evidence is explicitly reused rather than misrepresented as a new complete run. Totals remain36 Partial,1 local Fail,2 Not executed,6 Blocked,0 full Pass. Implementation stops at this checkpoint for the coordinator handoff.
