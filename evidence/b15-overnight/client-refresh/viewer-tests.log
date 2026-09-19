@@ -1,0 +1,12 @@
+✔ new link exchanges then confirms cookie; reload uses only its selector (41.00525ms)
+✔ blocked cookie confirmation does not display the exchanged document or silently persist a bearer (6.247542ms)
+✔ changing the fragment ignores a late previous exchange and shows only the new share (5.1485ms)
+✔ invalid new token never falls back to the previous valid recipient (5.289583ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 172.838667

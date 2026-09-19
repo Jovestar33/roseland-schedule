@@ -1,0 +1,27 @@
+{
+  "shares": [
+    {
+      "name": "B15 ordinary fictional day",
+      "exchange": 200,
+      "read": 200,
+      "httpOnly": true,
+      "sameSite": "strict",
+      "scopedPath": true,
+      "cookieNotRenewed": true,
+      "noOriginalBearerInResponse": true
+    },
+    {
+      "name": "B15 long fictional day",
+      "exchange": 200,
+      "read": 200,
+      "httpOnly": true,
+      "sameSite": "strict",
+      "scopedPath": true,
+      "cookieNotRenewed": true,
+      "noOriginalBearerInResponse": true
+    }
+  ],
+  "crossCookie": 404,
+  "missingCookie": 428,
+  "wrongOrigin": 403
+}

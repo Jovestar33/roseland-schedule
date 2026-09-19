@@ -1,0 +1,20 @@
+# Overnight pass 1 — Client refresh
+
+September19. Authorized overnight bundle; continuing with UI/control work after this commit. Continuation checkout `/private/tmp/roseland-b15-overnight`, branch `codex/b15-overnight-parity`; frozen3506 and its df803b3 source remain untouched.
+
+Read the pre-implementation choice in B15_CLIENT_SESSION_DESIGN.md. An encrypted HttpOnly cookie, scoped to an individual random recipient endpoint, now permits refresh after the original bearer is removed from the address. Only a non-secret selector remains in the URL. Every read still calls the existing server-only resolver, enforcing original expiry, revocation, sponsor permissions and the restricted projection. No schema/grant/authenticator/account-policy changes. Fixed transport expiration never slides; an expired/revoked underlying grant is denied even if its encrypted cookie has not physically expired yet.
+
+The browser confirms cookie acceptance before displaying the document. Missing-cookie recovery is explicit; it never falls back to persistent JavaScript bearer storage. New-token navigation cannot silently use an old share, and late responses cannot replace a newer recipient. Original legacy-token verification stays intact. Scope remains gated to loopback configuration; HTTPS/Secure deployment is not certified.
+
+Evidence: `evidence/b15-overnight/client-refresh/`. Final build/changed-source hashes in build-identity.json. Runtime3512 is the working overnight candidate and may be rebuilt for subsequent authorized passes; the consolidated final report will identify its final build.
+
+- **248 platform tests**, **96 editor tests**, including12 focused grant/cookie/server tests and4 actual-component navigation tests; build/type checks pass. Two inherited unrelated hook warnings remain.
+- Genuine local normal-account creation of two disposable Client grants, exchange/read and projection checks. Separate cookie paths, no cookie renewal on read, cross-link404, missing-cookie428 and wrong-origin403 are verified through the built server.
+- Browser valid link opens and reloads after bearer clearing. Two simultaneous shares remain separate, and final-build same-tab replacement opens/reloads the second schedule correctly. Screenshots and DOM evidence identify the viewed fictional names without tokens.
+- One owned grant revoked through the ordinary authorized RPC. The other owned grant's timestamps were placed just before expiry through bounded fixture setup; subsequent real resolver reads deny both existing recipient cookies and clear them. This is genuine database enforcement with a controlled expiry fixture, not a30-day elapsed-time test.
+- Browser context without the cookie cannot use a copied selector. Actual browser privacy settings were not changed; cookie-blocked confirmation also has real component/HTTP tests.
+- Two final-build fictional links are retained for independent review in `/private/tmp/roseland-overnight-share-final.json`. Earlier test grant material is in `/private/tmp/roseland-overnight-share-access.json`. Private values are excluded from source, evidence and messages. Existing review credentials remain in `/private/tmp/roseland-b15-review-access.json`.
+
+First HTTP/browser exchange/revocation evidence preceded the final same-tab/stale-response and clearer missing-session wording refinements; transport/RPC enforcement code is unchanged. Final reload/navigation and missing-cookie screenshots cover the final build. Legacy HMAC/session binding and original lifetime are unit-tested and reuse B11's real legacy-bridge evidence; a fresh real legacy-alias browser round trip remains unverified. Hosted cookies, native outputs and physical devices remain outside this pass's evidence.
+
+No saved schedule document or retained membership was changed. Only this pass's disposable grants were created/revoked/expired. No mail, credential change, hosted operation, deployment or push. Source licenses and footer removal are preserved. SHARE-02 returns to Partial; no full group is promoted. Continue the authorized bundle.

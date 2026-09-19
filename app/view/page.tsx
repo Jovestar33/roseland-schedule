@@ -11,6 +11,6 @@ interface Props {
 
 export default async function ViewPage({ searchParams }: Props) {
   const { v, vt } = await searchParams;
-  if(readLocalWorkspaceConfig(process.env,(await headers()).get('host')))return <LocalClientViewer legacyName={v??''} legacyToken={vt??''}/>;
+  if(readLocalWorkspaceConfig(process.env,(await headers()).get('host')))return <LocalClientViewer legacyName={v} legacyToken={vt}/>;
   return <ReadOnlyViewer name={v ?? ''} viewToken={vt ?? ''} />;
 }

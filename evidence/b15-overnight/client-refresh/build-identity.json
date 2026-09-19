@@ -1,0 +1,12 @@
+{
+  "build": "yqNjkOSXUhhHHol2JMn3L",
+  "checkout": "/private/tmp/roseland-b15-overnight",
+  "runtime": "http://127.0.0.1:3512",
+  "sourceHashes": {
+    "components/view/LocalClientViewer.tsx": "51b99598efcc46dc29f20331cf11e385597b452bdee6576e192238e56d2c12f4",
+    "lib/platform/client-recipient-session.ts": "b2094e951e54f85ba1f03093800e87f4586688817ba7a8cca202b9d04fadbfad",
+    "lib/platform/client-recipient-response.ts": "187c856919b3013e8af5b4ba8d6532098468b75c14b2da591066ef27266b8922",
+    "app/api/platform/local-client-view/route.ts": "c74dd8c1e23026662f7f611447f31198d0cc26c43ecee2a74ca26112be9205d1",
+    "app/api/platform/local-client-view/[recipient]/route.ts": "78d3785b4af9fc65fe3e96d511db6bce4f7e9ca68b95d118587aa75a3bf1a872"
+  }
+}

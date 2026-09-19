@@ -1,0 +1,20 @@
+✔ Client grant uses 256 random bits, hash-only RPC and immutable versioned retry (2.657375ms)
+✔ Actor switch sends no stale sharing RPC (0.512166ms)
+✔ Legacy signature binds exact name and original lifetime (0.292375ms)
+✔ Team deep links preserve validated IDs without granting access (0.208375ms)
+✔ exchange proves grant then reload checks original grant with an HttpOnly narrowly scoped cookie (42.538208ms)
+✔ separate shared schedules never substitute cookies or overwrite their paths (11.143208ms)
+✔ revocation, expiry or sponsor denial is rechecked and clears the recipient cookie (9.08775ms)
+✔ missing cookies are explicit; unavailable/rate-limited backend never loses a valid cookie (9.351166ms)
+✔ cross-origin exchange/read and invalid explicit tokens cannot use prior cookies (6.382542ms)
+✔ recipient cookie is opaque, origin/selector bound, and has a fixed non-sliding lifetime (2.049292ms)
+✔ tampered and malformed cookies cannot authorize a recipient (0.441667ms)
+✔ legacy binding and expiration survive exchange without extension (0.222541ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 12
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 223.259375

@@ -1,0 +1,5 @@
+- main:
+  - status: This shared session is unavailable. Reopen the original link, or ask the sender for a current link.
+  - button "Try again"
+- generic "Notifications"
+- alert

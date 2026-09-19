@@ -13,6 +13,6 @@ interface Props {
 export default async function PublicViewPage({ params, searchParams }: Props) {
   const { name } = await params;
   const { vt } = await searchParams;
-  if(readLocalWorkspaceConfig(process.env,(await headers()).get('host')))return <LocalClientViewer legacyName={name} legacyToken={vt??''}/>;
+  if(readLocalWorkspaceConfig(process.env,(await headers()).get('host')))return <LocalClientViewer legacyName={name} legacyToken={vt}/>;
   return <PublicViewer name={name} viewToken={vt ?? ''} />;
 }

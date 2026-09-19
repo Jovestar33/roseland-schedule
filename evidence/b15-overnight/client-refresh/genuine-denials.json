@@ -1,0 +1,15 @@
+{
+  "fixtureScope": "Only two grants created by this pass",
+  "results": [
+    {
+      "reason": "revoked",
+      "status": 404,
+      "cookieCleared": true
+    },
+    {
+      "reason": "expired",
+      "status": 404,
+      "cookieCleared": true
+    }
+  ]
+}
