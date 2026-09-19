@@ -17,7 +17,7 @@ const errors: Record<FailureKind, string> = {
 };
 type MfaStage = 'checking' | 'enroll' | 'code' | 'ready';
 
-export default function LocalInvitationsClient({ config }: { config: LocalEditorConfig }) {
+export default function LocalInvitationsClient({ config, reviewMode=false }: { config: LocalEditorConfig; reviewMode?:boolean }) {
   const workspace = useLocalWorkspace();
   const managed = !!workspace;
   const active = workspace?.active ?? true;
@@ -52,6 +52,8 @@ export default function LocalInvitationsClient({ config }: { config: LocalEditor
   const dialog = useRef<HTMLDialogElement>(null), review = useRef<HTMLElement>(null);
   const currentOrg = organizations.find(item => item.id === selected);
   const attempt = controller.attempt;
+  const draftReview = useRef<HTMLButtonElement>(null), returnToDraft = useRef(false);
+  useEffect(()=>{if(returnToDraft.current&&!attempt&&active){returnToDraft.current=false;draftReview.current?.focus();}},[attempt,active]);
   const roleAvailable = role === 'member' || currentOrg?.role === 'owner';
   const productionAvailable = !production || productions.some(item => item.id === production);
   const dirty = !!recipient || !!reason || !!revoking || !!attempt || role !== 'member' || !!production || days !== 7;
@@ -173,13 +175,13 @@ export default function LocalInvitationsClient({ config }: { config: LocalEditor
     } catch { setMessage('Check the recipient, role, expiry and required reason.'); }
   }
   function discardRequest() {
-    const action = () => { controller.clear(); setMessage('Local request discarded. Your draft is still here.'); redraw(); };
+    const action = () => { returnToDraft.current=true;controller.clear(); setMessage('Request review closed. Your draft is still here.'); redraw(); };
     if (controller.phase === 'review') action();
     else setConfirmation({ title: 'Discard local request?', text: 'This request may already have changed access. Discarding its local record does not undo it. Review its result before starting another request.', label: 'Discard local request', action });
   }
 
   return <div className={styles.page}><main className={styles.main}>
-    <header className={styles.header}><div><span className={styles.eyebrow}>LOCAL ACCOUNT REHEARSAL</span><h1>Invitations</h1><p>Manage access for fictional organizations on this computer.</p></div><span className={styles.badge}>Local only</span></header>
+    <header className={styles.header}><div>{!reviewMode&&<span className={styles.eyebrow}>LOCAL ACCOUNT REHEARSAL</span>}<h1>Invitations</h1><p>{reviewMode?`Manage invitations for ${workspace?.organization?.name??'your organization'}.`:'Manage access for fictional organizations on this computer.'}</p></div>{!reviewMode&&<span className={styles.badge}>Local only</span>}</header>
     <p className={styles.notice}>Creating an invitation records access; this rehearsal does not send email. Drafts stay in this tab and are lost when it closes or reloads.</p>
     <p className={styles.status} role="status" aria-live="polite">{message}</p>
     {!workspace && (!session || authNeeded) && <section className={styles.card} aria-label="Account sign in"><h2>{account.current ? 'Sign in again' : 'Sign in'}</h2>
@@ -224,7 +226,7 @@ export default function LocalInvitationsClient({ config }: { config: LocalEditor
     {selected && <div className={styles.columns}><section className={styles.card} aria-label="Invitation draft"><h2>{revoking ? 'Revoke invitation' : 'New invitation'}</h2>
       {revoking ? <form className={styles.form} onSubmit={event => { event.preventDefault(); prepare('revoke'); }}><p><strong>{revoking.email}</strong><br />{revoking.role} access</p>
         <label>Reason for revocation<textarea required maxLength={500} disabled={busy || !!attempt || !ready} value={reason} onChange={event => setReason(event.target.value)} /></label>
-        <button disabled={busy || !!attempt || !ready || !currentOrg}>Review revocation</button><button type="button" className={styles.secondary} disabled={busy || !!attempt} onClick={() => { setRevoking(null); setReason(''); }}>Back to invitation draft</button>
+        <button ref={draftReview} disabled={busy || !!attempt || !ready || !currentOrg}>Review revocation</button><button type="button" className={styles.secondary} disabled={busy || !!attempt} onClick={() => { setRevoking(null); setReason(''); }}>Back to invitation draft</button>
       </form> : <form className={styles.form} onSubmit={event => { event.preventDefault(); prepare('create'); }}>
         <fieldset disabled={busy || !!attempt || !ready || !currentOrg}>
           <label>Recipient email<input type="email" required maxLength={320} autoComplete="off" value={recipient} onChange={event => setRecipient(event.target.value)} /></label>
@@ -233,7 +235,7 @@ export default function LocalInvitationsClient({ config }: { config: LocalEditor
           {production && <label>Production role<select value={productionRole} onChange={event => setProductionRole(event.target.value)}><option value="viewer">Viewer</option><option value="editor">Editor</option><option value="organizer">Organizer</option></select></label>}
           {productionMore && <button type="button" className={styles.secondary} onClick={() => void run(() => loadProductions(selected, true))}>Load more productions</button>}
           <label>Expires after (days)<input type="number" required min={1} max={30} value={days} onChange={event => setDays(Number(event.target.value))} /></label>
-          <button disabled={!roleAvailable || !productionAvailable}>Review invitation</button>
+          <button ref={draftReview} disabled={!roleAvailable || !productionAvailable}>Review invitation</button>
         </fieldset>
       </form>}
     </section><section className={styles.card} aria-label="Pending invitations"><div className={styles.sectionTitle}><h2>Pending invitations</h2><button className={styles.secondary} disabled={busy || !ready} onClick={() => void run(() => loadInvitations())}>Refresh invitations</button></div>

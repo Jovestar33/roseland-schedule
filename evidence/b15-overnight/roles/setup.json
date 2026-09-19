@@ -1,0 +1,17 @@
+{
+  "project": "roseland-b14-destination-g2",
+  "created": {
+    "identities": 3,
+    "organizations": 2,
+    "productions": 2,
+    "schedules": 2
+  },
+  "checks": [
+    "Genuine AAL2 Admin reads two assigned schedules",
+    "Genuine member reads two assigned schedules",
+    "Outsider sees no new schedules",
+    "South Viewer write denied through normal RPC"
+  ],
+  "scope": "Only new disposable fixtures; existing memberships and samples unchanged",
+  "browserJourneys": "not asserted by setup"
+}

@@ -1,0 +1,42 @@
+- img "Roseland Pictures"
+- generic: Production Schedule
+- navigation "Organization context":
+  - generic: Organization
+  - combobox "Switch organization":
+    - option "Choose an organization" [disabled]
+    - option "Overnight North Studio" [selected]
+    - option "Overnight South Studio"
+  - button "Back to schedules" [active]
+- heading "Account & settings" [level=1]
+- paragraph: Manage your account and the organizations you work with.
+- navigation "Account navigation":
+  - button "Your account"
+  - button "Invitations for you"
+  - button "Manage invitations"
+- banner:
+  - heading "Sign-in and security" [level=2]
+  - paragraph: Manage your password and two-step verification.
+- region "Account access":
+  - button "Reset password"
+- region "Account security":
+  - button "Two-step verification"
+  - heading "Two-step verification" [level=2]
+  - paragraph: An authenticator adds protection to your account.
+  - paragraph: Authenticator verified for this session.
+- generic: [fictional Admin]
+- generic: Unfinished work retained
+- button "Sign out"
+- region "Organization deletion settings"
+- banner:
+  - heading "Administration" [level=2]
+  - paragraph: Overnight North Studio
+- region "Organization membership management":
+  - button "Organization members"
+- region "Organization security settings":
+  - button "Organization security"
+- region "Organization presentation settings":
+  - button "Organization appearance"
+- generic "Settings · Permissions"
+- text: ▸ ▾ ▾ ▾ ‹ ›
+- generic "Notifications"
+- alert: Roseland Schedule

@@ -1,0 +1,21 @@
+- img "Roseland Pictures"
+- navigation "Organization context":
+  - status: No organization access yet. Review an invitation in Account & settings.
+  - button "Account & settings" [active]
+- status: That organization is unavailable to this account. Retained drafts have not been discarded.
+- main:
+  - region "Schedule library":
+    - heading "Library" [level=1]
+    - button "+ New Schedule" [disabled]
+    - button "↻ Refresh"
+    - button "📁 Library"
+    - button "★ Templates"
+    - button "🔗 Backup"
+    - button "Move requests"
+    - generic: ⌕
+    - textbox "Search schedules…"
+    - button "Filter"
+    - text: ▸
+    - status: Choose an organization to see its schedules.
+- generic "Notifications"
+- alert

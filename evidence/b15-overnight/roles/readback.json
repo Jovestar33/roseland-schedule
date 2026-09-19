@@ -1,0 +1,24 @@
+[
+  {
+    "organization": "Overnight North Studio",
+    "role": "editor",
+    "scheduleVersion": 2,
+    "notes": "Overnight North Editor saved note",
+    "presentation": {
+      "labels": {
+        "hdrTitle": "Overnight North fixture"
+      }
+    },
+    "presentationVersion": 1,
+    "canManage": false
+  },
+  {
+    "organization": "Overnight South Studio",
+    "role": "viewer",
+    "scheduleVersion": 1,
+    "notes": "Fictional overnight note",
+    "presentation": {},
+    "presentationVersion": 0,
+    "canManage": false
+  }
+]

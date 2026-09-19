@@ -1,0 +1,39 @@
+- img "Roseland Pictures"
+- generic: Production Schedule
+- navigation "Organization context":
+  - generic: Organization
+  - combobox "Switch organization":
+    - option "Choose an organization" [disabled]
+    - option "Overnight North Studio"
+    - option "Overnight South Studio" [selected]
+  - button "Account & settings" [active]
+- region "Organization deletion settings"
+- main:
+  - region "Schedule library":
+    - heading "Library" [level=1]
+    - button "+ New Schedule"
+    - button "↻ Refresh"
+    - button "📁 Library"
+    - button "★ Templates"
+    - button "🔗 Backup"
+    - button "Move requests"
+    - generic: ⌕
+    - textbox "Search schedules…"
+    - button "Filter"
+    - text: ▸
+    - generic "▾ South production 1 schedule":
+      - text: ▾
+      - generic: South production
+      - generic: 1 schedule
+    - generic "▾ No production day 1":
+      - text: ▾
+      - generic: No production day
+      - generic: "1"
+    - button "Arrange Overnight South day": ≡
+    - button "Overnight South day"
+    - button "Organize Overnight South day": ⋯
+    - button "+ New schedule in South production"
+  - paragraph: A schedule draft is retained in another organization. Return there to continue, or explicitly discard it when opening another schedule.
+  - text: ▾ ‹ ›
+- generic "Notifications"
+- alert: Roseland Schedule

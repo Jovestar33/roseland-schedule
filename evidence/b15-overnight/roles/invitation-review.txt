@@ -1,0 +1,60 @@
+- img "Roseland Pictures"
+- generic: Overnight North fixture
+- navigation "Organization context":
+  - generic: Organization
+  - combobox "Switch organization":
+    - option "Choose an organization" [disabled]
+    - option "Overnight North Studio" [selected]
+    - option "Overnight South Studio"
+  - button "Back to schedules"
+- heading "Account & settings" [level=1]
+- paragraph: Manage your account and the organizations you work with.
+- navigation "Account navigation":
+  - button "Your account"
+  - button "Invitations for you"
+  - button "Manage invitations"
+- region "Organization deletion settings"
+- text: ▸ ▾ ▾ ▾ ‹ ›
+- main:
+  - text: LOCAL ACCOUNT REHEARSAL
+  - heading "Invitations" [level=1]
+  - paragraph: Manage access for fictional organizations on this computer.
+  - generic: Local only
+  - paragraph: Creating an invitation records access; this rehearsal does not send email. Drafts stay in this tab and are lost when it closes or reloads.
+  - status: Review this request before confirming.
+  - region "Invitation draft":
+    - heading "New invitation" [level=2]
+    - text: Recipient email
+    - textbox "Recipient email" [disabled]
+    - text: Organization role
+    - combobox "Organization role" [disabled]:
+      - option "Member" [disabled] [selected]
+    - text: Production access
+    - combobox "Production access" [disabled]:
+      - option "No production assignment" [disabled]
+      - option "North production" [disabled] [selected]
+    - text: Production role
+    - combobox "Production role" [disabled]:
+      - option "Viewer" [disabled] [selected]
+      - option "Editor" [disabled]
+      - option "Organizer" [disabled]
+    - text: Expires after (days)
+    - spinbutton "Expires after (days)" [disabled]: "7"
+    - button "Review invitation" [disabled]
+  - region "Pending invitations":
+    - heading "Pending invitations" [level=2]
+    - button "Refresh invitations"
+    - paragraph: No pending invitations in this organization.
+    - list
+  - region "Request review" [active]:
+    - heading "Review request" [level=2]
+    - generic: review
+    - paragraph:
+      - strong: Invite [fictional recipient]
+      - text: Overnight North Studio
+    - paragraph: member · 7 days · viewer in North production
+    - generic "Request details"
+    - button "Confirm invitation"
+    - button "Back to draft"
+- generic "Notifications"
+- alert: Roseland Schedule

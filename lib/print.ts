@@ -13,6 +13,7 @@ export async function printSchedule(scheduleName: string) {
 /** Print existing document portals, isolating only the opt-in local workspace. */
 export async function printDocument(name: string, kind: 'schedule' | 'contacts' | 'callsheet', local = false) {
   const previous = document.title;
+  const previousFocus = document.activeElement as HTMLElement | null;
   const className = kind === 'contacts' ? 'cs-printing' : kind === 'callsheet' ? 'callsheet-printing' : '';
   document.title = `${name || 'Schedule'} - ${kind}`;
   if (className) document.body.classList.add(className);
@@ -22,6 +23,7 @@ export async function printDocument(name: string, kind: 'schedule' | 'contacts' 
     if (local) delete document.body.dataset.localDocument;
     document.title = previous;
     window.removeEventListener('afterprint', cleanup);
+    if (previousFocus?.isConnected && previousFocus.getClientRects().length) previousFocus.focus();
   };
   window.addEventListener('afterprint', cleanup);
   try {

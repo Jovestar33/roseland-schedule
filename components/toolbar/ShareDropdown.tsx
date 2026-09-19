@@ -43,7 +43,7 @@ export default function ShareDropdown({ readOnly = false, onModalChange, authori
     setOpen(o => !o);
   }
 
-  function close() { setOpen(false); }
+  function close() { setOpen(false); btnRef.current?.focus(); }
 
   async function handlePrint() {
     if (authorizeOutput && !await authorizeOutput()) return;

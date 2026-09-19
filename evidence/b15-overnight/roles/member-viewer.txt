@@ -1,0 +1,68 @@
+- img "Roseland Pictures"
+- generic: Production Schedule
+- navigation "Organization context":
+  - generic: Organization
+  - combobox "Switch organization":
+    - option "Choose an organization" [disabled]
+    - option "Overnight North Studio"
+    - option "Overnight South Studio" [selected]
+  - button "Account & settings"
+- region "Organization deletion settings"
+- main:
+  - text: ▸ ▾ ▾
+  - region "Schedule editor":
+    - generic: Overnight South day
+    - generic: Saved
+    - button "Save" [disabled]
+    - button "More save options" [disabled]:
+      - generic: ▾
+    - button "⬆ Share ▾":
+      - generic: ⬆
+      - generic: Share
+      - generic: ▾
+    - button "Tools":
+      - generic: Tools
+    - button "Close":
+      - generic: Close
+    - paragraph: Read-only schedule access.
+    - generic: Overnight South day
+    - generic: Town / Location
+    - generic: Fictional overnight town
+    - generic: Date
+    - generic: —
+    - generic: Call Time
+    - generic: —
+    - generic: Producer
+    - generic: —
+    - generic: Director
+    - generic: —
+    - generic: Camera
+    - generic: —
+    - generic: ← Scroll to view time columns →
+    - table:
+      - rowgroup:
+        - row "Action Location Description Notes Time In Duration Time Out":
+          - columnheader
+          - columnheader "Action"
+          - columnheader "Location"
+          - columnheader "Description"
+          - columnheader "Notes"
+          - columnheader
+          - columnheader "Time In"
+          - columnheader "Duration"
+          - columnheader "Time Out"
+      - rowgroup:
+        - row "1 Shoot Fictional overnight note 00:30":
+          - cell "1"
+          - cell "Shoot":
+            - generic: Shoot
+          - cell
+          - cell
+          - cell "Fictional overnight note"
+          - cell
+          - cell
+          - cell "00:30"
+          - cell
+    - text: ▾ ‹ ›
+- generic "Notifications"
+- alert: Roseland Schedule
