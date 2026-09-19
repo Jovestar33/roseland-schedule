@@ -9,6 +9,7 @@ type Props = { review?:boolean; config: LocalEditorConfig; client: SupabaseClien
   onReady(ready: boolean): void; requireAuth(): void; policyRevision: number; onInvitation(value: {actor:string;id:string}): void };
 export default function LocalAccountAccess({ review=false, config, client, session, authNeeded, onReady, requireAuth, policyRevision, onInvitation }: Props) {
   const [mode, setMode] = useState<'signup' | 'recovery' | null>(null);
+  const invitationEntry=useRef<HTMLButtonElement>(null), recoveryEntry=useRef<HTMLButtonElement>(null);
   const [email, setEmail] = useState(''), [invitation, setInvitation] = useState(''), [accepted, setAccepted] = useState(false);
   const [message, setMessage] = useState(''), [busy, setBusy] = useState(false), busyRef = useRef(false);
   const [policy, setPolicy] = useState<Policy | null>(null), [policyChecked, setPolicyChecked] = useState(false);
@@ -141,8 +142,13 @@ export default function LocalAccountAccess({ review=false, config, client, sessi
       </form>}
       <button disabled={busy} onClick={() => void run(async () => { await callbackClient.auth.signOut({ scope: 'local' }); callbackActive.current=false; setCallback(null); setCallbackEmail(''); setFactor(null); setPassword(''); setConfirmation(''); setCode(''); setMessage(''); })}>Close email action</button>
     </div> : <>
-      {(!review||!session||authNeeded)&&<><button disabled={busy} onClick={() => setMode(mode === 'signup' ? null : 'signup')}>Create invited account</button>{' '}</>}
-      <button disabled={busy} onClick={() => setMode(mode === 'recovery' ? null : 'recovery')}>{review&&session&&!authNeeded?'Reset password':'Forgot password'}</button>
+      {review&&(!session||authNeeded)?<div data-account-entry>
+        <button ref={recoveryEntry} type="button" disabled={busy} aria-expanded={mode==='recovery'} onClick={()=>setMode(mode==='recovery'?null:'recovery')}>Forgot password?</button>
+        <button ref={invitationEntry} type="button" disabled={busy} aria-expanded={mode==='signup'} onClick={()=>setMode(mode==='signup'?null:'signup')}>Have an invitation?</button>
+      </div>:<>
+        {!review&&<><button disabled={busy} onClick={() => setMode(mode === 'signup' ? null : 'signup')}>Create invited account</button>{' '}</>}
+        <button disabled={busy} onClick={() => setMode(mode === 'recovery' ? null : 'recovery')}>{review&&session&&!authNeeded?'Reset password':'Forgot password'}</button>
+      </>}
       {mode && <form onSubmit={requestMail}>
         <h2>{mode === 'signup' ? 'Create an invited account' : 'Request password recovery'}</h2>
         <label>Email <input required type="email" maxLength={320} autoComplete="email" value={email} onChange={e => setEmail(e.target.value)}/></label>
@@ -153,6 +159,7 @@ export default function LocalAccountAccess({ review=false, config, client, sessi
         </>}
         <p><button disabled={busy || (mode === 'signup' && !accepted)}>Send email</button></p>
         <p>Local fictional testing only. Messages stay in the local mail sink. A sent request may complete even if its reply is lost.</p>
+        {review&&(!session||authNeeded)&&<div data-account-entry><button type="button" disabled={busy} onClick={()=>{const entry=mode==='signup'?invitationEntry:recoveryEntry;setMode(null);entry.current?.focus();}}>Back to sign in</button></div>}
       </form>}
     </>}
   </section>;

@@ -1,0 +1,15 @@
+✔ email callbacks accept only explicit operation and hash; reject duplicates and redirect injection (0.581959ms)
+✔ Remember me persists authentication only and never changes draft journals (0.160791ms)
+✔ unremembered auth does not survive a new tab; origin namespaces and accounts do not share a key (0.07575ms)
+✔ development Auth setup is disabled by default (0.335084ms)
+✔ development Auth setup accepts only a matching hosted Supabase project (0.342541ms)
+✔ development Auth setup rejects secret keys and mismatched projects (0.209083ms)
+✔ development Auth setup rejects insecure or malformed URLs (0.078167ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 66.356541

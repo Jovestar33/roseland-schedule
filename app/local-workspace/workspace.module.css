@@ -24,6 +24,12 @@
 @media(max-width:760px){.header{padding:24px 16px;flex-wrap:wrap;}.shell{padding:16px;}.directory{align-items:stretch;}.directory label{flex-basis:100%;}.tabs{gap:8px;}}
 
 .login label:has(input[type="checkbox"]) { display:flex; align-items:center; }
+.entryShell .login>button{background:var(--ink,#111);color:white;border-color:var(--ink,#111);font-weight:600;min-height:44px}
+.entryShell .login>button:hover{background:#333}
+.entryShell [data-account-entry]{display:flex;align-items:center;justify-content:space-between;gap:8px 20px;flex-wrap:wrap}
+.entryShell [data-account-entry]>button{background:transparent;border:0;border-radius:3px;padding:6px 0;min-height:32px;color:var(--g600,#555);font-size:12px;text-decoration:underline;text-underline-offset:3px}
+.entryShell [data-account-entry]>button:hover{color:var(--ink,#111)}
+.entryShell button:focus-visible{outline:2px solid var(--pink);outline-offset:4px}
 
 .reviewBar { max-width:1500px; margin:auto; padding:10px 20px; display:flex; align-items:center; justify-content:space-between; gap:12px; font-size:13px; }
 

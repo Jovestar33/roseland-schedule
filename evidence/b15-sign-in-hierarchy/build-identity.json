@@ -1,0 +1,8 @@
+{
+  "baseCommit": "30fd24a76f4427d6782bc165ef7a7a8b6e8b3e73",
+  "buildId": "bxnWmdCK5H4Fwj5yxlPCl",
+  "sourceSHA256": {
+    "components/local/LocalAccountAccess.tsx": "6afb1a93291c9fd86186e999739c35eb5dcfa6aeca792f31f709c99118cb4246",
+    "app/local-workspace/workspace.module.css": "f14ca12bccc5aeb8d826f102740d0f1f8582a67143118820cd2867c8eefd9fee"
+  }
+}
