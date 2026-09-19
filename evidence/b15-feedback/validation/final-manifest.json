@@ -1,0 +1,49 @@
+{
+  "recordedAt": "2026-09-19T22:31:47.005196+00:00",
+  "branch": "codex/b15-save-feedback",
+  "baseCommit": "39706c3",
+  "build": "i1TlVAmpPwZDzdvovJhVA",
+  "runtime": {
+    "launcher": 22857,
+    "server": 22866,
+    "port": 3520,
+    "project": "roseland-b14-destination-g2",
+    "api": "http://127.0.0.1:56521",
+    "build": "i1TlVAmpPwZDzdvovJhVA"
+  },
+  "previewHttpStatus": {
+    "3520": 200,
+    "3518": 200,
+    "3516": 200,
+    "3514": 200,
+    "3512": 200,
+    "3506": 200
+  },
+  "faultProxyStopped": true,
+  "heldResponses": {
+    "held": 0,
+    "released": 1
+  },
+  "sourceSha256": {
+    "app/local-schedule/LocalScheduleClient.tsx": "1738cdd80a11bb27f5155a5fac6575320ee83a19c86d6599d0764a894a6fdace"
+  },
+  "focusedSaveTests": {
+    "passed": 37,
+    "failed": 0
+  },
+  "typeCheckExit": 0,
+  "buildExit": 0,
+  "preservation": {
+    "retainedSchedules": 16,
+    "versionsNamesAndDocumentsUnchanged": true,
+    "existingTestSchedule": "efc8579e-e920-474f-970a-1a1d0a0b33e1",
+    "testScheduleVersion": 12,
+    "originalDocumentContentRestoredExceptSaveTimestamp": true,
+    "noNewScheduleCreated": true
+  },
+  "credentialValueScan": {
+    "files": 33,
+    "privateValues": 19,
+    "matches": 0
+  }
+}

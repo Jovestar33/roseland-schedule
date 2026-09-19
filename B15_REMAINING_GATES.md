@@ -25,3 +25,5 @@ These observations supersede older statements that the same exact slices are une
 | Final product acceptance | Human review of preserved candidates and remaining expectations | Agent-generated evidence is not user sign-off |
 
 Broader browser/fixture/control permutations remain unclaimed where not specifically recorded. No current evidence selects another concrete high-value runnable defect after this bounded correction. Optional exhaustive combinations, repeated passing journeys, credential/account actions, speculative logo/configuration changes and a visual redesign would create work without clearing these gates. Stop this local batch after saving its evidence and stable preview. A newly reported reproducible defect can supply a concrete next target within any still-active authorized window.
+
+Concrete follow-up: independent screenshot review identified persistent ordinary save-success feedback after new edits. B15_SAVE_FEEDBACK_REPORT.md records its confirmed reproduction and bounded correction in the3520 candidate. The prerequisite and human gates above are unchanged.

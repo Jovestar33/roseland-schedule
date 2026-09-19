@@ -1,0 +1,45 @@
+✔ save: acknowledges the submitted revision and reads the new baseline on the next save (63.839333ms)
+✔ saveForce: acknowledges the submitted revision and reads the new baseline on the next save (24.064667ms)
+✔ late success cannot mutate a reopened document with the same name (17.476542ms)
+✔ late offline cannot mutate a reopened document with the same name (24.705375ms)
+✔ late conflict cannot mutate a reopened document with the same name (15.219917ms)
+✔ unmount cancels acknowledgements without requiring a different schedule name (13.914375ms)
+✔ out-of-order responses do not roll back the latest acknowledged baseline (12.163958ms)
+✔ Save As retains edits made during its request and keeps them dirty (15.3415ms)
+✔ Save As response after navigation cannot replace the document or route (15.663708ms)
+✔ resolveConflictOverwrite stops after its snapshot if navigation changed the document (18.106833ms)
+✔ resolveConflictReload stops after its snapshot if navigation changed the document (10.662375ms)
+✔ late cloud loads cannot overwrite a subsequent document (12.660375ms)
+✔ row edits, undo and redo advance revisions without persisting request guards (11.464375ms)
+✔ Save As requires creation and reports an existing name without losing edits (12.022916ms)
+✔ restore applies only when the submitted document is unchanged (11.228084ms)
+✔ restore preserves edits made during the request (15.892ms)
+✔ restore ignores a late response after switch (11.174833ms)
+✔ restore ignores a late response after reopen (11.161ms)
+✔ restore ignores a late response after unmount (10.8045ms)
+✔ restore ignores a late response after later save (18.6825ms)
+✔ snapshot copy applies only when the submitted document is unchanged (9.828542ms)
+✔ snapshot copy preserves edits made during the request (10.196875ms)
+✔ snapshot copy ignores a late response after switch (9.632041ms)
+✔ snapshot copy ignores a late response after reopen (9.749708ms)
+✔ snapshot copy ignores a late response after unmount (22.615709ms)
+✔ snapshot copy ignores a late response after later save (9.622167ms)
+✔ an older toolbar save cannot acknowledge edits after restore starts (9.562209ms)
+✔ snapshot copy name collision leaves the source unchanged and can be retried (9.583333ms)
+✔ Save As refuses an existing name even with force and preserves its contents (9.607791ms)
+✔ two simultaneous Save As requests for one name produce exactly one winner (0.905375ms)
+✔ a provider outage must not be reported as a successful conditional save (25009.820875ms)
+✔ normal saves retain timestamp conflict protection and allow intended updates (7.102042ms)
+✔ create-only requests still require an authorized editor (0.946125ms)
+✔ save API distinguishes a name collision from a remote-version conflict (27.33225ms)
+✔ two ordinary saves of the same baseline cannot overwrite each other (1.037459ms)
+✔ baseline-free ordinary save cannot replace an existing schedule (0.551708ms)
+✔ a stale update cannot resurrect a deleted document (0.853292ms)
+ℹ tests 37
+ℹ suites 0
+ℹ pass 37
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 25186.30675

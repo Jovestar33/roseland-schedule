@@ -1,0 +1,75 @@
+{
+  "id": "efc8579e-e920-474f-970a-1a1d0a0b33e1",
+  "slug": "b15-inline-controls-fictional",
+  "town": null,
+  "status": "draft",
+  "document": {
+    "meta": {
+      "dp": "Fictional Camera",
+      "wx": null,
+      "dir": "Fictional Director",
+      "lat": null,
+      "lng": null,
+      "date": "",
+      "prod": "Fictional Producer",
+      "town": "",
+      "phase": "Prep",
+      "dayNumber": 2,
+      "totalDays": 3,
+      "projectName": "Keyboard Control Production"
+    },
+    "rows": [
+      {
+        "dur": "",
+        "loc": "",
+        "desc": "VISIBLE EARLIER EDIT MUST SURVIVE",
+        "done": false,
+        "notes": "",
+        "action": "Shoot",
+        "locLat": null,
+        "locLng": null,
+        "status": "",
+        "timeIn": "",
+        "fixedIn": false,
+        "fixedOut": false,
+        "otherText": "",
+        "sunLocked": false,
+        "contactName": "",
+        "contactEmail": "",
+        "contactPhone": "",
+        "contactTitle": "",
+        "fixedOutTime": "",
+        "subLocations": [
+          {
+            "id": "cu1b7t",
+            "loc": "",
+            "desc": "NESTED BASELINE",
+            "done": true,
+            "locLat": null,
+            "locLng": null
+          }
+        ]
+      }
+    ],
+    "savedAt": 1789857019029
+  },
+  "phase_id": null,
+  "created_at": "2026-09-19T22:16:17.912749+00:00",
+  "created_by": "8f2c1dd0-d3fc-47c7-94b6-22bf3dde1ff6",
+  "deleted_at": null,
+  "updated_at": "2026-09-19T22:30:19.037423+00:00",
+  "updated_by": "8f2c1dd0-d3fc-47c7-94b6-22bf3dde1ff6",
+  "display_name": "B15 inline controls — fictional",
+  "production_id": "64b12765-4d49-4420-8ff1-4705e8844610",
+  "organization_id": "2f75e684-eb3a-4951-9389-2df147812a8a",
+  "document_version": 12,
+  "library_position": 13,
+  "production_day_id": null,
+  "destination_labels": {
+    "phase": "",
+    "projectName": "B14 production"
+  },
+  "archived_from_status": null,
+  "last_transfer_version": 0,
+  "document_schema_version": 1
+}

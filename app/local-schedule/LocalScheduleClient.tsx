@@ -350,7 +350,7 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
         <p>Fictional data only · Supabase on this computer</p>
         <p>Authenticated editing and document tools with fictional location and weather responses. Library parity review remains open.</p>
       </header>}
-      {(!review||! /^(Schedules loaded\.|Schedule loaded\.|Choose an authorized organization above\.|Schedule closed\. Choose a schedule from the library\.)$/.test(message))&&<p role="status" aria-live="polite">{message}</p>}
+      {message && !(dirty && message === 'Schedule saved.') && (!review||! /^(Schedules loaded\.|Schedule loaded\.|Choose an authorized organization above\.|Schedule closed\. Choose a schedule from the library\.)$/.test(message))&&<p role="status" aria-live="polite">{message}</p>}
       {!workspace && (!session || authNeeded) && <form className={styles.login} onSubmit={login}>
         {authNeeded && <p>Sign in again to continue. Your edits are still here.</p>}
         <label>Email<input type="email" autoComplete="off" required readOnly={!!session} value={session?.user.email ?? email} onChange={e => setEmail(e.target.value)} /></label>

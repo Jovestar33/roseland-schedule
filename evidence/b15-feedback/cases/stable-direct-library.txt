@@ -1,0 +1,104 @@
+Browser tab: 1020304401, Title: "Roseland Schedule", URL: "http://127.0.0.1:3520/review?screen=schedule&org=2f75e684-eb3a-4951-9389-2df147812a8a".
+1 AXWebArea Roseland Schedule, URL: 127.0.0.1:3520/review?screen=schedule&org=2f75e684-eb3a-4951-9389-2df147812a8a
+	2 container
+		3 image Roseland Pictures
+		4 text B14 LATEST ORGANIZATION LABELS
+	20 container Organization context
+		21 text ORGANIZATION
+		22 text B14 Fictional Studio
+		23 button Account & settings
+	24 container Organization deletion settings
+	25 container Schedule library
+		26 heading Library, Value: 1
+			27 text Library
+		28 container
+			29 button + New Schedule
+			30 button ↻ Refresh
+		31 button 📁 Library
+		32 button ★ Templates
+		33 button 🔗 Backup
+		34 button Move requests
+		35 container
+			36 text ⌕
+			37 text field (settable)
+		38 button (collapsed) Filter, Secondary Actions: Expand
+		39 container Recent schedules
+			40 text RECENT
+			41 button B15 inline controls — fictional
+			42 text B14 production
+		43 container
+			44 button (expanded) ▾ B14 production 17 schedules, Secondary Actions: Collapse
+				45 text ▾
+				46 text B14 production
+				47 text 17
+				48 text schedules
+			49 button (expanded) ▾ No production day 17, Secondary Actions: Collapse
+				50 text ▾
+				51 text No production day
+				52 text 17
+			53 button Arrange B15 ordinary fictional day
+			54 button B15 ordinary fictional day
+			55 text 2026-10-20
+			56 button Organize B15 ordinary fictional day
+			57 button Arrange B15 long fictional day
+			58 button B15 long fictional day
+			59 text 2026-10-20
+			60 button Organize B15 long fictional day
+			61 button Arrange B15 empty fictional day
+			62 button B15 empty fictional day
+			63 button Organize B15 empty fictional day
+			64 button Arrange B14 Fictional
+			65 button B14 Fictional
+			66 text 2026-09-20
+			67 button Organize B14 Fictional
+			68 button Arrange B15 review copy
+			69 button B15 review copy
+			70 text 2026-10-20
+			71 button Organize B15 review copy
+			72 button Arrange Example shoot day — fictional
+			73 button Example shoot day — fictional
+			74 button Organize Example shoot day — fictional
+			75 button Arrange B15 comprehensive parity — fictional
+			76 button B15 comprehensive parity — fictional
+			77 text 2026-09-19
+			78 button Organize B15 comprehensive parity — fictional
+			79 button Arrange B15 import round trip — fictional
+			80 button B15 import round trip — fictional
+			81 button Organize B15 import round trip — fictional
+			82 button Arrange B15 import round trip — fictional copy
+			83 button B15 import round trip — fictional copy
+			84 button Organize B15 import round trip — fictional copy
+			85 button Arrange B15 duplicate handoff — fictional
+			86 button B15 duplicate handoff — fictional
+			87 button Organize B15 duplicate handoff — fictional
+			88 button Arrange Coordinator parity review — fictional
+			89 button Coordinator parity review — fictional
+			90 button Organize Coordinator parity review — fictional
+			91 button Arrange B15 quality workflow — fictional
+			92 button B15 quality workflow — fictional
+			93 button Organize B15 quality workflow — fictional
+			94 button Arrange B15 concurrent editing — fictional
+			95 button B15 concurrent editing — fictional
+			96 button Organize B15 concurrent editing — fictional
+			97 button Arrange B15 matched weather — fictional
+			98 button B15 matched weather — fictional
+			99 text 2026-10-20
+			100 button Organize B15 matched weather — fictional
+			101 button Arrange B15 snapshot copy — fictional
+			102 button B15 snapshot copy — fictional
+			103 text 2026-10-20
+			104 button Organize B15 snapshot copy — fictional
+			105 button Arrange B15 document parity — fictional
+			106 button B15 document parity — fictional
+			107 text 2026-11-21
+			108 button Organize B15 document parity — fictional
+			109 button Arrange B15 inline controls — fictional
+			110 button B15 inline controls — fictional
+			111 button Organize B15 inline controls — fictional
+			112 button + New schedule in B14 production
+				113 text + New schedule in
+				114 text B14 production
+	19 container Notifications
+	115 text Roseland Schedule
+
+The focused UI element is 23 button Account & settings

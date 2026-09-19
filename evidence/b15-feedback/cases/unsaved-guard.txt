@@ -1,0 +1,8 @@
+Browser tab: 1020304401, Title: "Roseland Schedule", URL: "http://127.0.0.1:3520/review?screen=schedule&org=2f75e684-eb3a-4951-9389-2df147812a8a&schedule=efc8579e-e920-474f-970a-1a1d0a0b33e1".
+0 AXWebArea Roseland Schedule, URL: 127.0.0.1:3520/review?screen=schedule&org=2f75e684-eb3a-4951-9389-2df147812a8a&schedule=efc8579e-e920-474f-970a-1a1d0a0b33e1
+	1 container Discard unsaved changes
+		2 text Your unsaved changes will be discarded.
+		3 button Keep editing
+		4 button Close schedule and discard unsaved changes
+
+The focused UI element is 3 button Keep editing

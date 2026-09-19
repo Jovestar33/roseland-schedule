@@ -72,7 +72,7 @@
   {
     "case": "SAVE-01",
     "coverage": "Partial",
-    "boundary": "Ordinary save/reopen and authenticated readback retained. New held-acknowledgement cases preserve edits made while saving and save them only on a later deliberate action. Full paired Save As paths remain."
+    "boundary": "Ordinary save/reopen and authenticated readback retained. Held acknowledgements preserve newer edits. Stale ordinary save-success feedback now hides when dirty; desktop/narrow edit/Undo/Redo, unsaved guard, newer-edit acknowledgement and uncertain-result recovery messages verified. Full paired Save As paths remain. See B15_SAVE_FEEDBACK_REPORT.md."
   },
   {
     "case": "SAVE-02",
