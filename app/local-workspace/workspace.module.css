@@ -55,4 +55,18 @@
 .administrationCard{max-width:860px;margin:12px auto;padding:16px;background:white;border:1px solid var(--g200);border-radius:10px;color:var(--ink)}.administrationCard[hidden]{display:none}
 .reviewDialog{color:var(--ink);border-color:var(--g200)}.reviewDialog button{color:var(--ink);border-color:var(--g300)}.reviewDialog button:focus-visible{outline:2px solid var(--pink);outline-offset:3px}
 @media(max-width:600px){.organizationBar{padding:10px 16px;gap:12px;align-items:center}.organizationBar>button{font-size:11px;padding:8px;min-height:40px;max-width:125px}.administrationCard{margin:12px}.reviewShell{padding:4px 16px}.reviewShell .login{max-width:100%}}
-.settingsShell{max-width:900px;padding:24px 20px}.settingsShell .settingsIntro{margin:0 0 20px}.settingsShell .settingsIntro h1{font-family:var(--fb);font-weight:700}.accountPanels{background:white;border:1px solid var(--g200);border-radius:10px;padding:20px}.accountPanels>section{max-width:none!important;margin:12px 0!important}.accountPanels>section:last-child{margin-bottom:0!important}.securityHeading h2{font-size:16px;margin:0 0 6px}.securityHeading p{font-size:13px;color:var(--g600);margin:0 0 18px}.accountPanels h2{font-size:18px;margin:14px 0}.accountPanels p{font-size:13px;line-height:1.6;margin:10px 0}.accountPanels [role="status"]:empty{display:none}.settingsShell .account{background:white;border:1px solid var(--g200);border-radius:10px;padding:18px;margin:12px 0;gap:14px}.settingsShell .account>span:nth-child(2){font-size:11px;color:var(--g500)}.entryShell{max-width:480px;padding:24px 20px}.entryShell .login{padding:0 0 20px}.entryShell .login h2{font-family:var(--fb);font-size:28px}
+.settingsShell{max-width:900px;padding:24px 20px}.settingsShell .settingsIntro{margin:0 0 20px}.settingsShell .settingsIntro h1{font-family:var(--fb);font-weight:700}.accountPanels{background:white;border:1px solid var(--g200);border-radius:10px;padding:20px}.accountPanels>section{max-width:none!important;margin:12px 0!important}.accountPanels>section:last-child{margin-bottom:0!important}.securityHeading h2{font-size:16px;margin:0 0 6px}.securityHeading p{font-size:13px;color:var(--g600);margin:0 0 18px}.accountPanels h2{font-size:18px;margin:14px 0}.accountPanels p{font-size:13px;line-height:1.6;margin:10px 0}.accountPanels [role="status"]:empty{display:none}.settingsShell .account{background:white;border:1px solid var(--g200);border-radius:10px;padding:18px;margin:12px 0;gap:14px}.settingsShell .account>span:nth-child(2){font-size:11px;color:var(--g500)}.entryShell{max-width:480px;padding:24px 20px}.entryShell .login{max-width:none;padding:0 0 20px}.entryShell .login h2{font-family:var(--fb);font-size:28px}
+
+.entryShell [hidden]{display:none!important}
+.entryShell [data-account-task]{margin:0!important;max-width:none!important}
+.entryShell [data-account-task] form{display:grid;gap:12px}
+.entryShell [data-account-task] h2{font-family:var(--fb);font-size:26px;line-height:1.2;margin:0 0 4px;color:#183443}
+.entryShell [data-account-task] p{font-size:12px;line-height:1.5;margin:0}
+.entryShell [data-account-task] details{font-size:12px;line-height:1.6}
+.entryShell [data-account-task] summary{cursor:pointer;padding:3px 0}
+.entryShell [data-account-task] input:not([type="checkbox"]){width:100%;box-sizing:border-box}
+.entryShell [data-account-task] label:has(input[type="checkbox"]){font-weight:400;font-size:12px;line-height:1.5;gap:8px}
+.entryShell [data-account-task] input[type="checkbox"]{flex:0 0 auto;margin-top:3px}
+.entryShell [data-account-primary]{width:100%;background:var(--ink,#111);color:white;border-color:var(--ink,#111);min-height:44px;font-weight:600}
+.entryShell [data-account-task] [role="status"]:not([hidden]){margin:0 0 14px;padding:12px;border-left:3px solid var(--pink);background:white}
+.entryShell [data-account-task] h2:focus-visible{outline:2px solid var(--pink);outline-offset:4px}

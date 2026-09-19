@@ -1,0 +1,16 @@
+- img "Roseland Pictures"
+- generic: Production Schedule
+- form "Workspace sign in":
+  - heading "Sign in" [level=2]
+  - text: Email address
+  - textbox "Email address"
+  - text: Password
+  - textbox "Password"
+  - button "Sign in"
+  - checkbox "Remember me on this personal device"
+  - text: Remember me on this personal device
+- region "Account access":
+  - button "Forgot password?" [active]
+  - button "Have an invitation?"
+- generic "Notifications"
+- alert

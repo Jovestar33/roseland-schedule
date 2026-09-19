@@ -1,14 +1,15 @@
 'use client';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { createClient, type Session, type SupabaseClient } from '@supabase/supabase-js';
 import type { LocalEditorConfig } from '@/lib/platform/local-editor-config';
 import { FICTIONAL_PRIVACY, FICTIONAL_TERMS, parseAccountCallback, type AccountCallback } from '@/lib/platform/account-session';
 
 type Policy = { termsVersion: string; privacyVersion: string; accepted: boolean };
 type Props = { review?:boolean; config: LocalEditorConfig; client: SupabaseClient; session: Session | null; authNeeded: boolean;
-  onReady(ready: boolean): void; requireAuth(): void; policyRevision: number; onInvitation(value: {actor:string;id:string}): void };
-export default function LocalAccountAccess({ review=false, config, client, session, authNeeded, onReady, requireAuth, policyRevision, onInvitation }: Props) {
+  onEntryTaskChange?(active:boolean):void; onReady(ready: boolean): void; requireAuth(): void; policyRevision: number; onInvitation(value: {actor:string;id:string}): void };
+export default function LocalAccountAccess({ review=false, onEntryTaskChange, config, client, session, authNeeded, onReady, requireAuth, policyRevision, onInvitation }: Props) {
   const [mode, setMode] = useState<'signup' | 'recovery' | null>(null);
+  const taskHeading=useRef<HTMLHeadingElement>(null), returnEntry=useRef<'signup'|'recovery'|null>(null);
   const invitationEntry=useRef<HTMLButtonElement>(null), recoveryEntry=useRef<HTMLButtonElement>(null);
   const [email, setEmail] = useState(''), [invitation, setInvitation] = useState(''), [accepted, setAccepted] = useState(false);
   const [message, setMessage] = useState(''), [busy, setBusy] = useState(false), busyRef = useRef(false);
@@ -21,6 +22,13 @@ export default function LocalAccountAccess({ review=false, config, client, sessi
   }));
   const [password, setPassword] = useState(''), [confirmation, setConfirmation] = useState('');
   const [factor, setFactor] = useState<string | null>(null), [code, setCode] = useState('');
+  const entry=review&&(!session||authNeeded);
+  useLayoutEffect(()=>{onEntryTaskChange?.(!!callback||(entry&&!!mode));},[callback,entry,mode,onEntryTaskChange]);
+  useEffect(()=>{
+    if(!review||busy)return;
+    if(callback||mode)taskHeading.current?.focus();
+    else if(returnEntry.current){(returnEntry.current==='signup'?invitationEntry:recoveryEntry).current?.focus();returnEntry.current=null;}
+  },[callback,mode,review,busy]);
   const callbackActive=useRef(false);
   const sessionRef = useRef(session); sessionRef.current = session;
   const sessionToken=session?.access_token;
@@ -115,10 +123,10 @@ export default function LocalAccountAccess({ review=false, config, client, sessi
     callbackActive.current=false; setCallback(null); setCallbackEmail(''); setFactor(null);
     setMessage('Password saved. Existing sessions are invalidated. Sign in with your new password and any required MFA, then review your invitation.');
   }); }
-  return <section aria-label="Account access" style={{ margin: '12px 0', maxWidth: 720 }}>
-    <p role="status" aria-live="polite">{message}</p>
-    {session && !authNeeded && !policy && <button disabled={busy} onClick={() => setRetry(value => value + 1)}>Retry account checks</button>}
-    {policy && !policy.accepted && <form onSubmit={event => { event.preventDefault(); void run(async () => {
+  return <section aria-label="Account access" data-account-task={entry&&!!mode||review&&!!callback||undefined} aria-busy={busy} style={{ margin: '12px 0', maxWidth: 720 }}>
+    <p hidden={!message||(review&&authNeeded&&/^(You have been inactive|Account checks)/.test(message))} role="status" aria-live="polite">{message}</p>
+    {session && !authNeeded && !policy && (!review||!callback) && <button disabled={busy} onClick={() => setRetry(value => value + 1)}>Retry account checks</button>}
+    {policy && !policy.accepted && (!review||(!callback&&!!session&&!authNeeded)) && <form onSubmit={event => { event.preventDefault(); void run(async () => {
       if (!policyChecked || !session) return;
       const token = session.access_token;
       const result = await client.rpc('accept_account_policies', { terms_version: policy.termsVersion, privacy_version: policy.privacyVersion }).setHeader('Authorization', `Bearer ${token}`);
@@ -131,7 +139,7 @@ export default function LocalAccountAccess({ review=false, config, client, sessi
       <p><button disabled={busy || !policyChecked}>Continue</button></p>
     </form>}
     {callback ? <div>
-      <h2>{callback.type === 'invite' ? 'Verify your invited account' : 'Reset your password'}</h2>
+      <h2 ref={taskHeading} tabIndex={-1}>{callback.type === 'invite' ? 'Verify your invited account' : 'Reset your password'}</h2>
       {!callbackEmail ? <button disabled={busy} onClick={() => void verifyLink()}>Verify email link</button> : <form onSubmit={changePassword}>
         <p>Verified account: {callbackEmail}. Your current workspace is kept separately.</p>
         <label>New password <input required minLength={12} maxLength={128} type="password" autoComplete="new-password" value={password} onChange={e => setPassword(e.target.value)}/></label>
@@ -140,26 +148,26 @@ export default function LocalAccountAccess({ review=false, config, client, sessi
         {factor && <label>Authenticator code <input required inputMode="numeric" autoComplete="one-time-code" value={code} onChange={e => setCode(e.target.value)}/></label>}
         <p><button disabled={busy}>Save password and sign out existing sessions</button></p>
       </form>}
-      <button disabled={busy} onClick={() => void run(async () => { await callbackClient.auth.signOut({ scope: 'local' }); callbackActive.current=false; setCallback(null); setCallbackEmail(''); setFactor(null); setPassword(''); setConfirmation(''); setCode(''); setMessage(''); })}>Close email action</button>
+      <button disabled={busy} onClick={() => void run(async () => { await callbackClient.auth.signOut({ scope: 'local' }); callbackActive.current=false; returnEntry.current='recovery'; setCallback(null); setCallbackEmail(''); setFactor(null); setPassword(''); setConfirmation(''); setCode(''); setMessage(''); })}>Close email action</button>
     </div> : <>
-      {review&&(!session||authNeeded)?<div data-account-entry>
+      {review&&(!session||authNeeded)?<div data-account-entry hidden={!!mode}>
         <button ref={recoveryEntry} type="button" disabled={busy} aria-expanded={mode==='recovery'} onClick={()=>setMode(mode==='recovery'?null:'recovery')}>Forgot password?</button>
         <button ref={invitationEntry} type="button" disabled={busy} aria-expanded={mode==='signup'} onClick={()=>setMode(mode==='signup'?null:'signup')}>Have an invitation?</button>
       </div>:<>
         {!review&&<><button disabled={busy} onClick={() => setMode(mode === 'signup' ? null : 'signup')}>Create invited account</button>{' '}</>}
         <button disabled={busy} onClick={() => setMode(mode === 'recovery' ? null : 'recovery')}>{review&&session&&!authNeeded?'Reset password':'Forgot password'}</button>
       </>}
-      {mode && <form onSubmit={requestMail}>
-        <h2>{mode === 'signup' ? 'Create an invited account' : 'Request password recovery'}</h2>
+      {mode && <form onSubmit={requestMail} aria-label={mode==='signup'?'Invitation setup':'Password recovery'}>
+        <h2 ref={taskHeading} tabIndex={-1}>{review?(mode==='signup'?'Set up your invited account':'Reset your password'):(mode==='signup'?'Create an invited account':'Request password recovery')}</h2>
         <label>Email <input required type="email" maxLength={320} autoComplete="email" value={email} onChange={e => setEmail(e.target.value)}/></label>
         {mode === 'signup' && <>
           <p><label>Invitation ID <input required value={invitation} onChange={e => setInvitation(e.target.value)}/></label></p>
           <FictionalNotices terms={FICTIONAL_TERMS} privacy={FICTIONAL_PRIVACY}/>
           <label style={{display:'flex',alignItems:'flex-start'}}><input type="checkbox" checked={accepted} onChange={e => setAccepted(e.target.checked)}/> I accept the Terms of Service and acknowledge the Privacy Policy.</label>
         </>}
-        <p><button disabled={busy || (mode === 'signup' && !accepted)}>Send email</button></p>
+        <p><button data-account-primary disabled={busy || (mode === 'signup' && !accepted)}>{busy?'Sending…':'Send email'}</button></p>
         <p>Local fictional testing only. Messages stay in the local mail sink. A sent request may complete even if its reply is lost.</p>
-        {review&&(!session||authNeeded)&&<div data-account-entry><button type="button" disabled={busy} onClick={()=>{const entry=mode==='signup'?invitationEntry:recoveryEntry;setMode(null);entry.current?.focus();}}>Back to sign in</button></div>}
+        {review&&(!session||authNeeded)&&<div data-account-entry><button type="button" disabled={busy} onClick={()=>{returnEntry.current=mode;setMode(null);}}>Back to sign in</button></div>}
       </form>}
     </>}
   </section>;

@@ -1,0 +1,23 @@
+- img "Roseland Pictures"
+- generic: B14 latest organization labels
+- navigation "Organization context":
+  - generic: Organization
+  - strong: B14 Fictional Studio
+  - button "Account & settings"
+- region "Organization deletion settings"
+- main:
+  - region "Schedule library":
+    - heading "Library" [level=1]
+    - button "+ New Schedule"
+    - button "↻ Refresh"
+    - button "📁 Library"
+    - button "★ Templates"
+    - button "🔗 Backup"
+    - button "Move requests"
+    - generic: ⌕
+    - textbox "Search schedules…"
+    - button "Filter"
+    - text: ▸
+    - generic "▾ B14 production 15 schedules":
+      - text: ▾
+      - generic: B14 produc

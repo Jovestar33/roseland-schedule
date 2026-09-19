@@ -1,0 +1,10 @@
+{
+  "attemptedAction": "recovery request to synthetic nonexistent example.test address",
+  "intendedCheck": "required-field validation without submitting",
+  "observedResult": "503 uncertain outcome",
+  "localMailSinkMatchingMessages": 0,
+  "additionalMailSubmissions": 0,
+  "credentialChanges": false,
+  "accountCreation": false,
+  "note": "Empty-fill did not clear retained email as expected; stopped submissions and checked recipient-scoped local sink without reading message bodies."
+}

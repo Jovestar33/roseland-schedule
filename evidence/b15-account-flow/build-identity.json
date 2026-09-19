@@ -1,0 +1,9 @@
+{
+  "baseCommit": "fe2aec884265e5a29faae635d105570782bbf2b2",
+  "buildId": "fynQxJ5cKu45f9IpMwuK7",
+  "sourceSHA256": {
+    "components/local/LocalAccountAccess.tsx": "1b3c10791761b3c616b744d95e9820c2d417e3ca8cd507693355e781ad44e0b7",
+    "app/local-workspace/LocalWorkspaceClient.tsx": "a24217c445f1f2c13054c67923a0ddeebf55dfa9f53746f953dfd548903f6ec6",
+    "app/local-workspace/workspace.module.css": "c37ae415fbd891502eb3695baba96c14ad43fba9d5be7d50ef87c6a1eecb2a98"
+  }
+}

@@ -1,0 +1,14 @@
+- img "Roseland Pictures"
+- generic: Production Schedule
+- region "Account access":
+  - status: Request outcome is uncertain. Check your email or try signing in before requesting another message.
+  - form "Password recovery":
+    - heading "Reset your password" [level=2]
+    - text: Email
+    - textbox "Email"
+    - paragraph:
+      - button "Send email"
+    - paragraph: Local fictional testing only. Messages stay in the local mail sink. A sent request may complete even if its reply is lost.
+    - button "Back to sign in"
+- generic "Notifications"
+- alert

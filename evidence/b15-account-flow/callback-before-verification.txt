@@ -1,0 +1,9 @@
+- img "Roseland Pictures"
+- generic: Production Schedule
+- region "Account access":
+  - status: Review this email action before continuing. Your open workspace has not changed.
+  - heading "Reset your password" [active] [level=2]
+  - button "Verify email link"
+  - button "Close email action"
+- generic "Notifications"
+- alert
