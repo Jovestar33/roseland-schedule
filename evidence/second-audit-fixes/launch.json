@@ -1,0 +1,22 @@
+{
+  "recordedAt": "2026-09-19T22:52:43.309972+00:00",
+  "sourceCommit": "8965ba8",
+  "url": "http://127.0.0.1:3522/review",
+  "runtime": {
+    "launcher": 24997,
+    "server": 25007,
+    "port": 3522,
+    "project": "roseland-b14-destination-g2",
+    "api": "http://127.0.0.1:56521",
+    "build": "R2Sn1Vtshobzqmgm-abnr"
+  },
+  "httpStatus": 200,
+  "startup": "Ready in314ms",
+  "configuration": "Same existing live document providers, fictional local database/accounts and mail sink as frozen3520. Direct API connection; no fault proxy.",
+  "launcher": "/private/tmp/roseland-b15-second-audit-launch.ts",
+  "launcherSha256": "0be633742c0231d19bac2dd22ba946e4f094e8ecbacbd3ea16529bb6ff6b5405",
+  "browserOpened": false,
+  "databaseTestsOrMutations": false,
+  "externalProviderCalls": false,
+  "existingBuildIdentitiesUnchanged": true
+}

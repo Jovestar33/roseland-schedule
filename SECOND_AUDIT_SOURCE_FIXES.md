@@ -1,6 +1,6 @@
 # Second audit — source/test correction checkpoint
 
-September19,2026. Branch `codex/b15-second-audit-fixes`, checkout `/private/tmp/roseland-b15-second-audit-fixes`, based on `59270d8`. Isolated build: `R2Sn1Vtshobzqmgm-abnr`. **No preview service was started. Independent browser verification is pending the coordinator's handoff. This is not audit completion.**
+September19,2026. Branch `codex/b15-second-audit-fixes`, checkout `/private/tmp/roseland-b15-second-audit-fixes`, based on `59270d8`. Isolated build: `R2Sn1Vtshobzqmgm-abnr`. **The source/test phase started no preview service. The later service-only handoff is recorded below. Independent browser verification remains coordinator-owned; this is not audit completion.**
 
 The input findings are preserved in `evidence/second-audit-fixes/independent-findings.md`; their original source is `/Users/johnsammon/roseland-schedule/evidence/second-audit/findings.md`.
 
@@ -25,3 +25,11 @@ These are source-level component and controlled-handler checks, not real browser
 No browser tools, shared-database calls, credentials, external map calls, hosted writes or existing-service start/restart operations were used. All edits and the build are confined to this new checkout; existing dependencies are reused via the untracked node_modules link. Stable3520 and earlier build identities were read only and remain unchanged. No source was copied into those running checkouts. No callback through the previously rejected report route was attempted.
 
 Stop here and await the coordinator's explicit browser/service handoff. Do not infer permission to launch a preview from the presence of an inherited launcher script.
+
+## Service-only handoff
+
+The coordinator subsequently authorized starting the existing build only. The review is now running at **http://127.0.0.1:3522/review**, bound to127.0.0.1. Source checkpoint remains `8965ba8`; served build is `R2Sn1Vtshobzqmgm-abnr`. The process reported Ready in314ms and an ordinary local HTTP request to `/review` returned200. Exact process IDs and launch metadata are in `evidence/second-audit-fixes/launch.json`.
+
+The launcher is outside the checkout at `/private/tmp/roseland-b15-second-audit-launch.ts`. It reuses the frozen3520 launch configuration and existing credentials, changing only the unused listen port and process-manifest path; the connection is directly to the existing local56521 database. Live providers are configured, but no provider was called. No application code or compiled artifact changed, no existing service was restarted, and the recorded frozen build identities remain unchanged.
+
+No browser was opened, no fixture/database mutation or shared-database test was run, and no new credentials/access were created. The coordinator retains sole browser/database audit ownership. Stop after this service handoff and await further direction.
