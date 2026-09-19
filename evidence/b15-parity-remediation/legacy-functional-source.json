@@ -1,0 +1,46 @@
+{
+  "source": "62eb261",
+  "substituted": "Netlify Blobs transport only; local JSON persistence; fictional credentials",
+  "handlers": [
+    {
+      "name": "auth",
+      "sha256": "d622a8bdaa679753a7fd801b97bd74dd84ce6f9dd7c9066ffb6b0411b37777eb"
+    },
+    {
+      "name": "load",
+      "sha256": "e92c8f34e5f094962bd3b56050c032580e21b892f89ba7432c214d7ced17701d"
+    },
+    {
+      "name": "save",
+      "sha256": "1399bb66e43071053c2011c531da643b7099db2762bd28f02a10af44ab7450cf"
+    },
+    {
+      "name": "library",
+      "sha256": "e2ea7efdb0d35c3484da3ffaf42a7591e73cbb46dd3f0a919bd350c53a0a8a85"
+    },
+    {
+      "name": "snapshots",
+      "sha256": "fb54d2928040d8bb4c2db6f0b5a628e14b5eb8dd9769be0f201390b971846232"
+    },
+    {
+      "name": "templates",
+      "sha256": "259551c9524f53031e971f20081dbc73d68974079b2953b5215a100a5c58551f"
+    },
+    {
+      "name": "rename-schedule",
+      "sha256": "4ece6f3ca2e547d1506a9b5c86626a19aa7902bcccfeaddb47ca3898e695fe40"
+    },
+    {
+      "name": "move-schedule",
+      "sha256": "158453e4615e70c641de32a18c99081aaa3446073c113b514713efa68aad8086"
+    },
+    {
+      "name": "cms-load",
+      "sha256": "35b66a4115f86066ec6833e1085b7e62e2d8d2bcbc355f5e7b72a459ac6365d1"
+    },
+    {
+      "name": "view-link",
+      "sha256": "36207c0523de11a60d121b49b0160f8f0e4a65a8e372f4477c4382c6d3dbfda6"
+    }
+  ]
+}

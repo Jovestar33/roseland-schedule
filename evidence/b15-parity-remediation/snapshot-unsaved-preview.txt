@@ -1,0 +1,24 @@
+Snapshots
+✕
+
+Capture the current draft without saving it. Automatic snapshots capture dirty drafts every five minutes while this schedule is active.
+
+Snapshot change confirmed. Your schedule draft is unchanged.
+
+Snapshot collection
+Available snapshots
+Snapshot Trash
+Refresh snapshots
+Snapshot name
+Save snapshot
+
+1 snapshots
+
+B15 unsaved draft parity
+· named · 9/19/2026, 12:16:36 AM · 2 rows
+B15 unsaved draft parity
+Preview complete snapshot
+Snapshot label
+Review name and protectReview restore contentReview move to Trash
+Save As New
+Organization snapshot settings

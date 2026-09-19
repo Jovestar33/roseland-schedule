@@ -1,0 +1,54 @@
+Snapshots
+✕
+
+Capture the current draft without saving it. Automatic snapshots capture dirty drafts every five minutes while this schedule is active.
+
+Snapshot change confirmed. Your schedule draft is unchanged.
+
+Snapshot collection
+Available snapshots
+Snapshot Trash
+Refresh snapshots
+Snapshot name
+Save snapshot
+
+1 snapshots
+
+B15 unsaved draft parity
+· named · 9/19/2026, 12:16:36 AM · 2 rows
+B15 unsaved draft parity
+Preview complete snapshot
+B15 unsaved draft parity
+B14 production
+TOWN / LOCATION
+—
+DATE
+—
+CALL TIME
+11:45 PM
+PRODUCER
+—
+DIRECTOR
+—
+CAMERA
+—
+	Action	Location	Description	Notes		Time In	Duration	Time Out
+1	Crew Call	
+Fictional audit studio
+↳
+Fictional annex
+100 Fictional Example Lane
+Nested fictional instructions
+Second line
+	Fictional long description Second line of the shot plan Third line remains visible	Unsaved fictional snapshot marker Second note		11:45 PM	00:30	12:15 AM
+2	Shoot	
+	Zero-duration fictional marker			12:15 AM	00:00	12:15 AM
+Contacts and row status
+Row 1: Fictional confirmation complete · Not done
+Fictional Audit Contact · Fictional coordinator · +1 202 555 0142 · audit@example.test
+Row 2: No booking status · Not done
+No contact recorded
+Snapshot label
+Review name and protectReview restore contentReview move to Trash
+Save As New
+Organization snapshot settings

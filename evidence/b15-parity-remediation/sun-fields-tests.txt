@@ -1,0 +1,11 @@
+✔ long document fields survive real store load, edits, undo/redo, serialization and reload (75.498708ms)
+✔ refresh/clear of sun rows retains ordinary row identities, nested content and zero duration (19.10075ms)
+✔ weather metadata and sun changes undo as one user operation without changing call sheet (12.289959ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 214.059583

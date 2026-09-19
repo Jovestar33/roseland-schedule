@@ -1,0 +1,30 @@
+{
+  "observedAt": "2026-09-19T04:36:11.156Z",
+  "fixtureSchedule": "86f6b47d-0df9-405b-92d6-9aeeeb0e2ddf",
+  "query": "Raleigh Union Station",
+  "date": "2026-09-19",
+  "unauthenticated": 401,
+  "foreignOrigin": 403,
+  "suggestionCount": 5,
+  "placeId": "ChIJ5_VemHBfrIkR5qqtw-MEGWM",
+  "publicLocation": {
+    "lat": 35.7772979,
+    "lng": -78.6475134,
+    "address": "510 W Martin St, Raleigh, NC 27601, USA"
+  },
+  "weather": {
+    "sunrise": "7:00 AM",
+    "sunset": "7:15 PM",
+    "maxC": 29.6,
+    "minC": 21.6,
+    "maxF": 85,
+    "minF": 71,
+    "prec": 13,
+    "code": 3,
+    "cond": "Overcast",
+    "fetchedAt": "12:36 AM"
+  },
+  "cacheControl": "private, no-store",
+  "credentialsRecorded": false,
+  "actualScheduleWrites": false
+}

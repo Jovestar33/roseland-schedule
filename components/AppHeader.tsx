@@ -1,8 +1,8 @@
 'use client';
-import { useEffect } from 'react';
+import { useEffect, type ReactNode } from 'react';
 import { useCmsStore, useCmsLabel } from '@/lib/store/cmsStore';
 
-export default function AppHeader() {
+export default function AppHeader({actions}: {actions?: ReactNode} = {}) {
   const logo     = useCmsStore((s) => s.config.logo as string | undefined);
   const hdrTitle = useCmsLabel('hdrTitle', 'Production Schedule');
 
@@ -29,6 +29,7 @@ export default function AppHeader() {
       <span className="hdr-title">
         {hdrTitle}
       </span>
+      {actions && <div className="hdr-right">{actions}</div>}
     </div>
   );
 }

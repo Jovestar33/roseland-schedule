@@ -1,5 +1,6 @@
 'use client';
 import { useState, useRef, useCallback, useEffect } from 'react';
+import {observeTextareaSize} from '@/lib/observe-textarea-size';
 import { createPortal } from 'react-dom';
 import { useLocalEditor } from './LocalEditorContext';
 import { useDocumentProviders } from '@/components/local/DocumentProvidersContext';
@@ -37,9 +38,10 @@ export default function PlacesAutocomplete({
   const request = useRef(0);
   useEffect(() => {
     const pending = request;
-    pending.current++; setOpen(false);
+    pending.current++; setOpen(false);setFeedback('');
     return () => { pending.current++; if (debounceRef.current) clearTimeout(debounceRef.current); };
   }, [providers, localEditor, disabled]);
+  const [feedback,setFeedback] = useState('');
   const [suggestions, setSuggestions] = useState<PlaceSuggestion[]>([]);
   const [open, setOpen]         = useState(false);
   const [focused, setFocused]   = useState(0);
@@ -56,8 +58,7 @@ export default function PlacesAutocomplete({
   useEffect(() => {
     if (!multiline || !elementRef.current) return;
     const el = elementRef.current as HTMLTextAreaElement;
-    el.style.height = 'auto';
-    el.style.height = `${el.scrollHeight}px`;
+    return observeTextareaSize(el);
   }, [value, multiline]);
 
   // Keep dropdown anchored during scroll / resize
@@ -75,11 +76,14 @@ export default function PlacesAutocomplete({
   const search = useCallback((q: string) => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
     const ticket = ++request.current;
+    setFeedback('');
     if ((localEditor && !providers) || !q.trim()) { setSuggestions([]); setOpen(false); return; }
     debounceRef.current = setTimeout(async () => {
-      const results = await (localEditor ? providers!.search(q) : searchPlaces(q)).catch(() => []);
+      let failed=false;
+      const results = await (localEditor ? providers!.search(q) : searchPlaces(q)).catch(() => {failed=true;return [];});
       if (request.current !== ticket) return;
       setSuggestions(results);
+      if(localEditor&&providers?.kind==='live')setFeedback(failed?'Location search unavailable. You can enter a location manually.':results.length?'':'No matching locations. You can enter one manually.');
       if (results.length > 0) {
         setRect(elementRef.current?.getBoundingClientRect() ?? null);
         setOpen(true);
@@ -102,7 +106,8 @@ export default function PlacesAutocomplete({
     onChange(s.main || s.label);
     const ticket = ++request.current;
     if (onSelect && (!localEditor || providers)) {
-      const geo = await (localEditor ? providers!.geocode(s.placeId) : geocodePlace(s.placeId, s.main || s.label)).catch(() => null);
+      const geo = await (localEditor ? providers!.geocode(s.placeId, s.main || s.label) : geocodePlace(s.placeId, s.main || s.label)).catch(() => null);
+      if(request.current===ticket&&localEditor&&providers?.kind==='live')setFeedback(geo?'':'Address details unavailable. You can enter the address manually.');
       if (request.current === ticket) onSelect(geo?.address || s.label, geo);
     }
   }
@@ -140,6 +145,7 @@ export default function PlacesAutocomplete({
               {s.sec && <span style={{ color: 'var(--g500)', marginLeft: '4px' }}>{s.sec}</span>}
             </div>
           ))}
+          {providers?.kind==='live'&&<div translate="no" style={{padding:'6px 10px',fontFamily:'sans-serif',fontSize:12,fontWeight:400,fontStyle:'normal',letterSpacing:'normal',whiteSpace:'nowrap',color:'#5e5e5e',background:'white'}}>Google Maps</div>}
         </div>,
         document.body
       )
@@ -176,6 +182,7 @@ export default function PlacesAutocomplete({
         />
       )}
       {dropdown}
+      {feedback&&<small role="status" style={{display:'block',whiteSpace:'normal'}}>{feedback}</small>}
     </>
   );
 }

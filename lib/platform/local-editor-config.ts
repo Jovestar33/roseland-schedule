@@ -1,4 +1,4 @@
-export interface LocalEditorConfig { supabaseUrl: string; anonymousKey: string; accountOnboarding?: boolean }
+export interface LocalEditorConfig { supabaseUrl: string; anonymousKey: string; accountOnboarding?: boolean; liveDocumentProviders?: boolean }
 
 /** Disabled by default; even an accidental hosted flag cannot expose this route. */
 export function readLocalEditorConfig(env: Record<string, string | undefined>, host: string | null): LocalEditorConfig | null {

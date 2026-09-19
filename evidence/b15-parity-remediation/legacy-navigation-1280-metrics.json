@@ -1,0 +1,45 @@
+{
+  "dpr": 1,
+  "fonts": "loaded",
+  "height": 720,
+  "rects": {
+    ".hdr": {
+      "height": 111,
+      "width": 1280,
+      "x": 0,
+      "y": 0
+    },
+    ".meta": {
+      "height": 225.984375,
+      "width": 1248,
+      "x": 16,
+      "y": 189
+    },
+    ".panel": {
+      "height": 944.484375,
+      "width": 1248,
+      "x": 16,
+      "y": 127
+    },
+    ".tbl-wrap": {
+      "height": 534.5,
+      "width": 1248,
+      "x": 16,
+      "y": 475.984375
+    },
+    ".toolbar": {
+      "height": 62,
+      "width": 1248,
+      "x": 16,
+      "y": 127
+    },
+    ".wx-strip": {
+      "height": 61,
+      "width": 1248,
+      "x": 16,
+      "y": 414.984375
+    }
+  },
+  "width": 1280,
+  "zoom": "1"
+}

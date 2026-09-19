@@ -9,7 +9,7 @@ import {ScheduleRepositoryError,type StoredSchedule} from '@/lib/platform/schedu
 import {captureSnapshotAttempt,createSnapshotRepository,retainSnapshotRequest,readSnapshotRequest,clearSnapshotRequest,SnapshotTimer,type SnapshotOperation,type SnapshotReceipt,type ScheduleSnapshot,type RetainedSnapshotRequest,type SnapshotPolicy} from '@/lib/platform/schedule-snapshots';
 import {captureSnapshotExtra,createSnapshotExtras,retainSnapshotExtra,readSnapshotExtra,clearSnapshotExtra,type RetainedSnapshotExtra} from '@/lib/platform/schedule-snapshot-extras';
 import type {ProductionDestination} from '@/lib/platform/schedule-library';
-interface Props {client:SupabaseClient;actor:string|null;organization:string|null;schedule:string|null;enabled:boolean;readOnly?:boolean;canWrite:boolean;canCopy:boolean;getSource:()=>StoredSchedule|null;onState:(dirty:boolean,busy:boolean)=>void;requireAuth:()=>void;beforeRestore:(sourceVersion:number)=>unknown;onRestored:(receipt:SnapshotReceipt,context:unknown)=>Promise<boolean>;captureOpen:()=>unknown;onCopy:(id:string,context:unknown)=>Promise<boolean>}
+interface Props {onClose?:()=>void;openRequest?:number;review?:boolean;client:SupabaseClient;actor:string|null;organization:string|null;schedule:string|null;enabled:boolean;readOnly?:boolean;canWrite:boolean;canCopy:boolean;getSource:()=>StoredSchedule|null;onState:(dirty:boolean,busy:boolean)=>void;requireAuth:()=>void;beforeRestore:(sourceVersion:number)=>unknown;onRestored:(receipt:SnapshotReceipt,context:unknown)=>Promise<boolean>;captureOpen:()=>unknown;onCopy:(id:string,context:unknown)=>Promise<boolean>}
 const labels:Record<SnapshotOperation,string>={capture:'Capture snapshot',name:'Name snapshot',trash:'Move snapshot to Trash',restore_trash:'Restore snapshot from Trash',purge:'Permanently delete snapshot',restore_content:'Restore snapshot content'};
 function SnapshotPreview({document,name}:{document:NonNullable<ScheduleSnapshot['document']>;name:string}){
  const labels:Record<string,string>={basecamp:'Basecamp',parking:'Parking',hospital:'Hospital',emergency:'Emergency contact',mealNotes:'Meal notes',safetyNotes:'Safety notes',specialInstructions:'Special instructions',notes:'Call-sheet notes'};
@@ -44,6 +44,11 @@ export default function LocalScheduleSnapshots(p:Props){
   try{await work(current);}catch(e){if(current()){setMessage(e instanceof Error?e.message:'Snapshot operation failed. The request and draft are retained.');if(e instanceof ScheduleRepositoryError&&e.kind==='unauthenticated')p.requireAuth();}}
   finally{if(seq===ticket.current){busyRef.current=false;setBusy(false);}}
  }
+ const lastOpenRequest=useRef(0);
+ useEffect(()=>{if(!p.openRequest||p.openRequest===lastOpenRequest.current||!ready)return;lastOpenRequest.current=p.openRequest;setOpen(true);void run(current=>refresh(current));
+ // A request is consumed only after ordinary snapshot admission is ready.
+ // eslint-disable-next-line react-hooks/exhaustive-deps
+ },[p.openRequest,ready]);
  async function refresh(current:()=>boolean,mode=trash){const a=p.actor!,o=p.organization!,s=p.schedule!;if(!p.readOnly)await repo.expire(a,s);const [rows,settings,dests]=await Promise.all([repo.list(a,o,s,mode),extras.policy(a,o),extras.destinations(a,o)]);if(!current())return;
   rows.sort((a,b)=>a.kind==='imported'&&b.kind==='imported'?(a.original_order??0)-(b.original_order??0):b.captured_at.localeCompare(a.captured_at)||a.id.localeCompare(b.id));setItems(rows);setPolicy(settings);setRetention(settings.retention_days?.toString()??'');setMinimum(settings.trash_min_role);setDestinations(dests.filter(d=>d.create));
  }
@@ -77,12 +82,12 @@ export default function LocalScheduleSnapshots(p:Props){
  const disabled=busy||!!pending||!!extra||recoveryError,choice=destinations.find(d=>d.id===production);
  return <section aria-label="Snapshots"><button className="btn btn-light" disabled={!ready||busy} onClick={()=>{setOpen(true);void run(current=>refresh(current));}}>Snapshots{pending||extra?' · request retained':''}</button>
   {!open&&message&&<p role="status">{message}</p>}
-  <ModalVisibilityContext.Provider value={ready}><Modal open={open} onClose={()=>setOpen(false)} title="Snapshots" className="template-modal" retainWhenHidden>
+  <ModalVisibilityContext.Provider value={ready}><Modal open={open} onClose={()=>{setOpen(false);p.onClose?.();}} title="Snapshots" className="template-modal" retainWhenHidden>
    <p>{p.readOnly?'Organization is read-only. Snapshot capture, changes and retention are paused; existing history remains available.':'Capture the current draft without saving it. Automatic snapshots capture dirty drafts every five minutes while this schedule is active.'}</p><p role="status" aria-live="polite">{message}</p>
    <fieldset disabled={disabled} style={{border:0,padding:0}}>
     <label>Snapshot collection<select value={trash?'trash':'active'} onChange={e=>{const mode=e.target.value==='trash';setTrash(mode);setSelected(null);void run(current=>refresh(current,mode));}}><option value="active">Available snapshots</option><option value="trash">Snapshot Trash</option></select></label>
     <button className="btn btn-light" onClick={()=>void run(current=>refresh(current))}>Refresh snapshots</button>
-    {!trash&&p.canWrite&&<div><label>Snapshot name<input value={name} maxLength={150} onChange={e=>setName(e.target.value)}/></label><button className="btn btn-primary" disabled={!name.trim()} onClick={()=>void run(async current=>{await prepare('capture',current);})}>Review capture of current draft</button></div>}
+    {!trash&&p.canWrite&&<div><label>Snapshot name<input value={name} maxLength={150} onChange={e=>setName(e.target.value)}/></label><button className="btn btn-primary" disabled={!name.trim()} onClick={()=>void run(async current=>{const request=await prepare('capture',current);if(p.review&&request)await send(request,current);})}>{p.review?'Save snapshot':'Review capture of current draft'}</button></div>}
     <p>{items.length} snapshots</p><ul className="template-list">{items.map(s=><li key={s.id}><button className="btn btn-light" onClick={()=>void run(async current=>{const x=await repo.read(p.actor!,p.organization!,p.schedule!,s.id);if(current()){setSelected(x);setName(x.name??'');setCopyName((x.name??'Snapshot')+' copy');}})}>{s.name||'Automatic snapshot'}</button> · {s.kind} · {new Date(s.captured_at).toLocaleString()} · {s.row_count} rows</li>)}</ul>
    </fieldset>
    {selected&&!pending&&!extra&&!recoveryError&&<fieldset disabled={busy} style={{border:0,padding:0}}><legend>{selected.name||'Automatic snapshot'}</legend>

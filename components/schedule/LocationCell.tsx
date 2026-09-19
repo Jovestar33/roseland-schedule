@@ -1,7 +1,9 @@
 'use client';
 import { useState, useRef, useLayoutEffect } from 'react';
+import {observeTextareaSize} from '@/lib/observe-textarea-size';
 import { useScheduleStore } from '@/lib/store/scheduleStore';
 import type { ScheduleRow, SubLocation } from '@/lib/types';
+import {useDocumentProviders} from '@/components/local/DocumentProvidersContext';
 import { useLocalEditor } from './LocalEditorContext';
 import PlacesAutocomplete from './PlacesAutocomplete';
 import type { GeoResult } from '@/lib/googlePlaces';
@@ -24,8 +26,7 @@ function DescTextarea({ value, onChange, onFocus }: {
   useLayoutEffect(() => {
     const el = ref.current;
     if (!el) return;
-    el.style.height = 'auto';
-    el.style.height = `${el.scrollHeight}px`;
+    return observeTextareaSize(el);
   }, [value]);
   return (
     <textarea
@@ -43,6 +44,8 @@ function DescTextarea({ value, onChange, onFocus }: {
 
 export default function LocationCell({ index, row }: Props) {
   const local = useLocalEditor();
+  const providers = useDocumentProviders();
+  const linksEnabled = !local || providers?.kind === 'live';
   const updateRow = useScheduleStore((s) => s.updateRow);
   const pushUndo  = useScheduleStore((s) => s.pushUndo);
 
@@ -84,7 +87,7 @@ export default function LocationCell({ index, row }: Props) {
   }
 
   function openMainMap() {
-    if (local) return;
+    if (!linksEnabled) return;
     const url = row.locLat && row.locLng
       ? `https://www.google.com/maps/dir/?api=1&destination=${row.locLat},${row.locLng}`
       : row.locAddress
@@ -92,7 +95,7 @@ export default function LocationCell({ index, row }: Props) {
       : row.loc
       ? `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(row.loc)}`
       : null;
-    if (url) window.open(url, '_blank', 'noopener');
+    if (url) window.open(url, '_blank', 'noopener,noreferrer');
   }
 
   const hasMainMap = !!(row.locLat && row.locLng) || !!(row.locAddress) || !!(row.loc);
@@ -116,7 +119,7 @@ export default function LocationCell({ index, row }: Props) {
   }
 
   function openSubMap(sl: SubLocation) {
-    if (local) return;
+    if (!linksEnabled) return;
     const url = sl.locLat && sl.locLng
       ? `https://www.google.com/maps/dir/?api=1&destination=${sl.locLat},${sl.locLng}`
       : sl.address
@@ -124,7 +127,7 @@ export default function LocationCell({ index, row }: Props) {
       : sl.loc
       ? `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(sl.loc)}`
       : null;
-    if (url) window.open(url, '_blank', 'noopener');
+    if (url) window.open(url, '_blank', 'noopener,noreferrer');
   }
 
   return (
@@ -152,8 +155,8 @@ export default function LocationCell({ index, row }: Props) {
         >
           {addrOpen ? '▾' : '▸'}
         </button>
-        {!local && hasMainMap && (
-          <button type="button" className="loc-map-btn" onClick={openMainMap} disabled={local} title="Get directions">
+        {linksEnabled && hasMainMap && (
+          <button type="button" className="loc-map-btn" onClick={openMainMap} disabled={!linksEnabled} title="Get directions">
             &#128205;
           </button>
         )}
@@ -219,7 +222,7 @@ export default function LocationCell({ index, row }: Props) {
                 {subAddrIsOpen ? '▾' : '▸'}
               </button>
               {hasSubMap && (
-                <button type="button" className="loc-subloc-pin" onClick={() => openSubMap(sl)} disabled={local} title="Get directions">
+                <button type="button" className="loc-subloc-pin" onClick={() => openSubMap(sl)} disabled={!linksEnabled} title="Get directions">
                   &#128205;
                 </button>
               )}

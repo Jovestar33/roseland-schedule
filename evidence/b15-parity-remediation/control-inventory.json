@@ -1,0 +1,2014 @@
+{
+  "baseline": "62eb261 (historical provenance; fresh private dashboard verification blocked)",
+  "kind": "source control inventory, not executed case count",
+  "files": [
+    {
+      "file": "components/cms/CmsModal.tsx",
+      "sha256": "361738e9175746dc73921ddac8aad2554c1e202a540342dc9c2e42e33d7ff555",
+      "anchors": [
+        {
+          "line": 86,
+          "source": "function swatch(val: string, def: string, onChange: (v: string) => void) {"
+        },
+        {
+          "line": 89,
+          "source": "<input type=\"color\" value={val || def}"
+        },
+        {
+          "line": 91,
+          "source": "onChange={e => onChange(e.target.value)} />"
+        },
+        {
+          "line": 92,
+          "source": "<input type=\"text\" className=\"lbl-inp\""
+        },
+        {
+          "line": 95,
+          "source": "onChange={e => { if (/^#[0-9a-fA-F]{6}$/.test(e.target.value)) onChange(e.target.value); }} />"
+        },
+        {
+          "line": 96,
+          "source": "<button className=\"btn btn-light btn-sm\" style={{ padding: '3px 7px' }}"
+        },
+        {
+          "line": 97,
+          "source": "onClick={() => onChange(def)} title={`Reset to ${def}`}>\u21ba</button>"
+        },
+        {
+          "line": 212,
+          "source": "onClick={e => { if (e.target === e.currentTarget) closeModal(); }}>"
+        },
+        {
+          "line": 216,
+          "source": "<button className=\"mclose\" onClick={closeModal}>\u2715</button>"
+        },
+        {
+          "line": 222,
+          "source": "<input"
+        },
+        {
+          "line": 229,
+          "source": "onChange={e => setPin(e.target.value)}"
+        },
+        {
+          "line": 230,
+          "source": "onKeyDown={e => e.key === 'Enter' && handlePinSubmit()}"
+        },
+        {
+          "line": 235,
+          "source": "<button className=\"btn btn-light\" onClick={closeModal}>Cancel</button>"
+        },
+        {
+          "line": 236,
+          "source": "<button className=\"btn btn-pink\" onClick={handlePinSubmit} disabled={verifying}>"
+        },
+        {
+          "line": 248,
+          "source": "onClick={e => { if (e.target === e.currentTarget) closeModal(); }}>"
+        },
+        {
+          "line": 253,
+          "source": "<button className=\"mclose\" onClick={closeModal}>\u2715</button>"
+        },
+        {
+          "line": 259,
+          "source": "<button key={t} className={`cms-tab${tab === t ? ' active' : ''}`} onClick={() => setTab(t)}>"
+        },
+        {
+          "line": 279,
+          "source": "<input"
+        },
+        {
+          "line": 284,
+          "source": "onChange={e => setActions(prev => prev.map((a, j) => j === i ? { ...a, name: e.target.value } : a))}"
+        },
+        {
+          "line": 286,
+          "source": "<select"
+        },
+        {
+          "line": 289,
+          "source": "onChange={e => setActions(prev => prev.map((a, j) => j === i ? { ...a, color: e.target.value } : a))}"
+        },
+        {
+          "line": 293,
+          "source": "<button className=\"ac-del-btn\" title=\"Remove\""
+        },
+        {
+          "line": 294,
+          "source": "onClick={() => setActions(prev => prev.filter((_, j) => j !== i))}>\u00d7</button>"
+        },
+        {
+          "line": 299,
+          "source": "<input"
+        },
+        {
+          "line": 304,
+          "source": "onChange={e => setNAName(e.target.value)}"
+        },
+        {
+          "line": 305,
+          "source": "onKeyDown={e => {"
+        },
+        {
+          "line": 313,
+          "source": "<button className=\"btn btn-pink btn-sm\" onClick={() => {"
+        },
+        {
+          "line": 382,
+          "source": "<input type=\"file\" accept=\"image/png,image/svg+xml,image/jpeg,image/webp\""
+        },
+        {
+          "line": 384,
+          "source": "onChange={e => handleLogoFile(e.target.files?.[0] ?? null)} />"
+        },
+        {
+          "line": 387,
+          "source": "<button className=\"btn btn-light btn-sm\" onClick={() => setLogo(null)}>\u21ba Remove Logo</button>"
+        },
+        {
+          "line": 401,
+          "source": "<input"
+        },
+        {
+          "line": 406,
+          "source": "onChange={e => setLabels(prev => ({ ...prev, [key]: e.target.value }))}"
+        },
+        {
+          "line": 418,
+          "source": "<button className=\"btn btn-light\" onClick={closeModal}>Cancel</button>"
+        },
+        {
+          "line": 419,
+          "source": "<button className=\"btn btn-pink\" onClick={handleSave} disabled={saving}>"
+        }
+      ]
+    },
+    {
+      "file": "components/library/BackupTab.tsx",
+      "sha256": "af8550fce8afb4e0a456ccde84d4b0febf9cc54002a99cfb8b77fec5067523d1",
+      "anchors": [
+        {
+          "line": 99,
+          "source": "<button className=\"btn btn-light btn-sm\" onClick={handleSyncNow}>&#8635; Sync Now</button>"
+        },
+        {
+          "line": 100,
+          "source": "<button className=\"btn btn-light btn-sm\" onClick={() => { onRefresh(); setSyncMsg('Retried \u2014 library reloaded.'); }}>Retry Pending</button>"
+        },
+        {
+          "line": 101,
+          "source": "<button className=\"btn btn-light btn-sm\" onClick={() => setSyncMsg('No local cache to clear.')}>Clear Stale Cache</button>"
+        },
+        {
+          "line": 108,
+          "source": "<button className=\"btn btn-light btn-sm\" onClick={exportLibraryJson}>Export Library JSON</button>"
+        },
+        {
+          "line": 111,
+          "source": "<input"
+        },
+        {
+          "line": 115,
+          "source": "onChange={e => { handleImportFile(e.target.files?.[0] ?? null); e.target.value = ''; }}"
+        },
+        {
+          "line": 124,
+          "source": "<button"
+        },
+        {
+          "line": 126,
+          "source": "onClick={handleMigrateProjectMeta}"
+        }
+      ]
+    },
+    {
+      "file": "components/library/LibraryPage.tsx",
+      "sha256": "b61412d202f6dea6168b35bfcc2823ee8dcf0cb1473edd14da08316fe3a403ca",
+      "anchors": [
+        {
+          "line": 1088,
+          "source": "document.addEventListener('mousedown', onDown);"
+        },
+        {
+          "line": 1089,
+          "source": "document.addEventListener('keydown', onKey);"
+        },
+        {
+          "line": 1090,
+          "source": "document.addEventListener('scroll', onScroll, true);"
+        },
+        {
+          "line": 1237,
+          "source": "onClick={() => !deleteModal.submitting && setDeleteModal(null)}"
+        },
+        {
+          "line": 1239,
+          "source": "<div className=\"lbt-modal lbt-modal--delete\" onClick={(e) => e.stopPropagation()}>"
+        },
+        {
+          "line": 1247,
+          "source": "<input"
+        },
+        {
+          "line": 1254,
+          "source": "onChange={(e) => setDeleteModal((m) => m ? { ...m, passcode: e.target.value } : null)}"
+        },
+        {
+          "line": 1255,
+          "source": "onKeyDown={(e) => {"
+        },
+        {
+          "line": 1261,
+          "source": "<input"
+        },
+        {
+          "line": 1267,
+          "source": "onChange={(e) => setDeleteModal((m) => m ? { ...m, confirmText: e.target.value } : null)}"
+        },
+        {
+          "line": 1268,
+          "source": "onKeyDown={(e) => {"
+        },
+        {
+          "line": 1282,
+          "source": "<button"
+        },
+        {
+          "line": 1284,
+          "source": "onClick={() => setDeleteModal(null)}"
+        },
+        {
+          "line": 1289,
+          "source": "<button"
+        },
+        {
+          "line": 1291,
+          "source": "onClick={handleDeleteConfirm}"
+        },
+        {
+          "line": 1309,
+          "source": "onClick={() => !renameModal.submitting && setRenameModal(null)}"
+        },
+        {
+          "line": 1311,
+          "source": "<div className=\"lbt-modal\" onClick={(e) => e.stopPropagation()}>"
+        },
+        {
+          "line": 1314,
+          "source": "<input"
+        },
+        {
+          "line": 1320,
+          "source": "onChange={(e) => setRenameModal((m) => m ? { ...m, draft: e.target.value, error: null } : null)}"
+        },
+        {
+          "line": 1321,
+          "source": "onKeyDown={(e) => {"
+        },
+        {
+          "line": 1338,
+          "source": "<button"
+        },
+        {
+          "line": 1340,
+          "source": "onClick={() => setRenameModal(null)}"
+        },
+        {
+          "line": 1345,
+          "source": "<button"
+        },
+        {
+          "line": 1347,
+          "source": "onClick={handleRenameConfirm}"
+        },
+        {
+          "line": 1366,
+          "source": "onClick={() => !moveModal.submitting && setMoveModal(null)}"
+        },
+        {
+          "line": 1368,
+          "source": "<div className=\"lbt-modal\" onClick={(e) => e.stopPropagation()}>"
+        },
+        {
+          "line": 1374,
+          "source": "<select"
+        },
+        {
+          "line": 1379,
+          "source": "onChange={(e) => {"
+        },
+        {
+          "line": 1411,
+          "source": "<input"
+        },
+        {
+          "line": 1418,
+          "source": "onChange={(e) => setMoveModal((m) => m ? { ...m, customProdText: e.target.value, error: null } : null)}"
+        },
+        {
+          "line": 1419,
+          "source": "onKeyDown={(e) => {"
+        },
+        {
+          "line": 1428,
+          "source": "<select"
+        },
+        {
+          "line": 1432,
+          "source": "onChange={(e) => setMoveModal((m) => m ? {"
+        },
+        {
+          "line": 1456,
+          "source": "<input"
+        },
+        {
+          "line": 1463,
+          "source": "onChange={(e) => setMoveModal((m) => m ? { ...m, customPhaseText: e.target.value, error: null } : null)}"
+        },
+        {
+          "line": 1464,
+          "source": "onKeyDown={(e) => {"
+        },
+        {
+          "line": 1475,
+          "source": "<button"
+        },
+        {
+          "line": 1477,
+          "source": "onClick={() => setMoveModal(null)}"
+        },
+        {
+          "line": 1482,
+          "source": "<button"
+        },
+        {
+          "line": 1484,
+          "source": "onClick={handleMoveConfirm}"
+        },
+        {
+          "line": 1498,
+          "source": "<button className=\"btn btn-pink btn-sm\" onClick={() => router.push('/schedule/Untitled')}>"
+        },
+        {
+          "line": 1502,
+          "source": "<button"
+        },
+        {
+          "line": 1504,
+          "source": "onClick={handleRefresh}"
+        },
+        {
+          "line": 1510,
+          "source": "<button"
+        },
+        {
+          "line": 1512,
+          "source": "onClick={() => setFilterStatus(showArchived ? 'active' : 'all')}"
+        },
+        {
+          "line": 1520,
+          "source": "<button"
+        },
+        {
+          "line": 1523,
+          "source": "onClick={toggleMore}"
+        },
+        {
+          "line": 1531,
+          "source": "<button"
+        },
+        {
+          "line": 1534,
+          "source": "onClick={() => { openCmsModal(); setMoreOpen(false); }}"
+        },
+        {
+          "line": 1538,
+          "source": "<button"
+        },
+        {
+          "line": 1541,
+          "source": "onClick={handleLogout}"
+        },
+        {
+          "line": 1553,
+          "source": "<button className=\"lib-refresh-error-dismiss\" onClick={() => setRefreshError(null)}>\u2715</button>"
+        },
+        {
+          "line": 1559,
+          "source": "<button className=\"lib-success-notice-dismiss\" onClick={() => setSuccessMessage(null)}>\u2715</button>"
+        },
+        {
+          "line": 1565,
+          "source": "<button className={`mtab${tab === 'schedules' ? ' active' : ''}`} onClick={() => setTab('schedules')}>"
+        },
+        {
+          "line": 1568,
+          "source": "<button className={`mtab${tab === 'templates' ? ' active' : ''}`} onClick={() => setTab('templates')}>"
+        },
+        {
+          "line": 1571,
+          "source": "<button className={`mtab${tab === 'backup' ? ' active' : ''}`} onClick={() => setTab('backup')}>"
+        },
+        {
+          "line": 1574,
+          "source": "<button className={`mtab${tab === 'versions' ? ' active' : ''}`} onClick={() => setTab('versions')}>"
+        },
+        {
+          "line": 1588,
+          "source": "<LibrarySearch value={searchQuery} onChange={setSearchQuery} />"
+        },
+        {
+          "line": 1590,
+          "source": "<button"
+        },
+        {
+          "line": 1592,
+          "source": "onClick={() => setShowFilterPanel((v) => !v)}"
+        },
+        {
+          "line": 1597,
+          "source": "<select"
+        },
+        {
+          "line": 1600,
+          "source": "onChange={(e) => setSortMode(e.target.value as SortMode)}"
+        },
+        {
+          "line": 1616,
+          "source": "<select"
+        },
+        {
+          "line": 1619,
+          "source": "onChange={(e) => setFilterProd(e.target.value)}"
+        },
+        {
+          "line": 1630,
+          "source": "<input"
+        },
+        {
+          "line": 1634,
+          "source": "onChange={(e) => setFilterDateFrom(e.target.value)}"
+        },
+        {
+          "line": 1637,
+          "source": "<input"
+        },
+        {
+          "line": 1641,
+          "source": "onChange={(e) => setFilterDateTo(e.target.value)}"
+        },
+        {
+          "line": 1649,
+          "source": "<button"
+        },
+        {
+          "line": 1652,
+          "source": "onClick={() => setFilterStatus(s)}"
+        },
+        {
+          "line": 1660,
+          "source": "<button"
+        },
+        {
+          "line": 1662,
+          "source": "onClick={() => {"
+        },
+        {
+          "line": 1696,
+          "source": "<button"
+        },
+        {
+          "line": 1698,
+          "source": "onClick={() => router.push(`/schedule/${encodeURIComponent(s.name)}`)}"
+        },
+        {
+          "line": 1722,
+          "source": "<button"
+        },
+        {
+          "line": 1724,
+          "source": "onClick={() => router.push(`/schedule/${encodeURIComponent(r.name)}`)}"
+        }
+      ]
+    },
+    {
+      "file": "components/library/LibrarySearch.tsx",
+      "sha256": "0c6ac076f0423a2722e214d45fc729cf3b6181d65df3cc23aadffb74f9cdf52e",
+      "anchors": [
+        {
+          "line": 6,
+          "source": "onChange: (v: string) => void;"
+        },
+        {
+          "line": 9,
+          "source": "export default function LibrarySearch({ value, onChange }: Props) {"
+        },
+        {
+          "line": 17,
+          "source": "timerRef.current = setTimeout(() => onChange(draft), 300);"
+        },
+        {
+          "line": 22,
+          "source": "function clear() { setDraft(''); onChange(''); }"
+        },
+        {
+          "line": 27,
+          "source": "<input"
+        },
+        {
+          "line": 32,
+          "source": "onChange={(e) => setDraft(e.target.value)}"
+        },
+        {
+          "line": 35,
+          "source": "<button className=\"lib-search-clear\" onClick={clear} title=\"Clear search\">\u2715</button>"
+        }
+      ]
+    },
+    {
+      "file": "components/library/LibraryTree.tsx",
+      "sha256": "aca874708238962b5fe2369edf6ce53cae46c8792796750a0ccbdd60fa09aaeb",
+      "anchors": [
+        {
+          "line": 234,
+          "source": "document.addEventListener('mousedown', onDown);"
+        },
+        {
+          "line": 235,
+          "source": "document.addEventListener('keydown', onKey);"
+        },
+        {
+          "line": 236,
+          "source": "document.addEventListener('scroll', onScroll, true);"
+        },
+        {
+          "line": 253,
+          "source": "document.addEventListener('mousedown', onDown);"
+        },
+        {
+          "line": 254,
+          "source": "document.addEventListener('keydown', onKey);"
+        },
+        {
+          "line": 255,
+          "source": "document.addEventListener('scroll', onScroll, true);"
+        },
+        {
+          "line": 267,
+          "source": "<button"
+        },
+        {
+          "line": 269,
+          "source": "onClick={() => onOpen(s.name)}"
+        },
+        {
+          "line": 275,
+          "source": "<div className=\"lbt-sched-acts\" onClick={(e) => e.stopPropagation()}>"
+        },
+        {
+          "line": 282,
+          "source": "<button"
+        },
+        {
+          "line": 284,
+          "source": "onClick={toggleMenu}"
+        },
+        {
+          "line": 291,
+          "source": "<button"
+        },
+        {
+          "line": 293,
+          "source": "onClick={() => { onCopyTeam(s.name); setMenuOpen(false); }}"
+        },
+        {
+          "line": 297,
+          "source": "<button"
+        },
+        {
+          "line": 299,
+          "source": "onClick={() => { onCopyClient(s.name); setMenuOpen(false); }}"
+        },
+        {
+          "line": 312,
+          "source": "<button"
+        },
+        {
+          "line": 315,
+          "source": "onClick={() => !isSyncing && onMoveTo(s.name)}"
+        },
+        {
+          "line": 321,
+          "source": "<button"
+        },
+        {
+          "line": 324,
+          "source": "onClick={() => !isSyncing && onRename(s.name)}"
+        },
+        {
+          "line": 330,
+          "source": "<button"
+        },
+        {
+          "line": 333,
+          "source": "onClick={() => onArchive(s.name)}"
+        },
+        {
+          "line": 339,
+          "source": "<button"
+        },
+        {
+          "line": 343,
+          "source": "onClick={toggleCtx}"
+        },
+        {
+          "line": 353,
+          "source": "<button"
+        },
+        {
+          "line": 356,
+          "source": "onClick={() => onRestore(s.name)}"
+        },
+        {
+          "line": 361,
+          "source": "<button"
+        },
+        {
+          "line": 364,
+          "source": "onClick={() => onDeletePermanently(s.name)}"
+        },
+        {
+          "line": 376,
+          "source": "<button"
+        },
+        {
+          "line": 379,
+          "source": "onClick={() => { if (!isSyncing) { onRename(s.name); setCtxOpen(false); } }}"
+        },
+        {
+          "line": 384,
+          "source": "<button"
+        },
+        {
+          "line": 387,
+          "source": "onClick={() => { onArchive(s.name); setCtxOpen(false); }}"
+        },
+        {
+          "line": 731,
+          "source": "onClick={() => !editModal.saving && setEditModal(null)}"
+        },
+        {
+          "line": 733,
+          "source": "<div className=\"lbt-modal\" onClick={(e) => e.stopPropagation()}>"
+        },
+        {
+          "line": 738,
+          "source": "<input"
+        },
+        {
+          "line": 742,
+          "source": "onChange={(e) => setEditModal((m) => m ? { ...m, draft: e.target.value } : null)}"
+        },
+        {
+          "line": 743,
+          "source": "onKeyDown={(e) => {"
+        },
+        {
+          "line": 751,
+          "source": "<button"
+        },
+        {
+          "line": 753,
+          "source": "onClick={() => setEditModal(null)}"
+        },
+        {
+          "line": 758,
+          "source": "<button"
+        },
+        {
+          "line": 760,
+          "source": "onClick={handleEditSave}"
+        },
+        {
+          "line": 773,
+          "source": "<button className=\"lib-refresh-error-dismiss\" onClick={() => setDndMessage(null)}>\u2715</button>"
+        },
+        {
+          "line": 777,
+          "source": "<DragDropContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>"
+        },
+        {
+          "line": 796,
+          "source": "<div className=\"lbt-prod-row\" onClick={() => toggleNode(prodId)}>"
+        },
+        {
+          "line": 802,
+          "source": "<button"
+        },
+        {
+          "line": 804,
+          "source": "onClick={(e) => { e.stopPropagation(); openEditProd(prod); }}"
+        },
+        {
+          "line": 826,
+          "source": "<div className=\"lbt-phase-row\" onClick={() => toggleNode(phaseId)}>"
+        },
+        {
+          "line": 832,
+          "source": "<button"
+        },
+        {
+          "line": 834,
+          "source": "onClick={(e) => { e.stopPropagation(); openEditPhase(prod, ph); }}"
+        },
+        {
+          "line": 882,
+          "source": "<button"
+        },
+        {
+          "line": 884,
+          "source": "onClick={() => handleNewSchedule(prod.productionDisplay, ph.phaseDisplay)}"
+        },
+        {
+          "line": 897,
+          "source": "<input"
+        },
+        {
+          "line": 902,
+          "source": "onChange={(e) => setNewPhaseDraft(e.target.value)}"
+        },
+        {
+          "line": 903,
+          "source": "onKeyDown={(e) => {"
+        },
+        {
+          "line": 908,
+          "source": "<button className=\"lbt-create-confirm\" onClick={() => confirmCreatePhase(prod.productionKey)}>\u2713</button>"
+        },
+        {
+          "line": 909,
+          "source": "<button className=\"lbt-create-cancel\" onClick={() => { setCreatingPhaseFor(null); setNewPhaseDraft(''); }}>\u2715</button>"
+        },
+        {
+          "line": 912,
+          "source": "<button"
+        },
+        {
+          "line": 914,
+          "source": "onClick={() => { setCreatingPhaseFor(prod.productionKey); setNewPhaseDraft(''); }}"
+        },
+        {
+          "line": 974,
+          "source": "<input"
+        },
+        {
+          "line": 979,
+          "source": "onChange={(e) => setNewProdDraft(e.target.value)}"
+        },
+        {
+          "line": 980,
+          "source": "onKeyDown={(e) => {"
+        },
+        {
+          "line": 985,
+          "source": "<button className=\"lbt-create-confirm\" onClick={confirmCreateProd}>\u2713</button>"
+        },
+        {
+          "line": 986,
+          "source": "<button className=\"lbt-create-cancel\" onClick={() => { setCreatingProd(false); setNewProdDraft(''); }}>\u2715</button>"
+        },
+        {
+          "line": 989,
+          "source": "<button"
+        },
+        {
+          "line": 991,
+          "source": "onClick={() => { setCreatingProd(true); setNewProdDraft(''); }}"
+        }
+      ]
+    },
+    {
+      "file": "components/library/TemplatesTab.tsx",
+      "sha256": "8f697c241f61cb16bc2fb9caf341b4cdc14d3c7a95e144715933c422915cbf5e",
+      "anchors": [
+        {
+          "line": 78,
+          "source": "<div key={name} className=\"sitem\" onClick={() => handleLoad(name)}>"
+        },
+        {
+          "line": 83,
+          "source": "<div className=\"sitem-acts\" onClick={(e) => e.stopPropagation()}>"
+        },
+        {
+          "line": 84,
+          "source": "<button className=\"sitem-del\" onClick={() => handleDelete(name)} title=\"Delete template\">\ud83d\uddd1</button>"
+        }
+      ]
+    },
+    {
+      "file": "components/library/VersionsTab.tsx",
+      "sha256": "6cfc96d519e6d1e35e007efa2371bd1009479b1f038eaab6630e80e7bd4aca9e",
+      "anchors": [
+        {
+          "line": 96,
+          "source": "<select"
+        },
+        {
+          "line": 99,
+          "source": "onChange={(e) => setSelectedName(e.target.value)}"
+        },
+        {
+          "line": 142,
+          "source": "<button className=\"btn btn-light btn-sm\" onClick={() => setPreview(snap)}>Preview</button>"
+        },
+        {
+          "line": 143,
+          "source": "<button className=\"btn btn-light btn-sm\" onClick={() => handleSaveAsNew(snap)}>Save As New</button>"
+        },
+        {
+          "line": 144,
+          "source": "<button className=\"btn btn-pink btn-sm\"  onClick={() => handleRestore(snap)}>Restore</button>"
+        },
+        {
+          "line": 145,
+          "source": "<button className=\"tp-snap-del\"          onClick={() => handleDelete(snap)}>Delete</button>"
+        },
+        {
+          "line": 155,
+          "source": "<div className=\"snapshot-preview-overlay\" onClick={(e) => { if (e.target === e.currentTarget) setPreview(null); }}>"
+        },
+        {
+          "line": 164,
+          "source": "<button className=\"btn btn-light btn-sm\" onClick={() => setPreview(null)}>Close</button>"
+        },
+        {
+          "line": 203,
+          "source": "<button className=\"btn btn-light btn-sm\" onClick={() => handleSaveAsNew(preview)}>Save As New</button>"
+        },
+        {
+          "line": 204,
+          "source": "<button className=\"btn btn-pink btn-sm\" onClick={() => { handleRestore(preview); setPreview(null); }}>Restore</button>"
+        },
+        {
+          "line": 205,
+          "source": "<button className=\"btn btn-light btn-sm\" onClick={() => setPreview(null)}>Close Preview</button>"
+        }
+      ]
+    },
+    {
+      "file": "components/modals/CallSheetModal.tsx",
+      "sha256": "d4d6f3003434bd894f809fc667785b6bdd3a5e5eb0002ace123c7fc66d9d337b",
+      "anchors": [
+        {
+          "line": 70,
+          "source": "window.addEventListener('afterprint', function cleanup() {"
+        },
+        {
+          "line": 99,
+          "source": "<input"
+        },
+        {
+          "line": 103,
+          "source": "onChange={(e) => setDraft(e.target.value)}"
+        },
+        {
+          "line": 104,
+          "source": "onBlur={commit}"
+        },
+        {
+          "line": 105,
+          "source": "onKeyDown={(e) => {"
+        },
+        {
+          "line": 111,
+          "source": "<span className={value ? 'csh-fv' : 'csh-fv csh-fv-empty'} onClick={start}>"
+        },
+        {
+          "line": 157,
+          "source": "<div ref={wrapRef} className=\"csh-loc-wrap\" onBlur={handleWrapBlur} onKeyDown={handleKeyDown}>"
+        },
+        {
+          "line": 161,
+          "source": "onChange={setDraft}"
+        },
+        {
+          "line": 168,
+          "source": "<span className={value ? 'csh-fv' : 'csh-fv csh-fv-empty'} onClick={start}>"
+        },
+        {
+          "line": 205,
+          "source": "<textarea"
+        },
+        {
+          "line": 210,
+          "source": "onChange={(e) => setDraft(e.target.value)}"
+        },
+        {
+          "line": 211,
+          "source": "onBlur={commit}"
+        },
+        {
+          "line": 212,
+          "source": "onKeyDown={(e) => {"
+        },
+        {
+          "line": 219,
+          "source": "onClick={start}"
+        },
+        {
+          "line": 399,
+          "source": "<input"
+        },
+        {
+          "line": 402,
+          "source": "onChange={(e) => setShowContacts(e.target.checked)}"
+        },
+        {
+          "line": 406,
+          "source": "<button"
+        },
+        {
+          "line": 409,
+          "source": "onClick={() => handlePrint(scheduleName)}"
+        }
+      ]
+    },
+    {
+      "file": "components/modals/ConflictModal.tsx",
+      "sha256": "f195359dc3cf1a8d5b0ab97685d5c920750c73a151a25c26942083d7f2f1fa6d",
+      "anchors": [
+        {
+          "line": 35,
+          "source": "<button className=\"btn btn-light\" onClick={onClose}>Cancel</button>"
+        },
+        {
+          "line": 36,
+          "source": "<button className=\"btn btn-light\" onClick={onSaveAs}>Save As Copy</button>"
+        },
+        {
+          "line": 37,
+          "source": "<button className=\"btn btn-light\" onClick={onReload}>Reload Remote</button>"
+        },
+        {
+          "line": 38,
+          "source": "<button className=\"btn btn-pink\" onClick={onOverwrite}>Overwrite</button>"
+        }
+      ]
+    },
+    {
+      "file": "components/modals/ContactModal.tsx",
+      "sha256": "e501d51e3ff7024d766673e3d1c7cee7690a6fe55148f84415277dfa6d40d985",
+      "anchors": [
+        {
+          "line": 58,
+          "source": "<button className=\"btn btn-light\" onClick={() => { window.location.href = `mailto:${email}`; }}>Email</button>"
+        },
+        {
+          "line": 59,
+          "source": "<button className=\"btn btn-light\" onClick={() => { window.location.href = `tel:${phone}`; }}>Call</button>"
+        },
+        {
+          "line": 60,
+          "source": "<button className=\"btn btn-pink\" onClick={handleSave}>Save Contact</button>"
+        },
+        {
+          "line": 67,
+          "source": "<input autoFocus style={inp} type=\"text\" placeholder=\"Contact name\" value={name} onChange={(e) => setName(e.target.value)} />"
+        },
+        {
+          "line": 71,
+          "source": "<input style={inp} type=\"text\" placeholder=\"Role / title\" value={title} onChange={(e) => setTitle(e.target.value)} />"
+        },
+        {
+          "line": 75,
+          "source": "<input style={inp} type=\"tel\" placeholder=\"Phone\" value={phone} onChange={(e) => setPhone(e.target.value)} />"
+        },
+        {
+          "line": 79,
+          "source": "<input style={inp} type=\"email\" placeholder=\"Email\" value={email} onChange={(e) => setEmail(e.target.value)} />"
+        }
+      ]
+    },
+    {
+      "file": "components/modals/ContactSheetModal.tsx",
+      "sha256": "467bf60306b0fb99826b51795dcd8214d468efe5f8c81141f35efbd8de9e957d",
+      "anchors": [
+        {
+          "line": 75,
+          "source": "window.addEventListener('afterprint', function cleanup() {"
+        },
+        {
+          "line": 155,
+          "source": "<button"
+        },
+        {
+          "line": 158,
+          "source": "onClick={() => handlePrint(scheduleName)}"
+        },
+        {
+          "line": 162,
+          "source": "<button"
+        },
+        {
+          "line": 165,
+          "source": "onClick={() => downloadCsv(contacts, scheduleName)}"
+        }
+      ]
+    },
+    {
+      "file": "components/modals/Modal.tsx",
+      "sha256": "9e9752076a9302516d20ebb825fa045044918579c74b5c7e5354266cfa626c5c",
+      "anchors": [
+        {
+          "line": 20,
+          "source": "document.addEventListener('keydown', onKey);"
+        },
+        {
+          "line": 29,
+          "source": "onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}"
+        },
+        {
+          "line": 34,
+          "source": "<button className=\"mclose\" onClick={onClose} aria-label=\"Close\">\u2715</button>"
+        }
+      ]
+    },
+    {
+      "file": "components/modals/NotesModal.tsx",
+      "sha256": "d9edc07c5a6bcc62679036ffc4085ddded240a2f1916042a6bc122dea485de33",
+      "anchors": [
+        {
+          "line": 31,
+          "source": "<button className=\"btn btn-light\" onClick={onClose}>Cancel</button>"
+        },
+        {
+          "line": 32,
+          "source": "<button className=\"btn btn-pink\" onClick={handleSave}>Save</button>"
+        },
+        {
+          "line": 36,
+          "source": "<textarea"
+        },
+        {
+          "line": 40,
+          "source": "onChange={(e) => setValue(e.target.value)}"
+        }
+      ]
+    },
+    {
+      "file": "components/modals/SaveAsModal.tsx",
+      "sha256": "3dce9d1baf032bc5239148a62e6cfb0e4db45b13efd0d3d88d530fe2c7c8d7dc",
+      "anchors": [
+        {
+          "line": 38,
+          "source": "<button className=\"btn btn-light\" onClick={onClose}>Cancel</button>"
+        },
+        {
+          "line": 39,
+          "source": "<button className=\"btn btn-pink\" onClick={handleSave} disabled={!value.trim()}>"
+        },
+        {
+          "line": 45,
+          "source": "<input"
+        },
+        {
+          "line": 51,
+          "source": "onChange={(e) => setValue(e.target.value)}"
+        },
+        {
+          "line": 52,
+          "source": "onKeyDown={handleKeyDown}"
+        }
+      ]
+    },
+    {
+      "file": "components/modals/StatusModal.tsx",
+      "sha256": "7a5c5b3706e80a05d8f0825514fbe16fa132f814373a26c6bceec7f4f396ae91",
+      "anchors": [
+        {
+          "line": 39,
+          "source": "<button className=\"btn btn-light\" onClick={handleClear}>Clear</button>"
+        },
+        {
+          "line": 40,
+          "source": "<button className=\"btn btn-light\" onClick={onClose}>Cancel</button>"
+        },
+        {
+          "line": 41,
+          "source": "<button className=\"btn btn-pink\" onClick={handleSave}>Save Status</button>"
+        },
+        {
+          "line": 45,
+          "source": "<textarea"
+        },
+        {
+          "line": 49,
+          "source": "onChange={(e) => setValue(e.target.value)}"
+        }
+      ]
+    },
+    {
+      "file": "components/schedule/ActionCell.tsx",
+      "sha256": "98a71e4f1d32429ab0402b7e31ac18c98ed723897ee512d85aa0db5036b96e7b",
+      "anchors": [
+        {
+          "line": 36,
+          "source": "<input"
+        },
+        {
+          "line": 40,
+          "source": "onChange={(e) => updateRow(index, { otherText: e.target.value })}"
+        },
+        {
+          "line": 41,
+          "source": "onFocus={pushUndo}"
+        },
+        {
+          "line": 44,
+          "source": "<button className=\"other-back\" onClick={handleBackClick} title=\"Change action\">\u21a9</button>"
+        },
+        {
+          "line": 55,
+          "source": "<select"
+        },
+        {
+          "line": 58,
+          "source": "onChange={(e) => handleSelectChange(e.target.value)}"
+        }
+      ]
+    },
+    {
+      "file": "components/schedule/AutoResizeTextarea.tsx",
+      "sha256": "884144be9c7292e03b46822afbba3883b7740adba06f373d15dd01daf603533c",
+      "anchors": [
+        {
+          "line": 7,
+          "source": "onChange: (v: string) => void;"
+        },
+        {
+          "line": 8,
+          "source": "onFocus?: () => void;"
+        },
+        {
+          "line": 13,
+          "source": "export default function AutoResizeTextarea({ className, value, onChange, onFocus, placeholder, rows = 2 }: Props) {"
+        },
+        {
+          "line": 24,
+          "source": "<textarea"
+        },
+        {
+          "line": 28,
+          "source": "onChange={(e) => onChange(e.target.value)}"
+        },
+        {
+          "line": 29,
+          "source": "onFocus={onFocus}"
+        }
+      ]
+    },
+    {
+      "file": "components/schedule/ComboInput.tsx",
+      "sha256": "c5fd62bc3fa1b8a40ef792572c63b40d2790394a11d1a64b04726e754b25be7c",
+      "anchors": [
+        {
+          "line": 6,
+          "source": "onChange: (value: string) => void;"
+        },
+        {
+          "line": 7,
+          "source": "onBlur?: () => void;"
+        },
+        {
+          "line": 21,
+          "source": "value, onChange, onBlur, onEscape, options, placeholder, className, autoFocus,"
+        },
+        {
+          "line": 39,
+          "source": "onChange(opt);"
+        },
+        {
+          "line": 59,
+          "source": "onBlur?.();"
+        },
+        {
+          "line": 71,
+          "source": "// but calling onChange here ensures the draft reflects the final value"
+        },
+        {
+          "line": 72,
+          "source": "// before the parent's onBlur/commit reads it."
+        },
+        {
+          "line": 74,
+          "source": "if (normalized !== value) onChange(normalized);"
+        },
+        {
+          "line": 75,
+          "source": "onBlur?.();"
+        },
+        {
+          "line": 80,
+          "source": "<input"
+        },
+        {
+          "line": 86,
+          "source": "onChange={(e) => { onChange(e.target.value); setTyped(true); setActiveIdx(-1); }}"
+        },
+        {
+          "line": 87,
+          "source": "onFocus={() => { setOpen(true); setTyped(false); }}"
+        },
+        {
+          "line": 88,
+          "source": "onBlur={handleBlur}"
+        },
+        {
+          "line": 89,
+          "source": "onKeyDown={handleKeyDown}"
+        },
+        {
+          "line": 94,
+          "source": "<button"
+        }
+      ]
+    },
+    {
+      "file": "components/schedule/CrewIdentityBlock.tsx",
+      "sha256": "b378de8157dcca13a27f01c8d2afef0469d12117fd4f034a174e579ac9f2cc4e",
+      "anchors": [
+        {
+          "line": 51,
+          "source": "<span className=\"crew-label\" onClick={() => startEdit(key)}>{label}</span>"
+        },
+        {
+          "line": 53,
+          "source": "<input"
+        },
+        {
+          "line": 57,
+          "source": "onChange={(e) => setDraft(e.target.value)}"
+        },
+        {
+          "line": 58,
+          "source": "onBlur={confirm}"
+        },
+        {
+          "line": 59,
+          "source": "onKeyDown={(e) => {"
+        },
+        {
+          "line": 67,
+          "source": "onClick={() => startEdit(key)}"
+        }
+      ]
+    },
+    {
+      "file": "components/schedule/CrewInput.tsx",
+      "sha256": "5ae677d247537cbb4bcd0d7eb158ca5a19f711e82239a16199742a11616fa06a",
+      "anchors": [
+        {
+          "line": 10,
+          "source": "onChange: (value: string) => void;"
+        },
+        {
+          "line": 15,
+          "source": "export default function CrewInput({ field, value, onChange, placeholder, id }: Props) {"
+        },
+        {
+          "line": 42,
+          "source": "onChange(s);"
+        },
+        {
+          "line": 57,
+          "source": "<input"
+        },
+        {
+          "line": 63,
+          "source": "onChange={e => onChange(e.target.value)}"
+        },
+        {
+          "line": 64,
+          "source": "onFocus={handleFocus}"
+        },
+        {
+          "line": 65,
+          "source": "onBlur={handleBlur}"
+        },
+        {
+          "line": 66,
+          "source": "onKeyDown={handleKeyDown}"
+        }
+      ]
+    },
+    {
+      "file": "components/schedule/DescriptionCell.tsx",
+      "sha256": "e49e9e96b21aa9993223c0aa34bf1cafb243bdcfda0a907baa86869a73187abf",
+      "anchors": [
+        {
+          "line": 20,
+          "source": "onChange={(desc) => updateRow(index, { desc })}"
+        },
+        {
+          "line": 21,
+          "source": "onFocus={pushUndo}"
+        }
+      ]
+    },
+    {
+      "file": "components/schedule/DoneContactCell.tsx",
+      "sha256": "2e4216aded46845b94ec34462b9df3dfc971067f26aa74bb0468ac8d3fecd770",
+      "anchors": [
+        {
+          "line": 24,
+          "source": "<input"
+        },
+        {
+          "line": 28,
+          "source": "onChange={(e) => handleDoneChange(e.target.checked)}"
+        },
+        {
+          "line": 31,
+          "source": "<button"
+        },
+        {
+          "line": 33,
+          "source": "onClick={onOpenContact}"
+        }
+      ]
+    },
+    {
+      "file": "components/schedule/DurationCell.tsx",
+      "sha256": "9e737490e3fbdf866d2c9383840b788b8bb1d885a09b4b363dd3a66772ed63e6",
+      "anchors": [
+        {
+          "line": 28,
+          "source": "<select"
+        },
+        {
+          "line": 32,
+          "source": "onChange={(e) => handleChange(e.target.value)}"
+        }
+      ]
+    },
+    {
+      "file": "components/schedule/HeaderIdentityLine.tsx",
+      "sha256": "0856ed8c4491b9b566688fa2cc98484438624f4ec1302c32d8078f9039efb800",
+      "anchors": [
+        {
+          "line": 207,
+          "source": "onChange={setDraft}"
+        },
+        {
+          "line": 208,
+          "source": "onBlur={commit}"
+        },
+        {
+          "line": 218,
+          "source": "onClick={() => startEdit('projectName')}"
+        },
+        {
+          "line": 232,
+          "source": "onChange={setDraft}"
+        },
+        {
+          "line": 233,
+          "source": "onBlur={commit}"
+        },
+        {
+          "line": 243,
+          "source": "onClick={() => startEdit('phase')}"
+        },
+        {
+          "line": 255,
+          "source": "<input"
+        },
+        {
+          "line": 263,
+          "source": "onChange={handleDayChange}"
+        },
+        {
+          "line": 264,
+          "source": "onBlur={() => commitDay(draftRef.current)}"
+        },
+        {
+          "line": 265,
+          "source": "onKeyDown={onDayKey}"
+        },
+        {
+          "line": 271,
+          "source": "onClick={() => startEdit('day')}"
+        }
+      ]
+    },
+    {
+      "file": "components/schedule/LocationCell.tsx",
+      "sha256": "5cf70717cd52498058f4d237e8708af20ba29e2b4b482832bbfce7d650ab69ae",
+      "anchors": [
+        {
+          "line": 17,
+          "source": "function DescTextarea({ value, onChange, onFocus }: {"
+        },
+        {
+          "line": 19,
+          "source": "onChange: (v: string) => void;"
+        },
+        {
+          "line": 20,
+          "source": "onFocus: () => void;"
+        },
+        {
+          "line": 30,
+          "source": "<textarea"
+        },
+        {
+          "line": 37,
+          "source": "onChange={(e) => onChange(e.target.value)}"
+        },
+        {
+          "line": 38,
+          "source": "onFocus={onFocus}"
+        },
+        {
+          "line": 59,
+          "source": "// PlacesAutocomplete calls onChange(s.main) on selection \u2014 the short place"
+        },
+        {
+          "line": 65,
+          "source": "// Places onSelect fires AFTER onChange(s.main), so locName is already the"
+        },
+        {
+          "line": 134,
+          "source": "onChange={handleNameChange}"
+        },
+        {
+          "line": 136,
+          "source": "onFocus={pushUndo}"
+        },
+        {
+          "line": 141,
+          "source": "<button"
+        },
+        {
+          "line": 144,
+          "source": "onClick={() => setAddrOpen(v => !v)}"
+        },
+        {
+          "line": 152,
+          "source": "<button type=\"button\" className=\"loc-map-btn\" onClick={openMainMap} title=\"Get directions\">"
+        },
+        {
+          "line": 164,
+          "source": "onChange={(v) => updateRow(index, { locAddress: v, locLat: null, locLng: null })}"
+        },
+        {
+          "line": 166,
+          "source": "onFocus={pushUndo}"
+        },
+        {
+          "line": 182,
+          "source": "<input"
+        },
+        {
+          "line": 186,
+          "source": "onChange={(e) => patchSubLoc(i, { done: e.target.checked })}"
+        },
+        {
+          "line": 194,
+          "source": "onChange={(v) => patchSubLoc(i, { name: v, loc: v })}"
+        },
+        {
+          "line": 196,
+          "source": "// onChange already set the short name; capture address + coords"
+        },
+        {
+          "line": 201,
+          "source": "onFocus={pushUndo}"
+        },
+        {
+          "line": 207,
+          "source": "<button"
+        },
+        {
+          "line": 210,
+          "source": "onClick={() => setSubAddrOpen(prev => ({ ...prev, [sl.id]: !prev[sl.id] }))}"
+        },
+        {
+          "line": 218,
+          "source": "<button type=\"button\" className=\"loc-subloc-pin\" onClick={() => openSubMap(sl)} title=\"Get directions\">"
+        },
+        {
+          "line": 222,
+          "source": "<button type=\"button\" className=\"loc-subloc-remove\" onClick={() => removeSubLoc(i)} title=\"Remove sub-location\">"
+        },
+        {
+          "line": 231,
+          "source": "onChange={(v) => patchSubLoc(i, { address: v, locLat: null, locLng: null })}"
+        },
+        {
+          "line": 237,
+          "source": "onFocus={pushUndo}"
+        },
+        {
+          "line": 247,
+          "source": "onChange={(desc) => patchSubLoc(i, { desc })}"
+        },
+        {
+          "line": 248,
+          "source": "onFocus={pushUndo}"
+        },
+        {
+          "line": 255,
+          "source": "<button type=\"button\" className=\"loc-add-subloc\" onClick={addSubLoc}>"
+        }
+      ]
+    },
+    {
+      "file": "components/schedule/NotesCell.tsx",
+      "sha256": "d5d77e58634a28a2ab900433506c7ff82d3072ab80ec1ec2ddde5865cc84b00c",
+      "anchors": [
+        {
+          "line": 22,
+          "source": "<button"
+        },
+        {
+          "line": 24,
+          "source": "onClick={onOpenStatus}"
+        },
+        {
+          "line": 32,
+          "source": "onChange={(notes) => updateRow(index, { notes })}"
+        },
+        {
+          "line": 33,
+          "source": "onFocus={pushUndo}"
+        }
+      ]
+    },
+    {
+      "file": "components/schedule/PlacesAutocomplete.tsx",
+      "sha256": "a8b7f6b4a2ed9bb0c22be2cf6d8b58993f4bccc17788243beed7e4452b9b5d85",
+      "anchors": [
+        {
+          "line": 8,
+          "source": "onChange: (value: string) => void;"
+        },
+        {
+          "line": 10,
+          "source": "onFocus?: () => void;"
+        },
+        {
+          "line": 20,
+          "source": "onChange,"
+        },
+        {
+          "line": 22,
+          "source": "onFocus,"
+        },
+        {
+          "line": 53,
+          "source": "window.addEventListener('scroll', update, { passive: true, capture: true });"
+        },
+        {
+          "line": 54,
+          "source": "window.addEventListener('resize', update, { passive: true });"
+        },
+        {
+          "line": 81,
+          "source": "onChange(v);"
+        },
+        {
+          "line": 88,
+          "source": "onChange(s.main || s.label);"
+        },
+        {
+          "line": 122,
+          "source": "onClick={() => handleSelect(s)}"
+        },
+        {
+          "line": 139,
+          "source": "onChange: handleInput,"
+        },
+        {
+          "line": 140,
+          "source": "onKeyDown: handleKeyDown,"
+        },
+        {
+          "line": 141,
+          "source": "onFocus: () => { onFocus?.(); },"
+        },
+        {
+          "line": 142,
+          "source": "onBlur: () => setOpen(false),"
+        },
+        {
+          "line": 148,
+          "source": "<textarea"
+        },
+        {
+          "line": 155,
+          "source": "<input"
+        }
+      ]
+    },
+    {
+      "file": "components/schedule/RowControls.tsx",
+      "sha256": "5cd35d745d8eedaa035cbc6cb16bc18730c8a855d9a7112873c67daab8ccd5a5",
+      "anchors": [
+        {
+          "line": 54,
+          "source": "<button className=\"move-btn\" onClick={moveUp} disabled={index < firstReorderable} title=\"Move up\">\u25b2</button>"
+        },
+        {
+          "line": 55,
+          "source": "<button className=\"move-btn\" onClick={moveDown} disabled={index >= total - 1} title=\"Move down\">\u25bc</button>"
+        }
+      ]
+    },
+    {
+      "file": "components/schedule/ScheduleEditor.tsx",
+      "sha256": "272e487be6a89ebbe7ccc759862ce12c76684ff28b49b2e55404b9e9de9436b2",
+      "anchors": [
+        {
+          "line": 76,
+          "source": "window.addEventListener('beforeunload', handleBeforeUnload);"
+        },
+        {
+          "line": 227,
+          "source": "<button className=\"btn btn-light\" onClick={() => { pushUndo(); addRowAfter(rows.length - 1); }}>"
+        }
+      ]
+    },
+    {
+      "file": "components/schedule/ScheduleGrid.tsx",
+      "sha256": "13c1eaf977de65473912b628f68b004ae6afbd3716b929f0a8f811bc5a322440",
+      "anchors": [
+        {
+          "line": 76,
+          "source": "<DragDropContext onDragEnd={handleDragEnd}>"
+        }
+      ]
+    },
+    {
+      "file": "components/schedule/ScheduleHeader.tsx",
+      "sha256": "892b803e947eb0fa1b8dac237e674aa122b0bbb1e00c0acc3fdd53a5b77c4d19",
+      "anchors": [
+        {
+          "line": 53,
+          "source": "onChange={(v) => updateMeta({ town: v })}"
+        },
+        {
+          "line": 58,
+          "source": "<button className=\"loc-map-btn\" onClick={openTownMap} title=\"Open in Google Maps\">"
+        },
+        {
+          "line": 71,
+          "source": "<input"
+        },
+        {
+          "line": 76,
+          "source": "onChange={(e) => updateMeta({ date: e.target.value })}"
+        }
+      ]
+    },
+    {
+      "file": "components/schedule/ScheduleRow.tsx",
+      "sha256": "711dc7505c1faf23d6a7b9f1eee549715426b67c53c9085fb68888bcb9202d35",
+      "anchors": [
+        {
+          "line": 84,
+          "source": "<button className=\"del-btn\" onClick={handleDelete} title=\"Delete row\">\u2715</button>"
+        }
+      ]
+    },
+    {
+      "file": "components/schedule/TimeInCell.tsx",
+      "sha256": "db56c393d8e610f8abbaf187668c964c23740054220509c82aeb2226371c5fff",
+      "anchors": [
+        {
+          "line": 43,
+          "source": "<button"
+        },
+        {
+          "line": 45,
+          "source": "onClick={toggleFixedIn}"
+        },
+        {
+          "line": 49,
+          "source": "<select"
+        },
+        {
+          "line": 52,
+          "source": "onChange={(e) => handleTimeChange(e.target.value)}"
+        }
+      ]
+    },
+    {
+      "file": "components/schedule/TimeOutCell.tsx",
+      "sha256": "b1492ebd3f23396634bff806c23ee563e326a4269f9f5fb491fe30ca32f21261",
+      "anchors": [
+        {
+          "line": 34,
+          "source": "<select"
+        },
+        {
+          "line": 37,
+          "source": "onChange={(e) => handleTimeChange(e.target.value)}"
+        },
+        {
+          "line": 49,
+          "source": "<button"
+        },
+        {
+          "line": 51,
+          "source": "onClick={toggleFixedOut}"
+        }
+      ]
+    },
+    {
+      "file": "components/schedule/WxStrip.tsx",
+      "sha256": "00d77a969c5e68cabbdd462fc448084f57b0941d39e67c7ab44df496c52e7aca",
+      "anchors": [
+        {
+          "line": 73,
+          "source": "<button className=\"wx-refresh\" onClick={onRefresh} title=\"Refresh weather\">\u21bb Refresh</button>"
+        },
+        {
+          "line": 74,
+          "source": "<button className=\"wx-refresh\" onClick={onClear} title=\"Clear weather\">\u2715 Clear</button>"
+        }
+      ]
+    },
+    {
+      "file": "components/toolbar/EditorToolbar.tsx",
+      "sha256": "8cfdf07da8c889e20828c3a2edaee4246c33c4fe092c355ebc2933bf258e28cc",
+      "anchors": [
+        {
+          "line": 33,
+          "source": "<button"
+        },
+        {
+          "line": 35,
+          "source": "onClick={() => setToolsOpen((o) => !o)}"
+        },
+        {
+          "line": 42,
+          "source": "<button className=\"btn btn-light btn-sm tbar-close\" onClick={onClose} title=\"Close\" aria-label=\"Close\">"
+        }
+      ]
+    },
+    {
+      "file": "components/toolbar/SaveDropdown.tsx",
+      "sha256": "2bd3493957f024d54e6e39de03a5b75c22f8270d389f742098d1d7d27a230ecd",
+      "anchors": [
+        {
+          "line": 22,
+          "source": "document.addEventListener('mousedown', onOutside);"
+        },
+        {
+          "line": 23,
+          "source": "window.addEventListener('scroll', onScroll, true);"
+        },
+        {
+          "line": 42,
+          "source": "<button className=\"btn btn-light btn-sm tbar-split-main\" onClick={onSave} title=\"Save\">"
+        },
+        {
+          "line": 45,
+          "source": "<button"
+        },
+        {
+          "line": 48,
+          "source": "onClick={toggle}"
+        },
+        {
+          "line": 59,
+          "source": "<button className=\"tbar-drop-item\" onClick={() => pick(onSaveAs)}>Save As\u2026</button>"
+        },
+        {
+          "line": 60,
+          "source": "<button className=\"tbar-drop-item\" onClick={() => pick(onSnapshot)}>\ud83d\udcf7 Snapshot</button>"
+        }
+      ]
+    },
+    {
+      "file": "components/toolbar/ShareDropdown.tsx",
+      "sha256": "1aa400ef6efe16bc757e963a66333b9afd45ceb0e599a8588f68513648f26751",
+      "anchors": [
+        {
+          "line": 24,
+          "source": "document.addEventListener('mousedown', onOutside);"
+        },
+        {
+          "line": 25,
+          "source": "window.addEventListener('scroll', onScroll, true);"
+        },
+        {
+          "line": 74,
+          "source": "<button"
+        },
+        {
+          "line": 77,
+          "source": "onClick={toggle}"
+        },
+        {
+          "line": 89,
+          "source": "<button className=\"tbar-drop-item\" onClick={handlePrint}>\ud83d\udda8 Print / PDF</button>"
+        },
+        {
+          "line": 90,
+          "source": "<button className=\"tbar-drop-item\" onClick={handleExportJson}>\u2b07 Export JSON</button>"
+        },
+        {
+          "line": 91,
+          "source": "<button className=\"tbar-drop-item\" onClick={handleContactSheet}>\ud83d\udccb Contact Sheet</button>"
+        },
+        {
+          "line": 92,
+          "source": "<button className=\"tbar-drop-item\" onClick={handleCallSheet}>\ud83d\udcc4 Call Sheet</button>"
+        }
+      ]
+    },
+    {
+      "file": "components/toolbar/ToolsPanel.tsx",
+      "sha256": "3ea874529ac7bf89deffafb45d7ce25f1e11957d55367a591f07d706d23c62a9",
+      "anchors": [
+        {
+          "line": 85,
+          "source": "<input"
+        },
+        {
+          "line": 90,
+          "source": "onChange={(e) => setNameInput(e.target.value)}"
+        },
+        {
+          "line": 91,
+          "source": "onKeyDown={(e) => e.key === 'Enter' && handleSave()}"
+        },
+        {
+          "line": 94,
+          "source": "<button"
+        },
+        {
+          "line": 96,
+          "source": "onClick={handleSave}"
+        },
+        {
+          "line": 117,
+          "source": "<div key={name} className=\"sitem\" onClick={() => handleApply(name)}>"
+        },
+        {
+          "line": 122,
+          "source": "<div className=\"sitem-acts\" onClick={(e) => e.stopPropagation()}>"
+        },
+        {
+          "line": 123,
+          "source": "<button className=\"sitem-del\" onClick={() => handleDelete(name)} title=\"Delete template\">\ud83d\uddd1</button>"
+        },
+        {
+          "line": 159,
+          "source": "<button className=\"btn btn-light btn-sm\" onClick={handleExport}>"
+        },
+        {
+          "line": 281,
+          "source": "<button className=\"btn btn-light btn-sm\" onClick={() => setPreview(snap)}>Preview</button>"
+        },
+        {
+          "line": 282,
+          "source": "<button className=\"btn btn-light btn-sm\" onClick={() => handleSaveAsNew(snap)}>Save As New</button>"
+        },
+        {
+          "line": 283,
+          "source": "<button className=\"btn btn-pink btn-sm\"  onClick={() => handleRestore(snap)}>Restore</button>"
+        },
+        {
+          "line": 284,
+          "source": "<button className=\"tp-snap-del\"          onClick={() => handleDelete(snap)}>Delete</button>"
+        },
+        {
+          "line": 297,
+          "source": "onClick={(e) => { if (e.target === e.currentTarget) setPreview(null); }}"
+        },
+        {
+          "line": 307,
+          "source": "<button className=\"btn btn-light btn-sm\" onClick={() => setPreview(null)}>Close</button>"
+        },
+        {
+          "line": 350,
+          "source": "<button className=\"btn btn-light btn-sm\" onClick={() => handleSaveAsNew(preview)}>Save As New</button>"
+        },
+        {
+          "line": 351,
+          "source": "<button className=\"btn btn-pink btn-sm\" onClick={() => { handleRestore(preview); setPreview(null); }}>Restore</button>"
+        },
+        {
+          "line": 352,
+          "source": "<button className=\"btn btn-light btn-sm\" onClick={() => setPreview(null)}>Close Preview</button>"
+        },
+        {
+          "line": 381,
+          "source": "<div className=\"tp-backdrop\" onClick={onClose} />"
+        },
+        {
+          "line": 388,
+          "source": "<button className=\"tp-x\" onClick={onClose} aria-label=\"Close tools panel\">"
+        },
+        {
+          "line": 394,
+          "source": "<button className={`mtab${tab === 'templates' ? ' active' : ''}`} onClick={() => setTab('templates')}>Templates</button>"
+        },
+        {
+          "line": 395,
+          "source": "<button className={`mtab${tab === 'backup'    ? ' active' : ''}`} onClick={() => setTab('backup')}>Backup</button>"
+        },
+        {
+          "line": 396,
+          "source": "<button className={`mtab${tab === 'restore'   ? ' active' : ''}`} onClick={() => setTab('restore')}>Restore</button>"
+        }
+      ]
+    },
+    {
+      "file": "components/toolbar/UndoRedoButtons.tsx",
+      "sha256": "3e3944bc44c2fb21d9327bc12dee224ea78c6683138b01b3d11cb3818410f718",
+      "anchors": [
+        {
+          "line": 9,
+          "source": "<button"
+        },
+        {
+          "line": 11,
+          "source": "onClick={undo}"
+        },
+        {
+          "line": 18,
+          "source": "<button"
+        },
+        {
+          "line": 20,
+          "source": "onClick={redo}"
+        }
+      ]
+    },
+    {
+      "file": "components/ui/Toast.tsx",
+      "sha256": "ec5ad5b69f5b78f67792428c165711c45657049e8f3875d0e61a480a09f0b124",
+      "anchors": [
+        {
+          "line": 33,
+          "source": "onClick={() => onDismiss(toast.id)}"
+        }
+      ]
+    },
+    {
+      "file": "components/view/PublicViewer.tsx",
+      "sha256": "edb8a0f6114b48e51ded3227e45941628302e8325f1936a2496ef8b06747f769",
+      "anchors": [
+        {
+          "line": 71,
+          "source": "<button className=\"btn btn-light btn-sm\" onClick={() => printSchedule(name)}>"
+        }
+      ]
+    },
+    {
+      "file": "components/view/ReadOnlyViewer.tsx",
+      "sha256": "b0cc025cfe642afe035e858370845d530548f52595ee0bb6f0f027b3e411fc41",
+      "anchors": [
+        {
+          "line": 58,
+          "source": "<button className=\"btn btn-light btn-sm\" onClick={() => printSchedule(name)}>\ud83d\udda8 Print / Save PDF</button>"
+        }
+      ]
+    },
+    {
+      "file": "app/(auth)/login/page.tsx",
+      "sha256": "9301d691b5d1c3dc7beb10150ed1a4691b9344794ddf5d438db735548c1554a8",
+      "anchors": [
+        {
+          "line": 107,
+          "source": "<form onSubmit={handleSubmit} autoComplete=\"off\">"
+        },
+        {
+          "line": 109,
+          "source": "<input type=\"text\" name=\"username\" autoComplete=\"username\" aria-hidden=\"true\" tabIndex={-1} style={{ position: 'absolute', opacity: 0, pointerEvents: 'none', width: 0, height: 0 }} />"
+        },
+        {
+          "line": 110,
+          "source": "<input type=\"password\" name=\"password\" autoComplete=\"current-password\" aria-hidden=\"true\" tabIndex={-1} style={{ position: 'absolute', opacity: 0, pointerEvents: 'none', width: 0, height: 0 }} />"
+        },
+        {
+          "line": 113,
+          "source": "<input"
+        },
+        {
+          "line": 120,
+          "source": "onChange={(e) => setPassword(e.target.value)}"
+        },
+        {
+          "line": 138,
+          "source": "<button"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,107 @@
+[
+  {
+    "clipped": true,
+    "height": 26,
+    "needed": 29,
+    "placeholder": "Location…",
+    "value": "Fictional location 1"
+  },
+  {
+    "clipped": false,
+    "height": 26,
+    "needed": 26,
+    "placeholder": "Sub-location…",
+    "value": "Annex 1"
+  },
+  {
+    "clipped": true,
+    "height": 15,
+    "needed": 33,
+    "placeholder": "Description…",
+    "value": "SUB-1 Fictional nested description END-SUB-1"
+  },
+  {
+    "clipped": true,
+    "height": 26,
+    "needed": 104,
+    "placeholder": "Description…",
+    "value": "DESC-1 Fictional detail with a comma, \"quoted text\", and multiple lines.\nSecond line remains visible.  END-DESC-1"
+  },
+  {
+    "clipped": true,
+    "height": 26,
+    "needed": 85,
+    "placeholder": "Notes…",
+    "value": "NOTE-1\nFictional instructions END-NOTE-1"
+  },
+  {
+    "clipped": true,
+    "height": 26,
+    "needed": 29,
+    "placeholder": "Location…",
+    "value": "Fictional location 2"
+  },
+  {
+    "clipped": false,
+    "height": 26,
+    "needed": 26,
+    "placeholder": "Sub-location…",
+    "value": "Annex 2"
+  },
+  {
+    "clipped": true,
+    "height": 15,
+    "needed": 33,
+    "placeholder": "Description…",
+    "value": "SUB-2 Fictional nested description END-SUB-2"
+  },
+  {
+    "clipped": true,
+    "height": 26,
+    "needed": 104,
+    "placeholder": "Description…",
+    "value": "DESC-2 Fictional detail with a comma, \"quoted text\", and multiple lines.\nSecond line remains visible.  END-DESC-2"
+  },
+  {
+    "clipped": true,
+    "height": 26,
+    "needed": 85,
+    "placeholder": "Notes…",
+    "value": "NOTE-2\nFictional instructions END-NOTE-2"
+  },
+  {
+    "clipped": true,
+    "height": 26,
+    "needed": 29,
+    "placeholder": "Location…",
+    "value": "Fictional location 3"
+  },
+  {
+    "clipped": false,
+    "height": 26,
+    "needed": 26,
+    "placeholder": "Sub-location…",
+    "value": "Annex 3"
+  },
+  {
+    "clipped": true,
+    "height": 15,
+    "needed": 33,
+    "placeholder": "Description…",
+    "value": "SUB-3 Fictional nested description END-SUB-3"
+  },
+  {
+    "clipped": true,
+    "height": 26,
+    "needed": 104,
+    "placeholder": "Description…",
+    "value": "DESC-3 Fictional detail with a comma, \"quoted text\", and multiple lines.\nSecond line remains visible.  END-DESC-3"
+  },
+  {
+    "clipped": true,
+    "height": 26,
+    "needed": 85,
+    "placeholder": "Notes…",
+    "value": "NOTE-3\nFictional instructions END-NOTE-3"
+  }
+]

@@ -87,7 +87,8 @@ export function calcSunTimes(
 async function fetchSunOnly(
   date: string,
   lat: number,
-  lng: number
+  lng: number,
+  request: typeof fetch = fetch
 ): Promise<{ sunrise: string; sunset: string } | null> {
   const urls = [
     `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&daily=sunrise,sunset&timezone=auto&start_date=${date}&end_date=${date}`,
@@ -97,7 +98,7 @@ async function fetchSunOnly(
   let ianaTimezone: string | null = null;
   try {
     const today = new Date().toISOString().slice(0, 10);
-    const tzRes = await fetch(
+    const tzRes = await request(
       `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&daily=sunrise&timezone=auto&start_date=${today}&end_date=${today}`
     );
     const tzJ = await tzRes.json() as { timezone?: string };
@@ -108,7 +109,7 @@ async function fetchSunOnly(
 
   for (const url of urls) {
     try {
-      const r = await fetch(url);
+      const r = await request(url);
       const j = await r.json() as { daily?: { sunrise?: string[]; sunset?: string[] } };
       if (j.daily?.sunrise?.length) {
         return {
@@ -126,7 +127,8 @@ export async function fetchWeather(
   date: string,
   lat: number,
   lng: number,
-  town?: string
+  town?: string,
+  request: typeof fetch = fetch
 ): Promise<WeatherData | null> {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -135,7 +137,7 @@ export async function fetchWeather(
   const fetchedAt = new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
 
   if (diff > 16) {
-    const sun = await fetchSunOnly(date, lat, lng);
+    const sun = await fetchSunOnly(date, lat, lng, request);
     if (!sun) return null;
     return { ...sun, fetchedAt, town, noForecast: true };
   }
@@ -144,7 +146,7 @@ export async function fetchWeather(
 
   try {
     const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,weathercode,sunrise,sunset&temperature_unit=celsius&timezone=auto&start_date=${date}&end_date=${date}`;
-    const res = await fetch(url);
+    const res = await request(url);
     const wx = await res.json() as {
       daily?: {
         time?: string[];
@@ -158,7 +160,7 @@ export async function fetchWeather(
     };
 
     if (!wx.daily?.time?.length) {
-      const sun = await fetchSunOnly(date, lat, lng);
+      const sun = await fetchSunOnly(date, lat, lng, request);
       if (!sun) return null;
       return { ...sun, fetchedAt, town, noForecast: true };
     }
@@ -185,7 +187,7 @@ export async function fetchWeather(
       town,
     };
   } catch {
-    const sun = await fetchSunOnly(date, lat, lng);
+    const sun = await fetchSunOnly(date, lat, lng, request);
     if (!sun) return null;
     return { ...sun, fetchedAt, town, noForecast: true };
   }

@@ -18,3 +18,5 @@
   .library button:global(.lbt-sched-name) { white-space: normal; overflow-wrap: anywhere; }
   .metadata { order: 1; flex-basis: 100%; padding-left: 20px; }
 }
+
+.library [hidden] { display:none; }

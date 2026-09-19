@@ -2,12 +2,13 @@
 import { useRef, useState, useEffect } from 'react';
 
 interface Props {
+  disabled?: boolean;
   onSave: () => void;
   onSaveAs: () => void;
   onSnapshot: () => void;
 }
 
-export default function SaveDropdown({ onSave, onSaveAs, onSnapshot }: Props) {
+export default function SaveDropdown({ onSave, onSaveAs, onSnapshot, disabled = false }: Props) {
   const [open, setOpen] = useState(false);
   const [dropPos, setDropPos] = useState({ top: 0, left: 0 });
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -39,11 +40,12 @@ export default function SaveDropdown({ onSave, onSaveAs, onSnapshot }: Props) {
 
   return (
     <div className="tbar-split" ref={wrapRef}>
-      <button className="btn btn-light btn-sm tbar-split-main" onClick={onSave} title="Save">
+      <button className="btn btn-light btn-sm tbar-split-main" disabled={disabled} onClick={onSave} title="Save">
         Save
       </button>
       <button
         className="btn btn-light btn-sm tbar-split-chev"
+        disabled={disabled}
         ref={chevRef}
         onClick={toggle}
         aria-label="More save options"

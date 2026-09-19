@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useRef } from 'react';
+import {observeTextareaSize} from '@/lib/observe-textarea-size';
 
 interface Props {
   className?: string;
@@ -16,8 +17,7 @@ export default function AutoResizeTextarea({ className, value, onChange, onFocus
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    el.style.height = 'auto';
-    el.style.height = el.scrollHeight + 'px';
+    return observeTextareaSize(el);
   }, [value]);
 
   return (

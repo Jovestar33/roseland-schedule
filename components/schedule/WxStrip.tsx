@@ -1,6 +1,7 @@
 'use client';
 import { useScheduleStore } from '@/lib/store/scheduleStore';
 import { wxIcon } from '@/lib/weather';
+import {useDocumentProviders} from '@/components/local/DocumentProvidersContext';
 import { useLocalEditor } from './LocalEditorContext';
 
 interface Props {
@@ -11,6 +12,8 @@ interface Props {
 
 export default function WxStrip({ onRefresh, onClear, readOnly = false }: Props) {
   const local = useLocalEditor();
+  const providers = useDocumentProviders();
+  const linksEnabled = !local || providers?.kind === 'live';
   const wx = useScheduleStore((s) => s.meta.wx);
   const town = useScheduleStore((s) => s.meta.town);
 
@@ -48,7 +51,7 @@ export default function WxStrip({ onRefresh, onClear, readOnly = false }: Props)
               {wx.prec !== undefined ? (
                 <>
                   {wx.prec}%&nbsp;
-                  {!local && <a
+                  {linksEnabled && <a
                     href={`https://www.google.com/search?q=${searchQ}`}
                     target="_blank"
                     rel="noopener noreferrer"

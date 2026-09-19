@@ -8,8 +8,8 @@ import {ScheduleRepositoryError,type StoredSchedule} from '@/lib/platform/schedu
 import {templateDraftRows,captureTemplateAttempt,clearTemplateRequest,createTemplateRepository,readTemplateRequest,retainTemplateRequest,type RetainedTemplateRequest,type TemplateApplyReview,type TemplateOperation,type TemplateProduction,type TemplateRecord} from '@/lib/platform/schedule-templates';
 export interface TemplateDraftContext {id:string;version:number;documentSession:number;editRevision:number}
 const operationLabel:Record<TemplateOperation,string>={create:'Save template',replace:'Replace template',rename:'Rename template',trash:'Move to Trash',restore:'Restore template',publish:'Publish template',unpublish:'Withdraw publication',import:'Import browser template'};
-interface Props {client:SupabaseClient;actor:string|null;organization:string|null;enabled:boolean;canWriteCurrent:boolean;getSource:()=>StoredSchedule|null;canApply:()=>boolean;onApply:(review:TemplateApplyReview,context:TemplateDraftContext)=>boolean;onState:(dirty:boolean,busy:boolean)=>void;requireAuth:()=>void}
-export default function LocalScheduleTemplates({client,actor,organization,enabled,canWriteCurrent,getSource,canApply,onApply,onState,requireAuth}:Props){
+interface Props {onClose?:()=>void;openRequest?:number;client:SupabaseClient;actor:string|null;organization:string|null;enabled:boolean;canWriteCurrent:boolean;getSource:()=>StoredSchedule|null;canApply:()=>boolean;onApply:(review:TemplateApplyReview,context:TemplateDraftContext)=>boolean;onState:(dirty:boolean,busy:boolean)=>void;requireAuth:()=>void}
+export default function LocalScheduleTemplates({onClose,openRequest,client,actor,organization,enabled,canWriteCurrent,getSource,canApply,onApply,onState,requireAuth}:Props){
  const [repo]=useState(()=>createTemplateRepository(client));
  const [open,setOpen]=useState(false),[productions,setProductions]=useState<TemplateProduction[]>([]),[production,setProduction]=useState('');
  const [mode,setMode]=useState<'production'|'organization'|'trash'>('production'),[items,setItems]=useState<TemplateRecord[]>([]),[name,setName]=useState(''),[newName,setNewName]=useState('');
@@ -32,6 +32,11 @@ export default function LocalScheduleTemplates({client,actor,organization,enable
   try{await work(current);}catch(e){if(current()){setMessage(e instanceof ScheduleRepositoryError?e.kind==='conflict'?'The name may already exist, or the template, schedule or permissions changed. Your draft is retained. Choose a unique name or refresh and review again.':e.kind==='unavailable'?'This template operation is unavailable under current permissions. Your draft and any pending request are retained.':e.message:e instanceof Error?e.message:'Template operation failed.');if(e instanceof ScheduleRepositoryError&&e.kind==='unauthenticated')requireAuth();}}
   finally{if(seq===ticket.current){busyRef.current=false;setBusy(false);}}
  }
+ const lastOpenRequest=useRef(0);
+ useEffect(()=>{if(!openRequest||openRequest===lastOpenRequest.current||!enabled||!actor||!organization)return;lastOpenRequest.current=openRequest;visibility.current++;setOpen(true);void run(current=>refresh(current));
+ // Keep the existing authorization and retained-request machinery.
+ // eslint-disable-next-line react-hooks/exhaustive-deps
+ },[openRequest,enabled,actor,organization]);
  async function refresh(current:()=>boolean,p=production,m=mode){const ps=await repo.productions(actor!,organization!);const chosen=p||getSource()?.production_id||ps[0]?.id||'';const next=m==='organization'||chosen?await repo.inventory(actor!,organization!,chosen,m==='trash',m==='organization'):[];if(current()){setProductions(ps);setProduction(chosen);setItems(next);}}
  function begin(a:ReturnType<typeof captureTemplateAttempt>){const value={attempt:a,started:false};retainTemplateRequest(localStorage,value);setPending(value);setApply(null);setMessage('Review the exact change below before confirming.');}
  async function prepare(row:TemplateRecord,operation:TemplateOperation,current:()=>boolean){
@@ -52,7 +57,7 @@ export default function LocalScheduleTemplates({client,actor,organization,enable
  return <section aria-label="Templates">
   <button className="btn btn-light" disabled={!enabled||busy||!actor||!organization} onClick={()=>{visibility.current++;setOpen(true);void run(current=>refresh(current));}}>Templates{inScope&&pending?' · request retained':''}</button>
   {!open&&inScope&&message&&<p role="status">{message}</p>}
-  <ModalVisibilityContext.Provider value={enabled&&inScope}><Modal open={open} onClose={()=>{visibility.current++;setOpen(false);}} title="Templates" className="template-modal" retainWhenHidden>
+  <ModalVisibilityContext.Provider value={enabled&&inScope}><Modal open={open} onClose={()=>{visibility.current++;setOpen(false);onClose?.();}} title="Templates" className="template-modal" retainWhenHidden>
    <p>Templates start in their production. Organization publication is deliberate and keeps source restrictions.</p>
    <p role="status" aria-live="polite">{message}</p>
    {pendingUses>0&&<p>Save the applied template in your schedule before saving that draft as another template or making a copy.</p>}
@@ -81,7 +86,7 @@ export default function LocalScheduleTemplates({client,actor,organization,enable
    </section>}
    {apply&&<section aria-label="Apply template review"><h3>Apply {apply.review.template.name}</h3><p>Replace the current rows, including any unsaved row edits. Keep this schedule’s metadata, name and placement. You can Undo the application. Save schedule commits the rows and their source restrictions together.</p>
     <details><summary>Review rows to apply ({apply.review.template.rows.length})</summary><pre style={{whiteSpace:'pre-wrap',maxHeight:'35vh',overflow:'auto'}}>{JSON.stringify(apply.review.template.rows,null,2)}</pre></details>
-    <button className="btn btn-primary" disabled={busy} onClick={()=>void run(async current=>{const fresh=await repo.reviewApply(actor!,apply.review.template.id,apply.context.id,organization!);if(!current())return;if(fresh.template.version!==apply.review.template.version||fresh.policy!==apply.review.policy||fresh.target_version!==apply.context.version)throw Error('The template, source permissions or receiving schedule changed. Cancel and review again; your draft is retained.');if(!onApply(fresh,apply.context))throw Error('The current document changed during review. Cancel and review again; your newer edits are retained.');setApply(null);setOpen(false);setMessage('Template applied to the draft. Metadata is retained. Undo is available; Save schedule commits it.');})}>Apply rows to draft</button><button className="btn btn-light" disabled={busy} onClick={()=>{setApply(null);setMessage('Apply cancelled. Your draft is unchanged.');}}>Keep current rows</button>
+    <button className="btn btn-primary" disabled={busy} onClick={()=>void run(async current=>{const fresh=await repo.reviewApply(actor!,apply.review.template.id,apply.context.id,organization!);if(!current())return;if(fresh.template.version!==apply.review.template.version||fresh.policy!==apply.review.policy||fresh.target_version!==apply.context.version)throw Error('The template, source permissions or receiving schedule changed. Cancel and review again; your draft is retained.');if(!onApply(fresh,apply.context))throw Error('The current document changed during review. Cancel and review again; your newer edits are retained.');setApply(null);setOpen(false);onClose?.();setMessage('Template applied to the draft. Metadata is retained. Undo is available; Save schedule commits it.');})}>Apply rows to draft</button><button className="btn btn-light" disabled={busy} onClick={()=>{setApply(null);setMessage('Apply cancelled. Your draft is unchanged.');}}>Keep current rows</button>
    </section>}
   </Modal></ModalVisibilityContext.Provider>
  </section>;

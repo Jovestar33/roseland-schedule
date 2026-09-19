@@ -1,0 +1,84 @@
+{
+  "rows": [
+    {
+      "action": "Crew Call",
+      "otherText": "",
+      "desc": "Fictional long description\nSecond line of the shot plan\nThird line remains visible",
+      "loc": "Fictional audit studio",
+      "locLat": null,
+      "locLng": null,
+      "notes": "Unsaved fictional snapshot marker\nSecond note",
+      "status": "Fictional confirmation complete",
+      "contactName": "Fictional Audit Contact",
+      "contactTitle": "Fictional coordinator",
+      "contactPhone": "+1 202 555 0142",
+      "contactEmail": "audit@example.test",
+      "timeIn": "11:45 PM",
+      "dur": "00:30",
+      "done": false,
+      "sunLocked": false,
+      "fixedIn": false,
+      "fixedOut": false,
+      "fixedOutTime": "",
+      "locName": "Fictional audit studio",
+      "subLocations": [
+        {
+          "id": "8zirci",
+          "loc": "Fictional annex",
+          "desc": "Nested fictional instructions\nSecond line",
+          "done": true,
+          "name": "Fictional annex",
+          "locLat": null,
+          "locLng": null,
+          "address": "100 Fictional Example Lane"
+        }
+      ]
+    },
+    {
+      "action": "Shoot",
+      "otherText": "",
+      "desc": "Zero-duration fictional marker",
+      "loc": "",
+      "locLat": null,
+      "locLng": null,
+      "notes": "",
+      "status": "",
+      "contactName": "",
+      "contactTitle": "",
+      "contactPhone": "",
+      "contactEmail": "",
+      "timeIn": "12:15 AM",
+      "dur": "00:00",
+      "done": false,
+      "sunLocked": false,
+      "fixedIn": false,
+      "fixedOut": false,
+      "fixedOutTime": ""
+    }
+  ],
+  "meta": {
+    "town": "",
+    "date": "",
+    "prod": "",
+    "dir": "",
+    "dp": "",
+    "lat": null,
+    "lng": null,
+    "wx": null,
+    "projectName": "B14 production",
+    "phase": "",
+    "dayNumber": null,
+    "totalDays": null,
+    "callsheet": {
+      "notes": "Fictional call sheet notes\nSecond line",
+      "parking": "Fictional parking",
+      "basecamp": "Fictional basecamp, 100 Example Lane",
+      "hospital": "Fictional hospital — not medical guidance",
+      "emergency": "Fictional coordinator +1 202 555 0100",
+      "mealNotes": "Fictional meal notes\nVegetarian option",
+      "safetyNotes": "Fictional safety notes\nKeep routes clear",
+      "specialInstructions": "Fictional special instructions\nBring sample badge"
+    }
+  },
+  "savedAt": 1789791946874
+}

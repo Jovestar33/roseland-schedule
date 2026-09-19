@@ -1,0 +1,13 @@
+✔ local Share exports the current unsaved document only after output authorization (34.069917ms)
+✔ denied local draft export neither reads nor downloads document content (7.078584ms)
+✔ readiness pause during library load starts a replacement read and rejects stale results (53.949084ms)
+✔ failed library load reports an error instead of claiming it is still loading (18.869459ms)
+✔ textareas recover full text height after hidden admission, width changes and font loading (21.670541ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 186.193125

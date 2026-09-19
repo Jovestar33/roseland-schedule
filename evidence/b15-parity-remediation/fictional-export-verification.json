@@ -1,0 +1,6 @@
+{
+  "pass": true,
+  "comparison": "Actual browser download rows and metadata exactly match ordinary authenticated saved version 4; savedAt intentionally generated at export",
+  "rows": 2,
+  "callsheetFields": 8
+}

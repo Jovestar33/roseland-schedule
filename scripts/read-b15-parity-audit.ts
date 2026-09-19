@@ -1,0 +1,11 @@
+import {readFileSync,writeFileSync} from 'node:fs';
+import {createClient} from '@supabase/supabase-js';
+const config=JSON.parse(readFileSync('/private/tmp/roseland-b14-destination-g2-live-status.json','utf8'));
+const access=JSON.parse(readFileSync('/private/tmp/roseland-b15-review-access.json','utf8'));
+if(config.API_URL!=='http://127.0.0.1:56521')throw Error('Fictional loopback required');
+const client=createClient(config.API_URL,config.ANON_KEY,{auth:{persistSession:false,autoRefreshToken:false}});
+const login=await client.auth.signInWithPassword({email:access.email,password:access.password});if(login.error)throw Error('Login failed');
+const result=await client.rpc('session_read_schedule',{target_schedule_id:'86f6b47d-0df9-405b-92d6-9aeeeb0e2ddf'});
+if(result.error||result.data?.display_name!=='B15 comprehensive parity — fictional')throw Error('Fictional document read failed');
+writeFileSync(`evidence/b15-parity-remediation/audit-saved-readback-v${result.data.document_version}.json`,JSON.stringify(result.data,null,2));
+console.log(JSON.stringify({id:result.data.id,version:result.data.document_version,rows:result.data.document.rows.length}));

@@ -1,0 +1,84 @@
+Templates
+✕
+
+Templates start in their production. Organization publication is deliberate and keeps source restrictions.
+
+Template change confirmed. Your schedule draft is unchanged.
+
+Template library
+Production templates
+Published to organization
+Production Trash
+Template production
+Choose production
+B14 production
+Refresh templates
+New template name
+Save draft as template
+B14 newest template name
+· 1 rows · Production only
+B15 parity rows — fictional
+· 2 rows · Production only
+Browser templates — discover, export or import
+B15 parity rows — fictional
+Review all template rows, including notes and contacts
+[
+  {
+    "dur": "00:30",
+    "loc": "Fictional audit studio",
+    "desc": "Fictional long description\nSecond line of the shot plan\nThird line remains visible",
+    "done": false,
+    "notes": "Unsaved fictional snapshot marker\nSecond note",
+    "action": "Crew Call",
+    "locLat": null,
+    "locLng": null,
+    "status": "Fictional confirmation complete",
+    "timeIn": "11:45 PM",
+    "fixedIn": false,
+    "locName": "Fictional audit studio",
+    "fixedOut": false,
+    "otherText": "",
+    "sunLocked": false,
+    "contactName": "Fictional Audit Contact",
+    "contactEmail": "audit@example.test",
+    "contactPhone": "+1 202 555 0142",
+    "contactTitle": "Fictional coordinator",
+    "fixedOutTime": "",
+    "subLocations": [
+      {
+        "id": "8zirci",
+        "loc": "Fictional annex",
+        "desc": "Nested fictional instructions\nSecond line",
+        "done": true,
+        "name": "Fictional annex",
+        "locLat": null,
+        "locLng": null,
+        "address": "100 Fictional Example Lane"
+      }
+    ]
+  },
+  {
+    "dur": "00:00",
+    "loc": "",
+    "desc": "Zero-duration fictional marker",
+    "done": false,
+    "notes": "",
+    "action": "Shoot",
+    "locLat": null,
+    "locLng": null,
+    "status": "",
+    "timeIn": "12:15 AM",
+    "fixedIn": false,
+    "fixedOut": false,
+    "otherText": "",
+    "sunLocked": false,
+    "contactName": "",
+    "contactEmail": "",
+    "contactPhone": "",
+    "contactTitle": "",
+    "fixedOutTime": ""
+  }
+]
+Review Apply to current schedule
+Template name
+Review renameReplace with current draft rowsReview move to TrashReview organization publication

@@ -291,7 +291,8 @@ export const useScheduleStore = create<ScheduleStore>((set, get) => ({
     const inserts: Array<{ pt: { idx: number; note: string }; label: string; time: string }> = [];
     if (srMin >= 0) inserts.push({ pt: findPt(srMin, true), label: '🌅 Sunrise', time: sunrise });
     if (ssMin >= 0) inserts.push({ pt: findPt(ssMin, false), label: '🌇 Sunset', time: sunset });
-    inserts.sort((a, b) => b.pt.idx - a.pt.idx);
+    // Insert in reverse chronological order at a shared index so the final rows read forward.
+    inserts.sort((a, b) => b.pt.idx - a.pt.idx || t12m(b.time) - t12m(a.time));
 
     const newRows = [...clean];
     const newKeys = [...cleanKeys];

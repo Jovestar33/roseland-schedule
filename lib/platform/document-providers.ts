@@ -2,8 +2,9 @@ import type { GeoResult, PlaceSuggestion } from '../googlePlaces.ts';
 import type { WeatherData } from '../types.ts';
 
 export interface DocumentProviders {
+  kind?: 'live' | 'fictional';
   search(query: string): Promise<PlaceSuggestion[]>;
-  geocode(id: string): Promise<GeoResult | null>;
+  geocode(id: string, fallbackName?: string): Promise<GeoResult | null>;
   weather(date: string, lat: number, lng: number, town: string): Promise<WeatherData | null>;
 }
 const places = [

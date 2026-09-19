@@ -1,0 +1,53 @@
+   ▲ Next.js 15.5.25
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully in 2.3s
+   Linting and checking validity of types ...
+
+./components/local/LocalScheduleLibrary.tsx
+45:102  Warning: The ref value 'ticket.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'ticket.current' to a variable inside the effect, and use that variable in the cleanup function.  react-hooks/exhaustive-deps
+
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules
+   Collecting page data ...
+   Generating static pages (0/8) ...
+   Generating static pages (2/8) 
+   Generating static pages (4/8) 
+   Generating static pages (6/8) 
+ ✓ Generating static pages (8/8)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                                             Size  First Load JS
+┌ ○ /                                                25.5 kB         158 kB
+├ ○ /_not-found                                        993 B         104 kB
+├ ƒ /api/places                                        147 B         103 kB
+├ ƒ /api/platform/invitations                          147 B         103 kB
+├ ƒ /api/platform/invitations/[invitationId]/revoke    147 B         103 kB
+├ ƒ /api/platform/local-account/mail                   147 B         103 kB
+├ ƒ /api/platform/local-client-view                    147 B         103 kB
+├ ƒ /api/platform/local-membership-notifications       147 B         103 kB
+├ ƒ /api/platform/local-organization-notifications     147 B         103 kB
+├ ƒ /api/platform/organizations                        147 B         103 kB
+├ ƒ /local-accept-invitation                         1.61 kB         170 kB
+├ ƒ /local-client                                    1.29 kB         111 kB
+├ ƒ /local-invitations                                1.3 kB         173 kB
+├ ƒ /local-schedule                                    180 B         267 kB
+├ ƒ /local-workspace                                   148 B         307 kB
+├ ○ /login                                           3.16 kB         106 kB
+├ ○ /manifest.webmanifest                              147 B         103 kB
+├ ƒ /platform/setup                                  8.75 kB         173 kB
+├ ƒ /review                                            149 B         307 kB
+├ ƒ /schedule/[name]                                 8.74 kB         165 kB
+├ ƒ /view                                            2.02 kB         111 kB
+└ ƒ /view/[name]                                     2.06 kB         111 kB
++ First Load JS shared by all                         103 kB
+  ├ chunks/255-37e0f0325134c4d7.js                   46.4 kB
+  ├ chunks/4bd1b696-c023c6e3521b1417.js              54.2 kB
+  └ other shared chunks (total)                      1.96 kB
+
+
+ƒ Middleware                                         32.6 kB
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

@@ -1,0 +1,183 @@
+- img "Roseland Pictures"
+- generic: B14 latest organization labels
+- region "Organization deletion settings"
+- main:
+  - region "Schedule editor":
+    - generic: B15 comprehensive parity — fictional
+    - generic: Unsaved
+    - button "Save"
+    - button "More save options":
+      - generic: ▾
+    - button "Undo":
+      - text: ↩
+      - generic: Undo
+    - button "Redo" [disabled]:
+      - text: ↪
+      - generic: Redo
+    - button "⬆ Share ▾":
+      - generic: ⬆
+      - generic: Share
+      - generic: ▾
+    - button "Tools":
+      - generic: Tools
+    - button "Close":
+      - generic: Close
+    - generic: B14 production
+    - generic: Phase
+    - generic: ·
+    - generic: Day
+    - generic: —
+    - generic: PRODUCER
+    - generic: —
+    - generic: DIRECTOR
+    - generic: —
+    - generic: CAMERA
+    - generic: —
+    - generic: Town / Location
+    - textbox "Town / Location" [active]:
+      - /placeholder: e.g. Garner, NC
+      - text: 510 W Martin St, Raleigh, NC 27601, USA
+    - button "📍"
+    - generic: Date
+    - textbox "Date": 2026-09-19
+    - generic: Call Time
+    - generic: 11:45 PM
+    - generic: Sunrise
+    - generic: 🌅 7:00 AM
+    - generic: Sunset
+    - generic: 🌇 7:15 PM
+    - generic: High / Low
+    - generic: 85°F / 71°F
+    - generic: Conditions
+    - generic: ☁️ Overcast
+    - generic: Precip
+    - text: 13%
+    - link "Google Weather ↗":
+      - /url: https://www.google.com/search?q=510%20W%20Martin%20St%20weather
+    - generic: Updated
+    - generic: 12:34 AM
+    - button "↻ Refresh"
+    - button "✕ Clear"
+    - link "Weather by Open-Meteo":
+      - /url: https://open-meteo.com/
+    - status: Weather and sun times updated.
+    - table:
+      - rowgroup:
+        - row "Action Location Description Notes Time In Duration Time Out Done":
+          - columnheader
+          - columnheader "Action"
+          - columnheader "Location"
+          - columnheader "Description"
+          - columnheader "Notes"
+          - columnheader
+          - columnheader "Time In"
+          - columnheader "Duration"
+          - columnheader "Time Out"
+          - columnheader "Done"
+          - columnheader
+      - rowgroup:
+        - row "🌇 Sunset 7:15 PM":
+          - cell
+          - cell "🌇 Sunset":
+            - generic: 🌇 Sunset
+          - cell
+          - cell
+          - cell
+          - cell
+          - cell "7:15 PM":
+            - generic: 7:15 PM
+          - cell
+          - cell
+          - cell
+          - cell
+        - row "🌅 Sunrise 7:00 AM":
+          - cell
+          - cell "🌅 Sunrise":
+            - generic: 🌅 Sunrise
+          - cell
+          - cell
+          - cell
+          - cell
+          - cell "7:00 AM":
+            - generic: 7:00 AM
+          - cell
+          - cell
+          - cell
+          - cell
+        - row "≡ 3 Crew Call ▾ Fictional audit studio Show full address 📍 Mark done • Fictional annex Show full address 📍 × Nested fictional instructions Second line + sub-location Fictional long description Second line of the shot plan Third line remains visible ✓ Unsaved fictional snapshot marker Second note ‹ 11:45 PM 00:30 12:15 AM › Mark done 👤 ✕":
+          - cell "≡ 3":
+            - button "≡"
+            - text: "3"
+          - cell "Crew Call ▾":
+            - combobox:
+            - text: ▾
+          - cell "Fictional audit studio Show full address 📍 Mark done • Fictional annex Show full address 📍 × Nested fictional instructions Second line + sub-location":
+            - textbox "Location…": Fictional audit studio
+            - button "Show full address": ▸
+            - button "📍"
+            - checkbox "Mark done" [checked]
+            - generic: •
+            - textbox "Sub-location…": Fictional annex
+            - button "Show full address": ▸
+            - button "📍"
+            - button "×"
+            - textbox "Description…": Nested fictional instructions Second line
+            - button "+ sub-location"
+          - cell "Fictional long description Second line of the shot plan Third line remains visible":
+            - textbox "Description…": Fictional long description Second line of the shot plan Third line remains visible
+          - cell "✓ Unsaved fictional snapshot marker Second note":
+            - button "✓"
+            - textbox "Notes…": Unsaved fictional snapshot marker Second note
+          - cell
+          - cell "‹ 11:45 PM":
+            - button "‹"
+            - combobox:
+          - cell "00:30":
+            - combobox:
+          - cell "12:15 AM ›":
+            - generic: 12:15 AM
+            - button "›"
+          - cell "Mark done 👤":
+            - checkbox "Mark done"
+            - button "👤"
+          - cell "✕":
+            - button "✕"
+        - row "≡ 4 Shoot ▾ Show full address + sub-location Zero-duration fictional marker ✓ ‹ 12:15 AM 00:00 12:15 AM › Mark done 👤 ✕":
+          - cell "≡ 4":
+            - button "≡"
+            - text: "4"
+          - cell "Shoot ▾":
+            - combobox:
+            - text: ▾
+          - cell "Show full address + sub-location":
+            - textbox "Location…"
+            - button "Show full address": ▸
+            - button "+ sub-location"
+          - cell "Zero-duration fictional marker":
+            - textbox "Description…": Zero-duration fictional marker
+          - cell "✓":
+            - button "✓"
+            - textbox "Notes…"
+          - cell
+          - cell "‹ 12:15 AM":
+            - button "‹"
+            - generic: 12:15 AM
+          - cell "00:00":
+            - combobox:
+          - cell "12:15 AM ›":
+            - generic: 12:15 AM
+            - button "›"
+          - cell "Mark done 👤":
+            - checkbox "Mark done"
+            - button "👤"
+          - cell "✕":
+            - button "✕"
+      - rowgroup:
+        - row "Total 00:30":
+          - cell
+          - cell "Total"
+          - cell "00:30"
+          - cell
+    - button "+ Add Row"
+- generic "Notifications"
+- alert: Roseland Schedule

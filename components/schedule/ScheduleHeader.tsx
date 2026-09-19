@@ -2,6 +2,7 @@
 import { useScheduleStore } from '@/lib/store/scheduleStore';
 import { useCmsLabel } from '@/lib/store/cmsStore';
 import PlacesAutocomplete from './PlacesAutocomplete';
+import {useDocumentProviders} from '@/components/local/DocumentProvidersContext';
 import { useLocalEditor } from './LocalEditorContext';
 import CrewIdentityBlock from './CrewIdentityBlock';
 import HeaderIdentityLine from './HeaderIdentityLine';
@@ -13,6 +14,8 @@ interface Props {
 
 export default function ScheduleHeader({ readOnly = false }: Props) {
   const local = useLocalEditor();
+  const providers = useDocumentProviders();
+  const linksEnabled = !local || providers?.kind === 'live';
   const meta       = useScheduleStore((s) => s.meta);
   const rows       = useScheduleStore((s) => s.rows);
   const updateMeta = useScheduleStore((s) => s.updateMeta);
@@ -32,11 +35,11 @@ export default function ScheduleHeader({ readOnly = false }: Props) {
   }
 
   function openTownMap() {
-    if (local) return;
+    if (!linksEnabled) return;
     const url = meta.lat && meta.lng
       ? `https://www.google.com/maps/search/?api=1&query=${meta.lat},${meta.lng}`
       : `https://www.google.com/maps/search/${encodeURIComponent(meta.town)}`;
-    window.open(url, '_blank', 'noopener');
+    window.open(url, '_blank', 'noopener,noreferrer');
   }
 
   return (
@@ -57,7 +60,7 @@ export default function ScheduleHeader({ readOnly = false }: Props) {
                 onSelect={handleTownSelect}
                 placeholder="e.g. Garner, NC"
               />
-              {!local && meta.lat !== null && meta.lng !== null && (
+              {linksEnabled && meta.lat !== null && meta.lng !== null && (
                 <button className="loc-map-btn" onClick={openTownMap} title="Open in Google Maps">
                   📍
                 </button>
