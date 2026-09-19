@@ -190,7 +190,7 @@ export default function LocationCell({ index, row }: Props) {
                 type="checkbox"
                 className="loc-subloc-cb"
                 checked={sl.done ?? false}
-                onChange={(e) => patchSubLoc(i, { done: e.target.checked })}
+                onChange={(e) => { pushUndo(); patchSubLoc(i, { done: e.target.checked }); }}
                 title="Mark done"
               />
               <span className="loc-subloc-bullet">•</span>

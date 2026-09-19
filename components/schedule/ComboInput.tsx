@@ -5,6 +5,7 @@ export interface ComboInputProps {
   value: string;
   onChange: (value: string) => void;
   onBlur?: () => void;
+  onCommit?: () => void;
   onEscape?: () => void;
   options: string[];
   placeholder?: string;
@@ -18,7 +19,7 @@ function titleCase(s: string): string {
 }
 
 export default function ComboInput({
-  value, onChange, onBlur, onEscape, options, placeholder, className, autoFocus,
+  value, onChange, onBlur, onCommit, onEscape, options, placeholder, className, autoFocus,
   showAllOnOpen = false,
 }: ComboInputProps) {
   const [open,      setOpen]      = useState(false);
@@ -56,7 +57,7 @@ export default function ComboInput({
       } else {
         setOpen(false);
       }
-      onBlur?.();
+      (onCommit ?? onBlur)?.();
     } else if (e.key === 'Escape') {
       e.preventDefault();
       setOpen(false);

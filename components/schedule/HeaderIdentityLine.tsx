@@ -31,10 +31,19 @@ export default function HeaderIdentityLine({ readOnly = false }: Props) {
   const [projectOptions, setProjectOptions] = useState<string[]>([]);
   const [phaseOptions,   setPhaseOptions]   = useState<string[]>([]);
 
-  // Pre-edit snapshot — used only by Escape to revert to the last valid value
-  const daySnapshot = useRef<{ dayNumber: number | null; totalDays: number | null }>({
-    dayNumber: null, totalDays: null,
-  });
+  const triggers = useRef<Partial<Record<Field, HTMLButtonElement | null>>>({});
+  const returnFocus = useRef<Field | null>(null);
+  useEffect(() => {
+    if (!editing && returnFocus.current) {
+      triggers.current[returnFocus.current]?.focus();
+      returnFocus.current = null;
+    }
+  }, [editing]);
+
+  function finish(returnToTrigger = false) {
+    returnFocus.current = returnToTrigger ? editing : null;
+    setEditing(null);
+  }
 
   useEffect(() => {
     setProjectOptions(localEditor ? [] : readOptions('rp_lib_project_options'));
@@ -55,7 +64,6 @@ export default function HeaderIdentityLine({ readOnly = false }: Props) {
     } else if (field === 'phase') {
       init = meta.phase;
     } else {
-      daySnapshot.current = { dayNumber: meta.dayNumber, totalDays: meta.totalDays };
       if (meta.dayNumber != null) {
         init = meta.totalDays != null ? `${meta.dayNumber}/${meta.totalDays}` : String(meta.dayNumber);
       }
@@ -94,12 +102,12 @@ export default function HeaderIdentityLine({ readOnly = false }: Props) {
     }
   }
 
-  function commitDay(raw: string) {
+  function commitDay(raw: string, returnToTrigger = false) {
     const trimmed = raw.trim().replace(/\/$/, '');
     if (!trimmed) {
       setValidationMsg('');
       updateMeta({ dayNumber: null, totalDays: null });
-      setEditing(null);
+      finish(returnToTrigger);
       return;
     }
     const slashIdx = trimmed.indexOf('/');
@@ -132,34 +140,31 @@ export default function HeaderIdentityLine({ readOnly = false }: Props) {
 
     setValidationMsg('');
     updateMeta({ dayNumber: n, totalDays: total });
-    setEditing(null);
+    finish(returnToTrigger);
   }
 
-  function commit() {
+  function commit(returnToTrigger = false) {
     if (!editing) return;
     const val = draftRef.current;
     if (editing === 'projectName') {
       updateMeta({ projectName: titleCase(val) });
-      setEditing(null);
+      finish(returnToTrigger);
     } else if (editing === 'phase') {
       updateMeta({ phase: titleCase(val) });
-      setEditing(null);
+      finish(returnToTrigger);
     } else {
-      commitDay(val);
+      commitDay(val, returnToTrigger);
     }
   }
 
   function revert() {
-    // For day: restore the pre-edit snapshot so Escape is always a clean undo
-    if (editing === 'day') {
-      updateMeta({ dayNumber: daySnapshot.current.dayNumber, totalDays: daySnapshot.current.totalDays });
-    }
+    // All inline edits remain drafts until commit; Escape must not dirty the document.
     setValidationMsg('');
-    setEditing(null);
+    finish(true);
   }
 
   function onDayKey(e: React.KeyboardEvent<HTMLInputElement>) {
-    if (e.key === 'Enter')  { e.preventDefault(); commitDay(draftRef.current); }
+    if (e.key === 'Enter')  { e.preventDefault(); commitDay(draftRef.current, true); }
     if (e.key === 'Escape') { e.preventDefault(); revert(); }
   }
 
@@ -207,7 +212,8 @@ export default function HeaderIdentityLine({ readOnly = false }: Props) {
             className="hi-field"
             value={draft}
             onChange={setDraft}
-            onBlur={commit}
+            onBlur={() => commit()}
+            onCommit={() => commit(true)}
             onEscape={revert}
             options={projectOptions}
             placeholder="Project name"
@@ -215,12 +221,15 @@ export default function HeaderIdentityLine({ readOnly = false }: Props) {
             autoFocus
           />
         ) : (
-          <span
-            className={`hi-project${meta.projectName ? '' : ' hi-project-empty'}`}
+          <button
+            type="button"
+            aria-label="Edit project name"
+            ref={node => { triggers.current.projectName = node; }}
+            className={`inline-edit-trigger hi-project${meta.projectName ? '' : ' hi-project-empty'}`}
             onClick={() => startEdit('projectName')}
           >
             {meta.projectName || 'Project name'}
-          </span>
+          </button>
         )}
       </div>
 
@@ -232,7 +241,8 @@ export default function HeaderIdentityLine({ readOnly = false }: Props) {
             className="hi-field"
             value={draft}
             onChange={setDraft}
-            onBlur={commit}
+            onBlur={() => commit()}
+            onCommit={() => commit(true)}
             onEscape={revert}
             options={phaseOptions}
             placeholder="Phase"
@@ -240,12 +250,15 @@ export default function HeaderIdentityLine({ readOnly = false }: Props) {
             autoFocus
           />
         ) : (
-          <span
-            className={meta.phase ? 'hi-val' : 'hi-empty'}
+          <button
+            type="button"
+            aria-label="Edit phase"
+            ref={node => { triggers.current.phase = node; }}
+            className={`inline-edit-trigger ${meta.phase ? 'hi-val' : 'hi-empty'}`}
             onClick={() => startEdit('phase')}
           >
             {meta.phase || 'Phase'}
-          </span>
+          </button>
         )}
 
         <span className="hi-sep"> · </span>
@@ -260,6 +273,8 @@ export default function HeaderIdentityLine({ readOnly = false }: Props) {
               autoFocus
               type="text"
               inputMode="text"
+              aria-label="Production day"
+              aria-invalid={!!validationMsg}
               value={draft}
               placeholder="1/5"
               onChange={handleDayChange}
@@ -268,12 +283,15 @@ export default function HeaderIdentityLine({ readOnly = false }: Props) {
               style={{ width: `${Math.max((draft || '1/5').length, 3)}ch` }}
             />
           ) : (
-            <span
-              className={meta.dayNumber != null ? 'hi-val' : 'hi-empty'}
+            <button
+              type="button"
+              aria-label="Edit production day"
+              ref={node => { triggers.current.day = node; }}
+              className={`inline-edit-trigger ${meta.dayNumber != null ? 'hi-val' : 'hi-empty'}`}
               onClick={() => startEdit('day')}
             >
               {dayDisplayStr}
-            </span>
+            </button>
           )}
         </span>
       </div>

@@ -21,12 +21,17 @@ export default function CrewIdentityBlock({ readOnly = false }: Props) {
   const updateMeta = useScheduleStore((s) => s.updateMeta);
   const [editing, setEditing] = useState<CrewField | null>(null);
   const [draft,   setDraft]   = useState('');
+  const triggers = useRef<Partial<Record<CrewField, HTMLButtonElement | null>>>({});
+  const returnFocus = useRef<CrewField | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (editing && inputRef.current) {
       inputRef.current.focus();
       inputRef.current.select();
+    } else if (!editing && returnFocus.current) {
+      triggers.current[returnFocus.current]?.focus();
+      returnFocus.current = null;
     }
   }, [editing]);
 
@@ -36,13 +41,15 @@ export default function CrewIdentityBlock({ readOnly = false }: Props) {
     setEditing(field);
   }
 
-  function confirm() {
+  function confirm(returnToTrigger = false) {
     if (!editing) return;
     updateMeta({ [editing]: draft });
+    returnFocus.current = returnToTrigger ? editing : null;
     setEditing(null);
   }
 
   function cancel() {
+    returnFocus.current = editing;
     setEditing(null);
   }
 
@@ -55,21 +62,27 @@ export default function CrewIdentityBlock({ readOnly = false }: Props) {
             <input
               ref={inputRef}
               className="crew-input"
+              aria-label={labels?.[{prod:'metaProd',dir:'metaDir',dp:'metaDp'}[key]]||label}
               value={draft}
               onChange={(e) => setDraft(e.target.value)}
-              onBlur={confirm}
+              onBlur={() => confirm()}
               onKeyDown={(e) => {
-                if (e.key === 'Enter')  { e.preventDefault(); confirm(); }
+                if (e.key === 'Enter')  { e.preventDefault(); confirm(true); }
                 if (e.key === 'Escape') { e.preventDefault(); cancel(); }
               }}
             />
+          ) : readOnly ? (
+            <span className={`crew-val${!meta[key] ? ' crew-empty' : ''}`}>{meta[key] || '—'}</span>
           ) : (
-            <span
-              className={`crew-val${!meta[key] ? ' crew-empty' : ''}`}
+            <button
+              type="button"
+              ref={node => { triggers.current[key] = node; }}
+              aria-label={`Edit ${labels?.[{prod:'metaProd',dir:'metaDir',dp:'metaDp'}[key]]||label}`}
+              className={`inline-edit-trigger crew-val${!meta[key] ? ' crew-empty' : ''}`}
               onClick={() => startEdit(key)}
             >
               {meta[key] || '—'}
-            </span>
+            </button>
           )}
         </div>
       ))}

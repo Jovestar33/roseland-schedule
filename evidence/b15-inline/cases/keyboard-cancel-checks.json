@@ -1,0 +1,44 @@
+[
+  {
+    "name": "Edit project name",
+    "before": "The focused UI element is 28 button Edit project name",
+    "opened": "The focused UI element is 257 text field (settable) B14 production",
+    "cancelled": "The focused UI element is 257 button Edit project name",
+    "stillSaved": true
+  },
+  {
+    "name": "Edit phase",
+    "before": "The focused UI element is 29 button Edit phase",
+    "opened": "The focused UI element is 258 text field (settable)",
+    "cancelled": "The focused UI element is 258 button Edit phase",
+    "stillSaved": true
+  },
+  {
+    "name": "Edit production day",
+    "before": "The focused UI element is 31 button Edit production day",
+    "opened": "The focused UI element is 259 text field (settable) Production day",
+    "cancelled": "The focused UI element is 259 button Edit production day",
+    "stillSaved": true
+  },
+  {
+    "name": "Edit PRODUCER",
+    "before": "The focused UI element is 33 button Edit PRODUCER",
+    "opened": "The focused UI element is 260 text field (settable) PRODUCER",
+    "cancelled": "The focused UI element is 260 button Edit PRODUCER",
+    "stillSaved": true
+  },
+  {
+    "name": "Edit DIRECTOR",
+    "before": "The focused UI element is 35 button Edit DIRECTOR",
+    "opened": "The focused UI element is 261 text field (settable) DIRECTOR",
+    "cancelled": "The focused UI element is 261 button Edit DIRECTOR",
+    "stillSaved": true
+  },
+  {
+    "name": "Edit CAMERA",
+    "before": "The focused UI element is 37 button Edit CAMERA",
+    "opened": "The focused UI element is 262 text field (settable) CAMERA",
+    "cancelled": "The focused UI element is 262 button Edit CAMERA",
+    "stillSaved": true
+  }
+]

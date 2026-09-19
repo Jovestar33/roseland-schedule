@@ -1,0 +1,47 @@
+{
+  "recordedAt": "2026-09-19T22:24:38.793555+00:00",
+  "branch": "codex/b15-inline-controls",
+  "baseCommit": "d172f50",
+  "build": "GvjzjKCWyRkBh2FAjTiys",
+  "runtime": {
+    "launcher": 21611,
+    "server": 21620,
+    "port": 3518,
+    "project": "roseland-b14-destination-g2",
+    "api": "http://127.0.0.1:56521",
+    "build": "GvjzjKCWyRkBh2FAjTiys"
+  },
+  "previewHttpStatus": {
+    "3518": 200,
+    "3516": 200,
+    "3514": 200,
+    "3512": 200,
+    "3506": 200
+  },
+  "sourceSha256": {
+    "components/schedule/ComboInput.tsx": "0ee7173c7ee97d6821de3d1e09e8e20bbd320aa989822721a51f399af2457d81",
+    "components/schedule/CrewIdentityBlock.tsx": "bbbb2960a3ce8c0b5efd703a7db2c06114ec9b173c6db4b282efcb804be80379",
+    "components/schedule/HeaderIdentityLine.tsx": "10cf57b0afdf347797cdc258e37571109e0193b8a09681bd51963c1c6e9ddd9c",
+    "components/schedule/LocationCell.tsx": "036d2b967574ec33c244abf05420418e727532e287c6ff1116ea860791d201d5",
+    "styles/base.css": "e1a53f4b0f2dc4237b31783f9f89360550d34c865cf5265c38f8e46cec141401"
+  },
+  "editorTests": {
+    "passed": 101,
+    "failed": 0
+  },
+  "typeCheckExit": 0,
+  "buildExit": 0,
+  "retainedReviewDocuments": {
+    "retainedSchedules": 16,
+    "versionsNamesAndDocumentsUnchanged": true,
+    "newTarget": "efc8579e-e920-474f-970a-1a1d0a0b33e1",
+    "newTargetVersion": 5,
+    "savedMetadataAndNestedStateVerified": true
+  },
+  "credentialValueScan": {
+    "files": 50,
+    "privateValues": 19,
+    "matches": 0
+  },
+  "scope": "Local fictional fixtures only; frozen3516 and earlier previews preserved."
+}

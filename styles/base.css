@@ -111,6 +111,10 @@ body{font-family:var(--fb);background:var(--g100);color:var(--black);min-height:
 
 /* META */
 .meta{padding:20px 24px 16px;border-bottom:1px solid var(--g200)}
+/* Inline edit buttons preserve the established text layout. */
+.inline-edit-trigger{appearance:none;background:transparent;border:0;padding:0;margin:0;
+  font:inherit;color:inherit;text-align:inherit;letter-spacing:inherit;vertical-align:baseline}
+.inline-edit-trigger:focus-visible{outline:2px solid var(--pink);outline-offset:3px;border-radius:2px}
 /* IDENTITY BLOCK (two-row) */
 .hdr-id-block{padding-top:6px;padding-bottom:12px}
 /* Row 1 — project name */

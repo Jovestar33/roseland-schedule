@@ -17,7 +17,7 @@
   {
     "case": "IN-02",
     "coverage": "Partial",
-    "boundary": "Keyboard row reorder, time and date entry, dialog Escape/focus observed. Native IAB date-picker crashed; physical keyboard/touch coverage remains."
+    "boundary": "Keyboard row/time/date evidence retained. New native header triggers support Tab, Enter/Space, commit/cancel focus and invalid-day recovery; clean Escape stays Saved. Desktop/390 verified. Physical keyboard/touch coverage remains. See B15_INLINE_CONTROL_REPORT.md."
   },
   {
     "case": "IN-03",
@@ -62,12 +62,12 @@
   {
     "case": "ED-04",
     "coverage": "Partial",
-    "boundary": "Duration/reorder/delete and weather Undo/Redo observed. Full saved-baseline permutations remain."
+    "boundary": "Existing duration/reorder/delete/weather and template Undo evidence retained. Nested completion now has an independent Undo step preserving earlier row edits, with Redo, saved reopen and narrow removal/Undo verified. Broader baseline combinations remain."
   },
   {
     "case": "ED-05",
     "coverage": "Partial",
-    "boundary": "Town/date and call-sheet fields saved/read back. Complete header fixture set remains."
+    "boundary": "Metadata/call-sheet saved readback retained. Six inline header fields now keyboard reachable; project/phase commit, day validation/cancel and crew entry verified on a new fictional schedule. Complete fixture/device set remains."
   },
   {
     "case": "SAVE-01",
@@ -117,7 +117,7 @@
   {
     "case": "LOC-02",
     "coverage": "Partial",
-    "boundary": "Nested fields/completion and saved preservation observed; full reorder/remove/print matrix remains."
+    "boundary": "Nested fields/completion and outputs retained. New nested completion Undo preserves earlier row edits; keyboard remove/Undo verified at390 and saved readback agrees. Physical pointer/touch and full permutations remain."
   },
   {
     "case": "WX-01",

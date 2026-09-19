@@ -1,0 +1,134 @@
+[
+  {
+    "color": "rgb(17, 17, 17)",
+    "font": "16px \"DM Sans\", sans-serif",
+    "rect": {
+      "height": 225.984375,
+      "width": 1168,
+      "x": 16,
+      "y": 267
+    },
+    "text": "meta"
+  },
+  {
+    "color": "rgb(17, 17, 17)",
+    "font": "600 18px / 21.6px \"DM Sans\", sans-serif",
+    "rect": {
+      "height": 23.5,
+      "width": 130.125,
+      "x": 40,
+      "y": 294
+    },
+    "text": "hi-project"
+  },
+  {
+    "color": "rgb(17, 17, 17)",
+    "font": "12px / 19.2px \"DM Sans\", sans-serif",
+    "rect": {
+      "height": 19.1953125,
+      "width": 1120,
+      "x": 40,
+      "y": 320.59375
+    },
+    "text": "hdr-id-row2"
+  },
+  {
+    "color": "rgb(161, 161, 170)",
+    "font": "600 10px / 12px \"DM Sans\", sans-serif",
+    "rect": {
+      "height": 12,
+      "width": 362.6640625,
+      "x": 40,
+      "y": 357.7890625
+    },
+    "text": "crew-label"
+  },
+  {
+    "color": "rgb(161, 161, 170)",
+    "font": "13px / 18.2px \"DM Sans\", sans-serif",
+    "rect": {
+      "height": 18.1953125,
+      "width": 362.6640625,
+      "x": 40,
+      "y": 371.7890625
+    },
+    "text": "crew-val crew-empty"
+  },
+  {
+    "color": "rgb(161, 161, 170)",
+    "font": "600 10px / 12px \"DM Sans\", sans-serif",
+    "rect": {
+      "height": 12,
+      "width": 362.671875,
+      "x": 418.6640625,
+      "y": 357.7890625
+    },
+    "text": "crew-label"
+  },
+  {
+    "color": "rgb(161, 161, 170)",
+    "font": "13px / 18.2px \"DM Sans\", sans-serif",
+    "rect": {
+      "height": 18.1953125,
+      "width": 362.671875,
+      "x": 418.6640625,
+      "y": 371.7890625
+    },
+    "text": "crew-val crew-empty"
+  },
+  {
+    "color": "rgb(161, 161, 170)",
+    "font": "600 10px / 12px \"DM Sans\", sans-serif",
+    "rect": {
+      "height": 12,
+      "width": 362.6640625,
+      "x": 797.3359375,
+      "y": 357.7890625
+    },
+    "text": "crew-label"
+  },
+  {
+    "color": "rgb(161, 161, 170)",
+    "font": "13px / 18.2px \"DM Sans\", sans-serif",
+    "rect": {
+      "height": 18.1953125,
+      "width": 362.6640625,
+      "x": 797.3359375,
+      "y": 371.7890625
+    },
+    "text": "crew-val crew-empty"
+  },
+  {
+    "color": "rgb(17, 17, 17)",
+    "font": "16px \"DM Sans\", sans-serif",
+    "rect": {
+      "height": 169.5,
+      "width": 1168,
+      "x": 16,
+      "y": 570.484375
+    },
+    "text": "tbl-wrap"
+  },
+  {
+    "color": "rgb(17, 17, 17)",
+    "font": "16px \"DM Sans\", sans-serif",
+    "rect": {
+      "height": 0,
+      "width": 0,
+      "x": 0,
+      "y": 0
+    },
+    "text": "meta"
+  },
+  {
+    "color": "rgb(17, 17, 17)",
+    "font": "16px \"DM Sans\", sans-serif",
+    "rect": {
+      "height": 0,
+      "width": 0,
+      "x": 0,
+      "y": 0
+    },
+    "text": "tbl-wrap"
+  }
+]
