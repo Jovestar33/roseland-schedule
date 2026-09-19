@@ -17,6 +17,12 @@ test('navigation serializes only known screens and UUID organization identifiers
   assert.deepEqual(parseWorkspaceLocation('?screen=https://other.example&org=//other.example'),{screen:'schedule',organization:null});
   assert.deepEqual(parseWorkspaceLocation('?screen=acceptance&org='+org+'&next=https://other.example'),{screen:'acceptance',organization:org});
 });
+test('review navigation retains its entry route and normal scoped identifiers',()=>{
+  const location={screen:'schedule' as const,organization:org,schedule:prod};
+  const href=workspaceHref(location,'/review');
+  assert.ok(href.startsWith('/review?'));assert.deepEqual(parseWorkspaceLocation(href.split('?')[1]),location);
+  assert.ok(workspaceHref(location).startsWith('/local-workspace?'));
+});
 test('session expiry and same-account reauthentication keep identity; sign-out invalidates outstanding work',()=>{
   const identity=new WorkspaceIdentity();assert.equal(identity.bind(actor),true);const generation=identity.capture();
   assert.equal(identity.bind(null),false);assert.equal(identity.actor,actor);assert.equal(identity.bind(actor),false);assert.ok(identity.current(generation));

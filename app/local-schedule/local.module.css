@@ -25,3 +25,7 @@
 .fileEntry { display: grid; gap: 10px; margin: 16px 0; }
 .files pre { max-height: 300px; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; }
 .files li { margin: 10px 0; overflow-wrap: anywhere; }
+
+.reviewMain { margin:0 auto; padding-top:0; }
+.reviewMain > .toolbar { padding:8px 0; }
+.reviewLibrary > section { padding:10px 0; max-width:none; }

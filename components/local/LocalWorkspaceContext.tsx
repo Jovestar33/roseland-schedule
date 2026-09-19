@@ -6,6 +6,7 @@ import type { WorkspaceOrganization } from '@/lib/platform/workspace-repository'
 export interface WorkspacePanelState { dirty:boolean; busy:boolean }
 export interface WorkspaceScheduleRequest {id:string;organization:string;sequence:number;target?:'lifecycle'}
 export interface WorkspacePanel {
+  review?:boolean;
   client:SupabaseClient;
   session:Session|null;
   authNeeded:boolean;
@@ -21,6 +22,7 @@ export interface WorkspacePanel {
   openOrganization:(id:string)=>void;
   openLifecycle?:(organization:string,id:string)=>void;
   openSchedule:(organization:string,id:string)=>void;
+  onScheduleSelection?:(organization:string,id:string|null)=>void;
   scheduleRequest:WorkspaceScheduleRequest|null;
   consumeScheduleRequest:(sequence:number)=>void;
 }

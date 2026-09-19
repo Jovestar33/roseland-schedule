@@ -24,3 +24,12 @@
 @media(max-width:760px){.header{padding:24px 16px;flex-wrap:wrap;}.shell{padding:16px;}.directory{align-items:stretch;}.directory label{flex-basis:100%;}.tabs{gap:8px;}}
 
 .login label:has(input[type="checkbox"]) { display:flex; align-items:center; }
+
+.reviewBar { max-width:1500px; margin:auto; padding:10px 20px; display:flex; align-items:center; justify-content:space-between; gap:12px; font-size:13px; }
+
+.tabs[hidden] { display:none; }
+
+.reviewShell { max-width:1500px; padding:4px 20px; }
+.reviewShell .directory { margin:4px 0; }
+.reviewShell .directory label { flex:0 1 420px; min-width:0; display:flex; align-items:center; gap:12px; }
+.reviewShell .directory select { flex:1; min-width:0; padding:6px 10px; }

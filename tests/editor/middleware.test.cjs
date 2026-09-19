@@ -21,3 +21,8 @@ test('private schedules still require the auth flag', () => {
   const response = middleware(new NextRequest('https://example.test/schedule/A'));
   assert.equal(new URL(response.headers.get('location')).pathname, '/login');
 });
+test('review uses its independent server gate rather than legacy shared-password login', () => {
+  const response = middleware(new NextRequest('http://127.0.0.1:3487/review'));
+  assert.equal(response.status, 200);
+  assert.equal(response.headers.get('location'), null);
+});
