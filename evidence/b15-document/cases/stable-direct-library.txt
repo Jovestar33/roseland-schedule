@@ -1,0 +1,101 @@
+Browser tab: 1020304387, Title: "Roseland Schedule", URL: "http://127.0.0.1:3516/review?screen=schedule&org=2f75e684-eb3a-4951-9389-2df147812a8a".
+1 AXWebArea Roseland Schedule, URL: 127.0.0.1:3516/review?screen=schedule&org=2f75e684-eb3a-4951-9389-2df147812a8a
+	2 container
+		3 image Roseland Pictures
+		4 text B14 LATEST ORGANIZATION LABELS
+	21 container Organization context
+		40 text ORGANIZATION
+		41 text B14 Fictional Studio
+		25 button Account & settings
+	42 container Organization deletion settings
+	26 container Schedule library
+		27 heading Library, Value: 1
+			28 text Library
+		29 container
+			30 button + New Schedule
+			31 button ↻ Refresh
+		32 button 📁 Library
+		33 button ★ Templates
+		34 button 🔗 Backup
+		35 button Move requests
+		36 container
+			37 text ⌕
+			38 text field (settable)
+		39 button (collapsed) Filter, Secondary Actions: Expand
+		43 container Recent schedules
+			44 text RECENT
+			45 button B15 document parity — fictional
+			46 text B14 production 2026-11-21
+		47 container
+			48 button (expanded) ▾ B14 production 16 schedules, Secondary Actions: Collapse
+				49 text ▾
+				50 text B14 production
+				51 text 16
+				52 text schedules
+			53 button (expanded) ▾ No production day 16, Secondary Actions: Collapse
+				54 text ▾
+				55 text No production day
+				56 text 16
+			57 button Arrange B15 ordinary fictional day
+			58 button B15 ordinary fictional day
+			59 text 2026-10-20
+			60 button Organize B15 ordinary fictional day
+			61 button Arrange B15 long fictional day
+			62 button B15 long fictional day
+			63 text 2026-10-20
+			64 button Organize B15 long fictional day
+			65 button Arrange B15 empty fictional day
+			66 button B15 empty fictional day
+			67 button Organize B15 empty fictional day
+			68 button Arrange B14 Fictional
+			69 button B14 Fictional
+			70 text 2026-09-20
+			71 button Organize B14 Fictional
+			72 button Arrange B15 review copy
+			73 button B15 review copy
+			74 text 2026-10-20
+			75 button Organize B15 review copy
+			76 button Arrange Example shoot day — fictional
+			77 button Example shoot day — fictional
+			78 button Organize Example shoot day — fictional
+			79 button Arrange B15 comprehensive parity — fictional
+			80 button B15 comprehensive parity — fictional
+			81 text 2026-09-19
+			82 button Organize B15 comprehensive parity — fictional
+			83 button Arrange B15 import round trip — fictional
+			84 button B15 import round trip — fictional
+			85 button Organize B15 import round trip — fictional
+			86 button Arrange B15 import round trip — fictional copy
+			87 button B15 import round trip — fictional copy
+			88 button Organize B15 import round trip — fictional copy
+			89 button Arrange B15 duplicate handoff — fictional
+			90 button B15 duplicate handoff — fictional
+			91 button Organize B15 duplicate handoff — fictional
+			92 button Arrange Coordinator parity review — fictional
+			93 button Coordinator parity review — fictional
+			94 button Organize Coordinator parity review — fictional
+			95 button Arrange B15 quality workflow — fictional
+			96 button B15 quality workflow — fictional
+			97 button Organize B15 quality workflow — fictional
+			98 button Arrange B15 concurrent editing — fictional
+			99 button B15 concurrent editing — fictional
+			100 button Organize B15 concurrent editing — fictional
+			101 button Arrange B15 matched weather — fictional
+			102 button B15 matched weather — fictional
+			103 text 2026-10-20
+			104 button Organize B15 matched weather — fictional
+			105 button Arrange B15 snapshot copy — fictional
+			106 button B15 snapshot copy — fictional
+			107 text 2026-10-20
+			108 button Organize B15 snapshot copy — fictional
+			109 button Arrange B15 document parity — fictional
+			110 button B15 document parity — fictional
+			111 text 2026-11-21
+			112 button Organize B15 document parity — fictional
+			113 button + New schedule in B14 production
+				114 text + New schedule in
+				115 text B14 production
+	20 container Notifications
+	116 text Roseland Schedule
+
+The focused UI element is 25 button Account & settings

@@ -1,0 +1,372 @@
+{
+  "review": {
+    "actor": "8f2c1dd0-d3fc-47c7-94b6-22bf3dde1ff6",
+    "capabilities": {
+      "268cb10a-5062-4a18-8056-0f6c0c43ffe7": {
+        "read": true,
+        "edit": true,
+        "export": true
+      },
+      "1b150e87-7959-4ab8-8e23-76970ca6a928": {
+        "read": true,
+        "edit": true,
+        "export": true
+      }
+    },
+    "target": {
+      "id": "1b150e87-7959-4ab8-8e23-76970ca6a928",
+      "slug": "b15-document-parity-fictional",
+      "town": null,
+      "status": "draft",
+      "document": {
+        "meta": {
+          "dp": "",
+          "wx": null,
+          "dir": "",
+          "lat": null,
+          "lng": null,
+          "date": "2026-11-21",
+          "prod": "",
+          "town": "",
+          "phase": "",
+          "dayNumber": null,
+          "totalDays": null,
+          "projectName": "Import Draft Metadata"
+        },
+        "rows": [
+          {
+            "dur": "00:00",
+            "loc": "",
+            "desc": "",
+            "done": false,
+            "notes": "EXPORT CONCURRENT SAVED VERSION",
+            "action": "Shoot",
+            "locLat": null,
+            "locLng": null,
+            "status": "",
+            "timeIn": "",
+            "fixedIn": false,
+            "fixedOut": false,
+            "otherText": "",
+            "sunLocked": false,
+            "contactName": "B14 PRIVATE CONTACT",
+            "contactEmail": "",
+            "contactPhone": "",
+            "contactTitle": "",
+            "fixedOutTime": "",
+            "subLocations": [
+              {
+                "id": "gate",
+                "loc": "Test gate"
+              }
+            ]
+          }
+        ],
+        "savedAt": 1789855556854
+      },
+      "phase_id": null,
+      "created_at": "2026-09-19T09:08:59.071612+00:00",
+      "created_by": "8f2c1dd0-d3fc-47c7-94b6-22bf3dde1ff6",
+      "deleted_at": null,
+      "updated_at": "2026-09-19T22:05:56.863831+00:00",
+      "updated_by": "8f2c1dd0-d3fc-47c7-94b6-22bf3dde1ff6",
+      "display_name": "B15 document parity — fictional",
+      "production_id": "64b12765-4d49-4420-8ff1-4705e8844610",
+      "organization_id": "2f75e684-eb3a-4951-9389-2df147812a8a",
+      "document_version": 7,
+      "library_position": 12,
+      "production_day_id": null,
+      "destination_labels": {
+        "phase": "",
+        "projectName": "B14 production"
+      },
+      "archived_from_status": null,
+      "last_transfer_version": 0,
+      "document_schema_version": 1
+    },
+    "snapshots": [
+      {
+        "id": "02c060cf-b57b-47df-a5f9-d057115c7a75",
+        "kind": "automatic",
+        "name": null,
+        "version": 1,
+        "can_name": true,
+        "can_purge": false,
+        "can_trash": true,
+        "row_count": 1,
+        "deleted_at": null,
+        "captured_at": "2026-09-19T22:02:53.851138+00:00",
+        "original_id": null,
+        "schedule_id": "1b150e87-7959-4ab8-8e23-76970ca6a928",
+        "original_order": null,
+        "organization_id": "2f75e684-eb3a-4951-9389-2df147812a8a"
+      },
+      {
+        "id": "09006dac-3b87-4f50-b350-a04911fcac9b",
+        "kind": "automatic",
+        "name": null,
+        "version": 1,
+        "can_name": true,
+        "can_purge": false,
+        "can_trash": true,
+        "row_count": 1,
+        "deleted_at": null,
+        "captured_at": "2026-09-19T09:41:48.838884+00:00",
+        "original_id": null,
+        "schedule_id": "1b150e87-7959-4ab8-8e23-76970ca6a928",
+        "original_order": null,
+        "organization_id": "2f75e684-eb3a-4951-9389-2df147812a8a"
+      },
+      {
+        "id": "18799958-536a-49b2-b592-771ae18f3433",
+        "kind": "automatic",
+        "name": null,
+        "version": 1,
+        "can_name": true,
+        "can_purge": false,
+        "can_trash": true,
+        "row_count": 1,
+        "deleted_at": null,
+        "captured_at": "2026-09-19T09:26:33.829875+00:00",
+        "original_id": null,
+        "schedule_id": "1b150e87-7959-4ab8-8e23-76970ca6a928",
+        "original_order": null,
+        "organization_id": "2f75e684-eb3a-4951-9389-2df147812a8a"
+      },
+      {
+        "id": "1b9401da-54a1-4a35-9766-895255906774",
+        "kind": "automatic",
+        "name": null,
+        "version": 1,
+        "can_name": true,
+        "can_purge": false,
+        "can_trash": true,
+        "row_count": 1,
+        "deleted_at": null,
+        "captured_at": "2026-09-19T09:31:38.837431+00:00",
+        "original_id": null,
+        "schedule_id": "1b150e87-7959-4ab8-8e23-76970ca6a928",
+        "original_order": null,
+        "organization_id": "2f75e684-eb3a-4951-9389-2df147812a8a"
+      },
+      {
+        "id": "20e68e75-6c7b-4d8e-9581-a5b44545e852",
+        "kind": "automatic",
+        "name": null,
+        "version": 1,
+        "can_name": true,
+        "can_purge": false,
+        "can_trash": true,
+        "row_count": 1,
+        "deleted_at": null,
+        "captured_at": "2026-09-19T09:16:28.787063+00:00",
+        "original_id": null,
+        "schedule_id": "1b150e87-7959-4ab8-8e23-76970ca6a928",
+        "original_order": null,
+        "organization_id": "2f75e684-eb3a-4951-9389-2df147812a8a"
+      },
+      {
+        "id": "31eb9af0-dbac-4b01-8329-5a4801be9213",
+        "kind": "automatic",
+        "name": null,
+        "version": 1,
+        "can_name": true,
+        "can_purge": false,
+        "can_trash": true,
+        "row_count": 1,
+        "deleted_at": null,
+        "captured_at": "2026-09-19T09:21:28.827755+00:00",
+        "original_id": null,
+        "schedule_id": "1b150e87-7959-4ab8-8e23-76970ca6a928",
+        "original_order": null,
+        "organization_id": "2f75e684-eb3a-4951-9389-2df147812a8a"
+      },
+      {
+        "id": "51fab331-fb33-46e0-b911-4437d7e47e10",
+        "kind": "automatic",
+        "name": null,
+        "version": 1,
+        "can_name": true,
+        "can_purge": false,
+        "can_trash": true,
+        "row_count": 1,
+        "deleted_at": null,
+        "captured_at": "2026-09-19T10:07:13.814919+00:00",
+        "original_id": null,
+        "schedule_id": "1b150e87-7959-4ab8-8e23-76970ca6a928",
+        "original_order": null,
+        "organization_id": "2f75e684-eb3a-4951-9389-2df147812a8a"
+      },
+      {
+        "id": "92ec36f9-80a5-4efc-bb04-3ddf1e758658",
+        "kind": "named",
+        "name": "Document feedback verification",
+        "version": 1,
+        "can_name": true,
+        "can_purge": false,
+        "can_trash": true,
+        "row_count": 1,
+        "deleted_at": null,
+        "captured_at": "2026-09-19T22:03:23.562403+00:00",
+        "original_id": null,
+        "schedule_id": "1b150e87-7959-4ab8-8e23-76970ca6a928",
+        "original_order": null,
+        "organization_id": "2f75e684-eb3a-4951-9389-2df147812a8a"
+      },
+      {
+        "id": "9629cb8e-cf94-4c4f-b2f9-0a6db88b1d72",
+        "kind": "automatic",
+        "name": null,
+        "version": 1,
+        "can_name": true,
+        "can_purge": false,
+        "can_trash": true,
+        "row_count": 1,
+        "deleted_at": null,
+        "captured_at": "2026-09-19T09:36:43.836502+00:00",
+        "original_id": null,
+        "schedule_id": "1b150e87-7959-4ab8-8e23-76970ca6a928",
+        "original_order": null,
+        "organization_id": "2f75e684-eb3a-4951-9389-2df147812a8a"
+      },
+      {
+        "id": "9e79d20d-462b-40b3-bf20-00ef7900f9e2",
+        "kind": "automatic",
+        "name": null,
+        "version": 1,
+        "can_name": true,
+        "can_purge": false,
+        "can_trash": true,
+        "row_count": 1,
+        "deleted_at": null,
+        "captured_at": "2026-09-19T09:57:03.815042+00:00",
+        "original_id": null,
+        "schedule_id": "1b150e87-7959-4ab8-8e23-76970ca6a928",
+        "original_order": null,
+        "organization_id": "2f75e684-eb3a-4951-9389-2df147812a8a"
+      },
+      {
+        "id": "9fc277b5-2398-4d3e-9d03-1c2ddceb1f41",
+        "kind": "automatic",
+        "name": null,
+        "version": 1,
+        "can_name": true,
+        "can_purge": false,
+        "can_trash": true,
+        "row_count": 1,
+        "deleted_at": null,
+        "captured_at": "2026-09-19T10:02:08.812018+00:00",
+        "original_id": null,
+        "schedule_id": "1b150e87-7959-4ab8-8e23-76970ca6a928",
+        "original_order": null,
+        "organization_id": "2f75e684-eb3a-4951-9389-2df147812a8a"
+      },
+      {
+        "id": "af814e76-6eba-4455-87f2-a4cef0c6a49a",
+        "kind": "named",
+        "name": "Document baseline snapshot",
+        "version": 1,
+        "can_name": true,
+        "can_purge": false,
+        "can_trash": true,
+        "row_count": 1,
+        "deleted_at": null,
+        "captured_at": "2026-09-19T09:10:54.76382+00:00",
+        "original_id": null,
+        "schedule_id": "1b150e87-7959-4ab8-8e23-76970ca6a928",
+        "original_order": null,
+        "organization_id": "2f75e684-eb3a-4951-9389-2df147812a8a"
+      },
+      {
+        "id": "c6781a5b-5b9f-4f0b-a6d2-4e82ad1cb287",
+        "kind": "automatic",
+        "name": null,
+        "version": 1,
+        "can_name": true,
+        "can_purge": false,
+        "can_trash": true,
+        "row_count": 1,
+        "deleted_at": null,
+        "captured_at": "2026-09-19T10:12:18.819321+00:00",
+        "original_id": null,
+        "schedule_id": "1b150e87-7959-4ab8-8e23-76970ca6a928",
+        "original_order": null,
+        "organization_id": "2f75e684-eb3a-4951-9389-2df147812a8a"
+      },
+      {
+        "id": "d06d85af-dc59-4890-a217-c70871bba847",
+        "kind": "automatic",
+        "name": null,
+        "version": 1,
+        "can_name": true,
+        "can_purge": false,
+        "can_trash": true,
+        "row_count": 1,
+        "deleted_at": null,
+        "captured_at": "2026-09-19T09:46:53.812613+00:00",
+        "original_id": null,
+        "schedule_id": "1b150e87-7959-4ab8-8e23-76970ca6a928",
+        "original_order": null,
+        "organization_id": "2f75e684-eb3a-4951-9389-2df147812a8a"
+      },
+      {
+        "id": "fc9a70a8-c53c-456a-89a8-0193228fcebe",
+        "kind": "automatic",
+        "name": null,
+        "version": 1,
+        "can_name": true,
+        "can_purge": false,
+        "can_trash": true,
+        "row_count": 1,
+        "deleted_at": null,
+        "captured_at": "2026-09-19T09:51:58.815191+00:00",
+        "original_id": null,
+        "schedule_id": "1b150e87-7959-4ab8-8e23-76970ca6a928",
+        "original_order": null,
+        "organization_id": "2f75e684-eb3a-4951-9389-2df147812a8a"
+      }
+    ],
+    "template": {
+      "id": "1c9d650d-e5ac-438e-8c43-85a11d4ff9cc",
+      "name": "B14 newest template name",
+      "rows": [
+        {
+          "dur": "00:00",
+          "notes": "B14 client note",
+          "action": "Shoot",
+          "contactName": "B14 PRIVATE CONTACT",
+          "subLocations": [
+            {
+              "id": "gate",
+              "loc": "Test gate"
+            }
+          ]
+        }
+      ],
+      "version": 2,
+      "can_trash": true,
+      "can_manage": true,
+      "deleted_at": null,
+      "can_publish": true,
+      "published_at": null,
+      "production_id": "64b12765-4d49-4420-8ff1-4705e8844610",
+      "organization_id": "2f75e684-eb3a-4951-9389-2df147812a8a"
+    },
+    "targetHash": "78916ad3b9680cf175ba73e687b0dc55f09a5984dbaec177788501a58c900060"
+  },
+  "restrictedViewer": {
+    "actor": "c05b5229-3935-4080-9d30-e711971461a1",
+    "capabilities": {
+      "268cb10a-5062-4a18-8056-0f6c0c43ffe7": {
+        "read": false,
+        "edit": false,
+        "export": false
+      },
+      "1b150e87-7959-4ab8-8e23-76970ca6a928": {
+        "read": false,
+        "edit": false,
+        "export": false
+      }
+    }
+  }
+}

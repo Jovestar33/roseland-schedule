@@ -1,0 +1,50 @@
+Browser tab: 1020304387, Title: "Roseland Schedule", URL: "http://127.0.0.1:3516/review?screen=schedule&org=2f75e684-eb3a-4951-9389-2df147812a8a&schedule=1b150e87-7959-4ab8-8e23-76970ca6a928".
+1 AXWebArea Roseland Schedule, URL: 127.0.0.1:3516/review?screen=schedule&org=2f75e684-eb3a-4951-9389-2df147812a8a&schedule=1b150e87-7959-4ab8-8e23-76970ca6a928
+	2 container Backup and import
+		3 heading Backup and import, Value: 2
+			4 text Backup and import
+		5 button Close Backup and import
+			6 image
+		7 button ← All tools
+		8 container Schedule files
+			9 heading Schedule files, Value: 2
+				10 text Schedule files
+			11 text Download saved schedules, or import a JSON backup as new schedules. Unsaved edits stay in this tab.
+			12 button (collapsed) What the backup includes, Secondary Actions: Expand
+				13 text What the backup includes
+			14 button Export all readable schedules
+			15 button (disabled) Copy / Save As current draft
+			16 container
+				17 text Import schedule-only JSON
+				18 button (disabled) Import schedule-only JSON
+			19 text A name or slug already exists in that production. Edit the review; nothing was created.
+			20 container Review new schedules — no writes yet
+				36 text Review new schedules — no writes yet
+				37 text All items become new drafts in the selected production. A production day is optional for file imports. Imported schedules start as new drafts. Schedule fields stay exactly as supplied. Existing schedules are never overwritten.
+				21 container
+					38 text Destination production
+					22 pop up button (collapsed, settable) Destination production, Value: B14 production, Secondary Actions: Expand
+						23 menu
+							39 Choose a production
+							24 (selected) B14 production
+				25 container
+					40 text Destination production day
+					26 pop up button (collapsed, settable) Destination production day, Value: No production day, Secondary Actions: Expand
+						27 menu
+							28 (selected) No production day
+				29 container
+					41 text New schedule name  1
+					30 text field (settable) New schedule name 1, Value: B15 document parity — fictional
+				31 container
+					42 text New schedule slug  1
+					32 text field (settable) New schedule slug 1, Value: b15-document-parity-fictional
+				33 button (collapsed) Review full document 1 (1 rows), Secondary Actions: Expand
+					43 text Review full document
+					44 text 1
+					45 text  (
+					46 text 1
+					47 text  rows)
+				34 button Prepare create-only review
+				35 button Cancel review
+
+The focused UI element is 1 AXWebArea Roseland Schedule, URL: 127.0.0.1:3516/review?screen=schedule&org=2f75e684-eb3a-4951-9389-2df147812a8a&schedule=1b150e87-7959-4ab8-8e23-76970ca6a928

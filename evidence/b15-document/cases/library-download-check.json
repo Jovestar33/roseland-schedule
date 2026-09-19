@@ -1,0 +1,16 @@
+{
+  "file": "All-authorized-schedules-2026-09-19 (1).json",
+  "records": 16,
+  "allDocumentsEqualOrdinaryReadback": true,
+  "exclusions": [
+    "history",
+    "snapshots",
+    "templates",
+    "CMS",
+    "memberships",
+    "hierarchy definitions",
+    "legacy aliases",
+    "browser-only data"
+  ],
+  "sha256": "87d17fcc5aa9c597eb02dec1fcf71568092ac8aef3dc427a4da9a663a3b3728b"
+}

@@ -1,0 +1,59 @@
+{
+  "recordedAt": "2026-09-19T22:11:49.861308+00:00",
+  "branch": "codex/b15-document-parity",
+  "baseCommit": "22b77d7aacd2d241b1e73f61a5edfc2258a8a74a",
+  "applicationCheckpoint": "f5ef94f",
+  "build": "maNJN6IqApSNAN_ML5hfD",
+  "preview": "http://127.0.0.1:3516/review",
+  "runtime": {
+    "launcher": 18726,
+    "server": 18735,
+    "port": 3516,
+    "project": "roseland-b14-destination-g2",
+    "api": "http://127.0.0.1:56521",
+    "build": "maNJN6IqApSNAN_ML5hfD"
+  },
+  "previewHttpStatus": {
+    "3516": 200,
+    "3514": 200,
+    "3512": 200,
+    "3506": 200
+  },
+  "faultProxyStopped": true,
+  "heldResponses": {
+    "held": 0,
+    "released": 1
+  },
+  "sourceSha256": {
+    "components/local/LocalScheduleSnapshots.tsx": "158d6d282f222740a39197ebc2849a6aabdf164575cdce2b2a50575ec7143964"
+  },
+  "editorTests": {
+    "passed": 100,
+    "failed": 0
+  },
+  "documentTests": {
+    "passed": 31,
+    "failed": 0
+  },
+  "typeCheckExit": 0,
+  "buildExit": 0,
+  "retainedReviewDocuments": {
+    "retainedSchedules": 15,
+    "versionsAndHashesUnchanged": true,
+    "newScheduleCount": 1,
+    "cancelledAndRejectedImportsAbsent": true,
+    "inputFilesUnchanged": true
+  },
+  "targetVersion": 7,
+  "snapshots": {
+    "total": 15,
+    "named": 2,
+    "automatic": 13,
+    "namedCaptureNamesUnique": true
+  },
+  "credentialValueScan": {
+    "files": 60,
+    "privateValues": 19,
+    "matches": 0
+  }
+}

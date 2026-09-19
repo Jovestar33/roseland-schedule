@@ -1,0 +1,39 @@
+✔ schedule-only JSON preserves complete documents, source provenance and canonical hash (5.117083ms)
+✔ legacy formats are accepted without importing any legacy network adapter (1.992542ms)
+✔ tampered hashes, partial entries, invalid JSON and unsupported versions fail closed (1.022417ms)
+✔ unrecognized fields, bounds, dates, times and large nested collections are rejected without stripping (0.638125ms)
+✔ oversize file and count limits reject before review (13.768625ms)
+✔ copy review freezes current draft and never mutates the source or later edits (0.471417ms)
+✔ duplicate names, slugs and generated IDs fail before sending (1.230542ms)
+✔ partial failure stops batch; lost acknowledgement recovers same UUID and skips completed items (0.514541ms)
+✔ uncommitted failure retries the exact reviewed ID/document (0.207916ms)
+✔ permission denial retains identity and prevents later items; auth recovery can retry (0.303334ms)
+✔ scope change stops later writes and duplicate execution does not send twice (0.215792ms)
+✔ conflicting identity blocks retry rather than allocating a replacement (0.119542ms)
+✔ changed export inventory rejects incomplete or mixed output (5.282125ms)
+✔ overwrite instructions are rejected rather than silently discarded (1.248584ms)
+✔ production-only import retains its reviewed destination and document through lost acknowledgement (0.274208ms)
+✔ snapshot capture freezes the complete draft without cleaning or truncating it (1.992458ms)
+✔ snapshot request recovery is actor, organization, schedule and exact-request bound (0.59175ms)
+✔ automatic capture observes the five-minute dirty interval and cannot cross document or account identity (0.087541ms)
+✔ permanent snapshot deletion requires a reviewed explicit confirmation (0.105375ms)
+✔ snapshot inventory preserves complete collections across pages above the old 25-item cap (0.4175ms)
+✔ snapshot transport rejects another account and mismatched schedule responses (0.272291ms)
+✔ an interrupted capture retains its identity across reload and confirms without another write (0.26825ms)
+✔ a late snapshot restore never replaces a newer draft or another account/document (0.065375ms)
+✔ Captured template mutation retains every nested row and exact request identity after newer edits (0.957667ms)
+✔ Template acknowledgement must match request, object, action and exact next version (0.336083ms)
+✔ Durable pending request survives reload only under the original account and organization (0.544625ms)
+✔ Failed storage readback prevents dispatch-ready recovery state (0.141167ms)
+✔ A changed account cannot send or probe an old template request (0.273041ms)
+✔ Publication has a separate server operation and retries use the same reviewed version (0.149458ms)
+✔ Template reads reject a different organization, target or malformed rows (0.320625ms)
+✔ Definitive server validation rejection stays distinct from an uncertain transport failure (0.119709ms)
+ℹ tests 31
+ℹ suites 0
+ℹ pass 31
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 108.140708

@@ -1,0 +1,22 @@
+Browser tab: 1020304387, Title: "Roseland Schedule", URL: "http://127.0.0.1:3516/review?screen=schedule&org=2f75e684-eb3a-4951-9389-2df147812a8a&schedule=1b150e87-7959-4ab8-8e23-76970ca6a928".
+1 AXWebArea Roseland Schedule, URL: 127.0.0.1:3516/review?screen=schedule&org=2f75e684-eb3a-4951-9389-2df147812a8a&schedule=1b150e87-7959-4ab8-8e23-76970ca6a928
+	2 container Backup and import
+		3 heading Backup and import, Value: 2
+			4 text Backup and import
+		5 button Close Backup and import
+			6 image
+		7 button ← All tools
+		8 container Schedule files
+			9 heading Schedule files, Value: 2
+				10 text Schedule files
+			11 text Download saved schedules, or import a JSON backup as new schedules. Unsaved edits stay in this tab.
+			12 button (collapsed) What the backup includes, Secondary Actions: Expand
+				13 text What the backup includes
+			14 button Export all readable schedules
+			15 button Copy / Save As current draft
+			16 container
+				17 text Import schedule-only JSON
+				18 button Import schedule-only JSON
+			19 text Schedules changed while exporting. No partial file was produced. Retry the export.
+
+The focused UI element is 1 AXWebArea Roseland Schedule, URL: 127.0.0.1:3516/review?screen=schedule&org=2f75e684-eb3a-4951-9389-2df147812a8a&schedule=1b150e87-7959-4ab8-8e23-76970ca6a928
