@@ -1,0 +1,4 @@
+Recovered exact fictional newer description after successful snapshot restoration. Original saved version remains guarded.
+Your unsaved changes will be discarded.
+
+Keep editingClose schedule and discard unsaved changes

@@ -1,0 +1,14 @@
+import {readFileSync,writeFileSync} from 'node:fs';
+import {createClient} from '@supabase/supabase-js';
+const config=JSON.parse(readFileSync('/private/tmp/roseland-b14-destination-g2-live-status.json','utf8'));
+const access=JSON.parse(readFileSync('/private/tmp/roseland-b15-review-access.json','utf8'));
+if(config.API_URL!=='http://127.0.0.1:56521')throw Error('Fictional loopback required');
+const client=createClient(config.API_URL,config.ANON_KEY,{auth:{persistSession:false,autoRefreshToken:false}});
+const login=await client.auth.signInWithPassword({email:access.email,password:access.password});if(login.error)throw Error('Login failed');
+const fixture=JSON.parse(readFileSync('/private/tmp/roseland-b15-quality-fixture.json','utf8'));
+const result=await client.rpc('session_read_schedule',{target_schedule_id:fixture.schedule});
+if(result.error||result.data?.display_name!==fixture.name)throw Error('Fictional document read failed');
+const rows=result.data.document.rows;
+if(rows.length!==2||rows[0].desc!=='Fictional long description\nSecond line of the shot plan\nThird line remains visible'||rows[0].contactEmail!=='audit@example.test'||rows[0].subLocations?.[0]?.desc!=='Nested fictional instructions\nSecond line')throw Error('Restored content differs');
+writeFileSync('evidence/b15-quality-pass/saved-readback.json',JSON.stringify(result.data,null,2));
+console.log(JSON.stringify({version:result.data.document_version,rows:rows.length,restoredTemplateContentVerified:true}));

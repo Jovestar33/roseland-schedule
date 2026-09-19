@@ -285,7 +285,7 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
     const record=await repository.read(c.id);
     if(!safe()||record.document_version!==receipt.schedule_version)return false;
     state().loadSchedule(record.display_name,{rows:record.document.rows??[],meta:makeMeta(record.document.meta),savedAt:record.document.savedAt??0});
-    controller.record=record;setVersion(record.document_version);setMessage('Snapshot content restored. Your previous draft and undo history remain available through Recover retained source draft.');return true;
+    controller.record=record;setVersion(record.document_version);if(review)setReviewTool(null);setMessage('Snapshot content restored. Your previous draft and undo history remain available through Recover retained source draft.');return true;
   }
   async function recoverSourceDraft(){
     const record=controller.record,actor=accountRef.current;if(!record||!actor)return;
@@ -407,7 +407,7 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
           </div>
 
           {!review&&<div className={styles.toolbar}>{shareTools}</div>}
-          {workspace&&controller.record&&<ReviewToolPanel enabled={review} open={active&&reviewTool==='sharing'} title="Team and Client links" onClose={()=>setReviewTool(null)} onBack={()=>setReviewTool('menu')}><div><LocalScheduleSharing workspacePath={review?'/review':'/local-workspace'} key={`${session?.user.id}:${controller.record.id}`} client={client} actor={session?.user.id??null} organization={controller.record.organization_id} schedule={controller.record.id} enabled={active&&recordInScope&&ready&&permission?.read===true&&!confirmation} readOnly={workspace.readOnly===true}/></div></ReviewToolPanel>}
+          {workspace&&controller.record&&<ReviewToolPanel enabled={review} open={active&&reviewTool==='sharing'} title="Team and Client links" onClose={()=>setReviewTool(null)} onBack={()=>setReviewTool('menu')}><div><LocalScheduleSharing expanded={review&&reviewTool==='sharing'} workspacePath={review?'/review':'/local-workspace'} key={`${session?.user.id}:${controller.record.id}`} client={client} actor={session?.user.id??null} organization={controller.record.organization_id} schedule={controller.record.id} enabled={active&&recordInScope&&ready&&permission?.read===true&&!confirmation} readOnly={workspace.readOnly===true}/></div></ReviewToolPanel>}
           <LocalSchedulePrint visible={active && recordInScope && ready && !confirmation} />
           {(controller.attempt || controller.result) && <section className={styles.recovery} aria-label="Save recovery">
             <h2>{controller.result?.state === 'matched' ? 'Saved version confirmed' : 'Save needs review'}</h2>
@@ -442,7 +442,10 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
         </section>}
       </>}
       <dialog ref={dialogRef} onCancel={() => setConfirmation(null)} aria-label="Discard unsaved changes" className={styles.confirm}>
-        <p>Your unsaved edits and retained save attempt will be discarded. A sent save may already have committed; discarding does not undo it.</p>
+        <p>{controller.attempt ? controller.result?.state === 'matched'
+          ? 'Your unsaved edits and retained save review will be discarded. The confirmed save will remain in the schedule’s history.'
+          : 'Your unsaved edits and retained save attempt will be discarded. The save may already have completed; discarding does not undo it.'
+          : 'Your unsaved changes will be discarded.'}</p>
         <button className="btn btn-light" onClick={() => setConfirmation(null)}>Keep editing</button>
         <button className="btn btn-primary" onClick={() => { const action = confirmation?.action; setConfirmation(null); action?.(); }}>{confirmation?.label}</button>
       </dialog>

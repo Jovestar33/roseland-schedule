@@ -22,7 +22,7 @@
 }
 
 /* Template workflow uses the existing modal/buttons with contained form layout. */
-.modal.template-modal { max-width: min(900px, calc(100vw - 32px)); }
+.modal.template-modal { max-width: min(900px, calc(100vw - 32px)) !important; }
 .template-modal label { display:flex; flex-direction:column; gap:6px; margin:12px 0; }
 .template-modal input:not([type="checkbox"]), .template-modal select { box-sizing:border-box; width:100%; min-width:0; min-height:38px; padding:8px; border:1px solid var(--g300, #ddd); border-radius:6px; color:inherit; background:var(--white, white); font:inherit; }
 .template-modal .btn { margin:4px 4px 4px 0; max-width:100%; white-space:normal; }
@@ -35,3 +35,6 @@
 .template-modal .mhdr { gap: 12px; }
 .template-modal .mhdr h2 { min-width: 0; flex: 1; overflow-wrap: anywhere; line-height: 1.15; }
 .template-modal .mhdr .mclose { flex: 0 0 34px; }
+
+.template-modal .mfoot { flex-shrink:0; flex-wrap:wrap; }
+.template-modal .mfoot p { margin:6px 0 0; font-size:12px; color:var(--g600); }

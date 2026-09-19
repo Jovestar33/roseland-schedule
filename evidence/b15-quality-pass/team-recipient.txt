@@ -1,0 +1,65 @@
+Team link in new tab required ordinary sign-in, then opened the intended fictional schedule. No Client link created or sent.
+- img "Roseland Pictures"
+- generic: B14 latest organization labels
+- region "Organization deletion settings"
+- main:
+  - text: ▸ ▾ ▾
+  - region "Schedule editor":
+    - generic: B15 quality workflow — fictional
+    - generic: Saved
+    - button "Save"
+    - button "More save options":
+      - generic: ▾
+    - button "Undo" [disabled]:
+      - text: ↩
+      - generic: Undo
+    - button "Redo" [disabled]:
+      - text: ↪
+      - generic: Redo
+    - button "⬆ Share ▾":
+      - generic: ⬆
+      - generic: Share
+      - generic: ▾
+    - button "Tools":
+      - generic: Tools
+    - button "Close":
+      - generic: Close
+    - button "Recover retained source draft"
+    - generic: B14 production
+    - generic: Phase
+    - generic: ·
+    - generic: Day
+    - generic: —
+    - generic: PRODUCER
+    - generic: —
+    - generic: DIRECTOR
+    - generic: —
+    - generic: CAMERA
+    - generic: —
+    - generic: Town / Location
+    - textbox "Town / Location":
+      - /placeholder: e.g. Garner, NC
+    - generic: Date
+    - textbox "Date"
+    - generic: — pick a date —
+    - generic: Call Time
+    - generic: 11:45 PM
+    - link "Weather by Open-Meteo":
+      - /url: https://open-meteo.com/
+    - button "Refresh weather" [disabled]
+    - table:
+      - rowgroup:
+        - row "Action Location Description Notes Time In Duration Time Out Done":
+          - columnheader
+          - columnheader "Action"
+          - columnheader "Location"
+          - columnheader "Description"
+          - columnheader "Notes"
+          - columnheader
+          - columnheader "Time In"
+          - columnheader "Duration"
+          - columnheader "Time Out"
+          - columnheader "Done"
+          - columnheader
+      - rowgroup:
+        - row "≡ 1 Crew Call ▾ Fictional audit studio Show full address 📍 Mark done • Fictional annex Show full address 📍 × Nested fictional instructions Second line + sub-locatio

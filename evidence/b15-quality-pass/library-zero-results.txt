@@ -1,0 +1,27 @@
+- img "Roseland Pictures"
+- generic: B14 latest organization labels
+- button "Account & settings"
+- text: Organization
+- combobox "Organization":
+  - option "Choose an organization"
+  - option "B14 Fictional Studio" [selected]
+- region "Organization deletion settings"
+- main:
+  - region "Schedule library":
+    - heading "Library" [level=1]
+    - button "+ New Schedule"
+    - button "↻ Refresh"
+    - button "📁 Library"
+    - button "★ Templates"
+    - button "🔗 Backup"
+    - button "Move requests"
+    - generic: ⌕
+    - textbox "Search schedules…" [active]: zz-no-matching-quality-test
+    - button "✕"
+    - button "Filter"
+    - text: ▸
+    - status: 0 schedules
+    - strong: No schedules match these filters.
+    - paragraph: Try a different search or clear the filters.
+- generic "Notifications"
+- alert: Roseland Schedule

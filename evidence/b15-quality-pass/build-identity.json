@@ -1,0 +1,17 @@
+{
+  "baseCommit": "bb77fabe71c045fda3b0a75c8da8532249ba537c",
+  "url": "http://127.0.0.1:3492/review",
+  "buildId": "T45AklKF6oIS3mSNptLXJ",
+  "sourceSHA256": {
+    "app/globals.css": "6662359c4afd586971888d7078b96fbcbc1ca32eef475a0d2126558662f5fc76",
+    "app/local-schedule/LocalScheduleClient.tsx": "aa76af44664de07093b4cd4e5441720b93e9667f4507dd395ee2b557108a054e",
+    "components/local/LocalScheduleLibrary.tsx": "0aea3d0739e4d2b9c1a1453864cc645f7d559c0e3561c3b7d40375f6ac18e5ca",
+    "components/local/LocalScheduleSharing.tsx": "7390dc189935e9c67cdc1c32c52f67d59bf1b204d93f7840b1011d5afa9fe12f",
+    "components/local/LocalScheduleTemplates.tsx": "223c9441539b1c2707481b1d888c1488f441fa5f5b310fe03c3c01e79b988bf4",
+    "components/local/TemplateRowsPreview.tsx": "d45609f9799abbe00767b7ef76c131fbc2fbc3d0b9dc0076740c1f07ae36d202",
+    "components/local/template-preview.module.css": "50dfe9fd0f3c25c733633b7495a73de28004bab625d05ee78e71b726fef357c1"
+  },
+  "platformTests": 239,
+  "editorTests": 69,
+  "scope": "Local fictional data only; existing 3488 and 3490 runtimes preserved"
+}
