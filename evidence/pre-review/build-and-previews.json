@@ -1,0 +1,67 @@
+{
+  "checkedAt": "2026-09-19T23:55:57.518Z",
+  "applicationCommit": "8965ba8",
+  "baseCommit": "3d81369fb3929dbda00dd80577c1879c4baadd45",
+  "build": "R2Sn1Vtshobzqmgm-abnr",
+  "copiedFrom": "/private/tmp/roseland-b15-second-audit-fixes",
+  "workspacePageHash": "2ea031bb102e1b1aa80f22e226699d84339d76645d8ecd398e6fa50a9ef464ca",
+  "frozenWorkspacePageHash": "2ea031bb102e1b1aa80f22e226699d84339d76645d8ecd398e6fa50a9ef464ca",
+  "previews": [
+    {
+      "status": "fulfilled",
+      "value": {
+        "port": 3506,
+        "status": 200
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "port": 3512,
+        "status": 200
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "port": 3514,
+        "status": 200
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "port": 3516,
+        "status": 200
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "port": 3518,
+        "status": 200
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "port": 3520,
+        "status": 200
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "port": 3522,
+        "status": 200
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "port": 3524,
+        "status": 200
+      }
+    }
+  ]
+}

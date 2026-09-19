@@ -1,0 +1,13 @@
+{
+  "freshNativePdfPaths": [],
+  "status": "blocked",
+  "reason": "Native Mac control reported locked, then Chrome window not found; user unlock request pending.",
+  "historicalFilesReusedAsFresh": false,
+  "plannedKinds": [
+    "schedule",
+    "contacts",
+    "callsheet"
+  ],
+  "applicationCommit": "8965ba8",
+  "build": "R2Sn1Vtshobzqmgm-abnr"
+}

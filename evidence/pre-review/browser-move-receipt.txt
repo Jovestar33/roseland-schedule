@@ -1,0 +1,32 @@
+Move schedule
+
+Pre-review browser move
+
+Saved action confirmed.
+
+Whole saved schedule · version 2
+Pre-review browser move
+North production
+TOWN / LOCATION
+Fictional Harbor
+DATE
+—
+CALL TIME
+—
+PRODUCER
+—
+DIRECTOR
+—
+CAMERA
+—
+← Scroll to view time columns →
+	Action	Location	Description	Notes		Time In	Duration	Time Out
+1	Shoot
+	BROWSER MOVE CONTENT MUST SURVIVE	Fictional review only
+All document fields
+
+Move · saved version 2 · Pre-review fictional destination · Unassigned · No phase. Date, location and rows are retained; Move and Duplicate use destination production/phase labels.
+
+Confirmed identity: 50fb2046-3079-4276-be85-87ea593d0357
+
+Close confirmed result

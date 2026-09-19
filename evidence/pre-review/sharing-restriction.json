@@ -1,0 +1,9 @@
+{
+  "targetDenied": {
+    "code": "PT404",
+    "message": "Sharing unavailable"
+  },
+  "controlCanCreate": true,
+  "newLinksCreated": 0,
+  "recipientTokenRoundTrip": "Not tested; no new recipient access granted"
+}

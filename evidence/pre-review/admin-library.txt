@@ -1,0 +1,125 @@
+- banner:
+  - text: LOCAL WORKSPACE
+  - heading "Roseland rehearsals" [level=1]
+  - paragraph: One account, with unfinished work kept in this tab.
+  - generic: Fictional data only
+- paragraph: Switching local screens keeps drafts and request details. Closing or reloading loses tab-only requests. Duplicate source backups and template or appearance request receipts can be recovered by the original account on this computer. Email stays in the local mail sink. Remember me retains sign-in only; idle expiry still applies.
+- status: Signed in. Choose an organization or accept a fictional invitation.
+- region "Account access":
+  - button "Create invited account"
+  - button "Forgot password"
+- region "Account security":
+  - button "Account security"
+  - heading "Account security" [level=2]
+  - paragraph: An authenticator adds protection to your account.
+  - status
+  - paragraph: Authenticator verified for this session.
+- generic: overnight-admin-fefb1bfb-3ffd-4928-ae3b-d9385a36b2f4@example.test
+- generic: No unfinished work
+- button "Sign out"
+- text: Workspace organization
+- combobox "Workspace organization":
+  - option "Choose an organization"
+  - option "Overnight North Studio · admin" [selected]
+  - option "Overnight South Studio · admin"
+- button "Refresh organizations"
+- navigation "Workspace screens":
+  - button "Schedules"
+  - button "Schedule lifecycle"
+  - button "Manage invitations"
+  - button "Accept invitation"
+  - button "Restricted provisioning"
+- region "Organization deletion settings"
+- region "Organization membership management":
+  - button "Organization members"
+- region "Organization security settings":
+  - button "Organization security"
+- region "Organization presentation settings":
+  - button "Organization appearance"
+- generic "Settings · Permissions"
+- main:
+  - heading "Local schedule rehearsal" [level=1]
+  - paragraph: Fictional data only · Supabase on this computer
+  - paragraph: Authenticated editing and document tools with fictional location and weather responses. Library parity review remains open.
+  - status: Schedules loaded.
+  - button "Refresh list"
+  - region "Schedule files":
+    - heading "Schedule files" [level=2]
+    - paragraph: Download saved schedules, or import a JSON backup as new schedules. Unsaved edits stay in this tab.
+    - generic "What the backup includes"
+    - button "Export all readable schedules"
+    - button "Copy / Save As current draft" [disabled]
+    - text: Import schedule-only JSON
+    - button "Import schedule-only JSON"
+    - status
+  - region "Snapshots":
+    - button "Snapshots" [disabled]
+  - region "Templates":
+    - button "Templates"
+  - region "Schedule library":
+    - heading "Schedules" [level=1]
+    - button "New schedule"
+    - button "Refresh library"
+    - text: Search schedules
+    - searchbox "Search schedules": Pre-review
+    - text: Production filter
+    - combobox "Production filter":
+      - option "All productions" [selected]
+      - option "North production"
+      - option "Pre-review fictional destination"
+    - text: Collection
+    - combobox "Collection":
+      - option "Active" [selected]
+      - option "Archived"
+      - option "All saved"
+      - option "Trash"
+    - text: Sort schedules
+    - combobox "Sort schedules":
+      - option "Manual / day order" [selected]
+      - option "Name"
+      - option "Schedule date"
+      - option "Recently saved"
+    - generic "▸Date filter"
+    - button "Clear filters"
+    - status: 4 visible schedules · Search includes every loaded page
+    - generic "▾ North production 3 schedules":
+      - text: ▾
+      - generic: North production
+      - generic: 3 schedules
+    - generic "▾ No production day 3":
+      - text: ▾
+      - generic: No production day
+      - generic: "3"
+    - generic "Arrange Pre-review source fixture": ≡
+    - button "Pre-review source fixture"
+    - generic: 2026-09-22
+    - button "Organize Pre-review source fixture": ⋯
+    - generic "Arrange Pre-review target fixture": ≡
+    - button "Pre-review target fixture"
+    - generic: 2026-09-22
+    - button "Organize Pre-review target fixture": ⋯
+    - generic "Arrange Pre-review control fixture": ≡
+    - button "Pre-review control fixture"
+    - generic: 2026-09-22
+    - button "Organize Pre-review control fixture": ⋯
+    - button "+ New schedule in North production"
+    - generic "▾ Pre-review fictional destination 1 schedule":
+      - text: ▾
+      - generic: Pre-review fictional destination
+      - generic: 1 schedule
+    - generic "▾ No production day 1":
+      - text: ▾
+      - generic: No production day
+      - generic: "1"
+    - generic "Arrange Pre-review move fixture": ≡
+    - button "Pre-review move fixture"
+    - generic: 2026-09-22
+    - button "Organize Pre-review move fixture": ⋯
+    - button "+ New schedule in Pre-review fictional destination"
+  - region "Schedule transfers":
+    - heading "Move requests" [level=2]
+    - button "Refresh requests"
+    - status
+    - paragraph: North production → Pre-review fictional destination · approved
+- generic "Notifications"
+- alert: Roseland Schedule

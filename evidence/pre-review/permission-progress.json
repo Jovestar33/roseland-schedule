@@ -1,0 +1,139 @@
+{
+  "checks": [
+    "Existing AAL2 Admin created a fictional destination through authenticated RLS; no membership assigned",
+    "Active Editor permitted before application; inherited source export restriction then denies target read/edit/export with zero direct target restrictions; unrelated control remains permitted"
+  ],
+  "startedAt": "2026-09-19T23:50:42.095Z",
+  "production": {
+    "productions": [
+      {
+        "id": "995be3f5-c3e2-48d6-8f97-2bd2f16c6153",
+        "days": [],
+        "name": "North production",
+        "create": true,
+        "phases": [],
+        "organize": true
+      },
+      {
+        "id": "1aa5fb7d-282d-4666-914d-231377046dc5",
+        "days": [],
+        "name": "Pre-review fictional destination",
+        "create": true,
+        "phases": [],
+        "organize": true
+      }
+    ]
+  },
+  "before": {
+    "source": {
+      "read": true,
+      "edit": true,
+      "export": true
+    },
+    "target": {
+      "read": true,
+      "edit": true,
+      "export": true
+    },
+    "control": {
+      "read": true,
+      "edit": true,
+      "export": true
+    }
+  },
+  "sourceRestriction": {
+    "id": "95906d32-3501-44e2-b02a-d01ad1a5ce1c",
+    "revision": 1,
+    "authority": "admin",
+    "created_at": "2026-09-19T23:50:42.369022+00:00",
+    "created_by": "79574221-8137-47de-8313-d30132dfb433",
+    "updated_at": "2026-09-19T23:50:42.369022+00:00",
+    "schedule_id": "e4801bea-627a-4797-acdc-e86195dcee72",
+    "subject_role": null,
+    "production_id": "995be3f5-c3e2-48d6-8f97-2bd2f16c6153",
+    "denied_actions": [
+      "export"
+    ],
+    "organization_id": "8ae21b75-edad-4ad2-9095-b8a1bc6ff737",
+    "subject_user_id": "9c7e61f3-ba2f-495e-bdef-7f37f6e05818"
+  },
+  "template": {
+    "id": "6e261676-a104-46fd-9b6b-6300e0c96d46",
+    "version": 1,
+    "confirmed": true,
+    "operation": "create",
+    "request_id": "5821277a-a477-482c-9cf3-c46f5a1d517c"
+  },
+  "templateSave": {
+    "id": "4eb79fff-487b-4795-ad1a-2d0f70629521",
+    "slug": "pre-review-4eb79fff-487b-4795-ad1a-2d0f70629521",
+    "town": "Fictional North Harbor",
+    "status": "draft",
+    "document": {
+      "meta": {
+        "date": "2026-09-22",
+        "town": "Fictional North Harbor",
+        "projectName": "Pre-review fictional production"
+      },
+      "rows": [
+        {
+          "dur": "00:30",
+          "desc": "PRE-REVIEW FICTIONAL ROW",
+          "notes": "Retention marker",
+          "action": "Shoot"
+        }
+      ]
+    },
+    "phase_id": null,
+    "created_at": "2026-09-19T23:50:42.338345+00:00",
+    "created_by": "79574221-8137-47de-8313-d30132dfb433",
+    "deleted_at": null,
+    "updated_at": "2026-09-19T23:50:42.39026+00:00",
+    "updated_by": "79574221-8137-47de-8313-d30132dfb433",
+    "display_name": "Pre-review target fixture",
+    "production_id": "995be3f5-c3e2-48d6-8f97-2bd2f16c6153",
+    "organization_id": "8ae21b75-edad-4ad2-9095-b8a1bc6ff737",
+    "document_version": 2,
+    "library_position": 128,
+    "production_day_id": null,
+    "archived_from_status": null,
+    "document_schema_version": 1
+  },
+  "after": {
+    "source": {
+      "read": true,
+      "edit": true,
+      "export": false
+    },
+    "target": {
+      "read": false,
+      "edit": false,
+      "export": false
+    },
+    "control": {
+      "read": true,
+      "edit": true,
+      "export": true
+    }
+  },
+  "targetOwnPermissions": {
+    "effective": {
+      "edit": true,
+      "read": true,
+      "share": true,
+      "trash": true,
+      "create": true,
+      "export": true,
+      "history": true,
+      "discover": true,
+      "organize": true,
+      "transfer": true,
+      "permissions": true
+    },
+    "restrictions": []
+  },
+  "targetReadDenial": {
+    "code": "PT404",
+    "message": "Schedule unavailable"
+  }
+}

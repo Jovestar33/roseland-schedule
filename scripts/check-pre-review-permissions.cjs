@@ -1,0 +1,37 @@
+// Uses existing genuine sessions and normal RLS/RPCs only. No role/credential changes.
+const assert=require('node:assert/strict');
+const {randomUUID}=require('node:crypto');
+const {fs,fixtures,login,rpc,save}=require('./pre-review-common.cjs');
+const manifestPath='evidence/pre-review/new-fixtures.json';
+(async()=>{if(fs.existsSync(manifestPath))throw Error('Fixture manifest exists; inspect saved progress before resuming');const clients=[];const report={checks:[],startedAt:new Date().toISOString()};try{
+ const admin=await login(fixtures.leadership);clients.push(admin);const member=await login(fixtures.member);clients.push(member);
+ const north=fixtures.organizations.find(x=>x.memberRole==='editor');
+ const ids={organization:north.id,production:north.production,destination:randomUUID(),move:randomUUID(),source:randomUUID(),target:randomUUID(),control:randomUUID(),template:randomUUID(),restriction:randomUUID(),moveRestriction:randomUUID(),moveRequest:randomUUID(),templateRequest:randomUUID()};save('new-fixtures',ids);
+ const inserted=await admin.from('productions').insert({id:ids.destination,organization_id:north.id,name:'Pre-review fictional destination',slug:'pre-review-'+ids.destination,created_by:fixtures.leadership.id,updated_by:fixtures.leadership.id});if(inserted.error)throw Error('Normal production creation: '+inserted.error.message);report.production=await rpc(admin,'schedule_creation_destinations',{target_organization_id:north.id});report.checks.push('Existing AAL2 Admin created a fictional destination through authenticated RLS; no membership assigned');save('permission-progress',report);
+ const doc={meta:{projectName:'Pre-review fictional production',town:'Fictional North Harbor',date:'2026-09-22'},rows:[{action:'Shoot',dur:'00:30',desc:'PRE-REVIEW FICTIONAL ROW',notes:'Retention marker'}]};
+ for(const kind of ['move','source','target','control'])await rpc(admin,'create_schedule_in_production',{target_schedule_id:ids[kind],target_production_id:ids.production,target_day_id:null,target_phase_id:null,next_display_name:'Pre-review '+kind+' fixture',next_slug:'pre-review-'+ids[kind],next_document:doc,schema_version:1});
+ const caps=async(id)=>{const out={};for(const action of ['read','edit','export'])out[action]=await rpc(member,'schedule_capability',{action,target_production_id:ids.production,target_schedule_id:id});return out;};
+ report.before={source:await caps(ids.source),target:await caps(ids.target),control:await caps(ids.control)};for(const v of Object.values(report.before))assert.deepEqual(v,{read:true,edit:true,export:true});save('permission-progress',report);
+ const restrict=async(id,schedule)=>rpc(admin,'set_schedule_restriction',{target_id:id,target_organization_id:ids.organization,target_production_id:ids.production,target_schedule_id:schedule,subject_role:null,subject_user_id:fixtures.member.id,denied_actions:['export'],expected_revision:0});
+ report.sourceRestriction=await restrict(ids.restriction,ids.source);
+ report.template=await rpc(admin,'mutate_schedule_template',{request_id:ids.templateRequest,target_template_id:ids.template,target_production_id:ids.production,expected_version:0,operation:'create',next_name:'Pre-review inherited restriction',next_rows:doc.rows,source_schedule_id:ids.source,source_version:1});
+ const review=await rpc(admin,'review_schedule_template_apply',{target_template_id:ids.template,target_schedule_id:ids.target});
+ report.templateSave=await rpc(admin,'save_schedule_with_templates',{target_schedule_id:ids.target,expected_version:1,next_document:doc,schema_version:1,template_uses:[{id:ids.template,version:review.template.version,policy:review.policy}]});
+ report.after={source:await caps(ids.source),target:await caps(ids.target),control:await caps(ids.control)};
+ assert.equal(report.after.source.export,false);assert.deepEqual(report.after.target,{read:false,edit:false,export:false});assert.deepEqual(report.after.control,{read:true,edit:true,export:true});
+ report.targetOwnPermissions=await rpc(admin,'read_schedule_permissions',{target_organization_id:ids.organization,target_production_id:ids.production,target_schedule_id:ids.target});assert.equal(report.targetOwnPermissions.restrictions.length,0);
+ const denied=await member.rpc('session_read_schedule',{target_schedule_id:ids.target});assert.ok(denied.error);report.targetReadDenial={code:denied.error.code,message:denied.error.message};
+ report.checks.push('Active Editor permitted before application; inherited source export restriction then denies target read/edit/export with zero direct target restrictions; unrelated control remains permitted');save('permission-progress',report);
+ report.moveRestriction=await restrict(ids.moveRestriction,ids.move);
+ const before=await rpc(admin,'session_read_schedule',{target_schedule_id:ids.move});
+ report.destinations=await rpc(admin,'schedule_transfer_destinations',{target_schedule_id:ids.move});assert.equal(report.destinations.find(x=>x.id===ids.destination)?.direct,true);
+ const moveReview=await rpc(admin,'review_schedule_transfer',{target_schedule_id:ids.move,target_production_id:ids.destination});
+ const args={target_schedule_id:ids.move,target_production_id:ids.destination,expected_version:before.document_version,expected_policy:moveReview.policy,request_id:ids.moveRequest,target_day_id:null,target_phase_id:null,approve_request:false};
+ report.moveReceipt=await rpc(admin,'move_schedule',args);assert.equal(report.moveReceipt.status,'approved');
+ const after=await rpc(admin,'session_read_schedule',{target_schedule_id:ids.move});assert.equal(after.id,before.id);assert.equal(after.production_id,ids.destination);assert.equal(after.document_version,before.document_version+1);assert.deepEqual(after.document.rows,before.document.rows);assert.equal(after.document.meta.town,before.document.meta.town);assert.equal(after.document.meta.date,before.document.meta.date);
+ report.moveReadback={before,after};report.moveRetry=await rpc(admin,'move_schedule',args);assert.deepEqual(report.moveRetry,report.moveReceipt);
+ report.movedPermissions=await rpc(admin,'read_schedule_permissions',{target_organization_id:ids.organization,target_production_id:ids.destination,target_schedule_id:ids.move});
+ report.memberDestinationRead=await rpc(member,'schedule_capability',{action:'read',target_production_id:ids.destination,target_schedule_id:ids.move});assert.equal(report.memberDestinationRead,false);
+ report.checks.push('Direct cross-production Move preserves ID, rows, date and town; increments version once; repeated request returns same receipt; existing member gains no destination access');
+ report.completedAt=new Date().toISOString();save('permission-results',report);console.log(JSON.stringify({checks:report.checks,fixtures:ids}));
+}catch(e){report.error=e.message;save('permission-progress',report);throw e;}finally{for(const c of clients)await c.auth.signOut({scope:'local'});}})().catch(e=>{console.error(e.message);process.exitCode=1;});

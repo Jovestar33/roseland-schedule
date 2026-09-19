@@ -1,0 +1,41 @@
+{
+  "checkedAt": "2026-09-19T23:56:36.701Z",
+  "retainedReviewSchedulesUnchanged": 18,
+  "existingNorthSouth": {
+    "organization_memberships": {
+      "retained": 4,
+      "new": 0
+    },
+    "production_memberships": {
+      "retained": 2,
+      "new": 0
+    },
+    "productions": {
+      "retained": 2,
+      "new": 1
+    },
+    "schedules": {
+      "retained": 127,
+      "new": 5
+    }
+  },
+  "membershipRowsUnchanged": true,
+  "existingProductionPermissionsUnchanged": true,
+  "browserMoveVersion": 3,
+  "movedRestrictionPreserved": true,
+  "newRecords": {
+    "productions": 1,
+    "schedules": 5,
+    "templates": 1,
+    "restrictions": 2
+  },
+  "sharingRestriction": {
+    "targetDenied": {
+      "code": "PT404",
+      "message": "Sharing unavailable"
+    },
+    "controlCanCreate": true,
+    "newLinksCreated": 0,
+    "recipientTokenRoundTrip": "Not tested; no new recipient access granted"
+  }
+}

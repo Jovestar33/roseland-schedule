@@ -1,0 +1,31 @@
+Contact Sheet
+✕
+B15 ordinary fictional day
+· Tuesday, October 20, 2026
+· 3 contacts
+=Fictional Crew
+Fictional department
+📞 +1 202 555 0142
+✉ crew1@example.test
+9:00 AM
+Crew Call
+Fictional location 1
+DESC-1 Fictional detail with a comma, "quoted text", and multiple lines. Second line remains visible. END-DESC-1
+Example Crew 2
+Fictional department
+📞 +1 202 555 0142
+✉ crew2@example.test
+9:00 AM
+Fictional scene 2
+Fictional location 2
+DESC-2 Fictional detail with a comma, "quoted text", and multiple lines. Second line remains visible. END-DESC-2
+Example Crew 3
+Fictional department
+📞 +1 202 555 0142
+✉ crew3@example.test
+9:15 AM
+Wrap
+Fictional location 3
+DESC-3 Fictional detail with a comma, "quoted text", and multiple lines. Second line remains visible. END-DESC-3
+🖨 Print
+⬇ Download CSV
