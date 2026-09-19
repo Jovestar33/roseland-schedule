@@ -1,0 +1,1256 @@
+{
+    "tables": [
+        {
+            "table": "account_mail_limits",
+            "schema": "private",
+            "columns": [
+                "bucket",
+                "window_start",
+                "attempts"
+            ]
+        },
+        {
+            "table": "account_policy_acceptances",
+            "schema": "private",
+            "columns": [
+                "user_id",
+                "terms_version",
+                "privacy_version",
+                "accepted_at",
+                "source"
+            ]
+        },
+        {
+            "table": "account_policy_versions",
+            "schema": "private",
+            "columns": [
+                "id",
+                "terms_version",
+                "privacy_version",
+                "enforce_acceptance"
+            ]
+        },
+        {
+            "table": "account_session_activity",
+            "schema": "private",
+            "columns": [
+                "session_id",
+                "user_id",
+                "last_activity_at"
+            ]
+        },
+        {
+            "table": "administration_notification_outbox",
+            "schema": "private",
+            "columns": [
+                "event_id",
+                "organization_id",
+                "membership_id",
+                "recipient_id",
+                "actor_id",
+                "next_status",
+                "membership_revision",
+                "created_at",
+                "delivery_state",
+                "attempts",
+                "claim_id",
+                "claimed_by",
+                "lease_until",
+                "delivered_at",
+                "last_error",
+                "event_kind",
+                "lifecycle_version",
+                "cancel_before"
+            ]
+        },
+        {
+            "table": "client_view_rate",
+            "schema": "private",
+            "columns": [
+                "id",
+                "window_at",
+                "hits"
+            ]
+        },
+        {
+            "table": "membership_status_receipts",
+            "schema": "private",
+            "columns": [
+                "request_id",
+                "organization_id",
+                "actor_id",
+                "membership_id",
+                "fingerprint",
+                "result",
+                "created_at"
+            ]
+        },
+        {
+            "table": "migration_capture_runs",
+            "schema": "private",
+            "columns": [
+                "id",
+                "organization_id",
+                "source_environment",
+                "source_epoch",
+                "capture_hash",
+                "capture",
+                "target_state",
+                "created_at"
+            ]
+        },
+        {
+            "table": "migration_record_versions",
+            "schema": "private",
+            "columns": [
+                "record_id",
+                "organization_id",
+                "version",
+                "snapshot",
+                "fingerprint",
+                "import_run_id",
+                "imported_at"
+            ]
+        },
+        {
+            "table": "migration_records",
+            "schema": "private",
+            "columns": [
+                "id",
+                "organization_id",
+                "source_environment",
+                "source_store",
+                "source_key",
+                "source_item",
+                "source_revision",
+                "payload",
+                "schedule_refs",
+                "tombstone",
+                "version",
+                "fingerprint",
+                "import_run_id",
+                "updated_at"
+            ]
+        },
+        {
+            "table": "organization_lifecycle",
+            "schema": "private",
+            "columns": [
+                "organization_id",
+                "version",
+                "deletion_request_id",
+                "requested_by",
+                "requested_at",
+                "cancel_before",
+                "cancelled_by",
+                "cancelled_at"
+            ]
+        },
+        {
+            "table": "organization_lifecycle_receipts",
+            "schema": "private",
+            "columns": [
+                "request_id",
+                "organization_id",
+                "actor_id",
+                "fingerprint",
+                "result"
+            ]
+        },
+        {
+            "table": "organization_mfa_policy",
+            "schema": "private",
+            "columns": [
+                "organization_id",
+                "version",
+                "required_roles",
+                "updated_by",
+                "updated_at"
+            ]
+        },
+        {
+            "table": "organization_mfa_policy_receipts",
+            "schema": "private",
+            "columns": [
+                "request_id",
+                "organization_id",
+                "actor_id",
+                "fingerprint",
+                "version"
+            ]
+        },
+        {
+            "table": "organization_presentation",
+            "schema": "private",
+            "columns": [
+                "organization_id",
+                "version",
+                "config",
+                "updated_by",
+                "updated_at"
+            ]
+        },
+        {
+            "table": "organization_presentation_receipts",
+            "schema": "private",
+            "columns": [
+                "request_id",
+                "organization_id",
+                "actor_id",
+                "fingerprint",
+                "version",
+                "created_at"
+            ]
+        },
+        {
+            "table": "platform_operators",
+            "schema": "private",
+            "columns": [
+                "user_id",
+                "role",
+                "active",
+                "mfa_required",
+                "designation_reason",
+                "created_at",
+                "created_by",
+                "disabled_at",
+                "disabled_by"
+            ]
+        },
+        {
+            "table": "schedule_client_aliases",
+            "schema": "private",
+            "columns": [
+                "id",
+                "legacy_name",
+                "organization_id",
+                "schedule_id",
+                "creator_id",
+                "created_at",
+                "revoked_at",
+                "revoked_by"
+            ]
+        },
+        {
+            "table": "schedule_client_links",
+            "schema": "private",
+            "columns": [
+                "id",
+                "organization_id",
+                "schedule_id",
+                "creator_id",
+                "token_hash",
+                "created_at",
+                "expires_at",
+                "revoked_at",
+                "revoked_by"
+            ]
+        },
+        {
+            "table": "schedule_copy_receipts",
+            "schema": "private",
+            "columns": [
+                "schedule_id",
+                "actor_id",
+                "fingerprint",
+                "created_at"
+            ]
+        },
+        {
+            "table": "schedule_snapshot_copy_receipts",
+            "schema": "private",
+            "columns": [
+                "request_id",
+                "actor_id",
+                "organization_id",
+                "source_id",
+                "snapshot_id",
+                "destination_id",
+                "fingerprint",
+                "result"
+            ]
+        },
+        {
+            "table": "schedule_snapshot_imports",
+            "schema": "private",
+            "columns": [
+                "source_record_id",
+                "snapshot_id",
+                "fingerprint"
+            ]
+        },
+        {
+            "table": "schedule_snapshot_policy",
+            "schema": "private",
+            "columns": [
+                "organization_id",
+                "version",
+                "retention_days",
+                "trash_min_role",
+                "updated_by",
+                "updated_at"
+            ]
+        },
+        {
+            "table": "schedule_snapshot_policy_receipts",
+            "schema": "private",
+            "columns": [
+                "request_id",
+                "organization_id",
+                "actor_id",
+                "fingerprint",
+                "version"
+            ]
+        },
+        {
+            "table": "schedule_snapshot_receipts",
+            "schema": "private",
+            "columns": [
+                "request_id",
+                "organization_id",
+                "schedule_id",
+                "snapshot_id",
+                "actor_id",
+                "fingerprint",
+                "result",
+                "created_at"
+            ]
+        },
+        {
+            "table": "schedule_snapshots",
+            "schema": "private",
+            "columns": [
+                "id",
+                "organization_id",
+                "schedule_id",
+                "name",
+                "kind",
+                "document",
+                "template_bindings",
+                "version",
+                "captured_at",
+                "deleted_at",
+                "created_by",
+                "updated_by",
+                "updated_at",
+                "original_id",
+                "original_order",
+                "original_payload"
+            ]
+        },
+        {
+            "table": "schedule_template_bindings",
+            "schema": "private",
+            "columns": [
+                "schedule_id",
+                "template_id",
+                "fingerprint",
+                "contexts"
+            ]
+        },
+        {
+            "table": "schedule_template_browser_origins",
+            "schema": "private",
+            "columns": [
+                "template_id",
+                "actor_id",
+                "source_name",
+                "source_saved_at",
+                "source_fingerprint",
+                "created_at"
+            ]
+        },
+        {
+            "table": "schedule_template_receipts",
+            "schema": "private",
+            "columns": [
+                "request_id",
+                "template_id",
+                "actor_id",
+                "fingerprint",
+                "result",
+                "created_at"
+            ]
+        },
+        {
+            "table": "schedule_template_save_receipts",
+            "schema": "private",
+            "columns": [
+                "schedule_id",
+                "version",
+                "actor_id",
+                "fingerprint"
+            ]
+        },
+        {
+            "table": "schedule_template_sources",
+            "schema": "private",
+            "columns": [
+                "template_id",
+                "organization_id",
+                "schedule_id"
+            ]
+        },
+        {
+            "table": "schedule_templates",
+            "schema": "private",
+            "columns": [
+                "id",
+                "organization_id",
+                "production_id",
+                "name",
+                "rows",
+                "version",
+                "deleted_at",
+                "created_by",
+                "updated_by",
+                "created_at",
+                "updated_at",
+                "published_at",
+                "published_by"
+            ]
+        },
+        {
+            "table": "schedule_transfer_writes",
+            "schema": "private",
+            "columns": [
+                "transaction_id",
+                "schedule_id",
+                "actor_id",
+                "source_id",
+                "destination_id",
+                "expected_version"
+            ]
+        },
+        {
+            "table": "schedule_transfers",
+            "schema": "private",
+            "columns": [
+                "id",
+                "organization_id",
+                "schedule_id",
+                "source_id",
+                "destination_id",
+                "requester",
+                "decision_fingerprint",
+                "status",
+                "fingerprint",
+                "created_at",
+                "expires_at",
+                "decided_by",
+                "decided_at",
+                "result_version"
+            ]
+        },
+        {
+            "table": "workflow_requests",
+            "schema": "private",
+            "columns": [
+                "action",
+                "request_id",
+                "actor_user_id",
+                "resource_id",
+                "created_at",
+                "request_fingerprint"
+            ]
+        },
+        {
+            "table": "audit_events",
+            "schema": "public",
+            "columns": [
+                "id",
+                "organization_id",
+                "actor_user_id",
+                "action",
+                "resource_type",
+                "resource_id",
+                "request_id",
+                "metadata",
+                "created_at"
+            ]
+        },
+        {
+            "table": "organization_invitations",
+            "schema": "public",
+            "columns": [
+                "id",
+                "organization_id",
+                "email",
+                "email_normalized",
+                "organization_role",
+                "production_id",
+                "production_role",
+                "status",
+                "expires_at",
+                "accepted_at",
+                "accepted_by",
+                "revoked_at",
+                "revoked_by",
+                "created_at",
+                "updated_at",
+                "created_by"
+            ]
+        },
+        {
+            "table": "organization_memberships",
+            "schema": "public",
+            "columns": [
+                "id",
+                "organization_id",
+                "user_id",
+                "role",
+                "status",
+                "invited_by",
+                "joined_at",
+                "created_at",
+                "updated_at",
+                "revision"
+            ]
+        },
+        {
+            "table": "organizations",
+            "schema": "public",
+            "columns": [
+                "id",
+                "name",
+                "slug",
+                "default_timezone",
+                "default_locale",
+                "default_country_code",
+                "default_currency",
+                "created_at",
+                "updated_at",
+                "created_by",
+                "updated_by",
+                "deleted_at"
+            ]
+        },
+        {
+            "table": "phases",
+            "schema": "public",
+            "columns": [
+                "id",
+                "organization_id",
+                "production_id",
+                "name",
+                "phase_type",
+                "position",
+                "version",
+                "created_at",
+                "updated_at",
+                "created_by",
+                "updated_by",
+                "deleted_at"
+            ]
+        },
+        {
+            "table": "production_days",
+            "schema": "public",
+            "columns": [
+                "id",
+                "organization_id",
+                "production_id",
+                "phase_id",
+                "calendar_date",
+                "day_number",
+                "day_type",
+                "position",
+                "status",
+                "version",
+                "created_at",
+                "updated_at",
+                "created_by",
+                "updated_by",
+                "deleted_at"
+            ]
+        },
+        {
+            "table": "production_memberships",
+            "schema": "public",
+            "columns": [
+                "id",
+                "organization_id",
+                "production_id",
+                "user_id",
+                "role",
+                "status",
+                "invited_by",
+                "joined_at",
+                "created_at",
+                "updated_at"
+            ]
+        },
+        {
+            "table": "productions",
+            "schema": "public",
+            "columns": [
+                "id",
+                "organization_id",
+                "name",
+                "slug",
+                "status",
+                "timezone",
+                "locale",
+                "country_code",
+                "currency",
+                "version",
+                "created_at",
+                "updated_at",
+                "created_by",
+                "updated_by",
+                "deleted_at"
+            ]
+        },
+        {
+            "table": "profiles",
+            "schema": "public",
+            "columns": [
+                "user_id",
+                "display_name",
+                "preferred_timezone",
+                "preferred_locale",
+                "created_at",
+                "updated_at"
+            ]
+        },
+        {
+            "table": "schedule_restrictions",
+            "schema": "public",
+            "columns": [
+                "id",
+                "organization_id",
+                "production_id",
+                "schedule_id",
+                "subject_role",
+                "subject_user_id",
+                "denied_actions",
+                "authority",
+                "created_by",
+                "revision",
+                "created_at",
+                "updated_at"
+            ]
+        },
+        {
+            "table": "schedule_versions",
+            "schema": "public",
+            "columns": [
+                "id",
+                "organization_id",
+                "production_id",
+                "schedule_id",
+                "version",
+                "document_schema_version",
+                "document",
+                "checksum",
+                "label",
+                "created_at",
+                "created_by",
+                "metadata",
+                "metadata_checksum"
+            ]
+        },
+        {
+            "table": "schedules",
+            "schema": "public",
+            "columns": [
+                "id",
+                "organization_id",
+                "production_id",
+                "production_day_id",
+                "display_name",
+                "slug",
+                "status",
+                "town",
+                "document_schema_version",
+                "document",
+                "document_version",
+                "created_at",
+                "updated_at",
+                "created_by",
+                "updated_by",
+                "deleted_at",
+                "archived_from_status",
+                "phase_id",
+                "library_position"
+            ]
+        }
+    ],
+    "foreign_keys": [
+        {
+            "table": "audit_events",
+            "definition": "FOREIGN KEY (actor_user_id) REFERENCES auth.users(id) ON DELETE SET NULL",
+            "references": "auth.users"
+        },
+        {
+            "table": "audit_events",
+            "definition": "FOREIGN KEY (organization_id) REFERENCES organizations(id) ON DELETE SET NULL",
+            "references": "organizations"
+        },
+        {
+            "table": "organization_invitations",
+            "definition": "FOREIGN KEY (accepted_by) REFERENCES auth.users(id) ON DELETE SET NULL",
+            "references": "auth.users"
+        },
+        {
+            "table": "organization_invitations",
+            "definition": "FOREIGN KEY (created_by) REFERENCES auth.users(id) ON DELETE RESTRICT",
+            "references": "auth.users"
+        },
+        {
+            "table": "organization_invitations",
+            "definition": "FOREIGN KEY (organization_id) REFERENCES organizations(id) ON DELETE CASCADE",
+            "references": "organizations"
+        },
+        {
+            "table": "organization_invitations",
+            "definition": "FOREIGN KEY (organization_id, production_id) REFERENCES productions(organization_id, id) ON DELETE CASCADE",
+            "references": "productions"
+        },
+        {
+            "table": "organization_invitations",
+            "definition": "FOREIGN KEY (revoked_by) REFERENCES auth.users(id) ON DELETE SET NULL",
+            "references": "auth.users"
+        },
+        {
+            "table": "organization_memberships",
+            "definition": "FOREIGN KEY (invited_by) REFERENCES auth.users(id) ON DELETE SET NULL",
+            "references": "auth.users"
+        },
+        {
+            "table": "organization_memberships",
+            "definition": "FOREIGN KEY (organization_id) REFERENCES organizations(id) ON DELETE CASCADE",
+            "references": "organizations"
+        },
+        {
+            "table": "organization_memberships",
+            "definition": "FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE",
+            "references": "auth.users"
+        },
+        {
+            "table": "organizations",
+            "definition": "FOREIGN KEY (created_by) REFERENCES auth.users(id) ON DELETE SET NULL",
+            "references": "auth.users"
+        },
+        {
+            "table": "organizations",
+            "definition": "FOREIGN KEY (updated_by) REFERENCES auth.users(id) ON DELETE SET NULL",
+            "references": "auth.users"
+        },
+        {
+            "table": "phases",
+            "definition": "FOREIGN KEY (created_by) REFERENCES auth.users(id) ON DELETE RESTRICT",
+            "references": "auth.users"
+        },
+        {
+            "table": "phases",
+            "definition": "FOREIGN KEY (organization_id, production_id) REFERENCES productions(organization_id, id) ON DELETE RESTRICT",
+            "references": "productions"
+        },
+        {
+            "table": "phases",
+            "definition": "FOREIGN KEY (updated_by) REFERENCES auth.users(id) ON DELETE RESTRICT",
+            "references": "auth.users"
+        },
+        {
+            "table": "private.account_policy_acceptances",
+            "definition": "FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE",
+            "references": "auth.users"
+        },
+        {
+            "table": "private.account_session_activity",
+            "definition": "FOREIGN KEY (session_id) REFERENCES auth.sessions(id) ON DELETE CASCADE",
+            "references": "auth.sessions"
+        },
+        {
+            "table": "private.account_session_activity",
+            "definition": "FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE",
+            "references": "auth.users"
+        },
+        {
+            "table": "private.administration_notification_outbox",
+            "definition": "FOREIGN KEY (actor_id) REFERENCES auth.users(id)",
+            "references": "auth.users"
+        },
+        {
+            "table": "private.administration_notification_outbox",
+            "definition": "FOREIGN KEY (claimed_by) REFERENCES auth.users(id)",
+            "references": "auth.users"
+        },
+        {
+            "table": "private.administration_notification_outbox",
+            "definition": "FOREIGN KEY (membership_id) REFERENCES organization_memberships(id)",
+            "references": "organization_memberships"
+        },
+        {
+            "table": "private.administration_notification_outbox",
+            "definition": "FOREIGN KEY (organization_id) REFERENCES organizations(id)",
+            "references": "organizations"
+        },
+        {
+            "table": "private.administration_notification_outbox",
+            "definition": "FOREIGN KEY (recipient_id) REFERENCES auth.users(id)",
+            "references": "auth.users"
+        },
+        {
+            "table": "private.membership_status_receipts",
+            "definition": "FOREIGN KEY (actor_id) REFERENCES auth.users(id)",
+            "references": "auth.users"
+        },
+        {
+            "table": "private.membership_status_receipts",
+            "definition": "FOREIGN KEY (membership_id) REFERENCES organization_memberships(id)",
+            "references": "organization_memberships"
+        },
+        {
+            "table": "private.membership_status_receipts",
+            "definition": "FOREIGN KEY (organization_id) REFERENCES organizations(id)",
+            "references": "organizations"
+        },
+        {
+            "table": "private.migration_capture_runs",
+            "definition": "FOREIGN KEY (organization_id) REFERENCES organizations(id)",
+            "references": "organizations"
+        },
+        {
+            "table": "private.migration_record_versions",
+            "definition": "FOREIGN KEY (organization_id, record_id) REFERENCES private.migration_records(organization_id, id) ON DELETE RESTRICT",
+            "references": "private.migration_records"
+        },
+        {
+            "table": "private.migration_records",
+            "definition": "FOREIGN KEY (organization_id) REFERENCES organizations(id) ON DELETE RESTRICT",
+            "references": "organizations"
+        },
+        {
+            "table": "private.organization_lifecycle",
+            "definition": "FOREIGN KEY (cancelled_by) REFERENCES auth.users(id)",
+            "references": "auth.users"
+        },
+        {
+            "table": "private.organization_lifecycle",
+            "definition": "FOREIGN KEY (organization_id) REFERENCES organizations(id)",
+            "references": "organizations"
+        },
+        {
+            "table": "private.organization_lifecycle",
+            "definition": "FOREIGN KEY (requested_by) REFERENCES auth.users(id)",
+            "references": "auth.users"
+        },
+        {
+            "table": "private.organization_lifecycle_receipts",
+            "definition": "FOREIGN KEY (actor_id) REFERENCES auth.users(id)",
+            "references": "auth.users"
+        },
+        {
+            "table": "private.organization_lifecycle_receipts",
+            "definition": "FOREIGN KEY (organization_id) REFERENCES organizations(id)",
+            "references": "organizations"
+        },
+        {
+            "table": "private.organization_mfa_policy",
+            "definition": "FOREIGN KEY (organization_id) REFERENCES organizations(id) ON DELETE RESTRICT",
+            "references": "organizations"
+        },
+        {
+            "table": "private.organization_mfa_policy",
+            "definition": "FOREIGN KEY (updated_by) REFERENCES auth.users(id)",
+            "references": "auth.users"
+        },
+        {
+            "table": "private.organization_mfa_policy_receipts",
+            "definition": "FOREIGN KEY (actor_id) REFERENCES auth.users(id)",
+            "references": "auth.users"
+        },
+        {
+            "table": "private.organization_mfa_policy_receipts",
+            "definition": "FOREIGN KEY (organization_id) REFERENCES organizations(id)",
+            "references": "organizations"
+        },
+        {
+            "table": "private.organization_presentation",
+            "definition": "FOREIGN KEY (organization_id) REFERENCES organizations(id) ON DELETE RESTRICT",
+            "references": "organizations"
+        },
+        {
+            "table": "private.organization_presentation",
+            "definition": "FOREIGN KEY (updated_by) REFERENCES auth.users(id)",
+            "references": "auth.users"
+        },
+        {
+            "table": "private.organization_presentation_receipts",
+            "definition": "FOREIGN KEY (actor_id) REFERENCES auth.users(id)",
+            "references": "auth.users"
+        },
+        {
+            "table": "private.organization_presentation_receipts",
+            "definition": "FOREIGN KEY (organization_id) REFERENCES organizations(id) ON DELETE RESTRICT",
+            "references": "organizations"
+        },
+        {
+            "table": "private.platform_operators",
+            "definition": "FOREIGN KEY (created_by) REFERENCES auth.users(id) ON DELETE SET NULL",
+            "references": "auth.users"
+        },
+        {
+            "table": "private.platform_operators",
+            "definition": "FOREIGN KEY (disabled_by) REFERENCES auth.users(id) ON DELETE SET NULL",
+            "references": "auth.users"
+        },
+        {
+            "table": "private.platform_operators",
+            "definition": "FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE",
+            "references": "auth.users"
+        },
+        {
+            "table": "private.schedule_client_aliases",
+            "definition": "FOREIGN KEY (creator_id) REFERENCES auth.users(id)",
+            "references": "auth.users"
+        },
+        {
+            "table": "private.schedule_client_aliases",
+            "definition": "FOREIGN KEY (organization_id) REFERENCES organizations(id)",
+            "references": "organizations"
+        },
+        {
+            "table": "private.schedule_client_aliases",
+            "definition": "FOREIGN KEY (revoked_by) REFERENCES auth.users(id)",
+            "references": "auth.users"
+        },
+        {
+            "table": "private.schedule_client_aliases",
+            "definition": "FOREIGN KEY (schedule_id) REFERENCES schedules(id)",
+            "references": "schedules"
+        },
+        {
+            "table": "private.schedule_client_links",
+            "definition": "FOREIGN KEY (creator_id) REFERENCES auth.users(id)",
+            "references": "auth.users"
+        },
+        {
+            "table": "private.schedule_client_links",
+            "definition": "FOREIGN KEY (organization_id) REFERENCES organizations(id)",
+            "references": "organizations"
+        },
+        {
+            "table": "private.schedule_client_links",
+            "definition": "FOREIGN KEY (revoked_by) REFERENCES auth.users(id)",
+            "references": "auth.users"
+        },
+        {
+            "table": "private.schedule_client_links",
+            "definition": "FOREIGN KEY (schedule_id) REFERENCES schedules(id)",
+            "references": "schedules"
+        },
+        {
+            "table": "private.schedule_copy_receipts",
+            "definition": "FOREIGN KEY (actor_id) REFERENCES auth.users(id) ON DELETE RESTRICT",
+            "references": "auth.users"
+        },
+        {
+            "table": "private.schedule_copy_receipts",
+            "definition": "FOREIGN KEY (schedule_id) REFERENCES schedules(id) ON DELETE RESTRICT",
+            "references": "schedules"
+        },
+        {
+            "table": "private.schedule_snapshot_copy_receipts",
+            "definition": "FOREIGN KEY (actor_id) REFERENCES auth.users(id)",
+            "references": "auth.users"
+        },
+        {
+            "table": "private.schedule_snapshot_copy_receipts",
+            "definition": "FOREIGN KEY (organization_id) REFERENCES organizations(id)",
+            "references": "organizations"
+        },
+        {
+            "table": "private.schedule_snapshot_imports",
+            "definition": "FOREIGN KEY (source_record_id) REFERENCES private.migration_records(id)",
+            "references": "private.migration_records"
+        },
+        {
+            "table": "private.schedule_snapshot_policy",
+            "definition": "FOREIGN KEY (organization_id) REFERENCES organizations(id)",
+            "references": "organizations"
+        },
+        {
+            "table": "private.schedule_snapshot_policy",
+            "definition": "FOREIGN KEY (updated_by) REFERENCES auth.users(id)",
+            "references": "auth.users"
+        },
+        {
+            "table": "private.schedule_snapshot_policy_receipts",
+            "definition": "FOREIGN KEY (actor_id) REFERENCES auth.users(id)",
+            "references": "auth.users"
+        },
+        {
+            "table": "private.schedule_snapshot_policy_receipts",
+            "definition": "FOREIGN KEY (organization_id) REFERENCES organizations(id)",
+            "references": "organizations"
+        },
+        {
+            "table": "private.schedule_snapshot_receipts",
+            "definition": "FOREIGN KEY (actor_id) REFERENCES auth.users(id)",
+            "references": "auth.users"
+        },
+        {
+            "table": "private.schedule_snapshot_receipts",
+            "definition": "FOREIGN KEY (organization_id) REFERENCES organizations(id)",
+            "references": "organizations"
+        },
+        {
+            "table": "private.schedule_snapshot_receipts",
+            "definition": "FOREIGN KEY (schedule_id) REFERENCES schedules(id)",
+            "references": "schedules"
+        },
+        {
+            "table": "private.schedule_snapshots",
+            "definition": "FOREIGN KEY (created_by) REFERENCES auth.users(id)",
+            "references": "auth.users"
+        },
+        {
+            "table": "private.schedule_snapshots",
+            "definition": "FOREIGN KEY (organization_id, schedule_id) REFERENCES schedules(organization_id, id) ON DELETE RESTRICT",
+            "references": "schedules"
+        },
+        {
+            "table": "private.schedule_snapshots",
+            "definition": "FOREIGN KEY (updated_by) REFERENCES auth.users(id)",
+            "references": "auth.users"
+        },
+        {
+            "table": "private.schedule_template_bindings",
+            "definition": "FOREIGN KEY (schedule_id) REFERENCES schedules(id) ON DELETE RESTRICT",
+            "references": "schedules"
+        },
+        {
+            "table": "private.schedule_template_bindings",
+            "definition": "FOREIGN KEY (template_id) REFERENCES private.schedule_templates(id) ON DELETE RESTRICT",
+            "references": "private.schedule_templates"
+        },
+        {
+            "table": "private.schedule_template_browser_origins",
+            "definition": "FOREIGN KEY (actor_id) REFERENCES auth.users(id) ON DELETE RESTRICT",
+            "references": "auth.users"
+        },
+        {
+            "table": "private.schedule_template_browser_origins",
+            "definition": "FOREIGN KEY (template_id) REFERENCES private.schedule_templates(id) ON DELETE RESTRICT",
+            "references": "private.schedule_templates"
+        },
+        {
+            "table": "private.schedule_template_receipts",
+            "definition": "FOREIGN KEY (actor_id) REFERENCES auth.users(id) ON DELETE RESTRICT",
+            "references": "auth.users"
+        },
+        {
+            "table": "private.schedule_template_receipts",
+            "definition": "FOREIGN KEY (template_id) REFERENCES private.schedule_templates(id) ON DELETE RESTRICT",
+            "references": "private.schedule_templates"
+        },
+        {
+            "table": "private.schedule_template_save_receipts",
+            "definition": "FOREIGN KEY (actor_id) REFERENCES auth.users(id) ON DELETE RESTRICT",
+            "references": "auth.users"
+        },
+        {
+            "table": "private.schedule_template_save_receipts",
+            "definition": "FOREIGN KEY (schedule_id) REFERENCES schedules(id) ON DELETE RESTRICT",
+            "references": "schedules"
+        },
+        {
+            "table": "private.schedule_template_sources",
+            "definition": "FOREIGN KEY (organization_id, schedule_id) REFERENCES schedules(organization_id, id) ON DELETE RESTRICT",
+            "references": "schedules"
+        },
+        {
+            "table": "private.schedule_template_sources",
+            "definition": "FOREIGN KEY (organization_id, template_id) REFERENCES private.schedule_templates(organization_id, id) ON DELETE RESTRICT",
+            "references": "private.schedule_templates"
+        },
+        {
+            "table": "private.schedule_templates",
+            "definition": "FOREIGN KEY (created_by) REFERENCES auth.users(id) ON DELETE RESTRICT",
+            "references": "auth.users"
+        },
+        {
+            "table": "private.schedule_templates",
+            "definition": "FOREIGN KEY (organization_id) REFERENCES organizations(id) ON DELETE RESTRICT",
+            "references": "organizations"
+        },
+        {
+            "table": "private.schedule_templates",
+            "definition": "FOREIGN KEY (organization_id, production_id) REFERENCES productions(organization_id, id) ON DELETE RESTRICT",
+            "references": "productions"
+        },
+        {
+            "table": "private.schedule_templates",
+            "definition": "FOREIGN KEY (published_by) REFERENCES auth.users(id) ON DELETE RESTRICT",
+            "references": "auth.users"
+        },
+        {
+            "table": "private.schedule_templates",
+            "definition": "FOREIGN KEY (updated_by) REFERENCES auth.users(id) ON DELETE RESTRICT",
+            "references": "auth.users"
+        },
+        {
+            "table": "private.schedule_transfers",
+            "definition": "FOREIGN KEY (decided_by) REFERENCES auth.users(id)",
+            "references": "auth.users"
+        },
+        {
+            "table": "private.schedule_transfers",
+            "definition": "FOREIGN KEY (destination_id) REFERENCES productions(id)",
+            "references": "productions"
+        },
+        {
+            "table": "private.schedule_transfers",
+            "definition": "FOREIGN KEY (organization_id) REFERENCES organizations(id)",
+            "references": "organizations"
+        },
+        {
+            "table": "private.schedule_transfers",
+            "definition": "FOREIGN KEY (requester) REFERENCES auth.users(id)",
+            "references": "auth.users"
+        },
+        {
+            "table": "private.schedule_transfers",
+            "definition": "FOREIGN KEY (schedule_id) REFERENCES schedules(id)",
+            "references": "schedules"
+        },
+        {
+            "table": "private.schedule_transfers",
+            "definition": "FOREIGN KEY (source_id) REFERENCES productions(id)",
+            "references": "productions"
+        },
+        {
+            "table": "private.workflow_requests",
+            "definition": "FOREIGN KEY (actor_user_id) REFERENCES auth.users(id) ON DELETE RESTRICT",
+            "references": "auth.users"
+        },
+        {
+            "table": "production_days",
+            "definition": "FOREIGN KEY (created_by) REFERENCES auth.users(id) ON DELETE RESTRICT",
+            "references": "auth.users"
+        },
+        {
+            "table": "production_days",
+            "definition": "FOREIGN KEY (organization_id, production_id, phase_id) REFERENCES phases(organization_id, production_id, id) ON DELETE RESTRICT",
+            "references": "phases"
+        },
+        {
+            "table": "production_days",
+            "definition": "FOREIGN KEY (organization_id, production_id) REFERENCES productions(organization_id, id) ON DELETE RESTRICT",
+            "references": "productions"
+        },
+        {
+            "table": "production_days",
+            "definition": "FOREIGN KEY (updated_by) REFERENCES auth.users(id) ON DELETE RESTRICT",
+            "references": "auth.users"
+        },
+        {
+            "table": "production_memberships",
+            "definition": "FOREIGN KEY (invited_by) REFERENCES auth.users(id) ON DELETE SET NULL",
+            "references": "auth.users"
+        },
+        {
+            "table": "production_memberships",
+            "definition": "FOREIGN KEY (organization_id, production_id) REFERENCES productions(organization_id, id) ON DELETE CASCADE",
+            "references": "productions"
+        },
+        {
+            "table": "production_memberships",
+            "definition": "FOREIGN KEY (organization_id, user_id) REFERENCES organization_memberships(organization_id, user_id) ON DELETE CASCADE",
+            "references": "organization_memberships"
+        },
+        {
+            "table": "production_memberships",
+            "definition": "FOREIGN KEY (production_id) REFERENCES productions(id) ON DELETE CASCADE",
+            "references": "productions"
+        },
+        {
+            "table": "production_memberships",
+            "definition": "FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE",
+            "references": "auth.users"
+        },
+        {
+            "table": "productions",
+            "definition": "FOREIGN KEY (created_by) REFERENCES auth.users(id) ON DELETE SET NULL",
+            "references": "auth.users"
+        },
+        {
+            "table": "productions",
+            "definition": "FOREIGN KEY (organization_id) REFERENCES organizations(id) ON DELETE RESTRICT",
+            "references": "organizations"
+        },
+        {
+            "table": "productions",
+            "definition": "FOREIGN KEY (updated_by) REFERENCES auth.users(id) ON DELETE SET NULL",
+            "references": "auth.users"
+        },
+        {
+            "table": "profiles",
+            "definition": "FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE",
+            "references": "auth.users"
+        },
+        {
+            "table": "schedule_restrictions",
+            "definition": "FOREIGN KEY (created_by) REFERENCES auth.users(id) ON DELETE RESTRICT",
+            "references": "auth.users"
+        },
+        {
+            "table": "schedule_restrictions",
+            "definition": "FOREIGN KEY (organization_id) REFERENCES organizations(id) ON DELETE RESTRICT",
+            "references": "organizations"
+        },
+        {
+            "table": "schedule_restrictions",
+            "definition": "FOREIGN KEY (organization_id, production_id) REFERENCES productions(organization_id, id) ON DELETE RESTRICT",
+            "references": "productions"
+        },
+        {
+            "table": "schedule_restrictions",
+            "definition": "FOREIGN KEY (organization_id, production_id, schedule_id) REFERENCES schedules(organization_id, production_id, id) DEFERRABLE INITIALLY DEFERRED",
+            "references": "schedules"
+        },
+        {
+            "table": "schedule_restrictions",
+            "definition": "FOREIGN KEY (subject_user_id) REFERENCES auth.users(id) ON DELETE RESTRICT",
+            "references": "auth.users"
+        },
+        {
+            "table": "schedule_versions",
+            "definition": "FOREIGN KEY (created_by) REFERENCES auth.users(id) ON DELETE SET NULL",
+            "references": "auth.users"
+        },
+        {
+            "table": "schedule_versions",
+            "definition": "FOREIGN KEY (organization_id, schedule_id) REFERENCES schedules(organization_id, id) ON DELETE RESTRICT",
+            "references": "schedules"
+        },
+        {
+            "table": "schedules",
+            "definition": "FOREIGN KEY (created_by) REFERENCES auth.users(id) ON DELETE RESTRICT",
+            "references": "auth.users"
+        },
+        {
+            "table": "schedules",
+            "definition": "FOREIGN KEY (organization_id, production_id, production_day_id) REFERENCES production_days(organization_id, production_id, id) ON DELETE RESTRICT",
+            "references": "production_days"
+        },
+        {
+            "table": "schedules",
+            "definition": "FOREIGN KEY (organization_id, production_id) REFERENCES productions(organization_id, id) ON DELETE RESTRICT",
+            "references": "productions"
+        },
+        {
+            "table": "schedules",
+            "definition": "FOREIGN KEY (organization_id, production_id, phase_id) REFERENCES phases(organization_id, production_id, id) ON DELETE RESTRICT",
+            "references": "phases"
+        },
+        {
+            "table": "schedules",
+            "definition": "FOREIGN KEY (updated_by) REFERENCES auth.users(id) ON DELETE RESTRICT",
+            "references": "auth.users"
+        }
+    ]
+}

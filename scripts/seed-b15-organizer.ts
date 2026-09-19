@@ -1,0 +1,17 @@
+import {readFileSync,writeFileSync,existsSync} from 'node:fs';
+import {execFileSync} from 'node:child_process';
+import {randomUUID,randomBytes} from 'node:crypto';
+import {createClient} from '@supabase/supabase-js';
+const output='/private/tmp/roseland-b15-review-access.json';
+if(existsSync(output))throw Error('Review actor already exists; do not reseed');
+const config=JSON.parse(readFileSync('/private/tmp/roseland-b14-destination-g2-live-status.json','utf8'));
+const f=JSON.parse(readFileSync('/private/tmp/roseland-b15-fixtures.json','utf8'));
+if(config.API_URL!=='http://127.0.0.1:56521'||f.project!=='roseland-b14-destination-g2')throw Error('Owned fictional destination required');
+const email='b15-organizer-'+randomUUID()+'@example.test',password='Fictional1!'+randomBytes(18).toString('hex');
+const admin=createClient(config.API_URL,config.SERVICE_ROLE_KEY,{auth:{persistSession:false,autoRefreshToken:false}});
+const r=await admin.auth.admin.createUser({email,password,email_confirm:true,app_metadata:{b08_terms:'fictional-terms-v1',b08_privacy:'fictional-privacy-v1'}});
+if(r.error||!r.data.user)throw Error('Fictional organizer creation failed');
+const actor=r.data.user.id;
+execFileSync('docker',['exec','-i','supabase_db_'+f.project,'psql','-XqAt','-v','ON_ERROR_STOP=1','-U','postgres','-d','postgres'],{input:`begin;insert into public.organization_memberships(organization_id,user_id,role,status,joined_at)values('${f.organization}','${actor}','member','active',now());insert into public.production_memberships(organization_id,production_id,user_id,role,status,joined_at)values('${f.organization}','${f.production}','${actor}','organizer','active',now());commit;`,stdio:['pipe','pipe','pipe']});
+writeFileSync(output,JSON.stringify({project:f.project,app:'http://127.0.0.1:3485/local-workspace',email,password,actor,organization:f.organization,production:f.production,schedules:f.fixtures.map((x:any)=>({id:x.id,name:x.name}))},null,2),{mode:0o600});
+console.log('Fictional Organizer review access saved privately.');

@@ -1,0 +1,18 @@
+✔ local Share exports the current unsaved document only after output authorization (33.364958ms)
+✔ denied local draft export neither reads nor downloads document content (7.357667ms)
+✔ local backend requires explicit flag, loopback host and anonymous local key (0.523625ms)
+✔ list rejects invalid cursors, malformed/duplicate summaries and maps expired sessions (0.4625ms)
+✔ pending save advances version while preserving newer unsaved edits and prevents parallel save (5.418459ms)
+✔ acknowledged current revision becomes clean; failed/conflicting save retains edits and baseline (0.174292ms)
+✔ late save and load cannot cross a session boundary or overwrite edits made during loading (0.315333ms)
+✔ closing fences late save/load replies while retaining the signed-in actor for reopening (0.150959ms)
+✔ Template recovery releases only a freshly verified unchanged baseline and preserves newer edits (0.171291ms)
+✔ Template re-review cannot release an uncertain attempt when a later save or account switch wins (0.186041ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 10
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 153.060084

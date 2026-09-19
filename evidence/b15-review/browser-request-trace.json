@@ -1,0 +1,260 @@
+[
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/",
+    "result": "local application"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/login",
+    "result": "local application"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/_next/static/media/13971731025ec697-s.p.woff2",
+    "result": "local application"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/_next/static/css/0688e01ed382c861.css",
+    "result": "local application"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/_next/static/css/f917ac1c383b255a.css",
+    "result": "local application"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/_next/static/css/152ba458418bff61.css",
+    "result": "local application"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/_next/static/media/4261f91ea7100e2e-s.p.woff2",
+    "result": "local application"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/_next/static/media/6c25f6e897d845a3-s.p.woff2",
+    "result": "local application"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/_next/static/media/logo-login.0d0db23d.png",
+    "result": "local application"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/_next/static/chunks/webpack-69a988b5d95d0973.js",
+    "result": "local application"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/_next/static/chunks/3fa34e2d-c4e69fcbbb8d29c4.js",
+    "result": "local application"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/_next/static/chunks/549-e0f2c4117fe76e23.js",
+    "result": "local application"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/_next/static/chunks/main-app-05f9e3f6507eea2e.js",
+    "result": "local application"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/_next/static/chunks/app/layout-e6fcc3e41975b223.js",
+    "result": "local application"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/_next/static/chunks/app/(auth)/login/page-182e3734da8e7246.js",
+    "result": "local application"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/.netlify/functions/cms-load",
+    "result": "fictional fixture"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/favicon-32x32.png",
+    "result": "local application"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "POST",
+    "path": "/.netlify/functions/auth",
+    "result": "fictional fixture"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/",
+    "result": "local application"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/_next/static/chunks/app/(app)/layout-a174519e439bf3e2.js",
+    "result": "local application"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/_next/static/chunks/a65b9b38-ee30ed1e69e5f707.js",
+    "result": "local application"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/_next/static/chunks/854-3ad546156af875e7.js",
+    "result": "local application"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/_next/static/chunks/5-b75ed16ea66c9bc4.js",
+    "result": "local application"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/_next/static/chunks/app/(app)/page-975514a5c35d2a6a.js",
+    "result": "local application"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/logo-header.png",
+    "result": "local application"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/.netlify/functions/load",
+    "result": "fictional fixture"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/.netlify/functions/library",
+    "result": "fictional fixture"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/.netlify/functions/load",
+    "result": "fictional fixture"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/.netlify/functions/load",
+    "result": "fictional fixture"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/.netlify/functions/load",
+    "result": "fictional fixture"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/.netlify/functions/templates",
+    "result": "fictional fixture"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/.netlify/functions/snapshots",
+    "result": "fictional fixture"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/schedule/B15%20ordinary%20fictional%20day",
+    "result": "local application"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/_next/static/chunks/app/(app)/schedule/%5Bname%5D/page-97c6a88577d67f61.js",
+    "result": "local application"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/.netlify/functions/load",
+    "result": "fictional fixture"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/schedule/B15%20ordinary%20fictional%20day",
+    "result": "local application"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/.netlify/functions/load",
+    "result": "fictional fixture"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/.netlify/functions/library",
+    "result": "fictional fixture"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/.netlify/functions/load",
+    "result": "fictional fixture"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/.netlify/functions/load",
+    "result": "fictional fixture"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/.netlify/functions/load",
+    "result": "fictional fixture"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/.netlify/functions/templates",
+    "result": "fictional fixture"
+  },
+  {
+    "surface": "fictional legacy",
+    "method": "GET",
+    "path": "/.netlify/functions/snapshots",
+    "result": "fictional fixture"
+  }
+]

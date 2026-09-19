@@ -1,0 +1,146 @@
+{
+  "rows": [
+    {
+      "action": "Crew Call",
+      "otherText": "Fictional scene 1",
+      "desc": "DESC-1 Fictional detail with a comma, \"quoted text\", and multiple lines.\nSecond line remains visible.  END-DESC-1",
+      "loc": "Fictional location 1",
+      "locLat": 0,
+      "locLng": 0,
+      "notes": "NOTE-1\nFictional instructions END-NOTE-1",
+      "status": "Ready",
+      "contactName": "=Fictional Crew",
+      "contactTitle": "Fictional department",
+      "contactPhone": "+1 202 555 0142",
+      "contactEmail": "crew1@example.test",
+      "timeIn": "9:00 AM",
+      "dur": "00:00",
+      "done": false,
+      "sunLocked": false,
+      "fixedIn": true,
+      "fixedOut": false,
+      "fixedOutTime": "",
+      "locName": "Fictional location 1",
+      "locAddress": "100 Example Lane, Fictional Town",
+      "subLocations": [
+        {
+          "id": "fictional-sub-0",
+          "loc": "Fictional annex",
+          "desc": "SUB-1 Fictional nested description END-SUB-1",
+          "done": false,
+          "name": "Annex 1",
+          "locLat": 0,
+          "locLng": 0,
+          "address": "200 Sample Road"
+        }
+      ]
+    },
+    {
+      "action": "Other",
+      "otherText": "Fictional scene 2",
+      "desc": "DESC-2 Fictional detail with a comma, \"quoted text\", and multiple lines.\nSecond line remains visible.  END-DESC-2",
+      "loc": "Fictional location 2",
+      "locLat": 0,
+      "locLng": 0,
+      "notes": "NOTE-2\nFictional instructions END-NOTE-2",
+      "status": "Ready",
+      "contactName": "Example Crew 2",
+      "contactTitle": "Fictional department",
+      "contactPhone": "+1 202 555 0142",
+      "contactEmail": "crew2@example.test",
+      "timeIn": "9:00 AM",
+      "dur": "00:15",
+      "done": true,
+      "sunLocked": false,
+      "fixedIn": false,
+      "fixedOut": false,
+      "fixedOutTime": "",
+      "locName": "Fictional location 2",
+      "locAddress": "101 Example Lane, Fictional Town",
+      "subLocations": [
+        {
+          "id": "fictional-sub-1",
+          "loc": "Fictional annex",
+          "desc": "SUB-2 Fictional nested description END-SUB-2",
+          "done": false,
+          "name": "Annex 2",
+          "locLat": 0,
+          "locLng": 0,
+          "address": "201 Sample Road"
+        }
+      ]
+    },
+    {
+      "action": "Wrap",
+      "otherText": "Fictional scene 3",
+      "desc": "DESC-3 Fictional detail with a comma, \"quoted text\", and multiple lines.\nSecond line remains visible.  END-DESC-3",
+      "loc": "Fictional location 3",
+      "locLat": 0,
+      "locLng": 0,
+      "notes": "NOTE-3\nFictional instructions END-NOTE-3",
+      "status": "Ready",
+      "contactName": "Example Crew 3",
+      "contactTitle": "Fictional department",
+      "contactPhone": "+1 202 555 0142",
+      "contactEmail": "crew3@example.test",
+      "timeIn": "9:15 AM",
+      "dur": "00:15",
+      "done": false,
+      "sunLocked": false,
+      "fixedIn": false,
+      "fixedOut": false,
+      "fixedOutTime": "",
+      "locName": "Fictional location 3",
+      "locAddress": "102 Example Lane, Fictional Town",
+      "subLocations": [
+        {
+          "id": "fictional-sub-2",
+          "loc": "Fictional annex",
+          "desc": "SUB-3 Fictional nested description END-SUB-3",
+          "done": false,
+          "name": "Annex 3",
+          "locLat": 0,
+          "locLng": 0,
+          "address": "202 Sample Road"
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "town": "B15 unsaved export checkpoint",
+    "date": "2026-10-20",
+    "prod": "Fictional producer with complete long credit",
+    "dir": "Fictional director",
+    "dp": "Fictional camera lead",
+    "lat": 0,
+    "lng": 0,
+    "wx": {
+      "code": 2,
+      "cond": "Partly Cloudy",
+      "maxC": 24,
+      "maxF": 75,
+      "minC": 12,
+      "minF": 54,
+      "prec": 35,
+      "town": "Fictional Harbor Studio",
+      "sunset": "7:15 PM",
+      "sunrise": "6:30 AM",
+      "fetchedAt": "Fictional forecast"
+    },
+    "projectName": "Fictional production \u2013 document acceptance",
+    "phase": "Principal photography",
+    "dayNumber": 2,
+    "totalDays": 12,
+    "callsheet": {
+      "notes": "CALL-NOTES Fictional detail with a comma, \"quoted text\", and multiple lines.\nSecond line remains visible. Fictional detail with a comma, \"quoted text\", and multiple lines.\nSecond line remains visible.  END-CALL-NOTES",
+      "parking": "200 Sample Road, Fictional Town",
+      "basecamp": "100 Example Lane, Fictional Harbor",
+      "hospital": "Fictional care center \u2014 fixture only",
+      "emergency": "Example coordinator +1 202 555 0100",
+      "mealNotes": "Fictional lunch\nVegetarian option",
+      "safetyNotes": "Fictional safety instructions\nKeep pathways clear",
+      "specialInstructions": "Fictional access instructions\nBring sample badge"
+    }
+  },
+  "savedAt": 1789785550872
+}

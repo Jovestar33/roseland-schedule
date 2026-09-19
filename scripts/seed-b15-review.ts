@@ -1,0 +1,14 @@
+import {readFileSync,writeFileSync,existsSync} from 'node:fs';
+import {execFileSync} from 'node:child_process';
+import {randomUUID,createHash} from 'node:crypto';
+import {documentFixture,emptyDocumentFixture} from '../tests/fixtures/document-fixtures.ts';
+const out='/private/tmp/roseland-b15-fixtures.json';
+if(existsSync(out))throw Error('B15 fixtures already exist; reuse them without reseeding');
+const f=JSON.parse(readFileSync('/private/tmp/roseland-b14-fixtures.json','utf8'));
+const q=(s:string)=>"'"+s.replaceAll("'","''")+"'";
+const fixtures=[['ordinary',documentFixture()],['long',documentFixture(32)],['empty',emptyDocumentFixture()]].map(([label,document])=>({id:randomUUID(),name:'B15 '+label+' fictional day',document}));
+const sql=fixtures.map(x=>`insert into public.schedules(id,organization_id,production_id,display_name,slug,document,created_by,updated_by) values (${q(x.id)},${q(f.organization)},${q(f.production)},${q(x.name)},${q('b15-'+x.id)},${q(JSON.stringify(x.document))}::jsonb,${q(f.editor.id)},${q(f.editor.id)});`).join('\n');
+execFileSync('docker',['exec','-i','supabase_db_roseland-b14-destination-g2','psql','-X','-q','-v','ON_ERROR_STOP=1','-U','postgres','-d','postgres'],{input:'begin;\n'+sql+'\ncommit;',stdio:['pipe','pipe','pipe']});
+writeFileSync(out,JSON.stringify({project:'roseland-b14-destination-g2',organization:f.organization,production:f.production,editor:f.editor,viewer:f.viewer,fixtures}),{mode:0o600});
+writeFileSync('evidence/b15-review/fixtures.json',JSON.stringify(fixtures.map(x=>({id:x.id,name:x.name,sha256:createHash('sha256').update(JSON.stringify(x.document)).digest('hex'),rows:(x.document as any).rows.length})),null,2));
+console.log('Created three B15 fictional schedules; retained earlier fixtures.');

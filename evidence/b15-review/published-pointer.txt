@@ -1,0 +1,12 @@
+    - text: Deploys from
+    - text: Published
+    - link "62eb261":
+      - /url: https://github.com/Jovestar33/roseland-schedule/commit/62eb261c897b3a5c4e03857e59fee8071d520b88
+    - generic: Auto publishing is on. Deploys from main are published automatically
+      - 'link "Production: main @62eb261"':
+        - /url: /projects/roselandschedule/deploys/6aa4d1344f4fd68c916c5451
+        - text: "@62eb261"
+        - /url: https://6aa4d1344f4fd68c916c5451--roselandschedule.netlify.app
+      - /url: /projects/roselandschedule/deploys/6aa4d1344f4fd68c916c5451
+      - 'link "Production: main @62eb261"':
+        - text: "@62eb261"

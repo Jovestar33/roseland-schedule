@@ -1,0 +1,30 @@
+✔ local backend requires explicit flag, loopback host and anonymous local key (0.544042ms)
+✔ list rejects invalid cursors, malformed/duplicate summaries and maps expired sessions (0.774041ms)
+✔ pending save advances version while preserving newer unsaved edits and prevents parallel save (12.556875ms)
+✔ acknowledged current revision becomes clean; failed/conflicting save retains edits and baseline (0.217583ms)
+✔ late save and load cannot cross a session boundary or overwrite edits made during loading (0.162416ms)
+✖ closing fences late save/load replies while retaining the signed-in actor for reopening (0.140667ms)
+✔ Template recovery releases only a freshly verified unchanged baseline and preserves newer edits (0.144459ms)
+✔ Template re-review cannot release an uncertain attempt when a later save or account switch wins (0.168666ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 7
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 112.568833
+
+✖ failing tests:
+
+test at tests/platform/local-editor.test.ts:71:1
+✖ closing fences late save/load replies while retaining the signed-in actor for reopening (0.140667ms)
+  TypeError: h.controller.close is not a function
+      at TestContext.<anonymous> (file:///private/tmp/roseland-b13-b14-cf4b0ee/tests/platform/local-editor.test.ts:75:18)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7)

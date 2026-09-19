@@ -1,0 +1,86 @@
+[
+  {
+    "surface": "legacy",
+    "case": "duration cascade and undo redo",
+    "total": "\tTotal\t00:45\t",
+    "undone": "\tTotal\t00:30\t",
+    "redone": "\tTotal\t00:45\t"
+  },
+  {
+    "surface": "target",
+    "case": "duration cascade and undo redo",
+    "total": "\tTotal\t00:45\t",
+    "undone": "\tTotal\t00:30\t",
+    "redone": "\tTotal\t00:45\t"
+  },
+  {
+    "surface": "legacy",
+    "case": "add row undo and multiline notes",
+    "before": 3,
+    "added": 4,
+    "undone": 3,
+    "notes": "B15 paired notes\nSecond line"
+  },
+  {
+    "surface": "target",
+    "case": "add row undo and multiline notes",
+    "before": 3,
+    "added": 4,
+    "undone": 3,
+    "notes": "B15 paired notes\nSecond line"
+  },
+  {
+    "surface": "target",
+    "case": "confirmed Close focus",
+    "focused": {
+      "tag": "BUTTON",
+      "text": "Refresh list"
+    },
+    "editorClosed": true
+  },
+  {
+    "surface": "target 390x844",
+    "case": "dirty Close Escape",
+    "town": "B15 mobile draft",
+    "dialogClosed": true
+  },
+  {
+    "surface": "target 390x844",
+    "case": "Close focus",
+    "focus": {
+      "tag": "BUTTON",
+      "text": "Refresh list"
+    }
+  },
+  {
+    "surface": "target 390x844",
+    "case": "long fixture open",
+    "rowNoteFields": 32
+  },
+  {
+    "surface": "target 390x844",
+    "case": "empty fixture open",
+    "rowNoteFields": 0
+  },
+  {
+    "surface": "target 390x844",
+    "case": "empty fixture add",
+    "rowNoteFields": 1
+  },
+  {
+    "surface": "target Organizer",
+    "case": "Duplicate confirmed and opened",
+    "editorName": "B15 review copy"
+  },
+  {
+    "surface": "target Organizer",
+    "case": "save and reload copied schedule",
+    "notes": "B15 saved copy check"
+  },
+  {
+    "surface": "target Organizer",
+    "case": "source intact after duplicate/save",
+    "notes": "NOTE-1\nFictional instructions END-NOTE-1",
+    "versionOne": true
+  }
+]

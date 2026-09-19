@@ -1,0 +1,20 @@
+[
+  {
+    "id": "5ba74f3b-690d-42e2-9723-5476bca97f8a",
+    "name": "B15 ordinary fictional day",
+    "sha256": "9c91b24a18a9ad037d3b62c7faf7fb34c833e8c1fdc7d4ade4d82a67588f298c",
+    "rows": 3
+  },
+  {
+    "id": "d11dc5f9-3718-4e64-86d0-bb2c5e011315",
+    "name": "B15 long fictional day",
+    "sha256": "0e05ad56da00b6e1485f7dbbf9603dde1984e56ea2c2fb2cb77d3e4e25aab0c5",
+    "rows": 32
+  },
+  {
+    "id": "f88a5091-bad0-4c15-896e-5549c0c71af6",
+    "name": "B15 empty fictional day",
+    "sha256": "db01ebc55dd685cc212d00d875eedcc863a393d7a7bbee817b54d0b99a46209b",
+    "rows": 0
+  }
+]

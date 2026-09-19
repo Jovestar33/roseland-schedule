@@ -1,0 +1,14 @@
+   ▲ Next.js 15.5.25
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully in 2.7s
+   Linting and checking validity of types ...
+   Collecting page data ...
+   Generating static pages (0/9) ...
+TypeError: Cannot read properties of null (reading 'useContext')
+    at p (.next/server/pages/_error.js:8:28427)
+Error occurred prerendering page "/404". Read more: https://nextjs.org/docs/messages/prerender-error
+TypeError: Cannot read properties of null (reading 'useContext')
+    at p (.next/server/pages/_error.js:8:28427)
+Export encountered an error on /_error: /404, exiting the build.
+ ⨯ Next.js build worker exited with code: 1 and signal: null

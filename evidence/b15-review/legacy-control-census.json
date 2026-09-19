@@ -1,0 +1,1952 @@
+[
+  {
+    "path": "app/(auth)/login/page.tsx",
+    "line": 31,
+    "source": "async function handleSubmit(e: React.FormEvent) {"
+  },
+  {
+    "path": "app/(auth)/login/page.tsx",
+    "line": 107,
+    "source": "<form onSubmit={handleSubmit} autoComplete=\"off\">"
+  },
+  {
+    "path": "app/(auth)/login/page.tsx",
+    "line": 120,
+    "source": "onChange={(e) => setPassword(e.target.value)}"
+  },
+  {
+    "path": "components/cms/CmsModal.tsx",
+    "line": 91,
+    "source": "onChange={e => onChange(e.target.value)} />"
+  },
+  {
+    "path": "components/cms/CmsModal.tsx",
+    "line": 95,
+    "source": "onChange={e => { if (/^#[0-9a-fA-F]{6}$/.test(e.target.value)) onChange(e.target.value); }} />"
+  },
+  {
+    "path": "components/cms/CmsModal.tsx",
+    "line": 97,
+    "source": "onClick={() => onChange(def)} title={`Reset to ${def}`}>\u21ba</button>"
+  },
+  {
+    "path": "components/cms/CmsModal.tsx",
+    "line": 131,
+    "source": "async function handlePinSubmit() {"
+  },
+  {
+    "path": "components/cms/CmsModal.tsx",
+    "line": 154,
+    "source": "function handleDragStart(i: number) { dragSrc.current = i; }"
+  },
+  {
+    "path": "components/cms/CmsModal.tsx",
+    "line": 155,
+    "source": "function handleDrop(i: number) {"
+  },
+  {
+    "path": "components/cms/CmsModal.tsx",
+    "line": 181,
+    "source": "async function handleSave() {"
+  },
+  {
+    "path": "components/cms/CmsModal.tsx",
+    "line": 201,
+    "source": "function handleLogoFile(file: File | null) {"
+  },
+  {
+    "path": "components/cms/CmsModal.tsx",
+    "line": 212,
+    "source": "onClick={e => { if (e.target === e.currentTarget) closeModal(); }}>"
+  },
+  {
+    "path": "components/cms/CmsModal.tsx",
+    "line": 216,
+    "source": "<button className=\"mclose\" onClick={closeModal}>\u2715</button>"
+  },
+  {
+    "path": "components/cms/CmsModal.tsx",
+    "line": 229,
+    "source": "onChange={e => setPin(e.target.value)}"
+  },
+  {
+    "path": "components/cms/CmsModal.tsx",
+    "line": 230,
+    "source": "onKeyDown={e => e.key === 'Enter' && handlePinSubmit()}"
+  },
+  {
+    "path": "components/cms/CmsModal.tsx",
+    "line": 235,
+    "source": "<button className=\"btn btn-light\" onClick={closeModal}>Cancel</button>"
+  },
+  {
+    "path": "components/cms/CmsModal.tsx",
+    "line": 236,
+    "source": "<button className=\"btn btn-pink\" onClick={handlePinSubmit} disabled={verifying}>"
+  },
+  {
+    "path": "components/cms/CmsModal.tsx",
+    "line": 248,
+    "source": "onClick={e => { if (e.target === e.currentTarget) closeModal(); }}>"
+  },
+  {
+    "path": "components/cms/CmsModal.tsx",
+    "line": 253,
+    "source": "<button className=\"mclose\" onClick={closeModal}>\u2715</button>"
+  },
+  {
+    "path": "components/cms/CmsModal.tsx",
+    "line": 259,
+    "source": "<button key={t} className={`cms-tab${tab === t ? ' active' : ''}`} onClick={() => setTab(t)}>"
+  },
+  {
+    "path": "components/cms/CmsModal.tsx",
+    "line": 284,
+    "source": "onChange={e => setActions(prev => prev.map((a, j) => j === i ? { ...a, name: e.target.value } : a))}"
+  },
+  {
+    "path": "components/cms/CmsModal.tsx",
+    "line": 289,
+    "source": "onChange={e => setActions(prev => prev.map((a, j) => j === i ? { ...a, color: e.target.value } : a))}"
+  },
+  {
+    "path": "components/cms/CmsModal.tsx",
+    "line": 294,
+    "source": "onClick={() => setActions(prev => prev.filter((_, j) => j !== i))}>\u00d7</button>"
+  },
+  {
+    "path": "components/cms/CmsModal.tsx",
+    "line": 304,
+    "source": "onChange={e => setNAName(e.target.value)}"
+  },
+  {
+    "path": "components/cms/CmsModal.tsx",
+    "line": 305,
+    "source": "onKeyDown={e => {"
+  },
+  {
+    "path": "components/cms/CmsModal.tsx",
+    "line": 313,
+    "source": "<button className=\"btn btn-pink btn-sm\" onClick={() => {"
+  },
+  {
+    "path": "components/cms/CmsModal.tsx",
+    "line": 384,
+    "source": "onChange={e => handleLogoFile(e.target.files?.[0] ?? null)} />"
+  },
+  {
+    "path": "components/cms/CmsModal.tsx",
+    "line": 387,
+    "source": "<button className=\"btn btn-light btn-sm\" onClick={() => setLogo(null)}>\u21ba Remove Logo</button>"
+  },
+  {
+    "path": "components/cms/CmsModal.tsx",
+    "line": 406,
+    "source": "onChange={e => setLabels(prev => ({ ...prev, [key]: e.target.value }))}"
+  },
+  {
+    "path": "components/cms/CmsModal.tsx",
+    "line": 418,
+    "source": "<button className=\"btn btn-light\" onClick={closeModal}>Cancel</button>"
+  },
+  {
+    "path": "components/cms/CmsModal.tsx",
+    "line": 419,
+    "source": "<button className=\"btn btn-pink\" onClick={handleSave} disabled={saving}>"
+  },
+  {
+    "path": "components/library/BackupTab.tsx",
+    "line": 33,
+    "source": "function handleImportFile(file: File | null) {"
+  },
+  {
+    "path": "components/library/BackupTab.tsx",
+    "line": 57,
+    "source": "function handleSyncNow() {"
+  },
+  {
+    "path": "components/library/BackupTab.tsx",
+    "line": 63,
+    "source": "async function handleMigrateProjectMeta() {"
+  },
+  {
+    "path": "components/library/BackupTab.tsx",
+    "line": 99,
+    "source": "<button className=\"btn btn-light btn-sm\" onClick={handleSyncNow}>&#8635; Sync Now</button>"
+  },
+  {
+    "path": "components/library/BackupTab.tsx",
+    "line": 100,
+    "source": "<button className=\"btn btn-light btn-sm\" onClick={() => { onRefresh(); setSyncMsg('Retried \u2014 library reloaded.'); }}>Retry Pending</button>"
+  },
+  {
+    "path": "components/library/BackupTab.tsx",
+    "line": 101,
+    "source": "<button className=\"btn btn-light btn-sm\" onClick={() => setSyncMsg('No local cache to clear.')}>Clear Stale Cache</button>"
+  },
+  {
+    "path": "components/library/BackupTab.tsx",
+    "line": 108,
+    "source": "<button className=\"btn btn-light btn-sm\" onClick={exportLibraryJson}>Export Library JSON</button>"
+  },
+  {
+    "path": "components/library/BackupTab.tsx",
+    "line": 115,
+    "source": "onChange={e => { handleImportFile(e.target.files?.[0] ?? null); e.target.value = ''; }}"
+  },
+  {
+    "path": "components/library/BackupTab.tsx",
+    "line": 126,
+    "source": "onClick={handleMigrateProjectMeta}"
+  },
+  {
+    "path": "components/library/LibraryPage.tsx",
+    "line": 106,
+    "source": "function deletePendingMutation(name: string) {"
+  },
+  {
+    "path": "components/library/LibraryPage.tsx",
+    "line": 733,
+    "source": "async function loadLibrary() {"
+  },
+  {
+    "path": "components/library/LibraryPage.tsx",
+    "line": 747,
+    "source": "async function handleRefresh() {"
+  },
+  {
+    "path": "components/library/LibraryPage.tsx",
+    "line": 794,
+    "source": "async function handleArchive(name: string) {"
+  },
+  {
+    "path": "components/library/LibraryPage.tsx",
+    "line": 832,
+    "source": "async function handleRestore(name: string) {"
+  },
+  {
+    "path": "components/library/LibraryPage.tsx",
+    "line": 848,
+    "source": "function handleDeletePermanently(name: string) {"
+  },
+  {
+    "path": "components/library/LibraryPage.tsx",
+    "line": 852,
+    "source": "async function handleDeleteConfirm() {"
+  },
+  {
+    "path": "components/library/LibraryPage.tsx",
+    "line": 910,
+    "source": "function handleRenameSchedule(name: string) {"
+  },
+  {
+    "path": "components/library/LibraryPage.tsx",
+    "line": 914,
+    "source": "async function handleRenameConfirm() {"
+  },
+  {
+    "path": "components/library/LibraryPage.tsx",
+    "line": 987,
+    "source": "function handleMoveTo(name: string) {"
+  },
+  {
+    "path": "components/library/LibraryPage.tsx",
+    "line": 1003,
+    "source": "async function handleMoveConfirm() {"
+  },
+  {
+    "path": "components/library/LibraryPage.tsx",
+    "line": 1063,
+    "source": "function handleLogout() {"
+  },
+  {
+    "path": "components/library/LibraryPage.tsx",
+    "line": 1088,
+    "source": "document.addEventListener('mousedown', onDown);"
+  },
+  {
+    "path": "components/library/LibraryPage.tsx",
+    "line": 1089,
+    "source": "document.addEventListener('keydown', onKey);"
+  },
+  {
+    "path": "components/library/LibraryPage.tsx",
+    "line": 1090,
+    "source": "document.addEventListener('scroll', onScroll, true);"
+  },
+  {
+    "path": "components/library/LibraryPage.tsx",
+    "line": 1237,
+    "source": "onClick={() => !deleteModal.submitting && setDeleteModal(null)}"
+  },
+  {
+    "path": "components/library/LibraryPage.tsx",
+    "line": 1239,
+    "source": "<div className=\"lbt-modal lbt-modal--delete\" onClick={(e) => e.stopPropagation()}>"
+  },
+  {
+    "path": "components/library/LibraryPage.tsx",
+    "line": 1254,
+    "source": "onChange={(e) => setDeleteModal((m) => m ? { ...m, passcode: e.target.value } : null)}"
+  },
+  {
+    "path": "components/library/LibraryPage.tsx",
+    "line": 1255,
+    "source": "onKeyDown={(e) => {"
+  },
+  {
+    "path": "components/library/LibraryPage.tsx",
+    "line": 1267,
+    "source": "onChange={(e) => setDeleteModal((m) => m ? { ...m, confirmText: e.target.value } : null)}"
+  },
+  {
+    "path": "components/library/LibraryPage.tsx",
+    "line": 1268,
+    "source": "onKeyDown={(e) => {"
+  },
+  {
+    "path": "components/library/LibraryPage.tsx",
+    "line": 1284,
+    "source": "onClick={() => setDeleteModal(null)}"
+  },
+  {
+    "path": "components/library/LibraryPage.tsx",
+    "line": 1291,
+    "source": "onClick={handleDeleteConfirm}"
+  },
+  {
+    "path": "components/library/LibraryPage.tsx",
+    "line": 1309,
+    "source": "onClick={() => !renameModal.submitting && setRenameModal(null)}"
+  },
+  {
+    "path": "components/library/LibraryPage.tsx",
+    "line": 1311,
+    "source": "<div className=\"lbt-modal\" onClick={(e) => e.stopPropagation()}>"
+  },
+  {
+    "path": "components/library/LibraryPage.tsx",
+    "line": 1320,
+    "source": "onChange={(e) => setRenameModal((m) => m ? { ...m, draft: e.target.value, error: null } : null)}"
+  },
+  {
+    "path": "components/library/LibraryPage.tsx",
+    "line": 1321,
+    "source": "onKeyDown={(e) => {"
+  },
+  {
+    "path": "components/library/LibraryPage.tsx",
+    "line": 1340,
+    "source": "onClick={() => setRenameModal(null)}"
+  },
+  {
+    "path": "components/library/LibraryPage.tsx",
+    "line": 1347,
+    "source": "onClick={handleRenameConfirm}"
+  },
+  {
+    "path": "components/library/LibraryPage.tsx",
+    "line": 1366,
+    "source": "onClick={() => !moveModal.submitting && setMoveModal(null)}"
+  },
+  {
+    "path": "components/library/LibraryPage.tsx",
+    "line": 1368,
+    "source": "<div className=\"lbt-modal\" onClick={(e) => e.stopPropagation()}>"
+  },
+  {
+    "path": "components/library/LibraryPage.tsx",
+    "line": 1379,
+    "source": "onChange={(e) => {"
+  },
+  {
+    "path": "components/library/LibraryPage.tsx",
+    "line": 1418,
+    "source": "onChange={(e) => setMoveModal((m) => m ? { ...m, customProdText: e.target.value, error: null } : null)}"
+  },
+  {
+    "path": "components/library/LibraryPage.tsx",
+    "line": 1419,
+    "source": "onKeyDown={(e) => {"
+  },
+  {
+    "path": "components/library/LibraryPage.tsx",
+    "line": 1432,
+    "source": "onChange={(e) => setMoveModal((m) => m ? {"
+  },
+  {
+    "path": "components/library/LibraryPage.tsx",
+    "line": 1463,
+    "source": "onChange={(e) => setMoveModal((m) => m ? { ...m, customPhaseText: e.target.value, error: null } : null)}"
+  },
+  {
+    "path": "components/library/LibraryPage.tsx",
+    "line": 1464,
+    "source": "onKeyDown={(e) => {"
+  },
+  {
+    "path": "components/library/LibraryPage.tsx",
+    "line": 1477,
+    "source": "onClick={() => setMoveModal(null)}"
+  },
+  {
+    "path": "components/library/LibraryPage.tsx",
+    "line": 1484,
+    "source": "onClick={handleMoveConfirm}"
+  },
+  {
+    "path": "components/library/LibraryPage.tsx",
+    "line": 1498,
+    "source": "<button className=\"btn btn-pink btn-sm\" onClick={() => router.push('/schedule/Untitled')}>"
+  },
+  {
+    "path": "components/library/LibraryPage.tsx",
+    "line": 1504,
+    "source": "onClick={handleRefresh}"
+  },
+  {
+    "path": "components/library/LibraryPage.tsx",
+    "line": 1512,
+    "source": "onClick={() => setFilterStatus(showArchived ? 'active' : 'all')}"
+  },
+  {
+    "path": "components/library/LibraryPage.tsx",
+    "line": 1523,
+    "source": "onClick={toggleMore}"
+  },
+  {
+    "path": "components/library/LibraryPage.tsx",
+    "line": 1534,
+    "source": "onClick={() => { openCmsModal(); setMoreOpen(false); }}"
+  },
+  {
+    "path": "components/library/LibraryPage.tsx",
+    "line": 1541,
+    "source": "onClick={handleLogout}"
+  },
+  {
+    "path": "components/library/LibraryPage.tsx",
+    "line": 1553,
+    "source": "<button className=\"lib-refresh-error-dismiss\" onClick={() => setRefreshError(null)}>\u2715</button>"
+  },
+  {
+    "path": "components/library/LibraryPage.tsx",
+    "line": 1559,
+    "source": "<button className=\"lib-success-notice-dismiss\" onClick={() => setSuccessMessage(null)}>\u2715</button>"
+  },
+  {
+    "path": "components/library/LibraryPage.tsx",
+    "line": 1565,
+    "source": "<button className={`mtab${tab === 'schedules' ? ' active' : ''}`} onClick={() => setTab('schedules')}>"
+  },
+  {
+    "path": "components/library/LibraryPage.tsx",
+    "line": 1568,
+    "source": "<button className={`mtab${tab === 'templates' ? ' active' : ''}`} onClick={() => setTab('templates')}>"
+  },
+  {
+    "path": "components/library/LibraryPage.tsx",
+    "line": 1571,
+    "source": "<button className={`mtab${tab === 'backup' ? ' active' : ''}`} onClick={() => setTab('backup')}>"
+  },
+  {
+    "path": "components/library/LibraryPage.tsx",
+    "line": 1574,
+    "source": "<button className={`mtab${tab === 'versions' ? ' active' : ''}`} onClick={() => setTab('versions')}>"
+  },
+  {
+    "path": "components/library/LibraryPage.tsx",
+    "line": 1588,
+    "source": "<LibrarySearch value={searchQuery} onChange={setSearchQuery} />"
+  },
+  {
+    "path": "components/library/LibraryPage.tsx",
+    "line": 1592,
+    "source": "onClick={() => setShowFilterPanel((v) => !v)}"
+  },
+  {
+    "path": "components/library/LibraryPage.tsx",
+    "line": 1600,
+    "source": "onChange={(e) => setSortMode(e.target.value as SortMode)}"
+  },
+  {
+    "path": "components/library/LibraryPage.tsx",
+    "line": 1619,
+    "source": "onChange={(e) => setFilterProd(e.target.value)}"
+  },
+  {
+    "path": "components/library/LibraryPage.tsx",
+    "line": 1634,
+    "source": "onChange={(e) => setFilterDateFrom(e.target.value)}"
+  },
+  {
+    "path": "components/library/LibraryPage.tsx",
+    "line": 1641,
+    "source": "onChange={(e) => setFilterDateTo(e.target.value)}"
+  },
+  {
+    "path": "components/library/LibraryPage.tsx",
+    "line": 1652,
+    "source": "onClick={() => setFilterStatus(s)}"
+  },
+  {
+    "path": "components/library/LibraryPage.tsx",
+    "line": 1662,
+    "source": "onClick={() => {"
+  },
+  {
+    "path": "components/library/LibraryPage.tsx",
+    "line": 1698,
+    "source": "onClick={() => router.push(`/schedule/${encodeURIComponent(s.name)}`)}"
+  },
+  {
+    "path": "components/library/LibraryPage.tsx",
+    "line": 1724,
+    "source": "onClick={() => router.push(`/schedule/${encodeURIComponent(r.name)}`)}"
+  },
+  {
+    "path": "components/library/LibrarySearch.tsx",
+    "line": 32,
+    "source": "onChange={(e) => setDraft(e.target.value)}"
+  },
+  {
+    "path": "components/library/LibrarySearch.tsx",
+    "line": 35,
+    "source": "<button className=\"lib-search-clear\" onClick={clear} title=\"Clear search\">\u2715</button>"
+  },
+  {
+    "path": "components/library/LibraryTree.tsx",
+    "line": 50,
+    "source": "function loadCollapsed(): Set<string> {"
+  },
+  {
+    "path": "components/library/LibraryTree.tsx",
+    "line": 58,
+    "source": "function saveCollapsed(set: Set<string>) {"
+  },
+  {
+    "path": "components/library/LibraryTree.tsx",
+    "line": 234,
+    "source": "document.addEventListener('mousedown', onDown);"
+  },
+  {
+    "path": "components/library/LibraryTree.tsx",
+    "line": 235,
+    "source": "document.addEventListener('keydown', onKey);"
+  },
+  {
+    "path": "components/library/LibraryTree.tsx",
+    "line": 236,
+    "source": "document.addEventListener('scroll', onScroll, true);"
+  },
+  {
+    "path": "components/library/LibraryTree.tsx",
+    "line": 253,
+    "source": "document.addEventListener('mousedown', onDown);"
+  },
+  {
+    "path": "components/library/LibraryTree.tsx",
+    "line": 254,
+    "source": "document.addEventListener('keydown', onKey);"
+  },
+  {
+    "path": "components/library/LibraryTree.tsx",
+    "line": 255,
+    "source": "document.addEventListener('scroll', onScroll, true);"
+  },
+  {
+    "path": "components/library/LibraryTree.tsx",
+    "line": 269,
+    "source": "onClick={() => onOpen(s.name)}"
+  },
+  {
+    "path": "components/library/LibraryTree.tsx",
+    "line": 275,
+    "source": "<div className=\"lbt-sched-acts\" onClick={(e) => e.stopPropagation()}>"
+  },
+  {
+    "path": "components/library/LibraryTree.tsx",
+    "line": 284,
+    "source": "onClick={toggleMenu}"
+  },
+  {
+    "path": "components/library/LibraryTree.tsx",
+    "line": 293,
+    "source": "onClick={() => { onCopyTeam(s.name); setMenuOpen(false); }}"
+  },
+  {
+    "path": "components/library/LibraryTree.tsx",
+    "line": 299,
+    "source": "onClick={() => { onCopyClient(s.name); setMenuOpen(false); }}"
+  },
+  {
+    "path": "components/library/LibraryTree.tsx",
+    "line": 315,
+    "source": "onClick={() => !isSyncing && onMoveTo(s.name)}"
+  },
+  {
+    "path": "components/library/LibraryTree.tsx",
+    "line": 324,
+    "source": "onClick={() => !isSyncing && onRename(s.name)}"
+  },
+  {
+    "path": "components/library/LibraryTree.tsx",
+    "line": 333,
+    "source": "onClick={() => onArchive(s.name)}"
+  },
+  {
+    "path": "components/library/LibraryTree.tsx",
+    "line": 343,
+    "source": "onClick={toggleCtx}"
+  },
+  {
+    "path": "components/library/LibraryTree.tsx",
+    "line": 356,
+    "source": "onClick={() => onRestore(s.name)}"
+  },
+  {
+    "path": "components/library/LibraryTree.tsx",
+    "line": 364,
+    "source": "onClick={() => onDeletePermanently(s.name)}"
+  },
+  {
+    "path": "components/library/LibraryTree.tsx",
+    "line": 379,
+    "source": "onClick={() => { if (!isSyncing) { onRename(s.name); setCtxOpen(false); } }}"
+  },
+  {
+    "path": "components/library/LibraryTree.tsx",
+    "line": 387,
+    "source": "onClick={() => { onArchive(s.name); setCtxOpen(false); }}"
+  },
+  {
+    "path": "components/library/LibraryTree.tsx",
+    "line": 505,
+    "source": "function handleDragStart(start: DragStart) {"
+  },
+  {
+    "path": "components/library/LibraryTree.tsx",
+    "line": 513,
+    "source": "async function handleDragEnd(result: DropResult) {"
+  },
+  {
+    "path": "components/library/LibraryTree.tsx",
+    "line": 615,
+    "source": "function handleNewSchedule(projectName: string, phase: string) {"
+  },
+  {
+    "path": "components/library/LibraryTree.tsx",
+    "line": 645,
+    "source": "async function handleEditSave() {"
+  },
+  {
+    "path": "components/library/LibraryTree.tsx",
+    "line": 731,
+    "source": "onClick={() => !editModal.saving && setEditModal(null)}"
+  },
+  {
+    "path": "components/library/LibraryTree.tsx",
+    "line": 733,
+    "source": "<div className=\"lbt-modal\" onClick={(e) => e.stopPropagation()}>"
+  },
+  {
+    "path": "components/library/LibraryTree.tsx",
+    "line": 742,
+    "source": "onChange={(e) => setEditModal((m) => m ? { ...m, draft: e.target.value } : null)}"
+  },
+  {
+    "path": "components/library/LibraryTree.tsx",
+    "line": 743,
+    "source": "onKeyDown={(e) => {"
+  },
+  {
+    "path": "components/library/LibraryTree.tsx",
+    "line": 753,
+    "source": "onClick={() => setEditModal(null)}"
+  },
+  {
+    "path": "components/library/LibraryTree.tsx",
+    "line": 760,
+    "source": "onClick={handleEditSave}"
+  },
+  {
+    "path": "components/library/LibraryTree.tsx",
+    "line": 773,
+    "source": "<button className=\"lib-refresh-error-dismiss\" onClick={() => setDndMessage(null)}>\u2715</button>"
+  },
+  {
+    "path": "components/library/LibraryTree.tsx",
+    "line": 796,
+    "source": "<div className=\"lbt-prod-row\" onClick={() => toggleNode(prodId)}>"
+  },
+  {
+    "path": "components/library/LibraryTree.tsx",
+    "line": 804,
+    "source": "onClick={(e) => { e.stopPropagation(); openEditProd(prod); }}"
+  },
+  {
+    "path": "components/library/LibraryTree.tsx",
+    "line": 826,
+    "source": "<div className=\"lbt-phase-row\" onClick={() => toggleNode(phaseId)}>"
+  },
+  {
+    "path": "components/library/LibraryTree.tsx",
+    "line": 834,
+    "source": "onClick={(e) => { e.stopPropagation(); openEditPhase(prod, ph); }}"
+  },
+  {
+    "path": "components/library/LibraryTree.tsx",
+    "line": 884,
+    "source": "onClick={() => handleNewSchedule(prod.productionDisplay, ph.phaseDisplay)}"
+  },
+  {
+    "path": "components/library/LibraryTree.tsx",
+    "line": 902,
+    "source": "onChange={(e) => setNewPhaseDraft(e.target.value)}"
+  },
+  {
+    "path": "components/library/LibraryTree.tsx",
+    "line": 903,
+    "source": "onKeyDown={(e) => {"
+  },
+  {
+    "path": "components/library/LibraryTree.tsx",
+    "line": 908,
+    "source": "<button className=\"lbt-create-confirm\" onClick={() => confirmCreatePhase(prod.productionKey)}>\u2713</button>"
+  },
+  {
+    "path": "components/library/LibraryTree.tsx",
+    "line": 909,
+    "source": "<button className=\"lbt-create-cancel\" onClick={() => { setCreatingPhaseFor(null); setNewPhaseDraft(''); }}>\u2715</button>"
+  },
+  {
+    "path": "components/library/LibraryTree.tsx",
+    "line": 914,
+    "source": "onClick={() => { setCreatingPhaseFor(prod.productionKey); setNewPhaseDraft(''); }}"
+  },
+  {
+    "path": "components/library/LibraryTree.tsx",
+    "line": 979,
+    "source": "onChange={(e) => setNewProdDraft(e.target.value)}"
+  },
+  {
+    "path": "components/library/LibraryTree.tsx",
+    "line": 980,
+    "source": "onKeyDown={(e) => {"
+  },
+  {
+    "path": "components/library/LibraryTree.tsx",
+    "line": 985,
+    "source": "<button className=\"lbt-create-confirm\" onClick={confirmCreateProd}>\u2713</button>"
+  },
+  {
+    "path": "components/library/LibraryTree.tsx",
+    "line": 986,
+    "source": "<button className=\"lbt-create-cancel\" onClick={() => { setCreatingProd(false); setNewProdDraft(''); }}>\u2715</button>"
+  },
+  {
+    "path": "components/library/LibraryTree.tsx",
+    "line": 991,
+    "source": "onClick={() => { setCreatingProd(true); setNewProdDraft(''); }}"
+  },
+  {
+    "path": "components/library/TemplatesTab.tsx",
+    "line": 44,
+    "source": "function handleLoad(name: string) {"
+  },
+  {
+    "path": "components/library/TemplatesTab.tsx",
+    "line": 53,
+    "source": "async function handleDelete(name: string) {"
+  },
+  {
+    "path": "components/library/TemplatesTab.tsx",
+    "line": 78,
+    "source": "<div key={name} className=\"sitem\" onClick={() => handleLoad(name)}>"
+  },
+  {
+    "path": "components/library/TemplatesTab.tsx",
+    "line": 83,
+    "source": "<div className=\"sitem-acts\" onClick={(e) => e.stopPropagation()}>"
+  },
+  {
+    "path": "components/library/TemplatesTab.tsx",
+    "line": 84,
+    "source": "<button className=\"sitem-del\" onClick={() => handleDelete(name)} title=\"Delete template\">\ud83d\uddd1</button>"
+  },
+  {
+    "path": "components/library/VersionsTab.tsx",
+    "line": 44,
+    "source": "async function handleRestore(snap: Snapshot) {"
+  },
+  {
+    "path": "components/library/VersionsTab.tsx",
+    "line": 55,
+    "source": "async function handleSaveAsNew(snap: Snapshot) {"
+  },
+  {
+    "path": "components/library/VersionsTab.tsx",
+    "line": 78,
+    "source": "async function handleDelete(snap: Snapshot) {"
+  },
+  {
+    "path": "components/library/VersionsTab.tsx",
+    "line": 99,
+    "source": "onChange={(e) => setSelectedName(e.target.value)}"
+  },
+  {
+    "path": "components/library/VersionsTab.tsx",
+    "line": 142,
+    "source": "<button className=\"btn btn-light btn-sm\" onClick={() => setPreview(snap)}>Preview</button>"
+  },
+  {
+    "path": "components/library/VersionsTab.tsx",
+    "line": 143,
+    "source": "<button className=\"btn btn-light btn-sm\" onClick={() => handleSaveAsNew(snap)}>Save As New</button>"
+  },
+  {
+    "path": "components/library/VersionsTab.tsx",
+    "line": 144,
+    "source": "<button className=\"btn btn-pink btn-sm\"  onClick={() => handleRestore(snap)}>Restore</button>"
+  },
+  {
+    "path": "components/library/VersionsTab.tsx",
+    "line": 145,
+    "source": "<button className=\"tp-snap-del\"          onClick={() => handleDelete(snap)}>Delete</button>"
+  },
+  {
+    "path": "components/library/VersionsTab.tsx",
+    "line": 155,
+    "source": "<div className=\"snapshot-preview-overlay\" onClick={(e) => { if (e.target === e.currentTarget) setPreview(null); }}>"
+  },
+  {
+    "path": "components/library/VersionsTab.tsx",
+    "line": 164,
+    "source": "<button className=\"btn btn-light btn-sm\" onClick={() => setPreview(null)}>Close</button>"
+  },
+  {
+    "path": "components/library/VersionsTab.tsx",
+    "line": 203,
+    "source": "<button className=\"btn btn-light btn-sm\" onClick={() => handleSaveAsNew(preview)}>Save As New</button>"
+  },
+  {
+    "path": "components/library/VersionsTab.tsx",
+    "line": 204,
+    "source": "<button className=\"btn btn-pink btn-sm\" onClick={() => { handleRestore(preview); setPreview(null); }}>Restore</button>"
+  },
+  {
+    "path": "components/library/VersionsTab.tsx",
+    "line": 205,
+    "source": "<button className=\"btn btn-light btn-sm\" onClick={() => setPreview(null)}>Close Preview</button>"
+  },
+  {
+    "path": "components/modals/CallSheetModal.tsx",
+    "line": 66,
+    "source": "function handlePrint(scheduleName: string) {"
+  },
+  {
+    "path": "components/modals/CallSheetModal.tsx",
+    "line": 70,
+    "source": "window.addEventListener('afterprint', function cleanup() {"
+  },
+  {
+    "path": "components/modals/CallSheetModal.tsx",
+    "line": 103,
+    "source": "onChange={(e) => setDraft(e.target.value)}"
+  },
+  {
+    "path": "components/modals/CallSheetModal.tsx",
+    "line": 104,
+    "source": "onBlur={commit}"
+  },
+  {
+    "path": "components/modals/CallSheetModal.tsx",
+    "line": 105,
+    "source": "onKeyDown={(e) => {"
+  },
+  {
+    "path": "components/modals/CallSheetModal.tsx",
+    "line": 111,
+    "source": "<span className={value ? 'csh-fv' : 'csh-fv csh-fv-empty'} onClick={start}>"
+  },
+  {
+    "path": "components/modals/CallSheetModal.tsx",
+    "line": 141,
+    "source": "function handleWrapBlur(e: React.FocusEvent<HTMLDivElement>) {"
+  },
+  {
+    "path": "components/modals/CallSheetModal.tsx",
+    "line": 145,
+    "source": "function handleKeyDown(e: React.KeyboardEvent) {"
+  },
+  {
+    "path": "components/modals/CallSheetModal.tsx",
+    "line": 157,
+    "source": "<div ref={wrapRef} className=\"csh-loc-wrap\" onBlur={handleWrapBlur} onKeyDown={handleKeyDown}>"
+  },
+  {
+    "path": "components/modals/CallSheetModal.tsx",
+    "line": 161,
+    "source": "onChange={setDraft}"
+  },
+  {
+    "path": "components/modals/CallSheetModal.tsx",
+    "line": 168,
+    "source": "<span className={value ? 'csh-fv' : 'csh-fv csh-fv-empty'} onClick={start}>"
+  },
+  {
+    "path": "components/modals/CallSheetModal.tsx",
+    "line": 210,
+    "source": "onChange={(e) => setDraft(e.target.value)}"
+  },
+  {
+    "path": "components/modals/CallSheetModal.tsx",
+    "line": 211,
+    "source": "onBlur={commit}"
+  },
+  {
+    "path": "components/modals/CallSheetModal.tsx",
+    "line": 212,
+    "source": "onKeyDown={(e) => {"
+  },
+  {
+    "path": "components/modals/CallSheetModal.tsx",
+    "line": 219,
+    "source": "onClick={start}"
+  },
+  {
+    "path": "components/modals/CallSheetModal.tsx",
+    "line": 402,
+    "source": "onChange={(e) => setShowContacts(e.target.checked)}"
+  },
+  {
+    "path": "components/modals/CallSheetModal.tsx",
+    "line": 409,
+    "source": "onClick={() => handlePrint(scheduleName)}"
+  },
+  {
+    "path": "components/modals/ConflictModal.tsx",
+    "line": 35,
+    "source": "<button className=\"btn btn-light\" onClick={onClose}>Cancel</button>"
+  },
+  {
+    "path": "components/modals/ConflictModal.tsx",
+    "line": 36,
+    "source": "<button className=\"btn btn-light\" onClick={onSaveAs}>Save As Copy</button>"
+  },
+  {
+    "path": "components/modals/ConflictModal.tsx",
+    "line": 37,
+    "source": "<button className=\"btn btn-light\" onClick={onReload}>Reload Remote</button>"
+  },
+  {
+    "path": "components/modals/ConflictModal.tsx",
+    "line": 38,
+    "source": "<button className=\"btn btn-pink\" onClick={onOverwrite}>Overwrite</button>"
+  },
+  {
+    "path": "components/modals/ContactModal.tsx",
+    "line": 40,
+    "source": "function handleSave() {"
+  },
+  {
+    "path": "components/modals/ContactModal.tsx",
+    "line": 58,
+    "source": "<button className=\"btn btn-light\" onClick={() => { window.location.href = `mailto:${email}`; }}>Email</button>"
+  },
+  {
+    "path": "components/modals/ContactModal.tsx",
+    "line": 59,
+    "source": "<button className=\"btn btn-light\" onClick={() => { window.location.href = `tel:${phone}`; }}>Call</button>"
+  },
+  {
+    "path": "components/modals/ContactModal.tsx",
+    "line": 60,
+    "source": "<button className=\"btn btn-pink\" onClick={handleSave}>Save Contact</button>"
+  },
+  {
+    "path": "components/modals/ContactModal.tsx",
+    "line": 67,
+    "source": "<input autoFocus style={inp} type=\"text\" placeholder=\"Contact name\" value={name} onChange={(e) => setName(e.target.value)} />"
+  },
+  {
+    "path": "components/modals/ContactModal.tsx",
+    "line": 71,
+    "source": "<input style={inp} type=\"text\" placeholder=\"Role / title\" value={title} onChange={(e) => setTitle(e.target.value)} />"
+  },
+  {
+    "path": "components/modals/ContactModal.tsx",
+    "line": 75,
+    "source": "<input style={inp} type=\"tel\" placeholder=\"Phone\" value={phone} onChange={(e) => setPhone(e.target.value)} />"
+  },
+  {
+    "path": "components/modals/ContactModal.tsx",
+    "line": 79,
+    "source": "<input style={inp} type=\"email\" placeholder=\"Email\" value={email} onChange={(e) => setEmail(e.target.value)} />"
+  },
+  {
+    "path": "components/modals/ContactSheetModal.tsx",
+    "line": 71,
+    "source": "function handlePrint(scheduleName: string) {"
+  },
+  {
+    "path": "components/modals/ContactSheetModal.tsx",
+    "line": 75,
+    "source": "window.addEventListener('afterprint', function cleanup() {"
+  },
+  {
+    "path": "components/modals/ContactSheetModal.tsx",
+    "line": 158,
+    "source": "onClick={() => handlePrint(scheduleName)}"
+  },
+  {
+    "path": "components/modals/ContactSheetModal.tsx",
+    "line": 165,
+    "source": "onClick={() => downloadCsv(contacts, scheduleName)}"
+  },
+  {
+    "path": "components/modals/Modal.tsx",
+    "line": 20,
+    "source": "document.addEventListener('keydown', onKey);"
+  },
+  {
+    "path": "components/modals/Modal.tsx",
+    "line": 29,
+    "source": "onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}"
+  },
+  {
+    "path": "components/modals/Modal.tsx",
+    "line": 34,
+    "source": "<button className=\"mclose\" onClick={onClose} aria-label=\"Close\">\u2715</button>"
+  },
+  {
+    "path": "components/modals/NotesModal.tsx",
+    "line": 19,
+    "source": "function handleSave() {"
+  },
+  {
+    "path": "components/modals/NotesModal.tsx",
+    "line": 31,
+    "source": "<button className=\"btn btn-light\" onClick={onClose}>Cancel</button>"
+  },
+  {
+    "path": "components/modals/NotesModal.tsx",
+    "line": 32,
+    "source": "<button className=\"btn btn-pink\" onClick={handleSave}>Save</button>"
+  },
+  {
+    "path": "components/modals/NotesModal.tsx",
+    "line": 40,
+    "source": "onChange={(e) => setValue(e.target.value)}"
+  },
+  {
+    "path": "components/modals/SaveAsModal.tsx",
+    "line": 19,
+    "source": "function handleSave() {"
+  },
+  {
+    "path": "components/modals/SaveAsModal.tsx",
+    "line": 26,
+    "source": "function handleKeyDown(e: React.KeyboardEvent) {"
+  },
+  {
+    "path": "components/modals/SaveAsModal.tsx",
+    "line": 38,
+    "source": "<button className=\"btn btn-light\" onClick={onClose}>Cancel</button>"
+  },
+  {
+    "path": "components/modals/SaveAsModal.tsx",
+    "line": 39,
+    "source": "<button className=\"btn btn-pink\" onClick={handleSave} disabled={!value.trim()}>"
+  },
+  {
+    "path": "components/modals/SaveAsModal.tsx",
+    "line": 51,
+    "source": "onChange={(e) => setValue(e.target.value)}"
+  },
+  {
+    "path": "components/modals/SaveAsModal.tsx",
+    "line": 52,
+    "source": "onKeyDown={handleKeyDown}"
+  },
+  {
+    "path": "components/modals/StatusModal.tsx",
+    "line": 21,
+    "source": "function handleSave() {"
+  },
+  {
+    "path": "components/modals/StatusModal.tsx",
+    "line": 26,
+    "source": "function handleClear() {"
+  },
+  {
+    "path": "components/modals/StatusModal.tsx",
+    "line": 39,
+    "source": "<button className=\"btn btn-light\" onClick={handleClear}>Clear</button>"
+  },
+  {
+    "path": "components/modals/StatusModal.tsx",
+    "line": 40,
+    "source": "<button className=\"btn btn-light\" onClick={onClose}>Cancel</button>"
+  },
+  {
+    "path": "components/modals/StatusModal.tsx",
+    "line": 41,
+    "source": "<button className=\"btn btn-pink\" onClick={handleSave}>Save Status</button>"
+  },
+  {
+    "path": "components/modals/StatusModal.tsx",
+    "line": 49,
+    "source": "onChange={(e) => setValue(e.target.value)}"
+  },
+  {
+    "path": "components/schedule/ActionCell.tsx",
+    "line": 23,
+    "source": "function handleSelectChange(action: string) {"
+  },
+  {
+    "path": "components/schedule/ActionCell.tsx",
+    "line": 28,
+    "source": "function handleBackClick() {"
+  },
+  {
+    "path": "components/schedule/ActionCell.tsx",
+    "line": 40,
+    "source": "onChange={(e) => updateRow(index, { otherText: e.target.value })}"
+  },
+  {
+    "path": "components/schedule/ActionCell.tsx",
+    "line": 41,
+    "source": "onFocus={pushUndo}"
+  },
+  {
+    "path": "components/schedule/ActionCell.tsx",
+    "line": 44,
+    "source": "<button className=\"other-back\" onClick={handleBackClick} title=\"Change action\">\u21a9</button>"
+  },
+  {
+    "path": "components/schedule/ActionCell.tsx",
+    "line": 58,
+    "source": "onChange={(e) => handleSelectChange(e.target.value)}"
+  },
+  {
+    "path": "components/schedule/AutoResizeTextarea.tsx",
+    "line": 28,
+    "source": "onChange={(e) => onChange(e.target.value)}"
+  },
+  {
+    "path": "components/schedule/AutoResizeTextarea.tsx",
+    "line": 29,
+    "source": "onFocus={onFocus}"
+  },
+  {
+    "path": "components/schedule/ComboInput.tsx",
+    "line": 44,
+    "source": "function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {"
+  },
+  {
+    "path": "components/schedule/ComboInput.tsx",
+    "line": 67,
+    "source": "function handleBlur() {"
+  },
+  {
+    "path": "components/schedule/ComboInput.tsx",
+    "line": 86,
+    "source": "onChange={(e) => { onChange(e.target.value); setTyped(true); setActiveIdx(-1); }}"
+  },
+  {
+    "path": "components/schedule/ComboInput.tsx",
+    "line": 87,
+    "source": "onFocus={() => { setOpen(true); setTyped(false); }}"
+  },
+  {
+    "path": "components/schedule/ComboInput.tsx",
+    "line": 88,
+    "source": "onBlur={handleBlur}"
+  },
+  {
+    "path": "components/schedule/ComboInput.tsx",
+    "line": 89,
+    "source": "onKeyDown={handleKeyDown}"
+  },
+  {
+    "path": "components/schedule/CrewIdentityBlock.tsx",
+    "line": 51,
+    "source": "<span className=\"crew-label\" onClick={() => startEdit(key)}>{label}</span>"
+  },
+  {
+    "path": "components/schedule/CrewIdentityBlock.tsx",
+    "line": 57,
+    "source": "onChange={(e) => setDraft(e.target.value)}"
+  },
+  {
+    "path": "components/schedule/CrewIdentityBlock.tsx",
+    "line": 58,
+    "source": "onBlur={confirm}"
+  },
+  {
+    "path": "components/schedule/CrewIdentityBlock.tsx",
+    "line": 59,
+    "source": "onKeyDown={(e) => {"
+  },
+  {
+    "path": "components/schedule/CrewIdentityBlock.tsx",
+    "line": 67,
+    "source": "onClick={() => startEdit(key)}"
+  },
+  {
+    "path": "components/schedule/CrewInput.tsx",
+    "line": 29,
+    "source": "function handleFocus() {"
+  },
+  {
+    "path": "components/schedule/CrewInput.tsx",
+    "line": 34,
+    "source": "function handleBlur() {"
+  },
+  {
+    "path": "components/schedule/CrewInput.tsx",
+    "line": 41,
+    "source": "function handleSelect(s: string) {"
+  },
+  {
+    "path": "components/schedule/CrewInput.tsx",
+    "line": 47,
+    "source": "function handleKeyDown(e: React.KeyboardEvent) {"
+  },
+  {
+    "path": "components/schedule/CrewInput.tsx",
+    "line": 63,
+    "source": "onChange={e => onChange(e.target.value)}"
+  },
+  {
+    "path": "components/schedule/CrewInput.tsx",
+    "line": 64,
+    "source": "onFocus={handleFocus}"
+  },
+  {
+    "path": "components/schedule/CrewInput.tsx",
+    "line": 65,
+    "source": "onBlur={handleBlur}"
+  },
+  {
+    "path": "components/schedule/CrewInput.tsx",
+    "line": 66,
+    "source": "onKeyDown={handleKeyDown}"
+  },
+  {
+    "path": "components/schedule/DescriptionCell.tsx",
+    "line": 20,
+    "source": "onChange={(desc) => updateRow(index, { desc })}"
+  },
+  {
+    "path": "components/schedule/DescriptionCell.tsx",
+    "line": 21,
+    "source": "onFocus={pushUndo}"
+  },
+  {
+    "path": "components/schedule/DoneContactCell.tsx",
+    "line": 17,
+    "source": "function handleDoneChange(done: boolean) {"
+  },
+  {
+    "path": "components/schedule/DoneContactCell.tsx",
+    "line": 28,
+    "source": "onChange={(e) => handleDoneChange(e.target.checked)}"
+  },
+  {
+    "path": "components/schedule/DoneContactCell.tsx",
+    "line": 33,
+    "source": "onClick={onOpenContact}"
+  },
+  {
+    "path": "components/schedule/DurationCell.tsx",
+    "line": 21,
+    "source": "function handleChange(dur: string) {"
+  },
+  {
+    "path": "components/schedule/DurationCell.tsx",
+    "line": 32,
+    "source": "onChange={(e) => handleChange(e.target.value)}"
+  },
+  {
+    "path": "components/schedule/HeaderIdentityLine.tsx",
+    "line": 66,
+    "source": "function handleDayChange(e: React.ChangeEvent<HTMLInputElement>) {"
+  },
+  {
+    "path": "components/schedule/HeaderIdentityLine.tsx",
+    "line": 207,
+    "source": "onChange={setDraft}"
+  },
+  {
+    "path": "components/schedule/HeaderIdentityLine.tsx",
+    "line": 208,
+    "source": "onBlur={commit}"
+  },
+  {
+    "path": "components/schedule/HeaderIdentityLine.tsx",
+    "line": 218,
+    "source": "onClick={() => startEdit('projectName')}"
+  },
+  {
+    "path": "components/schedule/HeaderIdentityLine.tsx",
+    "line": 232,
+    "source": "onChange={setDraft}"
+  },
+  {
+    "path": "components/schedule/HeaderIdentityLine.tsx",
+    "line": 233,
+    "source": "onBlur={commit}"
+  },
+  {
+    "path": "components/schedule/HeaderIdentityLine.tsx",
+    "line": 243,
+    "source": "onClick={() => startEdit('phase')}"
+  },
+  {
+    "path": "components/schedule/HeaderIdentityLine.tsx",
+    "line": 263,
+    "source": "onChange={handleDayChange}"
+  },
+  {
+    "path": "components/schedule/HeaderIdentityLine.tsx",
+    "line": 264,
+    "source": "onBlur={() => commitDay(draftRef.current)}"
+  },
+  {
+    "path": "components/schedule/HeaderIdentityLine.tsx",
+    "line": 265,
+    "source": "onKeyDown={onDayKey}"
+  },
+  {
+    "path": "components/schedule/HeaderIdentityLine.tsx",
+    "line": 271,
+    "source": "onClick={() => startEdit('day')}"
+  },
+  {
+    "path": "components/schedule/LocationCell.tsx",
+    "line": 37,
+    "source": "onChange={(e) => onChange(e.target.value)}"
+  },
+  {
+    "path": "components/schedule/LocationCell.tsx",
+    "line": 38,
+    "source": "onFocus={onFocus}"
+  },
+  {
+    "path": "components/schedule/LocationCell.tsx",
+    "line": 57,
+    "source": "function handleNameChange(v: string) {"
+  },
+  {
+    "path": "components/schedule/LocationCell.tsx",
+    "line": 64,
+    "source": "function handleNameSelect(addr: string, geo: GeoResult | null) {"
+  },
+  {
+    "path": "components/schedule/LocationCell.tsx",
+    "line": 76,
+    "source": "function handleAddrSelect(addr: string, geo: GeoResult | null) {"
+  },
+  {
+    "path": "components/schedule/LocationCell.tsx",
+    "line": 134,
+    "source": "onChange={handleNameChange}"
+  },
+  {
+    "path": "components/schedule/LocationCell.tsx",
+    "line": 136,
+    "source": "onFocus={pushUndo}"
+  },
+  {
+    "path": "components/schedule/LocationCell.tsx",
+    "line": 144,
+    "source": "onClick={() => setAddrOpen(v => !v)}"
+  },
+  {
+    "path": "components/schedule/LocationCell.tsx",
+    "line": 152,
+    "source": "<button type=\"button\" className=\"loc-map-btn\" onClick={openMainMap} title=\"Get directions\">"
+  },
+  {
+    "path": "components/schedule/LocationCell.tsx",
+    "line": 164,
+    "source": "onChange={(v) => updateRow(index, { locAddress: v, locLat: null, locLng: null })}"
+  },
+  {
+    "path": "components/schedule/LocationCell.tsx",
+    "line": 166,
+    "source": "onFocus={pushUndo}"
+  },
+  {
+    "path": "components/schedule/LocationCell.tsx",
+    "line": 186,
+    "source": "onChange={(e) => patchSubLoc(i, { done: e.target.checked })}"
+  },
+  {
+    "path": "components/schedule/LocationCell.tsx",
+    "line": 194,
+    "source": "onChange={(v) => patchSubLoc(i, { name: v, loc: v })}"
+  },
+  {
+    "path": "components/schedule/LocationCell.tsx",
+    "line": 201,
+    "source": "onFocus={pushUndo}"
+  },
+  {
+    "path": "components/schedule/LocationCell.tsx",
+    "line": 210,
+    "source": "onClick={() => setSubAddrOpen(prev => ({ ...prev, [sl.id]: !prev[sl.id] }))}"
+  },
+  {
+    "path": "components/schedule/LocationCell.tsx",
+    "line": 218,
+    "source": "<button type=\"button\" className=\"loc-subloc-pin\" onClick={() => openSubMap(sl)} title=\"Get directions\">"
+  },
+  {
+    "path": "components/schedule/LocationCell.tsx",
+    "line": 222,
+    "source": "<button type=\"button\" className=\"loc-subloc-remove\" onClick={() => removeSubLoc(i)} title=\"Remove sub-location\">"
+  },
+  {
+    "path": "components/schedule/LocationCell.tsx",
+    "line": 231,
+    "source": "onChange={(v) => patchSubLoc(i, { address: v, locLat: null, locLng: null })}"
+  },
+  {
+    "path": "components/schedule/LocationCell.tsx",
+    "line": 237,
+    "source": "onFocus={pushUndo}"
+  },
+  {
+    "path": "components/schedule/LocationCell.tsx",
+    "line": 247,
+    "source": "onChange={(desc) => patchSubLoc(i, { desc })}"
+  },
+  {
+    "path": "components/schedule/LocationCell.tsx",
+    "line": 248,
+    "source": "onFocus={pushUndo}"
+  },
+  {
+    "path": "components/schedule/LocationCell.tsx",
+    "line": 255,
+    "source": "<button type=\"button\" className=\"loc-add-subloc\" onClick={addSubLoc}>"
+  },
+  {
+    "path": "components/schedule/NotesCell.tsx",
+    "line": 24,
+    "source": "onClick={onOpenStatus}"
+  },
+  {
+    "path": "components/schedule/NotesCell.tsx",
+    "line": 32,
+    "source": "onChange={(notes) => updateRow(index, { notes })}"
+  },
+  {
+    "path": "components/schedule/NotesCell.tsx",
+    "line": 33,
+    "source": "onFocus={pushUndo}"
+  },
+  {
+    "path": "components/schedule/PlacesAutocomplete.tsx",
+    "line": 53,
+    "source": "window.addEventListener('scroll', update, { passive: true, capture: true });"
+  },
+  {
+    "path": "components/schedule/PlacesAutocomplete.tsx",
+    "line": 54,
+    "source": "window.addEventListener('resize', update, { passive: true });"
+  },
+  {
+    "path": "components/schedule/PlacesAutocomplete.tsx",
+    "line": 79,
+    "source": "function handleInput(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {"
+  },
+  {
+    "path": "components/schedule/PlacesAutocomplete.tsx",
+    "line": 85,
+    "source": "async function handleSelect(s: PlaceSuggestion) {"
+  },
+  {
+    "path": "components/schedule/PlacesAutocomplete.tsx",
+    "line": 95,
+    "source": "function handleKeyDown(e: React.KeyboardEvent) {"
+  },
+  {
+    "path": "components/schedule/PlacesAutocomplete.tsx",
+    "line": 122,
+    "source": "onClick={() => handleSelect(s)}"
+  },
+  {
+    "path": "components/schedule/RowControls.tsx",
+    "line": 30,
+    "source": "function moveUp() {"
+  },
+  {
+    "path": "components/schedule/RowControls.tsx",
+    "line": 37,
+    "source": "function moveDown() {"
+  },
+  {
+    "path": "components/schedule/RowControls.tsx",
+    "line": 54,
+    "source": "<button className=\"move-btn\" onClick={moveUp} disabled={index < firstReorderable} title=\"Move up\">\u25b2</button>"
+  },
+  {
+    "path": "components/schedule/RowControls.tsx",
+    "line": 55,
+    "source": "<button className=\"move-btn\" onClick={moveDown} disabled={index >= total - 1} title=\"Move down\">\u25bc</button>"
+  },
+  {
+    "path": "components/schedule/ScheduleEditor.tsx",
+    "line": 70,
+    "source": "function handleBeforeUnload(e: BeforeUnloadEvent) {"
+  },
+  {
+    "path": "components/schedule/ScheduleEditor.tsx",
+    "line": 76,
+    "source": "window.addEventListener('beforeunload', handleBeforeUnload);"
+  },
+  {
+    "path": "components/schedule/ScheduleEditor.tsx",
+    "line": 160,
+    "source": "async function handleRefreshWeather() {"
+  },
+  {
+    "path": "components/schedule/ScheduleEditor.tsx",
+    "line": 169,
+    "source": "function handleClearWeather() {"
+  },
+  {
+    "path": "components/schedule/ScheduleEditor.tsx",
+    "line": 176,
+    "source": "function handleSave() {"
+  },
+  {
+    "path": "components/schedule/ScheduleEditor.tsx",
+    "line": 185,
+    "source": "async function handleSnapshot() {"
+  },
+  {
+    "path": "components/schedule/ScheduleEditor.tsx",
+    "line": 227,
+    "source": "<button className=\"btn btn-light\" onClick={() => { pushUndo(); addRowAfter(rows.length - 1); }}>"
+  },
+  {
+    "path": "components/schedule/ScheduleGrid.tsx",
+    "line": 49,
+    "source": "function handleDragEnd(result: DropResult) {"
+  },
+  {
+    "path": "components/schedule/ScheduleHeader.tsx",
+    "line": 24,
+    "source": "function handleTownSelect(address: string, geo: GeoResult | null) {"
+  },
+  {
+    "path": "components/schedule/ScheduleHeader.tsx",
+    "line": 53,
+    "source": "onChange={(v) => updateMeta({ town: v })}"
+  },
+  {
+    "path": "components/schedule/ScheduleHeader.tsx",
+    "line": 58,
+    "source": "<button className=\"loc-map-btn\" onClick={openTownMap} title=\"Open in Google Maps\">"
+  },
+  {
+    "path": "components/schedule/ScheduleHeader.tsx",
+    "line": 76,
+    "source": "onChange={(e) => updateMeta({ date: e.target.value })}"
+  },
+  {
+    "path": "components/schedule/ScheduleRow.tsx",
+    "line": 43,
+    "source": "function handleDelete() {"
+  },
+  {
+    "path": "components/schedule/ScheduleRow.tsx",
+    "line": 84,
+    "source": "<button className=\"del-btn\" onClick={handleDelete} title=\"Delete row\">\u2715</button>"
+  },
+  {
+    "path": "components/schedule/TimeInCell.tsx",
+    "line": 33,
+    "source": "function handleTimeChange(timeIn: string) {"
+  },
+  {
+    "path": "components/schedule/TimeInCell.tsx",
+    "line": 45,
+    "source": "onClick={toggleFixedIn}"
+  },
+  {
+    "path": "components/schedule/TimeInCell.tsx",
+    "line": 52,
+    "source": "onChange={(e) => handleTimeChange(e.target.value)}"
+  },
+  {
+    "path": "components/schedule/TimeOutCell.tsx",
+    "line": 26,
+    "source": "function handleTimeChange(fixedOutTime: string) {"
+  },
+  {
+    "path": "components/schedule/TimeOutCell.tsx",
+    "line": 37,
+    "source": "onChange={(e) => handleTimeChange(e.target.value)}"
+  },
+  {
+    "path": "components/schedule/TimeOutCell.tsx",
+    "line": 51,
+    "source": "onClick={toggleFixedOut}"
+  },
+  {
+    "path": "components/schedule/WxStrip.tsx",
+    "line": 73,
+    "source": "<button className=\"wx-refresh\" onClick={onRefresh} title=\"Refresh weather\">\u21bb Refresh</button>"
+  },
+  {
+    "path": "components/schedule/WxStrip.tsx",
+    "line": 74,
+    "source": "<button className=\"wx-refresh\" onClick={onClear} title=\"Clear weather\">\u2715 Clear</button>"
+  },
+  {
+    "path": "components/toolbar/EditorToolbar.tsx",
+    "line": 35,
+    "source": "onClick={() => setToolsOpen((o) => !o)}"
+  },
+  {
+    "path": "components/toolbar/EditorToolbar.tsx",
+    "line": 42,
+    "source": "<button className=\"btn btn-light btn-sm tbar-close\" onClick={onClose} title=\"Close\" aria-label=\"Close\">"
+  },
+  {
+    "path": "components/toolbar/SaveDropdown.tsx",
+    "line": 22,
+    "source": "document.addEventListener('mousedown', onOutside);"
+  },
+  {
+    "path": "components/toolbar/SaveDropdown.tsx",
+    "line": 23,
+    "source": "window.addEventListener('scroll', onScroll, true);"
+  },
+  {
+    "path": "components/toolbar/SaveDropdown.tsx",
+    "line": 42,
+    "source": "<button className=\"btn btn-light btn-sm tbar-split-main\" onClick={onSave} title=\"Save\">"
+  },
+  {
+    "path": "components/toolbar/SaveDropdown.tsx",
+    "line": 48,
+    "source": "onClick={toggle}"
+  },
+  {
+    "path": "components/toolbar/SaveDropdown.tsx",
+    "line": 59,
+    "source": "<button className=\"tbar-drop-item\" onClick={() => pick(onSaveAs)}>Save As\u2026</button>"
+  },
+  {
+    "path": "components/toolbar/SaveDropdown.tsx",
+    "line": 60,
+    "source": "<button className=\"tbar-drop-item\" onClick={() => pick(onSnapshot)}>\ud83d\udcf7 Snapshot</button>"
+  },
+  {
+    "path": "components/toolbar/ShareDropdown.tsx",
+    "line": 24,
+    "source": "document.addEventListener('mousedown', onOutside);"
+  },
+  {
+    "path": "components/toolbar/ShareDropdown.tsx",
+    "line": 25,
+    "source": "window.addEventListener('scroll', onScroll, true);"
+  },
+  {
+    "path": "components/toolbar/ShareDropdown.tsx",
+    "line": 40,
+    "source": "function close() { setOpen(false); }"
+  },
+  {
+    "path": "components/toolbar/ShareDropdown.tsx",
+    "line": 42,
+    "source": "function handlePrint() {"
+  },
+  {
+    "path": "components/toolbar/ShareDropdown.tsx",
+    "line": 47,
+    "source": "function handleContactSheet() {"
+  },
+  {
+    "path": "components/toolbar/ShareDropdown.tsx",
+    "line": 52,
+    "source": "function handleCallSheet() {"
+  },
+  {
+    "path": "components/toolbar/ShareDropdown.tsx",
+    "line": 57,
+    "source": "function handleExportJson() {"
+  },
+  {
+    "path": "components/toolbar/ShareDropdown.tsx",
+    "line": 77,
+    "source": "onClick={toggle}"
+  },
+  {
+    "path": "components/toolbar/ShareDropdown.tsx",
+    "line": 89,
+    "source": "<button className=\"tbar-drop-item\" onClick={handlePrint}>\ud83d\udda8 Print / PDF</button>"
+  },
+  {
+    "path": "components/toolbar/ShareDropdown.tsx",
+    "line": 90,
+    "source": "<button className=\"tbar-drop-item\" onClick={handleExportJson}>\u2b07 Export JSON</button>"
+  },
+  {
+    "path": "components/toolbar/ShareDropdown.tsx",
+    "line": 91,
+    "source": "<button className=\"tbar-drop-item\" onClick={handleContactSheet}>\ud83d\udccb Contact Sheet</button>"
+  },
+  {
+    "path": "components/toolbar/ShareDropdown.tsx",
+    "line": 92,
+    "source": "<button className=\"tbar-drop-item\" onClick={handleCallSheet}>\ud83d\udcc4 Call Sheet</button>"
+  },
+  {
+    "path": "components/toolbar/ToolsPanel.tsx",
+    "line": 54,
+    "source": "async function handleSave() {"
+  },
+  {
+    "path": "components/toolbar/ToolsPanel.tsx",
+    "line": 61,
+    "source": "function handleApply(name: string) {"
+  },
+  {
+    "path": "components/toolbar/ToolsPanel.tsx",
+    "line": 72,
+    "source": "async function handleDelete(name: string) {"
+  },
+  {
+    "path": "components/toolbar/ToolsPanel.tsx",
+    "line": 90,
+    "source": "onChange={(e) => setNameInput(e.target.value)}"
+  },
+  {
+    "path": "components/toolbar/ToolsPanel.tsx",
+    "line": 91,
+    "source": "onKeyDown={(e) => e.key === 'Enter' && handleSave()}"
+  },
+  {
+    "path": "components/toolbar/ToolsPanel.tsx",
+    "line": 96,
+    "source": "onClick={handleSave}"
+  },
+  {
+    "path": "components/toolbar/ToolsPanel.tsx",
+    "line": 117,
+    "source": "<div key={name} className=\"sitem\" onClick={() => handleApply(name)}>"
+  },
+  {
+    "path": "components/toolbar/ToolsPanel.tsx",
+    "line": 122,
+    "source": "<div className=\"sitem-acts\" onClick={(e) => e.stopPropagation()}>"
+  },
+  {
+    "path": "components/toolbar/ToolsPanel.tsx",
+    "line": 123,
+    "source": "<button className=\"sitem-del\" onClick={() => handleDelete(name)} title=\"Delete template\">\ud83d\uddd1</button>"
+  },
+  {
+    "path": "components/toolbar/ToolsPanel.tsx",
+    "line": 140,
+    "source": "function handleExport() {"
+  },
+  {
+    "path": "components/toolbar/ToolsPanel.tsx",
+    "line": 159,
+    "source": "<button className=\"btn btn-light btn-sm\" onClick={handleExport}>"
+  },
+  {
+    "path": "components/toolbar/ToolsPanel.tsx",
+    "line": 191,
+    "source": "async function handleRestore(snap: Snapshot) {"
+  },
+  {
+    "path": "components/toolbar/ToolsPanel.tsx",
+    "line": 206,
+    "source": "async function handleSaveAsNew(snap: Snapshot) {"
+  },
+  {
+    "path": "components/toolbar/ToolsPanel.tsx",
+    "line": 229,
+    "source": "async function handleDelete(snap: Snapshot) {"
+  },
+  {
+    "path": "components/toolbar/ToolsPanel.tsx",
+    "line": 281,
+    "source": "<button className=\"btn btn-light btn-sm\" onClick={() => setPreview(snap)}>Preview</button>"
+  },
+  {
+    "path": "components/toolbar/ToolsPanel.tsx",
+    "line": 282,
+    "source": "<button className=\"btn btn-light btn-sm\" onClick={() => handleSaveAsNew(snap)}>Save As New</button>"
+  },
+  {
+    "path": "components/toolbar/ToolsPanel.tsx",
+    "line": 283,
+    "source": "<button className=\"btn btn-pink btn-sm\"  onClick={() => handleRestore(snap)}>Restore</button>"
+  },
+  {
+    "path": "components/toolbar/ToolsPanel.tsx",
+    "line": 284,
+    "source": "<button className=\"tp-snap-del\"          onClick={() => handleDelete(snap)}>Delete</button>"
+  },
+  {
+    "path": "components/toolbar/ToolsPanel.tsx",
+    "line": 297,
+    "source": "onClick={(e) => { if (e.target === e.currentTarget) setPreview(null); }}"
+  },
+  {
+    "path": "components/toolbar/ToolsPanel.tsx",
+    "line": 307,
+    "source": "<button className=\"btn btn-light btn-sm\" onClick={() => setPreview(null)}>Close</button>"
+  },
+  {
+    "path": "components/toolbar/ToolsPanel.tsx",
+    "line": 350,
+    "source": "<button className=\"btn btn-light btn-sm\" onClick={() => handleSaveAsNew(preview)}>Save As New</button>"
+  },
+  {
+    "path": "components/toolbar/ToolsPanel.tsx",
+    "line": 351,
+    "source": "<button className=\"btn btn-pink btn-sm\" onClick={() => { handleRestore(preview); setPreview(null); }}>Restore</button>"
+  },
+  {
+    "path": "components/toolbar/ToolsPanel.tsx",
+    "line": 352,
+    "source": "<button className=\"btn btn-light btn-sm\" onClick={() => setPreview(null)}>Close Preview</button>"
+  },
+  {
+    "path": "components/toolbar/ToolsPanel.tsx",
+    "line": 381,
+    "source": "<div className=\"tp-backdrop\" onClick={onClose} />"
+  },
+  {
+    "path": "components/toolbar/ToolsPanel.tsx",
+    "line": 388,
+    "source": "<button className=\"tp-x\" onClick={onClose} aria-label=\"Close tools panel\">"
+  },
+  {
+    "path": "components/toolbar/ToolsPanel.tsx",
+    "line": 394,
+    "source": "<button className={`mtab${tab === 'templates' ? ' active' : ''}`} onClick={() => setTab('templates')}>Templates</button>"
+  },
+  {
+    "path": "components/toolbar/ToolsPanel.tsx",
+    "line": 395,
+    "source": "<button className={`mtab${tab === 'backup'    ? ' active' : ''}`} onClick={() => setTab('backup')}>Backup</button>"
+  },
+  {
+    "path": "components/toolbar/ToolsPanel.tsx",
+    "line": 396,
+    "source": "<button className={`mtab${tab === 'restore'   ? ' active' : ''}`} onClick={() => setTab('restore')}>Restore</button>"
+  },
+  {
+    "path": "components/toolbar/UndoRedoButtons.tsx",
+    "line": 11,
+    "source": "onClick={undo}"
+  },
+  {
+    "path": "components/toolbar/UndoRedoButtons.tsx",
+    "line": 20,
+    "source": "onClick={redo}"
+  },
+  {
+    "path": "components/ui/Toast.tsx",
+    "line": 33,
+    "source": "onClick={() => onDismiss(toast.id)}"
+  },
+  {
+    "path": "components/view/PublicViewer.tsx",
+    "line": 71,
+    "source": "<button className=\"btn btn-light btn-sm\" onClick={() => printSchedule(name)}>"
+  },
+  {
+    "path": "components/view/ReadOnlyViewer.tsx",
+    "line": 58,
+    "source": "<button className=\"btn btn-light btn-sm\" onClick={() => printSchedule(name)}>\ud83d\udda8 Print / Save PDF</button>"
+  },
+  {
+    "path": "lib/api/cms.ts",
+    "line": 14,
+    "source": "export async function loadCmsConfig(): Promise<CmsConfig> {"
+  },
+  {
+    "path": "lib/api/cms.ts",
+    "line": 31,
+    "source": "export async function saveCmsConfig(config: CmsConfig, pin: string): Promise<void> {"
+  },
+  {
+    "path": "lib/api/snapshots.ts",
+    "line": 41,
+    "source": "export async function deleteSnapshot("
+  },
+  {
+    "path": "lib/api/templates.ts",
+    "line": 17,
+    "source": "export async function loadTemplates(token: string): Promise<TemplateMap> {"
+  },
+  {
+    "path": "lib/api/templates.ts",
+    "line": 24,
+    "source": "export async function saveTemplateRemote(name: string, rows: ScheduleRow[], token: string): Promise<TemplateMap> {"
+  },
+  {
+    "path": "lib/api/templates.ts",
+    "line": 28,
+    "source": "export async function deleteTemplateRemote(name: string, token: string): Promise<TemplateMap> {"
+  },
+  {
+    "path": "lib/crewSuggestions.ts",
+    "line": 5,
+    "source": "function load(): Record<string, string[]> {"
+  },
+  {
+    "path": "lib/crewSuggestions.ts",
+    "line": 17,
+    "source": "export function saveCrewSuggestion(field: CrewField, value: string): void {"
+  },
+  {
+    "path": "lib/hooks/useSaveActions.ts",
+    "line": 39,
+    "source": "async function loadScheduleFromCloud(name: string) {"
+  },
+  {
+    "path": "lib/hooks/useSaveActions.ts",
+    "line": 61,
+    "source": "async function save() {"
+  },
+  {
+    "path": "lib/hooks/useSaveActions.ts",
+    "line": 90,
+    "source": "async function saveForce() {"
+  },
+  {
+    "path": "lib/hooks/useSaveActions.ts",
+    "line": 105,
+    "source": "async function saveAs(newName: string) {"
+  },
+  {
+    "path": "lib/hooks/useSaveActions.ts",
+    "line": 180,
+    "source": "function closeSchedule() {"
+  },
+  {
+    "path": "lib/templates.ts",
+    "line": 20,
+    "source": "export function saveTemplate(name: string, rows: ScheduleRow[]): void {"
+  },
+  {
+    "path": "lib/templates.ts",
+    "line": 26,
+    "source": "export function deleteTemplate(name: string): void {"
+  }
+]
