@@ -1,0 +1,10 @@
+{
+  "actor": "8f2c1dd0-d3fc-47c7-94b6-22bf3dde1ff6",
+  "organization": "2f75e684-eb3a-4951-9389-2df147812a8a",
+  "schedule": "28b9e319-47a3-4a88-b1b7-a315adaef9a7",
+  "name": "Example shoot day — fictional",
+  "version": 2,
+  "rows": 3,
+  "sha256": "1134f0c903e1bc0f0653c0af5a7bd2566f50c21d84a92acc0c975cc6f4eeccbd",
+  "url": "http://127.0.0.1:3487/review?org=2f75e684-eb3a-4951-9389-2df147812a8a&schedule=28b9e319-47a3-4a88-b1b7-a315adaef9a7"
+}

@@ -1,0 +1,16 @@
+✔ local Share exports the current unsaved document only after output authorization (32.990125ms)
+✔ denied local draft export neither reads nor downloads document content (7.304458ms)
+✔ readiness pause during library load starts a replacement read and rejects stale results (53.116333ms)
+✔ failed library load reports an error instead of claiming it is still loading (19.155ms)
+✔ canonical tokenized public view passes through without an auth cookie or redirect (1.781625ms)
+✔ legacy viewer link redirects once and preserves encoded name and token (0.511292ms)
+✔ private schedules still require the auth flag (0.164625ms)
+✔ review uses its independent server gate rather than legacy shared-password login (0.127ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 184.496333

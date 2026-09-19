@@ -1,0 +1,48 @@
+✖ readiness pause during library load starts a replacement read and rejects stale results (48.468208ms)
+✖ failed library load reports an error instead of claiming it is still loading (19.774042ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 0
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 172.162666
+
+✖ failing tests:
+
+test at tests/editor/library-loading.test.cjs:15:1
+✖ readiness pause during library load starts a replacement read and rejects stale results (48.468208ms)
+  AssertionError [ERR_ASSERTION]: resumed access must not lose its load behind the previous request
+  
+  1 !== 2
+  
+      at TestContext.<anonymous> (/private/tmp/roseland-b13-b14-cf4b0ee/tests/editor/library-loading.test.cjs:17:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.start (node:internal/test_runner/test:1096:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:385:17) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 2,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/editor/library-loading.test.cjs:21:1
+✖ failed library load reports an error instead of claiming it is still loading (19.774042ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(!h.text().includes('Loading complete library'))
+  
+      at TestContext.<anonymous> (/private/tmp/roseland-b13-b14-cf4b0ee/tests/editor/library-loading.test.cjs:23:74)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

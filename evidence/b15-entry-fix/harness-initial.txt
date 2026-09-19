@@ -1,0 +1,36 @@
+✖ readiness pause during library load starts a replacement read and rejects stale results (47.318333ms)
+✖ failed library load reports an error instead of claiming it is still loading (17.531583ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 0
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 179.4045
+
+✖ failing tests:
+
+test at tests/editor/library-loading.test.cjs:15:1
+✖ readiness pause during library load starts a replacement read and rejects stale results (47.318333ms)
+  TypeError: Cannot read properties of undefined (reading 'shell')
+      at Object.LocalScheduleLibrary [as default] (evalmachine.<anonymous>:139:128)
+      at Object.render (/private/tmp/roseland-b13-b14-cf4b0ee/tests/editor/library-loading.test.cjs:11:86)
+      at TestContext.<anonymous> (/private/tmp/roseland-b13-b14-cf4b0ee/tests/editor/library-loading.test.cjs:16:22)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.start (node:internal/test_runner/test:1096:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:385:17)
+
+test at tests/editor/library-loading.test.cjs:21:1
+✖ failed library load reports an error instead of claiming it is still loading (17.531583ms)
+  TypeError: Cannot read properties of undefined (reading 'shell')
+      at Object.LocalScheduleLibrary [as default] (evalmachine.<anonymous>:139:128)
+      at Object.render (/private/tmp/roseland-b13-b14-cf4b0ee/tests/editor/library-loading.test.cjs:11:86)
+      at TestContext.<anonymous> (/private/tmp/roseland-b13-b14-cf4b0ee/tests/editor/library-loading.test.cjs:22:22)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3)

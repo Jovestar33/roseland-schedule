@@ -1,0 +1,10 @@
+✔ readiness pause during library load starts a replacement read and rejects stale results (50.883084ms)
+✔ failed library load reports an error instead of claiming it is still loading (18.286833ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 175.438375

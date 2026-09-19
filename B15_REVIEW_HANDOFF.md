@@ -1,5 +1,7 @@
 # B15 hands-on review handoff
 
+> Superseded after user feedback that this entry was confusing. Use the corrected schedule-first review in `B15_ENTRY_FIX.md`, code `3e9882a`, build `Q56HKBDuZItbJULc9MIdH`, on port 3487. The original 3485 snapshot and this historical handoff are preserved. User retest remains pending.
+
 Review URL: **http://127.0.0.1:3485/local-workspace**. Code `684db04`; build `V7u5vTmLh7nXQG_fKTs-p`. The review tab is signed in as a fictional Production Organizer in B14 Fictional Studio. This role can exercise schedule management and template publishing within its production; organization appearance remains restricted to organization Admins/Super Admins as approved.
 
 Review ordinary, empty and 32-row schedules, plus `B15 review copy`. The ordinary source remains version 1; the saved copy is version 2. Fictional content can be edited freely. Try normal library/editor, save/close/reopen, snapshots/templates, copy, and document output workflows. Give notes naturally; a prescribed script or sign-off form is not required.
