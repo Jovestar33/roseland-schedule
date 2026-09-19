@@ -1,0 +1,18 @@
+✔ local Share exports the current unsaved document only after output authorization (33.012375ms)
+✔ denied local draft export neither reads nor downloads document content (7.237625ms)
+✔ name-only and public=1 requests cannot bypass sharing authorization (1.508ms)
+✔ signed viewers receive only displayed fields; editors retain full documents (1.122958ms)
+✔ view links are scoped, expire, and reject legacy or altered tokens (0.135875ms)
+✔ Call Sheet uses native triggers for all eight fields; Escape discards drafts before a later blur and returns focus (146.445791ms)
+✔ Call Sheet Enter commits single-line edits, Tab/blur commits notes, and multiline Enter stays a newline (81.526625ms)
+✔ Location autocomplete owns handled Enter and cancelled late selections cannot commit (7.853584ms)
+✔ Call Sheet maps require legacy or explicit live providers; read-only fields remain non-editable (121.308708ms)
+✔ Share Escape closes from opener or menu focus, restores opener, and preserves option order/outside/scroll dismissal (5.023292ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 10
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 511.563792

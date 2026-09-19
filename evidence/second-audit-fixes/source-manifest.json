@@ -1,0 +1,32 @@
+{
+  "recordedAt": "2026-09-19T22:50:59.064513+00:00",
+  "branch": "codex/b15-second-audit-fixes",
+  "baseCommit": "59270d8",
+  "build": "R2Sn1Vtshobzqmgm-abnr",
+  "sourceSha256": {
+    "components/modals/CallSheetModal.tsx": "9052e649478aee0cdf7818c537539330699d633eafecd12651c8a3cbca1ff5cf",
+    "components/toolbar/ShareDropdown.tsx": "0781ed618a2efed08856f970e764dc5a8ecf8608215175a4ebd07ca3ed3d37f9",
+    "styles/call-sheet.css": "c9034fabbc4061f85057a8fc0362c730f7151d4dd5e1e756d8203ae3496ebc7b",
+    "tests/editor/draft-export.test.cjs": "57970bb6e6e0c9f0d6713d323aa2a78e20b6c7a75113d3e61b61cb9903c72109",
+    "tests/editor/second-audit-controls.test.cjs": "b4f49004b25489e1c1181509b3426f44cb7395f6dc7aa8df520a931248093ba6"
+  },
+  "editorTests": {
+    "passed": 107,
+    "failed": 0
+  },
+  "buildExit": 0,
+  "callSheetPrintSectionAndMainMarkupUnchanged": true,
+  "printSectionSha256": "f6e307018829e83502a40720003d4c1f4ff2f79ac60e60af13c61ac840c098b0",
+  "frozenBuildIdsReadOnly": {
+    "/private/tmp/roseland-b15-save-feedback/.next/BUILD_ID": "i1TlVAmpPwZDzdvovJhVA",
+    "/private/tmp/roseland-b15-inline-controls/.next/BUILD_ID": "GvjzjKCWyRkBh2FAjTiys",
+    "/private/tmp/roseland-b15-document-parity/.next/BUILD_ID": "maNJN6IqApSNAN_ML5hfD",
+    "/private/tmp/roseland-b15-runtime-parity/.next/BUILD_ID": "bYu7a1qaFvI5AErNSarin",
+    "/private/tmp/roseland-b15-overnight/.next/BUILD_ID": "U_DzDuTypFB9XtcrScYi3"
+  },
+  "browserUsed": false,
+  "sharedDatabaseUsed": false,
+  "servicesStartedOrRestarted": false,
+  "independentBrowserRetest": "Pending coordinator handoff; not claimed complete",
+  "typeCheckExit": 0
+}

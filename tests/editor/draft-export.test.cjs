@@ -11,7 +11,7 @@ function harness(allowed){
   const jsx=(type,props)=>({type,props});
   const state={scheduleName:'Fictional draft',getScheduleData:()=>{reads++;return draft;}};
   const mocks={
-    react:{useRef:()=>({current:null}),useState:(initial)=>[initial===false?true:initial,()=>{}],useEffect:()=>{},useContext:()=>true},
+    react:{useId:()=> 'share-menu-fixture',useRef:()=>({current:null}),useState:(initial)=>[initial===false?true:initial,()=>{}],useEffect:()=>{},useContext:()=>true},
     'react/jsx-runtime':{jsx,jsxs:jsx},
     '@/lib/store/scheduleStore':{useScheduleStore:selector=>selector(state)},
     '@/lib/print':{},

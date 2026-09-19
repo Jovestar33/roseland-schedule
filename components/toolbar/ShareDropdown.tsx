@@ -1,5 +1,5 @@
 'use client';
-import { useRef, useState, useEffect, useContext } from 'react';
+import { useRef, useState, useEffect, useContext, useId } from 'react';
 import { useScheduleStore } from '@/lib/store/scheduleStore';
 import { printSchedule, printDocument } from '@/lib/print';
 import { useLocalEditor } from '@/components/schedule/LocalEditorContext';
@@ -15,6 +15,7 @@ export default function ShareDropdown({ readOnly = false, onModalChange, authori
   const [contactSheetOpen, setContactSheetOpen] = useState(false);
   const [callSheetOpen,    setCallSheetOpen   ] = useState(false);
   const [dropPos, setDropPos] = useState({ top: 0, right: 0 });
+  const menuId = useId();
   const wrapRef = useRef<HTMLDivElement>(null);
   const btnRef  = useRef<HTMLButtonElement>(null);
 
@@ -24,10 +25,17 @@ export default function ShareDropdown({ readOnly = false, onModalChange, authori
       if (wrapRef.current && !wrapRef.current.contains(e.target as Node)) setOpen(false);
     }
     function onScroll() { setOpen(false); }
+    function onKey(e: KeyboardEvent) {
+      if (e.key === 'Escape' && !e.defaultPrevented) {
+        e.preventDefault(); setOpen(false); btnRef.current?.focus();
+      }
+    }
     document.addEventListener('mousedown', onOutside);
+    document.addEventListener('keydown', onKey);
     window.addEventListener('scroll', onScroll, true);
     return () => {
       document.removeEventListener('mousedown', onOutside);
+      document.removeEventListener('keydown', onKey);
       window.removeEventListener('scroll', onScroll, true);
     };
   }, [open]);
@@ -89,6 +97,8 @@ export default function ShareDropdown({ readOnly = false, onModalChange, authori
         ref={btnRef}
         onClick={toggle}
         title="Share"
+        aria-expanded={open}
+        aria-controls={menuId}
       >
         <span className="tbar-icon">⬆</span>
         <span className="tbar-label"> Share</span>
@@ -96,6 +106,7 @@ export default function ShareDropdown({ readOnly = false, onModalChange, authori
       </button>
       {open && (
         <div
+          id={menuId}
           className="tbar-drop"
           style={{ position: 'fixed', top: dropPos.top, right: dropPos.right, left: 'auto', zIndex: 9999 }}
         >

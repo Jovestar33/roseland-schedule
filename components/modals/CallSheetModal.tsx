@@ -5,6 +5,7 @@ import { createPortal } from 'react-dom';
 import { useScheduleStore } from '@/lib/store/scheduleStore';
 import Modal, { ModalVisibilityContext } from './Modal';
 import { useLocalEditor } from '@/components/schedule/LocalEditorContext';
+import { useDocumentProviders } from '@/components/local/DocumentProvidersContext';
 import { documentContacts } from '@/lib/document-tools';
 import { printDocument } from '@/lib/print';
 const CallSheetReadOnly = createContext(false);
@@ -58,41 +59,70 @@ function buildDayStr(dayNumber: number | null, totalDays: number | null): string
 
 type CSKey = keyof CallSheetData;
 
+// Keep cancellation separate from blur so removing the input cannot commit a
+// cancelled draft. Only explicit keyboard completion returns focus; Tab moves on.
+function useFieldEdit(value: string, fieldKey: CSKey, onCommit: (key: CSKey, val: string) => void) {
+  const readOnly = useContext(CallSheetReadOnly);
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState('');
+  const draftRef = useRef('');
+  const active = useRef(false);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const returnFocus = useRef(false);
+
+  useEffect(() => {
+    if (!editing && returnFocus.current) {
+      returnFocus.current = false;
+      triggerRef.current?.focus();
+    }
+  }, [editing]);
+
+  function change(next: string) { draftRef.current = next; setDraft(next); }
+  function start() {
+    if (readOnly) return;
+    change(value); active.current = true; setEditing(true);
+  }
+  function finish(commit: boolean, focus = false, next = draftRef.current) {
+    if (!active.current) return;
+    active.current = false;
+    returnFocus.current = focus;
+    if (commit && !readOnly) onCommit(fieldKey, next);
+    setEditing(false);
+  }
+  return {readOnly, editing, draft, change, start, finish, triggerRef};
+}
+
 function Field({
   label, fieldKey, value, placeholder = '—', onCommit,
 }: {
   label: string; fieldKey: CSKey; value: string; placeholder?: string;
   onCommit: (key: CSKey, val: string) => void;
 }) {
-  const readOnly = useContext(CallSheetReadOnly);
-  const [editing, setEditing] = useState(false);
-  const [draft,   setDraft  ] = useState('');
-
-  function start() { if (readOnly) return; setDraft(value); setEditing(true); }
-  function commit() { if (readOnly) return; onCommit(fieldKey, draft); setEditing(false); }
-  function revert() { setEditing(false); }
-
+  const edit = useFieldEdit(value, fieldKey, onCommit);
   return (
     <div className="csh-field">
       <span className="csh-fl">{label}</span>
-      {editing ? (
+      {edit.editing ? (
         <input
           className="csh-fi"
           aria-label={label}
-          disabled={readOnly}
+          disabled={edit.readOnly}
           autoFocus
-          value={draft}
-          onChange={(e) => setDraft(e.target.value)}
-          onBlur={commit}
+          value={edit.draft}
+          onChange={(e) => edit.change(e.target.value)}
+          onBlur={() => edit.finish(true)}
           onKeyDown={(e) => {
-            if (e.key === 'Enter')  { e.preventDefault(); commit(); }
-            if (e.key === 'Escape') { e.preventDefault(); revert(); }
+            if (e.key === 'Enter') { e.preventDefault(); edit.finish(true, true); }
+            if (e.key === 'Escape') { e.preventDefault(); edit.finish(false, true); }
           }}
         />
+      ) : edit.readOnly ? (
+        <span className={value ? 'csh-fv' : 'csh-fv csh-fv-empty'}>{value || placeholder}</span>
       ) : (
-        <span className={value ? 'csh-fv' : 'csh-fv csh-fv-empty'} onClick={start}>
+        <button type="button" ref={edit.triggerRef} aria-label={`Edit ${label}`}
+          className={`csh-edit-trigger csh-fv${value ? '' : ' csh-fv-empty'}`} onClick={edit.start}>
           {value || placeholder}
-        </span>
+        </button>
       )}
     </div>
   );
@@ -106,64 +136,55 @@ function LocationField({
   label: string; fieldKey: CSKey; value: string; placeholder?: string;
   onCommit: (key: CSKey, val: string) => void;
 }) {
-  const readOnly = useContext(CallSheetReadOnly);
-  const [editing, setEditing] = useState(false);
-  const [draft,   setDraft  ] = useState('');
+  const edit = useFieldEdit(value, fieldKey, onCommit);
   const wrapRef = useRef<HTMLDivElement>(null);
-
-  function start() { if (readOnly) return; setDraft(value); setEditing(true); }
-  function finish(val: string) { if (readOnly) return; onCommit(fieldKey, val); setEditing(false); }
-
-  // Focus the autocomplete input when edit mode opens
   useEffect(() => {
-    if (editing && wrapRef.current) {
-      (wrapRef.current.querySelector('input') as HTMLInputElement | null)?.focus();
-    }
-  }, [editing]);
+    if (edit.editing) wrapRef.current?.querySelector('input')?.focus();
+  }, [edit.editing]);
 
   function handleWrapBlur(e: React.FocusEvent<HTMLDivElement>) {
-    if (!e.currentTarget.contains(e.relatedTarget as Node)) finish(draft);
+    if (!e.currentTarget.contains(e.relatedTarget as Node)) edit.finish(true);
   }
-
   function handleKeyDown(e: React.KeyboardEvent) {
-    if (e.key === 'Escape') { e.preventDefault(); setEditing(false); }
+    if (e.key === 'Escape') { e.preventDefault(); edit.finish(false, true); }
+    // Autocomplete owns Enter when it is selecting a suggestion.
+    if (e.key === 'Enter' && !e.defaultPrevented) { e.preventDefault(); edit.finish(true, true); }
   }
 
   const local = useLocalEditor();
-  const mapUrl = !local && value
+  const providers = useDocumentProviders();
+  const mapUrl = (!local || providers?.kind === 'live') && value
     ? `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(value)}`
     : '';
 
   return (
     <div className="csh-field">
       <span className="csh-fl">{label}</span>
-      {editing ? (
+      {edit.editing ? (
         <div ref={wrapRef} className="csh-loc-wrap" onBlur={handleWrapBlur} onKeyDown={handleKeyDown}>
           <PlacesAutocomplete
-            disabled={readOnly}
+            disabled={edit.readOnly}
             ariaLabel={label}
             className="csh-fi"
-            value={draft}
-            onChange={setDraft}
-            onSelect={(addr) => { setDraft(addr); finish(addr); }}
+            value={edit.draft}
+            onChange={edit.change}
+            onSelect={(addr) => edit.finish(true, true, addr)}
             placeholder={placeholder}
           />
         </div>
       ) : (
         <>
-          <span className={value ? 'csh-fv' : 'csh-fv csh-fv-empty'} onClick={start}>
-            {value || placeholder}
-          </span>
+          {edit.readOnly ? (
+            <span className={value ? 'csh-fv' : 'csh-fv csh-fv-empty'}>{value || placeholder}</span>
+          ) : (
+            <button type="button" ref={edit.triggerRef} aria-label={`Edit ${label}`}
+              className={`csh-edit-trigger csh-fv${value ? '' : ' csh-fv-empty'}`} onClick={edit.start}>
+              {value || placeholder}
+            </button>
+          )}
           {mapUrl && (
-            <a
-              href={mapUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="csh-loc-pin"
-              aria-label="Open in Maps"
-            >
-              📍
-            </a>
+            <a href={mapUrl} target="_blank" rel="noopener noreferrer"
+              className="csh-loc-pin" aria-label="Open in Maps">📍</a>
           )}
         </>
       )}
@@ -177,39 +198,30 @@ function Notes({ label, fieldKey, value, onCommit }: {
   label: string; fieldKey: CSKey; value: string;
   onCommit: (key: CSKey, val: string) => void;
 }) {
-  const readOnly = useContext(CallSheetReadOnly);
-  const [editing, setEditing] = useState(false);
-  const [draft,   setDraft  ] = useState('');
-
-  function start() { if (readOnly) return; setDraft(value); setEditing(true); }
-  function commit() { if (readOnly) return; onCommit(fieldKey, draft); setEditing(false); }
-  function revert() { setEditing(false); }
-
+  const edit = useFieldEdit(value, fieldKey, onCommit);
   return (
     <div className="csh-field csh-field-notes">
       <span className="csh-fl">{label}</span>
-      {editing ? (
+      {edit.editing ? (
         <textarea
           aria-label={label}
-          disabled={readOnly}
+          disabled={edit.readOnly}
           className="csh-fi csh-notes-ta"
           autoFocus
-          value={draft}
+          value={edit.draft}
           rows={3}
-          onChange={(e) => setDraft(e.target.value)}
-          onBlur={commit}
+          onChange={(e) => edit.change(e.target.value)}
+          onBlur={() => edit.finish(true)}
           onKeyDown={(e) => {
-            if (e.key === 'Escape') { e.preventDefault(); revert(); }
+            if (e.key === 'Escape') { e.preventDefault(); edit.finish(false, true); }
           }}
         />
+      ) : edit.readOnly ? (
+        <span className={value ? 'csh-fv' : 'csh-fv csh-fv-empty'} style={{whiteSpace:'pre-wrap'}}>{value || '—'}</span>
       ) : (
-        <span
-          className={value ? 'csh-fv' : 'csh-fv csh-fv-empty'}
-          onClick={start}
-          style={{ whiteSpace: 'pre-wrap' }}
-        >
-          {value || '—'}
-        </span>
+        <button type="button" ref={edit.triggerRef} aria-label={`Edit ${label}`}
+          className={`csh-edit-trigger csh-fv${value ? '' : ' csh-fv-empty'}`}
+          onClick={edit.start} style={{whiteSpace:'pre-wrap'}}>{value || '—'}</button>
       )}
     </div>
   );
