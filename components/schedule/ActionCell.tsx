@@ -41,7 +41,7 @@ export default function ActionCell({ index, row }: Props) {
           onFocus={pushUndo}
           placeholder="Describe…"
         />
-        <button className="other-back" onClick={handleBackClick} title="Change action">↩</button>
+        <button className="other-back" onClick={handleBackClick} title="Change action" aria-label="Change action">↩</button>
         {showHint && <div className="lock-hint">⏱ Set duration above</div>}
       </div>
     );

@@ -175,6 +175,28 @@ tbody td:nth-child(11){min-width:34px}
   cursor:pointer;font-size:12px;padding:2px 5px;color:var(--g400);line-height:1}
 .other-back:hover{background:var(--g100);color:var(--g600)}
 
+/* Keep the custom-action chooser inside its cell, including completed rows. */
+@media screen {
+  .tbl-wrap table.sched td .other-wrap .other-inp-inline{min-width:0;flex:1 1 0;width:0}
+}
+
+/* Let Description absorb remaining space after the fixed utility columns.
+   With every column sized, spare space incorrectly inflates those columns.
+   Mixed length/percentage calc() widths on table columns are not portable. */
+@media screen and (min-width:761px) {
+  .tbl-wrap table.sched col.c-a,
+  .tbl-wrap table.sched col.c-l{width:17%}
+  .tbl-wrap table.sched col.c-d{width:auto}
+  .tbl-wrap table.sched col.c-nt{width:13%}
+  .tbl-wrap table.sched col.c-ti,
+  .tbl-wrap table.sched col.c-du,
+  .tbl-wrap table.sched col.c-to{width:8%}
+  .tbl-wrap table.sched col.c-cb{width:4%}
+}
+@media screen and (min-width:761px) and (max-width:1256px) {
+  .scroll-hint{display:flex}
+}
+
 .tdsp{font-size:13px;font-weight:500;color:var(--g800);padding:5px;font-variant-numeric:tabular-nums}
 .tout{color:var(--pink-dark);font-weight:600}
 .sun-label{font-size:13px;font-weight:700;padding:5px;display:flex;align-items:center;gap:4px}

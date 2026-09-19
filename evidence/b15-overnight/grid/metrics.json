@@ -1,0 +1,179 @@
+[
+  {
+    "columns": [
+      {
+        "label": "",
+        "width": 38
+      },
+      {
+        "label": "Action",
+        "width": 208.25
+      },
+      {
+        "label": "Location",
+        "width": 208.25
+      },
+      {
+        "label": "Description",
+        "width": 229.25
+      },
+      {
+        "label": "Notes",
+        "width": 159.25
+      },
+      {
+        "label": "",
+        "width": 3
+      },
+      {
+        "label": "Time In",
+        "width": 98
+      },
+      {
+        "label": "Duration",
+        "width": 98
+      },
+      {
+        "label": "Time Out",
+        "width": 98
+      },
+      {
+        "label": "Done",
+        "width": 49
+      },
+      {
+        "label": "",
+        "width": 36
+      }
+    ],
+    "container": 1168,
+    "custom": [
+      {
+        "buttonVisible": true,
+        "buttonWithinCell": true,
+        "min": "0px"
+      }
+    ],
+    "page": 1200,
+    "table": 1225,
+    "viewport": 1200
+  },
+  {
+    "columns": [
+      {
+        "label": "",
+        "width": 38
+      },
+      {
+        "label": "Action",
+        "width": 239.359375
+      },
+      {
+        "label": "Location",
+        "width": 239.359375
+      },
+      {
+        "label": "Description",
+        "width": 275.03125
+      },
+      {
+        "label": "Notes",
+        "width": 183.0390625
+      },
+      {
+        "label": "",
+        "width": 3
+      },
+      {
+        "label": "Time In",
+        "width": 112.6328125
+      },
+      {
+        "label": "Duration",
+        "width": 112.6328125
+      },
+      {
+        "label": "Time Out",
+        "width": 112.6328125
+      },
+      {
+        "label": "Done",
+        "width": 56.3125
+      },
+      {
+        "label": "",
+        "width": 36
+      }
+    ],
+    "container": 1408,
+    "custom": [
+      {
+        "buttonVisible": true,
+        "buttonWithinCell": true,
+        "min": "0px"
+      }
+    ],
+    "page": 1440,
+    "table": 1408,
+    "viewport": 1440
+  },
+  {
+    "columns": [
+      {
+        "label": "",
+        "width": 38
+      },
+      {
+        "label": "Action",
+        "width": 190
+      },
+      {
+        "label": "Location",
+        "width": 250
+      },
+      {
+        "label": "Description",
+        "width": 260
+      },
+      {
+        "label": "Notes",
+        "width": 190
+      },
+      {
+        "label": "",
+        "width": 3
+      },
+      {
+        "label": "Time In",
+        "width": 100
+      },
+      {
+        "label": "Duration",
+        "width": 100
+      },
+      {
+        "label": "Time Out",
+        "width": 110
+      },
+      {
+        "label": "Done",
+        "width": 64
+      },
+      {
+        "label": "",
+        "width": 36
+      }
+    ],
+    "container": 372,
+    "custom": [
+      {
+        "buttonVisible": true,
+        "buttonWithinCell": true,
+        "min": "0px"
+      }
+    ],
+    "page": 390,
+    "table": 1341,
+    "viewport": 390
+  }
+]
