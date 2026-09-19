@@ -1,5 +1,7 @@
 # Remaining gates after the local control checkpoint
 
+Current update: [PRE_REVIEW_TECHNICAL_COMPLETION.md](PRE_REVIEW_TECHNICAL_COMPLETION.md) supersedes the direct-Move and active-member inherited-restriction fixture gaps below. It records the fresh native-print blocker and preserves the remaining recipient, device, hosted, migration and human-review limits. This earlier checkpoint remains as historical context.
+
 September19,2026. This reconciliation uses the actual saved evidence through document checkpoint `d172f50` and the following inline-control candidate. It does not interpret Partial as a request to replay every variant.
 
 ## Evidence already established
