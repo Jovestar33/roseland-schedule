@@ -1,0 +1,248 @@
+Browser tab: 1020304387, Title: "Roseland Schedule", URL: "http://127.0.0.1:3516/review?screen=schedule&org=2f75e684-eb3a-4951-9389-2df147812a8a&schedule=1b150e87-7959-4ab8-8e23-76970ca6a928".
+1 AXWebArea Roseland Schedule, URL: 127.0.0.1:3516/review?screen=schedule&org=2f75e684-eb3a-4951-9389-2df147812a8a&schedule=1b150e87-7959-4ab8-8e23-76970ca6a928
+	2 container
+		3 image Roseland Pictures
+		5 container Organization context
+			6 text ORGANIZATION
+			7 text B14 Fictional Studio
+			8 button Account & settings
+		9 container Organization deletion settings
+		255 text Template applied to draft. Save schedule retains its source restrictions.
+		10 container Schedule editor
+			11 text B15 document parity — fictional Unsaved
+			12 container
+				13 button Save
+				14 button More save options
+			15 button Description: Undo, Help: Undo (Ctrl+Z)
+			17 button (disabled) Description: Redo, Help: Redo (Ctrl+Y)
+			19 button ⬆ Share ▾, Help: Share
+				20 text ⬆
+				21 text Share
+				22 text ▾
+			23 button Tools
+				24 image
+			26 button Close
+			27 container
+				247 text Dirty Document Metadata
+				29 text Phase · Day — PRODUCER — DIRECTOR — CAMERA —
+				30 text TOWN / LOCATION
+				31 text field (settable) TOWN / LOCATION, ID: m-town
+				32 text DATE
+				33 date field (settable) DATE, Value: 2026-11-21, ID: m-date
+					34 container
+						252 stepper
+						253 stepper
+						254 stepper
+					38 pop up button Show date picker Show date picker
+				39 text CALL TIME
+				40 text —
+				41 button (disabled) Refresh weather
+				42 text ← Scroll to see all columns →
+				43 table
+					44 row
+						45 cell
+							46 text Action
+						47 cell
+							48 text Location
+						49 cell
+							50 text Description
+						51 cell
+							52 text Notes
+						53 cell
+							54 text Time In
+						55 cell
+							56 text Duration
+						57 cell
+							58 text Time Out
+						59 cell
+							60 text Done
+					256 row
+						257 cell
+							258 button ▲, Help: Move up
+							259 button (disabled) ▼, Help: Move down
+							260 text 1
+						261 cell
+							262 container
+								263 pop up button (collapsed, settable) Value: Shoot, Secondary Actions: Expand
+									264 menu
+										265 —
+										266 Crew Call
+										267 Cast Call
+										268 Briefing / Meeting
+										269 Breakfast
+										270 Move to Location
+										271 Set Up
+										272 Move / Set Up
+										273 (selected) Shoot
+										274 Tear Down / Pack Up
+										275 Move
+										276 LUNCH
+										277 Dinner
+										278 WRAP
+										279 Move to Hotel
+										280 Drive to Next Town
+										281 Location Scout
+										282 Time Off
+										283 Rest of Day Off
+										284 Day Off
+										285 Drive Home
+										286 Other
+								287 text ▾
+						288 cell
+							289 container
+								290 text entry area (settable)
+								291 button (collapsed) Description: Show full address, Help: Show / add full address, Secondary Actions: Expand
+								292 checkbox (settable, integer) Description: Mark done, Value: 0
+								293 text •
+								294 text entry area (settable) Test gate
+								295 button (collapsed) Description: Show full address, Help: Show / add full address, Secondary Actions: Expand
+								296 button 📍, Help: Get directions
+								297 button ×, Help: Remove sub-location
+								298 text entry area (settable)
+								299 button + sub-location
+						300 cell
+							301 text entry area (settable)
+						302 cell
+							303 button ✓, Help: Add booking status
+							304 text entry area (settable) B14 client note
+						305 cell
+							306 button ‹, Help: Lock time-in
+							307 pop up button (collapsed, settable) Value: — set —, Secondary Actions: Expand
+								308 menu
+									309 (selected) — set —
+									310 12:00 AM
+									311 12:15 AM
+									312 12:30 AM
+									313 12:45 AM
+									314 1:00 AM
+									315 1:15 AM
+									316 1:30 AM
+									317 1:45 AM
+									318 2:00 AM
+									319 2:15 AM
+									320 2:30 AM
+									321 2:45 AM
+									322 3:00 AM
+									323 3:15 AM
+									324 3:30 AM
+									325 3:45 AM
+									326 4:00 AM
+									327 4:15 AM
+									328 4:30 AM
+									329 4:45 AM
+									330 5:00 AM
+									331 5:15 AM
+									332 5:30 AM
+									333 5:45 AM
+									334 6:00 AM
+									335 6:15 AM
+									336 6:30 AM
+									337 6:45 AM
+									338 7:00 AM
+									339 7:15 AM
+									340 7:30 AM
+									341 7:45 AM
+									342 8:00 AM
+									343 8:15 AM
+									344 8:30 AM
+									345 8:45 AM
+									346 9:00 AM
+									347 9:15 AM
+									348 9:30 AM
+									349 9:45 AM
+									350 10:00 AM
+									351 10:15 AM
+									352 10:30 AM
+									353 10:45 AM
+									354 11:00 AM
+									355 11:15 AM
+									356 11:30 AM
+									357 11:45 AM
+									358 12:00 PM
+									359 12:15 PM
+									360 12:30 PM
+									361 12:45 PM
+									362 1:00 PM
+									363 1:15 PM
+									364 1:30 PM
+									365 1:45 PM
+									366 2:00 PM
+									367 2:15 PM
+									368 2:30 PM
+									369 2:45 PM
+									370 3:00 PM
+									371 3:15 PM
+									372 3:30 PM
+									373 3:45 PM
+									374 4:00 PM
+									375 4:15 PM
+									376 4:30 PM
+									377 4:45 PM
+									378 5:00 PM
+									379 5:15 PM
+									380 5:30 PM
+									381 5:45 PM
+									382 6:00 PM
+									383 6:15 PM
+									384 6:30 PM
+									385 6:45 PM
+									386 7:00 PM
+									387 7:15 PM
+									388 7:30 PM
+									389 7:45 PM
+									390 8:00 PM
+									391 8:15 PM
+									392 8:30 PM
+									393 8:45 PM
+									394 9:00 PM
+									395 9:15 PM
+									396 9:30 PM
+									397 9:45 PM
+									398 10:00 PM
+									399 10:15 PM
+									400 10:30 PM
+									401 10:45 PM
+									402 11:00 PM
+									403 11:15 PM
+									404 11:30 PM
+									405 11:45 PM
+						406 cell
+							407 pop up button (collapsed, settable) Value: 00:00, Secondary Actions: Expand
+								408 menu
+									409 —
+									410 (selected) 00:00
+									411 00:15
+									412 00:30
+									413 00:45
+									414 01:00
+									415 01:15
+									416 01:30
+									417 01:45
+									418 02:00
+									419 02:30
+									420 03:00
+									421 03:30
+									422 04:00
+									423 04:30
+									424 05:00
+									425 06:00
+									426 07:00
+									427 08:00
+						428 cell
+							429 text —
+							430 button ›, Help: Lock time-out
+						431 cell
+							432 checkbox (settable, integer) Description: Mark done, Value: 0
+							433 button 👤, Help: Edit contact
+						434 cell
+							435 button ✕, Help: Delete row
+					233 row
+						234 cell
+							235 text Total
+						236 cell
+							237 text 00:00
+				238 button + Add Row
+		239 container Notifications
+		240 text Roseland Schedule
+
+The focused UI element is 23 button Tools

@@ -1,0 +1,57 @@
+{
+  "format": "production-command-schedule-only",
+  "version": 1,
+  "schedules": [
+    {
+      "name": "B15 document parity — fictional",
+      "slug": "b15-document-parity-fictional",
+      "data": {
+        "meta": {
+          "dp": "",
+          "wx": null,
+          "dir": "",
+          "lat": null,
+          "lng": null,
+          "date": "2026-11-21",
+          "prod": "",
+          "town": "",
+          "phase": "",
+          "dayNumber": null,
+          "totalDays": null,
+          "projectName": "Dirty Document Metadata"
+        },
+        "rows": [
+          {
+            "dur": "00:00",
+            "loc": "",
+            "desc": "",
+            "done": false,
+            "notes": "B14 client note",
+            "action": "Shoot",
+            "locLat": null,
+            "locLng": null,
+            "status": "",
+            "timeIn": "",
+            "fixedIn": false,
+            "fixedOut": false,
+            "otherText": "",
+            "sunLocked": false,
+            "contactName": "B14 PRIVATE CONTACT",
+            "contactEmail": "",
+            "contactPhone": "",
+            "contactTitle": "",
+            "fixedOutTime": "",
+            "subLocations": [
+              {
+                "id": "gate",
+                "loc": "Test gate"
+              }
+            ]
+          }
+        ],
+        "savedAt": 1789809172571
+      },
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+    }
+  ]
+}

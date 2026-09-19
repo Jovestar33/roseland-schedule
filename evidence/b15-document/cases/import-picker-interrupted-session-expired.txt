@@ -1,0 +1,23 @@
+Browser tab: 1020304387, Title: "Roseland Schedule — Fictional Review", URL: "http://127.0.0.1:3516/review?screen=schedule&org=2f75e684-eb3a-4951-9389-2df147812a8a&schedule=1b150e87-7959-4ab8-8e23-76970ca6a928".
+1 AXWebArea Roseland Schedule — Fictional Review, URL: 127.0.0.1:3516/review?screen=schedule&org=2f75e684-eb3a-4951-9389-2df147812a8a&schedule=1b150e87-7959-4ab8-8e23-76970ca6a928
+	2 container
+		3 image Roseland Pictures
+		241 text PRODUCTION SCHEDULE Your session has expired. Sign in again with the same account to continue. Your unfinished work is retained.
+		242 container Workspace sign in
+			243 heading Sign in again, Value: 2
+				244 text Sign in again
+			245 container
+				246 text Email address
+				247 text field Email address
+			248 container
+				249 text Password
+				250 text field (settable) Password
+			251 button Sign in
+			252 checkbox (settable, integer) Description: Remember me on this personal device, Value: 0
+		253 container Account access
+			254 button (collapsed) Forgot password?, Secondary Actions: Expand
+			255 button (collapsed) Have an invitation?, Secondary Actions: Expand
+		239 container Notifications
+		240 text Roseland Schedule
+
+The focused UI element is 243 heading Sign in again, Value: 2

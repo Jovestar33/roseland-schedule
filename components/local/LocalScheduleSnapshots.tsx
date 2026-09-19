@@ -57,7 +57,7 @@ export default function LocalScheduleSnapshots(p:Props){
   if(v.started){const r=await repo.probe(a);if(!current())return;if(r){await finish(v,r,current);return;}if(checkOnly){setMessage('No committed result is confirmed. Retry uses the same exact request.');return;}}
   const context=a.operation==='restore_content'?p.beforeRestore(a.sourceVersion!):undefined;
   const sent={attempt:a,started:true};retainSnapshotRequest(localStorage,sent);setPending(sent);
-  try{const r=await repo.send(a);await finish(sent,r,current,context);}catch(e){if(current()&&e instanceof ScheduleRepositoryError&&['invalid','conflict'].includes(e.kind)){clearSnapshotRequest(localStorage,a);setPending(readSnapshotRequest(localStorage,a.actor,a.organization,a.schedule));}throw e;}
+  try{const r=await repo.send(a);await finish(sent,r,current,context);}catch(e){if(current()&&e instanceof ScheduleRepositoryError){if(['invalid','conflict'].includes(e.kind)){clearSnapshotRequest(localStorage,a);setPending(readSnapshotRequest(localStorage,a.actor,a.organization,a.schedule));}else if(e.kind==='failed'){throw new Error('The snapshot result is not confirmed. Your exact request and draft are retained. Use Check snapshot result before retrying.');}}throw e;}
  }
  automatic.current=()=>{if(!timer.current.due(key,Date.now(),dirty,ready&&p.canWrite)||busyRef.current||pending||extra||recoveryError)return;void run(async current=>{const v=await prepare('capture',current,true);if(v&&current())await send(v,current);});};
  function beginExtra(v:RetainedSnapshotExtra){if(recoveryError)throw Error('Resolve stored request recovery before preparing another change.');v={...v,attempt:captureSnapshotExtra(v.attempt)};retainSnapshotExtra(localStorage,v);setExtra(v);}

@@ -1,0 +1,11 @@
+{
+  "basis": "Explicit UI edits visibly observed before the interrupted file chooser; this is not a fresh browser-state export.",
+  "schedule": "1b150e87-7959-4ab8-8e23-76970ca6a928",
+  "baseDocumentVersion": 4,
+  "baseEvidence": "after-template-apply.json",
+  "changes": {
+    "meta.projectName": "Import Draft Metadata",
+    "rows[0].notes": "IMPORT DRAFT MUST SURVIVE"
+  },
+  "browserStateAtReturn": "Session expired, unfinished work retained message; no further sign-in or import confirmation performed."
+}

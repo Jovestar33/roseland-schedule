@@ -1,0 +1,142 @@
+{
+  "review": {
+    "actor": "8f2c1dd0-d3fc-47c7-94b6-22bf3dde1ff6",
+    "capabilities": {
+      "268cb10a-5062-4a18-8056-0f6c0c43ffe7": {
+        "read": true,
+        "edit": true,
+        "export": true
+      },
+      "1b150e87-7959-4ab8-8e23-76970ca6a928": {
+        "read": true,
+        "edit": true,
+        "export": true
+      }
+    },
+    "target": {
+      "id": "1b150e87-7959-4ab8-8e23-76970ca6a928",
+      "slug": "b15-document-parity-fictional",
+      "town": null,
+      "status": "draft",
+      "document": {
+        "meta": {
+          "dp": "",
+          "wx": null,
+          "dir": "",
+          "lat": null,
+          "lng": null,
+          "date": "2026-11-20",
+          "prod": "",
+          "town": "",
+          "phase": "",
+          "dayNumber": null,
+          "totalDays": null,
+          "projectName": "Document Baseline"
+        },
+        "rows": [
+          {
+            "dur": "00:30",
+            "loc": "",
+            "desc": "DOCUMENT BASELINE DESCRIPTION",
+            "done": false,
+            "notes": "DOCUMENT BASELINE NOTE",
+            "action": "Shoot",
+            "locLat": null,
+            "locLng": null,
+            "status": "",
+            "timeIn": "8:00 AM",
+            "fixedIn": false,
+            "fixedOut": false,
+            "otherText": "",
+            "sunLocked": false,
+            "contactName": "",
+            "contactEmail": "",
+            "contactPhone": "",
+            "contactTitle": "",
+            "fixedOutTime": ""
+          }
+        ],
+        "savedAt": 1789808988772
+      },
+      "phase_id": null,
+      "created_at": "2026-09-19T09:08:59.071612+00:00",
+      "created_by": "8f2c1dd0-d3fc-47c7-94b6-22bf3dde1ff6",
+      "deleted_at": null,
+      "updated_at": "2026-09-19T09:09:48.782424+00:00",
+      "updated_by": "8f2c1dd0-d3fc-47c7-94b6-22bf3dde1ff6",
+      "display_name": "B15 document parity — fictional",
+      "production_id": "64b12765-4d49-4420-8ff1-4705e8844610",
+      "organization_id": "2f75e684-eb3a-4951-9389-2df147812a8a",
+      "document_version": 2,
+      "library_position": 12,
+      "production_day_id": null,
+      "destination_labels": {
+        "phase": "",
+        "projectName": "B14 production"
+      },
+      "archived_from_status": null,
+      "last_transfer_version": 0,
+      "document_schema_version": 1
+    },
+    "snapshots": [
+      {
+        "id": "af814e76-6eba-4455-87f2-a4cef0c6a49a",
+        "kind": "named",
+        "name": "Document baseline snapshot",
+        "version": 1,
+        "can_name": true,
+        "can_purge": false,
+        "can_trash": true,
+        "row_count": 1,
+        "deleted_at": null,
+        "captured_at": "2026-09-19T09:10:54.76382+00:00",
+        "original_id": null,
+        "schedule_id": "1b150e87-7959-4ab8-8e23-76970ca6a928",
+        "original_order": null,
+        "organization_id": "2f75e684-eb3a-4951-9389-2df147812a8a"
+      }
+    ],
+    "template": {
+      "id": "1c9d650d-e5ac-438e-8c43-85a11d4ff9cc",
+      "name": "B14 newest template name",
+      "rows": [
+        {
+          "dur": "00:00",
+          "notes": "B14 client note",
+          "action": "Shoot",
+          "contactName": "B14 PRIVATE CONTACT",
+          "subLocations": [
+            {
+              "id": "gate",
+              "loc": "Test gate"
+            }
+          ]
+        }
+      ],
+      "version": 2,
+      "can_trash": true,
+      "can_manage": true,
+      "deleted_at": null,
+      "can_publish": true,
+      "published_at": null,
+      "production_id": "64b12765-4d49-4420-8ff1-4705e8844610",
+      "organization_id": "2f75e684-eb3a-4951-9389-2df147812a8a"
+    },
+    "targetHash": "29bc581bfc5ba72795f05518775ea7a1113b97f89c8fffa50fe7da1ee42ab584"
+  },
+  "restrictedViewer": {
+    "actor": "c05b5229-3935-4080-9d30-e711971461a1",
+    "capabilities": {
+      "268cb10a-5062-4a18-8056-0f6c0c43ffe7": {
+        "read": false,
+        "edit": false,
+        "export": false
+      },
+      "1b150e87-7959-4ab8-8e23-76970ca6a928": {
+        "read": false,
+        "edit": false,
+        "export": false
+      }
+    }
+  }
+}

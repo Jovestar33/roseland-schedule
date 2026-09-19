@@ -1,0 +1,13 @@
+{
+  "recordedAt": "2026-09-19T22:01:10.295863+00:00",
+  "authorizedDeadline": "2026-09-19T11:50:49Z",
+  "fileChooserCallElapsedSeconds": 45936.1494,
+  "returnedClock": "2026-09-19T22:00:19Z",
+  "importCasesCompleted": false,
+  "importConfirmationIssued": false,
+  "inputFilesUnchanged": true,
+  "stableCandidate": "http://127.0.0.1:3514/review",
+  "documentPreview3516": "stopped",
+  "faultProxy3515": "stopped",
+  "candidateWordingFix": "source edit only; unbuilt and untested"
+}
