@@ -1,0 +1,16 @@
+import {readFileSync,writeFileSync} from 'node:fs';
+import assert from 'node:assert/strict';
+import {createClient} from '@supabase/supabase-js';
+const config=JSON.parse(readFileSync('/private/tmp/roseland-b14-destination-g2-live-status.json','utf8'));
+const access=JSON.parse(readFileSync('/private/tmp/roseland-b15-review-access.json','utf8'));
+assert.equal(config.API_URL,'http://127.0.0.1:56521');
+const client=createClient(config.API_URL,config.ANON_KEY,{auth:{persistSession:false,autoRefreshToken:false}});
+const login=await client.auth.signInWithPassword({email:access.email,password:access.password});if(login.error)throw Error('Fictional login failed');
+const r=await client.rpc('session_read_schedule',{target_schedule_id:'b640d0dd-7b2b-413f-8151-6271145baf4a'});if(r.error)throw Error('Fictional read failed');
+const original=JSON.parse(readFileSync('evidence/b15-workflow-completion/matched-weather-fictional.json','utf8'));
+assert.equal(r.data.document_version,1);assert.deepEqual(r.data.document,original);
+const legacyStore=JSON.parse(readFileSync('/private/tmp/roseland-b15-legacy-functional-store.json','utf8'));
+const legacy=JSON.parse(legacyStore.schedules['B15 ordinary fictional day']);
+for(const key of ['wx','town','date','lat','lng'])assert.deepEqual(legacy.meta[key],original.meta[key],key);
+const result={savedVersion:1,completeSavedDocumentUnchanged:true,legacyWeatherTownDateCoordinatesEqual:true,ordinaryAccountRead:true};
+writeFileSync('evidence/b15-weather-parity/saved-readback.json',JSON.stringify(result,null,2));console.log(JSON.stringify(result));

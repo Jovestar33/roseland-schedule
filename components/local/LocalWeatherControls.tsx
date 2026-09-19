@@ -8,11 +8,14 @@ export default function LocalWeatherControls({ enabled, scope }: { enabled: bool
   const provider = useDocumentProviders();
   const fictional = provider?.kind !== 'live';
   const meta = useScheduleStore(s => s.meta), documentSession = useScheduleStore(s => s.documentSession);
-  const [message, setMessage] = useState(''), [busy, setBusy] = useState(false);
+  const [feedback,setFeedback]=useState<{text:string;key:string;weather:typeof meta.wx}|null>(null), [busy, setBusy] = useState(false);
   const ticket = useRef(0), lastKey = useRef(''), lastDocument = useRef('');
   const documentKey = `${scope}|${documentSession}`;
   const key = `${scope}|${documentSession}|${meta.date}|${meta.lat}|${meta.lng}`;
   const latest = useRef({ key, enabled }); latest.current = { key, enabled };
+  // Feedback belongs to the rendered weather version, not the component lifetime.
+  const message=feedback?.key===key&&feedback.weather===meta.wx?feedback.text:'';
+  function setMessage(text:string){setFeedback({text,key,weather:useScheduleStore.getState().meta.wx});}
   async function refresh() {
     if (!enabled || !provider || !meta.date || meta.lat === null || meta.lng === null) return;
     const request = ++ticket.current, expected = key;
@@ -29,7 +32,7 @@ export default function LocalWeatherControls({ enabled, scope }: { enabled: bool
   }
   useEffect(() => {
     const pending = ticket;
-    pending.current++; setBusy(false);
+    pending.current++; setBusy(false); setFeedback(null);
     if (!enabled || !provider) return;
     // Restore legacy sun markers from existing saved weather without fetching. Coordinate/date edits
     // fetch through the deterministic local seam, never the legacy provider.
@@ -53,10 +56,10 @@ export default function LocalWeatherControls({ enabled, scope }: { enabled: bool
   }
   return <>
     <WxStrip onRefresh={() => void refresh()} onClear={clear} readOnly={!enabled || busy} />
-    <div className="local-weather-controls">
-      {fictional?<span>Fictional locations and forecasts only</span>:<a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Weather by Open-Meteo</a>}
+    <div className="local-weather-controls" aria-label="Weather status and source">
       {!meta.wx && <button className="btn btn-light btn-sm" disabled={!enabled || busy || !meta.date || meta.lat === null || meta.lng === null} onClick={() => void refresh()}>Refresh weather</button>}
       {message && <span role="status">{message}</span>}
+      {fictional?<span className="weather-attribution">Fictional locations and forecasts only</span>:<a className="weather-attribution" href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Weather by Open-Meteo</a>}
     </div>
   </>;
 }

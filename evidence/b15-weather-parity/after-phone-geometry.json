@@ -1,0 +1,119 @@
+{
+  "panel": {
+    "height": 1467.203125,
+    "width": 372,
+    "x": 0,
+    "y": 0
+  },
+  "sections": {
+    ".add-area": {
+      "height": 67,
+      "width": 372,
+      "x": 0,
+      "y": 1400.203125
+    },
+    ".local-weather-controls": {
+      "height": 29.5,
+      "text": "Weather by Open-Meteo",
+      "width": 372,
+      "x": 0,
+      "y": 626.203125
+    },
+    ".meta": {
+      "height": 363.0078125,
+      "width": 372,
+      "x": 0,
+      "y": 100
+    },
+    ".tbl-wrap": {
+      "height": 704.5,
+      "width": 372,
+      "x": 0,
+      "y": 695.703125
+    },
+    ".toolbar": {
+      "height": 100,
+      "width": 372,
+      "x": 0,
+      "y": 0
+    },
+    ".wx-strip": {
+      "height": 163.1953125,
+      "text": "SUNRISE\n🌅 6:30 AM\nSUNSET\n🌇 7:15 PM\nHIGH / LOW\n75°F / 54°F\nCONDITIONS\n⛅ Partly Cloudy\nPRECIP\n35% Google Weather ↗\nUPDATED\nFictional forecast\n↻ Refresh\n✕ Clear",
+      "width": 372,
+      "x": 0,
+      "y": 463.0078125
+    }
+  },
+  "toolbarButtons": [
+    {
+      "height": 36,
+      "name": "Save",
+      "width": 52.125,
+      "x": 16,
+      "y": 51
+    },
+    {
+      "height": 36,
+      "name": "More save options",
+      "width": 28.5234375,
+      "x": 68.125,
+      "y": 51
+    },
+    {
+      "height": 36,
+      "name": "Undo",
+      "width": 35.1328125,
+      "x": 108.6484375,
+      "y": 51
+    },
+    {
+      "height": 36,
+      "name": "Redo",
+      "width": 35.1328125,
+      "x": 146.78125,
+      "y": 51
+    },
+    {
+      "height": 36,
+      "name": "⬆\nShare\n▾",
+      "width": 90.1171875,
+      "x": 193.9140625,
+      "y": 51
+    },
+    {
+      "height": 36,
+      "name": "Tools",
+      "width": 37,
+      "x": 288.03125,
+      "y": 51
+    },
+    {
+      "height": 36,
+      "name": "Close",
+      "width": 32.0390625,
+      "x": 329.03125,
+      "y": 51
+    }
+  ],
+  "viewport": {
+    "height": 844,
+    "width": 390
+  },
+  "weatherButtons": [
+    {
+      "height": 36,
+      "name": "↻ Refresh",
+      "width": 86.2578125,
+      "x": 12,
+      "y": 579.203125
+    },
+    {
+      "height": 36,
+      "name": "✕ Clear",
+      "width": 74.7421875,
+      "x": 106.2578125,
+      "y": 579.203125
+    }
+  ]
+}

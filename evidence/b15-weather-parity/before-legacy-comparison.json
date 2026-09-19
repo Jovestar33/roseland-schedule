@@ -1,0 +1,12 @@
+{
+  "Desktop": {
+    "toolbarButtons": true,
+    "weatherButtons": true,
+    "weatherFieldsAndGeometryEqual": true
+  },
+  "Phone": {
+    "toolbarButtons": true,
+    "weatherButtons": true,
+    "weatherFieldsAndGeometryEqual": true
+  }
+}

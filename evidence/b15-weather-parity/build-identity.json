@@ -1,0 +1,9 @@
+{
+  "baseCommit": "38c1b74006dbfb5bb9ce9ba65432a9ccce7f2064",
+  "buildId": "6R_x6b-jQ1skjZafRWiW2",
+  "legacyCommit": "62eb261c897b3a5c4e03857e59fee8071d520b88",
+  "sourceSHA256": {
+    "components/local/LocalWeatherControls.tsx": "c467457a1285555f07160f3c8dbef6131c0ecc0afd21f445211fa67a06d4967e",
+    "styles/local-documents.css": "1ade52cb1cdbe43a4826437ba97d7235465db348df12a7a1277ad74ddf88ca90"
+  }
+}

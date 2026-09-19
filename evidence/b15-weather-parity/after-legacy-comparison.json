@@ -1,0 +1,16 @@
+{
+  "desktop": {
+    "toolbarButtonsMatchLegacy": true,
+    "weatherButtonsMatchLegacy": true,
+    "weatherFieldsAndGeometryMatchLegacy": true,
+    "weatherContextBeforeGrid": true,
+    "contextHeight": 29.5
+  },
+  "phone": {
+    "toolbarButtonsMatchLegacy": true,
+    "weatherButtonsMatchLegacy": true,
+    "weatherFieldsAndGeometryMatchLegacy": true,
+    "weatherContextBeforeGrid": true,
+    "contextHeight": 29.5
+  }
+}

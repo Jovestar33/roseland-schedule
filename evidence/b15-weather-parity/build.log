@@ -1,0 +1,61 @@
+
+> roseland-schedule@2.0.0 build
+> next build
+
+   ▲ Next.js 15.5.25
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully in 1636ms
+   Linting and checking validity of types ...
+
+./app/local-schedule/LocalScheduleClient.tsx
+145:41  Warning: React Hook useMemo has unnecessary dependencies: 'documentSession', 'session.user.id', and 'workspace.organization.id'. Either exclude them or remove the dependency array.  react-hooks/exhaustive-deps
+
+./components/local/LocalScheduleLibrary.tsx
+47:102  Warning: The ref value 'ticket.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'ticket.current' to a variable inside the effect, and use that variable in the cleanup function.  react-hooks/exhaustive-deps
+
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules
+   Collecting page data ...
+   Generating static pages (0/8) ...
+   Generating static pages (2/8) 
+   Generating static pages (4/8) 
+   Generating static pages (6/8) 
+ ✓ Generating static pages (8/8)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                                             Size  First Load JS
+┌ ○ /                                                23.5 kB         158 kB
+├ ○ /_not-found                                        997 B         103 kB
+├ ƒ /api/places                                        157 B         102 kB
+├ ƒ /api/platform/invitations                          157 B         102 kB
+├ ƒ /api/platform/invitations/[invitationId]/revoke    157 B         102 kB
+├ ƒ /api/platform/local-account/mail                   157 B         102 kB
+├ ƒ /api/platform/local-client-view                    157 B         102 kB
+├ ƒ /api/platform/local-document-providers             157 B         102 kB
+├ ƒ /api/platform/local-membership-notifications       157 B         102 kB
+├ ƒ /api/platform/local-organization-notifications     157 B         102 kB
+├ ƒ /api/platform/organizations                        157 B         102 kB
+├ ƒ /local-accept-invitation                         1.63 kB         170 kB
+├ ƒ /local-client                                    1.28 kB         110 kB
+├ ƒ /local-invitations                               1.31 kB         173 kB
+├ ƒ /local-schedule                                    190 B         272 kB
+├ ƒ /local-workspace                                   158 B         315 kB
+├ ○ /login                                           3.17 kB         105 kB
+├ ○ /manifest.webmanifest                              157 B         102 kB
+├ ƒ /platform/setup                                  8.77 kB         172 kB
+├ ƒ /review                                            158 B         315 kB
+├ ƒ /schedule/[name]                                 8.67 kB         165 kB
+├ ƒ /view                                            2.02 kB         111 kB
+└ ƒ /view/[name]                                     2.07 kB         111 kB
++ First Load JS shared by all                         102 kB
+  ├ chunks/2549-b97661b3930c3e73.js                  45.9 kB
+  ├ chunks/3fa34e2d-c4e69fcbbb8d29c4.js              54.2 kB
+  └ other shared chunks (total)                      1.97 kB
+
+
+ƒ Middleware                                           33 kB
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

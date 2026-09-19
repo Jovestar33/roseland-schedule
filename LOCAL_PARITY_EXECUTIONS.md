@@ -28,7 +28,7 @@ This ledger indexes actual local observations. It does not change the production
 | BKP-02 | Partial | Actual fictional JSON parsed/imported at production level; exact authenticated readback. Invalid/recovery permutations remain. |
 | LOC-01 | Partial | Approved live public Google suggestions/details and restored buttons observed. Manual/provider-error/map-navigation matrix remains. |
 | LOC-02 | Partial | Nested fields/completion and saved preservation observed; full reorder/remove/print matrix remains. |
-| WX-01 | Partial | Live public forecast, Clear/Undo, refresh order and saved-weather initial restoration observed. Broader failure/time cases remain. |
+| WX-01 | Partial | Live public forecast, Clear/Undo, refresh order and saved-weather restoration observed. Matched desktop/phone field and button geometry equals legacy; detached Refresh/status and stale Undo feedback corrected. Controlled refresh/error/late-response cases pass. Broader live failure/time and physical-device cases remain. |
 | CON-01 | Partial | Fictional full contact saved/read back. Complete long/international/suggestion fixtures remain. |
 | CON-02 | Partial | Actual eight-column/two-record CSV checked, including escaping. Full contact sheet sorting/output remains. |
 | CALL-01 | Partial | All eight fields saved/read back and shown in preview. Actual printed pagination remains. |
@@ -59,3 +59,5 @@ September 19 workflow continuation: B15_WORKFLOW_COMPLETION.md and evidence/b15-
 September 19 C06 integration checkpoint: B15_TEMPLATE_INTEGRATION.md and evidence/b15-template-integration/. Browse-first template library, contextual creation, complete management lifecycle, apply/cancel/undo, browser import cancellation, keyboard return and390px layout verified. Account security entries are grouped and their disclosures/return work. Existing full backend/export evidence is explicitly reused rather than misrepresented as a new complete run. Totals remain36 Partial,1 local Fail,2 Not executed,6 Blocked,0 full Pass. Implementation stops at this checkpoint for the coordinator handoff.
 
 September 19 C08: B15_ACCOUNT_FLOW.md records the single-task sign-in/invitation/recovery correction, full desktop/narrow form navigation and final callback focus checks. Expired-state coverage is rendered component evidence, not live idle expiry. One unintended fictional recovery request returned503; recipient-scoped local mail sink read found zero messages. No parity group is promoted. Implementation stops for independent review and sole-owner handoff.
+
+September19 WEATHER-PARITY-20260919: B15_WEATHER_PARITY.md and evidence/b15-weather-parity/ record matched legacy values/button geometry, nearby weather attribution/refresh/status, and weather-scoped feedback. Source document unchanged at version1. No provider/configuration changes or live provider queries in this pass. Full parity status remains partial pending independent review.

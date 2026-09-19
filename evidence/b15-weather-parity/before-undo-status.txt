@@ -1,0 +1,2 @@
+Weather by Open-Meteo
+Weather and sun rows cleared from this draft.
