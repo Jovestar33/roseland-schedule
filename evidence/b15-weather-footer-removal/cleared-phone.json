@@ -1,0 +1,18 @@
+{
+  "button": {
+    "disabled": false,
+    "height": 36,
+    "name": "Refresh weather",
+    "width": 118.0546875,
+    "x": 12,
+    "y": 471.0078125
+  },
+  "footerCount": 0,
+  "gridTop": 555.0078125,
+  "metaBottom": 463.0078125,
+  "providerCredits": 0,
+  "viewport": {
+    "height": 844,
+    "width": 390
+  }
+}

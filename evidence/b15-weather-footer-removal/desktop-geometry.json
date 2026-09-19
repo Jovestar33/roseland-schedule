@@ -1,0 +1,228 @@
+{
+  "candidate": {
+    "panel": {
+      "height": 944.484375,
+      "width": 1248,
+      "x": 0,
+      "y": 0
+    },
+    "sections": {
+      ".add-area": {
+        "height": 61,
+        "width": 1248,
+        "x": 0,
+        "y": 883.484375
+      },
+      ".local-weather-controls": null,
+      ".meta": {
+        "height": 225.984375,
+        "width": 1248,
+        "x": 0,
+        "y": 62
+      },
+      ".tbl-wrap": {
+        "height": 534.5,
+        "width": 1248,
+        "x": 0,
+        "y": 348.984375
+      },
+      ".toolbar": {
+        "height": 62,
+        "width": 1248,
+        "x": 0,
+        "y": 0
+      },
+      ".wx-strip": {
+        "height": 61,
+        "text": "SUNRISE\n🌅 6:30 AM\nSUNSET\n🌇 7:15 PM\nHIGH / LOW\n75°F / 54°F\nCONDITIONS\n⛅ Partly Cloudy\nPRECIP\n35% Google Weather ↗\nUPDATED\nFictional forecast\n↻ Refresh✕ Clear",
+        "width": 1248,
+        "x": 0,
+        "y": 287.984375
+      }
+    },
+    "toolbarButtons": [
+      {
+        "height": 36,
+        "name": "Save",
+        "width": 49.8046875,
+        "x": 763.125,
+        "y": 13
+      },
+      {
+        "height": 36,
+        "name": "More save options",
+        "width": 22.5078125,
+        "x": 812.9296875,
+        "y": 13
+      },
+      {
+        "height": 36,
+        "name": "Undo",
+        "width": 70.9921875,
+        "x": 845.4375,
+        "y": 13
+      },
+      {
+        "height": 36,
+        "name": "Redo",
+        "width": 69.8046875,
+        "x": 915.4296875,
+        "y": 13
+      },
+      {
+        "height": 36,
+        "name": "⬆\nShare\n▾",
+        "width": 86.2890625,
+        "x": 995.234375,
+        "y": 13
+      },
+      {
+        "height": 36,
+        "name": "Tools",
+        "width": 73.40625,
+        "x": 1091.5234375,
+        "y": 13
+      },
+      {
+        "height": 36,
+        "name": "Close",
+        "width": 55.0703125,
+        "x": 1174.9296875,
+        "y": 13
+      }
+    ],
+    "viewport": {
+      "height": 720,
+      "width": 1280
+    },
+    "weatherButtons": [
+      {
+        "height": 26.5,
+        "name": "↻ Refresh",
+        "width": 69.703125,
+        "x": 740.96875,
+        "y": 304.734375
+      },
+      {
+        "height": 26.5,
+        "name": "✕ Clear",
+        "width": 59.953125,
+        "x": 810.671875,
+        "y": 304.734375
+      }
+    ]
+  },
+  "legacy": {
+    "panel": {
+      "height": 944.484375,
+      "width": 1248,
+      "x": 0,
+      "y": 0
+    },
+    "sections": {
+      ".add-area": {
+        "height": 61,
+        "width": 1248,
+        "x": 0,
+        "y": 883.484375
+      },
+      ".local-weather-controls": null,
+      ".meta": {
+        "height": 225.984375,
+        "width": 1248,
+        "x": 0,
+        "y": 62
+      },
+      ".tbl-wrap": {
+        "height": 534.5,
+        "width": 1248,
+        "x": 0,
+        "y": 348.984375
+      },
+      ".toolbar": {
+        "height": 62,
+        "width": 1248,
+        "x": 0,
+        "y": 0
+      },
+      ".wx-strip": {
+        "height": 61,
+        "text": "SUNRISE\n🌅 6:30 AM\nSUNSET\n🌇 7:15 PM\nHIGH / LOW\n75°F / 54°F\nCONDITIONS\n⛅ Partly Cloudy\nPRECIP\n35% Google Weather ↗\nUPDATED\nFictional forecast\n↻ Refresh✕ Clear",
+        "width": 1248,
+        "x": 0,
+        "y": 287.984375
+      }
+    },
+    "toolbarButtons": [
+      {
+        "height": 36,
+        "name": "Save",
+        "width": 49.8046875,
+        "x": 763.125,
+        "y": 13
+      },
+      {
+        "height": 36,
+        "name": "More save options",
+        "width": 22.5078125,
+        "x": 812.9296875,
+        "y": 13
+      },
+      {
+        "height": 36,
+        "name": "Undo",
+        "width": 70.9921875,
+        "x": 845.4375,
+        "y": 13
+      },
+      {
+        "height": 36,
+        "name": "Redo",
+        "width": 69.8046875,
+        "x": 915.4296875,
+        "y": 13
+      },
+      {
+        "height": 36,
+        "name": "⬆\nShare\n▾",
+        "width": 86.2890625,
+        "x": 995.234375,
+        "y": 13
+      },
+      {
+        "height": 36,
+        "name": "Tools",
+        "width": 73.40625,
+        "x": 1091.5234375,
+        "y": 13
+      },
+      {
+        "height": 36,
+        "name": "Close",
+        "width": 55.0703125,
+        "x": 1174.9296875,
+        "y": 13
+      }
+    ],
+    "viewport": {
+      "height": 720,
+      "width": 1280
+    },
+    "weatherButtons": [
+      {
+        "height": 26.5,
+        "name": "↻ Refresh",
+        "width": 69.703125,
+        "x": 740.96875,
+        "y": 304.734375
+      },
+      {
+        "height": 26.5,
+        "name": "✕ Clear",
+        "width": 59.953125,
+        "x": 810.671875,
+        "y": 304.734375
+      }
+    ]
+  }
+}

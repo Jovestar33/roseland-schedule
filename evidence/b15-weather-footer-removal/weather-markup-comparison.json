@@ -1,0 +1,18 @@
+{
+  "saved": {
+    "legacyMarkupEqual": true,
+    "text": "Sunrise 🌅 6:30 AM Sunset 🌇 7:15 PM High / Low 75°F / 54°F Conditions ⛅ Partly Cloudy Precip 35% Google Weather ↗ Updated Fictional forecast ↻ Refresh ✕ Clear"
+  },
+  "sunOnly": {
+    "legacyMarkupEqual": true,
+    "text": "Sunrise 🌅 6:30 AM Sunset 🌇 7:15 PM Forecast Not yet available Updated Fictional forecast ↻ Refresh ✕ Clear"
+  },
+  "zeroValues": {
+    "legacyMarkupEqual": true,
+    "text": "Sunrise 🌅 6:30 AM Sunset 🌇 7:15 PM High / Low 0°F / 0°F Conditions ☀️ Clear Precip 0% Google Weather ↗ Updated Fictional forecast ↻ Refresh ✕ Clear"
+  },
+  "empty": {
+    "legacyMarkupEqual": true,
+    "text": ""
+  }
+}

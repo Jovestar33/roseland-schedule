@@ -1,0 +1,33 @@
+{
+  "desktop": {
+    "viewport": {
+      "height": 720,
+      "width": 1280
+    },
+    "weatherTextAndAllMeasuredGeometryEqual": true,
+    "footerAbsent": true
+  },
+  "phone": {
+    "viewport": {
+      "height": 844,
+      "width": 390
+    },
+    "weatherTextAndAllMeasuredGeometryEqual": true,
+    "footerAbsent": true
+  },
+  "cleared-desktop": {
+    "directRefreshBeforeGrid": true,
+    "footerAbsent": true,
+    "disabled": false
+  },
+  "cleared-phone": {
+    "directRefreshBeforeGrid": true,
+    "footerAbsent": true,
+    "disabled": false
+  },
+  "empty-desktop": {
+    "directRefreshBeforeGrid": true,
+    "footerAbsent": true,
+    "disabled": true
+  }
+}

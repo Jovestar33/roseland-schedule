@@ -1,10 +1,7 @@
 /* Local portals reuse legacy document styling without printing workspace chrome. */
 .local-schedule-print { display: none; }
-.local-weather-controls { order:3; display:flex; flex-wrap:wrap; gap:8px; align-items:center; padding:6px 24px; border-bottom:1px solid var(--g100); color:var(--g500); font-size:11px; line-height:1.5; }
-.local-weather-controls .weather-attribution { margin-left:auto; }
-@media(max-width:600px){.local-weather-controls{padding:6px 12px;gap:6px 12px}.local-weather-controls [role="status"]{flex-basis:100%}.local-weather-controls .weather-attribution{margin-left:0}}
-.local-weather-controls a { color:inherit; text-underline-offset:2px; }
-.local-weather-controls a:hover { color:var(--pink); }
+.weather-empty-refresh { order:3; align-self:flex-start; margin:8px 24px; }
+@media(max-width:600px){.weather-empty-refresh{margin:8px 12px;}}
 @media print {
   body[data-local-document] { margin:0 !important; padding:0 !important; min-height:0 !important; }
   body[data-local-document] > * { display:none !important; }

@@ -1,0 +1,16 @@
+✔ provider inputs reject invalid dates, coordinates and injected place paths (1.263166ms)
+✔ Places upstream receives only search and provider credential, never local context (9.003667ms)
+✔ place details preserve zero coordinates and reject malformed provider output (0.413708ms)
+✔ weather requests never receive Google key or application context (9.16325ms)
+✔ client sends auth only to local proxy and keeps town text out of weather payload (0.307375ms)
+✔ selected place name stays in the address without sending it to the details provider (0.2385ms)
+✔ local providers require active session and effective schedule editing permission (32.642292ms)
+✔ foreign origin, missing auth, malformed data and disabled live mode cannot reach providers (5.095334ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 201.485417

@@ -1,0 +1,9 @@
+{
+  "build": "N58VrGih-TndBPa3zM7OO",
+  "sourceSha256": {
+    "components/local/LocalWeatherControls.tsx": "69eda1fb9f5f53358abfb6f73b00050aa7a6674fdc5b83a167e011776e3c7daa",
+    "styles/local-documents.css": "7edfeea4a1e51742ac0e035063648fbc2514c3942dcd8d2bf01a9a0db4746e4f",
+    "tests/editor/local-weather-feedback.test.cjs": "544bc0b40c051ecf6fb37928bff0348a22d92966318bd92a8a1b89f4d70c293a",
+    "scripts/serve-b15-weather-footer-review.ts": "6c0227bf93ea6c247d3fdaa0ac80a8b94e561238a74a331842e5962dc64c32a2"
+  }
+}

@@ -1,5 +1,7 @@
 # WEATHER-PARITY-20260919 — saved comparison and correction
 
+Historical checkpoint at3502. Its attribution/status-row direction is superseded in this checkout by [B15_WEATHER_FOOTER_REMOVAL.md](B15_WEATHER_FOOTER_REMOVAL.md), following the explicit user request to remove the footer entirely. The3502 runtime and its original checkout remain frozen.
+
 Bounded user-authorized weather/button pass, continuing from C08. Implementation stops here for independent coordinator review and the planned fresh-task handoff. No unrelated batch began.
 
 ## Candidate and authority

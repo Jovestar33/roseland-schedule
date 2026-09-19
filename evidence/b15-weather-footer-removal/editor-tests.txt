@@ -1,0 +1,18 @@
+✔ long document fields survive real store load, edits, undo/redo, serialization and reload (54.363958ms)
+✔ refresh/clear of sun rows retains ordinary row identities, nested content and zero duration (21.384459ms)
+✔ weather metadata and sun changes undo as one user operation without changing call sheet (14.156625ms)
+✔ sunrise precedes sunset when both markers share the insertion point before a late call (14.081667ms)
+✔ saved weather has no added footer, and Clear leaves a direct Refresh button with complete Undo (66.857958ms)
+✔ refresh disables controls and preserves honest unavailable weather without persistent chatter (25.635042ms)
+✔ null and rejected weather show a relevant error toast and leave saved data unchanged (38.589334ms)
+✔ late weather and errors cannot affect another scope or revoked edit context (57.35025ms)
+✔ cancelling an active refresh resets loading and ignores the late result (13.518ms)
+✔ empty weather Refresh reports pending state and respects missing coordinates and read-only access (16.607208ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 10
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 331.7725
