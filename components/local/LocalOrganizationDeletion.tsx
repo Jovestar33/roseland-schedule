@@ -2,7 +2,7 @@
 import {useEffect,useMemo,useRef,useState} from 'react';
 import {useLocalWorkspace,useWorkspacePanelState} from './LocalWorkspaceContext';
 import {captureLifecycleAttempt,createOrganizationLifecycleRepository,LifecycleError,type LifecycleAttempt,type OrganizationLifecycle} from '@/lib/platform/organization-lifecycle';
-export default function LocalOrganizationDeletion(){
+export default function LocalOrganizationDeletion({showControls=true}:{showControls?:boolean}){
  const {client,session,organization,authNeeded,active,requireAuth,onLifecycleChange,lifecycleRevision}=useLocalWorkspace()!;
  const actor=session?.user.id,org=organization?.id,ready=!!actor&&!!org&&!authNeeded;
  const repo=useMemo(()=>createOrganizationLifecycleRepository(client),[client]);
@@ -26,8 +26,8 @@ export default function LocalOrganizationDeletion(){
  }
  return <section aria-label="Organization deletion settings">
  {record?.read_only&&<div role="status"><strong>{record.state==='awaiting_purge'?'Organization is awaiting purge.':'Organization deletion is pending.'}</strong> Existing authorized read and export remain available. Ordinary writes and automatic snapshots are paused; unsaved drafts are retained.{record.cancel_before&&<p>Cancellation deadline: {new Date(record.cancel_before).toLocaleString()}.</p>}{record.state==='awaiting_purge'&&<p>The cancellation window has ended. No automatic data erasure is implemented.</p>}</div>}
- {record?.can_manage&&<button disabled={!ready||busy} onClick={()=>setOpen(v=>!v)}>Organization deletion</button>}
- {open&&record?.can_manage&&<div><h2>Organization deletion — {organization?.name}</h2><p>Request a 30-day cancellation window. Ordinary writes pause immediately. A separate approved purge process would be needed afterward. Billing is separate.</p><p role="status">{message}</p>
+ {showControls&&record?.can_manage&&<button disabled={!ready||busy} onClick={()=>setOpen(v=>!v)}>Organization deletion</button>}
+ {showControls&&open&&record?.can_manage&&<div><h2>Organization deletion — {organization?.name}</h2><p>Request a 30-day cancellation window. Ordinary writes pause immediately. A separate approved purge process would be needed afterward. Billing is separate.</p><p role="status">{message}</p>
  <button disabled={!ready||busy||!!pending} onClick={()=>void run(async()=>{await load();setConfirmed(false);setMessage('Current lifecycle reviewed. Confirm again before requesting deletion.');})}>Review organization status</button>
  {record.can_request&&!pending&&<fieldset disabled={!ready||busy}><legend>Confirm deletion request</legend><label>Organization name<input value={name} onChange={e=>setName(e.target.value)}/></label><label><input type="checkbox" checked={confirmed} onChange={e=>setConfirmed(e.target.checked)}/>I confirm this request for {organization?.name}, including pausing ordinary writes.</label></fieldset>}
  {(record.can_request||pending?.operation==='request')&&<button disabled={!ready||busy||(!pending&&(!confirmed||name!==organization?.name))} onClick={()=>void run(()=>submit('request'))}>{pending?'Retry exact deletion request':'Request organization deletion'}</button>}

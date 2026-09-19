@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
+import ScheduleDocumentPreview from './ScheduleDocumentPreview';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { StoredSchedule } from '@/lib/platform/schedule-repository';
 import { ScheduleRepositoryError } from '@/lib/platform/schedule-repository';
@@ -56,7 +57,7 @@ export default function LocalScheduleFiles({client,actor,organization,enabled,co
       {entries.map((entry,i)=><div key={i} className={styles.fileEntry}>
         <label>New schedule name {i+1}<input value={entry.name} onChange={e=>setEntries(all=>all.map((v,j)=>j===i?{...v,name:e.target.value}:v))}/></label>
         <label>New schedule slug {i+1}<input value={entry.slug} onChange={e=>setEntries(all=>all.map((v,j)=>j===i?{...v,slug:e.target.value}:v))}/></label>
-        <details><summary>Review full document {i+1} ({entry.data.rows?.length??0} rows)</summary><pre>{JSON.stringify(entry.data,null,2)}</pre></details>
+        <details><summary>Review full document {i+1} ({entry.data.rows?.length??0} rows)</summary><ScheduleDocumentPreview document={entry.data}/></details>
       </div>)}
       <button className="btn btn-primary" disabled={source?!day:!selectedProduction} onClick={()=>void run(async current=>{const placement=source?undefined:{productionId:production,phaseId:null};const proposed=new ScheduleFileImport(actor!,organization!,day||null,entries,undefined,placement);await repo.preflight(actor!,organization!,day||null,entries,placement);if(current()){setReview(proposed);setMessage('Review locked. Confirm to create these exact documents; later source edits remain in your draft.');}})}>Prepare create-only review</button>
       <button className="btn btn-light" onClick={clear}>Cancel review</button>

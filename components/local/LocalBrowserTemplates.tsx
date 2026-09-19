@@ -1,5 +1,6 @@
 'use client';
 import {useEffect,useRef,useState} from 'react';
+import TemplateRowsPreview from './TemplateRowsPreview';
 import {LS_TEMPLATES_KEY} from '@/lib/constants';
 import {parseBrowserTemplates,type BrowserTemplate} from '@/lib/platform/browser-templates';
 import {captureTemplateAttempt,templateDraftRows,type TemplateAttempt,type TemplateProduction} from '@/lib/platform/schedule-templates';
@@ -18,7 +19,7 @@ export default function LocalBrowserTemplates({actor,organization,productions,di
    {raw!==null&&<button className="btn btn-light" onClick={()=>{const url=URL.createObjectURL(new Blob([raw],{type:'application/json'})),link=document.createElement('a');link.href=url;link.download='Browser-template-originals.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}}>Export untouched browser-template source</button>}
    <p role="status">{message}</p>
    {items.length>0&&<><p>Source: {origin}</p><label>Browser template to review<select value={selected??''} onChange={e=>{const n=Number(e.target.value);if(e.target.value===''){setSelected(null);return;}setSelected(n);setName(items[n].name);setClaimed(false);}}><option value="">Choose a template</option>{items.map((t,i)=><option key={i} value={i}>{t.name} · {t.rows.length} rows</option>)}</select></label></>}
-   {chosen&&<><details><summary>Review complete original rows, including contacts and notes</summary><pre>{JSON.stringify(chosen.rows,null,2)}</pre></details>
+   {chosen&&<><details><summary>Review complete original rows, including contacts and notes</summary><TemplateRowsPreview rows={chosen.rows}/></details>
     <label>Import destination production<select value={destination} onChange={e=>{setDestination(e.target.value);setClaimed(false);}}><option value="">Choose a production explicitly</option>{productions.filter(p=>p.can_manage).map(p=><option key={p.id} value={p.id}>{p.name}</option>)}</select></label>
     <label>Imported template name<input value={name} maxLength={150} onChange={e=>setName(e.target.value)}/></label>
     <label className="template-ownership"><input type="checkbox" checked={claimed} onChange={e=>setClaimed(e.target.checked)}/>I have reviewed this template and may assign its content to the selected production.</label>

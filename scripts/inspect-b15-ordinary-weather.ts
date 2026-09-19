@@ -1,0 +1,14 @@
+import {readFileSync,writeFileSync} from 'node:fs';
+import {createClient} from '@supabase/supabase-js';
+const config=JSON.parse(readFileSync('/private/tmp/roseland-b14-destination-g2-live-status.json','utf8'));
+const access=JSON.parse(readFileSync('/private/tmp/roseland-b15-review-access.json','utf8'));
+if(config.API_URL!=='http://127.0.0.1:56521')throw Error('Fictional loopback required');
+const client=createClient(config.API_URL,config.ANON_KEY,{auth:{persistSession:false,autoRefreshToken:false}});
+const login=await client.auth.signInWithPassword({email:access.email,password:access.password});if(login.error)throw Error('Login failed');
+const manifest=JSON.parse(readFileSync('/private/tmp/roseland-b15-fixtures.json','utf8'));
+const fixture=manifest.fixtures.find((f:{name:string})=>f.name==='B15 ordinary fictional day');
+const result=await client.rpc('session_read_schedule',{target_schedule_id:fixture.id});
+if(result.error||result.data?.display_name!==fixture.name)throw Error('Fictional read failed');
+const legacy=JSON.parse(JSON.parse(readFileSync('/private/tmp/roseland-b15-legacy-functional-store.json','utf8')).schedules[fixture.name]);
+const summary={name:fixture.name,targetVersion:result.data.document_version,targetRows:result.data.document.rows.length,targetSunRows:result.data.document.rows.filter((r:{sunLocked:boolean})=>r.sunLocked).length,legacyRows:legacy.rows.length,legacySunRows:legacy.rows.filter((r:{sunLocked:boolean})=>r.sunLocked).length,explanation:'Stored inputs differ. Candidate adds missing sun rows from saved weather as an unsaved draft change; legacy input already contains its two sun rows.'};
+writeFileSync('evidence/b15-workflow-completion/ordinary-sun-row-inputs.json',JSON.stringify(summary,null,2));console.log(summary);

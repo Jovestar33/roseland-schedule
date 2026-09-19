@@ -1,0 +1,9 @@
+{
+  "name": "B15 ordinary fictional day",
+  "targetVersion": 1,
+  "targetRows": 3,
+  "targetSunRows": 0,
+  "legacyRows": 5,
+  "legacySunRows": 2,
+  "explanation": "Stored inputs differ. Candidate adds missing sun rows from saved weather as an unsaved draft change; legacy input already contains its two sun rows."
+}

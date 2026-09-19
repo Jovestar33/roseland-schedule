@@ -1,0 +1,48 @@
+- img "Roseland Pictures"
+- generic: B14 latest organization labels
+- region "Organization deletion settings"
+- main:
+  - text: ▸ ▾ ▾
+  - region "Schedule editor":
+    - generic: B15 matched weather — fictional
+    - generic: Saved
+    - button "Save"
+    - button "More save options":
+      - generic: ▾
+    - button "Undo" [disabled]:
+      - text: ↩
+      - generic: Undo
+    - button "Redo" [disabled]:
+      - text: ↪
+      - generic: Redo
+    - button "⬆ Share ▾":
+      - generic: ⬆
+      - generic: Share
+      - generic: ▾
+    - button "Tools":
+      - generic: Tools
+    - button "Close":
+      - generic: Close
+    - generic: Fictional production – document acceptance
+    - generic: Principal photography
+    - generic: ·
+    - generic: Day
+    - generic: 2 of 12
+    - generic: PRODUCER
+    - generic: Fictional producer with complete long credit
+    - generic: DIRECTOR
+    - generic: Fictional director
+    - generic: CAMERA
+    - generic: Fictional camera lead
+    - generic: Town / Location
+    - textbox "Town / Location":
+      - /placeholder: e.g. Garner, NC
+      - text: Fictional Harbor Studio
+    - button "📍"
+    - generic: Date
+    - textbox "Date": 2026-10-20
+    - generic: Call Time
+    - generic: 9:00 AM
+    - generic: Sunrise
+    - generic: 🌅 6:30 AM
+    - generic: 

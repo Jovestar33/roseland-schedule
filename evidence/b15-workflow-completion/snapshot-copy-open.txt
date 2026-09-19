@@ -1,0 +1,93 @@
+- img "Roseland Pictures"
+- generic: B14 latest organization labels
+- region "Organization deletion settings"
+- main:
+  - text: ▸ ▾ ▾
+  - region "Schedule editor":
+    - generic: B15 snapshot copy — fictional
+    - generic: Saved
+    - button "Save"
+    - button "More save options":
+      - generic: ▾
+    - button "Undo" [disabled]:
+      - text: ↩
+      - generic: Undo
+    - button "Redo" [disabled]:
+      - text: ↪
+      - generic: Redo
+    - button "⬆ Share ▾":
+      - generic: ⬆
+      - generic: Share
+      - generic: ▾
+    - button "Tools" [active]:
+      - generic: Tools
+    - button "Close":
+      - generic: Close
+    - generic: B14 production
+    - generic: Phase
+    - generic: ·
+    - generic: Day
+    - generic: 2 of 12
+    - generic: PRODUCER
+    - generic: Fictional producer with complete long credit
+    - generic: DIRECTOR
+    - generic: Fictional director
+    - generic: CAMERA
+    - generic: Fictional camera lead
+    - generic: Town / Location
+    - textbox "Town / Location":
+      - /placeholder: e.g. Garner, NC
+      - text: Fictional Harbor Studio
+    - button "📍"
+    - generic: Date
+    - textbox "Date": 2026-10-20
+    - generic: Call Time
+    - generic: 9:00 AM
+    - generic: Sunrise
+    - generic: 🌅 6:30 AM
+    - generic: Sunset
+    - generic: 🌇 7:15 PM
+    - generic: High / Low
+    - generic: 75°F / 54°F
+    - generic: Conditions
+    - generic: ⛅ Partly Cloudy
+    - generic: Precip
+    - text: 35%
+    - link "Google Weather ↗":
+      - /url: https://www.google.com/search?q=Fictional%20Harbor%20Studio%20weather
+    - generic: Updated
+    - generic: Fictional forecast
+    - button "↻ Refresh"
+    - button "✕ Clear"
+    - link "Weather by Open-Meteo":
+      - /url: https://open-meteo.com/
+    - table:
+      - rowgroup:
+        - row "Action Location Description Notes Time In Duration Time Out Done":
+          - columnheader
+          - columnheader "Action"
+          - columnheader "Location"
+          - columnheader "Description"
+          - columnheader "Notes"
+          - columnheader
+          - columnheader "Time In"
+          - columnheader "Duration"
+          - columnheader "Time Out"
+          - columnheader "Done"
+          - columnheader
+      - rowgroup:
+        - row "🌅 Sunrise 6:30 AM":
+          - cell
+          - cell "🌅 Sunrise":
+            - generic: 🌅 Sunrise
+          - cell
+          - cell
+          - cell
+          - cell
+          - cell "6:30 AM":
+            - generic: 6:30 AM
+          - cell
+          - cell
+          - cell
+          - cell
+        - row "≡ 2 Crew Call ▾ Fictional location 1 Show full 

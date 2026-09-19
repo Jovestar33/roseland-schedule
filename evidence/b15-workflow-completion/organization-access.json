@@ -1,0 +1,26 @@
+[
+  {
+    "accessFile": "/private/tmp/roseland-b15-review-access.json",
+    "organizations": [
+      {
+        "id": "2f75e684-eb3a-4951-9389-2df147812a8a",
+        "name": "B14 Fictional Studio",
+        "role": "member",
+        "access_state": "ready",
+        "mfa_required": false
+      }
+    ]
+  },
+  {
+    "accessFile": "/private/tmp/roseland-b15-entry-review-access.json",
+    "organizations": [
+      {
+        "id": "2f75e684-eb3a-4951-9389-2df147812a8a",
+        "name": "B14 Fictional Studio",
+        "role": "member",
+        "access_state": "ready",
+        "mfa_required": false
+      }
+    ]
+  }
+]

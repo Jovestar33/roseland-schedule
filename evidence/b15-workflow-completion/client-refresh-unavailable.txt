@@ -1,0 +1,4 @@
+- main:
+  - status: Shared schedule unavailable. Ask the sender for a current link.
+- generic "Notifications"
+- alert

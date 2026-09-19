@@ -67,7 +67,7 @@ export async function encodeScheduleFile(records:StoredSchedule[]):Promise<Sched
 }
 export async function parseScheduleFile(contents:string,singleName:string):Promise<FileEntry[]> {
   if(new TextEncoder().encode(contents).length>FILE_BYTES) invalid('File exceeds 20 MB.');
-  const root:unknown=JSON.parse(contents);let entries:FileEntry[];
+  let root:unknown;try{root=JSON.parse(contents);}catch{invalid('This file is not valid JSON. Choose a complete schedule backup; nothing was imported.');}let entries:FileEntry[];
   if(object(root)&&root.format==='production-command-schedule-only') {
     if(root.version!==1||!Array.isArray(root.schedules)||Object.keys(root).some(k=>!['format','version','exportedAt','scope','excludes','schedules'].includes(k))) invalid('Unsupported schedule-only file.');
     entries=root.schedules as FileEntry[];

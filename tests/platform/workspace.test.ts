@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { createWorkspaceRepository } from '../../lib/platform/workspace-repository.ts';
-import { WorkspaceIdentity, parseWorkspaceLocation, workspaceHref } from '../../lib/platform/workspace-navigation.ts';
+import { WorkspaceIdentity, parseWorkspaceLocation, workspaceHref, workspaceOrganizationSwitch } from '../../lib/platform/workspace-navigation.ts';
 import { readLocalWorkspaceConfig } from '../../lib/platform/local-workspace-config.ts';
 const actor='11111111-1111-4111-8111-111111111111',org='22222222-2222-4222-8222-222222222222',prod='33333333-3333-4333-8333-333333333333';
 test('workspace gate requires independent opt-in, matching loopback config and server workflows',()=>{
@@ -65,4 +65,16 @@ test('a mismatched account sends no directory or permission queries',async()=>{
 test('directory distinguishes session expiry from forbidden or malformed responses',async()=>{
   for(const [status,kind] of [[401,'unauthenticated'],[403,'unavailable'],[500,'failed']] as const){const h=harness();h.fail(status);await assert.rejects(()=>h.repo.organizations(actor),{kind});}
   const h=harness([{organization_id:org,role:'superuser',organizations:{name:'Fictional'}}]);await assert.rejects(()=>h.repo.organizations(actor),{kind:'failed'});
+});
+
+test('organization switches block active work and review retained drafts without blocking same-scope navigation',()=>{
+ const current={screen:'schedule' as const,organization:org,schedule:prod};
+ const other={screen:'schedule' as const,organization:actor};
+ assert.equal(workspaceOrganizationSwitch(current,other,true,true),'busy');
+ assert.equal(workspaceOrganizationSwitch(current,other,true,false),'review');
+ assert.equal(workspaceOrganizationSwitch(current,other,false,false),'ready');
+ assert.equal(workspaceOrganizationSwitch(current,{...current,screen:'lifecycle'},true,true),'ready');
+ assert.equal(workspaceOrganizationSwitch(current,{screen:'schedule',organization:null},true,false),'review');
+ assert.equal(workspaceOrganizationSwitch({screen:'schedule',organization:null},other,false,false),'ready');
+ assert.deepEqual(current,{screen:'schedule',organization:org,schedule:prod});
 });

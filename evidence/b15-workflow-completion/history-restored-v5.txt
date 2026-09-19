@@ -1,0 +1,54 @@
+- img "Roseland Pictures"
+- generic: B14 latest organization labels
+- region "Organization deletion settings"
+- text: ▸
+- main:
+  - button "← Back to schedules"
+  - heading "Schedule history" [level=1]
+  - paragraph: B15 concurrent editing — fictional
+  - generic: Current version 5
+  - button "Open schedule"
+  - button "Refresh history" [disabled]
+  - status: Matching saved version 5 confirmed. Current version is 5. Open it explicitly to replace an editor draft.
+  - paragraph: Preview a saved version before restoring it. Restoration creates a new version; your schedule’s name, placement and earlier history stay intact.
+  - navigation "Saved versions":
+    - button "Version 5 Current 9/19/2026, 1:49:33 AM" [disabled]:
+      - strong:
+        - text: Version 5
+        - generic: Current
+      - time: 9/19/2026, 1:49:33 AM
+    - button "Version 4 9/19/2026, 1:35:47 AM" [disabled]:
+      - strong: Version 4
+      - time: 9/19/2026, 1:35:47 AM
+    - button "Version 3 9/19/2026, 1:34:06 AM" [disabled]:
+      - strong: Version 3
+      - time: 9/19/2026, 1:34:06 AM
+    - button "Version 2 9/19/2026, 1:34:00 AM" [disabled]:
+      - strong: Version 2
+      - time: 9/19/2026, 1:34:00 AM
+    - button "Version 1 9/19/2026, 1:33:50 AM" [disabled]:
+      - strong: Version 1
+      - time: 9/19/2026, 1:33:50 AM
+  - region "Historical document preview":
+    - heading "Version 3" [level=2]
+    - paragraph: 9/19/2026, 1:34:06 AM
+    - button "Review restoration" [disabled]
+    - term: Production
+    - definition: B14 production
+    - heading "1 row" [level=3]
+    - list "Schedule rows":
+      - generic: "1"
+      - strong: Crew Call
+      - generic: No start time
+      - paragraph: First writer fictional saved change
+      - generic: Not done
+  - region "History restoration review":
+    - heading "Restoration confirmed" [level=2]
+    - paragraph:
+      - text: Restore version 3 as a new saved version of
+      - strong: B15 concurrent editing — fictional
+      - text: . Your unsaved editor draft is retained separately.
+    - paragraph: Saved as version 5. All earlier versions remain available.
+    - button "Done"
+- generic "Notifications"
+- alert: Roseland Schedule

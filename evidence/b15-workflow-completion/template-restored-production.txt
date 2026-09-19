@@ -1,0 +1,29 @@
+Templates
+✕
+
+Templates start in their production. Organization publication is deliberate and keeps source restrictions.
+
+Template change confirmed. Your schedule draft is unchanged.
+
+Template library
+Production templates
+Published to organization
+Production Trash
+Template production
+Choose production
+B14 production
+Refresh templates
+New template name
+Save draft as template
+B14 newest template name
+· 1 rows · Production only
+B15 parity rows — fictional
+· 2 rows · Production only
+B15 browser recovery — fictional
+· 3 rows · Production only
+Browser templates — discover, export or import
+B15 browser recovery — fictional
+Review all template rows, including notes and contacts
+Review Apply to current schedule
+Template name
+Review renameReplace with current draft rowsReview move to TrashReview organization publication

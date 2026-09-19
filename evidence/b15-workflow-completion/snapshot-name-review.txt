@@ -1,0 +1,12 @@
+Snapshots
+✕
+
+Capture the current draft without saving it. Automatic snapshots capture dirty drafts every five minutes while this schedule is active.
+
+Name snapshot
+
+B15 browser recovery checkpoint — fictional · snapshot version 1
+
+New name: B15 protected recovery — fictional. Named snapshots are protected from automatic expiry.
+
+Confirm name snapshotCancel review

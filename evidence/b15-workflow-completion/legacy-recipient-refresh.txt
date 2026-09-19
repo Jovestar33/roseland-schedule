@@ -1,0 +1,115 @@
+- img "Roseland Pictures"
+- button "🖨 Print / Save PDF"
+- generic: Sunrise
+- generic: 🌅 6:30 AM
+- generic: Sunset
+- generic: 🌇 7:15 PM
+- generic: High / Low
+- generic: 75°F / 54°F
+- generic: Conditions
+- generic: ⛅ Partly Cloudy
+- generic: Precip
+- generic: 35%
+- generic: Updated
+- generic: Fictional forecast
+- generic: B15 ordinary fictional day
+- generic: Fictional production – document acceptance
+- generic: Principal photography · Day 2 of 12
+- generic: Town / Location
+- generic: Fictional Harbor Studio
+- generic: Date
+- generic: Tuesday, October 20, 2026
+- generic: Call Time
+- generic: 9:00 AM
+- generic: Producer
+- generic: Fictional producer with complete long credit
+- generic: Director
+- generic: Fictional director
+- generic: Camera
+- generic: Fictional camera lead
+- table:
+  - rowgroup:
+    - row "Action Location Description Notes Time In Duration Time Out":
+      - columnheader
+      - columnheader "Action"
+      - columnheader "Location"
+      - columnheader "Description"
+      - columnheader "Notes"
+      - columnheader
+      - columnheader "Time In"
+      - columnheader "Duration"
+      - columnheader "Time Out"
+  - rowgroup:
+    - row "🌅 Sunrise 6:30 AM":
+      - cell
+      - cell "🌅 Sunrise"
+      - cell
+      - cell "6:30 AM"
+      - cell
+      - cell
+    - row "2 Crew Call Fictional location 1 100 Example Lane, Fictional Town ↳ Annex 1 200 Sample Road SUB-1 Fictional nested description END-SUB-1 DESC-1 Fictional detail with a comma, \"quoted text\", and multiple lines. Second line remains visible. END-DESC-1 NOTE-1 Fictional instructions END-NOTE-1 9:00 AM 00:00 9:00 AM":
+      - cell "2"
+      - cell "Crew Call":
+        - generic: Crew Call
+      - cell "Fictional location 1 100 Example Lane, Fictional Town ↳ Annex 1 200 Sample Road SUB-1 Fictional nested description END-SUB-1":
+        - link "Fictional location 1":
+          - /url: https://www.google.com/maps/dir/?api=1&destination=100%20Example%20Lane%2C%20Fictional%20Town
+        - generic: 100 Example Lane, Fictional Town
+        - generic: ↳
+        - link "Annex 1":
+          - /url: https://www.google.com/maps/dir/?api=1&destination=200%20Sample%20Road
+        - generic: 200 Sample Road
+        - generic: SUB-1 Fictional nested description END-SUB-1
+      - cell "DESC-1 Fictional detail with a comma, \"quoted text\", and multiple lines. Second line remains visible. END-DESC-1"
+      - cell "NOTE-1 Fictional instructions END-NOTE-1"
+      - cell
+      - cell "9:00 AM"
+      - cell "00:00"
+      - cell "9:00 AM"
+    - row "3 Fictional scene 2 Fictional location 2 101 Example Lane, Fictional Town ↳ Annex 2 201 Sample Road SUB-2 Fictional nested description END-SUB-2 DESC-2 Fictional detail with a comma, \"quoted text\", and multiple lines. Second line remains visible. END-DESC-2 NOTE-2 Fictional instructions END-NOTE-2 9:00 AM 00:15 9:15 AM":
+      - cell "3"
+      - cell "Fictional scene 2":
+        - generic: Fictional scene 2
+      - cell "Fictional location 2 101 Example Lane, Fictional Town ↳ Annex 2 201 Sample Road SUB-2 Fictional nested description END-SUB-2":
+        - link "Fictional location 2":
+          - /url: https://www.google.com/maps/dir/?api=1&destination=101%20Example%20Lane%2C%20Fictional%20Town
+        - generic: 101 Example Lane, Fictional Town
+        - generic: ↳
+        - link "Annex 2":
+          - /url: https://www.google.com/maps/dir/?api=1&destination=201%20Sample%20Road
+        - generic: 201 Sample Road
+        - generic: SUB-2 Fictional nested description END-SUB-2
+      - cell "DESC-2 Fictional detail with a comma, \"quoted text\", and multiple lines. Second line remains visible. END-DESC-2"
+      - cell "NOTE-2 Fictional instructions END-NOTE-2"
+      - cell
+      - cell "9:00 AM"
+      - cell "00:15"
+      - cell "9:15 AM"
+    - row "4 Wrap Fictional location 3 102 Example Lane, Fictional Town ↳ Annex 3 202 Sample Road SUB-3 Fictional nested description END-SUB-3 DESC-3 Fictional detail with a comma, \"quoted text\", and multiple lines. Second line remains visible. END-DESC-3 NOTE-3 Fictional instructions END-NOTE-3 9:15 AM 00:15 9:30 AM":
+      - cell "4"
+      - cell "Wrap":
+        - generic: Wrap
+      - cell "Fictional location 3 102 Example Lane, Fictional Town ↳ Annex 3 202 Sample Road SUB-3 Fictional nested description END-SUB-3":
+        - link "Fictional location 3":
+          - /url: https://www.google.com/maps/dir/?api=1&destination=102%20Example%20Lane%2C%20Fictional%20Town
+        - generic: 102 Example Lane, Fictional Town
+        - generic: ↳
+        - link "Annex 3":
+          - /url: https://www.google.com/maps/dir/?api=1&destination=202%20Sample%20Road
+        - generic: 202 Sample Road
+        - generic: SUB-3 Fictional nested description END-SUB-3
+      - cell "DESC-3 Fictional detail with a comma, \"quoted text\", and multiple lines. Second line remains visible. END-DESC-3"
+      - cell "NOTE-3 Fictional instructions END-NOTE-3"
+      - cell
+      - cell "9:15 AM"
+      - cell "00:15"
+      - cell "9:30 AM"
+    - row "🌇 Sunset 7:15 PM":
+      - cell
+      - cell "🌇 Sunset"
+      - cell
+      - cell "7:15 PM"
+      - cell
+      - cell
+- generic "Notifications"
+- alert

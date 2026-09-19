@@ -34,7 +34,7 @@ export default function LocalAcceptanceClient({ config, pendingInvitation, onInv
   const [invitationId, setInvitationId] = useState('');
   const [preview,setPreview]=useState<{organizationName:string;productionName:string|null;organizationRole:string;productionRole:string|null;expiresAt:string}|null>(null);
   const [authNeeded, setAuthNeeded] = useState(false), [busy, setBusy] = useState(false);
-  const [message, setMessage] = useState(managed ? 'Review the invitation ID supplied for this fictional account.' : 'Sign in with the fictional account that received the invitation.');
+  const [message, setMessage] = useState(workspace?.review ? '' : managed ? 'Review the invitation ID supplied for this fictional account.' : 'Sign in with the fictional account that received the invitation.');
   const [confirmClear, setConfirmClear] = useState<'signout' | 'review' | null>(null);
   const dialog = useRef<HTMLDialogElement>(null), review = useRef<HTMLElement>(null);
   const dirty = !!invitationId || !!controller.attempt;
@@ -132,9 +132,9 @@ export default function LocalAcceptanceClient({ config, pendingInvitation, onInv
     finally { busyRef.current = false; setBusy(false); }
   }
   const attempt = controller.attempt;
-  return <div className={styles.page}><main className={styles.main}>
-    <header className={styles.header}><div><span className={styles.eyebrow}>LOCAL ACCOUNT REHEARSAL</span><h1>Accept an invitation</h1><p>Join a fictional organization using its supplied invitation ID.</p></div><span className={styles.badge}>Local only</span></header>
-    <p className={styles.notice}>Use only fictional accounts and invitation IDs. This rehearsal sends no email. Drafts stay in this tab and are lost when it closes or reloads.</p>
+  return <div className={`${styles.page} ${workspace?.review?styles.product:''}`}><main className={styles.main}>
+    <header className={styles.header}><div>{!workspace?.review&&<span className={styles.eyebrow}>LOCAL ACCOUNT REHEARSAL</span>}<h1>Accept an invitation</h1><p>{workspace?.review?'Review an invitation sent to your account before joining an organization.':'Join a fictional organization using its supplied invitation ID.'}</p></div>{!workspace?.review&&<span className={styles.badge}>Local only</span>}</header>
+    {!workspace?.review&&<p className={styles.notice}>Use only fictional accounts and invitation IDs. This rehearsal sends no email. Drafts stay in this tab and are lost when it closes or reloads.</p>}
     <p className={styles.status} role="status" aria-live="polite">{message}</p>
     {!workspace && (!session || authNeeded) && <section className={styles.card} aria-label="Account sign in"><h2>{account.current ? 'Sign in again' : 'Sign in'}</h2>
       {account.current && <p>Your invitation ID and review are retained for this account.</p>}
@@ -145,9 +145,9 @@ export default function LocalAcceptanceClient({ config, pendingInvitation, onInv
     </section>}
     {!workspace && session && <div className={styles.account}><span>{session.user.email}</span><button className={styles.secondary} disabled={busy} onClick={() => dirty ? setConfirmClear('signout') : void signOut()}>Sign out</button></div>}
     {account.current && <section className={styles.card} aria-label="Invitation draft"><h2>Invitation ID</h2>
-      <p>Enter the ID supplied for this fictional account. Confirm the invitation with its sender before accepting.</p>
+      <p>Enter the invitation ID sent to you. You can review the organization and access before accepting.</p>
       <form className={styles.form} onSubmit={event => { event.preventDefault(); void reviewInvitation(); }}>
-        <label>Fictional invitation ID<input required autoComplete="off" maxLength={36} disabled={!ready || busy || !!attempt} value={invitationId} onChange={event => setInvitationId(event.target.value)} /></label>
+        <label>{workspace?.review?'Invitation ID':'Fictional invitation ID'}<input required autoComplete="off" maxLength={36} disabled={!ready || busy || !!attempt} value={invitationId} onChange={event => setInvitationId(event.target.value)} /></label>
         <button disabled={!ready || busy || !!attempt}>Review invitation</button>
       </form>
     </section>}

@@ -1,0 +1,2 @@
+History refresh retained selected schedule and all4 versions.
+http://127.0.0.1:3494/review?screen=lifecycle&org=2f75e684-eb3a-4951-9389-2df147812a8a&schedule=619b6591-65f8-4fbd-a1b6-238825c186b0

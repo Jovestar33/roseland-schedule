@@ -4,10 +4,11 @@ import { createClient, type Session } from '@supabase/supabase-js';
 import type { LocalEditorConfig } from '@/lib/platform/local-editor-config';
 import { ScheduleRepositoryError } from '@/lib/platform/schedule-repository';
 import { createWorkspaceRepository, type WorkspaceOrganization } from '@/lib/platform/workspace-repository';
-import { parseWorkspaceLocation, workspaceHref, WorkspaceIdentity, type WorkspaceLocation, type WorkspaceScreen } from '@/lib/platform/workspace-navigation';
+import { parseWorkspaceLocation, workspaceHref, workspaceOrganizationSwitch, WorkspaceIdentity, type WorkspaceLocation, type WorkspaceScreen } from '@/lib/platform/workspace-navigation';
 import { LocalWorkspaceContext, type WorkspacePanelState, type WorkspaceScheduleRequest } from '@/components/local/LocalWorkspaceContext';
 import { useScheduleStore } from '@/lib/store/scheduleStore';
 import AppHeader from '@/components/AppHeader';
+import WorkspaceOrganizationContext from '@/components/local/WorkspaceOrganizationContext';
 import LocalScheduleClient from '../local-schedule/LocalScheduleClient';
 import LocalInvitationsClient from '../local-invitations/LocalInvitationsClient';
 import LocalAcceptanceClient from '../local-accept-invitation/LocalAcceptanceClient';
@@ -59,6 +60,8 @@ export default function LocalWorkspaceClient({config,review=false}:{config:Local
   const [email,setEmail]=useState(''),[password,setPassword]=useState('');
   const [location,setLocation]=useState<WorkspaceLocation>(initial),locationRef=useRef(initial);
   const [organizations,setOrganizations]=useState<WorkspaceOrganization[]>([]),[more,setMore]=useState(false);
+  const [directoryState,setDirectoryState]=useState<'loading'|'ready'|'error'>('loading');
+  const [organizationSwitch,setOrganizationSwitch]=useState<{next:WorkspaceLocation;push:boolean}|null>(null),switchDialog=useRef<HTMLDialogElement>(null);
   const [visited,setVisited]=useState<WorkspaceOrganization[]>([]),[managementPanels,setManagementPanels]=useState<string[]>([]);
   const [scope,setScope]=useState<WorkspaceOrganization|null>(null);
   const [lifecyclePanels,setLifecyclePanels]=useState<string[]>([]),[scheduleRequest,setScheduleRequest]=useState<WorkspaceScheduleRequest|null>(null),scheduleSequence=useRef(0),teamRequest=useRef<string|null>(null);
@@ -78,6 +81,8 @@ export default function LocalWorkspaceClient({config,review=false}:{config:Local
   mfaRequired.current=(token,recent)=>{if(token===`Bearer ${sessionRef.current?.access_token}`){if(recent)setRecentMfa(true);setMfaRevision(v=>v+1);}};
   const remember=(organization:WorkspaceOrganization)=>setVisited(previous=>[...previous.filter(item=>item.id!==organization.id),organization]);
   async function navigate(next:WorkspaceLocation,push=true){
+    if(review&&next.screen==='provisioning')next={screen:'schedule',organization:next.organization};
+    if(review&&(next.screen==='acceptance'||next.screen==='invitations'))setShowSettings(true);
     const ticket=++navigationTicket.current,generation=identity.capture(),actor=identity.actor;
     if(!actor)return;
     try{
@@ -87,7 +92,7 @@ export default function LocalWorkspaceClient({config,review=false}:{config:Local
       if(next.screen==='invitations'&&(!organization||organization.role==='member')){next={...next,screen:'schedule'};setMessage('Invitation management requires an Owner or Admin organization.');}
       if(organization){remember(organization);setOrganizations(previous=>previous.map(item=>item.id===organization.id?organization:item));if(next.screen==='invitations')setManagementPanels(previous=>previous.includes(organization.id)?previous:[...previous,organization.id]);if(next.screen==='lifecycle')setLifecyclePanels(previous=>previous.includes(organization.id)?previous:[...previous,organization.id]);}
       setScope(organization);locationRef.current=next;setLocation(next);
-      if(organization&&next.schedule&&next.screen==='schedule'){const key=`${actor}:${organization.id}:${next.schedule}`;if(teamRequest.current!==key){teamRequest.current=key;setScheduleRequest({id:next.schedule,organization:organization.id,sequence:++scheduleSequence.current});}}else teamRequest.current=null;
+      if(organization&&next.schedule&&(next.screen==='schedule'||next.screen==='lifecycle')){const key=`${actor}:${organization.id}:${next.screen}:${next.schedule}`;if(teamRequest.current!==key){teamRequest.current=key;setScheduleRequest({id:next.schedule,organization:organization.id,sequence:++scheduleSequence.current,...(next.screen==='lifecycle'?{target:'lifecycle' as const}:{})});}}else teamRequest.current=null;
       if(push)history.pushState(null,'',href(next));else history.replaceState(null,'',href(next));return true;
     }catch(error){
       if(ticket===navigationTicket.current&&identity.current(generation)){
@@ -97,11 +102,24 @@ export default function LocalWorkspaceClient({config,review=false}:{config:Local
       }
     }
   }
+  function requestNavigation(next:WorkspaceLocation,push=true){
+    const switchState=review?workspaceOrganizationSwitch(locationRef.current,next,dirty,working):'ready';
+    if(switchState!=='ready'){
+      if(switchState==='busy'){setMessage('Finish the current operation before switching organizations.');if(!push)history.replaceState(null,'',href(locationRef.current));return;}
+      if(switchState==='review'){setOrganizationSwitch({next,push});if(!push)history.replaceState(null,'',href(locationRef.current));return;}
+    }
+    void navigate(next,push);
+  }
+  function directoryLocation(page:{items:WorkspaceOrganization[];more:boolean}){
+    const next=locationRef.current;
+    return review&&!next.organization&&next.screen==='schedule'&&page.items.length===1&&!page.more?{...next,organization:page.items[0].id}:next;
+  }
   async function loadOrganizations(append=false){
-    const actor=identity.actor,generation=identity.capture(),ticket=++directoryTicket.current;if(!actor)return false;
-    const page=await repository.organizations(actor,append?organizations.at(-1)?.id:undefined);
-    if(!identity.current(generation)||ticket!==directoryTicket.current)return false;
-    setOrganizations(previous=>append?[...previous,...page.items]:page.items);setMore(page.more);return true;
+    const actor=identity.actor,generation=identity.capture(),ticket=++directoryTicket.current;if(!actor)return null;
+    try{const page=await repository.organizations(actor,append?organizations.at(-1)?.id:undefined);
+      if(!identity.current(generation)||ticket!==directoryTicket.current)return null;
+      setOrganizations(previous=>append?[...previous,...page.items]:page.items);setMore(page.more);setDirectoryState('ready');return page;
+    }catch(error){if(identity.current(generation)&&ticket===directoryTicket.current)setDirectoryState('error');throw error;}
   }
   useEffect(()=>{
     const navigationRequests=navigationTicket,directoryRequests=directoryTicket;
@@ -109,7 +127,7 @@ export default function LocalWorkspaceClient({config,review=false}:{config:Local
     const subscription=client.auth.onAuthStateChange((_event,next)=>{
       if(sessionRef.current?.access_token!==next?.access_token){navigationRequests.current++;directoryRequests.current++;}
       if(next&&identity.bind(next.user.id)){
-        navigationTicket.current++;directoryTicket.current++;useScheduleStore.getState().newSchedule();setPanels({});setVisited([]);setOrganizationLifecycles({});setManagementPanels([]);setLifecyclePanels([]);setScheduleRequest(null);setOrganizations([]);setScope(null);setMore(false);setAccountEpoch(identity.generation);
+        navigationTicket.current++;directoryTicket.current++;useScheduleStore.getState().newSchedule();setPanels({});setVisited([]);setOrganizationLifecycles({});setManagementPanels([]);setLifecyclePanels([]);setScheduleRequest(null);setOrganizations([]);setScope(null);setMore(false);setDirectoryState('loading');setOrganizationSwitch(null);setAccountEpoch(identity.generation);
       }
       // Keep the known account address for reauthentication after a cross-tab sign-out.
       if(next)setEmail(next.user.email??'');
@@ -122,77 +140,86 @@ export default function LocalWorkspaceClient({config,review=false}:{config:Local
   useEffect(()=>{
     if(!session || authNeeded || !accountReady)return;
     setMessage(previous=>previous==='Checking your remembered account.'?'Your remembered account is ready. Choose an organization or review an invitation.':previous);
-    void loadOrganizations().then(current=>current?navigate(locationRef.current,false):undefined).catch(()=>setMessage('Organizations could not be refreshed. Your drafts are retained.'));
+    void loadOrganizations().then(current=>current?navigate(directoryLocation(current),false):undefined).catch(()=>setMessage('Organizations could not be refreshed. Your drafts are retained.'));
     // Account epoch and navigation tickets guard asynchronous directory reads.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[session?.access_token,authNeeded,accountReady]);
   useEffect(()=>{
     if(!session||authNeeded||!accountReady)return;
-    const refresh=()=>{if(document.visibilityState==='visible'){setMfaRevision(v=>v+1);void loadOrganizations().then(current=>current?navigate(locationRef.current,false):undefined).catch(()=>{});}};
+    const refresh=()=>{if(document.visibilityState==='visible'){setMfaRevision(v=>v+1);void loadOrganizations().then(current=>current?navigate(directoryLocation(current),false):undefined).catch(()=>{});}};
     const timer=window.setInterval(refresh,15000);window.addEventListener('focus',refresh);
     return()=>{clearInterval(timer);window.removeEventListener('focus',refresh);};
     // The directory and navigation use the current actor/ticket fences.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[session?.access_token,authNeeded,accountReady]);
   useEffect(()=>{
-    const pop=()=>{void navigate(parseWorkspaceLocation(window.location.search),false);};
+    const pop=()=>{requestNavigation(parseWorkspaceLocation(window.location.search),false);};
     window.addEventListener('popstate',pop);return()=>window.removeEventListener('popstate',pop);
     // The actor, current location and request identity are read from refs.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[repository,identity]);
+  },[repository,identity,dirty,working]);
   useEffect(()=>{if(confirmSignOut)dialog.current?.showModal();else dialog.current?.close();},[confirmSignOut]);
+  useEffect(()=>{if(organizationSwitch)switchDialog.current?.showModal();else switchDialog.current?.close();},[organizationSwitch]);
   async function login(event:React.FormEvent){
     event.preventDefault();if(busyRef.current||working)return;busyRef.current=true;setBusy(true);
-    try{if(config.accountOnboarding)authStorage.setRemember(rememberSession);const r=await client.auth.signInWithPassword({email:sessionRef.current?.user.email??email,password});setPassword('');if(r.error||!r.data.session){setMessage('Sign-in failed. Check your fictional account details.');return;}if(config.accountOnboarding)client.auth.startAutoRefresh();setEmail(r.data.user.email??email);setAuthNeeded(false);setMessage('Signed in. Choose an organization or accept a fictional invitation.');}
+    try{if(config.accountOnboarding)authStorage.setRemember(rememberSession);const r=await client.auth.signInWithPassword({email:sessionRef.current?.user.email??email,password});setPassword('');if(r.error||!r.data.session){setMessage(review?'Sign-in failed. Check your email and password.':'Sign-in failed. Check your fictional account details.');return;}if(config.accountOnboarding)client.auth.startAutoRefresh();setEmail(r.data.user.email??email);setAuthNeeded(false);setMessage('Signed in. Choose an organization or accept a fictional invitation.');}
     catch{setPassword('');setMessage('Sign-in could not finish. Your drafts are retained.');}finally{busyRef.current=false;setBusy(false);}
   }
   async function signOut(){
     if(busyRef.current||working)return;busyRef.current=true;setBusy(true);
     try{if(sessionRef.current){const r=await client.auth.signOut({scope:'local'});if(r.error)throw new Error('Sign out unavailable');}
-      navigationTicket.current++;directoryTicket.current++;identity.clear();useScheduleStore.getState().newSchedule();setAccountEpoch(identity.generation);setPanels({});setVisited([]);setOrganizationLifecycles({});setManagementPanels([]);setLifecyclePanels([]);setScheduleRequest(null);setOrganizations([]);setScope(null);setMore(false);setSession(null);sessionRef.current=null;setEmail('');setPassword('');setAuthNeeded(false);setConfirmSignOut(false);setLocation(initial);locationRef.current=initial;history.replaceState(null,'',href(initial));setMessage('Signed out. Tab-only drafts and requests cleared. Retained source drafts, template requests and appearance requests remain available to their original account.');
+      navigationTicket.current++;directoryTicket.current++;identity.clear();useScheduleStore.getState().newSchedule();setAccountEpoch(identity.generation);setPanels({});setVisited([]);setOrganizationLifecycles({});setManagementPanels([]);setLifecyclePanels([]);setScheduleRequest(null);setOrganizations([]);setScope(null);setMore(false);setDirectoryState('loading');setOrganizationSwitch(null);setSession(null);sessionRef.current=null;setEmail('');setPassword('');setAuthNeeded(false);setConfirmSignOut(false);setLocation(initial);locationRef.current=initial;history.replaceState(null,'',href(initial));setMessage('Signed out. Tab-only drafts and requests cleared. Retained source drafts, template requests and appearance requests remain available to their original account.');
     }catch{setMessage('Sign-out could not finish. Your workspace is retained.');}finally{busyRef.current=false;setBusy(false);}
   }
   const active=location.screen;
   const onScheduleSelection=(organization:string,id:string|null)=>{
     if(!review||locationRef.current.screen!=='schedule'||locationRef.current.organization!==organization)return;
     const next:WorkspaceLocation={screen:'schedule',organization,...(id?{schedule:id}:{})};
-    teamRequest.current=id?`${identity.actor}:${organization}:${id}`:null;
+    teamRequest.current=id?`${identity.actor}:${organization}:schedule:${id}`:null;
     if(href(next)===href(locationRef.current))return;
     locationRef.current=next;setLocation(next);history.pushState(null,'',href(next));
   };
-  const openOrganization=(id:string)=>{void navigate({screen:'schedule',organization:id});};
+  const openOrganization=(id:string)=>{requestNavigation({screen:'schedule',organization:id});};
   const openSchedule=(organization:string,id:string)=>{const generation=identity.capture();void navigate({screen:'schedule',organization}).then(ok=>{if(ok&&identity.current(generation)&&locationRef.current.organization===organization&&locationRef.current.screen==='schedule')setScheduleRequest({id,organization,sequence:++scheduleSequence.current});});};
-  const openLifecycle=(organization:string,id:string)=>{const generation=identity.capture();void navigate({screen:'lifecycle',organization}).then(ok=>{if(ok&&identity.current(generation)&&locationRef.current.organization===organization&&locationRef.current.screen==='lifecycle')setScheduleRequest({id,organization,sequence:++scheduleSequence.current,target:'lifecycle'});});};
+  const openLifecycle=(organization:string,id:string)=>{void navigate({screen:'lifecycle',organization,schedule:id});};
   const panel=(id:string,organization:WorkspaceOrganization|null,enabled:boolean)=>({review,openSettings:()=>setShowSettings(true),client,session,authNeeded:authNeeded||!accountReady||!mfaReady||organization?.access_state==='mfa_required',organization,active:enabled&&accountReady&&mfaReady&&organization?.access_state!=='mfa_required',panelId:id,report,requireAuth,readOnly:!!organization&&organizationLifecycles[organization.id]?.read_only===true,lifecycleVersion:organization?organizationLifecycles[organization.id]?.version??-1:0,lifecycleRevision,onLifecycleChange,openOrganization,openSchedule,onScheduleSelection,openLifecycle,scheduleRequest,consumeScheduleRequest});
   function tab(screen:WorkspaceScreen){if(authNeeded||!session||!accountReady){return;}void navigate({screen,organization:locationRef.current.organization});}
   return <div className={review?undefined:styles.page}>
-    {review?<AppHeader actions={(!location.schedule||showSettings)?<button className="btn btn-light btn-sm" onClick={()=>{if(showSettings)tab('schedule');setShowSettings(v=>!v);}}>{showSettings?'Back to schedules':'Account & settings'}</button>:undefined}/>:<header className={styles.header}><div><span className={styles.eyebrow}>LOCAL WORKSPACE</span><h1>Roseland rehearsals</h1><p>One account, with unfinished work kept in this tab.</p></div><span className={styles.badge}>Fictional data only</span></header>}
-    <div className={`${styles.shell} ${review?styles.reviewShell:''} ${review&&!location.schedule&&!showSettings?styles.reviewLibraryContext:''}`} style={review&&!!location.schedule&&!showSettings?{padding:0}:undefined}>
+    {review?<AppHeader/>:<header className={styles.header}><div><span className={styles.eyebrow}>LOCAL WORKSPACE</span><h1>Roseland rehearsals</h1><p>One account, with unfinished work kept in this tab.</p></div><span className={styles.badge}>Fictional data only</span></header>}
+    {review&&session&&<nav className={styles.organizationBar} aria-label="Organization context">
+      <div className={styles.organizationIdentity}>{authNeeded?<span role="status">Sign in again to continue.</span>:<WorkspaceOrganizationContext organizations={organizations} current={scope} state={!accountReady?'loading':directoryState} more={more} disabled={busy||working||!accountReady||!mfaReady} onChange={id=>requestNavigation({screen:'schedule',organization:id})} onRetry={()=>void loadOrganizations().then(page=>page?navigate(directoryLocation(page),false):undefined).catch(()=>{})} onMore={()=>void loadOrganizations(true).catch(()=>{})}/>}</div>
+      <button className="btn btn-light btn-sm" onClick={()=>{if(showSettings&&active!=='schedule')tab('schedule');setShowSettings(v=>!v);}}>{showSettings?'Back to schedules':'Account & settings'}</button>
+    </nav>}
+    <div className={`${styles.shell} ${review?styles.reviewShell:''} ${review&&showSettings?styles.settingsShell:''} ${review&&(!session||authNeeded)?styles.entryShell:''}`} style={review&&!!location.schedule&&!showSettings?{padding:0}:undefined}>
       {!review&&<p className={styles.notice}>Switching local screens keeps drafts and request details. Closing or reloading loses tab-only requests. Duplicate source backups and template or appearance request receipts can be recovered by the original account on this computer. {config.accountOnboarding?'Email stays in the local mail sink. Remember me retains sign-in only; idle expiry still applies.':'No email is sent.'}</p>}
       {(!review||! /^(Your remembered|Checking your remembered|Signed in|Sign in once)/.test(message))&&<p role="status" aria-live="polite" className={styles.status}>{message}</p>}
-      {(!session||authNeeded)&&<form className={styles.login} onSubmit={login} aria-label="Workspace sign in"><h2>{identity.actor?'Sign in again':'Sign in'}</h2><label>Fictional account email<input type="email" required autoComplete="off" readOnly={!!identity.actor} value={session?.user.email??email} onChange={event=>setEmail(event.target.value)}/></label><label>Password<input type="password" required autoComplete="off" value={password} onChange={event=>setPassword(event.target.value)}/></label><button disabled={busy||working}>Sign in</button>{config.accountOnboarding&&<label><input type="checkbox" checked={rememberSession} onChange={event=>setRememberSession(event.target.checked)}/> Remember me on this personal device</label>}</form>}
-      <div hidden={review&&!showSettings&&!!session&&accountReady&&mfaReady&&!authNeeded}>
-      {config.accountOnboarding&&<LocalAccountAccess config={config} client={client} session={session} authNeeded={authNeeded} onReady={setAccountReady} requireAuth={requireAuth} policyRevision={policyRevision} onInvitation={setPendingInvitation}/>}
+      {(!session||authNeeded)&&<form className={styles.login} onSubmit={login} aria-label="Workspace sign in"><h2>{identity.actor?'Sign in again':'Sign in'}</h2><label>{review?'Email address':'Fictional account email'}<input type="email" required autoComplete="off" readOnly={!!identity.actor} value={session?.user.email??email} onChange={event=>setEmail(event.target.value)}/></label><label>Password<input type="password" required autoComplete="off" value={password} onChange={event=>setPassword(event.target.value)}/></label><button disabled={busy||working}>Sign in</button>{config.accountOnboarding&&<label><input type="checkbox" checked={rememberSession} onChange={event=>setRememberSession(event.target.checked)}/> Remember me on this personal device</label>}</form>}
+        {review&&showSettings&&<section className={styles.settingsIntro}><h1>Account &amp; settings</h1><p>Manage your account and the organizations you work with.</p><nav aria-label="Account navigation" className={styles.settingsNavigation}><button className="btn btn-light" aria-current={active==='schedule'?'page':undefined} onClick={()=>tab('schedule')}>Your account</button><button className="btn btn-light" aria-current={active==='acceptance'?'page':undefined} onClick={()=>tab('acceptance')}>Invitations for you</button>{scope&&scope.role!=='member'&&<button className="btn btn-light" aria-current={active==='invitations'?'page':undefined} onClick={()=>tab('invitations')}>Manage invitations</button>}</nav></section>}
+      <div className={review&&showSettings?styles.accountPanels:undefined} hidden={review&&((showSettings&&active!=='schedule')||(!showSettings&&!!session&&accountReady&&mfaReady&&!authNeeded))}>
+      {config.accountOnboarding&&<LocalAccountAccess review={review} config={config} client={client} session={session} authNeeded={authNeeded} onReady={setAccountReady} requireAuth={requireAuth} policyRevision={policyRevision} onInvitation={setPendingInvitation}/>}
       <LocalMfaAccess key={accountEpoch} client={client} session={session} authNeeded={authNeeded} organization={scope?.id??null} revision={mfaRevision} recentRequired={recentMfa} onReady={setMfaReady} onVerified={mfaVerified}/>
       </div>
       {pendingInvitation?.actor===session?.user.id&&accountReady&&<p>Verified invitation ready. <button onClick={()=>tab('acceptance')}>Review verified invitation</button></p>}
-      {identity.actor&&<><div hidden={review&&!showSettings}><div className={styles.account}><span>{session?.user.email??email}{authNeeded?' · Sign-in required':''}</span><span>{dirty?'Unfinished work retained':'No unfinished work'}</span><button disabled={busy||working} onClick={()=>dirty?setConfirmSignOut(true):void signOut()}>Sign out</button></div></div>
-        <div hidden={review&&!!location.schedule&&!showSettings} className={styles.directory}><label>{review?'Organization':'Workspace organization'}<select value={scope?.id??''} disabled={busy||authNeeded||!session||!accountReady} onChange={event=>void navigate({screen:active,organization:event.target.value||null})}><option value="">Choose an organization</option>{scope&&!organizations.some(item=>item.id===scope.id)&&<option value={scope.id}>{scope.name}{!review&&<> · {scope.role}</>}</option>}{organizations.map(item=><option key={item.id} value={item.id}>{item.name}{!review&&<> · {item.role==='owner'?'Organization Super Admin':item.role}</>}</option>)}</select></label><button hidden={review&&!showSettings} disabled={busy||authNeeded||!session||!accountReady} onClick={()=>void loadOrganizations().then(current=>current?navigate(locationRef.current,false):undefined).catch(()=>setMessage('Organizations could not be refreshed.'))}>Refresh organizations</button>{more&&<button disabled={busy||authNeeded||!session||!accountReady} onClick={()=>void loadOrganizations(true).catch(()=>setMessage('More organizations could not be loaded.'))}>Load more organizations</button>}</div>
-        <nav hidden={review&&!showSettings} aria-label="Workspace screens" className={styles.tabs}><button aria-current={active==='schedule'?'page':undefined} onClick={()=>tab('schedule')}>Schedules</button><button aria-current={active==='lifecycle'?'page':undefined} disabled={!scope} onClick={()=>tab('lifecycle')}>Schedule lifecycle</button><button aria-current={active==='invitations'?'page':undefined} disabled={!scope||scope.role==='member'} onClick={()=>tab('invitations')}>Manage invitations</button><button aria-current={active==='acceptance'?'page':undefined} onClick={()=>tab('acceptance')}>Accept invitation</button><button aria-current={active==='provisioning'?'page':undefined} onClick={()=>tab('provisioning')}>Restricted provisioning</button></nav>
+      {identity.actor&&<><div hidden={review&&(!showSettings||active!=='schedule')}><div className={styles.account}><span>{session?.user.email??email}{authNeeded?' · Sign-in required':''}</span><span>{dirty?'Unfinished work retained':'No unfinished work'}</span><button disabled={busy||working} onClick={()=>dirty?setConfirmSignOut(true):void signOut()}>Sign out</button></div></div>
+        <div hidden={review} className={styles.directory}><label>{review?'Organization':'Workspace organization'}<select value={scope?.id??''} disabled={busy||authNeeded||!session||!accountReady} onChange={event=>requestNavigation({screen:active,organization:event.target.value||null})}><option value="">Choose an organization</option>{scope&&!organizations.some(item=>item.id===scope.id)&&<option value={scope.id}>{scope.name}{!review&&<> · {scope.role}</>}</option>}{organizations.map(item=><option key={item.id} value={item.id}>{item.name}{!review&&<> · {item.role==='owner'?'Organization Super Admin':item.role}</>}</option>)}</select></label><button hidden={review&&!showSettings} disabled={busy||authNeeded||!session||!accountReady} onClick={()=>void loadOrganizations().then(current=>current?navigate(directoryLocation(current),false):undefined).catch(()=>setMessage('Organizations could not be refreshed.'))}>Refresh organizations</button>{more&&<button disabled={busy||authNeeded||!session||!accountReady} onClick={()=>void loadOrganizations(true).catch(()=>setMessage('More organizations could not be loaded.'))}>Load more organizations</button>}</div>
+        <nav hidden={review} aria-label="Workspace screens" className={styles.tabs}><button aria-current={active==='schedule'?'page':undefined} onClick={()=>tab('schedule')}>Schedules</button><button aria-current={active==='lifecycle'?'page':undefined} disabled={!scope} onClick={()=>tab('lifecycle')}>Schedule lifecycle</button><button aria-current={active==='invitations'?'page':undefined} disabled={!scope||scope.role==='member'} onClick={()=>tab('invitations')}>Manage invitations</button><button aria-current={active==='acceptance'?'page':undefined} onClick={()=>tab('acceptance')}>Accept invitation</button><button aria-current={active==='provisioning'?'page':undefined} onClick={()=>tab('provisioning')}>Restricted provisioning</button></nav>
+
       </>}
     </div>
     {identity.actor&&<div key={accountEpoch} hidden={!accountReady||!mfaReady||scope?.access_state==='mfa_required'}>
-      {visited.map(o=><div key={'deletion:'+o.id} hidden={scope?.id!==o.id}><LocalWorkspaceContext.Provider value={panel('deletion:'+o.id,o,scope?.id===o.id)}><LocalOrganizationDeletion/></LocalWorkspaceContext.Provider></div>)}
-      {visited.filter(o=>o.role!=='member').map(o=><div key={'members:'+o.id} hidden={scope?.id!==o.id||(review&&!showSettings)}><LocalWorkspaceContext.Provider value={panel('members:'+o.id,o,scope?.id===o.id)}><LocalOrganizationMembers/></LocalWorkspaceContext.Provider></div>)}
-      {visited.map(o=><div key={'security:'+o.id} hidden={scope?.id!==o.id||(review&&!showSettings)}><LocalWorkspaceContext.Provider value={panel('security:'+o.id,o,scope?.id===o.id)}><LocalOrganizationSecurity/></LocalWorkspaceContext.Provider></div>)}
-      {visited.map(o=><div key={'presentation:'+o.id} hidden={scope?.id!==o.id||(review&&!showSettings)}><LocalWorkspaceContext.Provider value={panel('presentation:'+o.id,o,scope?.id===o.id)}><LocalOrganizationSettings/></LocalWorkspaceContext.Provider></div>)}
-      {visited.filter(o=>o.role!=='member').map(o=><div key={'permissions:'+o.id} hidden={scope?.id!==o.id||(review&&!showSettings)}><LocalWorkspaceContext.Provider value={panel('permissions:'+o.id,o,scope?.id===o.id)}><LocalSchedulePermissions/></LocalWorkspaceContext.Provider></div>)}
-      <div hidden={active!=='schedule'}><LocalWorkspaceContext.Provider value={panel('schedule',scope,active==='schedule')}><LocalScheduleClient config={config}/></LocalWorkspaceContext.Provider></div>
+      {visited.map(o=><div key={'deletion:'+o.id} hidden={scope?.id!==o.id}><LocalWorkspaceContext.Provider value={panel('deletion:'+o.id,o,scope?.id===o.id)}><LocalOrganizationDeletion showControls={!review||(showSettings&&active==='schedule')}/></LocalWorkspaceContext.Provider></div>)}
+      {review&&showSettings&&active==='schedule'&&scope&&scope.role!=='member'&&<header className={styles.administrationHeading}><h2>Administration</h2><p>{scope.name}</p></header>}
+      {visited.filter(o=>o.role!=='member').map(o=><div className={review?styles.administrationCard:undefined} key={'members:'+o.id} hidden={scope?.id!==o.id||(review&&(!showSettings||active!=='schedule'||o.role==='member'))}><LocalWorkspaceContext.Provider value={panel('members:'+o.id,o,scope?.id===o.id)}><LocalOrganizationMembers/></LocalWorkspaceContext.Provider></div>)}
+      {visited.map(o=><div className={review?styles.administrationCard:undefined} key={'security:'+o.id} hidden={scope?.id!==o.id||(review&&(!showSettings||active!=='schedule'||o.role==='member'))}><LocalWorkspaceContext.Provider value={panel('security:'+o.id,o,scope?.id===o.id)}><LocalOrganizationSecurity/></LocalWorkspaceContext.Provider></div>)}
+      {visited.map(o=><div className={review?styles.administrationCard:undefined} key={'presentation:'+o.id} hidden={scope?.id!==o.id||(review&&(!showSettings||active!=='schedule'||o.role==='member'))}><LocalWorkspaceContext.Provider value={panel('presentation:'+o.id,o,scope?.id===o.id)}><LocalOrganizationSettings/></LocalWorkspaceContext.Provider></div>)}
+      {visited.filter(o=>o.role!=='member').map(o=><div className={review?styles.administrationCard:undefined} key={'permissions:'+o.id} hidden={scope?.id!==o.id||(review&&(!showSettings||active!=='schedule'||o.role==='member'))}><LocalWorkspaceContext.Provider value={panel('permissions:'+o.id,o,scope?.id===o.id)}><LocalSchedulePermissions/></LocalWorkspaceContext.Provider></div>)}
+      <div hidden={active!=='schedule'||(review&&showSettings)}><LocalWorkspaceContext.Provider value={panel('schedule',scope,active==='schedule'&&(!review||!showSettings))}><LocalScheduleClient config={config}/></LocalWorkspaceContext.Provider></div>
       <div hidden={active!=='acceptance'}><LocalWorkspaceContext.Provider value={panel('acceptance',null,active==='acceptance')}><LocalAcceptanceClient config={config} pendingInvitation={pendingInvitation?.actor===session?.user.id?pendingInvitation:null} onInvitationUsed={()=>setPendingInvitation(null)}/></LocalWorkspaceContext.Provider></div>
-      <div hidden={active!=='provisioning'}><LocalWorkspaceContext.Provider value={panel('provisioning',null,active==='provisioning')}><LocalProvisioningClient/></LocalWorkspaceContext.Provider></div>
-      {lifecyclePanels.map(id=>{const organization=visited.find(item=>item.id===id)!;const enabled=active==='lifecycle'&&scope?.id===id;return <div key={id} hidden={!enabled}><LocalWorkspaceContext.Provider value={panel('lifecycle:'+id,organization,enabled)}><LocalLifecycleClient/></LocalWorkspaceContext.Provider></div>;})}
-      {managementPanels.map(id=>{const organization=visited.find(item=>item.id===id)!;const enabled=active==='invitations'&&scope?.id===id&&scope.role!=='member';return <div key={id} hidden={!enabled}><LocalWorkspaceContext.Provider value={panel('invitations:'+id,organization,enabled)}><LocalInvitationsClient config={config}/></LocalWorkspaceContext.Provider></div>;})}
+      <div hidden={review||active!=='provisioning'}><LocalWorkspaceContext.Provider value={panel('provisioning',null,!review&&active==='provisioning')}><LocalProvisioningClient/></LocalWorkspaceContext.Provider></div>
+      {lifecyclePanels.map(id=>{const organization=visited.find(item=>item.id===id)!;const enabled=active==='lifecycle'&&(!review||!showSettings)&&scope?.id===id;return <div key={id} hidden={!enabled}><LocalWorkspaceContext.Provider value={panel('lifecycle:'+id,organization,enabled)}><LocalLifecycleClient/></LocalWorkspaceContext.Provider></div>;})}
+      {managementPanels.map(id=>{const organization=visited.find(item=>item.id===id)!;const enabled=(!review||showSettings)&&active==='invitations'&&scope?.id===id&&scope.role!=='member';return <div key={id} hidden={!enabled}><LocalWorkspaceContext.Provider value={panel('invitations:'+id,organization,enabled)}><LocalInvitationsClient config={config}/></LocalWorkspaceContext.Provider></div>;})}
     </div>}
+    <dialog ref={switchDialog} className={`${styles.dialog} ${review?styles.reviewDialog:''}`} onCancel={()=>setOrganizationSwitch(null)} aria-label="Switch organization"><h2>Switch organization?</h2><p>Your unfinished work in <strong>{scope?.name}</strong> will stay in this tab. Return to this organization to continue. Switching will not move schedules or save your edits.</p><div><button onClick={()=>setOrganizationSwitch(null)}>Stay here</button><button disabled={working||busy||authNeeded||!session} onClick={()=>{const request=organizationSwitch;setOrganizationSwitch(null);if(request)void navigate(request.next,request.push);}}>Switch organization</button></div></dialog>
     <dialog ref={dialog} className={styles.dialog} onCancel={()=>setConfirmSignOut(false)} aria-label="Clear workspace"><h2>Sign out and clear this workspace?</h2><p>Unsaved schedule edits and tab-only workflow drafts will be cleared. Retained source drafts, template requests and appearance requests remain on this computer for the original account. A request already sent may have completed; signing out does not undo it.</p><div><button disabled={busy||working} onClick={()=>setConfirmSignOut(false)}>Keep working</button><button disabled={busy||working} onClick={()=>void signOut()}>Sign out and clear</button></div></dialog>
   </div>;
 }

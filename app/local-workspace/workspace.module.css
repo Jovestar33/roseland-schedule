@@ -40,3 +40,13 @@
 .reviewLibraryContext { max-width:900px; padding:12px 20px 0; }
 .reviewLibraryContext .directory { margin:0; }
 .reviewLibraryContext .directory label { font-size:12px; color:var(--g600); }
+
+.organizationBar{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:10px 24px;border-bottom:1px solid var(--g200);background:#fafafa;color:var(--ink)}
+.organizationIdentity{min-width:0;flex:1}.organizationBar>button{flex-shrink:0}.organizationBar .btn{font-size:12px}
+.reviewShell .status{background:white;border:1px solid var(--g200);border-left:3px solid var(--pink);border-radius:6px;font-size:13px;color:var(--ink)}
+.settingsIntro{max-width:900px;margin:24px auto 12px}.settingsIntro h1{font-family:var(--fb);font-size:26px}.settingsIntro p{font-size:13px;color:var(--g600);margin:8px 0 20px}.settingsNavigation{display:flex;gap:10px;flex-wrap:wrap}.settingsNavigation [aria-current]{border-color:var(--pink)}
+.administrationHeading{max-width:900px;margin:28px auto 12px;padding:0 20px;color:var(--ink)}.administrationHeading h2{font-size:20px}.administrationHeading p{font-size:13px;color:var(--g500);margin-top:6px}
+.administrationCard{max-width:860px;margin:12px auto;padding:16px;background:white;border:1px solid var(--g200);border-radius:10px;color:var(--ink)}.administrationCard[hidden]{display:none}
+.reviewDialog{color:var(--ink);border-color:var(--g200)}.reviewDialog button{color:var(--ink);border-color:var(--g300)}.reviewDialog button:focus-visible{outline:2px solid var(--pink);outline-offset:3px}
+@media(max-width:600px){.organizationBar{padding:10px 16px;gap:12px;align-items:center}.organizationBar>button{font-size:11px;padding:8px;min-height:40px;max-width:125px}.administrationCard{margin:12px}.reviewShell{padding:4px 16px}.reviewShell .login{max-width:100%}}
+.settingsShell{max-width:900px;padding:24px 20px}.settingsShell .settingsIntro{margin:0 0 20px}.settingsShell .settingsIntro h1{font-family:var(--fb);font-weight:700}.accountPanels>section{background:white;border:1px solid var(--g200);border-radius:10px;padding:18px;max-width:none!important;margin:12px 0!important}.accountPanels h2{font-size:18px;margin:14px 0}.accountPanels p{font-size:13px;line-height:1.6;margin:10px 0}.accountPanels [role="status"]:empty{display:none}.settingsShell .account{background:white;border:1px solid var(--g200);border-radius:10px;padding:18px;margin:12px 0;gap:14px}.settingsShell .account>span:nth-child(2){font-size:11px;color:var(--g500)}.entryShell{max-width:480px;padding:24px 20px}.entryShell .login{padding:0 0 20px}.entryShell .login h2{font-family:var(--fb);font-size:28px}

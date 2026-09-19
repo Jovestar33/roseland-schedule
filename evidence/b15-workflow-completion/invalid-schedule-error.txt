@@ -1,0 +1,12 @@
+Backup and import
+← All tools
+Schedule files
+
+Download saved schedules, or import a JSON backup as new schedules. Unsaved edits stay in this tab.
+
+What the backup includes
+Export all readable schedules
+Copy / Save As current draft
+Import schedule-only JSON
+
+This file is not valid JSON. Choose a complete schedule backup; nothing was imported.

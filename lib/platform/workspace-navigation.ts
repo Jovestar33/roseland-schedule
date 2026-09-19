@@ -20,3 +20,9 @@ export class WorkspaceIdentity {
   capture(){return this.generation;}
   current(generation:number){return generation===this.generation;}
 }
+
+/** Switching retains the existing scoped draft; it never authorizes a write. */
+export function workspaceOrganizationSwitch(current:WorkspaceLocation,next:WorkspaceLocation,dirty:boolean,working:boolean):'ready'|'busy'|'review'{
+  if(!current.organization||current.organization===next.organization)return 'ready';
+  return working?'busy':dirty?'review':'ready';
+}

@@ -1,0 +1,48 @@
+{
+  "baseCommit": "cd86ff3923ab03aadd199b2e46c40a0bfd66c41b",
+  "checkout": "/private/tmp/roseland-b15-workflow-completion",
+  "branch": "codex/b15-workflow-completion",
+  "runtime": {
+    "launcher": 81584,
+    "server": 81593,
+    "port": 3494,
+    "project": "roseland-b14-destination-g2",
+    "build": "tjBgvlEtpK4FPyF7vvq1x"
+  },
+  "sourceSha256": {
+    "app/local-accept-invitation/LocalAcceptanceClient.tsx": "ba14a2b439fc061a78732ffaf6e1ca469840e71297bb24dfb9874cf4932b82a4",
+    "app/local-invitations/invitations.module.css": "ee7a1a9e6b49a915c87e29dc4401346bf59a8e1c489b96e4eed38eb46bc5f8e0",
+    "app/local-workspace/LocalLifecycleClient.tsx": "26162eded3acd587772c081b3c1d9d7f87f2b07ad3bc39b06ac3cf57d60a9eea",
+    "app/local-workspace/LocalWorkspaceClient.tsx": "ae8ec03ad3e192e26d13a47182266511383351766b62f85641ca0a8d1bc4e23d",
+    "app/local-workspace/lifecycle.module.css": "b6541fc7c77f609c6f2a8a840ea99c6340b903e0af90d613bdb547ca15666048",
+    "app/local-workspace/workspace.module.css": "897a0f1d8e5057197551eb2fe7b6978e6b702d7489debe90fa5771035a384bb1",
+    "components/local/LocalAccountAccess.tsx": "f9903c37664aac936dc2913a4fab24067013354b4ddd2fedc4eb8e3082a6b4e0",
+    "components/local/LocalBrowserTemplates.tsx": "4c28d66e6eed1d2f1c1f394088dba4137155b8ca6b51e05e4e4780f7948ae20c",
+    "components/local/LocalOrganizationDeletion.tsx": "bbb340369b290e7b1c7428321b8baa22ece68268a4c7b43a68d9e1cbbeead5a1",
+    "components/local/LocalScheduleFiles.tsx": "1a5fb0a9675ae1e0704a4dc68a711aaba88509bc2a84f144161a5fae41233696",
+    "components/local/LocalScheduleSnapshots.tsx": "3892f4c970f2a1df1a8b12446e3e5dea606a4dc96d678da49c56ff3045567e3e",
+    "components/local/ScheduleDocumentPreview.tsx": "59a8a35707928bbaa883e0866023d641a91f7912856dbea8003bedd8177aab62",
+    "components/local/TemplateRowsPreview.tsx": "4bc3d3b512ed02ae20333403d0878cba94a7b1345af18c00c89175ccc5652939",
+    "components/local/WorkspaceOrganizationContext.tsx": "4973822032eac28514d1eeaef5c367bcd66d6bd781ba97a05dd1c30332ff0660",
+    "components/local/document-preview.module.css": "2b42d32d7ec3c711cea1035906a140e6e49206e56b6b6ede4f3e021e2cad04cd",
+    "components/local/workspace-organization.module.css": "10edc0ea1563002d59ff715c276ca606dace5c6c6aa6503b1a9c61f81cba3f4c",
+    "lib/platform/browser-templates.ts": "7fb66b7cb365cac64f4dca10985faeb4275553e0712ff4570ccf7897e0749996",
+    "lib/platform/schedule-files.ts": "1dff450bf17b0e3b48a1c85c65b5515b6edf312150b9a7be63d69ef7d8cae09a",
+    "lib/platform/workspace-navigation.ts": "18d3b76fb34f0bc0b9b03a43c38ca05b2e57a8aadc10a56e83e6a822211b5775",
+    "scripts/check-b15-library-download.ts": "945d47f097e9ad8cf3bc06fdd59ceb1de26d6c75106011afb148eb165c4f99cc",
+    "scripts/inspect-b15-ordinary-weather.ts": "2b6685488ed9631875cc14ad2ad3d3e160e0e3f2eab0a09484633b9386d6a58f",
+    "scripts/read-b15-organization-access.ts": "dffe6991c877f787f99604c7de0f1d57fbf19a26dcb7f05d0d4012a5c92bf8ce",
+    "scripts/read-b15-workflow-results.ts": "d3edb00f203c041bf41b037835086c967755d5e86e7d4257c630bf1d1317f327",
+    "scripts/serve-b15-workflow-review.ts": "6acb6744841393039175debb7a1d91a6cce5f0cfb3b85b0671c9306e7cfc66b7",
+    "styles/local-documents.css": "d4f80f67276d127d12ef734635c78ce71094b7f28faa50b8619c5631b89ef53c",
+    "tests/editor/workspace-organization.test.cjs": "0ddd9d0dc0c0ec1aff673457d446fe5d83f2c2caf60ed5b592a00fdf334bc2a0",
+    "tests/platform/workspace.test.ts": "992c5cc8621ef31773690211aa5e29d0e08bb5e560b639f148dc031377c1cfbe"
+  },
+  "verification": {
+    "platform": 240,
+    "editor": 72,
+    "build": "passed",
+    "hostedChanges": false,
+    "actualScheduleChanges": false
+  }
+}

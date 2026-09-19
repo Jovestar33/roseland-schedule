@@ -1,0 +1,7 @@
+Save needs review
+
+The saved schedule changed. Your attempted document was not confirmed. Your draft is retained; do not overwrite the newer version.
+
+Attempted from version 2. Checking does not replace your draft.
+
+Check saved resultRetry exact save

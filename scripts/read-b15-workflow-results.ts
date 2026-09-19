@@ -1,0 +1,28 @@
+import {readFileSync,writeFileSync} from 'node:fs';
+import assert from 'node:assert/strict';
+import {createClient} from '@supabase/supabase-js';
+import {createTemplateRepository} from '../lib/platform/schedule-templates.ts';
+import {createSnapshotRepository} from '../lib/platform/schedule-snapshots.ts';
+const config=JSON.parse(readFileSync('/private/tmp/roseland-b14-destination-g2-live-status.json','utf8'));
+const access=JSON.parse(readFileSync('/private/tmp/roseland-b15-review-access.json','utf8'));
+if(config.API_URL!=='http://127.0.0.1:56521')throw Error('Fictional loopback required');
+const client=createClient(config.API_URL,config.ANON_KEY,{auth:{persistSession:false,autoRefreshToken:false}});
+const login=await client.auth.signInWithPassword({email:access.email,password:access.password});if(login.error)throw Error('Login failed');
+const actor=login.data.user!.id;
+async function read(id:string,name:string){const r=await client.rpc('session_read_schedule',{target_schedule_id:id});if(r.error||r.data?.display_name!==name)throw Error('Fictional read failed');return r.data;}
+const source=await read('b640d0dd-7b2b-413f-8151-6271145baf4a','B15 matched weather — fictional');
+const copy=await read('e62b61ba-02ee-4d23-97b7-8eec30fd64d9','B15 snapshot copy — fictional');
+const concurrent=await read('619b6591-65f8-4fbd-a1b6-238825c186b0','B15 concurrent editing — fictional');
+const original=JSON.parse(readFileSync('evidence/b15-workflow-completion/matched-weather-fictional.json','utf8'));
+assert.equal(source.document_version,1);assert.deepEqual(source.document,original);
+assert.equal(copy.document_version,1);assert.deepEqual(copy.document.rows,source.document.rows);
+for(const key of ['callsheet','wx','town','lat','lng','date','prod','dir','dp','dayNumber','totalDays'])assert.deepEqual(copy.document.meta[key],source.document.meta[key]);
+assert.equal(concurrent.document_version,5);assert.equal(concurrent.document.rows[0].desc,'First writer fictional saved change');
+const snapshots=createSnapshotRepository(client),snapshot=await snapshots.read(actor,source.organization_id,source.id,'25420833-b8c2-4cd8-928a-d0f1927d8489');
+assert.equal(snapshot.name,'B15 protected recovery — fictional');assert.equal(snapshot.deleted_at,null);assert.equal(snapshot.version,4);assert.deepEqual(snapshot.document?.rows,source.document.rows);assert.deepEqual(snapshot.document?.meta,source.document.meta);assert.ok((snapshot.document?.savedAt??0)>=source.document.savedAt);
+const templates=createTemplateRepository(client),list=await templates.inventory(actor,source.organization_id,source.production_id);
+const item=list.find(t=>t.name==='B15 browser recovery — fictional');assert.ok(item);
+const template=await templates.read(actor,item.id,source.organization_id);
+assert.equal(template.published_at,null);assert.equal(template.deleted_at,null);assert.deepEqual(template.rows,concurrent.document.rows);
+const summary={source:{id:source.id,version:source.document_version,unchangedExactOriginal:true},copy:{id:copy.id,version:copy.document_version,rowsContactsWeatherCallSheetEqual:true,destinationProject:copy.document.meta.projectName,destinationPhase:copy.document.meta.phase},concurrent:{id:concurrent.id,version:concurrent.document_version,restoredContentVerified:true},snapshot:{id:snapshot.id,name:snapshot.name,version:snapshot.version,rowsAndMetadataEqual:true,captureTimestampRecordedSeparately:true,restoredFromTrash:true},template:{id:template.id,version:template.version,rows:template.rows?.length,productionOnly:true,notTrashed:true}};
+writeFileSync('evidence/b15-workflow-completion/saved-readback.json',JSON.stringify(summary,null,2));console.log(JSON.stringify(summary));

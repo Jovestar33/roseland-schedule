@@ -5,9 +5,9 @@ import type { LocalEditorConfig } from '@/lib/platform/local-editor-config';
 import { FICTIONAL_PRIVACY, FICTIONAL_TERMS, parseAccountCallback, type AccountCallback } from '@/lib/platform/account-session';
 
 type Policy = { termsVersion: string; privacyVersion: string; accepted: boolean };
-type Props = { config: LocalEditorConfig; client: SupabaseClient; session: Session | null; authNeeded: boolean;
+type Props = { review?:boolean; config: LocalEditorConfig; client: SupabaseClient; session: Session | null; authNeeded: boolean;
   onReady(ready: boolean): void; requireAuth(): void; policyRevision: number; onInvitation(value: {actor:string;id:string}): void };
-export default function LocalAccountAccess({ config, client, session, authNeeded, onReady, requireAuth, policyRevision, onInvitation }: Props) {
+export default function LocalAccountAccess({ review=false, config, client, session, authNeeded, onReady, requireAuth, policyRevision, onInvitation }: Props) {
   const [mode, setMode] = useState<'signup' | 'recovery' | null>(null);
   const [email, setEmail] = useState(''), [invitation, setInvitation] = useState(''), [accepted, setAccepted] = useState(false);
   const [message, setMessage] = useState(''), [busy, setBusy] = useState(false), busyRef = useRef(false);
@@ -141,8 +141,8 @@ export default function LocalAccountAccess({ config, client, session, authNeeded
       </form>}
       <button disabled={busy} onClick={() => void run(async () => { await callbackClient.auth.signOut({ scope: 'local' }); callbackActive.current=false; setCallback(null); setCallbackEmail(''); setFactor(null); setPassword(''); setConfirmation(''); setCode(''); setMessage(''); })}>Close email action</button>
     </div> : <>
-      <button disabled={busy} onClick={() => setMode(mode === 'signup' ? null : 'signup')}>Create invited account</button>{' '}
-      <button disabled={busy} onClick={() => setMode(mode === 'recovery' ? null : 'recovery')}>Forgot password</button>
+      {(!review||!session||authNeeded)&&<><button disabled={busy} onClick={() => setMode(mode === 'signup' ? null : 'signup')}>Create invited account</button>{' '}</>}
+      <button disabled={busy} onClick={() => setMode(mode === 'recovery' ? null : 'recovery')}>{review&&session&&!authNeeded?'Reset password':'Forgot password'}</button>
       {mode && <form onSubmit={requestMail}>
         <h2>{mode === 'signup' ? 'Create an invited account' : 'Request password recovery'}</h2>
         <label>Email <input required type="email" maxLength={320} autoComplete="email" value={email} onChange={e => setEmail(e.target.value)}/></label>

@@ -1,6 +1,8 @@
 /* Local portals reuse legacy document styling without printing workspace chrome. */
 .local-schedule-print { display: none; }
-.local-weather-controls { order:7; display:flex; flex-wrap:wrap; gap:8px; align-items:center; padding:8px 12px; font-size:12px; }
+.local-weather-controls { order:7; display:flex; flex-wrap:wrap; gap:8px; align-items:center; padding:6px 12px; border-top:1px solid var(--g100); color:var(--g500); font-size:11px; line-height:1.5; }
+.local-weather-controls a { color:inherit; text-underline-offset:2px; }
+.local-weather-controls a:hover { color:var(--pink); }
 @media print {
   body[data-local-document] { margin:0 !important; padding:0 !important; min-height:0 !important; }
   body[data-local-document] > * { display:none !important; }

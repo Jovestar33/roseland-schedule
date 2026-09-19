@@ -1,0 +1,23 @@
+- img "Roseland Pictures"
+- navigation "Organization context":
+  - generic: Organization
+  - strong: B14 Fictional Studio
+  - button "Back to schedules"
+- heading "Account & settings" [level=1]
+- paragraph: Manage your account and the organizations you work with.
+- navigation "Account navigation":
+  - button "Your account"
+  - button "Invitations for you" [active]
+- region "Organization deletion settings"
+- text: ▸ ▾ ▾
+- main:
+  - heading "Accept an invitation" [level=1]
+  - paragraph: Review an invitation sent to your account before joining an organization.
+  - region "Invitation draft":
+    - heading "Invitation ID" [level=2]
+    - paragraph: Enter the invitation ID sent to you. You can review the organization and access before accepting.
+    - text: Invitation ID
+    - textbox "Invitation ID"
+    - button "Review invitation"
+- generic "Notifications"
+- alert: Roseland Schedule

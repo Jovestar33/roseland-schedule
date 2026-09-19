@@ -1,0 +1,34 @@
+{
+  "source": {
+    "id": "b640d0dd-7b2b-413f-8151-6271145baf4a",
+    "version": 1,
+    "unchangedExactOriginal": true
+  },
+  "copy": {
+    "id": "e62b61ba-02ee-4d23-97b7-8eec30fd64d9",
+    "version": 1,
+    "rowsContactsWeatherCallSheetEqual": true,
+    "destinationProject": "B14 production",
+    "destinationPhase": ""
+  },
+  "concurrent": {
+    "id": "619b6591-65f8-4fbd-a1b6-238825c186b0",
+    "version": 5,
+    "restoredContentVerified": true
+  },
+  "snapshot": {
+    "id": "25420833-b8c2-4cd8-928a-d0f1927d8489",
+    "name": "B15 protected recovery — fictional",
+    "version": 4,
+    "rowsAndMetadataEqual": true,
+    "captureTimestampRecordedSeparately": true,
+    "restoredFromTrash": true
+  },
+  "template": {
+    "id": "d2b1772a-21d8-4966-98f5-191249d0313c",
+    "version": 7,
+    "rows": 1,
+    "productionOnly": true,
+    "notTrashed": true
+  }
+}
