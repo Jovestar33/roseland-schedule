@@ -1,0 +1,85 @@
+- img "Roseland Pictures"
+- generic: Overnight North fixture
+- navigation "Organization context":
+  - generic: Organization
+  - combobox "Switch organization":
+    - option "Choose an organization" [disabled]
+    - option "Overnight North Studio" [selected]
+    - option "Overnight South Studio"
+  - button "Account & settings"
+- status: Finish the current operation before changing schedules.
+- region "Organization deletion settings"
+- main:
+  - region "Schedule library":
+    - heading "Library" [level=1]
+    - button "+ New Schedule" [disabled]
+    - button "↻ Refresh"
+    - button "📁 Library"
+    - button "★ Templates"
+    - button "🔗 Backup"
+    - button "Move requests"
+    - generic: ⌕
+    - textbox "Search schedules…" [active]: Runtime library
+    - button "✕"
+    - button "Filter (3)" [expanded]
+    - text: Production filter
+    - combobox "Production filter":
+      - option "All productions"
+      - option "North production" [selected]
+    - text: Collection
+    - combobox "Collection":
+      - option "Active"
+      - option "Archived" [selected]
+      - option "All saved"
+      - option "Trash"
+    - text: Sort schedules
+    - combobox "Sort schedules":
+      - option "Manual / day order"
+      - option "Name" [selected]
+      - option "Schedule date"
+      - option "Recently saved"
+    - generic "▸Date filter"
+    - button "Clear filters"
+    - status: 8 schedules
+    - generic "▾ North production 8 schedules":
+      - text: ▾
+      - generic: North production
+      - generic: 8 schedules
+    - generic "▾ No production day 8":
+      - text: ▾
+      - generic: No production day
+      - generic: "8"
+    - generic "Arrange Runtime library 010": ≡
+    - button "Runtime library 010"
+    - generic: 2026-10-11 · Archived
+    - button "Organize Runtime library 010": ⋯
+    - generic "Arrange Runtime library 020": ≡
+    - button "Runtime library 020"
+    - generic: 2026-10-21 · Archived
+    - button "Organize Runtime library 020": ⋯
+    - generic "Arrange Runtime library 040": ≡
+    - button "Runtime library 040"
+    - generic: 2026-10-13 · Archived
+    - button "Organize Runtime library 040": ⋯
+    - generic "Arrange Runtime library 050": ≡
+    - button "Runtime library 050"
+    - generic: 2026-10-23 · Archived
+    - button "Organize Runtime library 050": ⋯
+    - generic "Arrange Runtime library 070": ≡
+    - button "Runtime library 070"
+    - generic: 2026-10-15 · Archived
+    - button "Organize Runtime library 070": ⋯
+    - generic "Arrange Runtime library 080": ≡
+    - button "Runtime library 080"
+    - generic: 2026-10-25 · Archived
+    - button "Organize Runtime library 080": ⋯
+    - generic "Arrange Runtime library 100": ≡
+    - button "Runtime library 100"
+    - generic: 2026-10-17 · Archived
+    - button "Organize Runtime library 100": ⋯
+    - generic "Arrange Runtime library 110": ≡
+    - button "Runtime library 110"
+    - generic: 2026-10-27 · Archived
+    - button "Organize Runtime library 110": ⋯
+- generic "Notifications"
+- alert: Roseland Schedule

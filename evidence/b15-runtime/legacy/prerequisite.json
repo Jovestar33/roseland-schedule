@@ -1,0 +1,6 @@
+{
+  "existingFixture": "/private/tmp/roseland-b11-fixtures.json",
+  "legacyTokenExpiredAt": "2026-09-19T06:55:50.000Z",
+  "checkedAt": "2026-09-19T08:41:51.197Z",
+  "result": "Existing authorized alias token is expired; no new token, secret, alias or grant issued. Valid alias refresh remains unexecuted under this continuation scope."
+}

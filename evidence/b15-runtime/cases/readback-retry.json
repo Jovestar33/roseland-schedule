@@ -1,0 +1,180 @@
+[
+  {
+    "kind": "held-save",
+    "id": "879c0c51-e111-433c-87b3-eff3dc172575",
+    "version": 3,
+    "hash": "c236682e14c032b926fd4e9ba7d6a248c794c6efc51b7d2a974ca1a8d6b1a3af",
+    "document": {
+      "meta": {
+        "dp": "",
+        "wx": null,
+        "dir": "",
+        "lat": null,
+        "lng": null,
+        "date": "",
+        "prod": "",
+        "town": "Fictional runtime town",
+        "phase": "",
+        "dayNumber": null,
+        "totalDays": null,
+        "projectName": ""
+      },
+      "rows": [
+        {
+          "dur": "00:30",
+          "loc": "",
+          "desc": "Fictional runtime description",
+          "done": false,
+          "notes": "HELD NEWER EDIT B",
+          "action": "Shoot",
+          "locLat": null,
+          "locLng": null,
+          "status": "",
+          "timeIn": "",
+          "fixedIn": false,
+          "fixedOut": false,
+          "otherText": "",
+          "sunLocked": false,
+          "contactName": "",
+          "contactEmail": "",
+          "contactPhone": "",
+          "contactTitle": "",
+          "fixedOutTime": ""
+        }
+      ],
+      "savedAt": 1789806488626
+    }
+  },
+  {
+    "kind": "lost-ack",
+    "id": "05d5f9a4-b0d4-4527-9346-7c94b8e76213",
+    "version": 5,
+    "hash": "a3724a3006ca2715c9c1d51284583b3541b74753329230e6708fc447ab987020",
+    "document": {
+      "meta": {
+        "dp": "",
+        "wx": null,
+        "dir": "",
+        "lat": null,
+        "lng": null,
+        "date": "",
+        "prod": "",
+        "town": "Fictional runtime town",
+        "phase": "",
+        "dayNumber": null,
+        "totalDays": null,
+        "projectName": ""
+      },
+      "rows": [
+        {
+          "dur": "00:30",
+          "loc": "",
+          "desc": "Fictional runtime description",
+          "done": false,
+          "notes": "REMOTE NEWER SAVED D",
+          "action": "Shoot",
+          "locLat": null,
+          "locLng": null,
+          "status": "",
+          "timeIn": "",
+          "fixedIn": false,
+          "fixedOut": false,
+          "otherText": "",
+          "sunLocked": false,
+          "contactName": "",
+          "contactEmail": "",
+          "contactPhone": "",
+          "contactTitle": "",
+          "fixedOutTime": ""
+        }
+      ],
+      "savedAt": 1789806529157
+    }
+  },
+  {
+    "kind": "retry",
+    "id": "bb3c932b-a9a6-4642-83a9-532f5b10d491",
+    "version": 2,
+    "hash": "402c01480342ee3b8a37640db7d27a4eec4bf4e84d80f1ad1036133d180a5ce1",
+    "document": {
+      "meta": {
+        "dp": "",
+        "wx": null,
+        "dir": "",
+        "lat": null,
+        "lng": null,
+        "date": "",
+        "prod": "",
+        "town": "Fictional runtime town",
+        "phase": "",
+        "dayNumber": null,
+        "totalDays": null,
+        "projectName": ""
+      },
+      "rows": [
+        {
+          "dur": "00:30",
+          "loc": "",
+          "desc": "Fictional runtime description",
+          "done": false,
+          "notes": "RETRY ATTEMPT A",
+          "action": "Shoot",
+          "locLat": null,
+          "locLng": null,
+          "status": "",
+          "timeIn": "",
+          "fixedIn": false,
+          "fixedOut": false,
+          "otherText": "",
+          "sunLocked": false,
+          "contactName": "",
+          "contactEmail": "",
+          "contactPhone": "",
+          "contactTitle": "",
+          "fixedOutTime": ""
+        }
+      ],
+      "savedAt": 1789806551845
+    }
+  },
+  {
+    "kind": "navigation",
+    "id": "d3885c24-88f5-49cf-9af7-f877488c53fb",
+    "version": 1,
+    "hash": "7081802b50a48a391e03b09371081b082baafb2b3f6c01c2d5389e6b8c02024b",
+    "document": {
+      "meta": {
+        "date": "",
+        "town": "Fictional runtime town"
+      },
+      "rows": [
+        {
+          "dur": "00:30",
+          "desc": "Fictional runtime description",
+          "notes": "Runtime original note",
+          "action": "Shoot"
+        }
+      ]
+    }
+  },
+  {
+    "kind": "input-edges",
+    "id": "8c281f05-df22-4df8-9d30-4a261bf84d83",
+    "version": 1,
+    "hash": "7081802b50a48a391e03b09371081b082baafb2b3f6c01c2d5389e6b8c02024b",
+    "document": {
+      "meta": {
+        "date": "",
+        "town": "Fictional runtime town"
+      },
+      "rows": [
+        {
+          "dur": "00:30",
+          "desc": "Fictional runtime description",
+          "notes": "Runtime original note",
+          "action": "Shoot"
+        }
+      ]
+    }
+  }
+]

@@ -1,0 +1,51 @@
+- img "Roseland Pictures"
+- generic: Overnight North fixture
+- navigation "Organization context":
+  - generic: Organization
+  - combobox "Switch organization":
+    - option "Choose an organization" [disabled]
+    - option "Overnight North Studio" [selected]
+    - option "Overnight South Studio"
+  - button "Account & settings"
+- status: Finish the current operation before changing schedules.
+- region "Organization deletion settings"
+- main:
+  - region "Schedule library":
+    - heading "Library" [level=1]
+    - button "+ New Schedule" [disabled]
+    - button "↻ Refresh"
+    - button "📁 Library"
+    - button "★ Templates"
+    - button "🔗 Backup"
+    - button "Move requests"
+    - generic: ⌕
+    - textbox "Search schedules…": fIcTiOnAl HaRbOr
+    - button "✕"
+    - button "Filter (4)" [expanded]
+    - text: Production filter
+    - combobox "Production filter":
+      - option "All productions"
+      - option "North production" [selected]
+    - text: Collection
+    - combobox "Collection":
+      - option "Active" [selected]
+      - option "Archived"
+      - option "All saved"
+      - option "Trash"
+    - text: Sort schedules
+    - combobox "Sort schedules":
+      - option "Manual / day order"
+      - option "Name"
+      - option "Schedule date" [selected]
+      - option "Recently saved"
+    - generic "Date filter"
+    - text: From date
+    - textbox "From date" [active]: 2026-10-20
+    - text: To date
+    - textbox "To date": 2026-10-15
+    - button "Clear filters"
+    - status: 0 schedules
+    - strong: No schedules match these filters.
+    - paragraph: Try a different search or clear the filters.
+- generic "Notifications"
+- alert: Roseland Schedule

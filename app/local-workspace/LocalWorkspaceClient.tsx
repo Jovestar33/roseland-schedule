@@ -74,6 +74,7 @@ export default function LocalWorkspaceClient({config,review=false}:{config:Local
   const [message,setMessage]=useState('Sign in once to use the local rehearsals.'),[confirmSignOut,setConfirmSignOut]=useState(false);
   const dialog=useRef<HTMLDialogElement>(null);
   const dirty=Object.values(panels).some(value=>value.dirty),working=Object.values(panels).some(value=>value.busy);
+  useEffect(()=>{if(!working)setMessage(previous=>previous==='Finish the current operation before changing schedules.'||previous==='Finish the current operation before switching organizations.'?'':previous);},[working]);
   const report=useCallback((id:string,value:WorkspacePanelState|null)=>setPanels(previous=>{
     if(value && previous[id]?.dirty===value.dirty && previous[id]?.busy===value.busy)return previous;
     if(!value && !previous[id])return previous;const next={...previous};if(value)next[id]=value;else delete next[id];return next;
@@ -157,7 +158,19 @@ export default function LocalWorkspaceClient({config,review=false}:{config:Local
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[session?.access_token,authNeeded,accountReady]);
   useEffect(()=>{
-    const pop=()=>{requestNavigation(parseWorkspaceLocation(window.location.search),false);};
+    const pop=()=>{
+      const next=parseWorkspaceLocation(window.location.search),current=locationRef.current;
+      if(review&&current.screen==='schedule'&&next.screen==='schedule'&&current.organization&&next.organization===current.organization&&next.schedule!==current.schedule){
+        // Keep the address bound to the displayed draft until its normal editor
+        // guard accepts navigation. A cancelled or busy transition stays here.
+        navigationTicket.current++;
+        history.replaceState(null,'',href(current));
+        if(working){setMessage('Finish the current operation before changing schedules.');return;}
+        setScheduleRequest({id:next.schedule??'',organization:current.organization,sequence:++scheduleSequence.current,history:true,...(!next.schedule?{target:'library' as const}:{})});
+        return;
+      }
+      requestNavigation(next,false);
+    };
     window.addEventListener('popstate',pop);return()=>window.removeEventListener('popstate',pop);
     // The actor, current location and request identity are read from refs.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -176,12 +189,15 @@ export default function LocalWorkspaceClient({config,review=false}:{config:Local
     }catch{setMessage('Sign-out could not finish. Your workspace is retained.');}finally{busyRef.current=false;setBusy(false);}
   }
   const active=location.screen;
-  const onScheduleSelection=(organization:string,id:string|null)=>{
+  const onScheduleSelection=(organization:string,id:string|null,replaceHistory=false)=>{
     if(!review||locationRef.current.screen!=='schedule'||locationRef.current.organization!==organization)return;
+    // A directory refresh started before this selection must not restore its
+    // older address or schedule request when the scope read finishes later.
+    navigationTicket.current++;
     const next:WorkspaceLocation={screen:'schedule',organization,...(id?{schedule:id}:{})};
     teamRequest.current=id?`${identity.actor}:${organization}:schedule:${id}`:null;
     if(href(next)===href(locationRef.current))return;
-    locationRef.current=next;setLocation(next);history.pushState(null,'',href(next));
+    locationRef.current=next;setLocation(next);if(replaceHistory)history.replaceState(null,'',href(next));else history.pushState(null,'',href(next));
   };
   const openOrganization=(id:string)=>{requestNavigation({screen:'schedule',organization:id});};
   const openSchedule=(organization:string,id:string)=>{const generation=identity.capture();void navigate({screen:'schedule',organization}).then(ok=>{if(ok&&identity.current(generation)&&locationRef.current.organization===organization&&locationRef.current.screen==='schedule')setScheduleRequest({id,organization,sequence:++scheduleSequence.current});});};

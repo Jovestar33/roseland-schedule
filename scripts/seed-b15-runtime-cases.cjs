@@ -1,0 +1,20 @@
+// Add only new disposable schedules to the existing disposable North fixture.
+const fs=require('node:fs'),cp=require('node:child_process'),crypto=require('node:crypto');
+const privateFile='/private/tmp/roseland-b15-runtime-cases.json';
+if(fs.existsSync(privateFile))throw Error('Reuse existing runtime fixtures');
+const prior=JSON.parse(fs.readFileSync('/private/tmp/roseland-b15-overnight-fixtures.json'));
+const org=prior.organizations.find(o=>o.name==='Overnight North Studio');
+if(prior.project!=='roseland-b14-destination-g2'||!org)throw Error('Expected disposable North fixture');
+const root='/private/tmp/'+prior.project;
+if(fs.existsSync(root+'/supabase/.temp/project-ref')||!fs.readFileSync(root+'/supabase/config.toml','utf8').includes('project_id = "'+prior.project+'"'))throw Error('Unlinked local project required');
+const q=v=>"'"+String(v).replaceAll("'","''")+"'";
+const rows=[];
+for(let i=1;i<=120;i++)rows.push({id:crypto.randomUUID(),name:`Runtime library ${String(i).padStart(3,'0')}`,kind:'library',town:i%2?'Fictional Harbor':'Fictional Orchard',date:`2026-10-${String(1+(i%28)).padStart(2,'0')}`,status:i%10===0?'archived':'draft',trash:i%15===0});
+for(const kind of ['held-save','lost-ack','retry','navigation','input-edges'])rows.push({id:crypto.randomUUID(),name:'Runtime '+kind,kind,town:'Fictional runtime town',date:'',status:'draft',trash:false});
+const statements=rows.map((r,i)=>{const document={meta:{town:r.town,date:r.date},rows:[{action:'Shoot',dur:'00:30',notes:'Runtime original note',desc:'Fictional runtime description'}]};return `insert into public.schedules(id,organization_id,production_id,display_name,slug,document,town,status,deleted_at,library_position,created_by,updated_by) values(${q(r.id)},${q(org.id)},${q(org.production)},${q(r.name)},${q('runtime-'+r.id)},${q(JSON.stringify(document))},${q(r.town)},${q(r.status)},${r.trash?'now()':'null'},${i+1},${q(prior.member.id)},${q(prior.member.id)});`;});
+cp.execFileSync('docker',['exec','-i','supabase_db_'+prior.project,'psql','-XqAt','-v','ON_ERROR_STOP=1','-U','postgres','-d','postgres'],{input:'begin;\n'+statements.join('\n')+'\ncommit;',stdio:['pipe','pipe','pipe']});
+const manifest={organization:org.id,production:org.production,actor:prior.member.id,rows};
+fs.writeFileSync(privateFile,JSON.stringify(manifest,null,2),{mode:0o600});
+fs.mkdirSync('evidence/b15-runtime/cases',{recursive:true});
+fs.writeFileSync('evidence/b15-runtime/cases/fixture-inventory.json',JSON.stringify({...manifest,scope:'125 newly inserted disposable schedules; no existing schedule or membership changed'},null,2)+'\n');
+console.log('Created 125 disposable schedules in the existing North fixture; no memberships changed.');

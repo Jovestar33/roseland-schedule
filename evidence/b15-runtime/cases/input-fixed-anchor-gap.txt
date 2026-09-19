@@ -1,0 +1,394 @@
+- img "Roseland Pictures"
+- generic: Overnight North fixture
+- navigation "Organization context":
+  - generic: Organization
+  - combobox "Switch organization":
+    - option "Choose an organization" [disabled]
+    - option "Overnight North Studio" [selected]
+    - option "Overnight South Studio"
+  - button "Account & settings"
+- status: Finish the current operation before changing schedules.
+- region "Organization deletion settings"
+- main:
+  - text: ▾ ▾
+  - region "Schedule editor":
+    - generic: Runtime input-edges
+    - generic: Unsaved
+    - button "Save"
+    - button "More save options":
+      - generic: ▾
+    - button "Undo":
+      - text: ↩
+      - generic: Undo
+    - button "Redo" [disabled]:
+      - text: ↪
+      - generic: Redo
+    - button "⬆ Share ▾":
+      - generic: ⬆
+      - generic: Share
+      - generic: ▾
+    - button "Tools":
+      - generic: Tools
+    - button "Close":
+      - generic: Close
+    - generic: Project name
+    - generic: Phase
+    - generic: ·
+    - generic: Day
+    - generic: —
+    - generic: PRODUCER
+    - generic: —
+    - generic: DIRECTOR
+    - generic: —
+    - generic: CAMERA
+    - generic: —
+    - generic: Town / Location
+    - textbox "Town / Location":
+      - /placeholder: e.g. Garner, NC
+      - text: Fictional runtime town
+    - generic: Date
+    - textbox "Date"
+    - generic: — pick a date —
+    - generic: Call Time
+    - generic: 11:45 PM
+    - button "Refresh weather" [disabled]
+    - generic: ← Scroll to see all columns →
+    - table:
+      - rowgroup:
+        - row "Action Location Description Notes Time In Duration Time Out Done":
+          - columnheader
+          - columnheader "Action"
+          - columnheader "Location"
+          - columnheader "Description"
+          - columnheader "Notes"
+          - columnheader
+          - columnheader "Time In"
+          - columnheader "Duration"
+          - columnheader "Time Out"
+          - columnheader "Done"
+          - columnheader
+      - rowgroup:
+        - row "≡ 1 Café – 舞台 / reset Change action Show full address + sub-location Fictional runtime description ✓ Runtime original note ‹ 11:45 PM 00:30 12:15 AM › Mark done 👤 ✕":
+          - cell "≡ 1":
+            - button "≡"
+            - text: "1"
+          - cell "Café – 舞台 / reset Change action":
+            - textbox "Describe…": Café – 舞台 / reset
+            - button "Change action": ↩
+          - cell "Show full address + sub-location":
+            - textbox "Location…"
+            - button "Show full address": ▸
+            - button "+ sub-location"
+          - cell "Fictional runtime description":
+            - textbox "Description…": Fictional runtime description
+          - cell "✓ Runtime original note":
+            - button "✓"
+            - textbox "Notes…": Runtime original note
+          - cell
+          - cell "‹ 11:45 PM":
+            - button "‹"
+            - combobox:
+              - option "— set —"
+              - option "12:00 AM"
+              - option "12:15 AM"
+              - option "12:30 AM"
+              - option "12:45 AM"
+              - option "1:00 AM"
+              - option "1:15 AM"
+              - option "1:30 AM"
+              - option "1:45 AM"
+              - option "2:00 AM"
+              - option "2:15 AM"
+              - option "2:30 AM"
+              - option "2:45 AM"
+              - option "3:00 AM"
+              - option "3:15 AM"
+              - option "3:30 AM"
+              - option "3:45 AM"
+              - option "4:00 AM"
+              - option "4:15 AM"
+              - option "4:30 AM"
+              - option "4:45 AM"
+              - option "5:00 AM"
+              - option "5:15 AM"
+              - option "5:30 AM"
+              - option "5:45 AM"
+              - option "6:00 AM"
+              - option "6:15 AM"
+              - option "6:30 AM"
+              - option "6:45 AM"
+              - option "7:00 AM"
+              - option "7:15 AM"
+              - option "7:30 AM"
+              - option "7:45 AM"
+              - option "8:00 AM"
+              - option "8:15 AM"
+              - option "8:30 AM"
+              - option "8:45 AM"
+              - option "9:00 AM"
+              - option "9:15 AM"
+              - option "9:30 AM"
+              - option "9:45 AM"
+              - option "10:00 AM"
+              - option "10:15 AM"
+              - option "10:30 AM"
+              - option "10:45 AM"
+              - option "11:00 AM"
+              - option "11:15 AM"
+              - option "11:30 AM"
+              - option "11:45 AM"
+              - option "12:00 PM"
+              - option "12:15 PM"
+              - option "12:30 PM"
+              - option "12:45 PM"
+              - option "1:00 PM"
+              - option "1:15 PM"
+              - option "1:30 PM"
+              - option "1:45 PM"
+              - option "2:00 PM"
+              - option "2:15 PM"
+              - option "2:30 PM"
+              - option "2:45 PM"
+              - option "3:00 PM"
+              - option "3:15 PM"
+              - option "3:30 PM"
+              - option "3:45 PM"
+              - option "4:00 PM"
+              - option "4:15 PM"
+              - option "4:30 PM"
+              - option "4:45 PM"
+              - option "5:00 PM"
+              - option "5:15 PM"
+              - option "5:30 PM"
+              - option "5:45 PM"
+              - option "6:00 PM"
+              - option "6:15 PM"
+              - option "6:30 PM"
+              - option "6:45 PM"
+              - option "7:00 PM"
+              - option "7:15 PM"
+              - option "7:30 PM"
+              - option "7:45 PM"
+              - option "8:00 PM"
+              - option "8:15 PM"
+              - option "8:30 PM"
+              - option "8:45 PM"
+              - option "9:00 PM"
+              - option "9:15 PM"
+              - option "9:30 PM"
+              - option "9:45 PM"
+              - option "10:00 PM"
+              - option "10:15 PM"
+              - option "10:30 PM"
+              - option "10:45 PM"
+              - option "11:00 PM"
+              - option "11:15 PM"
+              - option "11:30 PM"
+              - option "11:45 PM" [selected]
+          - cell "00:30":
+            - combobox:
+              - option "—"
+              - option "00:00"
+              - option "00:15"
+              - option "00:30" [selected]
+              - option "00:45"
+              - option "01:00"
+              - option "01:15"
+              - option "01:30"
+              - option "01:45"
+              - option "02:00"
+              - option "02:30"
+              - option "03:00"
+              - option "03:30"
+              - option "04:00"
+              - option "04:30"
+              - option "05:00"
+              - option "06:00"
+              - option "07:00"
+              - option "08:00"
+          - cell "12:15 AM ›":
+            - generic: 12:15 AM
+            - button "›"
+          - cell "Mark done 👤":
+            - checkbox "Mark done"
+            - button "👤"
+          - cell "✕":
+            - button "✕"
+        - row "≡ 2 Shoot ▾ Show full address + sub-location ✓ ‹🔒 12:45 AM 30-min gap after previous row. 00:15 1:00 AM › Mark done 👤 ✕":
+          - cell "≡ 2":
+            - button "≡"
+            - text: "2"
+          - cell "Shoot ▾":
+            - combobox:
+              - option "—"
+              - option "Crew Call"
+              - option "Cast Call"
+              - option "Briefing / Meeting"
+              - option "Breakfast"
+              - option "Move to Location"
+              - option "Set Up"
+              - option "Move / Set Up"
+              - option "Shoot" [selected]
+              - option "Tear Down / Pack Up"
+              - option "Move"
+              - option "LUNCH"
+              - option "Dinner"
+              - option "WRAP"
+              - option "Move to Hotel"
+              - option "Drive to Next Town"
+              - option "Location Scout"
+              - option "Time Off"
+              - option "Rest of Day Off"
+              - option "Day Off"
+              - option "Drive Home"
+              - option "Other"
+            - text: ▾
+          - cell "Show full address + sub-location":
+            - textbox "Location…"
+            - button "Show full address": ▸
+            - button "+ sub-location"
+          - cell:
+            - textbox "Description…"
+          - cell "✓":
+            - button "✓"
+            - textbox "Notes…"
+          - cell
+          - cell "‹🔒 12:45 AM 30-min gap after previous row.":
+            - button "‹🔒" [active]
+            - combobox:
+              - option "— set —"
+              - option "12:00 AM"
+              - option "12:15 AM"
+              - option "12:30 AM"
+              - option "12:45 AM" [selected]
+              - option "1:00 AM"
+              - option "1:15 AM"
+              - option "1:30 AM"
+              - option "1:45 AM"
+              - option "2:00 AM"
+              - option "2:15 AM"
+              - option "2:30 AM"
+              - option "2:45 AM"
+              - option "3:00 AM"
+              - option "3:15 AM"
+              - option "3:30 AM"
+              - option "3:45 AM"
+              - option "4:00 AM"
+              - option "4:15 AM"
+              - option "4:30 AM"
+              - option "4:45 AM"
+              - option "5:00 AM"
+              - option "5:15 AM"
+              - option "5:30 AM"
+              - option "5:45 AM"
+              - option "6:00 AM"
+              - option "6:15 AM"
+              - option "6:30 AM"
+              - option "6:45 AM"
+              - option "7:00 AM"
+              - option "7:15 AM"
+              - option "7:30 AM"
+              - option "7:45 AM"
+              - option "8:00 AM"
+              - option "8:15 AM"
+              - option "8:30 AM"
+              - option "8:45 AM"
+              - option "9:00 AM"
+              - option "9:15 AM"
+              - option "9:30 AM"
+              - option "9:45 AM"
+              - option "10:00 AM"
+              - option "10:15 AM"
+              - option "10:30 AM"
+              - option "10:45 AM"
+              - option "11:00 AM"
+              - option "11:15 AM"
+              - option "11:30 AM"
+              - option "11:45 AM"
+              - option "12:00 PM"
+              - option "12:15 PM"
+              - option "12:30 PM"
+              - option "12:45 PM"
+              - option "1:00 PM"
+              - option "1:15 PM"
+              - option "1:30 PM"
+              - option "1:45 PM"
+              - option "2:00 PM"
+              - option "2:15 PM"
+              - option "2:30 PM"
+              - option "2:45 PM"
+              - option "3:00 PM"
+              - option "3:15 PM"
+              - option "3:30 PM"
+              - option "3:45 PM"
+              - option "4:00 PM"
+              - option "4:15 PM"
+              - option "4:30 PM"
+              - option "4:45 PM"
+              - option "5:00 PM"
+              - option "5:15 PM"
+              - option "5:30 PM"
+              - option "5:45 PM"
+              - option "6:00 PM"
+              - option "6:15 PM"
+              - option "6:30 PM"
+              - option "6:45 PM"
+              - option "7:00 PM"
+              - option "7:15 PM"
+              - option "7:30 PM"
+              - option "7:45 PM"
+              - option "8:00 PM"
+              - option "8:15 PM"
+              - option "8:30 PM"
+              - option "8:45 PM"
+              - option "9:00 PM"
+              - option "9:15 PM"
+              - option "9:30 PM"
+              - option "9:45 PM"
+              - option "10:00 PM"
+              - option "10:15 PM"
+              - option "10:30 PM"
+              - option "10:45 PM"
+              - option "11:00 PM"
+              - option "11:15 PM"
+              - option "11:30 PM"
+              - option "11:45 PM"
+            - generic: 30-min gap after previous row.
+          - cell "00:15":
+            - combobox:
+              - option "—"
+              - option "00:00"
+              - option "00:15" [selected]
+              - option "00:30"
+              - option "00:45"
+              - option "01:00"
+              - option "01:15"
+              - option "01:30"
+              - option "01:45"
+              - option "02:00"
+              - option "02:30"
+              - option "03:00"
+              - option "03:30"
+              - option "04:00"
+              - option "04:30"
+              - option "05:00"
+              - option "06:00"
+              - option "07:00"
+              - option "08:00"
+          - cell "1:00 AM ›":
+            - generic: 1:00 AM
+            - button "›"
+          - cell "Mark done 👤":
+            - checkbox "Mark done"
+            - button "👤"
+          - cell "✕":
+            - button "✕"
+      - rowgroup:
+        - row "Total 00:45":
+          - cell
+          - cell "Total"
+          - cell "00:45"
+          - cell
+    - button "+ Add Row"
+- generic "Notifications"
+- alert: Roseland Schedule

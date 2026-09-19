@@ -1,0 +1,10 @@
+{
+  "before": {
+    "url": "http://127.0.0.1:3514/review?screen=schedule&org=8ae21b75-edad-4ad2-9095-b8a1bc6ff737&schedule=d3885c24-88f5-49cf-9af7-f877488c53fb"
+  },
+  "after": {
+    "url": "http://127.0.0.1:3514/review?screen=schedule&org=8ae21b75-edad-4ad2-9095-b8a1bc6ff737",
+    "note": "OVERLAPPING SCOPE RACE"
+  },
+  "heldScopeResponses": 2
+}

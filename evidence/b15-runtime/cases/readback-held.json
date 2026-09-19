@@ -1,0 +1,128 @@
+[
+  {
+    "kind": "held-save",
+    "id": "879c0c51-e111-433c-87b3-eff3dc172575",
+    "version": 2,
+    "hash": "5d4828e171b74a4aacfd41fee2ec2c10d6ecb6b1ce7632cd030b0127be6e239c",
+    "document": {
+      "meta": {
+        "dp": "",
+        "wx": null,
+        "dir": "",
+        "lat": null,
+        "lng": null,
+        "date": "",
+        "prod": "",
+        "town": "Fictional runtime town",
+        "phase": "",
+        "dayNumber": null,
+        "totalDays": null,
+        "projectName": ""
+      },
+      "rows": [
+        {
+          "dur": "00:30",
+          "loc": "",
+          "desc": "Fictional runtime description",
+          "done": false,
+          "notes": "HELD ATTEMPT A",
+          "action": "Shoot",
+          "locLat": null,
+          "locLng": null,
+          "status": "",
+          "timeIn": "",
+          "fixedIn": false,
+          "fixedOut": false,
+          "otherText": "",
+          "sunLocked": false,
+          "contactName": "",
+          "contactEmail": "",
+          "contactPhone": "",
+          "contactTitle": "",
+          "fixedOutTime": ""
+        }
+      ],
+      "savedAt": 1789806461947
+    }
+  },
+  {
+    "kind": "lost-ack",
+    "id": "05d5f9a4-b0d4-4527-9346-7c94b8e76213",
+    "version": 1,
+    "hash": "7081802b50a48a391e03b09371081b082baafb2b3f6c01c2d5389e6b8c02024b",
+    "document": {
+      "meta": {
+        "date": "",
+        "town": "Fictional runtime town"
+      },
+      "rows": [
+        {
+          "dur": "00:30",
+          "desc": "Fictional runtime description",
+          "notes": "Runtime original note",
+          "action": "Shoot"
+        }
+      ]
+    }
+  },
+  {
+    "kind": "retry",
+    "id": "bb3c932b-a9a6-4642-83a9-532f5b10d491",
+    "version": 1,
+    "hash": "7081802b50a48a391e03b09371081b082baafb2b3f6c01c2d5389e6b8c02024b",
+    "document": {
+      "meta": {
+        "date": "",
+        "town": "Fictional runtime town"
+      },
+      "rows": [
+        {
+          "dur": "00:30",
+          "desc": "Fictional runtime description",
+          "notes": "Runtime original note",
+          "action": "Shoot"
+        }
+      ]
+    }
+  },
+  {
+    "kind": "navigation",
+    "id": "d3885c24-88f5-49cf-9af7-f877488c53fb",
+    "version": 1,
+    "hash": "7081802b50a48a391e03b09371081b082baafb2b3f6c01c2d5389e6b8c02024b",
+    "document": {
+      "meta": {
+        "date": "",
+        "town": "Fictional runtime town"
+      },
+      "rows": [
+        {
+          "dur": "00:30",
+          "desc": "Fictional runtime description",
+          "notes": "Runtime original note",
+          "action": "Shoot"
+        }
+      ]
+    }
+  },
+  {
+    "kind": "input-edges",
+    "id": "8c281f05-df22-4df8-9d30-4a261bf84d83",
+    "version": 1,
+    "hash": "7081802b50a48a391e03b09371081b082baafb2b3f6c01c2d5389e6b8c02024b",
+    "document": {
+      "meta": {
+        "date": "",
+        "town": "Fictional runtime town"
+      },
+      "rows": [
+        {
+          "dur": "00:30",
+          "desc": "Fictional runtime description",
+          "notes": "Runtime original note",
+          "action": "Shoot"
+        }
+      ]
+    }
+  }
+]

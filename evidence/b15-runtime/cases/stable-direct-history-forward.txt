@@ -1,0 +1,73 @@
+Browser tab: 1020304376, Title: "Roseland Schedule", URL: "http://127.0.0.1:3514/review?screen=schedule&org=2f75e684-eb3a-4951-9389-2df147812a8a&schedule=f88a5091-bad0-4c15-896e-5549c0c71af6".
+1 AXWebArea Roseland Schedule, URL: 127.0.0.1:3514/review?screen=schedule&org=2f75e684-eb3a-4951-9389-2df147812a8a&schedule=f88a5091-bad0-4c15-896e-5549c0c71af6
+	2 container
+		3 image Roseland Pictures
+		4 text B14 LATEST ORGANIZATION LABELS
+		5 container Organization context
+			6 text ORGANIZATION
+			7 text B14 Fictional Studio
+			8 button Account & settings
+		9 container Organization deletion settings
+		95 container Schedule editor
+			96 text B15 empty fictional day Saved
+			97 container
+				98 button Save
+				99 button More save options
+			100 button (disabled) Description: Undo, Help: Undo (Ctrl+Z)
+				101 text ↩ Undo
+			102 button (disabled) Description: Redo, Help: Redo (Ctrl+Y)
+				103 text ↪ Redo
+			104 button ⬆ Share ▾, Help: Share
+				105 text ⬆
+				106 text Share
+				107 text ▾
+			108 button Tools
+				109 image
+				110 text Tools
+			111 button Close
+			112 container
+				113 text Project name
+				114 text Phase · Day — PRODUCER — DIRECTOR — CAMERA —
+				115 text TOWN / LOCATION
+				116 text field (settable) TOWN / LOCATION, ID: m-town
+				117 text DATE
+				118 container
+					119 date field (settable) DATE, ID: m-date
+						120 container
+							121 stepper
+							122 stepper
+							123 stepper
+						124 pop up button Show date picker Show date picker
+					125 text — pick a date —
+				126 text CALL TIME
+				127 text —
+				128 button (disabled) Refresh weather
+				129 text ← Scroll to see all columns →
+				130 table
+					131 row
+						132 cell
+							133 text Action
+						134 cell
+							135 text Location
+						136 cell
+							137 text Description
+						138 cell
+							139 text Notes
+						140 cell
+							141 text Time In
+						142 cell
+							143 text Duration
+						144 cell
+							145 text Time Out
+						146 cell
+							147 text Done
+					148 row
+						149 cell
+							150 text Total
+						151 cell
+							152 text 00:00
+				153 button + Add Row
+		93 container Notifications
+		94 text Roseland Schedule
+
+The focused UI element is 1 AXWebArea Roseland Schedule, URL: 127.0.0.1:3514/review?screen=schedule&org=2f75e684-eb3a-4951-9389-2df147812a8a&schedule=f88a5091-bad0-4c15-896e-5549c0c71af6

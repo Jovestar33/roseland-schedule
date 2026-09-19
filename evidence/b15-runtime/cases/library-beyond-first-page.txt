@@ -1,0 +1,40 @@
+- img "Roseland Pictures"
+- generic: Overnight North fixture
+- navigation "Organization context":
+  - generic: Organization
+  - combobox "Switch organization":
+    - option "Choose an organization" [disabled]
+    - option "Overnight North Studio" [selected]
+    - option "Overnight South Studio"
+  - button "Account & settings"
+- status: Finish the current operation before changing schedules.
+- region "Organization deletion settings"
+- main:
+  - region "Schedule library":
+    - heading "Library" [level=1]
+    - button "+ New Schedule" [disabled]
+    - button "↻ Refresh"
+    - button "📁 Library"
+    - button "★ Templates"
+    - button "🔗 Backup"
+    - button "Move requests"
+    - generic: ⌕
+    - textbox "Search schedules…" [active]: Runtime library 011
+    - button "✕"
+    - button "Filter"
+    - text: ▸
+    - status: 1 schedule
+    - generic "▾ North production 1 schedule":
+      - text: ▾
+      - generic: North production
+      - generic: 1 schedule
+    - generic "▾ No production day 1":
+      - text: ▾
+      - generic: No production day
+      - generic: "1"
+    - generic "Arrange Runtime library 011": ≡
+    - button "Runtime library 011"
+    - generic: 2026-10-12
+    - button "Organize Runtime library 011": ⋯
+- generic "Notifications"
+- alert: Roseland Schedule

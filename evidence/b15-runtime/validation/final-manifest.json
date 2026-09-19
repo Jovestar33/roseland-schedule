@@ -1,0 +1,42 @@
+{
+  "recordedAt": "2026-09-19T08:56:40.358666+00:00",
+  "branch": "codex/b15-runtime-parity",
+  "baseCommit": "ac6fedb26a761b19d4e497d21660f27946d2ee31",
+  "build": "bYu7a1qaFvI5AErNSarin",
+  "preview": "http://127.0.0.1:3514/review",
+  "runtime": {
+    "launcher": 98026,
+    "server": 98035,
+    "port": 3514,
+    "project": "roseland-b14-destination-g2",
+    "api": "http://127.0.0.1:56521",
+    "build": "bYu7a1qaFvI5AErNSarin"
+  },
+  "frozenPreview": "http://127.0.0.1:3512/review",
+  "frozenCommit": "ac6fedb26a761b19d4e497d21660f27946d2ee31",
+  "faultProxyStopped": true,
+  "heldResponses": {
+    "held": 0,
+    "released": 1
+  },
+  "sourceSha256": {
+    "app/local-schedule/LocalScheduleClient.tsx": "fe86ea862fbcdd641f072c33faecaa12e4f7256d86313f2b7e17daee43227c8f",
+    "app/local-workspace/LocalWorkspaceClient.tsx": "86a25c7404687aac9ec08d469c1bd05502e0722deb3bc28901e1cd85fad4db84",
+    "components/local/LocalWorkspaceContext.tsx": "04c1bd57f48ae3b977ad4e1fc3bfc077084fa71a31e0bc3a2ada133119541c24"
+  },
+  "editorTests": {
+    "passed": 100,
+    "failed": 0
+  },
+  "typeCheckExit": 0,
+  "buildExit": 0,
+  "retainedReviewDocuments": {
+    "count": 15,
+    "versionsAndHashesUnchanged": true
+  },
+  "credentialValueScan": {
+    "files": 140,
+    "privateValues": 21,
+    "matches": 0
+  }
+}

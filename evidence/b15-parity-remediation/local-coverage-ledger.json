@@ -2,12 +2,12 @@
   {
     "case": "NAV-01",
     "coverage": "Partial",
-    "boundary": "Local library/editor open, Close, refresh and direct copy handoff observed. History selection survives refresh and Back/Forward. Genuine Admin dirty switch/cancel/return and Editor/Viewer organization switching now verified; full fixture/role permutations remain."
+    "boundary": "Local library/editor and role-switch journeys retained. Runtime continuation verifies clean and guarded Back/Forward plus delayed organization-scope reads; outdated reads no longer replace newer editor addresses. Full role/device/history permutations remain. See B15_RUNTIME_SAVE_NAVIGATION.md."
   },
   {
     "case": "NAV-02",
     "coverage": "Partial",
-    "boundary": "Dirty Close and Keep editing observed; ordinary copy is contextual. Retained import and template reviews survive Tools dismissal; template cancellation sends nothing. Concurrent navigation/save permutations remain."
+    "boundary": "Dirty Close/cancel and retained document reviews remain verified. New controlled browser Back during pending save, dirty Back cancellation/confirmation, and newer-draft preservation pass. Full cross-panel/navigation permutations remain."
   },
   {
     "case": "IN-01",
@@ -27,7 +27,7 @@
   {
     "case": "LIB-01",
     "coverage": "Partial",
-    "boundary": "Search, filters/reset, Recent suppression, production tree and archive/Trash collections observed. Multiple-production and ordering permutations remain."
+    "boundary": "Real two-page library retrieval, exact Active/Archived/All saved search results, trimmed town search, combined production/date filters, reversed-range empty state and separate resets verified. Page-two failure retains the prior complete list; fresh load shows no partial list. Late North responses cannot overwrite South. Multiple-production/ordering permutations remain. See B15_RUNTIME_LIBRARY_INPUTS.md."
   },
   {
     "case": "LIB-02",
@@ -72,12 +72,12 @@
   {
     "case": "SAVE-01",
     "coverage": "Partial",
-    "boundary": "Ordinary saves and reopen verified with authenticated readback. Broader paired paths remain."
+    "boundary": "Ordinary save/reopen and authenticated readback retained. New held-acknowledgement cases preserve edits made while saving and save them only on a later deliberate action. Full paired Save As paths remain."
   },
   {
     "case": "SAVE-02",
     "coverage": "Partial",
-    "boundary": "Two ordinary tabs exercised a genuine stale-write conflict, preserved the second draft, checked the different saved result, and explicitly reloaded the first writer. Lost-acknowledgement and network-loss browser paths remain."
+    "boundary": "Genuine stale-write conflict and new controlled lost acknowledgement, pre-forward failure, exact retry, second-session newer save, Check saved result and explicit reload browser journeys verified. Request hashes and authenticated versions confirm no silent overwrite or check-induced save. Wider transport/device permutations remain. See B15_RUNTIME_SAVE_NAVIGATION.md."
   },
   {
     "case": "SNAP-01",
@@ -127,7 +127,7 @@
   {
     "case": "CON-01",
     "coverage": "Partial",
-    "boundary": "Fictional full contact saved/read back. Complete long/international/suggestion fixtures remain."
+    "boundary": "Fictional contact save/readback retained. New Unicode name/title, international-format phone/extension, plus-addressed example.invalid email, whitespace trim, cancel, Undo and reopen verified. No Call/Email launched; address deliverability and full contact/output permutations remain."
   },
   {
     "case": "CON-02",

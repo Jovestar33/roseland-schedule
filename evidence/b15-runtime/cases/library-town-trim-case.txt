@@ -1,0 +1,277 @@
+- img "Roseland Pictures"
+- generic: Overnight North fixture
+- navigation "Organization context":
+  - generic: Organization
+  - combobox "Switch organization":
+    - option "Choose an organization" [disabled]
+    - option "Overnight North Studio" [selected]
+    - option "Overnight South Studio"
+  - button "Account & settings"
+- status: Finish the current operation before changing schedules.
+- region "Organization deletion settings"
+- main:
+  - region "Schedule library":
+    - heading "Library" [level=1]
+    - button "+ New Schedule" [disabled]
+    - button "↻ Refresh"
+    - button "📁 Library"
+    - button "★ Templates"
+    - button "🔗 Backup"
+    - button "Move requests"
+    - generic: ⌕
+    - textbox "Search schedules…": fIcTiOnAl HaRbOr
+    - button "✕"
+    - button "Filter (2)" [expanded]
+    - text: Production filter
+    - combobox "Production filter":
+      - option "All productions"
+      - option "North production" [selected]
+    - text: Collection
+    - combobox "Collection":
+      - option "Active" [selected]
+      - option "Archived"
+      - option "All saved"
+      - option "Trash"
+    - text: Sort schedules
+    - combobox "Sort schedules":
+      - option "Manual / day order"
+      - option "Name" [selected]
+      - option "Schedule date"
+      - option "Recently saved"
+    - generic "▸Date filter"
+    - button "Clear filters"
+    - status: 56 schedules
+    - generic "▾ North production 56 schedules":
+      - text: ▾
+      - generic: North production
+      - generic: 56 schedules
+    - generic "▾ No production day 56":
+      - text: ▾
+      - generic: No production day
+      - generic: "56"
+    - generic "Arrange Runtime library 001": ≡
+    - button "Runtime library 001"
+    - generic: 2026-10-02
+    - button "Organize Runtime library 001": ⋯
+    - generic "Arrange Runtime library 003": ≡
+    - button "Runtime library 003"
+    - generic: 2026-10-04
+    - button "Organize Runtime library 003": ⋯
+    - generic "Arrange Runtime library 005": ≡
+    - button "Runtime library 005"
+    - generic: 2026-10-06
+    - button "Organize Runtime library 005": ⋯
+    - generic "Arrange Runtime library 007": ≡
+    - button "Runtime library 007"
+    - generic: 2026-10-08
+    - button "Organize Runtime library 007": ⋯
+    - generic "Arrange Runtime library 009": ≡
+    - button "Runtime library 009"
+    - generic: 2026-10-10
+    - button "Organize Runtime library 009": ⋯
+    - generic "Arrange Runtime library 011": ≡
+    - button "Runtime library 011"
+    - generic: 2026-10-12
+    - button "Organize Runtime library 011": ⋯
+    - generic "Arrange Runtime library 013": ≡
+    - button "Runtime library 013"
+    - generic: 2026-10-14
+    - button "Organize Runtime library 013": ⋯
+    - generic "Arrange Runtime library 017": ≡
+    - button "Runtime library 017"
+    - generic: 2026-10-18
+    - button "Organize Runtime library 017": ⋯
+    - generic "Arrange Runtime library 019": ≡
+    - button "Runtime library 019"
+    - generic: 2026-10-20
+    - button "Organize Runtime library 019": ⋯
+    - generic "Arrange Runtime library 021": ≡
+    - button "Runtime library 021"
+    - generic: 2026-10-22
+    - button "Organize Runtime library 021": ⋯
+    - generic "Arrange Runtime library 023": ≡
+    - button "Runtime library 023"
+    - generic: 2026-10-24
+    - button "Organize Runtime library 023": ⋯
+    - generic "Arrange Runtime library 025": ≡
+    - button "Runtime library 025"
+    - generic: 2026-10-26
+    - button "Organize Runtime library 025": ⋯
+    - generic "Arrange Runtime library 027": ≡
+    - button "Runtime library 027"
+    - generic: 2026-10-28
+    - button "Organize Runtime library 027": ⋯
+    - generic "Arrange Runtime library 029": ≡
+    - button "Runtime library 029"
+    - generic: 2026-10-02
+    - button "Organize Runtime library 029": ⋯
+    - generic "Arrange Runtime library 031": ≡
+    - button "Runtime library 031"
+    - generic: 2026-10-04
+    - button "Organize Runtime library 031": ⋯
+    - generic "Arrange Runtime library 033": ≡
+    - button "Runtime library 033"
+    - generic: 2026-10-06
+    - button "Organize Runtime library 033": ⋯
+    - generic "Arrange Runtime library 035": ≡
+    - button "Runtime library 035"
+    - generic: 2026-10-08
+    - button "Organize Runtime library 035": ⋯
+    - generic "Arrange Runtime library 037": ≡
+    - button "Runtime library 037"
+    - generic: 2026-10-10
+    - button "Organize Runtime library 037": ⋯
+    - generic "Arrange Runtime library 039": ≡
+    - button "Runtime library 039"
+    - generic: 2026-10-12
+    - button "Organize Runtime library 039": ⋯
+    - generic "Arrange Runtime library 041": ≡
+    - button "Runtime library 041"
+    - generic: 2026-10-14
+    - button "Organize Runtime library 041": ⋯
+    - generic "Arrange Runtime library 043": ≡
+    - button "Runtime library 043"
+    - generic: 2026-10-16
+    - button "Organize Runtime library 043": ⋯
+    - generic "Arrange Runtime library 047": ≡
+    - button "Runtime library 047"
+    - generic: 2026-10-20
+    - button "Organize Runtime library 047": ⋯
+    - generic "Arrange Runtime library 049": ≡
+    - button "Runtime library 049"
+    - generic: 2026-10-22
+    - button "Organize Runtime library 049": ⋯
+    - generic "Arrange Runtime library 051": ≡
+    - button "Runtime library 051"
+    - generic: 2026-10-24
+    - button "Organize Runtime library 051": ⋯
+    - generic "Arrange Runtime library 053": ≡
+    - button "Runtime library 053"
+    - generic: 2026-10-26
+    - button "Organize Runtime library 053": ⋯
+    - generic "Arrange Runtime library 055": ≡
+    - button "Runtime library 055"
+    - generic: 2026-10-28
+    - button "Organize Runtime library 055": ⋯
+    - generic "Arrange Runtime library 057": ≡
+    - button "Runtime library 057"
+    - generic: 2026-10-02
+    - button "Organize Runtime library 057": ⋯
+    - generic "Arrange Runtime library 059": ≡
+    - button "Runtime library 059"
+    - generic: 2026-10-04
+    - button "Organize Runtime library 059": ⋯
+    - generic "Arrange Runtime library 061": ≡
+    - button "Runtime library 061"
+    - generic: 2026-10-06
+    - button "Organize Runtime library 061": ⋯
+    - generic "Arrange Runtime library 063": ≡
+    - button "Runtime library 063"
+    - generic: 2026-10-08
+    - button "Organize Runtime library 063": ⋯
+    - generic "Arrange Runtime library 065": ≡
+    - button "Runtime library 065"
+    - generic: 2026-10-10
+    - button "Organize Runtime library 065": ⋯
+    - generic "Arrange Runtime library 067": ≡
+    - button "Runtime library 067"
+    - generic: 2026-10-12
+    - button "Organize Runtime library 067": ⋯
+    - generic "Arrange Runtime library 069": ≡
+    - button "Runtime library 069"
+    - generic: 2026-10-14
+    - button "Organize Runtime library 069": ⋯
+    - generic "Arrange Runtime library 071": ≡
+    - button "Runtime library 071"
+    - generic: 2026-10-16
+    - button "Organize Runtime library 071": ⋯
+    - generic "Arrange Runtime library 073": ≡
+    - button "Runtime library 073"
+    - generic: 2026-10-18
+    - button "Organize Runtime library 073": ⋯
+    - generic "Arrange Runtime library 077": ≡
+    - button "Runtime library 077"
+    - generic: 2026-10-22
+    - button "Organize Runtime library 077": ⋯
+    - generic "Arrange Runtime library 079": ≡
+    - button "Runtime library 079"
+    - generic: 2026-10-24
+    - button "Organize Runtime library 079": ⋯
+    - generic "Arrange Runtime library 081": ≡
+    - button "Runtime library 081"
+    - generic: 2026-10-26
+    - button "Organize Runtime library 081": ⋯
+    - generic "Arrange Runtime library 083": ≡
+    - button "Runtime library 083"
+    - generic: 2026-10-28
+    - button "Organize Runtime library 083": ⋯
+    - generic "Arrange Runtime library 085": ≡
+    - button "Runtime library 085"
+    - generic: 2026-10-02
+    - button "Organize Runtime library 085": ⋯
+    - generic "Arrange Runtime library 087": ≡
+    - button "Runtime library 087"
+    - generic: 2026-10-04
+    - button "Organize Runtime library 087": ⋯
+    - generic "Arrange Runtime library 089": ≡
+    - button "Runtime library 089"
+    - generic: 2026-10-06
+    - button "Organize Runtime library 089": ⋯
+    - generic "Arrange Runtime library 091": ≡
+    - button "Runtime library 091"
+    - generic: 2026-10-08
+    - button "Organize Runtime library 091": ⋯
+    - generic "Arrange Runtime library 093": ≡
+    - button "Runtime library 093"
+    - generic: 2026-10-10
+    - button "Organize Runtime library 093": ⋯
+    - generic "Arrange Runtime library 095": ≡
+    - button "Runtime library 095"
+    - generic: 2026-10-12
+    - button "Organize Runtime library 095": ⋯
+    - generic "Arrange Runtime library 097": ≡
+    - button "Runtime library 097"
+    - generic: 2026-10-14
+    - button "Organize Runtime library 097": ⋯
+    - generic "Arrange Runtime library 099": ≡
+    - button "Runtime library 099"
+    - generic: 2026-10-16
+    - button "Organize Runtime library 099": ⋯
+    - generic "Arrange Runtime library 101": ≡
+    - button "Runtime library 101"
+    - generic: 2026-10-18
+    - button "Organize Runtime library 101": ⋯
+    - generic "Arrange Runtime library 103": ≡
+    - button "Runtime library 103"
+    - generic: 2026-10-20
+    - button "Organize Runtime library 103": ⋯
+    - generic "Arrange Runtime library 107": ≡
+    - button "Runtime library 107"
+    - generic: 2026-10-24
+    - button "Organize Runtime library 107": ⋯
+    - generic "Arrange Runtime library 109": ≡
+    - button "Runtime library 109"
+    - generic: 2026-10-26
+    - button "Organize Runtime library 109": ⋯
+    - generic "Arrange Runtime library 111": ≡
+    - button "Runtime library 111"
+    - generic: 2026-10-28
+    - button "Organize Runtime library 111": ⋯
+    - generic "Arrange Runtime library 113": ≡
+    - button "Runtime library 113"
+    - generic: 2026-10-02
+    - button "Organize Runtime library 113": ⋯
+    - generic "Arrange Runtime library 115": ≡
+    - button "Runtime library 115"
+    - generic: 2026-10-04
+    - button "Organize Runtime library 115": ⋯
+    - generic "Arrange Runtime library 117": ≡
+    - button "Runtime library 117"
+    - generic: 2026-10-06
+    - button "Organize Runtime library 117": ⋯
+    - generic "Arrange Runtime library 119": ≡
+    - button "Runtime library 119"
+    - generic: 2026-10-08
+    - button "Organize Runtime library 119": ⋯
+- generic "Notifications"
+- alert: Roseland Schedule

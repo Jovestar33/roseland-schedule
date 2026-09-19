@@ -1,0 +1,6 @@
+{
+  "rows": 112,
+  "reason": "Initial direct fixture setup omitted the denormalized town column. Genuine member saves of unchanged documents populated it on112 readable new library fixtures. Eight Trash fixtures remain unreadable to this member and were untouched. The attempted direct SQL update failed atomically before this repair.",
+  "membershipsChanged": false,
+  "retainedSchedulesChanged": false
+}

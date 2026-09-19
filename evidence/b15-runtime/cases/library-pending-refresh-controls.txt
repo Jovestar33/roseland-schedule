@@ -1,0 +1,51 @@
+Browser tab: 1020304383, Title: "Roseland Schedule", URL: "http://127.0.0.1:3514/review?screen=schedule&org=8ae21b75-edad-4ad2-9095-b8a1bc6ff737".
+0 AXWebArea Roseland Schedule, URL: 127.0.0.1:3514/review?screen=schedule&org=8ae21b75-edad-4ad2-9095-b8a1bc6ff737
+	1 container
+		2 image Roseland Pictures
+		3 text OVERNIGHT NORTH FIXTURE
+	19 container Organization context
+		20 container
+			21 text ORGANIZATION
+			22 pop up button (disabled, collapsed, settable) Description: Switch organization, Value: Overnight North Studio, Secondary Actions: Expand
+				23 menu
+					24 (disabled) Choose an organization
+					25 (selected) Overnight North Studio
+					26 Overnight South Studio
+		27 button Account & settings
+	28 container Organization deletion settings
+	29 container Schedule library
+		30 heading Library, Value: 1
+			31 text Library
+		32 container
+			33 button (disabled) + New Schedule
+			34 button (disabled) ↻ Refresh
+		35 button 📁 Library
+		36 button ★ Templates
+		37 button 🔗 Backup
+		38 button Move requests
+		39 container
+			40 text ⌕
+			41 text field (settable) Runtime library 011
+			42 button ✕, Help: Clear search
+		43 button (collapsed) Filter, Secondary Actions: Expand
+		44 text Saving or reviewing…
+		45 text Loading complete library…
+		46 container
+			47 button (expanded) ▾ North production 1 schedule, Secondary Actions: Collapse
+				48 text ▾
+				49 text North production
+				50 text 1
+				51 text schedule
+			52 button (expanded) ▾ No production day 1, Secondary Actions: Collapse
+				53 text ▾
+				54 text No production day
+				55 text 1
+			56 container Description: Arrange Runtime library 011, Help: Drag within this section
+				57 text ≡
+			58 button (disabled) Runtime library 011
+			59 text 2026-10-12
+			60 button (disabled) Organize Runtime library 011
+	18 container Notifications
+	61 text Roseland Schedule
+
+The focused UI element is 0 AXWebArea Roseland Schedule, URL: 127.0.0.1:3514/review?screen=schedule&org=8ae21b75-edad-4ad2-9095-b8a1bc6ff737

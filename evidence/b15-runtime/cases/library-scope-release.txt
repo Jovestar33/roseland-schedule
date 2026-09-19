@@ -1,0 +1,48 @@
+Browser tab: 1020304383, Title: "Roseland Schedule", URL: "http://127.0.0.1:3514/review?screen=schedule&org=ad48bcbf-7b2a-4c9f-b6b6-f6e1ee162f44".
+0 AXWebArea Roseland Schedule, URL: 127.0.0.1:3514/review?screen=schedule&org=ad48bcbf-7b2a-4c9f-b6b6-f6e1ee162f44
+	1 container
+		2 image Roseland Pictures
+		3 text PRODUCTION SCHEDULE
+	19 container Organization context
+		62 container
+			63 text ORGANIZATION
+			64 pop up button (collapsed, settable) Description: Switch organization, Value: Overnight South Studio, Secondary Actions: Expand
+				65 menu
+					66 (disabled) Choose an organization
+					67 Overnight North Studio
+					68 (selected) Overnight South Studio
+		27 button Account & settings
+	69 container Organization deletion settings
+	29 container Schedule library
+		30 heading Library, Value: 1
+			31 text Library
+		32 container
+			33 button (disabled) + New Schedule
+			34 button ↻ Refresh
+		35 button 📁 Library
+		36 button ★ Templates
+		37 button 🔗 Backup
+		38 button Move requests
+		39 container
+			40 text ⌕
+			41 text field (settable)
+		43 button (collapsed) Filter, Secondary Actions: Expand
+		70 container
+			71 button (expanded) ▾ South production 1 schedule, Secondary Actions: Collapse
+				72 text ▾
+				73 text South production
+				74 text 1
+				75 text schedule
+			76 button (expanded) ▾ No production day 1, Secondary Actions: Collapse
+				77 text ▾
+				78 text No production day
+				79 text 1
+			80 container Description: Arrange Overnight South day, Help: Drag within this section
+				81 text ≡
+			82 button Overnight South day
+			83 text · Read only
+			84 button Organize Overnight South day
+	18 container Notifications
+	61 text Roseland Schedule
+
+The focused UI element is 27 button Account & settings

@@ -4,7 +4,7 @@ import type { Session, SupabaseClient } from '@supabase/supabase-js';
 import type {OrganizationLifecycle} from '@/lib/platform/organization-lifecycle';
 import type { WorkspaceOrganization } from '@/lib/platform/workspace-repository';
 export interface WorkspacePanelState { dirty:boolean; busy:boolean }
-export interface WorkspaceScheduleRequest {id:string;organization:string;sequence:number;target?:'lifecycle'}
+export interface WorkspaceScheduleRequest {id:string;organization:string;sequence:number;target?:'lifecycle'|'library';history?:boolean}
 export interface WorkspacePanel {
   review?:boolean;
   openSettings?:()=>void;
@@ -23,7 +23,7 @@ export interface WorkspacePanel {
   openOrganization:(id:string)=>void;
   openLifecycle?:(organization:string,id:string)=>void;
   openSchedule:(organization:string,id:string)=>void;
-  onScheduleSelection?:(organization:string,id:string|null)=>void;
+  onScheduleSelection?:(organization:string,id:string|null,replaceHistory?:boolean)=>void;
   scheduleRequest:WorkspaceScheduleRequest|null;
   consumeScheduleRequest:(sequence:number)=>void;
 }

@@ -184,9 +184,9 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
   function guarded(action: () => void, label: string) {
     if (state().dirty || documentDialogOpen || contact !== null || status !== null || notes !== null || controller.attempt) setConfirmation({ label, action, scope: scopeRef.current }); else action();
   }
-  function closeSchedule() {
+  function closeSchedule(replaceHistory=false) {
     epoch.current++; navigationEpoch.current++;
-    if(controller.record)workspace?.onScheduleSelection?.(controller.record.organization_id,null);
+    if(controller.record)workspace?.onScheduleSelection?.(controller.record.organization_id,null,replaceHistory);
     controller.close(); state().newSchedule(); setReviewTool(null);
     setSelected(null); setVersion(null); setPermission(null); setDraftAvailable(false);
     setContact(null); setStatus(null); setNotes(null); setDocumentDialogOpen(false);
@@ -248,10 +248,10 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
       return allowed;
     }catch{setMessage('Output permission could not be confirmed. Your draft is retained.');return false;}
   }
-  async function open(id: string) {
+  async function open(id: string,replaceHistory=false) {
     if (await controller.open(id)) {
       setSelected(id); setVersion(controller.record!.document_version);
-      workspace?.onScheduleSelection?.(controller.record!.organization_id,id);
+      workspace?.onScheduleSelection?.(controller.record!.organization_id,id,replaceHistory);
       setContact(null); setStatus(null); setNotes(null);
       try{setDraftAvailable(!!readSourceDraft(localStorage,accountRef.current!,controller.record!.organization_id,id));}catch{setDraftAvailable(false);}
       setMessage('Schedule loaded.');
@@ -318,7 +318,8 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
     const request = workspace?.scheduleRequest;
     if (!request || request.target==='lifecycle' || !workspace.active || !ready || busy || request.organization !== workspace.organization?.id) return;
     workspace.consumeScheduleRequest(request.sequence);
-    guarded(() => void run(() => open(request.id)), 'Open saved result and discard unsaved changes');
+    if(request.target==='library')guarded(()=>closeSchedule(request.history),'Close schedule and discard unsaved changes');
+    else guarded(() => void run(() => open(request.id,request.history)), 'Open saved result and discard unsaved changes');
     // One account-bound request opens only after the editor is ready; normal discard guards apply.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [workspace?.scheduleRequest?.sequence, workspace?.active, workspace?.organization?.id, ready, busy]);

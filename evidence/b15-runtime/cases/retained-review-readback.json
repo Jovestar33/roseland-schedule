@@ -1,0 +1,77 @@
+[
+  {
+    "name": "B14 Fictional",
+    "version": 3,
+    "sha256": "54d5973fb3774dabbe526c7c23b8d14a648c0681538ea062f264d25232d8c6b9"
+  },
+  {
+    "name": "B15 comprehensive parity — fictional",
+    "version": 12,
+    "sha256": "f4e576f12999825cf4032367b377e68d5da23f8a68fe71568d6ee0ff85b57ea9"
+  },
+  {
+    "name": "B15 concurrent editing — fictional",
+    "version": 5,
+    "sha256": "89e4fd1bc72c081f037fbc3bcb68ea5ad3504253448f647078f70cc4d90ccea8"
+  },
+  {
+    "name": "B15 duplicate handoff — fictional",
+    "version": 1,
+    "sha256": "90eed2637cd260e84c58c461701328fb1da307bb35e2fbe84896e07ee634001a"
+  },
+  {
+    "name": "B15 empty fictional day",
+    "version": 1,
+    "sha256": "0e40153bf674b33593c94ec9973d94dc286b4876be53dcb98533633f37703610"
+  },
+  {
+    "name": "B15 import round trip — fictional",
+    "version": 1,
+    "sha256": "90eed2637cd260e84c58c461701328fb1da307bb35e2fbe84896e07ee634001a"
+  },
+  {
+    "name": "B15 import round trip — fictional copy",
+    "version": 1,
+    "sha256": "90eed2637cd260e84c58c461701328fb1da307bb35e2fbe84896e07ee634001a"
+  },
+  {
+    "name": "B15 long fictional day",
+    "version": 1,
+    "sha256": "361d13e6d35b79c7f2a2df5a56fb5309010475456cd85f05e80fb1e37a2ca7d4"
+  },
+  {
+    "name": "B15 matched weather — fictional",
+    "version": 1,
+    "sha256": "616a2f4ac7a4e6fa7f72575dd2f565f61bdb251ca558d303f3c6f67d0c7ea719"
+  },
+  {
+    "name": "B15 ordinary fictional day",
+    "version": 1,
+    "sha256": "7661d9a019c299300ae062c1bf912efd1c07b4d6c4759401d380acccd3bf901c"
+  },
+  {
+    "name": "B15 quality workflow — fictional",
+    "version": 5,
+    "sha256": "0fa8fec8eb02124db967a36e02a01d000d905c90d6b31398f85ed6605b083ae7"
+  },
+  {
+    "name": "B15 review copy",
+    "version": 2,
+    "sha256": "6a93ac9d8bb1502941cbb39a05aef64c1a7f076b45ad7b05ec9bca55001c38dd"
+  },
+  {
+    "name": "B15 snapshot copy — fictional",
+    "version": 1,
+    "sha256": "be00b4e6daa37030b9ccbce2567ecafe3ad5a0802debdc3aca6e4933b07fb196"
+  },
+  {
+    "name": "Coordinator parity review — fictional",
+    "version": 2,
+    "sha256": "379eb2a62dc9418d3d3c656f69c00de6c55cd338b8d0b14cb731ab448056c038"
+  },
+  {
+    "name": "Example shoot day — fictional",
+    "version": 3,
+    "sha256": "ed0cc6dba33e124b51e8961d462e2caa69a6c63350d1b838e5c995266559e769"
+  }
+]
