@@ -1,0 +1,35 @@
+ok 1 - Anonymous phase order denied
+ok 2 - Service phase writes denied
+{"sub":"fa000000-0000-4000-8000-000000000001","session_id":"fa100000-0000-4000-8000-000000000001","exp":9999999999,"role":"authenticated","aal":"aal2"}
+ok 3 - Owner creates named phase
+ok 4 - Owner creates another phase
+ok 5 - Ambiguous create retry cannot duplicate phase
+{"id": "fa600000-0000-4000-8000-000000000001", "slug": "schedule-1", "town": null, "status": "draft", "document": {"meta": {}, "rows": []}, "phase_id": "fa400000-0000-4000-8000-000000000001", "created_at": "2026-09-20T07:16:51.15167+00:00", "created_by": "fa000000-0000-4000-8000-000000000001", "deleted_at": null, "updated_at": "2026-09-20T07:16:51.15167+00:00", "updated_by": "fa000000-0000-4000-8000-000000000001", "display_name": "Schedule 1", "production_id": "fa300000-0000-4000-8000-000000000001", "organization_id": "fa200000-0000-4000-8000-000000000001", "document_version": 1, "library_position": 1, "production_day_id": null, "archived_from_status": null, "document_schema_version": 1}
+{"id": "fa600000-0000-4000-8000-000000000002", "slug": "schedule-2", "town": null, "status": "draft", "document": {"meta": {}, "rows": []}, "phase_id": null, "created_at": "2026-09-20T07:16:51.15167+00:00", "created_by": "fa000000-0000-4000-8000-000000000001", "deleted_at": null, "updated_at": "2026-09-20T07:16:51.15167+00:00", "updated_by": "fa000000-0000-4000-8000-000000000001", "display_name": "Schedule 2", "production_id": "fa300000-0000-4000-8000-000000000001", "organization_id": "fa200000-0000-4000-8000-000000000001", "document_version": 1, "library_position": 2, "production_day_id": "fa500000-0000-4000-8000-000000000001", "archived_from_status": null, "document_schema_version": 1}
+{"id": "fa600000-0000-4000-8000-000000000003", "slug": "schedule-3", "town": null, "status": "draft", "document": {"meta": {}, "rows": []}, "phase_id": null, "created_at": "2026-09-20T07:16:51.15167+00:00", "created_by": "fa000000-0000-4000-8000-000000000001", "deleted_at": null, "updated_at": "2026-09-20T07:16:51.15167+00:00", "updated_by": "fa000000-0000-4000-8000-000000000001", "display_name": "Schedule 3", "production_id": "fa300000-0000-4000-8000-000000000001", "organization_id": "fa200000-0000-4000-8000-000000000001", "document_version": 1, "library_position": 3, "production_day_id": null, "archived_from_status": null, "document_schema_version": 1}
+{"id": "fa600000-0000-4000-8000-000000000004", "slug": "schedule-4", "town": null, "status": "draft", "document": {"meta": {}, "rows": []}, "phase_id": "fa400000-0000-4000-8000-000000000002", "created_at": "2026-09-20T07:16:51.15167+00:00", "created_by": "fa000000-0000-4000-8000-000000000001", "deleted_at": null, "updated_at": "2026-09-20T07:16:51.15167+00:00", "updated_by": "fa000000-0000-4000-8000-000000000001", "display_name": "Schedule 4", "production_id": "fa300000-0000-4000-8000-000000000001", "organization_id": "fa200000-0000-4000-8000-000000000001", "document_version": 1, "library_position": 4, "production_day_id": null, "archived_from_status": null, "document_schema_version": 1}
+ok 6 - Partial phase rejects missing day-assigned sibling
+ok 7 - Mixed day and dayless phase orders atomically
+ok 8 - Day-assigned row moved first
+ok 9 - Dayless row moved second
+ok 10 - One stale sibling rejects whole order
+ok 11 - Failed order did not partially increment first sibling
+ok 12 - Unphased schedules order directly within production
+ok 13 - Cannot mix different phases
+ok 14 - Owner renames with saved version
+ok 15 - Stale rename refused
+ok 16 - Fresh destination returns renamed phase
+ok 17 - Fresh phase version included
+ok 18 - Phase rename leaves schedule unchanged
+ok 19 - Cross-tenant phase creation refused
+{"sub":"fa000000-0000-4000-8000-000000000002","session_id":"fa100000-0000-4000-8000-000000000002","exp":9999999999,"role":"authenticated","aal":"aal2"}
+ok 20 - Editor cannot rename phases
+ok 21 - Editor cannot create phases
+ok 22 - Editor cannot arrange schedules
+{"sub":"fa000000-0000-4000-8000-000000000001","session_id":"fa100000-0000-4000-8000-000000000001","exp":9999999999,"role":"authenticated","aal":"aal2"}
+ok 23 - Per-schedule Organizer restriction survives mixed phase order
+ok 24 - Restriction denial preserves all sibling versions
+{}
+ok 25 - Phase ordering requires active session
+ok 26 - Phase creation requires active session
+1..26

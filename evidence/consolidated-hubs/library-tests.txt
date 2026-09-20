@@ -1,0 +1,17 @@
+(node:59200) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///private/tmp/roseland-consolidated-library-hubs/tests/platform/schedule-library.test.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to /private/tmp/roseland-consolidated-library-hubs/package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ library search includes a matching record beyond two complete pages (1.238333ms)
+✔ library pagination refuses repeated IDs and another tenant instead of returning partial results (0.337833ms)
+✔ Unassigned creation acknowledgement binds production and optional phase (5.842667ms)
+✔ hub moves bind both saved versions and refuse unversioned or unauthorized destinations (0.249583ms)
+✔ phase ordering combines dayless and day-assigned siblings but refuses other phases (0.275375ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 81.678333

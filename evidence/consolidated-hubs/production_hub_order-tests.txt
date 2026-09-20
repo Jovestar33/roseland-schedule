@@ -1,0 +1,18 @@
+ok 1 - New hubs append to saved order
+ok 2 - Anonymous move denied
+ok 3 - Service role move denied
+{"sub":"fa000000-0000-4000-8000-000000000001","session_id":"fa100000-0000-4000-8000-000000000001","exp":9999999999,"role":"authenticated","aal":"aal2"}
+ok 4 - Cannot skip another visible hub
+ok 5 - Owner can move hub down
+ok 6 - Fresh library read uses saved order
+ok 7 - Both moved versions increment
+ok 8 - Retry of old versions cannot undo saved move
+ok 9 - Owner can move hub back up
+ok 10 - Manual order overrides alphabetic order
+ok 11 - Cross-organization move denied
+{"sub":"fa000000-0000-4000-8000-000000000002","session_id":"fa100000-0000-4000-8000-000000000002","exp":9999999999,"role":"authenticated","aal":"aal2"}
+ok 12 - Editor cannot reorder production hubs
+{}
+ok 13 - Active session required
+ok 14 - Only confirmed moves audited
+1..14

@@ -1,0 +1,83 @@
+{
+  "documentWidth": 390,
+  "names": [
+    {
+      "client": 172,
+      "height": 19.59375,
+      "name": "Fictional Travel Series",
+      "scroll": 172,
+      "whiteSpace": "normal"
+    },
+    {
+      "client": 232,
+      "height": 18.1953125,
+      "name": "Mountain hub",
+      "scroll": 232,
+      "whiteSpace": "normal"
+    },
+    {
+      "client": 235,
+      "height": 18.1953125,
+      "name": "Coastal hub",
+      "scroll": 235,
+      "whiteSpace": "normal"
+    },
+    {
+      "client": 230,
+      "height": 18.1953125,
+      "name": "Upcoming locations",
+      "scroll": 230,
+      "whiteSpace": "normal"
+    },
+    {
+      "client": 235,
+      "height": 18.1953125,
+      "name": "Pickup hub",
+      "scroll": 235,
+      "whiteSpace": "normal"
+    },
+    {
+      "client": 172,
+      "height": 19.59375,
+      "name": "Fictional Documentary",
+      "scroll": 172,
+      "whiteSpace": "normal"
+    },
+    {
+      "client": 232,
+      "height": 18.1953125,
+      "name": "Interviews",
+      "scroll": 232,
+      "whiteSpace": "normal"
+    },
+    {
+      "client": 235,
+      "height": 18.1953125,
+      "name": "Field work",
+      "scroll": 235,
+      "whiteSpace": "normal"
+    },
+    {
+      "client": 172,
+      "height": 39.1875,
+      "name": "Fictional Studio Campaign",
+      "scroll": 172,
+      "whiteSpace": "normal"
+    },
+    {
+      "client": 232,
+      "height": 18.1953125,
+      "name": "Studio days",
+      "scroll": 232,
+      "whiteSpace": "normal"
+    },
+    {
+      "client": 235,
+      "height": 18.1953125,
+      "name": "Location days",
+      "scroll": 235,
+      "whiteSpace": "normal"
+    }
+  ],
+  "width": 390
+}

@@ -1,0 +1,130 @@
+{
+  "organization": "13863b28-d671-4da3-b73e-4d907222630e",
+  "actor": "8f2c1dd0-d3fc-47c7-94b6-22bf3dde1ff6",
+  "productions": [
+    {
+      "id": "ec13656f-7bb3-49a2-a828-b7205dbcae77",
+      "name": "Fictional Travel Series",
+      "phases": [
+        {
+          "id": "2e46e15d-303c-4087-be4c-3abc91ac28ec",
+          "name": "Mountain hub"
+        },
+        {
+          "id": "e173e4ba-8361-47b6-88fc-f8b910657391",
+          "name": "Coastal hub"
+        },
+        {
+          "id": "897a537f-e52e-4806-84dd-511bb1d1af48",
+          "name": "Upcoming hub"
+        }
+      ],
+      "schedules": [
+        {
+          "id": "70ee24bb-4f47-4b79-91fb-63051082b465",
+          "name": "Pine Ridge scout",
+          "phase": "2e46e15d-303c-4087-be4c-3abc91ac28ec",
+          "day": null
+        },
+        {
+          "id": "8ab208ca-8051-4bdf-ad88-9977cdf327cf",
+          "name": "Cedar Falls shoot",
+          "phase": "2e46e15d-303c-4087-be4c-3abc91ac28ec",
+          "day": "97b18529-825b-4fb7-a932-df3ffdc596c7"
+        },
+        {
+          "id": "bb231da6-2b28-4fe9-83ff-3217820445e2",
+          "name": "Harbor visit",
+          "phase": "e173e4ba-8361-47b6-88fc-f8b910657391",
+          "day": null
+        },
+        {
+          "id": "3c1a960e-bcd2-4a12-9978-a8beda3999bb",
+          "name": "Production overview",
+          "phase": null,
+          "day": null
+        }
+      ]
+    },
+    {
+      "id": "cb9869c6-4be7-4447-8d68-e0ae11fbe920",
+      "name": "Fictional Studio Campaign",
+      "phases": [
+        {
+          "id": "1393a366-2daa-4050-8c06-1ec7d72fa61b",
+          "name": "Studio days"
+        },
+        {
+          "id": "9879b89b-77b9-4a3b-91cc-e4a6caee93fd",
+          "name": "Location days"
+        }
+      ],
+      "schedules": [
+        {
+          "id": "4e4c4b79-79c1-4645-85cb-6b50e61f0920",
+          "name": "Product close-ups",
+          "phase": "1393a366-2daa-4050-8c06-1ec7d72fa61b",
+          "day": null
+        },
+        {
+          "id": "c3b25dc3-3d47-441c-bf07-a5cef674a967",
+          "name": "Talent session",
+          "phase": "1393a366-2daa-4050-8c06-1ec7d72fa61b",
+          "day": "6ca73b28-f0bf-445e-b128-7c93e2512619"
+        },
+        {
+          "id": "8a9f9767-1028-45ed-80cb-71f2d64b4e5c",
+          "name": "City exteriors",
+          "phase": "9879b89b-77b9-4a3b-91cc-e4a6caee93fd",
+          "day": null
+        },
+        {
+          "id": "bc1b4a39-d0e2-4c88-97d5-f6570f1deaa2",
+          "name": "Campaign overview",
+          "phase": null,
+          "day": null
+        }
+      ]
+    },
+    {
+      "id": "14d3a0f2-846c-4bc6-a440-1e6b0a332118",
+      "name": "Fictional Documentary",
+      "phases": [
+        {
+          "id": "a37b95c6-0997-4066-990a-9bbdb057b212",
+          "name": "Interviews"
+        },
+        {
+          "id": "75db1359-426d-4264-88bc-075b5fa94049",
+          "name": "Field work"
+        }
+      ],
+      "schedules": [
+        {
+          "id": "55a45214-6573-4067-95f9-b2f83f6b082b",
+          "name": "Contributor interview",
+          "phase": "a37b95c6-0997-4066-990a-9bbdb057b212",
+          "day": null
+        },
+        {
+          "id": "a65e4a9b-f3f4-4bcf-8437-251e76e1fe0c",
+          "name": "Archive interview",
+          "phase": "a37b95c6-0997-4066-990a-9bbdb057b212",
+          "day": "f900a7a9-d75c-4691-bcb4-2cfaaa967ff6"
+        },
+        {
+          "id": "1136d2b6-e3e8-4cb9-9844-49d59880bb98",
+          "name": "River walk",
+          "phase": "75db1359-426d-4264-88bc-075b5fa94049",
+          "day": null
+        },
+        {
+          "id": "d2075673-4864-49b7-94a4-d564ac5fa5a0",
+          "name": "Documentary overview",
+          "phase": null,
+          "day": null
+        }
+      ]
+    }
+  ]
+}
