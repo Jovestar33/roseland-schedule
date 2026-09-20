@@ -1,11 +1,8 @@
-export async function printSchedule(scheduleName: string) {
-  const prev = document.title;
-  const today = new Date().toISOString().slice(0, 10);
-  document.title = `${scheduleName || 'Schedule'} – ${today}`;
-  // Wait for web fonts (Bebas Neue, DM Sans) to finish loading before opening
-  // the print dialog. Without this, the print engine sometimes captures the page
-  // before the font is ready and falls back to a system font, causing blurry text.
-  await document.fonts.ready;
-  window.print();
-  setTimeout(() => { document.title = prev; }, 100);
+import type { ScheduleData } from './types';
+export interface SchedulePrintRequest { name: string; data: ScheduleData; authorize?: () => Promise<boolean> }
+/** Open a deterministic, paginated preview; screen expansion state is irrelevant. */
+export async function printSchedule(name: string, data: ScheduleData, authorize?: () => Promise<boolean>) {
+  window.dispatchEvent(new CustomEvent<SchedulePrintRequest>('schedule-print-preview', {
+    detail: { name, data: structuredClone(data), authorize },
+  }));
 }

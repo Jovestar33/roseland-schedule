@@ -1,0 +1,2 @@
+.field{margin-bottom:4px}.label{display:block;font-size:10px;font-weight:700;color:var(--g600,#475569);padding:3px 5px 0}.field textarea{font-weight:600}.add{background:transparent;border:0;color:var(--g500,#64748b);font:inherit;font-size:10px;padding:2px 5px;cursor:pointer}.add:hover{color:var(--pink,#c21875)}.printKey{font-weight:bold!important}
+@media print{.label,.add{display:none!important}}

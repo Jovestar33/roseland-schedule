@@ -68,7 +68,7 @@ export default function PublicViewer({ name }: Props) {
           alt="Roseland Pictures"
           style={{ height: '78px', width: 'auto', objectFit: 'contain', flexShrink: 0 }}
         />
-        <button className="btn btn-light btn-sm" onClick={() => printSchedule(name)}>
+        <button className="btn btn-light btn-sm" onClick={() => printSchedule(name, data)}>
           🖨 Print / Save PDF
         </button>
       </div>

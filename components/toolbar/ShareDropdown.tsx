@@ -41,7 +41,7 @@ export default function ShareDropdown() {
 
   function handlePrint() {
     close();
-    printSchedule(scheduleName ?? 'Schedule');
+    printSchedule(scheduleName ?? 'Schedule', getScheduleData());
   }
 
   function handleContactSheet() {

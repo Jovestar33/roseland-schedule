@@ -1,3 +1,4 @@
+import SchedulePrintProvider from '@/components/print/SchedulePrintProvider';
 import type { Metadata, Viewport } from 'next';
 import { Bebas_Neue, DM_Sans } from 'next/font/google';
 import './globals.css';
@@ -57,7 +58,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${bebasNeue.variable} ${dmSans.variable}`}>
       <body>
-          <ToastProvider><CmsProvider>{children}</CmsProvider></ToastProvider>
+          <ToastProvider><CmsProvider>{children}<SchedulePrintProvider /></CmsProvider></ToastProvider>
         </body>
     </html>
   );

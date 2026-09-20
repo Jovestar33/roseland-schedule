@@ -1,4 +1,6 @@
 'use client';
+import HubOrderButtons from './HubOrderButtons';
+import { orderProductions, moveProduction } from '@/lib/production-order';
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { useRouter } from 'next/navigation';
@@ -419,15 +421,18 @@ interface Props {
   onMoveTo: (name: string) => void;
   onUpdateLibMeta: (updated: LibraryData) => Promise<void>;
   syncingNames?: Set<string>;
+  canReorderProductions?: boolean;
 }
 
 export default function LibraryTree({
   schedules, libMeta,
   onArchive, onRestore, onDeletePermanently, onRename, onMoveTo,
-  onUpdateLibMeta, syncingNames: syncingNamesProp,
+  onUpdateLibMeta, syncingNames: syncingNamesProp, canReorderProductions = true,
 }: Props) {
   const syncingNames = syncingNamesProp ?? EMPTY_SET;
   const router = useRouter();
+  const [movingHub, setMovingHub] = useState(false);
+  const movingHubRef = useRef(false);
   const [collapsed,        setCollapsed]        = useState<Set<string>>(new Set());
   const [copiedInfo,       setCopiedInfo]        = useState<{ name: string; kind: 'team' | 'client' } | null>(null);
   const [editModal,        setEditModal]         = useState<EditModal | null>(null);
@@ -511,6 +516,7 @@ export default function LibraryTree({
   }
 
   async function handleDragEnd(result: DropResult) {
+    if (movingHubRef.current) return;
     const { source, destination } = result;
     console.log('[DnD] dropped', {
       draggableId: result.draggableId,
@@ -695,13 +701,13 @@ export default function LibraryTree({
   }));
 
   // Merge UI-only empty productions
-  const allProductions = [...overriddenProductions];
+  let allProductions = [...overriddenProductions];
   for (const [prodKey, prodDisplay] of emptyProds) {
     if (!allProductions.some((p) => p.productionKey === prodKey)) {
       allProductions.push({ productionKey: prodKey, productionDisplay: prodDisplay, phases: [], totalCount: 0 });
     }
   }
-  allProductions.sort((a, b) => a.productionKey.localeCompare(b.productionKey));
+  allProductions = orderProductions(allProductions, p => p.productionKey, libMeta.productionOrder);
 
   // Merge UI-only empty phases into each production
   for (const prod of allProductions) {
@@ -718,6 +724,16 @@ export default function LibraryTree({
         }
       }
     }
+  }
+
+  async function moveHub(key: string, direction: -1 | 1) {
+    if (movingHubRef.current || !canReorderProductions || schedules.some(s => s.loading || !s.data)) return;
+    movingHubRef.current = true; setMovingHub(true); setDndMessage(null);
+    try {
+      const productionOrder = moveProduction(allProductions.map(p => p.productionKey), key, direction);
+      await onUpdateLibMeta({ ...libMeta, productionOrder, updatedAt: Date.now() });
+    } catch { setDndMessage('The hub move could not be confirmed. Refresh the library to check the saved order.'); }
+    finally { movingHubRef.current = false; setMovingHub(false); }
   }
 
   // ── Render ──────────────────────────────────────────────────────────────────
@@ -784,7 +800,7 @@ export default function LibraryTree({
             </div>
           )}
 
-          {allProductions.map((prod) => {
+          {allProductions.map((prod, prodIndex) => {
             const prodId        = `prod:${prod.productionKey}`;
             const prodCollapsed = collapsed.has(prodId);
             const nophaseGroup  = prod.phases.find((ph) => ph.phaseKey === '');
@@ -799,6 +815,10 @@ export default function LibraryTree({
                   <span className="lbt-prod-count">
                     {prod.totalCount} schedule{prod.totalCount === 1 ? '' : 's'}
                   </span>
+                  <HubOrderButtons name={prod.productionDisplay}
+                    up={canReorderProductions && !movingHub && prodIndex > 0 && schedules.every(s => !s.loading && !!s.data)}
+                    down={canReorderProductions && !movingHub && prodIndex < allProductions.length - 1 && schedules.every(s => !s.loading && !!s.data)}
+                    onMove={direction => void moveHub(prod.productionKey, direction)} />
                   <button
                     className="lbt-edit-btn"
                     onClick={(e) => { e.stopPropagation(); openEditProd(prod); }}

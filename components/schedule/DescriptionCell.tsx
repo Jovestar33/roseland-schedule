@@ -16,6 +16,7 @@ export default function DescriptionCell({ index, row }: Props) {
     <>
       <AutoResizeTextarea
         className="ci-ta"
+        label="Description"
         value={row.desc}
         onChange={(desc) => updateRow(index, { desc })}
         onFocus={pushUndo}

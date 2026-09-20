@@ -19,12 +19,13 @@ interface Props {
   onMoveTo: (name: string) => void;
   onUpdateLibMeta: (updated: LibraryData) => Promise<void>;
   syncingNames?: Set<string>;
+  canReorderProductions?: boolean;
 }
 
 export default function ScheduleListTab({
   schedules, libMeta,
   onArchive, onRestore, onDeletePermanently, onRename, onMoveTo,
-  onUpdateLibMeta, syncingNames,
+  onUpdateLibMeta, syncingNames, canReorderProductions,
 }: Props) {
   return (
     <LibraryTree
@@ -37,6 +38,7 @@ export default function ScheduleListTab({
       onMoveTo={onMoveTo}
       onUpdateLibMeta={onUpdateLibMeta}
       syncingNames={syncingNames}
+      canReorderProductions={canReorderProductions}
     />
   );
 }
