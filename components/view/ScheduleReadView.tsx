@@ -1,4 +1,5 @@
 'use client';
+import CollapsibleText from '@/components/schedule/CollapsibleText';
 import { useLocalEditor } from '@/components/schedule/LocalEditorContext';
 import {useCmsStore,useCmsActionClassMap} from '@/lib/store/cmsStore';
 import { wxIcon } from '@/lib/weather';
@@ -50,7 +51,7 @@ function SubLocList({ subLocations }: { subLocations: SubLocation[] }) {
                 <span className="rv-subloc-loc">{displayName}</span>
               )}
               {sl.address && <div className="rv-subloc-addr">{sl.address}</div>}
-              {sl.desc && <div className="rv-subloc-desc">{sl.desc}</div>}
+              {sl.desc && <div className="rv-subloc-desc"><CollapsibleText value={sl.desc} label="Location description" /></div>}
             </div>
           </div>
         );
@@ -240,8 +241,8 @@ export default function ScheduleReadView({ data, name }: Props) {
                         <SubLocList subLocations={row.subLocations} />
                       )}
                     </td>
-                    <td>{row.desc}</td>
-                    <td>{row.notes}</td>
+                    <td><CollapsibleText value={row.desc} label="Description" /></td>
+                    <td><CollapsibleText value={row.notes} label="Notes" /></td>
                     <td className="col-dv" />
                     <td className="tc">{row.timeIn}</td>
                     <td className="tc">{row.dur}</td>

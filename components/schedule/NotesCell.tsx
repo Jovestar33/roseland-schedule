@@ -28,6 +28,7 @@ export default function NotesCell({ index, row, onOpenStatus, onOpenNotes }: Pro
       <div className="status-notes-slot">
         <AutoResizeTextarea
           className="ci-ta"
+          label="Notes"
           value={row.notes}
           onChange={(notes) => updateRow(index, { notes })}
           onFocus={pushUndo}
