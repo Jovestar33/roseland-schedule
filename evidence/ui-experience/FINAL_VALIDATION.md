@@ -1,6 +1,6 @@
 # UX-001–005 implementation handoff — September 20, 2026
 
-Status: all three approved local implementation batches complete and developer-validated. The UI specialist has independently inspected the nine PDFs (26 pages), requested the empty-print wording cleanup below, and received browser ownership for final read-only live review. Human acceptance and B15 product acceptance remain pending. No deployment, push, migration, branding change or permission change is included.
+Status: all three approved local implementation batches complete and developer-validated. The UI specialist has completed independent screen and PDF review, including the empty-print wording correction, with no remaining blocking finding for UX-001–005. Human acceptance and B15 product acceptance remain pending. No deployment, push, migration, branding change or permission change is included.
 
 ## Candidate and ownership
 
@@ -73,4 +73,4 @@ Two new B14 fictional inspection copies were created for keyboard/save and overs
 
 ## Remaining acceptance
 
-Independent PDF inspection has been reported by the UI specialist; final live read-only UI review is now underway in its own task. Any specialist observations should be recorded separately. User acceptance remains pending, and these implementation checks do not close B15 or authorize hosted/production changes.
+Independent screen/PDF review is complete and passed within the scoped checks: Library/date marker and keyboard/Account/Tools/ordinary Call Sheet/Contact Sheet, 390px Library and Contact Sheet, and all 26 PDF pages. The corrected empty PDF was separately verified and the other eight hashes were unchanged. Role and mutation checks remain developer evidence, not independently repeated mutation tests. The reviewer reset its viewport and retained a clean Library preview without editing or saving schedules. Full independent report: `/Users/johnsammon/roseland-schedule/design/ui-experience/INDEPENDENT_REVIEW_COMPLETE.md`. No remaining blocking finding for UX-001–005. User acceptance remains pending; this does not close B15 or authorize hosted/production changes.
