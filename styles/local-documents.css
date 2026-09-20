@@ -42,9 +42,6 @@
   body[data-local-document] .local-schedule-print .sched col.c-dv { width:0 !important; }
   body[data-local-document] .local-schedule-print .sched :is(col.c-ti,col.c-du,col.c-to) { width:10% !important; }
   body[data-local-document] .local-schedule-print .col-dv { display:none !important; }
-  body[data-local-document] .callsheet-print-only :is(td,th) { padding:4pt !important; font-size:9pt !important; }
-  body[data-local-document] .callsheet-print-only :is(.csh-pdoc-meta,.csh-pdoc-info) td:first-child { width:25% !important; }
-  body[data-local-document] .callsheet-print-only .csh-pdoc-sched :is(td,th):first-child { width:14% !important; }
 }
 
 @page local-schedule { size: landscape; margin: 0.24in; }
@@ -68,12 +65,4 @@
 @media print {
   /* Screen sticky headers and hidden editor columns must not control pagination. */
   body[data-local-document] :is(thead,thead tr,thead th) { position:static !important; top:auto !important; transform:none !important; break-inside:avoid !important; }
-  body[data-local-document] .callsheet-print-only :is(td,th) { width:auto !important; max-width:none !important; min-width:0 !important; }
-  body[data-local-document] .callsheet-print-only :is(.csh-pdoc-meta,.csh-pdoc-info) td:first-child { width:25% !important; }
-  body[data-local-document] .callsheet-print-only .csh-pdoc-sched th:nth-child(1) { width:18% !important; }
-  body[data-local-document] .callsheet-print-only .csh-pdoc-sched th:nth-child(2) { width:32% !important; }
-  body[data-local-document] .callsheet-print-only .csh-pdoc-sched th:nth-child(3) { width:50% !important; }
-  body[data-local-document] .callsheet-print-only .csh-pdoc-contacts th:nth-child(1) { width:40% !important; }
-  body[data-local-document] .callsheet-print-only .csh-pdoc-contacts th:nth-child(2) { width:25% !important; }
-  body[data-local-document] .callsheet-print-only .csh-pdoc-contacts th:nth-child(3) { width:35% !important; }
 }

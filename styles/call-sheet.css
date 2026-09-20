@@ -108,3 +108,5 @@
  .callsheet-print-only .csh-contacts-table :is(th,td):first-child{width:36%!important}
  .callsheet-print-only .csh-contacts-table :is(th,td):nth-child(2){width:25%!important}
 }
+
+@media print{.callsheet-print-only .csh-document tbody tr:nth-child(even):not(.sun-row){background:transparent!important}}
