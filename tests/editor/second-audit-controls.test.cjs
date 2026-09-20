@@ -51,13 +51,15 @@ function fixture(file, component, props = {}, options = {}) {
     '@/components/local/DocumentProvidersContext':{useDocumentProviders:()=>context.provider},
     '@/lib/document-tools':{documentContacts:()=>[]},
     '@/lib/print':{printDocument(){throw Error('Unexpected print');},printSchedule(){throw Error('Unexpected print');}},
+    './DocumentPrintFurniture':{default:()=>null},
+    '@/lib/date-label':require('./source-loader.cjs').sourceLoader()('lib/date-label.ts'),
     './Modal':{default:()=>null,ModalVisibilityContext:modalVisibility},
     '@/components/modals/Modal':{ModalVisibilityContext:modalVisibility},
     '@/components/modals/ContactSheetModal':{default:()=>null},
     '@/components/modals/CallSheetModal':{default:()=>null},
     '@/components/schedule/PlacesAutocomplete':{default:function PlacesAutocomplete(){}},
   };
-  const extra=file.includes('CallSheetModal')?'\nexport {Field, LocationField, Notes};':'';
+  const extra=file.includes('CallSheetModal')?'\nexport {Field, LocationField, Notes, CallSheetDocument};':'';
   const code=ts.transpileModule(fs.readFileSync(file,'utf8')+extra,{compilerOptions:{module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX}}).outputText;
   const mod={exports:{}};
   vm.runInThisContext('(function(require,module,exports){'+code+'\n})',{filename:file})(name=>mocks[name]??require(name),mod,mod.exports);
@@ -79,7 +81,9 @@ const fields=[['LocationField','Basecamp','basecamp'],['LocationField','Crew Par
 test('the actual Call Sheet renders all eight tested field types and carries the read-only boundary',()=>{
   const f=fixture(callFile,'default',{open:true,readOnly:true,onClose:()=>{}});
   assert.equal(f.tree.props.value,true);
-  const actual=f.all().filter(n=>['Field','LocationField','Notes'].includes(n.type?.name));
+  const content=f.find(n=>n.type?.name==='CallSheetDocument');
+  const shared=fixture(callFile,'CallSheetDocument',content.props);
+  const actual=shared.all().filter(n=>['Field','LocationField','Notes'].includes(n.type?.name));
   assert.deepEqual(actual.map(n=>[n.type.name,n.props.label,n.props.fieldKey]),fields);
 });
 

@@ -8,6 +8,8 @@ import { useLocalEditor } from '@/components/schedule/LocalEditorContext';
 import { useDocumentProviders } from '@/components/local/DocumentProvidersContext';
 import { documentContacts } from '@/lib/document-tools';
 import { printDocument } from '@/lib/print';
+import DocumentPrintFurniture from './DocumentPrintFurniture';
+import { dateLabel } from '@/lib/date-label';
 const CallSheetReadOnly = createContext(false);
 import PlacesAutocomplete from '@/components/schedule/PlacesAutocomplete';
 import type { ScheduleRow, WeatherData, CallSheetData } from '@/lib/types';
@@ -121,7 +123,7 @@ function Field({
       ) : (
         <button type="button" ref={edit.triggerRef} aria-label={`Edit ${label}`}
           className={`csh-edit-trigger csh-fv${value ? '' : ' csh-fv-empty'}`} onClick={edit.start}>
-          {value || placeholder}
+          {value || 'Add details…'}
         </button>
       )}
     </div>
@@ -179,7 +181,7 @@ function LocationField({
           ) : (
             <button type="button" ref={edit.triggerRef} aria-label={`Edit ${label}`}
               className={`csh-edit-trigger csh-fv${value ? '' : ' csh-fv-empty'}`} onClick={edit.start}>
-              {value || placeholder}
+              {value || 'Add details…'}
             </button>
           )}
           {mapUrl && (
@@ -221,7 +223,7 @@ function Notes({ label, fieldKey, value, onCommit }: {
       ) : (
         <button type="button" ref={edit.triggerRef} aria-label={`Edit ${label}`}
           className={`csh-edit-trigger csh-fv${value ? '' : ' csh-fv-empty'}`}
-          onClick={edit.start} style={{whiteSpace:'pre-wrap'}}>{value || '—'}</button>
+          onClick={edit.start} style={{whiteSpace:'pre-wrap'}}>{value || 'Add notes…'}</button>
       )}
     </div>
   );
@@ -247,114 +249,77 @@ interface PrintDocProps {
   showContacts: boolean;
 }
 
-function PrintDoc({
-  scheduleName, formattedDate, dayStr, projectName, phase,
-  prod, dir, dp, town, weather, generalCall,
-  lines, cs, contacts, showContacts,
-}: PrintDocProps) {
-  const local = useLocalEditor();
-  const hasKeyInfo = cs.basecamp || cs.parking || cs.hospital || cs.emergency ||
-                     cs.mealNotes || cs.safetyNotes || cs.specialInstructions || cs.notes;
+/** One content order for the editable view and its read-only print portal. */
+function CallSheetDocument({
+  scheduleName, formattedDate, dayStr, projectName, phase, prod, dir, dp,
+  town, weather, generalCall, lines, cs, contacts, showContacts,
+  print = false, onCommit,
+}: PrintDocProps & {print?: boolean; onCommit: (key: CSKey, value: string) => void}) {
+  const organizationLogo = useCmsStore(s => s.config.logo);
   const projectLine = [projectName, phase, dayStr].filter(Boolean).join(' · ');
-
-  const organizationLogo=useCmsStore(s=>s.config.logo);
-  return (
-    <div className="csh-pdoc">
-      {/* Branded header bar */}
-      <div className="csh-pdoc-brand">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={organizationLogo||"/logo-header.png"} className="csh-pdoc-logo" alt="Organization logo" />
-        <span className="csh-pdoc-brand-title">Call Sheet</span>
+  return <div className={`csh-document${print ? ' csh-pdoc' : ''}`}>
+    {print && <div className="csh-document-brand">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={organizationLogo || '/logo-header.png'} alt="Organization logo" />
+      <span>Call Sheet</span>
+    </div>}
+    <header className="csh-identity-grid">
+      <div><h1>{scheduleName || 'Call Sheet'}</h1>
+        {projectLine && <p className="csh-project">{projectLine}</p>}
+        <p className="csh-date">{formattedDate || 'Date not set'}</p>
       </div>
-
-      {/* Sub-brand: schedule name + project info */}
-      {(scheduleName || projectLine) && (
-        <div className="csh-pdoc-subbrand">
-          {scheduleName && <span className="csh-pdoc-sname">{scheduleName}</span>}
-          {projectLine  && <span className="csh-pdoc-pinfo">{projectLine}</span>}
-        </div>
-      )}
-
-      {/* Production details — only rows with values render */}
-      {(prod || dir || dp || formattedDate || town || weather) && (
-        <table className="csh-pdoc-meta">
-          <tbody>
-            {prod          && <tr><td className="csh-pdoc-lbl">Producer</td><td>{prod}</td></tr>}
-            {dir           && <tr><td className="csh-pdoc-lbl">Director</td><td>{dir}</td></tr>}
-            {dp            && <tr><td className="csh-pdoc-lbl">Camera</td><td>{dp}</td></tr>}
-            {formattedDate && <tr><td className="csh-pdoc-lbl">Date</td><td>{formattedDate}</td></tr>}
-            {town          && <tr><td className="csh-pdoc-lbl">Location</td><td>{town}</td></tr>}
-            {weather       && <tr><td className="csh-pdoc-lbl">Weather</td><td>{weather}</td></tr>}
-          </tbody>
-        </table>
-      )}
-
-      {/* General call */}
-      {generalCall && (
-        <div className="csh-pdoc-callbox">
-          <span className="csh-pdoc-call-lbl">General Call</span>
-          <span className="csh-pdoc-call-time">{generalCall}</span>
-        </div>
-      )}
-
-      {/* Key information — section only renders if at least one field has a value */}
-      {hasKeyInfo && (
-        <div className="csh-pdoc-section csh-pdoc-section-fixed">
-          <div className="csh-pdoc-sh">Key Information</div>
-          <table className="csh-pdoc-info">
-            <tbody>
-              {cs.basecamp            && <tr><td className="csh-pdoc-lbl">Basecamp</td><td>{cs.basecamp}</td></tr>}
-              {cs.parking             && <tr><td className="csh-pdoc-lbl">Crew Parking</td><td>{cs.parking}</td></tr>}
-              {cs.hospital            && <tr><td className="csh-pdoc-lbl">Nearest Hospital</td><td>{cs.hospital}</td></tr>}
-              {cs.emergency           && <tr><td className="csh-pdoc-lbl">Emergency Contact</td><td>{cs.emergency}</td></tr>}
-              {cs.mealNotes           && <tr><td className="csh-pdoc-lbl">Meal Notes</td><td style={{ whiteSpace: 'pre-wrap' }}>{cs.mealNotes}</td></tr>}
-              {cs.safetyNotes         && <tr><td className="csh-pdoc-lbl">Safety Notes</td><td style={{ whiteSpace: 'pre-wrap' }}>{cs.safetyNotes}</td></tr>}
-              {cs.specialInstructions && <tr><td className="csh-pdoc-lbl">Special Instructions</td><td style={{ whiteSpace: 'pre-wrap' }}>{cs.specialInstructions}</td></tr>}
-              {cs.notes               && <tr><td className="csh-pdoc-lbl">General Notes</td><td style={{ whiteSpace: 'pre-wrap' }}>{cs.notes}</td></tr>}
-            </tbody>
-          </table>
-        </div>
-      )}
-
-      {/* Contacts */}
-      {showContacts && contacts.length > 0 && (
-        <div className="csh-pdoc-section csh-pdoc-section-fixed">
-          <div className="csh-pdoc-sh">Contacts</div>
-          <table className="csh-pdoc-contacts">
-            {local && <thead><tr><th>Name / role</th><th>Phone</th><th>Email</th></tr></thead>}
-            <tbody>
-              {contacts.map((c, i) => (
-                <tr key={i}>
-                  <td><strong>{c.name || '—'}</strong>{c.title ? ` · ${c.title}` : ''}</td>
-                  <td>{c.phone}</td>
-                  <td>{c.email}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-
-      {/* Schedule — last, after key info */}
-      {lines.length > 0 && (
-        <div className="csh-pdoc-section">
-          <div className="csh-pdoc-sh">Schedule</div>
-          <table className="csh-pdoc-sched">
-            {local && <thead><tr><th>Time</th><th>Action</th><th>Location</th></tr></thead>}
-            <tbody>
-              {lines.map((l, i) => (
-                <tr key={i} className={l.isSun ? 'csh-pdoc-sun' : ''}>
-                  <td className="csh-pdoc-td-t">{l.timeIn}</td>
-                  <td className="csh-pdoc-td-a">{l.action}</td>
-                  <td>{l.loc}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-    </div>
-  );
+      <div className="csh-callbox"><span className="csh-call-lbl">General Call</span>
+        <strong className="csh-call-time">{generalCall || 'Not set'}</strong>
+      </div>
+    </header>
+    {(town || weather) && <section className="csh-section">
+      <h2 className="csh-sh">Location &amp; weather</h2>
+      {town && <p className="csh-detail"><span>Location</span>{town}</p>}
+      {weather && <p className="csh-detail"><span>Weather</span>{weather}</p>}
+    </section>}
+    {(!print || cs.basecamp || cs.parking || cs.hospital || cs.emergency) && <section className="csh-section">
+      <h2 className="csh-sh">Arrival &amp; emergency</h2>
+      <div className="csh-fields">
+        {(!print || cs.basecamp) && <LocationField label="Basecamp" fieldKey="basecamp" value={cs.basecamp ?? ''} onCommit={onCommit} />}
+        {(!print || cs.parking) && <LocationField label="Crew Parking" fieldKey="parking" value={cs.parking ?? ''} onCommit={onCommit} />}
+        {(!print || cs.hospital) && <LocationField label="Nearest Hospital" fieldKey="hospital" value={cs.hospital ?? ''} onCommit={onCommit} />}
+        {(!print || cs.emergency) && <Field label="Emergency Contact" fieldKey="emergency" value={cs.emergency ?? ''} onCommit={onCommit} />}
+      </div>
+    </section>}
+    <section className="csh-section">
+      <h2 className="csh-sh">Day schedule</h2>
+      {lines.length ? <table className="csh-sched-table csh-pdoc-sched">
+        <thead><tr><th scope="col">Time</th><th scope="col">Action</th><th scope="col">Location</th></tr></thead>
+        <tbody>{lines.map((l, i) => <tr key={i} className={l.isSun ? 'csh-sun-row' : 'csh-sched-row'}>
+          <td className="csh-td-t">{l.timeIn}</td><td className="csh-td-a">{l.action}</td><td className="csh-td-l">{l.loc}</td>
+        </tr>)}</tbody>
+      </table> : <p className="csh-empty">No scheduled activity.</p>}
+    </section>
+    {(!print || prod || dir || dp || cs.mealNotes || cs.safetyNotes || cs.specialInstructions || cs.notes) && <section className="csh-section">
+      <h2 className="csh-sh">Production notes &amp; team</h2>
+      <div className="csh-fields">
+        {(!print || cs.mealNotes) && <Notes label="Meal Notes" fieldKey="mealNotes" value={cs.mealNotes ?? ''} onCommit={onCommit} />}
+        {(!print || cs.safetyNotes) && <Notes label="Safety Notes" fieldKey="safetyNotes" value={cs.safetyNotes ?? ''} onCommit={onCommit} />}
+        {(!print || cs.specialInstructions) && <Notes label="Special Instructions" fieldKey="specialInstructions" value={cs.specialInstructions ?? ''} onCommit={onCommit} />}
+        {(!print || cs.notes) && <Notes label="General Notes" fieldKey="notes" value={cs.notes ?? ''} onCommit={onCommit} />}
+      </div>
+      {(prod || dir || dp) && <div className="csh-team">
+        {prod && <p className="csh-detail"><span>Producer</span>{prod}</p>}
+        {dir && <p className="csh-detail"><span>Director</span>{dir}</p>}
+        {dp && <p className="csh-detail"><span>Camera</span>{dp}</p>}
+      </div>}
+    </section>}
+    {showContacts && <section className="csh-section">
+      <h2 className="csh-sh">Contacts</h2>
+      {contacts.length ? <table className="csh-contacts-table csh-pdoc-contacts">
+        <thead><tr><th scope="col">Name / role</th><th scope="col">Phone</th><th scope="col">Email</th></tr></thead>
+        <tbody>{contacts.map((c, i) => <tr key={i}>
+          <td><strong>{c.name || 'Unnamed'}</strong>{c.title && <span className="csh-contact-role">{c.title}</span>}</td>
+          <td>{c.phone}</td><td>{c.email}</td>
+        </tr>)}</tbody>
+      </table> : <p className="csh-empty">No contacts on this schedule.</p>}
+    </section>}
+  </div>;
 }
 
 // ---- Modal ----
@@ -383,12 +348,12 @@ export default function CallSheetModal({ open, onClose, readOnly = false, author
   const contacts    = documentContacts(rows);
   const weather     = buildWxStr(meta.wx);
   const dayStr      = buildDayStr(meta.dayNumber, meta.totalDays);
-  const formattedDate = meta.date
+  const formattedDate = dateLabel(meta.date) !== 'Date not set'
     ? new Date(meta.date + 'T12:00:00').toLocaleDateString('en-US', {
         weekday: 'long', month: 'long', day: 'numeric', year: 'numeric',
       })
     : '';
-  const projectLine = [meta.projectName, meta.phase, dayStr].filter(Boolean).join(' · ');
+  
 
   function commit(key: CSKey, val: string) {
     if (readOnly) return;
@@ -424,123 +389,22 @@ export default function CallSheetModal({ open, onClose, readOnly = false, author
           </>
         }
       >
-        {/* Production header */}
-        {(projectLine || meta.prod || meta.dir || meta.dp || formattedDate || meta.town || weather) && (
-          <div className="csh-header">
-            {/* Project / Phase / Day */}
-            {projectLine && (
-              <div className="csh-meta-row" style={{ marginBottom: 4 }}>
-                <span className="csh-meta-item">
-                  <span className="csh-mi-val" style={{ fontWeight: 600 }}>{projectLine}</span>
-                </span>
-              </div>
-            )}
-            {/* Producer / Director / Camera */}
-            {(meta.prod || meta.dir || meta.dp) && (
-              <div className="csh-meta-row">
-                {meta.prod && <span className="csh-meta-item"><span className="csh-mi-lbl">Producer</span> <span className="csh-mi-val">{meta.prod}</span></span>}
-                {meta.dir  && <span className="csh-meta-item"><span className="csh-mi-lbl">Director</span> <span className="csh-mi-val">{meta.dir}</span></span>}
-                {meta.dp   && <span className="csh-meta-item"><span className="csh-mi-lbl">Camera</span> <span className="csh-mi-val">{meta.dp}</span></span>}
-              </div>
-            )}
-            {/* Date / Location */}
-            {(formattedDate || meta.town) && (
-              <div className="csh-meta-row">
-                {formattedDate && <span className="csh-meta-item"><span className="csh-mi-val">{formattedDate}</span></span>}
-                {meta.town     && <span className="csh-meta-item"><span className="csh-mi-lbl">Location</span> <span className="csh-mi-val">{meta.town}</span></span>}
-              </div>
-            )}
-            {weather && (
-              <div className="csh-meta-row">
-                <span className="csh-meta-item"><span className="csh-mi-lbl">Weather</span> <span className="csh-mi-val">{weather}</span></span>
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* General call badge */}
-        {generalCall && (
-          <div className="csh-callbox">
-            <span className="csh-call-lbl">General Call</span>
-            <span className="csh-call-time">{generalCall}</span>
-          </div>
-        )}
-
-        {/* Schedule */}
-        {lines.length > 0 && (
-          <div className="csh-section">
-            <div className="csh-sh">Schedule</div>
-            <table className="csh-sched-table">
-              <tbody>
-                {lines.map((l, i) => (
-                  <tr key={i} className={l.isSun ? 'csh-sun-row' : 'csh-sched-row'}>
-                    <td className="csh-td-t">{l.timeIn}</td>
-                    <td className="csh-td-a">{l.action}</td>
-                    <td className="csh-td-l">{l.loc}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-
-        {/* Key information */}
-        <div className="csh-section">
-          <div className="csh-sh">Key Information</div>
-          <div className="csh-fields">
-            <LocationField label="Basecamp"         fieldKey="basecamp"  value={cs.basecamp  ?? ''} onCommit={commit} />
-            <LocationField label="Crew Parking"     fieldKey="parking"   value={cs.parking   ?? ''} onCommit={commit} />
-            <LocationField label="Nearest Hospital" fieldKey="hospital"  value={cs.hospital  ?? ''} onCommit={commit} />
-            <Field label="Emergency Contact"    fieldKey="emergency"          value={cs.emergency          ?? ''} onCommit={commit} />
-            <Notes label="Meal Notes"           fieldKey="mealNotes"          value={cs.mealNotes          ?? ''} onCommit={commit} />
-            <Notes label="Safety Notes"         fieldKey="safetyNotes"        value={cs.safetyNotes        ?? ''} onCommit={commit} />
-            <Notes label="Special Instructions" fieldKey="specialInstructions" value={cs.specialInstructions ?? ''} onCommit={commit} />
-            <Notes label="General Notes"        fieldKey="notes"              value={cs.notes              ?? ''} onCommit={commit} />
-          </div>
-        </div>
-
-        {/* Contacts (toggle-gated) */}
-        {showContacts && (
-          <div className="csh-section">
-            <div className="csh-sh">Contacts</div>
-            {contacts.length === 0 ? (
-              <p className="csh-empty">No contacts on this schedule.</p>
-            ) : (
-              <div className="csh-contacts-list">
-                {contacts.map((c, i) => (
-                  <div key={i} className="csh-contact-row">
-                    <span className="csh-cn">{c.name || <em>Unnamed</em>}</span>
-                    {c.title && <span className="csh-ct">{c.title}</span>}
-                    {c.phone && <span className="csh-cp">{c.phone}</span>}
-                    {c.email && <span className="csh-ce">{c.email}</span>}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
+        <CallSheetDocument scheduleName={scheduleName} formattedDate={formattedDate} dayStr={dayStr}
+          projectName={meta.projectName} phase={meta.phase} prod={meta.prod} dir={meta.dir} dp={meta.dp}
+          town={meta.town} weather={weather} generalCall={generalCall} lines={lines} cs={cs}
+          contacts={contacts} showContacts={showContacts} onCommit={commit} />
       </Modal>
 
       {/* Print portal — rendered on document.body, outside modal DOM */}
       {open && visible && typeof document !== 'undefined' && createPortal(
         <div className="callsheet-print-only">
-          <PrintDoc
-            scheduleName={scheduleName}
-            formattedDate={formattedDate}
-            dayStr={dayStr}
-            projectName={meta.projectName}
-            phase={meta.phase}
-            prod={meta.prod}
-            dir={meta.dir}
-            dp={meta.dp}
-            town={meta.town}
-            weather={weather}
-            generalCall={generalCall}
-            lines={lines}
-            cs={cs}
-            contacts={contacts}
-            showContacts={showContacts}
-          />
+          <DocumentPrintFurniture name={scheduleName} date={formattedDate} kind="Call Sheet" />
+          <CallSheetReadOnly.Provider value={true}>
+            <CallSheetDocument print scheduleName={scheduleName} formattedDate={formattedDate} dayStr={dayStr}
+          projectName={meta.projectName} phase={meta.phase} prod={meta.prod} dir={meta.dir} dp={meta.dp}
+          town={meta.town} weather={weather} generalCall={generalCall} lines={lines} cs={cs}
+          contacts={contacts} showContacts={showContacts} onCommit={commit} />
+          </CallSheetReadOnly.Provider>
         </div>,
         document.body
       )}
