@@ -18,11 +18,11 @@ function downloadCsv(contacts: DocumentContact[], scheduleName: string) {
 }
 
 // Shared card list — rendered both inside the modal and in the print-only clone.
-function ContactCards({ contacts }: { contacts: DocumentContact[] }) {
+function ContactCards({ contacts, print = false }: { contacts: DocumentContact[]; print?: boolean }) {
   if (contacts.length === 0) {
     return (
       <p className="empty cs-empty">
-        No contacts found. Add contacts using the 👤 button on any row.
+        {print ? 'No contacts on this schedule.' : 'No contacts found. Add contacts using the 👤 button on any row.'}
       </p>
     );
   }
@@ -125,7 +125,7 @@ export default function ContactSheetModal({ open, onClose, authorizeOutput }: Pr
             {formattedDate && <div className="cs-print-date">{formattedDate}</div>}
             <h1 className="cs-print-title">Contact Sheet</h1>
           </div>
-          <ContactCards contacts={contacts} />
+          <ContactCards contacts={contacts} print />
         </div>,
         document.body
       )}
