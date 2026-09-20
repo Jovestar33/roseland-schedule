@@ -5,7 +5,7 @@ const object = (value: unknown): value is Record<string, unknown> => !!value && 
 function validateSchedule(data: unknown): asserts data is ScheduleData {
   if (!object(data) || !object(data.meta) || !Array.isArray(data.rows) || data.rows.length > 5000) throw new Error('Invalid schedule: expected metadata and rows.');
   if (new TextEncoder().encode(JSON.stringify(data)).length > 2_000_000) throw new Error('A schedule exceeds the backup size limit.');
-  const strings = 'action otherText desc loc locName locAddress notes status contactName contactTitle contactPhone contactEmail timeIn dur fixedOutTime'.split(' ');
+  const strings = 'action otherText desc loc locName locAddress notes keyInstruction status contactName contactTitle contactPhone contactEmail timeIn dur fixedOutTime'.split(' ');
   const booleans = 'done sunLocked fixedIn fixedOut'.split(' ');
   for (const row of data.rows) {
     if (!object(row)) throw new Error('Invalid schedule row.');

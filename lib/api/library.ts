@@ -11,6 +11,7 @@ export interface LibraryData {
   scheduleFolderMap: Record<string, string>;
   updatedAt: number;
   // Manual drag order per phase: phaseOrder[prodKey][phaseKey] = [scheduleName, ...]
+  productionOrder?: string[];
   phaseOrder?: {
     [productionKey: string]: {
       [phaseKey: string]: string[];

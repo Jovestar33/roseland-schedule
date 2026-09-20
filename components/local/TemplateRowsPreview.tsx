@@ -9,6 +9,7 @@ export default function TemplateRowsPreview({rows,label='Template rows'}: {rows:
     <div className={styles.content}>
       {(row.locName||row.loc||row.locAddress)&&<p><strong>{row.locName||row.loc}</strong>{row.locAddress&&<span className={styles.block}>{row.locAddress}</span>}{row.loc&&row.loc!==row.locName&&row.loc!==row.locAddress&&row.locName&&<span className={styles.block}>{row.loc}</span>}</p>}
       {row.desc&&<p>{row.desc}</p>}
+      {row.keyInstruction&&<div><h4>Key instruction</h4><p>{row.keyInstruction}</p></div>}
       {row.notes&&<div><h4>Notes</h4><p>{row.notes}</p></div>}
       {[row.contactName,row.contactTitle,row.contactPhone,row.contactEmail].some(Boolean)&&<div><h4>Contact</h4><p>{[row.contactName,row.contactTitle,row.contactPhone,row.contactEmail].filter(Boolean).join('\n')}</p></div>}
       <div className={styles.flags}><span>{row.done?'Done':'Not done'}</span>{row.status&&<span>{row.status}</span>}{row.fixedIn&&<span>Fixed start</span>}{row.fixedOut&&<span>Fixed end{row.fixedOutTime?`: ${row.fixedOutTime}`:''}</span>}{row.sunLocked&&<span>Sun time locked</span>}</div>

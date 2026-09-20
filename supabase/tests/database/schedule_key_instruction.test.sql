@@ -1,0 +1,13 @@
+BEGIN;
+CREATE EXTENSION IF NOT EXISTS pgtap WITH SCHEMA extensions;
+SET LOCAL search_path=public,extensions;
+SELECT plan(7);
+SELECT lives_ok($$SELECT private.validate_schedule_document('{"meta":{},"rows":[{"notes":"Existing note"}]}',1)$$, 'Existing rows remain valid');
+SELECT lives_ok($$SELECT private.validate_schedule_document('{"meta":{},"rows":[{"keyInstruction":"Use south entrance"}]}',1)$$, 'Key instruction is accepted');
+SELECT is(private.client_projection('{"meta":{},"rows":[{"action":"Shoot","keyInstruction":"Use south entrance"}]}')#>>'{rows,0,keyInstruction}','Use south entrance','Client projection retains the key instruction');
+SELECT ok(NOT (private.client_projection('{"meta":{},"rows":[{"action":"Shoot","keyInstruction":"Use south entrance","status":"private","contactEmail":"private@example.invalid"}]}')#>'{rows,0}' ?| array['status','contactEmail']),'Private fields remain excluded');
+SELECT throws_ok($$SELECT private.validate_schedule_document('{"meta":{},"rows":[{"keyInstruction":123}]}',1)$$, 'PT400', 'Invalid schedule document', 'Non-string instruction rejected');
+SELECT throws_ok($$SELECT private.validate_schedule_document(jsonb_build_object('meta','{}'::jsonb,'rows',jsonb_build_array(jsonb_build_object('keyInstruction',repeat('x',10001)))),1)$$, 'PT400', 'Invalid schedule document', 'Overlong instruction rejected');
+SELECT is(private.client_projection('{"meta":{},"rows":[{"keyInstruction":"Essential-only row"}]}')#>>'{rows,0,keyInstruction}','Essential-only row','Key-only rows remain visible to clients');
+SELECT * FROM finish();
+ROLLBACK;

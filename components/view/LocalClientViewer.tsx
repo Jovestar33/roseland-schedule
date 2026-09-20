@@ -11,5 +11,5 @@ export default function LocalClientViewer({legacyName,legacyToken}:{legacyName?:
  // The bearer stays in component memory, outside URLs after initial navigation.
  // eslint-disable-next-line react-hooks/exhaustive-deps
  },[legacyName,legacyToken]);
- return <main>{view?<><div className="readonly-bar" style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 24px"}}><span>Read-only Client schedule</span><button className="btn btn-light btn-sm" onClick={async()=>{const current=await refresh();if(current)await printSchedule(current.name);}}>Print / Save PDF</button></div><ScheduleReadView data={view.document} name={view.name}/></>:<p role="status">{message}</p>}</main>;
+ return <main>{view?<><div className="readonly-bar" style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 24px"}}><span>Read-only Client schedule</span><button className="btn btn-light btn-sm" onClick={async()=>{const current=await refresh();if(current)await printSchedule(current.name, current.document, async()=>!!await refresh());}}>Print / Save PDF</button></div><ScheduleReadView data={view.document} name={view.name}/></>:<p role="status">{message}</p>}</main>;
 }

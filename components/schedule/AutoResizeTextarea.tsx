@@ -11,9 +11,10 @@ interface Props {
   placeholder?: string;
   label?: string;
   rows?: number;
+  collapsible?: boolean;
 }
 
-export default function AutoResizeTextarea({ className, value, onChange, onFocus, placeholder, label = 'Text', rows = 2 }: Props) {
+export default function AutoResizeTextarea({ className, value, onChange, onFocus, placeholder, label = 'Text', rows = 2, collapsible = true }: Props) {
   const ref = useRef<HTMLTextAreaElement>(null);
   const id = useId();
   const [expanded, setExpanded] = useState(false);
@@ -22,8 +23,8 @@ export default function AutoResizeTextarea({ className, value, onChange, onFocus
   useLayoutEffect(() => {
     const el = ref.current;
     if (!el) return;
-    return observeTextareaSize(el, { rows: 3, expanded, onOverflow: setOverflow });
-  }, [value, expanded]);
+    return observeTextareaSize(el, collapsible ? { rows: 3, expanded, onOverflow: setOverflow } : undefined);
+  }, [value, expanded, collapsible]);
 
   return (
     <div className={styles.field}>
@@ -31,7 +32,7 @@ export default function AutoResizeTextarea({ className, value, onChange, onFocus
         ref={ref}
         id={id}
         aria-label={label}
-        className={`${className ?? ''}${expanded ? '' : ` ${styles.compactEditor}`}`}
+        className={`${className ?? ''}${expanded || !collapsible ? '' : ` ${styles.compactEditor}`}`}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         onFocus={() => { setExpanded(true); onFocus?.(); }}
@@ -39,7 +40,7 @@ export default function AutoResizeTextarea({ className, value, onChange, onFocus
         rows={rows}
         style={{ overflow: 'hidden', resize: 'none' }}
       />
-      {overflow && (
+      {collapsible && overflow && (
         <button
           type="button"
           className={styles.toggle}

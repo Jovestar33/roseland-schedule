@@ -1,7 +1,7 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const { sourceLoader } = require('./source-loader.cjs');
-const sample = { meta: { town: 'Test', callsheet: { notes: 'Preserve me' } }, rows: [{ action: 'Shoot', dur: '0', contactName: 'Synthetic', subLocations: [{ loc: 'Park', done: false }] }], savedAt: 3 };
+const sample = { meta: { town: 'Test', callsheet: { notes: 'Preserve me' } }, rows: [{ action: 'Shoot', dur: '0', contactName: 'Synthetic', keyInstruction: 'Use the south entrance.', subLocations: [{ loc: 'Park', done: false }] }], savedAt: 3 };
 function setup() {
   const writes = [];
   const mocks = { './load': { listSchedules: async () => ['A', 'B'], postLoad: async () => sample },

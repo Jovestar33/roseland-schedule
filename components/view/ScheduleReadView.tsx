@@ -71,7 +71,7 @@ export default function ScheduleReadView({ data, name }: Props) {
   const label=(key:string,fallback:string)=>config.labels?.[key]||fallback;
   const { meta, rows } = data;
   const wx = meta.wx;
-  const visibleRows = rows.filter(r => r.action || r.timeIn);
+  const visibleRows = rows.filter(r => r.action || r.timeIn || r.keyInstruction);
   const callTime = rows.find(r => !r.sunLocked)?.timeIn || '';
 
   const scheduleName = name || '';
@@ -242,7 +242,7 @@ export default function ScheduleReadView({ data, name }: Props) {
                       )}
                     </td>
                     <td><CollapsibleText value={row.desc} label="Description" /></td>
-                    <td><CollapsibleText value={row.notes} label="Notes" /></td>
+                    <td>{row.keyInstruction && <div style={{ fontWeight: 600, whiteSpace: 'pre-wrap', overflowWrap: 'anywhere', marginBottom: 5 }}>Key instruction: {row.keyInstruction}</div>}<CollapsibleText value={row.notes} label="Notes" /></td>
                     <td className="col-dv" />
                     <td className="tc">{row.timeIn}</td>
                     <td className="tc">{row.dur}</td>
