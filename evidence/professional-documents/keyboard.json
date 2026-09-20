@@ -1,0 +1,14 @@
+{
+  "emergency": "Professional keyboard verified — fictional",
+  "generalAfterUndo": "CALL-NOTES Fictional detail with a comma, \"quoted text\", and multiple lines.\nSecond line remains visible. Fictional detail with a comma, \"quoted text\", and multiple lines.\nSecond line remains visible.  END-CALL-NOTES",
+  "mapLinks": [
+    "https://www.google.com/maps/dir/?api=1&destination=100%20Example%20Lane%2C%20Fictional%20Harbor",
+    "https://www.google.com/maps/dir/?api=1&destination=200%20Sample%20Road%2C%20Fictional%20Town",
+    "https://www.google.com/maps/dir/?api=1&destination=Fictional%20care%20center%20%E2%80%94%20fixture%20only"
+  ],
+  "escapeRestoredFocus": true,
+  "enterCommittedAndRestoredFocus": true,
+  "multilineEnterRetained": true,
+  "tabCommitted": true,
+  "undoRestored": true
+}

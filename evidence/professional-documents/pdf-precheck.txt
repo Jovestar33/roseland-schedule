@@ -1,0 +1,10 @@
+{"file": "/private/tmp/roseland-professional-document-pass/output/pdf/professional-documents/empty-callsheet.pdf", "pages": 1, "checkedMarkers": 2, "missingMarkers": []}
+{"file": "/private/tmp/roseland-professional-document-pass/output/pdf/professional-documents/empty-contacts.pdf", "pages": 1, "checkedMarkers": 2, "missingMarkers": []}
+{"file": "/private/tmp/roseland-professional-document-pass/output/pdf/professional-documents/long-callsheet.pdf", "pages": 8, "checkedMarkers": 524, "missingMarkers": []}
+{"file": "/private/tmp/roseland-professional-document-pass/output/pdf/professional-documents/long-contacts.pdf", "pages": 6, "checkedMarkers": 257, "missingMarkers": []}
+{"file": "/private/tmp/roseland-professional-document-pass/output/pdf/professional-documents/ordinary-callsheet-a4.pdf", "pages": 2, "checkedMarkers": 68, "missingMarkers": []}
+{"file": "/private/tmp/roseland-professional-document-pass/output/pdf/professional-documents/ordinary-callsheet.pdf", "pages": 2, "checkedMarkers": 68, "missingMarkers": []}
+{"file": "/private/tmp/roseland-professional-document-pass/output/pdf/professional-documents/ordinary-contacts.pdf", "pages": 1, "checkedMarkers": 22, "missingMarkers": []}
+{"file": "/private/tmp/roseland-professional-document-pass/output/pdf/professional-documents/oversized-callsheet.pdf", "pages": 4, "checkedMarkers": 102, "missingMarkers": []}
+{"file": "/private/tmp/roseland-professional-document-pass/output/pdf/professional-documents/oversized-contacts.pdf", "pages": 3, "checkedMarkers": 75, "missingMarkers": []}
+{"file": "/private/tmp/roseland-professional-document-pass/output/pdf/professional-documents/sparse-callsheet.pdf", "pages": 1, "checkedMarkers": 33, "missingMarkers": []}

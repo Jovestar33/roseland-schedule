@@ -1,0 +1,16 @@
+{
+  "documentWidth": 390,
+  "links": [
+    {
+      "href": "mailto:long.fictional.contact@example.test",
+      "text": "long.fictional.contact@example.test"
+    }
+  ],
+  "modal": [
+    {
+      "client": 322,
+      "scroll": 322
+    }
+  ],
+  "width": 390
+}

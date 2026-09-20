@@ -1,0 +1,30 @@
+(node:43330) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///private/tmp/roseland-professional-document-pass/tests/platform/call-sheet.test.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to /private/tmp/roseland-professional-document-pass/package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ explicit crew call wins over earlier prep and sun rows without reordering work (0.775792ms)
+✔ fallback states the first activity honestly; missing explicit call remains missing (0.107625ms)
+✔ work brief retains untimed descriptions, notes, separate addresses and nested details (0.129125ms)
+✔ weather preserves supplied zero precipitation, partial temperatures and daylight without inference (0.075417ms)
+(node:43331) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///private/tmp/roseland-professional-document-pass/tests/platform/document-tools.test.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to /private/tmp/roseland-professional-document-pass/package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ CSV round-trips quoted multiline Unicode and intended row context with formula-safe values (0.802125ms)
+✔ CSV neutralizes formula prefixes in every column without altering ordinary text (0.195958ms)
+✔ contact grouping preserves differing titles and emails, duplicate contexts, and title-only contacts (0.083083ms)
+✔ safe download names strip filesystem separators, controls, and dot traversal (0.61675ms)
+✔ fictional providers preserve zero coordinates, sun-only, unavailable and invalid data without network (1.061917ms)
+(node:43332) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///private/tmp/roseland-professional-document-pass/tests/platform/print-margins.test.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to /private/tmp/roseland-professional-document-pass/package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ document labels cannot terminate CSS strings or inject a style tag (0.401333ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 10
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 68.294458
