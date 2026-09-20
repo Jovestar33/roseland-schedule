@@ -1,7 +1,7 @@
 'use client';
 import { useRef, useState, useEffect, useContext, useId } from 'react';
 import { useScheduleStore } from '@/lib/store/scheduleStore';
-import { printSchedule, printDocument } from '@/lib/print';
+import { printSchedule } from '@/lib/print';
 import { useLocalEditor } from '@/components/schedule/LocalEditorContext';
 import { ModalVisibilityContext } from '@/components/modals/Modal';
 import ContactSheetModal from '@/components/modals/ContactSheetModal';
@@ -56,8 +56,7 @@ export default function ShareDropdown({ readOnly = false, onModalChange, authori
   async function handlePrint() {
     if (authorizeOutput && !await authorizeOutput()) return;
     close();
-    if (local) void printDocument(scheduleName ?? 'Schedule', 'schedule', true);
-    else void printSchedule(scheduleName ?? 'Schedule');
+    void printSchedule(scheduleName ?? 'Schedule', getScheduleData(), authorizeOutput);
   }
 
   async function handleContactSheet() {

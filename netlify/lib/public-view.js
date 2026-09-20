@@ -31,8 +31,8 @@ exports.publicSchedule = data => ({
     ...pick(data.meta, 'town date prod dir dp projectName phase dayNumber totalDays'),
     wx: data.meta?.wx ? pick(data.meta.wx, 'sunrise sunset maxF minF prec code cond fetchedAt noForecast') : null,
   },
-  rows: (Array.isArray(data.rows) ? data.rows : []).filter(row => row && (row.action || row.timeIn)).map(row => ({
-    ...pick(row, 'action otherText desc loc locLat locLng locName locAddress notes timeIn dur sunLocked fixedOut fixedOutTime'),
+  rows: (Array.isArray(data.rows) ? data.rows : []).filter(row => row && (row.action || row.timeIn || row.keyInstruction)).map(row => ({
+    ...pick(row, 'action otherText desc loc locLat locLng locName locAddress notes keyInstruction timeIn dur sunLocked fixedOut fixedOutTime'),
     ...(Array.isArray(row.subLocations) ? { subLocations: row.subLocations.map(item => pick(item, 'id loc locLat locLng desc name address')) } : {}),
   })),
 });

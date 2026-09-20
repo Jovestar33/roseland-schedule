@@ -32,7 +32,7 @@ export function validateFileDocument(doc: unknown): asserts doc is Doc {
   for (const row of doc.rows) {
     if (!object(row)) invalid('Invalid row.');
     for (const [k,v] of Object.entries(row)) {
-      if ('action otherText desc loc locName locAddress notes status contactName contactTitle contactPhone contactEmail timeIn dur fixedOutTime'.split(' ').includes(k)) {
+      if ('action otherText desc loc locName locAddress notes keyInstruction status contactName contactTitle contactPhone contactEmail timeIn dur fixedOutTime'.split(' ').includes(k)) {
         if (!text(v)) invalid('Invalid row text: '+k);
         if (v && (['timeIn','fixedOutTime'].includes(k) ? !/^(0?[1-9]|1[0-2]):[0-5][0-9] (AM|PM)$/.test(v as string) : k==='dur' ? !/^[0-9]{1,3}:[0-5][0-9]$/.test(v as string) : false)) invalid('Invalid row time: '+k);
       } else if (['done','sunLocked','fixedIn','fixedOut'].includes(k)) { if (typeof v!=='boolean') invalid('Invalid row flag.'); }

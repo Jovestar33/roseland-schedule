@@ -7,7 +7,7 @@ export interface LibraryRecord {
  schedule_date:string|null;town:string|null;production_name:string;phase_name:string|null;day_number:number|null;calendar_date:string|null;
  can_edit:boolean;can_organize:boolean;can_trash:boolean;can_transfer:boolean;can_copy:boolean;
 }
-export interface ProductionDestination {id:string;name:string;create:boolean;organize:boolean;phases:{id:string;name:string}[];days:{id:string;phase:string|null;date:string|null;number:number|null;position:number}[]}
+export interface ProductionDestination {id:string;name:string;create:boolean;organize:boolean;position?:number;version?:number;phases:{id:string;name:string}[];days:{id:string;phase:string|null;date:string|null;number:number|null;position:number}[]}
 export type LibraryFilter='active'|'archived'|'all'|'trash';
 export type LibrarySort='manual'|'name'|'date'|'updated';
 export function libraryGroup(row:LibraryRecord){return row.production_id+':'+(row.production_day_id===null?'unassigned':row.effective_phase_id??'no-phase');}
@@ -24,7 +24,8 @@ export function createScheduleLibraryRepository(client:SupabaseClient){
     if(rows.length>10000)throw Error('This library exceeds 10,000 schedules. No partial search results were shown.');if(page.length<100)return rows;
    }
   },
-  async destinations(actor:string,organization:string):Promise<ProductionDestination[]>{const r=await rpc(actor,'schedule_creation_destinations',{target_organization_id:parseInvitationId(organization)});if(!r||!Array.isArray(r.productions))throw new ScheduleRepositoryError('failed');for(const p of r.productions){parseInvitationId(p.id);if(typeof p.name!=='string'||!Array.isArray(p.days)||!Array.isArray(p.phases)||typeof p.create!=='boolean'||typeof p.organize!=='boolean')throw new ScheduleRepositoryError('failed');}return r.productions;},
+  async destinations(actor:string,organization:string):Promise<ProductionDestination[]>{const r=await rpc(actor,'schedule_creation_destinations',{target_organization_id:parseInvitationId(organization)});if(!r||!Array.isArray(r.productions))throw new ScheduleRepositoryError('failed');for(const p of r.productions){parseInvitationId(p.id);if(typeof p.name!=='string'||!Array.isArray(p.days)||!Array.isArray(p.phases)||typeof p.create!=='boolean'||typeof p.organize!=='boolean'||(p.position!==undefined&&!Number.isSafeInteger(p.position))||(p.version!==undefined&&(!Number.isSafeInteger(p.version)||p.version<1)))throw new ScheduleRepositoryError('failed');}return r.productions;},
+  async moveHubs(actor:string,target:ProductionDestination,adjacent:ProductionDestination){if(target.id===adjacent.id||!target.organize||!adjacent.organize||!Number.isSafeInteger(target.version)||!Number.isSafeInteger(adjacent.version))throw new ScheduleRepositoryError('invalid');return rpc(actor,'move_production_hub',{target_production_id:parseInvitationId(target.id),adjacent_production_id:parseInvitationId(adjacent.id),expected_target_version:target.version,expected_adjacent_version:adjacent.version});},
   async order(actor:string,rows:LibraryRecord[]){if(!rows.length||rows.some(r=>libraryGroup(r)!==libraryGroup(rows[0])))throw new ScheduleRepositoryError('invalid');return rpc(actor,'order_schedule_library',{target_production_id:rows[0].production_id,target_phase_id:rows[0].effective_phase_id,unassigned:rows[0].production_day_id===null,ordered_ids:rows.map(r=>r.id),expected_versions:rows.map(r=>r.document_version)});},
   async place(actor:string,row:LibraryRecord,day:string|null,phase:string|null){return rpc(actor,'place_schedule',{target_schedule_id:row.id,expected_version:row.document_version,target_day_id:day,target_phase_id:phase});}
  };
