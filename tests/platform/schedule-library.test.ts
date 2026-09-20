@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import type { SupabaseClient } from '@supabase/supabase-js';
-import {createScheduleLibraryRepository,filterLibrary,type LibraryRecord} from '../../lib/platform/schedule-library.ts';
+import {createScheduleLibraryRepository,filterLibrary,libraryGroup,type LibraryRecord} from '../../lib/platform/schedule-library.ts';
 import {ScheduleLifecycleController,acknowledgementMatches} from '../../lib/platform/schedule-lifecycle-controller.ts';
 import type {StoredSchedule} from '../../lib/platform/schedule-repository.ts';
 const actor='11111111-1111-4111-8111-111111111111',org='22222222-2222-4222-8222-222222222222',prod='33333333-3333-4333-8333-333333333333';
@@ -16,4 +16,11 @@ test('hub moves bind both saved versions and refuse unversioned or unauthorized 
  const sdk={auth:{getSession:async()=>({data:{session:{user:{id:actor},access_token:'fictional'}}})},rpc:(name:string,args:unknown)=>{calls++;assert.equal(name,'move_production_hub');assert.deepEqual(args,{target_production_id:prod,adjacent_production_id:id(8),expected_target_version:3,expected_adjacent_version:7});return {setHeader:()=>Promise.resolve({data:[],error:null})};}} as unknown as SupabaseClient;
  const repo=createScheduleLibraryRepository(sdk);await repo.moveHubs(actor,target,adjacent);assert.equal(calls,1);
  for(const invalid of [{...adjacent,version:undefined},{...adjacent,organize:false},target])await assert.rejects(()=>repo.moveHubs(actor,target,invalid));assert.equal(calls,1);
+});
+
+test('phase ordering combines dayless and day-assigned siblings but refuses other phases',async()=>{
+ const phase=id(70),first={...row(1),phase_id:phase,effective_phase_id:phase},second={...row(2),production_day_id:id(71),effective_phase_id:phase};
+ assert.equal(libraryGroup(first),libraryGroup(second));assert.notEqual(libraryGroup(first),libraryGroup(row(3)));
+ let calls=0;const sdk={auth:{getSession:async()=>({data:{session:{user:{id:actor},access_token:'fictional'}}})},rpc:(name:string,args:unknown)=>{calls++;assert.equal(name,'order_schedule_phase_group');assert.deepEqual(args,{target_production_id:prod,target_phase_id:phase,ordered_ids:[second.id,first.id],expected_versions:[1,1]});return {setHeader:()=>Promise.resolve({data:[],error:null})};}} as unknown as SupabaseClient;
+ const repo=createScheduleLibraryRepository(sdk);await repo.order(actor,[second,first]);await assert.rejects(()=>repo.order(actor,[first,row(3)]));assert.equal(calls,1);
 });

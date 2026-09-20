@@ -61,3 +61,20 @@
 
 .library button:global(.lbt-sched-name):hover, .library :global(.lib-recent-name):hover { text-decoration:underline; text-underline-offset:3px; }
 .library button:global(.lbt-sched-name):focus-visible, .library :global(.lib-recent-name):focus-visible { outline:2px solid var(--pink-dark); outline-offset:3px; border-radius:2px; text-decoration:underline; text-underline-offset:3px; }
+
+/* Contextual creation stays subordinate to the single global New Schedule action. */
+.library .newInProduction { background:transparent; border:0; box-shadow:none; border-radius:3px; color:var(--pink-dark); font-size:12px; font-weight:500; padding:6px 0; margin:3px 14px 7px; min-height:30px; }
+.library :global(.lbt-phase) .newInProduction { margin-left:56px; }
+.library .newInProduction:hover:not(:disabled) { text-decoration:underline; text-underline-offset:3px; }
+.library .newInProduction:focus-visible { outline:2px solid var(--pink-dark); outline-offset:3px; }
+.emptyPhase { margin:8px 16px 0 56px; color:var(--g600); font-size:12px; }
+.library :global(.lbt-prod-name), .library :global(.lbt-phase-name) { white-space:normal; overflow:visible; overflow-wrap:anywhere; min-width:0; line-height:1.4; }
+.library :global(.lbt-prod-row), .library :global(.lbt-phase-row) { min-width:0; align-items:center; }
+.library :global(.lbt-prod-count), .library :global(.lbt-phase-count) { flex-shrink:0; }
+@media(max-width:600px){
+ .library :global(.lbt-prod-row){flex-wrap:wrap;gap:6px;}
+ .library :global(.lbt-prod-name){flex:1 1 145px;}
+ .library :global(.lbt-prod-count){font-size:11px;}
+ .library :global(.lbt-phase) .newInProduction{margin-left:48px;}
+ .emptyPhase{margin-left:48px;}
+}
