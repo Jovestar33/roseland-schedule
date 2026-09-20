@@ -1,83 +1,110 @@
-/* Shared call-sheet content: one hierarchy and measure on screen and paper. */
+/* One working document on screen and paper; controls only appear while editing. */
 .callsheet-print-only{display:none}
-.csh-modal{max-width:860px}
-.csh-document{font-family:var(--fb,'DM Sans',Arial,sans-serif);font-size:13px;line-height:1.5;color:#202025;overflow-wrap:anywhere}
-.csh-modal .mbody{padding:28px}
-.csh-identity-grid{display:grid;grid-template-columns:minmax(0,1fr) 180px;gap:24px;align-items:start;margin-bottom:26px}
-.csh-identity-grid h1{font-family:inherit;font-size:25px;line-height:1.2;font-weight:600;letter-spacing:-.4px;margin:0 0 10px}
-.csh-project,.csh-date{margin:5px 0;font-size:13px;color:#5e5e68}
-.csh-callbox{display:flex;flex-direction:column;gap:4px;border-left:3px solid #9d1468;background:#fdf3f8;padding:12px 16px;color:#202025}
-.csh-call-lbl{font-size:12px;color:#5e5e68}
-.csh-call-time{font-size:28px;line-height:1.2;font-weight:600;white-space:nowrap}
-.csh-section{margin:0 0 25px}
-.csh-sh{font-family:inherit;font-size:16px;line-height:1.3;font-weight:600;color:#202025;border-bottom:1px solid #dddde2;padding-bottom:8px;margin:0 0 12px;break-after:avoid}
-.csh-detail{display:grid;grid-template-columns:145px minmax(0,1fr);gap:12px;margin:6px 0;white-space:pre-wrap}
-.csh-detail>span{font-size:12px;color:#5e5e68}
-.csh-fields{display:block}
-.csh-field{display:flex;gap:12px;align-items:baseline;margin:7px 0;font-size:13px;min-width:0}
-.csh-fl{flex:0 0 145px;font-size:12px;color:#5e5e68;text-align:left}
-.csh-fv{flex:1;min-width:0;overflow-wrap:anywhere;white-space:pre-wrap;padding:3px 5px}
-.csh-edit-trigger{appearance:none;background:transparent;border:1px solid #dddde2;border-radius:4px;margin:0;font:inherit;color:inherit;text-align:left;cursor:pointer}
+.modal.csh-modal{width:min(960px,calc(100vw - 32px))!important;max-width:960px!important}
+.csh-modal .mbody{padding:24px}
+.csh-modal .mhdr h2{font-family:var(--fb);font-size:18px;letter-spacing:0}
+.csh-document{font-family:var(--fb,'DM Sans',Arial,sans-serif);font-size:13px;line-height:1.35;color:#202025;overflow-wrap:anywhere}
+.csh-masthead{border-bottom:2px solid #9d1468;margin-bottom:14px;padding-bottom:12px}
+.csh-identity-grid{display:grid;grid-template-columns:minmax(0,1fr) 220px;gap:24px;align-items:start}
+.csh-brand-title{display:flex;align-items:center;gap:12px}
+.csh-logo{width:48px;height:48px;object-fit:contain;flex-shrink:0;background:#111;padding:5px}
+.csh-kicker{font-size:11px;letter-spacing:1.2px;font-weight:600;text-transform:uppercase}
+.csh-identity-grid h1{font-family:inherit;font-size:22px;line-height:1.15;font-weight:650;letter-spacing:-.3px;margin:3px 0 0}
+.csh-schedule-name{font-weight:600;margin:8px 0 2px}
+.csh-phase{color:#50505a;margin:2px 0;font-size:12px}
+.csh-callbox{border-left:1px solid #bbb;padding-left:16px;text-align:right}
+.csh-call-lbl{display:block;font-size:12px;font-weight:600}
+.csh-call-time{display:block;font-size:30px;line-height:1.15;font-weight:650;white-space:nowrap;margin:2px 0 7px}
+.csh-date,.csh-day{margin:2px 0;font-size:12px}
+.csh-day{font-weight:600}
+.csh-summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:12px}
+.csh-summary-grid>div:only-child{grid-column:1/-1}
+.csh-detail{display:grid;grid-template-columns:65px minmax(0,1fr);gap:8px;margin:2px 0;white-space:pre-wrap}
+.csh-detail>span{font-size:11px;color:#50505a}
+.csh-town{margin:2px 0;font-weight:600}
+.csh-weather{margin:2px 0;color:#50505a;font-size:12px;line-height:1.4}
+.csh-edit-help{font-size:11px;color:#666;margin:0 0 12px}
+.csh-section{margin:0 0 14px}
+.csh-sh{font-family:inherit;font-size:13px;line-height:1.25;font-weight:650;color:#202025;border-bottom:1px solid #999;padding:0 0 4px;margin:0 0 6px;break-after:avoid}
+.csh-logistics-grid,.csh-bulletin-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 22px}
+.csh-field{display:flex;flex-wrap:wrap;gap:2px 4px;align-items:baseline;margin:5px 0;font-size:13px;min-width:0;break-inside:auto}
+.csh-fl{flex:0 0 100%;font-size:11px;font-weight:600;color:#50505a;text-align:left;break-after:avoid}
+.csh-fv{flex:1;min-width:0;overflow-wrap:anywhere;white-space:pre-wrap;padding:1px 0}
+.csh-edit-trigger{appearance:none;background:transparent;border:0;border-bottom:1px dotted #bbb;border-radius:0;margin:0;font:inherit;color:inherit;text-align:left;cursor:pointer;box-shadow:none}
 .csh-edit-trigger:hover{background:#fdf3f8;border-color:#9d1468}
 .csh-edit-trigger:focus-visible,.csh-fi:focus-visible{outline:2px solid #9d1468;outline-offset:3px}
 .csh-fv-empty{color:#666;font-style:normal}
-.csh-fi{flex:1;min-width:0;width:100%;font:inherit;color:#202025;border:1px solid #9d1468;border-radius:4px;background:white;padding:5px}
-.csh-notes-ta{resize:vertical;min-height:90px;line-height:1.5}
+.csh-fi{flex:1;min-width:0;width:100%;font:inherit;color:#202025;border:1px solid #9d1468;border-radius:3px;background:white;padding:5px}
+.csh-notes-ta{resize:vertical;min-height:90px;line-height:1.4}
 .csh-loc-wrap{flex:1;min-width:0;display:flex}
-.csh-loc-pin{flex-shrink:0;align-self:center;font-size:15px;text-decoration:none;padding:6px}
-.csh-sched-table,.csh-contacts-table{width:100%;table-layout:fixed;border-collapse:collapse;font:inherit}
-.csh-document :is(td,th){padding:9px 7px;text-align:left;vertical-align:top;border-bottom:1px solid #eee;white-space:pre-wrap;overflow-wrap:anywhere;font:inherit}
-.csh-document th{font-size:12px;font-weight:600;color:#5e5e68;background:#f7f7f8}
-.csh-sched-table :is(th,td):first-child{width:90px;white-space:nowrap;font-variant-numeric:tabular-nums}
-.csh-sched-table :is(th,td):nth-child(2){width:29%}
-.csh-sun-row{color:#77520b;background:#fffaf0}
-.csh-contact-role{display:block;font-size:12px;color:#5e5e68}
+.csh-loc-pin{flex-shrink:0;align-self:center;font-size:14px;text-decoration:none;padding:0 3px}
+.csh-bulletin{border-left:2px solid #9d1468;padding-left:10px}
+.csh-production-notes .csh-field{display:block;margin:4px 0}
+.csh-production-notes .csh-fl{display:block}
+.csh-production-notes .csh-fv{display:block;width:100%}
+.csh-document table{width:100%;min-width:0!important;max-width:100%;table-layout:fixed;border-collapse:collapse;font:inherit}
+.csh-time-col{width:78px}.csh-location-col{width:31%}
+.csh-document :is(td,th){padding:5px 6px;text-align:left;vertical-align:top;border:0;border-bottom:1px solid #ddd;white-space:pre-wrap;overflow-wrap:anywhere;font:inherit}
+.csh-document th{font-size:11px;font-weight:600;color:#444;background:transparent;letter-spacing:normal;text-transform:none}
+.csh-document thead tr{background:transparent!important}
+.csh-document tbody tr,.csh-document tbody tr:nth-child(even){background:transparent}
+.csh-td-t{white-space:nowrap!important;font-variant-numeric:tabular-nums}
+.csh-work-description,.csh-work-notes,.csh-work-location>span{display:block;white-space:pre-wrap}
+.csh-work-description{margin-top:2px}
+.csh-work-notes{margin-top:3px;color:#50505a}
+.csh-work-location+.csh-work-location{margin-top:5px}
+.csh-address,.csh-location-description{color:#50505a}
+.csh-location-description{margin-top:2px}
+.csh-sun-row{color:#50505a}
+.csh-sun-row strong{font-weight:400}
+.csh-contact-role{display:block;font-size:12px;color:#50505a}
 .csh-contacts-table :is(th,td):first-child{width:36%}
 .csh-contacts-table :is(th,td):nth-child(2){width:25%}
-.csh-team{margin-top:16px}
-.csh-empty{font-size:13px;color:#5e5e68;margin:6px 0}
-.csh-contacts-toggle{display:flex;align-items:center;gap:6px;font-size:13px;color:#5e5e68;cursor:pointer;margin-right:auto}
-.csh-document-brand{display:flex;align-items:center;gap:18px;background:#111;color:white;border-bottom:2px solid #e91e8c;padding:10px 16px;margin-bottom:24px}
-.csh-document-brand img{height:45px;width:auto;object-fit:contain}
-.csh-document-brand span{font-family:var(--fd,'Bebas Neue',sans-serif);font-size:22px;letter-spacing:1.5px}
+.csh-empty{font-size:13px;color:#50505a;margin:5px 0}
+.csh-contacts-toggle{display:flex;align-items:center;gap:6px;font-size:13px;color:#50505a;cursor:pointer;margin-right:auto}
 @media(max-width:600px){
- .csh-modal .mbody{padding:20px 16px}
- .csh-identity-grid{grid-template-columns:1fr;gap:16px}
- .csh-callbox{flex-direction:row;align-items:center;justify-content:space-between}
- .csh-call-time{font-size:26px}
- .csh-identity-grid h1{font-size:22px}
- .csh-field{flex-wrap:wrap;gap:5px}
- .csh-fl{flex-basis:100%}
+ .csh-modal .mbody{padding:18px 16px}
+ .csh-identity-grid{grid-template-columns:1fr;gap:12px}
+ .csh-callbox{border-left:0;border-top:1px solid #bbb;padding:10px 0 0;text-align:left}
+ .csh-call-time{font-size:28px}
+ .csh-identity-grid h1{font-size:20px}
+ .csh-summary-grid,.csh-logistics-grid,.csh-bulletin-grid{grid-template-columns:1fr;gap:6px}
  .csh-fi{font-size:16px}
- .csh-detail{grid-template-columns:1fr;gap:2px}
- .csh-sched-table :is(th,td):first-child{width:75px}
- .csh-document :is(td,th){padding:8px 4px;font-size:12px}
+ .csh-time-col{width:64px}.csh-location-col{width:34%}
+ .csh-document :is(td,th){padding:5px 3px;font-size:12px}
+ .csh-contact-role{font-size:11px}
+ .csh-contacts-table :is(th,td):nth-child(2){width:24%}
 }
 @media print{
  body.callsheet-printing :is(.panel,.hdr,.toolbar,.wx-strip,.add-area,.tbar,.overlay){display:none!important}
  body.callsheet-printing .callsheet-print-only{display:block!important}
- .callsheet-print-only .csh-loc-pin{display:none!important}
- .callsheet-print-only .csh-document{font-family:var(--fb,'DM Sans',Arial,sans-serif)!important;font-size:10pt!important;line-height:1.45!important}
- .callsheet-print-only .csh-identity-grid{grid-template-columns:minmax(0,1fr) 155px;break-inside:avoid}
- .callsheet-print-only .csh-section{break-inside:auto;margin-bottom:20px}
- .callsheet-print-only .csh-field{display:block;break-inside:auto;margin-bottom:10px;orphans:3;widows:3}
+ .callsheet-print-only .csh-loc-pin,.callsheet-print-only .csh-edit-help{display:none!important}
+ .callsheet-print-only .csh-document{font-family:var(--fb,'DM Sans',Arial,sans-serif)!important;font-size:10pt!important;line-height:1.25!important}
+ .callsheet-print-only .csh-masthead{margin-bottom:8pt;padding-bottom:6pt;break-inside:avoid}
+ .callsheet-print-only .csh-identity-grid{grid-template-columns:minmax(0,1fr) 155pt;gap:14pt}
+ .callsheet-print-only .csh-logo{width:30pt;height:30pt;padding:3pt;print-color-adjust:exact;-webkit-print-color-adjust:exact}
+ .callsheet-print-only h1{font-size:17pt}
+ .callsheet-print-only .csh-call-time{font-size:24pt;margin-bottom:3pt}
+ .callsheet-print-only :is(.csh-phase,.csh-date,.csh-day,.csh-call-lbl,.csh-weather){font-size:9pt}
+ .callsheet-print-only .csh-summary-grid{grid-template-columns:1fr 1fr;gap:14pt;margin-top:6pt}
+ .callsheet-print-only .csh-detail{grid-template-columns:45pt minmax(0,1fr);gap:5pt;margin:1pt 0}
+ .callsheet-print-only .csh-detail>span{font-size:9pt}
+ .callsheet-print-only .csh-section{break-inside:auto;margin-bottom:8pt}
+ .callsheet-print-only .csh-sh{font-size:10pt;padding-bottom:2pt;margin-bottom:3pt;break-after:avoid}
+ .callsheet-print-only .csh-logistics-grid,.callsheet-print-only .csh-bulletin-grid{grid-template-columns:1fr 1fr;column-gap:14pt}
+ .callsheet-print-only .csh-field{display:block;margin:3pt 0;orphans:2;widows:2}
  .callsheet-print-only .csh-fl{display:block;break-after:avoid;font-size:9pt;font-weight:600}
- .callsheet-print-only .csh-fv{display:block;padding:0;font-size:10pt;white-space:pre-wrap;orphans:3;widows:3}
- .callsheet-print-only .csh-sh{font-size:12pt;break-after:avoid}
+ .callsheet-print-only .csh-fv{display:block;padding:0;font-size:10pt;line-height:1.25;white-space:pre-wrap;orphans:2;widows:2}
+ .callsheet-print-only .csh-bulletin{padding-left:6pt}
  .callsheet-print-only table{table-layout:fixed!important;border-collapse:collapse!important;width:100%!important}
- .callsheet-print-only .csh-document :is(td,th),.callsheet-print-only .csh-document :is(td,th):last-child{display:table-cell!important;visibility:visible!important;font-family:inherit!important;font-size:10pt!important;line-height:1.4!important;color:#202025!important;padding:7pt 5pt!important;width:auto!important;max-width:none!important;overflow:visible!important;white-space:pre-wrap!important;overflow-wrap:anywhere!important;border:0!important;border-bottom:.5pt solid #dddde2!important;vertical-align:top!important}
- .callsheet-print-only .csh-document th{font-weight:600!important;font-size:9pt!important}
+ .callsheet-print-only .csh-time-col{width:52pt!important}.callsheet-print-only .csh-location-col{width:31%!important}
+ .callsheet-print-only .csh-document :is(td,th),.callsheet-print-only .csh-document :is(td,th):last-child{display:table-cell!important;visibility:visible!important;font-family:inherit!important;font-size:10pt!important;line-height:1.25!important;color:#202025!important;padding:3pt 4pt!important;width:auto!important;max-width:none!important;overflow:visible!important;white-space:pre-wrap!important;overflow-wrap:anywhere!important;border:0!important;border-bottom:.5pt solid #ccc!important;vertical-align:top!important}
+ .callsheet-print-only .csh-document th{font-weight:600!important;font-size:9pt!important;letter-spacing:normal!important;text-transform:none!important}
  .callsheet-print-only .csh-document thead{display:table-header-group!important}
  .callsheet-print-only .csh-document tr{break-inside:avoid;border:0!important;background:transparent!important}
+ .callsheet-print-only .csh-document tr.csh-long-row{break-inside:auto!important}
  .callsheet-print-only .csh-document .csh-td-t{white-space:nowrap!important}
- .callsheet-print-only .csh-document-brand{print-color-adjust:exact;-webkit-print-color-adjust:exact}
+ .callsheet-print-only .csh-contact-role{font-size:9pt}
+ .callsheet-print-only .csh-contacts-table :is(th,td):first-child{width:36%!important}
+ .callsheet-print-only .csh-contacts-table :is(th,td):nth-child(2){width:25%!important}
 }
-/* Override the legacy global modal width; keep the approved readable measure. */
-.modal.csh-modal{width:min(860px,calc(100vw - 32px))!important;max-width:860px!important}
-.csh-modal .mhead h2{font-family:var(--fb);font-size:18px;letter-spacing:0}
-.csh-document th{letter-spacing:normal;text-transform:none}
-@media print{.callsheet-print-only .csh-document th{letter-spacing:normal!important;text-transform:none!important}.callsheet-print-only .csh-document tbody tr:nth-child(even){background:transparent!important}}
-.csh-document table{min-width:0!important;max-width:100%;border-collapse:collapse}
-.csh-document thead tr{background:#f7f7f8!important}
-.csh-document tbody tr:nth-child(even){background:transparent}
-.csh-modal .mhdr h2{font-family:var(--fb);font-size:18px;letter-spacing:0}

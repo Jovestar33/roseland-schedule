@@ -58,3 +58,25 @@
 .cs-modal .mhdr h2{font-family:var(--fb);font-size:18px;letter-spacing:0}
 
 @media print{body[data-local-document] .cs-card.cs-card-long{break-inside:auto!important;page-break-inside:auto!important}}
+
+/* Professional companion: preserve type size, spend less paper on padding. */
+.cs-subtitle{gap:4px 8px;margin-bottom:14px}
+.cs-sched-name{font-size:22px;margin-bottom:3px}
+.cs-card{padding:10px 0}
+.cs-contact-table thead th{padding-bottom:5px}
+.cs-card-head,.cs-contact-row{gap:1px}
+.cs-contact-table .cs-assignment{padding:3px 0;line-height:1.3}
+.cs-contact-table .cs-row-time{padding-top:3px;padding-bottom:3px}
+.cs-row-desc{margin-top:2px}
+@media print{
+ .cs-print-only .cs-print-header{margin-bottom:10pt}
+ .cs-print-only .cs-print-sched-name{font-size:17pt}
+ .cs-print-only .cs-print-date{margin-top:3pt}
+ .cs-print-only .cs-print-title{font-size:11pt;margin:5pt 0 0}
+ .cs-print-only .cs-card{padding:5pt 0}
+ .cs-print-only .cs-contact-table :is(td,th),.cs-print-only .cs-contact-table :is(td,th):last-child{font-size:10pt!important;line-height:1.25!important;padding:2pt 0!important}
+ .cs-print-only .cs-contact-table thead th{padding-bottom:3pt!important}
+ .cs-print-only :is(.cs-title,.cs-phone,.cs-email,.cs-row-desc){font-size:10pt;line-height:1.25}
+ .cs-print-only .cs-name{font-size:10.5pt;line-height:1.25}
+ .cs-print-only .cs-row-desc{margin-top:1pt}
+}

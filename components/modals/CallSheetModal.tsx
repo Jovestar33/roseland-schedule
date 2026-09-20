@@ -12,45 +12,12 @@ import DocumentPrintFurniture from './DocumentPrintFurniture';
 import { dateLabel } from '@/lib/date-label';
 const CallSheetReadOnly = createContext(false);
 import PlacesAutocomplete from '@/components/schedule/PlacesAutocomplete';
-import type { ScheduleRow, WeatherData, CallSheetData } from '@/lib/types';
+import type { CallSheetData } from '@/lib/types';
+import { callSheetCall, callSheetLines, callSheetWeather, type CallSheetLine } from '@/lib/call-sheet';
 
 // ---- Derived-data helpers ----
 
-interface SchedLine { timeIn: string; action: string; loc: string; isSun: boolean; }
-
-function buildLines(rows: ScheduleRow[]): SchedLine[] {
-  const out: SchedLine[] = [];
-  for (const row of rows) {
-    if (row.sunLocked) {
-      if (row.timeIn || row.action) out.push({ timeIn: row.timeIn, action: row.action, loc: '', isSun: true });
-      continue;
-    }
-    if (!row.timeIn && !row.action) continue;
-    out.push({
-      timeIn: row.timeIn,
-      action: row.action === 'Other' ? (row.otherText || 'Other') : row.action,
-      loc: row.locName || row.loc,
-      isSun: false,
-    });
-  }
-  return out;
-}
-
-function deriveCall(rows: ScheduleRow[]): string {
-  for (const row of rows) { if (!row.sunLocked && row.timeIn) return row.timeIn; }
-  return '';
-}
-
 interface Contact { name: string; title: string; phone: string; email: string; }
-
-function buildWxStr(wx: WeatherData | null | undefined): string {
-  if (!wx) return '';
-  const parts: string[] = [];
-  if (wx.cond) parts.push(wx.cond);
-  if (wx.maxF != null && wx.minF != null) parts.push(`${wx.minF}–${wx.maxF}°F`);
-  else if (wx.maxF != null) parts.push(`${wx.maxF}°F`);
-  return parts.join(' · ');
-}
 
 function buildDayStr(dayNumber: number | null, totalDays: number | null): string {
   if (dayNumber == null) return '';
@@ -241,9 +208,9 @@ interface PrintDocProps {
   dir: string;
   dp: string;
   town: string;
-  weather: string;
-  generalCall: string;
-  lines: SchedLine[];
+  weather: string[];
+  generalCall: {label: string; time: string};
+  lines: CallSheetLine[];
   cs: CallSheetData;
   contacts: Contact[];
   showContacts: boolean;
@@ -256,58 +223,82 @@ function CallSheetDocument({
   print = false, onCommit,
 }: PrintDocProps & {print?: boolean; onCommit: (key: CSKey, value: string) => void}) {
   const organizationLogo = useCmsStore(s => s.config.logo);
-  const projectLine = [projectName, phase, dayStr].filter(Boolean).join(' · ');
+  const readOnly = useContext(CallSheetReadOnly);
   return <div className={`csh-document${print ? ' csh-pdoc' : ''}`}>
-    {print && <div className="csh-document-brand">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={organizationLogo || '/logo-header.png'} alt="Organization logo" />
-      <span>Call Sheet</span>
-    </div>}
-    <header className="csh-identity-grid">
-      <div><h1>{scheduleName || 'Call Sheet'}</h1>
-        {projectLine && <p className="csh-project">{projectLine}</p>}
-        <p className="csh-date">{formattedDate || 'Date not set'}</p>
+    <header className="csh-masthead">
+      <div className="csh-identity-grid">
+        <div className="csh-production">
+          <div className="csh-brand-title">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img className="csh-logo" src={organizationLogo || '/logo-header.png'} alt="Organization logo" />
+            <div><span className="csh-kicker">Call Sheet</span><h1>{projectName || scheduleName || 'Production'}</h1></div>
+          </div>
+          {projectName && scheduleName && <p className="csh-schedule-name">{scheduleName}</p>}
+          {phase && <p className="csh-phase">{phase}</p>}
+        </div>
+        <div className="csh-callbox"><span className="csh-call-lbl">{generalCall.label}</span>
+          <strong className="csh-call-time">{generalCall.time || 'Not set'}</strong>
+          <p className="csh-date">{formattedDate || 'Date not set'}</p>
+          {dayStr && <p className="csh-day">{dayStr}</p>}
+        </div>
       </div>
-      <div className="csh-callbox"><span className="csh-call-lbl">General Call</span>
-        <strong className="csh-call-time">{generalCall || 'Not set'}</strong>
-      </div>
+      {(prod || dir || dp || town || weather.length > 0) && <div className="csh-summary-grid">
+        {(prod || dir || dp) && <div className="csh-team">
+          {prod && <p className="csh-detail"><span>Producer</span>{prod}</p>}
+          {dir && <p className="csh-detail"><span>Director</span>{dir}</p>}
+          {dp && <p className="csh-detail"><span>Camera</span>{dp}</p>}
+        </div>}
+        {(town || weather.length > 0) && <div className="csh-conditions">
+          {town && <p className="csh-town">{town}</p>}
+          {weather.length > 0 && <p className="csh-weather">{weather.join(' · ')}</p>}
+        </div>}
+      </div>}
     </header>
-    {(town || weather) && <section className="csh-section">
-      <h2 className="csh-sh">Location &amp; weather</h2>
-      {town && <p className="csh-detail"><span>Location</span>{town}</p>}
-      {weather && <p className="csh-detail"><span>Weather</span>{weather}</p>}
-    </section>}
+    {!print && !readOnly && <p className="csh-edit-help">Select an underlined detail to edit. Changes save with your schedule.</p>}
     {(!print || cs.basecamp || cs.parking || cs.hospital || cs.emergency) && <section className="csh-section">
       <h2 className="csh-sh">Arrival &amp; emergency</h2>
-      <div className="csh-fields">
-        {(!print || cs.basecamp) && <LocationField label="Basecamp" fieldKey="basecamp" value={cs.basecamp ?? ''} onCommit={onCommit} />}
-        {(!print || cs.parking) && <LocationField label="Crew Parking" fieldKey="parking" value={cs.parking ?? ''} onCommit={onCommit} />}
-        {(!print || cs.hospital) && <LocationField label="Nearest Hospital" fieldKey="hospital" value={cs.hospital ?? ''} onCommit={onCommit} />}
-        {(!print || cs.emergency) && <Field label="Emergency Contact" fieldKey="emergency" value={cs.emergency ?? ''} onCommit={onCommit} />}
+      <div className="csh-logistics-grid">
+        <div className="csh-fields">
+          {(!print || cs.basecamp) && <LocationField label="Basecamp" fieldKey="basecamp" value={cs.basecamp ?? ''} onCommit={onCommit} />}
+          {(!print || cs.parking) && <LocationField label="Crew Parking" fieldKey="parking" value={cs.parking ?? ''} onCommit={onCommit} />}
+        </div>
+        <div className="csh-fields">
+          {(!print || cs.hospital) && <LocationField label="Nearest Hospital" fieldKey="hospital" value={cs.hospital ?? ''} onCommit={onCommit} />}
+          {(!print || cs.emergency) && <Field label="Emergency Contact" fieldKey="emergency" value={cs.emergency ?? ''} onCommit={onCommit} />}
+        </div>
+      </div>
+    </section>}
+    {(!print || cs.safetyNotes || cs.specialInstructions) && <section className="csh-section csh-bulletin">
+      <h2 className="csh-sh">Safety &amp; instructions</h2>
+      <div className="csh-bulletin-grid">
+        {(!print || cs.safetyNotes) && <Notes label="Safety Notes" fieldKey="safetyNotes" value={cs.safetyNotes ?? ''} onCommit={onCommit} />}
+        {(!print || cs.specialInstructions) && <Notes label="Special Instructions" fieldKey="specialInstructions" value={cs.specialInstructions ?? ''} onCommit={onCommit} />}
       </div>
     </section>}
     <section className="csh-section">
       <h2 className="csh-sh">Day schedule</h2>
       {lines.length ? <table className="csh-sched-table csh-pdoc-sched">
-        <thead><tr><th scope="col">Time</th><th scope="col">Action</th><th scope="col">Location</th></tr></thead>
-        <tbody>{lines.map((l, i) => <tr key={i} className={l.isSun ? 'csh-sun-row' : 'csh-sched-row'}>
-          <td className="csh-td-t">{l.timeIn}</td><td className="csh-td-a">{l.action}</td><td className="csh-td-l">{l.loc}</td>
+        <colgroup><col className="csh-time-col" /><col /><col className="csh-location-col" /></colgroup>
+        <thead><tr><th scope="col">Time</th><th scope="col">Activity / details</th><th scope="col">Location</th></tr></thead>
+        <tbody>{lines.map((l, i) => <tr key={i} className={`${l.isSun ? 'csh-sun-row' : 'csh-sched-row'}${l.long ? ' csh-long-row' : ''}`}>
+          <td className="csh-td-t">{l.timeIn}</td>
+          <td className="csh-td-a"><strong>{l.action}</strong>
+            {l.description && <span className="csh-work-description">{l.description}</span>}
+            {l.notes && <span className="csh-work-notes"><b>Notes: </b>{l.notes}</span>}
+          </td>
+          <td className="csh-td-l">{l.locations.map((loc, j) => <div className="csh-work-location" key={j}>
+            {loc.name && <span>{loc.name}</span>}{loc.address && <span className="csh-address">{loc.address}</span>}
+            {loc.description && <span className="csh-location-description">{loc.description}</span>}
+          </div>)}</td>
         </tr>)}</tbody>
       </table> : <p className="csh-empty">No scheduled activity.</p>}
     </section>
-    {(!print || prod || dir || dp || cs.mealNotes || cs.safetyNotes || cs.specialInstructions || cs.notes) && <section className="csh-section">
-      <h2 className="csh-sh">Production notes &amp; team</h2>
-      <div className="csh-fields">
+    {(!print || cs.mealNotes || cs.notes) && <section className="csh-section">
+      <h2 className="csh-sh">Production notes</h2>
+      <div className="csh-fields csh-production-notes">
         {(!print || cs.mealNotes) && <Notes label="Meal Notes" fieldKey="mealNotes" value={cs.mealNotes ?? ''} onCommit={onCommit} />}
-        {(!print || cs.safetyNotes) && <Notes label="Safety Notes" fieldKey="safetyNotes" value={cs.safetyNotes ?? ''} onCommit={onCommit} />}
-        {(!print || cs.specialInstructions) && <Notes label="Special Instructions" fieldKey="specialInstructions" value={cs.specialInstructions ?? ''} onCommit={onCommit} />}
         {(!print || cs.notes) && <Notes label="General Notes" fieldKey="notes" value={cs.notes ?? ''} onCommit={onCommit} />}
       </div>
-      {(prod || dir || dp) && <div className="csh-team">
-        {prod && <p className="csh-detail"><span>Producer</span>{prod}</p>}
-        {dir && <p className="csh-detail"><span>Director</span>{dir}</p>}
-        {dp && <p className="csh-detail"><span>Camera</span>{dp}</p>}
-      </div>}
     </section>}
     {showContacts && <section className="csh-section">
       <h2 className="csh-sh">Contacts</h2>
@@ -343,10 +334,10 @@ export default function CallSheetModal({ open, onClose, readOnly = false, author
   }, [open]);
 
   const cs          = meta.callsheet ?? {};
-  const lines       = buildLines(rows);
-  const generalCall = deriveCall(rows);
+  const lines       = callSheetLines(rows);
+  const generalCall = callSheetCall(rows);
   const contacts    = documentContacts(rows);
-  const weather     = buildWxStr(meta.wx);
+  const weather     = callSheetWeather(meta.wx);
   const dayStr      = buildDayStr(meta.dayNumber, meta.totalDays);
   const formattedDate = dateLabel(meta.date) !== 'Date not set'
     ? new Date(meta.date + 'T12:00:00').toLocaleDateString('en-US', {
