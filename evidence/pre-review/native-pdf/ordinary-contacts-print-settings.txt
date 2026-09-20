@@ -1,0 +1,115 @@
+Window: "", App: Google Chrome.
+0 window Print, Secondary Actions: Raise
+	1 container Print
+		2 container
+			3 HTML content B15 ordinary fictional day - contacts, URL: chrome://print/
+				4 container
+					5 HTML content chrome://print/pdf/index_print.html?chrome-untrusted://print/ACFCF2408F772DD44E9C305A18920D9C/0/print.pdf
+						6 container
+							7 container
+								8 button Fit to width
+								9 button Zoom in
+								10 button Zoom out
+							11 HTML content
+								12 container PDF document containing 1 page
+									13 container Finished loading PDF
+										14 text Finished loading PDF
+									15 container Page 1
+										16 text B15 ordinary fictional day
+Tuesday, October 20, 2026
+Contact Sheet
+
+										17 container
+											18 text =Fictional Crew Fictional department
+
+											19 link tel:+1%20202%20555%200142
+											20 link  ✉ crew1@example.test, Value: mailto:crew1@example.test
+										21 link crew1@example.test, Value: mailto:crew1@example.test
+										22 text
+9:00 AM Crew Call Fictional location 1 DESC-1 Fictional detail with a comma, "quoted text", and multiple lines.
+Second line remains visible. END-DESC-1
+
+										23 container
+											24 text Example Crew 2 Fictional department
+
+											25 link tel:+1%20202%20555%200142
+											26 link  ✉ crew2@example.test, Value: mailto:crew2@example.test
+										27 link crew2@example.test, Value: mailto:crew2@example.test
+										28 text
+9:00 AM Fictional scene 2 Fictional location 2 DESC-2 Fictional detail with a comma, "quoted text", and multiple lines.
+Second line remains visible. END-DESC-2
+
+										29 container
+											30 text Example Crew 3 Fictional department
+
+											31 link tel:+1%20202%20555%200142
+											32 link  ✉ crew3@example.test, Value: mailto:crew3@example.test
+										33 link crew3@example.test, Value: mailto:crew3@example.test
+										34 text
+9:15 AM Wrap Fictional location 3 DESC-3 Fictional detail with a comma, "quoted text", and multiple lines.
+Second line remains visible. END-DESC-3
+					35 container
+						36 text "
+					37 container
+						38 text "
+					39 container
+						40 text "
+					41 container
+						42 text "
+				43 heading Print, Value: 1
+					44 text Print
+				45 text 1 page
+				46 container
+					47 text Destination
+					48 pop up button Destination, Value: Save as PDF
+						49 (selected) Save as PDF
+					50 text Pages
+					51 pop up button Pages, Value: All
+						52 (selected) All
+					53 container More settings
+						54 button More settings
+					55 text Paper size
+					56 container Paper size
+						57 pop up button Paper size, Value: Letter
+							58 (selected)  Letter
+					59 text Pages per sheet
+					60 pop up button Pages per sheet, Value: 1
+						61 (selected) 1
+					62 text Margins
+					63 pop up button Margins, Value: Default
+						64 (selected) Default
+					65 text Scale
+					66 pop up button Scale, Value: Default
+						67 (selected) Default
+					68 text Options
+					69 container
+						70 checkbox Headers and footers, Value: 0
+							71 image
+						72 text Headers and footers
+					73 container
+						74 checkbox Background graphics, Value: 0
+							75 image
+						76 text Background graphics
+					77 container
+						78 text Print using system dialog… (⌥⌘P)
+						79 button Print using system dialog… (⌥⌘P)
+					80 container
+						81 text Open PDF in Preview
+						82 button Open PDF in Preview
+				83 button Cancel
+					84 text Cancel
+				85 button Save
+					86 text Save
+87 menu bar
+	88 Chrome
+	89 File
+	90 Edit
+	91 View
+	92 History
+	93 Bookmarks
+	94 Profiles
+	95 Tab
+	96 Window
+	97 Help
+
+The focused UI element is 54 button More settings

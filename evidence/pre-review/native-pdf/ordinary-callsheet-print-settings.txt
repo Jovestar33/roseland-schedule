@@ -1,0 +1,127 @@
+Window: "", App: Google Chrome.
+0 window Print, Secondary Actions: Raise
+	1 container Print
+		2 container
+			3 HTML content B15 ordinary fictional day - callsheet, URL: chrome://print/
+				4 container
+					5 HTML content chrome://print/pdf/index_print.html?chrome-untrusted://print/8878A07D12F722760D668A6B87E5FA8B/0/print.pdf
+						6 container
+							7 container
+								8 button Fit to width
+								9 button Zoom in
+								10 button Zoom out
+							11 HTML content
+								12 container PDF document containing 1 page
+									13 container This PDF is inaccessible. Couldn't download text extraction files. Please try again later.
+										14 text This PDF is inaccessible. Couldn't download text extraction files. Please try again later.
+									15 container Page 1
+										16 heading 2
+											17 text C a ll S h eet
+
+										18 text B15 ordinary fictional day Fictional production – document acceptance · Principal photography · Day 2 of 12
+PRODUCER Fictional producer with complete long credit
+DIRECTOR Fictional director
+CAMERA Fictional camera lead
+DATE Tuesday, October 20, 2026
+LOCATION Fictional Harbor Studio
+WEATHER Partly Cloudy · 54–75°F
+9:00 AM
+
+										19 container
+											20 text KEY INFORMATION
+BASECAMP 100 Example Lane, Fictional Harbor
+CREW PARKING 200 Sample Road, Fictional Town
+NEAREST HOSPITAL Fictional care center — fixture only
+EMERGENCY CONTACT Example coordinator +1 202 555 0100
+MEAL NOTES Fictional lunch
+Vegetarian option
+SAFETY NOTES Fictional safety instructions
+Keep pathways clear
+SPECIAL INSTRUCTIONS Fictional access instructions
+Bring sample badge
+GENERAL NOTES CALL-NOTES Fictional detail with a comma, "quoted text", and multiple lines.
+Second line remain
+											21 link crew1@example.test, Value: mailto:crew1@example.test
+											22 text
+Example Crew 2 · Fictional department +1 202 555 0142
+											23 link crew2@example.test, Value: mailto:crew2@example.test
+											24 text
+Example Crew 3 · Fictional department +1 202 555 0142
+											25 link crew3@example.test, Value: mailto:crew3@example.test
+											26 text
+SCHEDULE
+Time AAccttiioonn LLooccaattiioonn
+6:30 AM ������ Sunrise
+9:00 AM Crew Call Fictional location 1
+9:00 AM Fictional scene 2 Fictional location 2
+9:15 AM Wrap Fictional location 3
+7:15 PM ������ Sunset
+
+										27 container
+											28 text GENERAL CALL
+											29 image Unlabeled image
+					30 container
+						31 text "
+					32 container
+						33 text "
+					34 container
+						35 text "
+					36 container
+						37 text "
+				38 heading Print, Value: 1
+					39 text Print
+				40 text 1 page
+				41 container
+					42 text Destination
+					43 pop up button Destination, Value: Save as PDF
+						44 (selected) Save as PDF
+					45 text Pages
+					46 pop up button Pages, Value: All
+						47 (selected) All
+					48 container More settings
+						49 button More settings
+					50 text Paper size
+					51 container Paper size
+						52 pop up button Paper size, Value: Letter
+							53 (selected)  Letter
+					54 text Pages per sheet
+					55 pop up button Pages per sheet, Value: 1
+						56 (selected) 1
+					57 text Margins
+					58 pop up button Margins, Value: Default
+						59 (selected) Default
+					60 text Scale
+					61 pop up button Scale, Value: Default
+						62 (selected) Default
+					63 text Options
+					64 container
+						65 checkbox Headers and footers, Value: 0
+							66 image
+						67 text Headers and footers
+					68 container
+						69 checkbox Background graphics, Value: 0
+							70 image
+						71 text Background graphics
+					72 container
+						73 text Print using system dialog… (⌥⌘P)
+						74 button Print using system dialog… (⌥⌘P)
+					75 container
+						76 text Open PDF in Preview
+						77 button Open PDF in Preview
+				78 button Cancel
+					79 text Cancel
+				80 button Save
+					81 text Save
+82 menu bar
+	83 Chrome
+	84 File
+	85 Edit
+	86 View
+	87 History
+	88 Bookmarks
+	89 Profiles
+	90 Tab
+	91 Window
+	92 Help
+
+The focused UI element is 49 button More settings

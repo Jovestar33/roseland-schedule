@@ -2,7 +2,7 @@
 
 September 19, 2026 · local fictional environment only.
 
-The locally runnable pass is saved for independent review. Cross-production direct Move and active-member inherited-restriction isolation now have fresh evidence. No new application defect was confirmed, so application source remains the independently corrected `8965ba8` candidate. **Fresh native PDFs remain incomplete because native Mac/Chrome control was unavailable.** This is not product acceptance, hosted readiness, or migration approval.
+The locally runnable pass is saved for independent review. Cross-production direct Move and active-member inherited-restriction isolation now have fresh evidence. No new application defect was confirmed, so application source remains the independently corrected `8965ba8` candidate. **All six fresh native PDFs are now saved and inspected following the user-confirmed unlock.** This is not product acceptance, hosted readiness, or migration approval.
 
 ## Candidate and provenance
 
@@ -58,15 +58,30 @@ The ordinary fixture opened with automatic sun-row draft changes; none were save
 
 See [browser-observations.md](evidence/pre-review/browser-observations.md). SA01 map links, SA02 Call Sheet keyboard fields, and SA03 Share dismissal were already independently retested on the same application commit; this pass did not reimplement them.
 
-## Native PDF requirement — blocked, no fresh output paths
+## Native PDF requirement - completed after unlock
 
-**Fresh schedule PDF:** none. **Fresh Contact Sheet PDF:** none. **Fresh Call Sheet PDF:** none.
+On September 19, 2026 (EDT), the user confirmed the laptop was unlocked and authorized only the outstanding native outputs. Chrome 153 native Print > Save as PDF produced all six files from unchanged build `R2Sn1Vtshobzqmgm-abnr` at port 3524. This supersedes the earlier Mac-lock/window blocker. No old file, screenshot, combined proof set, or programmatic substitute is counted as a fresh native output.
 
-The native tool first reported that the Mac was locked and asked for manual unlock. An asynchronous unlock request was sent to the user; no reply arrived during this pass. A subsequent native Chrome selection reported `cgWindowNotFound`. Browser DOM control remained usable, but it does not establish native print/save availability. No lock bypass or alternative headless/programmatic PDF was used.
+| Output | Pages | Exact native PDF path |
+|---|---:|---|
+| ordinary-schedule | 1 | `/private/tmp/roseland-pre-review-technical-completion/output/pdf/pre-review-native/ordinary-schedule.pdf` |
+| ordinary-contacts | 1 | `/private/tmp/roseland-pre-review-technical-completion/output/pdf/pre-review-native/ordinary-contacts.pdf` |
+| ordinary-callsheet | 1 | `/private/tmp/roseland-pre-review-technical-completion/output/pdf/pre-review-native/ordinary-callsheet.pdf` |
+| long-schedule | 5 | `/private/tmp/roseland-pre-review-technical-completion/output/pdf/pre-review-native/long-schedule.pdf` |
+| long-contacts | 6 | `/private/tmp/roseland-pre-review-technical-completion/output/pdf/pre-review-native/long-contacts.pdf` |
+| long-callsheet | 3 | `/private/tmp/roseland-pre-review-technical-completion/output/pdf/pre-review-native/long-callsheet.pdf` |
 
-The prior fifteen native PDFs remain in `output/pdf/`: nine `target-{ordinary,long,empty}-{schedule,contacts,callsheet}.pdf` artifacts and six `legacy-{ordinary,long}-{schedule,contacts,callsheet}.pdf` comparisons. The second independent audit rechecked354 markers with zero missing. These are **older artifacts**, not fresh output from this candidate. New browser captures do not close the native output gate. [pdf-status.json](evidence/pre-review/pdf-status.json) explicitly records an empty fresh-path list.
+Settings verified individually in each native print preview: **Save as PDF; Letter; All pages; one page per sheet; Default margins and scale; browser headers/footers off; Background graphics off.** Application print styling determines orientation: schedules 792×612pt landscape; Contact/Call Sheets 612×792pt portrait. Both Call Sheets include contacts.
 
-Next bounded action after native access returns: use this unchanged3524 candidate and the ordinary/long fictional fixtures, save Schedule/Contact/Call Sheet through native Print, record the new paths and print settings, then render and inspect every page plus expected text markers. No access-policy change is needed.
+Fixtures: ordinary `5ba74f3b-690d-42e2-9723-5476bca97f8a` (saved version1, three source rows/contacts); long `d11dc5f9-3718-4e64-86d0-bb2c5e011315` (saved version1,32 source rows/contacts). Printing included their automatic sunrise/sunset draft rows; **neither draft was saved**.
+
+All **17 pages** were rendered with Poppler and PDFium. Every PDFium page was visually inspected for clipping, overlapping content, complete cards/rows, repeated table headings and legibility. All **383 content checks passed with zero missing**: description/nested/note end markers, contact names/emails, Call Sheet key-information values, location rows and header fields appropriate to each output. No output-layout defect was found. Renderer/matcher preparation issues are recorded in the QA summary rather than attributed to the application.
+
+Evidence: [native PDF manifest](evidence/pre-review/native-pdf/manifest.json) contains file hashes, native PDF creation metadata, exact paths, fixture/build identities, page sizes, settings, expected markers and per-page visual observations. [Review summary](evidence/pre-review/native-pdf/review-summary.json) records completion and QA limitations. Native settings captures, extracted text and all page renders are adjacent. [PDF status](evidence/pre-review/pdf-status.json) now lists all six fresh files.
+
+The post-print preservation check again confirms18 retained B14 records,127 pre-existing North/South schedules, both existing productions and all six membership rows unchanged. No application code, saved document, permission, alias, hosted resource, frozen preview or automation was changed. No physical printer, different browser engine, device-specific print or human acceptance claim is added.
+
+Browser/native ownership is released to the coordinator for independent file review. Ordinary Chrome tab 1020304413 and long tab 1020304419 remain on their Call Sheet views; both document titles returned to `Roseland Schedule` and body print classes cleared. Automatic sun-row changes remain unsaved in these tabs.
 
 ## Completed versus blocked ledger
 
@@ -80,7 +95,7 @@ The [prior independent45-family ledger](evidence/pre-review/prior-independent-co
 | SHARE-02 valid legacy alias | Blocked | Only known existing legacy token expired `2026-09-19T06:55:50Z`; no reissue or extension |
 | NAV/LIB/ED/SAVE everyday sequence | Fresh representative Chrome pass | No exhaustive permutation claim |
 | CON-02 / CALL-01 browser documents | Fresh in-app browser views | Screenshots/DOM are not native print evidence |
-| PDF-01/02/03 and PRINT-01 final-build native outputs | Blocked | Native Mac lock/window access; zero fresh PDFs |
+| PDF-01/02/03 and PRINT-01 final-build native outputs | Fresh native outputs complete | Six PDFs,17 pages visually inspected;383 content checks pass. Independent file review pending; physical printing remains open. |
 | UI-02/03 physical devices / PRINT-02 device output | External device gate | Existing desktop viewport evidence only |
 | Hosted integration and full privacy runtime | Outside authorization | No deployment, push, hosted mutations, or access expansion |
 | MIG-01 real-data transfer / reconstruction acceptance | Outside authorization | No real migration/export or writer switch |
@@ -103,5 +118,5 @@ See [baseline.json](evidence/pre-review/baseline.json), [preservation-final.json
 
 1. Open3524 and use the existing fictional North Admin account/authenticator. Search `Pre-review`. Check `Pre-review browser move` under the fictional destination: saved version3, destination project label, retained description/note/town. The Chrome tab is left on that result.
 2. Use the existing North member in a separate session. Search `Pre-review`: source/control remain available; inherited target and destination records should be absent. Open the control to verify normal editing remains available. Compare the before/after capability evidence for the inherited target.
-3. In the existing B14 review session, open ordinary Schedule, Contact Sheet and Call Sheet. The in-app browser is left on the Call Sheet. Inspect the retained second-audit corrections and complete fresh native PDFs once the Mac/native window is accessible; avoid saving the ordinary fixture's automatic draft changes.
+3. In the existing B14 review session, open ordinary Schedule, Contact Sheet and Call Sheet. The in-app browser is left on the Call Sheet. Inspect the retained second-audit corrections and the six fresh PDFs listed above; avoid saving the ordinary fixture's automatic draft changes.
 4. Review this report's remaining gates before any hosted, physical-device, real-data, or acceptance decision. The task stops here for independent review; no automation was restarted.

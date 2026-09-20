@@ -1,0 +1,468 @@
+Window: "", App: Google Chrome.
+0 window Print, Secondary Actions: Raise
+	1 container Print
+		2 container
+			3 HTML content B15 long fictional day - contacts, URL: chrome://print/
+				4 container
+					5 HTML content chrome://print/pdf/index_print.html?chrome-untrusted://print/320CC6DB1F9B365766D6A62270C26A90/0/print.pdf
+						6 container
+							7 container
+								8 button Fit to width
+								9 button Zoom in
+								10 button Zoom out
+							11 text 1
+							12 HTML content
+								13 container PDF document containing 6 pages
+									14 container Finished loading PDF
+										15 text Finished loading PDF
+									16 container Page 1
+										17 text B15 long fictional day
+Tuesday, October 20, 2026
+Contact Sheet
+
+										18 heading 2
+											19 text =Fictional Crew Fictional department
+
+											20 link tel:+1%20202%20555%200142
+											21 link  ✉ crew1@example.test, Value: mailto:crew1@example.test
+										22 link crew1@example.test, Value: mailto:crew1@example.test
+										23 text
+9:00 AM Crew Call Fictional location 1
+DESC-1 Fictional detail with a comma, "quoted text", and multiple lines.
+Second line remains visible. Fictional detail with a comma, "quoted text", and multiple lines.
+Second line remains visible. END-DESC-1
+
+										24 heading 2
+											25 text Example Crew 2 Fictional department
+
+											26 link tel:+1%20202%20555%200142
+											27 link  ✉ crew2@example.test, Value: mailto:crew2@example.test
+										28 link crew2@example.test, Value: mailto:crew2@example.test
+										29 text
+9:00 AM Fictional scene 2 Fictional location 2
+DESC-2 Fictional detail with a comma, "quoted text", and multiple lines.
+Second line remains visible. Fictional detail with a comma, "quoted text", and multiple lines.
+Second line remains visible. END-DESC-2
+
+										30 heading 2
+											31 text Example Crew 3 Fictional department
+
+											32 link tel:+1%20202%20555%200142
+											33 link  ✉ crew3@example.test, Value: mailto:crew3@example.test
+										34 link crew3@example.test, Value: mailto:crew3@example.test
+										35 text
+9:15 AM Fictional scene 3 Fictional location 3
+DESC-3 Fictional detail with a comma, "quoted text", and multiple lines.
+Second line remains visible. Fictional detail with a comma, "quoted text", and multiple lines.
+Second line remains visible. END-DESC-3
+
+										36 heading 2
+											37 text Example Crew 4 Fictional department
+
+											38 link tel:+1%20202%20555%200142
+											39 link  ✉ crew4@example.test, Value: mailto:crew4@example.test
+										40 link crew4@example.test, Value: mailto:crew4@example.test
+										41 text
+9:30 AM Fictional scene 4 Fictional location 4
+DESC-4 Fictional detail with a comma, "quoted text", and multiple lines.
+Second line remains visible. Fictional detail with a comma, "quoted text", and multiple lines.
+Second line remains visible. END-DESC-4
+
+										42 heading 2
+											43 text Example Crew 5 Fictional department
+
+											44 link tel:+1%20202%20555%200142
+											45 link  ✉ crew5@example.test, Value: mailto:crew5@example.test
+										46 link crew5@example.test, Value: mailto:crew5@example.test
+										47 text
+9:45 AM Fictional scene 5 Fictional location 5
+DESC-5 Fictional detail with a comma, "quoted text", and multiple lines.
+Second line remains visible. Fictional detail with a comma, "quoted text", and multiple lines.
+Second line remains visible. END-DESC-5
+									48 container Page 2
+										49 heading 2
+											50 text Example Crew 6 Fictional department
+
+											51 link tel:+1%20202%20555%200142
+											52 link  ✉ crew6@example.test, Value: mailto:crew6@example.test
+										53 link crew6@example.test, Value: mailto:crew6@example.test
+										54 text
+10:00 AM Fictional scene 6 Fictional location 6
+DESC-6 Fictional detail with a comma, "quoted text", and multiple lines.
+Second line remains visible. Fictional detail with a comma, "quoted text", and multiple lines.
+Second line remains visible. END-DESC-6
+
+										55 heading 2
+											56 text Example Crew 7 Fictional department
+
+											57 link tel:+1%20202%20555%200142
+											58 link  ✉ crew7@example.test, Value: mailto:crew7@example.test
+										59 link crew7@example.test, Value: mailto:crew7@example.test
+										60 text
+10:15 AM Fictional scene 7 Fictional location 7
+DESC-7 Fictional detail with a comma, "quoted text", and multiple lines.
+Second line remains visible. Fictional detail with a comma, "quoted text", and multiple lines.
+Second line remains visible. END-DESC-7
+
+										61 heading 2
+											62 text Example Crew 8 Fictional department
+
+											63 link tel:+1%20202%20555%200142
+											64 link  ✉ crew8@example.test, Value: mailto:crew8@example.test
+										65 link crew8@example.test, Value: mailto:crew8@example.test
+										66 text
+10:30 AM Fictional scene 8 Fictional location 8
+DESC-8 Fictional detail with a comma, "quoted text", and multiple lines.
+Second line remains visible. Fictional detail with a comma, "quoted text", and multiple lines.
+Second line remains visible. END-DESC-8
+
+										67 heading 2
+											68 text Example Crew 9 Fictional department
+
+											69 link tel:+1%20202%20555%200142
+											70 link  ✉ crew9@example.test, Value: mailto:crew9@example.test
+										71 link crew9@example.test, Value: mailto:crew9@example.test
+										72 text
+10:45 AM Fictional scene 9 Fictional location 9
+DESC-9 Fictional detail with a comma, "quoted text", and multiple lines.
+Second line remains visible. Fictional detail with a comma, "quoted text", and multiple lines.
+Second line remains visible. END-DESC-9
+
+										73 heading 2
+											74 text Example Crew 10 Fictional department
+
+											75 link tel:+1%20202%20555%200142
+											76 link  ✉ crew10@example.test, Value: mailto:crew10@example.test
+										77 link crew10@example.test, Value: mailto:crew10@example.test
+										78 text
+11:00 AM Fictional scene 10 Fictional location 10
+DESC-10 Fictional detail with a comma, "quoted text", and multiple lines.
+Second line remains visible. Fictional detail with a comma, "quoted text", and multiple lines.
+Second line remains visible. END-DESC-10
+
+										79 heading 2
+											80 text Example Crew 11 Fictional department
+
+											81 link tel:+1%20202%20555%200142
+											82 link  ✉ crew11@example.test, Value: mailto:crew11@example.test
+										83 link crew11@example.test, Value: mailto:crew11@example.test
+										84 text
+11:15 AM Fictional scene 11 Fictional location 11
+DESC-11 Fictional detail with a comma, "quoted text", and multiple lines.
+Second line remains visible. Fictional detail with a comma, "quoted text", and multiple lines.
+Second line remains visible. END-DESC-11
+									85 container Page 3
+										86 heading 2
+											87 text Example Crew 12 Fictional department
+
+											88 link tel:+1%20202%20555%200142
+											89 link  ✉ crew12@example.test, Value: mailto:crew12@example.test
+										90 link crew12@example.test, Value: mailto:crew12@example.test
+										91 text
+11:30 AM Fictional scene 12 Fictional location 12
+DESC-12 Fictional detail with a comma, "quoted text", and multiple lines.
+Second line remains visible. Fictional detail with a comma, "quoted text", and multiple lines.
+Second line remains visible. END-DESC-12
+
+										92 heading 2
+											93 text Example Crew 13 Fictional department
+
+											94 link tel:+1%20202%20555%200142
+											95 link  ✉ crew13@example.test, Value: mailto:crew13@example.test
+										96 link crew13@example.test, Value: mailto:crew13@example.test
+										97 text
+11:45 AM Fictional scene 13 Fictional location 13
+DESC-13 Fictional detail with a comma, "quoted text", and multiple lines.
+Second line remains visible. Fictional detail with a comma, "quoted text", and multiple lines.
+Second line remains visible. END-DESC-13
+
+										98 heading 2
+											99 text Example Crew 14 Fictional department
+
+											100 link tel:+1%20202%20555%200142
+											101 link  ✉ crew14@example.test, Value: mailto:crew14@example.test
+										102 link crew14@example.test, Value: mailto:crew14@example.test
+										103 text
+12:00 PM Fictional scene 14 Fictional location 14
+DESC-14 Fictional detail with a comma, "quoted text", and multiple lines.
+Second line remains visible. Fictional detail with a comma, "quoted text", and multiple lines.
+Second line remains visible. END-DESC-14
+
+										104 heading 2
+											105 text Example Crew 15 Fictional department
+
+											106 link tel:+1%20202%20555%200142
+											107 link  ✉ crew15@example.test, Value: mailto:crew15@example.test
+										108 link crew15@example.test, Value: mailto:crew15@example.test
+										109 text
+12:15 PM Fictional scene 15 Fictional location 15
+DESC-15 Fictional detail with a comma, "quoted text", and multiple lines.
+Second line remains visible. Fictional detail with a comma, "quoted text", and multiple lines.
+Second line remains visible. END-DESC-15
+
+										110 heading 2
+											111 text Example Crew 16 Fictional department
+
+											112 link tel:+1%20202%20555%200142
+											113 link  ✉ crew16@example.test, Value: mailto:crew16@example.test
+										114 link crew16@example.test, Value: mailto:crew16@example.test
+										115 text
+12:30 PM Fictional scene 16 Fictional location 16
+DESC-16 Fictional detail with a comma, "quoted text", and multiple lines.
+Second line remains visible. Fictional detail with a comma, "quoted text", and multiple lines.
+Second line remains visible. END-DESC-16
+
+										116 heading 2
+											117 text Example Crew 17 Fictional department
+
+											118 link tel:+1%20202%20555%200142
+											119 link  ✉ crew17@example.test, Value: mailto:crew17@example.test
+										120 link crew17@example.test, Value: mailto:crew17@example.test
+										121 text
+12:45 PM Fictional scene 17 Fictional location 17
+DESC-17 Fictional detail with a comma, "quoted text", and multiple lines.
+Second line remains visible. Fictional detail with a comma, "quoted text", and multiple lines.
+Second line remains visible. END-DESC-17
+									122 container Page 4
+										123 heading 2
+											124 text Example Crew 18 Fictional department
+
+											125 link tel:+1%20202%20555%200142
+											126 link  ✉ crew18@example.test, Value: mailto:crew18@example.test
+										127 link crew18@example.test, Value: mailto:crew18@example.test
+										128 text
+1:00 PM Fictional scene 18 Fictional location 18
+DESC-18 Fictional detail with a comma, "quoted text", and multiple lines.
+Second line remains visible. Fictional detail with a comma, "quoted text", and multiple lines.
+Second line remains visible. END-DESC-18
+
+										129 heading 2
+											130 text Example Crew 19 Fictional department
+
+											131 link tel:+1%20202%20555%200142
+											132 link  ✉ crew19@example.test, Value: mailto:crew19@example.test
+										133 link crew19@example.test, Value: mailto:crew19@example.test
+										134 text
+1:15 PM Fictional scene 19 Fictional location 19
+DESC-19 Fictional detail with a comma, "quoted text", and multiple lines.
+Second line remains visible. Fictional detail with a comma, "quoted text", and multiple lines.
+Second line remains visible. END-DESC-19
+
+										135 heading 2
+											136 text Example Crew 20 Fictional department
+
+											137 link tel:+1%20202%20555%200142
+											138 link  ✉ crew20@example.test, Value: mailto:crew20@example.test
+										139 link crew20@example.test, Value: mailto:crew20@example.test
+										140 text
+1:30 PM Fictional scene 20 Fictional location 20
+DESC-20 Fictional detail with a comma, "quoted text", and multiple lines.
+Second line remains visible. Fictional detail with a comma, "quoted text", and multiple lines.
+Second line remains visible. END-DESC-20
+
+										141 heading 2
+											142 text Example Crew 21 Fictional department
+
+											143 link tel:+1%20202%20555%200142
+											144 link  ✉ crew21@example.test, Value: mailto:crew21@example.test
+										145 link crew21@example.test, Value: mailto:crew21@example.test
+										146 text
+1:45 PM Fictional scene 21 Fictional location 21
+DESC-21 Fictional detail with a comma, "quoted text", and multiple lines.
+Second line remains visible. Fictional detail with a comma, "quoted text", and multiple lines.
+Second line remains visible. END-DESC-21
+
+										147 heading 2
+											148 text Example Crew 22 Fictional department
+
+											149 link tel:+1%20202%20555%200142
+											150 link  ✉ crew22@example.test, Value: mailto:crew22@example.test
+										151 link crew22@example.test, Value: mailto:crew22@example.test
+										152 text
+2:00 PM Fictional scene 22 Fictional location 22
+DESC-22 Fictional detail with a comma, "quoted text", and multiple lines.
+Second line remains visible. Fictional detail with a comma, "quoted text", and multiple lines.
+Second line remains visible. END-DESC-22
+
+										153 heading 2
+											154 text Example Crew 23 Fictional department
+
+											155 link tel:+1%20202%20555%200142
+											156 link  ✉ crew23@example.test, Value: mailto:crew23@example.test
+										157 link crew23@example.test, Value: mailto:crew23@example.test
+										158 text
+2:15 PM Fictional scene 23 Fictional location 23
+DESC-23 Fictional detail with a comma, "quoted text", and multiple lines.
+Second line remains visible. Fictional detail with a comma, "quoted text", and multiple lines.
+Second line remains visible. END-DESC-23
+									159 container Page 5
+										160 heading 2
+											161 text Example Crew 24 Fictional department
+
+											162 link tel:+1%20202%20555%200142
+											163 link  ✉ crew24@example.test, Value: mailto:crew24@example.test
+										164 link crew24@example.test, Value: mailto:crew24@example.test
+										165 text
+2:30 PM Fictional scene 24 Fictional location 24
+DESC-24 Fictional detail with a comma, "quoted text", and multiple lines.
+Second line remains visible. Fictional detail with a comma, "quoted text", and multiple lines.
+Second line remains visible. END-DESC-24
+
+										166 heading 2
+											167 text Example Crew 25 Fictional department
+
+											168 link tel:+1%20202%20555%200142
+											169 link  ✉ crew25@example.test, Value: mailto:crew25@example.test
+										170 link crew25@example.test, Value: mailto:crew25@example.test
+										171 text
+2:45 PM Fictional scene 25 Fictional location 25
+DESC-25 Fictional detail with a comma, "quoted text", and multiple lines.
+Second line remains visible. Fictional detail with a comma, "quoted text", and multiple lines.
+Second line remains visible. END-DESC-25
+
+										172 heading 2
+											173 text Example Crew 26 Fictional department
+
+											174 link tel:+1%20202%20555%200142
+											175 link  ✉ crew26@example.test, Value: mailto:crew26@example.test
+										176 link crew26@example.test, Value: mailto:crew26@example.test
+										177 text
+3:00 PM Fictional scene 26 Fictional location 26
+DESC-26 Fictional detail with a comma, "quoted text", and multiple lines.
+Second line remains visible. Fictional detail with a comma, "quoted text", and multiple lines.
+Second line remains visible. END-DESC-26
+
+										178 heading 2
+											179 text Example Crew 27 Fictional department
+
+											180 link tel:+1%20202%20555%200142
+											181 link  ✉ crew27@example.test, Value: mailto:crew27@example.test
+										182 link crew27@example.test, Value: mailto:crew27@example.test
+										183 text
+3:15 PM Fictional scene 27 Fictional location 27
+DESC-27 Fictional detail with a comma, "quoted text", and multiple lines.
+Second line remains visible. Fictional detail with a comma, "quoted text", and multiple lines.
+Second line remains visible. END-DESC-27
+
+										184 heading 2
+											185 text Example Crew 28 Fictional department
+
+											186 link tel:+1%20202%20555%200142
+											187 link  ✉ crew28@example.test, Value: mailto:crew28@example.test
+										188 link crew28@example.test, Value: mailto:crew28@example.test
+										189 text
+3:30 PM Fictional scene 28 Fictional location 28
+DESC-28 Fictional detail with a comma, "quoted text", and multiple lines.
+Second line remains visible. Fictional detail with a comma, "quoted text", and multiple lines.
+Second line remains visible. END-DESC-28
+
+										190 heading 2
+											191 text Example Crew 29 Fictional department
+
+											192 link tel:+1%20202%20555%200142
+											193 link  ✉ crew29@example.test, Value: mailto:crew29@example.test
+										194 link crew29@example.test, Value: mailto:crew29@example.test
+										195 text
+3:45 PM Fictional scene 29 Fictional location 29
+DESC-29 Fictional detail with a comma, "quoted text", and multiple lines.
+Second line remains visible. Fictional detail with a comma, "quoted text", and multiple lines.
+Second line remains visible. END-DESC-29
+									196 container Page 6
+										197 heading 2
+											198 text Example Crew 30 Fictional department
+
+											199 link tel:+1%20202%20555%200142
+											200 link  ✉ crew30@example.test, Value: mailto:crew30@example.test
+										201 link crew30@example.test, Value: mailto:crew30@example.test
+										202 text
+4:00 PM Fictional scene 30 Fictional location 30
+DESC-30 Fictional detail with a comma, "quoted text", and multiple lines.
+Second line remains visible. Fictional detail with a comma, "quoted text", and multiple lines.
+Second line remains visible. END-DESC-30
+
+										203 heading 2
+											204 text Example Crew 31 Fictional department
+
+											205 link tel:+1%20202%20555%200142
+											206 link  ✉ crew31@example.test, Value: mailto:crew31@example.test
+										207 link crew31@example.test, Value: mailto:crew31@example.test
+										208 text
+4:15 PM Fictional scene 31 Fictional location 31
+DESC-31 Fictional detail with a comma, "quoted text", and multiple lines.
+Second line remains visible. Fictional detail with a comma, "quoted text", and multiple lines.
+Second line remains visible. END-DESC-31
+
+										209 heading 2
+											210 text Example Crew 32 Fictional department
+
+											211 link tel:+1%20202%20555%200142
+											212 link  ✉ crew32@example.test, Value: mailto:crew32@example.test
+										213 link crew32@example.test, Value: mailto:crew32@example.test
+										214 text
+4:30 PM Wrap Fictional location 32 DESC-32 Fictional detail with a comma, "quoted text", and multiple lines.
+Second line remains visible. Fictional detail with a comma, "quoted text", and multiple lines.
+Second line remains visible. END-DESC-32
+					215 container
+						216 text "
+					217 container
+						218 text "
+					219 container
+						220 text "
+					221 container
+						222 text "
+				223 heading Print, Value: 1
+					224 text Print
+				225 text 6 pages
+				226 container
+					227 text Destination
+					228 pop up button Destination, Value: Save as PDF
+						229 (selected) Save as PDF
+					230 text Pages
+					231 pop up button Pages, Value: All
+					232 container More settings
+						233 button More settings
+					234 text Paper size
+					235 container Paper size
+						236 pop up button Paper size, Value: Letter
+							237 (selected)  Letter
+					238 text Pages per sheet
+					239 pop up button Pages per sheet, Value: 1
+						240 (selected) 1
+					241 text Margins
+					242 pop up button Margins, Value: Default
+						243 (selected) Default
+					244 text Scale
+					245 pop up button Scale, Value: Default
+						246 (selected) Default
+					247 text Options
+					248 container
+						249 checkbox Headers and footers, Value: 0
+							250 image
+						251 text Headers and footers
+					252 container
+						253 checkbox Background graphics, Value: 0
+							254 image
+						255 text Background graphics
+					256 container
+						257 text Print using system dialog… (⌥⌘P)
+						258 button Print using system dialog… (⌥⌘P)
+					259 container
+						260 text Open PDF in Preview
+						261 button Open PDF in Preview
+				262 button Cancel
+					263 text Cancel
+				264 button Save
+					265 text Save
+266 menu bar
+	267 Chrome
+	268 File
+	269 Edit
+	270 View
+	271 History
+	272 Bookmarks
+	273 Profiles
+	274 Tab
+	275 Window
+	276 Help
+
+The focused UI element is 233 button More settings

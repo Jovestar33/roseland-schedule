@@ -1,0 +1,17 @@
+{
+  "checkedAt": "2026-09-20T02:43:09.346137+00:00",
+  "files": 6,
+  "pages": 17,
+  "checkedMarkers": 383,
+  "missingMarkers": 0,
+  "allPagesVisuallyInspected": true,
+  "nativeOnly": true,
+  "applicationCodeChanged": false,
+  "savedFixtureDocumentsChanged": false,
+  "browserOwnership": "Released to coordinator after native printing; no further browser interaction planned",
+  "qaNotes": [
+    "Initial concurrent PDFium rendering crashed before QA completion; sequential rendering succeeded. PDF source files were not modified.",
+    "Initial compacted-text matcher joined row-ending marker digits with following time digits; corrected matcher preserves numeric boundaries while tolerating extracted glyph spacing. 383 checks passed.",
+    "One stale native element ID was rejected before the first Save action; fresh current accessibility IDs were used. No duplicate output was created."
+  ]
+}

@@ -1,0 +1,158 @@
+Window: "", App: Google Chrome.
+0 window Print, Secondary Actions: Raise
+	1 container Print
+		2 container
+			3 HTML content B15 ordinary fictional day - schedule, URL: chrome://print/
+				4 container
+					5 HTML content chrome://print/pdf/index_print.html?chrome-untrusted://print/649BE9C315F1372DD7AAE21D37DFFB9B/0/print.pdf
+						6 container
+							7 container
+								8 button Fit to width
+								9 button Zoom in
+								10 button Zoom out
+							11 HTML content
+								12 container PDF document containing 1 page
+									13 container This PDF is inaccessible. Couldn't download text extraction files. Please try again later.
+										14 text This PDF is inaccessible. Couldn't download text extraction files. Please try again later.
+									15 container Page 1
+										16 text SUNRISE ������ 6:30 AM SUNSET ������ 7:15 PM HIGH / LOW 75°F / 54°F CONDITIONS ⛅ Partly Cloudy PRECIP 35%
+
+										17 text B 1 5 o r d i n a r y f icti o n a l d a y
+Ficti o n a l p r o d u cti o n – d o c ume n t a ccepta n ce
+Principal photography · Day 2 of 12
+
+										18 text AAccttii oonn LLoo ccaattii oonn DDeessccrriippttii oonn Notes TTiimmee IInn DDuurraattii oonn TTiimmee OOuutt
+
+										19 text ������ Sunrise 6:30 AM
+
+										20 text 2 Crew Call Fictional location 1
+100 Example Lane, Fictional Town
+↳ Annex 1
+200 Sample Road
+SUB-1 Fictional nested description ENDSUB-1
+
+										21 text DESC-1 Fictional detail with a comma,
+"quoted text", and multiple lines.
+Second line remains visible. ENDDESC-1
+
+										22 text NOTE-1 Fictional
+instructions END-NOTE1
+
+										23 text 9:00 AM 00:00 9:00 AM
+
+										24 text 3 Fictional scene 2 Fictional location 2
+101 Example Lane, Fictional Town
+↳ Annex 2
+201 Sample Road
+SUB-2 Fictional nested description
+END-SUB-2
+
+										25 text DESC-2 Fictional detail with a comma,
+"quoted text", and multiple lines.
+Second line remains visible. ENDDESC-2
+
+										26 text NOTE-2 Fictional
+instructions END-NOTE2
+
+										27 text 9:00 AM 00:15 9:15 AM
+
+										28 text 4 Wrap Fictional location 3
+102 Example Lane, Fictional Town
+↳ Annex 3
+202 Sample Road
+SUB-3 Fictional nested description
+END-SUB-3
+
+										29 text DESC-3 Fictional detail with a comma,
+"quoted text", and multiple lines.
+Second line remains visible. ENDDESC-3
+
+										30 text NOTE-3 Fictional
+instructions END-NOTE3
+
+										31 text 9:15 AM 00:15 9:30 AM
+
+										32 text ������ Sunset 7:15 PM
+
+										33 text B 1 4 L A T E S T O R G A N I Z A T I O N L A B E L S
+
+										34 text TOWN / LOCATION
+Fictional Harbor Studio
+DATE
+Tuesday, October 20, 2026
+CALL TIME
+9:00 AM
+
+										35 container
+											36 text PRODUCER
+Fictional producer with complete long credit
+DIRECTOR
+Fictional director
+CAMERA
+Fictional camera lead
+											37 image Unlabeled image
+					38 container
+						39 text "
+					40 container
+						41 text "
+					42 container
+						43 text "
+					44 container
+						45 text "
+				46 heading Print, Value: 1
+					47 text Print
+				48 text 1 page
+				49 container
+					50 text Destination
+					51 pop up button Destination, Value: Save as PDF
+						52 (selected) Save as PDF
+					53 text Pages
+					54 pop up button Pages, Value: All
+						55 (selected) All
+					56 container More settings
+						57 button More settings
+					58 text Paper size
+					59 container Paper size
+						60 pop up button Paper size, Value: Letter
+							61 (selected)  Letter
+					62 text Pages per sheet
+					63 pop up button Pages per sheet, Value: 1
+						64 (selected) 1
+					65 text Margins
+					66 pop up button Margins, Value: Default
+						67 (selected) Default
+					68 text Scale
+					69 pop up button Scale, Value: Default
+						70 (selected) Default
+					71 text Options
+					72 container
+						73 checkbox Headers and footers, Value: 0
+							74 image
+						75 text Headers and footers
+					76 container
+						77 checkbox Background graphics, Value: 0
+							78 image
+						79 text Background graphics
+					80 container
+						81 text Print using system dialog… (⌥⌘P)
+						82 button Print using system dialog… (⌥⌘P)
+					83 container
+						84 text Open PDF in Preview
+						85 button Open PDF in Preview
+				86 button Cancel
+					87 text Cancel
+				88 button Save
+					89 text Save
+90 menu bar
+	91 Chrome
+	92 File
+	93 Edit
+	94 View
+	95 History
+	96 Bookmarks
+	97 Profiles
+	98 Tab
+	99 Window
+	100 Help
+
+The focused UI element is 57 button More settings

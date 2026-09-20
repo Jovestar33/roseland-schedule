@@ -1,0 +1,15 @@
+B15 ordinary fictional day
+Tuesday, October 20, 2026
+Contact Sheet
+=Fictional Crew Fictional departm ent
+📞  +1 202 555 0142 ✉  crew1@ exam ple.test
+9:00 AMCrew Call Fictional location 1 DESC-1 Fictional detail with a com m a, "quoted text", and m ultiple lines.
+Second line rem ains visible.  END-DESC-1
+Exam ple Crew 2 Fictional departm ent
+📞  +1 202 555 0142 ✉  crew2@ exam ple.test
+9:00 AMFictional scene 2 Fictional location 2 DESC-2 Fictional detail with a com m a, "quoted text", and m ultiple lines.
+Second line rem ains visible.  END-DESC-2
+Exam ple Crew 3 Fictional departm ent
+📞  +1 202 555 0142 ✉  crew3@ exam ple.test
+9:15 AMW rap Fictional location 3 DESC-3 Fictional detail with a com m a, "quoted text", and m ultiple lines.
+Second line rem ains visible.  END-DESC-3

@@ -1,0 +1,18 @@
+{
+  "ordinary": {
+    "url": "http://127.0.0.1:3524/review?screen=schedule&org=2f75e684-eb3a-4951-9389-2df147812a8a&schedule=5ba74f3b-690d-42e2-9723-5476bca97f8a",
+    "state": {
+      "active": "Call Sheet✕Fictional production – document acceptance · Principal photography · Day 2 of 12Producer Fictional producer with complete long creditDirector Fictional directorCamera Fictional camera leadTuesday, October 20, 2026Location Fictional Harbor StudioWeather Partly Cloudy · 54–75°FGeneral Call9:00 AMSchedule6:30 AM🌅 Sunrise9:00 AMCrew CallFictional location 19:00 AMFictional scene 2Fictional location 29:15 AMWrapFictional location 37:15 PM🌇 SunsetKey InformationBasecamp100 Example Lane, Fictional Harbor📍Crew Parking200 Sample Road, Fictional Town📍Nearest HospitalFictional care center — fixture only📍Emergency ContactExample coordinator +1 202 555 0100Meal NotesFictional lunch\nVegetarian optionSafety NotesFictional safety instructions\nKeep pathways clearSpecial InstructionsFictional access instructions\nBring sample badgeGeneral NotesCALL-NOTES Fictional detail with a comma, \"quoted text\", and multiple lines.\nSecond line remains visible. Fictional detail with a comma, \"quoted text\", and multiple lines.\nSecond line remains visible.  END-CALL-NOTESContacts=Fictional CrewFictional department+1 202 555 0142crew1@example.testExample Crew 2Fictional department+1 202 555 0142crew2@example.testExample Crew 3Fictional department+1 202 555 0142crew3@example.test Include contacts🖨 Print",
+      "bodyClass": "",
+      "title": "Roseland Schedule"
+    }
+  },
+  "long": {
+    "url": "http://127.0.0.1:3524/review?screen=schedule&org=2f75e684-eb3a-4951-9389-2df147812a8a&schedule=d11dc5f9-3718-4e64-86d0-bb2c5e011315",
+    "state": {
+      "active": "🖨 Print",
+      "bodyClass": "",
+      "title": "Roseland Schedule"
+    }
+  }
+}

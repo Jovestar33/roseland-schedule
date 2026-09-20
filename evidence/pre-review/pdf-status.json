@@ -1,13 +1,19 @@
 {
-  "freshNativePdfPaths": [],
-  "status": "blocked",
-  "reason": "Native Mac control reported locked, then Chrome window not found; user unlock request pending.",
-  "historicalFilesReusedAsFresh": false,
-  "plannedKinds": [
-    "schedule",
-    "contacts",
-    "callsheet"
+  "status": "fresh native outputs complete; independent review pending",
+  "freshNativePdfPaths": [
+    "/private/tmp/roseland-pre-review-technical-completion/output/pdf/pre-review-native/long-callsheet.pdf",
+    "/private/tmp/roseland-pre-review-technical-completion/output/pdf/pre-review-native/long-contacts.pdf",
+    "/private/tmp/roseland-pre-review-technical-completion/output/pdf/pre-review-native/long-schedule.pdf",
+    "/private/tmp/roseland-pre-review-technical-completion/output/pdf/pre-review-native/ordinary-callsheet.pdf",
+    "/private/tmp/roseland-pre-review-technical-completion/output/pdf/pre-review-native/ordinary-contacts.pdf",
+    "/private/tmp/roseland-pre-review-technical-completion/output/pdf/pre-review-native/ordinary-schedule.pdf"
   ],
+  "pages": 17,
+  "checkedMarkers": 383,
+  "missingMarkers": 0,
+  "allPagesVisuallyInspected": true,
+  "historicalFilesReusedAsFresh": false,
   "applicationCommit": "8965ba8",
-  "build": "R2Sn1Vtshobzqmgm-abnr"
+  "build": "R2Sn1Vtshobzqmgm-abnr",
+  "previousBlocker": "Resolved after user confirmed laptop unlocked; normal native Chrome controls used"
 }
