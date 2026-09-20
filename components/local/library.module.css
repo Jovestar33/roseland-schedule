@@ -39,14 +39,14 @@
 .filters select,.filters input { width:100%; min-width:0; min-height:36px; border:1px solid var(--g300); border-radius:8px; padding:8px 10px; font:inherit; color:var(--ink); background:white; }
 @media(max-width:640px){.library .filters{grid-template-columns:1fr;}}
 
-/* Readable library hierarchy; controls and tree semantics stay unchanged. */
+/* Keep readable metadata and restore the library's existing rose/display character. */
 .library:global(.lib-page) { max-width:1000px; padding:28px 24px; }
-.library :global(.lib-title) { font-family:var(--fb); font-size:27px; font-weight:600; letter-spacing:-.5px; }
-.library button:global(.lbt-sched-name), .library :global(.lib-recent-name) { color:var(--ink); font-size:14px; font-weight:600; white-space:normal; overflow-wrap:anywhere; max-width:none; }
-.library :global(.lbt-sched-row) { gap:12px; padding-top:13px; padding-bottom:13px; }
-.library :global(.lbt-prod) { border-radius:4px; box-shadow:none; }
+.library :global(.lib-title) { font-family:var(--fd); font-size:26px; letter-spacing:3px; }
+.library button:global(.lbt-sched-name), .library :global(.lib-recent-name) { color:var(--pink-dark); font-size:14px; font-weight:600; white-space:normal; overflow-wrap:anywhere; max-width:none; }
+.library :global(.lbt-sched-row) { gap:12px; padding-top:8px; padding-bottom:8px; }
+.library :global(.lbt-prod) { border-radius:12px; box-shadow:none; }
 .library :global(.lbt-prod-row) { background:#f7f7f8; }
-.library :global(.lib-recent) { border-radius:4px; background:white; }
+.library :global(.lib-recent) { border-radius:10px; background:white; }
 .library :global(.lib-recent-meta), .library :global(.lib-recent-time), .metadata { color:#5e5e68; font-size:12px; white-space:normal; overflow-wrap:anywhere; }
 .library :global(.lib-recent-item) { flex-wrap:wrap; gap:6px 16px; }
 .library :global(.lib-recent-name) { flex:1 1 240px; text-align:left; }
@@ -58,3 +58,6 @@
  .library :global(.lib-recent-name){flex-basis:100%;}
  .library :global(.lib-recent-meta){flex:1 1 150px;}
 }
+
+.library button:global(.lbt-sched-name):hover, .library :global(.lib-recent-name):hover { text-decoration:underline; text-underline-offset:3px; }
+.library button:global(.lbt-sched-name):focus-visible, .library :global(.lib-recent-name):focus-visible { outline:2px solid var(--pink-dark); outline-offset:3px; border-radius:2px; text-decoration:underline; text-underline-offset:3px; }
