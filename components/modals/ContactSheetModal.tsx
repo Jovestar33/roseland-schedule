@@ -4,6 +4,8 @@ import { useScheduleStore } from '@/lib/store/scheduleStore';
 import Modal from './Modal';
 import { documentContacts, contactsCsv, safeDownloadName, type DocumentContact } from '@/lib/document-tools';
 import { printDocument } from '@/lib/print';
+import DocumentPrintFurniture from './DocumentPrintFurniture';
+import { dateLabel } from '@/lib/date-label';
 import { useContext } from 'react';
 import { ModalVisibilityContext } from './Modal';
 import { useLocalEditor } from '@/components/schedule/LocalEditorContext';
@@ -24,39 +26,33 @@ function ContactCards({ contacts }: { contacts: DocumentContact[] }) {
       </p>
     );
   }
-  return (
-    <div className="cs-list">
-      {contacts.map((c, i) => {
-        const hasCtx = c.rows.some(r => r.timeIn || r.action || r.loc || r.desc);
-        return (
-          <div key={i} className="cs-card">
-            <div className="cs-card-head">
-              <span className="cs-name">{c.name || <em>Unnamed</em>}</span>
+  return <div className="cs-list">
+    {contacts.map((c, i) => <section key={i} className="cs-card" aria-label={c.name || 'Unnamed contact'}>
+      <table className="cs-contact-table">
+        <colgroup><col className="cs-time-col" /><col /></colgroup>
+        <thead><tr><th colSpan={2} scope="colgroup">
+          <div className="cs-identity">
+            <div className="cs-card-head"><span className="cs-name">{c.name || 'Unnamed'}</span>
               {c.title && <span className="cs-title">{c.title}</span>}
             </div>
             <div className="cs-contact-row">
-              {c.phone && <a href={`tel:${c.phone}`} className="cs-phone">📞 {c.phone}</a>}
-              {c.email && <a href={`mailto:${c.email}`} className="cs-email">✉ {c.email}</a>}
+              {c.phone && <a href={`tel:${c.phone}`} className="cs-phone">{c.phone}</a>}
+              {c.email && <a href={`mailto:${c.email}`} className="cs-email">{c.email}</a>}
             </div>
-            {hasCtx && (
-              <div className="cs-rows">
-                {c.rows.map((r, j) =>
-                  (r.timeIn || r.action || r.loc || r.desc) ? (
-                    <div key={j} className="cs-row-ctx">
-                      {r.timeIn  && <span className="cs-row-time">{r.timeIn}</span>}
-                      {r.action  && <span className="cs-row-action">{r.action}</span>}
-                      {r.loc     && <span className="cs-row-loc">{r.loc}</span>}
-                      {r.desc    && <span className="cs-row-desc">{r.desc}</span>}
-                    </div>
-                  ) : null
-                )}
-              </div>
-            )}
           </div>
-        );
-      })}
-    </div>
-  );
+        </th></tr></thead>
+        <tbody>{c.rows.map((r, j) => (r.timeIn || r.action || r.loc || r.desc) ?
+          <tr key={j} className="cs-row-ctx">
+            <td className="cs-row-time">{r.timeIn}</td>
+            <td className="cs-assignment">
+              {r.action && <span className="cs-row-action">{r.action}</span>}
+              {r.loc && <span className="cs-row-loc">{r.loc}</span>}
+              {r.desc && <span className="cs-row-desc">{r.desc}</span>}
+            </td>
+          </tr> : null)}</tbody>
+      </table>
+    </section>)}
+  </div>;
 }
 
 interface Props {
@@ -74,7 +70,7 @@ export default function ContactSheetModal({ open, onClose, authorizeOutput }: Pr
   const visible = useContext(ModalVisibilityContext);
   const local = useLocalEditor();
 
-  const formattedDate = meta.date
+  const formattedDate = dateLabel(meta.date) !== 'Date not set'
     ? new Date(meta.date + 'T12:00:00').toLocaleDateString('en-US', {
         weekday: 'long', month: 'long', day: 'numeric', year: 'numeric',
       })
@@ -108,8 +104,8 @@ export default function ContactSheetModal({ open, onClose, authorizeOutput }: Pr
         }
       >
         <div className="cs-subtitle">
-          <span className="cs-sched-name">{scheduleName}</span>
-          {formattedDate && <span className="cs-date">· {formattedDate}</span>}
+          <h1 className="cs-sched-name">{scheduleName || 'Contact Sheet'}</h1>
+          <span className="cs-date">{formattedDate || 'Date not set'}</span>
           <span className="cs-count">· {contacts.length} contact{contacts.length !== 1 ? 's' : ''}</span>
         </div>
         <ContactCards contacts={contacts} />
@@ -123,6 +119,7 @@ export default function ContactSheetModal({ open, onClose, authorizeOutput }: Pr
       ──────────────────────────────────────────────────────────────────── */}
       {open && visible && typeof document !== 'undefined' && createPortal(
         <div className="cs-print-only">
+          <DocumentPrintFurniture name={scheduleName} date={formattedDate} kind="Contact Sheet" />
           <div className="cs-print-header">
             <div className="cs-print-sched-name">{scheduleName}</div>
             {formattedDate && <div className="cs-print-date">{formattedDate}</div>}

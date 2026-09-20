@@ -76,3 +76,4 @@
 .modal.csh-modal{width:min(860px,calc(100vw - 32px))!important;max-width:860px!important}
 .csh-modal .mhead h2{font-family:var(--fb);font-size:18px;letter-spacing:0}
 .csh-document th{letter-spacing:normal;text-transform:none}
+@media print{.callsheet-print-only .csh-document th{letter-spacing:normal!important;text-transform:none!important}.callsheet-print-only .csh-document tbody tr:nth-child(even){background:transparent!important}}

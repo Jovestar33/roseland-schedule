@@ -1,153 +1,54 @@
-/* ── Contact Sheet Modal ──────────────────────────────────────────── */
-
-.cs-modal { max-width: 620px; }
-
-.cs-modal .mbody {
-  max-height: 60vh;
-  overflow-y: auto;
+/* Identity is a repeating table header; assignments have a stable time column. */
+.modal.cs-modal{width:min(860px,calc(100vw - 32px))!important;max-width:860px!important}
+.cs-modal .mbody{max-height:65vh;overflow-y:auto;padding:28px}
+.cs-modal .mhead h2{font-family:var(--fb);font-size:18px;letter-spacing:0}
+.cs-subtitle{display:flex;flex-wrap:wrap;gap:6px 10px;color:#5e5e68;font-size:13px;margin-bottom:24px}
+.cs-sched-name{flex-basis:100%;font-family:var(--fb);font-size:25px;font-weight:600;letter-spacing:-.4px;line-height:1.2;margin:0 0 8px;color:#202025;overflow-wrap:anywhere}
+.cs-empty{font-size:13px;color:#5e5e68;margin:16px 0}
+.cs-list{display:block;font-family:var(--fb,'DM Sans',Arial,sans-serif);color:#202025}
+.cs-card{border:0;border-top:1px solid #dddde2;border-radius:0;padding:16px 0;margin:0;break-inside:avoid}
+.cs-contact-table{width:100%;table-layout:fixed;border-collapse:collapse}
+.cs-time-col{width:82px}
+.cs-contact-table :is(td,th){font:inherit;font-size:13px;text-align:left;padding:0;vertical-align:top;border:0;white-space:pre-wrap;overflow-wrap:anywhere;text-transform:none;letter-spacing:normal;background:transparent}
+.cs-contact-table thead th{padding-bottom:12px}
+.cs-identity{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start}
+.cs-card-head,.cs-contact-row{display:flex;flex-direction:column;gap:3px;min-width:0}
+.cs-name{font-size:15px;font-weight:600;line-height:1.4;color:#202025}
+.cs-title{font-size:12px;color:#5e5e68;font-weight:400;line-height:1.5}
+.cs-phone,.cs-email{font-size:13px;font-weight:400;line-height:1.5;color:#404049;text-decoration:none;overflow-wrap:anywhere}
+.cs-phone:hover,.cs-email:hover{color:#9d1468;text-decoration:underline}
+.cs-contact-table .cs-row-time{font-size:12px;font-weight:500;white-space:nowrap;font-variant-numeric:tabular-nums;color:#5e5e68;padding:7px 10px 7px 0}
+.cs-contact-table .cs-assignment{padding:7px 0;line-height:1.5}
+.cs-row-action,.cs-row-loc,.cs-row-desc{display:block;white-space:pre-wrap;overflow-wrap:anywhere}
+.cs-row-action{font-weight:500;color:#202025}
+.cs-row-loc{color:#404049}
+.cs-row-desc{font-size:13px;font-style:normal;color:#5e5e68;margin-top:4px}
+.cs-contact-table tbody tr,.cs-contact-table tbody tr:nth-child(even){background:transparent}
+.cs-modal .mfoot{display:flex;justify-content:flex-end;align-items:center;gap:8px}
+.cs-print-only,.cs-print-header{display:none}
+@media(max-width:600px){
+ .cs-modal .mbody{padding:20px 16px}
+ .cs-sched-name{font-size:22px}
+ .cs-identity{grid-template-columns:1fr;gap:8px}
+ .cs-time-col{width:75px}
+ .cs-modal .mfoot{flex-wrap:wrap}
 }
-
-/* Subtitle line: schedule name · date · count */
-.cs-subtitle {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px 6px;
-  font-size: 12px;
-  color: var(--g500);
-  margin-bottom: 16px;
+@media print{
+ body.cs-printing :is(.panel,.hdr,.toolbar,.wx-strip,.add-area){display:none!important}
+ body.cs-printing .cs-print-only{display:block!important}
+ .cs-print-only .cs-print-header{display:block!important;border-bottom:0;padding:0;margin-bottom:22px;break-after:avoid}
+ .cs-print-only .cs-print-sched-name{font-family:var(--fb,'DM Sans',Arial,sans-serif);font-size:19pt;font-weight:600;color:#202025;overflow-wrap:anywhere}
+ .cs-print-only .cs-print-date{font-family:var(--fb,'DM Sans',Arial,sans-serif);font-size:10pt;color:#5e5e68;margin-top:6px}
+ .cs-print-only .cs-print-title{font-family:var(--fb,'DM Sans',Arial,sans-serif);font-size:12pt;font-weight:600;letter-spacing:0;margin:12px 0 0}
+ .cs-print-only .cs-card{break-inside:avoid;page-break-inside:avoid;padding:12pt 0}
+ .cs-print-only .cs-contact-table :is(td,th),.cs-print-only .cs-contact-table :is(td,th):last-child{display:table-cell!important;visibility:visible!important;overflow:visible!important;max-width:none!important;width:auto!important;font-family:var(--fb,'DM Sans',Arial,sans-serif)!important;font-size:10pt!important;line-height:1.5!important;padding:6pt 0!important;color:#202025!important;border:0!important;white-space:pre-wrap!important;overflow-wrap:anywhere!important}
+ .cs-print-only .cs-contact-table thead{display:table-header-group!important}
+ .cs-print-only .cs-contact-table thead th{padding-bottom:10pt!important}
+ .cs-print-only .cs-contact-table tr{break-inside:auto!important;border:0!important;background:transparent!important}
+ .cs-print-only .cs-contact-table .cs-row-time{padding-right:10pt!important;white-space:nowrap!important}
+ .cs-print-only .cs-identity{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+ .cs-print-only .cs-name{font-size:11pt}
+ .cs-print-only :is(.cs-title,.cs-phone,.cs-email,.cs-row-desc){font-size:10pt;line-height:1.5}
+ .cs-print-only a::after{content:none!important}
 }
-.cs-sched-name { font-weight: 600; color: var(--g700); }
-
-.cs-empty { margin-top: 8px; }
-
-/* ── Contact cards ── */
-.cs-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.cs-card {
-  border: 1px solid var(--g200);
-  border-radius: 10px;
-  padding: 12px 14px;
-}
-
-.cs-card-head {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-bottom: 5px;
-}
-.cs-name { font-size: 15px; font-weight: 600; color: var(--g800); }
-.cs-title { font-size: 12px; color: var(--g500); }
-
-.cs-contact-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px 18px;
-  margin-bottom: 8px;
-}
-.cs-phone,
-.cs-email {
-  font-size: 13px;
-  color: var(--g700);
-  text-decoration: none;
-}
-.cs-phone:hover,
-.cs-email:hover { color: var(--pink); }
-
-/* Row-context lines (time / action / location / desc) */
-.cs-rows {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  border-top: 1px solid var(--g100);
-  padding-top: 7px;
-  margin-top: 4px;
-}
-.cs-row-ctx {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 2px 8px;
-  align-items: baseline;
-  font-size: 12px;
-  color: var(--g500);
-}
-.cs-row-time   { font-weight: 600; color: var(--g700); white-space: nowrap; }
-.cs-row-action { color: var(--g700); }
-.cs-row-loc    { color: var(--g500); }
-.cs-row-desc   { color: var(--g400); font-style: italic; }
-
-/* Footer */
-.cs-modal .mfoot {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  gap: 8px;
-}
-
-/* ── Mobile ─────────────────────────────────────────────────────────── */
-@media (max-width: 760px) {
-  .cs-modal { max-width: 94vw !important; }
-  .cs-modal .mbody { max-height: 65vh; }
-  .cs-modal .mfoot { flex-wrap: wrap; justify-content: center; }
-  .cs-modal .mfoot .btn { flex: 1 1 120px; }
-}
-
-/* ── Print-only clone (screen) ───────────────────────────────────────
-   .cs-print-only is a portal div rendered directly on document.body,
-   completely outside the modal/overlay that print.css hides.
-   It is invisible at all times on screen.
-─────────────────────────────────────────────────────────────────────── */
-.cs-print-only   { display: none; }
-.cs-print-header { display: none; }
-
-/* ── Contact Sheet Print ─────────────────────────────────────────────
-   body.cs-printing is set by handlePrint() before window.print() and
-   cleared by the afterprint event. The modal/overlay remain hidden per
-   print.css (no override needed). Only .cs-print-only is shown.
-─────────────────────────────────────────────────────────────────────── */
-@media print {
-  body.cs-printing .panel,
-  body.cs-printing .hdr,
-  body.cs-printing .toolbar,
-  body.cs-printing .wx-strip,
-  body.cs-printing .add-area { display: none !important; }
-
-  body.cs-printing .cs-print-only {
-    display: block !important;
-    padding: 0 16px;
-  }
-
-  body.cs-printing .cs-print-header {
-    display: block !important;
-    margin-bottom: 18px;
-    padding-bottom: 10px;
-    border-bottom: 2px solid #111;
-  }
-
-  body.cs-printing .cs-print-sched-name {
-    font-size: 13px;
-    font-weight: 600;
-    color: #111;
-  }
-
-  body.cs-printing .cs-print-date {
-    font-size: 12px;
-    color: #555;
-    margin-bottom: 4px;
-  }
-
-  body.cs-printing .cs-print-title {
-    font-size: 22px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    color: #111;
-    margin: 4px 0 0;
-  }
-
-  /* Suppress link URL display that some browsers append in print */
-  body.cs-printing .cs-print-only a::after { content: '' !important; }
-}
+@media print{.cs-print-only .cs-contact-table th{letter-spacing:normal!important;text-transform:none!important}.cs-print-only .cs-contact-table tbody tr:nth-child(even){background:transparent!important}.cs-print-only .cs-contact-table .cs-time-col{width:82px!important}}

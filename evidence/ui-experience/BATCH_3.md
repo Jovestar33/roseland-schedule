@@ -1,0 +1,5 @@
+# Batch 3 — Contact Sheet
+
+Contact identity/role and reach details now occupy predictable columns, with a fixed assignment time column and separate wrapping action/location/description. Descriptions use normal readable text; repeated rounded card chrome is removed. A contact is a table with its identity in the repeating header, allowing exceptional multi-page assignments to retain context. Ordinary blocks retain break-inside avoidance. Contact grouping and CSV generation/protection are unchanged. The shared native print furniture adds document identity/date and page counters.
+
+Final applicable validation so far: 107 editor tests and 251 platform tests pass, including date-only and CSS-string safety regressions, existing contact grouping/CSV controls, read-only/keyboard behavior and save/recovery coverage. Production build passes. Final browser screenshots, native PDF content/page inspection, exact fixture preservation and role-menu checks are recorded in FINAL_VALIDATION.md after the checkpoint. This checkpoint does not claim independent visual acceptance or human approval of the implemented result.
