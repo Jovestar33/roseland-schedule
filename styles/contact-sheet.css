@@ -52,3 +52,9 @@
  .cs-print-only a::after{content:none!important}
 }
 @media print{.cs-print-only .cs-contact-table th{letter-spacing:normal!important;text-transform:none!important}.cs-print-only .cs-contact-table tbody tr:nth-child(even){background:transparent!important}.cs-print-only .cs-contact-table .cs-time-col{width:82px!important}}
+/* Schedule-grid defaults must never set the contact document's width or header. */
+.cs-contact-table{min-width:0!important;max-width:100%;border-collapse:collapse}
+.cs-contact-table thead tr{background:transparent!important}
+.cs-modal .mhdr h2{font-family:var(--fb);font-size:18px;letter-spacing:0}
+
+@media print{body[data-local-document] .cs-card.cs-card-long{break-inside:auto!important;page-break-inside:auto!important}}

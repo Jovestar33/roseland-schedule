@@ -27,7 +27,7 @@ function ContactCards({ contacts }: { contacts: DocumentContact[] }) {
     );
   }
   return <div className="cs-list">
-    {contacts.map((c, i) => <section key={i} className="cs-card" aria-label={c.name || 'Unnamed contact'}>
+    {contacts.map((c, i) => <section key={i} className={`cs-card${c.rows.reduce((n, r) => n + (r.desc?.length ?? 0) + (r.loc?.length ?? 0) + (r.action?.length ?? 0) + 120, 0) > 2200 ? ' cs-card-long' : ''}`} aria-label={c.name || 'Unnamed contact'}>
       <table className="cs-contact-table">
         <colgroup><col className="cs-time-col" /><col /></colgroup>
         <thead><tr><th colSpan={2} scope="colgroup">
