@@ -24,6 +24,7 @@ export interface ScheduleRow {
   locName?: string;    // short display name — absent on old schedules
   locAddress?: string; // full address — absent on old schedules
   notes: string;
+  keyInstruction?: string; // Explicit essential information; always printed inline.
   status: string;
   contactName: string;
   contactTitle: string;

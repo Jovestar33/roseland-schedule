@@ -1,6 +1,7 @@
 'use client';
 import { useScheduleStore } from '@/lib/store/scheduleStore';
 import type { ScheduleRow } from '@/lib/types';
+import KeyInstruction from './KeyInstruction';
 import AutoResizeTextarea from './AutoResizeTextarea';
 
 interface Props {
@@ -26,8 +27,10 @@ export default function NotesCell({ index, row, onOpenStatus, onOpenNotes }: Pro
         >&#10003;</button>
       </div>
       <div className="status-notes-slot">
+        <KeyInstruction value={row.keyInstruction} onChange={(keyInstruction) => updateRow(index, { keyInstruction })} onFocus={pushUndo} />
         <AutoResizeTextarea
           className="ci-ta"
+          label="Notes"
           value={row.notes}
           onChange={(notes) => updateRow(index, { notes })}
           onFocus={pushUndo}

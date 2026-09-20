@@ -37,6 +37,7 @@ function cleanLibrary(input) {
   Object.keys(base.scheduleFolderMap).forEach((scheduleName) => {
     if (!validFolderIds.has(base.scheduleFolderMap[scheduleName])) delete base.scheduleFolderMap[scheduleName];
   });
+  if (base.productionOrder !== undefined) base.productionOrder = Array.isArray(base.productionOrder) ? [...new Set(base.productionOrder.filter(key => typeof key === 'string' && key.length <= 1000))] : [];
   base.version = 1;
   base.updatedAt = Number(base.updatedAt || Date.now());
   return base;

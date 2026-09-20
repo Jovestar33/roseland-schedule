@@ -1,0 +1,30 @@
+.field { min-width: 0; }
+/* Avoid showing the top of a fourth line through the textarea bottom padding. */
+.compactEditor { padding-bottom: 0 !important; }
+.preview {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  line-height: 1.45;
+}
+.collapsed { max-height: 4.35em; overflow: hidden; }
+.toggle {
+  display: block;
+  border: 0;
+  background: transparent;
+  color: var(--g600, #475569);
+  font: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.4;
+  padding: 3px 5px;
+  margin-top: 2px;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+.toggle:hover { color: var(--pink, #c21875); }
+.toggle:focus-visible { outline: 2px solid var(--pink, #c21875); outline-offset: 2px; border-radius: 3px; }
+@media print {
+  .toggle { display: none !important; }
+  .preview { max-height: none !important; overflow: visible !important; }
+}

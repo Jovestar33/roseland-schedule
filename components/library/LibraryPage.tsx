@@ -78,6 +78,7 @@ interface LibraryMutation {
 }
 
 type PendingPhaseOrder = {
+  productionOrder?: string[];
   phaseOrder: NonNullable<LibraryData['phaseOrder']>;
   changedAt: number;
 };
@@ -457,7 +458,7 @@ export default function LibraryPage() {
           merged[pk] = { ...(merged[pk] ?? {}), ...phases };
         }
         // If cloud has caught up (its phaseOrder already matches pending), clear it.
-        const cloudCaughtUp = Object.entries(pendingPO.phaseOrder).every(([pk, phases]) =>
+        const cloudCaughtUp = (pendingPO.productionOrder === undefined || JSON.stringify(pendingPO.productionOrder) === JSON.stringify(resolvedMeta.productionOrder)) && Object.entries(pendingPO.phaseOrder).every(([pk, phases]) =>
           Object.entries(phases).every(([phk, order]) =>
             JSON.stringify(resolvedMeta.phaseOrder?.[pk]?.[phk]) === JSON.stringify(order)
           )
@@ -467,7 +468,7 @@ export default function LibraryPage() {
           writePendingPhaseOrder(null);
         } else {
           console.log('[Library PhaseOrder] stale CDN read — applying pending phaseOrder');
-          resolvedMeta = { ...resolvedMeta, phaseOrder: merged };
+          resolvedMeta = { ...resolvedMeta, phaseOrder: merged, ...(pendingPO.productionOrder ? { productionOrder: pendingPO.productionOrder } : {}) };
         }
       }
     }
@@ -777,8 +778,8 @@ export default function LibraryPage() {
 
       // If phaseOrder changed, protect it against stale CDN reads during the propagation window.
       // Written to sessionStorage so the guard survives in-session navigation.
-      if (JSON.stringify(updated.phaseOrder) !== JSON.stringify(prevMeta.phaseOrder)) {
-        writePendingPhaseOrder({ phaseOrder: updated.phaseOrder ?? {}, changedAt: Date.now() });
+      if (JSON.stringify(updated.phaseOrder) !== JSON.stringify(prevMeta.phaseOrder) || JSON.stringify(updated.productionOrder) !== JSON.stringify(prevMeta.productionOrder)) {
+        writePendingPhaseOrder({ phaseOrder: updated.phaseOrder ?? {}, productionOrder: updated.productionOrder, changedAt: Date.now() });
         console.log('[Library PhaseOrder] pending phaseOrder recorded');
       }
     } catch (err) {
@@ -1746,6 +1747,7 @@ export default function LibraryPage() {
                   onRename={handleRenameSchedule}
                   onMoveTo={handleMoveTo}
                   onUpdateLibMeta={updateLibMeta}
+                  canReorderProductions={!searchQuery && !filterProd && !filterDateFrom && !filterDateTo && filterStatus === 'active'}
                   syncingNames={syncingNamesSet}
                 />
               </>

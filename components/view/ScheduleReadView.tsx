@@ -1,4 +1,5 @@
 'use client';
+import CollapsibleText from '@/components/schedule/CollapsibleText';
 import { wxIcon } from '@/lib/weather';
 import { computeTimeOut } from '@/lib/time';
 import type { ScheduleData, SubLocation } from '@/lib/types';
@@ -47,7 +48,7 @@ function SubLocList({ subLocations }: { subLocations: SubLocation[] }) {
                 <span className="rv-subloc-loc">{displayName}</span>
               )}
               {sl.address && <div className="rv-subloc-addr">{sl.address}</div>}
-              {sl.desc && <div className="rv-subloc-desc">{sl.desc}</div>}
+              {sl.desc && <div className="rv-subloc-desc"><CollapsibleText value={sl.desc} label="Location description" /></div>}
             </div>
           </div>
         );
@@ -64,7 +65,7 @@ interface Props {
 export default function ScheduleReadView({ data, name }: Props) {
   const { meta, rows } = data;
   const wx = meta.wx;
-  const visibleRows = rows.filter(r => r.action || r.timeIn);
+  const visibleRows = rows.filter(r => r.action || r.timeIn || r.keyInstruction);
   const callTime = rows.find(r => !r.sunLocked)?.timeIn || '';
 
   const scheduleName = name || '';
@@ -234,8 +235,8 @@ export default function ScheduleReadView({ data, name }: Props) {
                         <SubLocList subLocations={row.subLocations} />
                       )}
                     </td>
-                    <td>{row.desc}</td>
-                    <td>{row.notes}</td>
+                    <td><CollapsibleText value={row.desc} label="Description" /></td>
+                    <td>{row.keyInstruction && <div style={{ fontWeight: 600, whiteSpace: 'pre-wrap', overflowWrap: 'anywhere', marginBottom: 5 }}>Key instruction: {row.keyInstruction}</div>}<CollapsibleText value={row.notes} label="Notes" /></td>
                     <td className="col-dv" />
                     <td className="tc">{row.timeIn}</td>
                     <td className="tc">{row.dur}</td>
