@@ -3,7 +3,7 @@ import { useEffect, type ReactNode } from 'react';
 import styles from './AppHeader.module.css';
 import { useCmsStore, useCmsLabel } from '@/lib/store/cmsStore';
 
-export default function AppHeader({actions}: {actions?: ReactNode} = {}) {
+export default function AppHeader({actions, compact = false}: {actions?: ReactNode; compact?: boolean} = {}) {
   const logo     = useCmsStore((s) => s.config.logo as string | undefined);
   const hdrTitle = useCmsLabel('hdrTitle', 'Production Schedule');
 
@@ -20,7 +20,7 @@ export default function AppHeader({actions}: {actions?: ReactNode} = {}) {
   }, []);
 
   return (
-    <div className={`hdr${actions?` ${styles.withActions}`:''}`} style={{ position: 'relative', display: 'flex' }}>
+    <div className={`hdr${compact?` ${styles.compact}`:''}${actions?` ${styles.withActions}`:''}`} style={{ position: 'relative', display: 'flex' }}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={logo || '/logo-header.png'}

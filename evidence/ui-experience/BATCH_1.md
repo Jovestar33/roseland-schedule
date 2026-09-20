@@ -1,0 +1,7 @@
+# Batch 1 — Library and shared navigation
+
+Approved UX-001/002/003/005 direction implemented locally. Calendar-only labels now use a validated timezone-independent formatter in rows, Recent and placement/day options (including backup, transfer and snapshot destinations). ISO storage, filters, sorting, permissions and lifecycle logic are unchanged. Date range uses its native marker; production/phase arrows are explicitly scoped. Shared shell has one quiet Account button using the existing settings handler; Tools duplicate removed. Original logo/type families and Roseland accent retained; compact header, readable schedule names and secondary text.
+
+Validation: five focused date/library tests pass (three extreme timezones, blank/invalid/leap/year cases plus existing library regressions). Production build passes. Fresh Chrome port 3526: date range Enter expands / Space collapses, computed pseudo-content none with native list-item marker; tree markers retained. Account opens sign-in/security, invitations and sign-out using the existing panel; role predicates untouched. Library at actual 390px has document width 390 and one visible Account entry. Screenshots: library-desktop.png and library-mobile.png. Further editor/role-menu regression and final candidate checks follow with the document batches. Native PDF evidence is deferred to the final applicable document candidate.
+
+Checkpoint is implementation evidence, not independent visual or user acceptance. Frozen previews and original fixtures remain untouched.

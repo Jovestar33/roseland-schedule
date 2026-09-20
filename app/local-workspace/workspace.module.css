@@ -89,3 +89,5 @@
 @media(max-width:600px){.accessShell{padding:24px 16px}.accessRecovery,.accessShell section[aria-label="Account security"]{padding:20px}.accessShell h1,.accessShell h2{font-size:22px}.accessPage :global(.hdr){padding:12px 16px!important;gap:10px!important}}
 
 .accessShell [role="status"]:empty{display:none}
+
+.accountEntry{border:0;background:transparent;color:var(--g600);font:inherit;font-size:13px;padding:8px 4px;min-height:40px;cursor:pointer}.accountEntry:hover,.accountEntry[aria-expanded="true"]{color:var(--ink);text-decoration:underline;text-underline-offset:4px}.accountEntry:focus-visible{outline:2px solid var(--pink);outline-offset:3px}

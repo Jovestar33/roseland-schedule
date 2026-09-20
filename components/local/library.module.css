@@ -22,7 +22,7 @@
 .library [hidden] { display:none !important; }
 
 .library :global(.lbt-prod) > summary::before, .library :global(.lbt-phase) > summary::before { content:'▾'; color:var(--g500); font-size:11px; width:12px; flex-shrink:0; }
-.library details:not([open]) > summary::before { content:'▸'; }
+.library :global(.lbt-prod):not([open]) > summary::before, .library :global(.lbt-phase):not([open]) > summary::before { content:'▸'; }
 .reviewDialog { max-height:calc(100dvh - 48px); overflow:auto; color:var(--ink); border-color:var(--g200); box-shadow:0 20px 60px #0003; }
 .reviewDialog h2 { font-family:var(--fd); letter-spacing:1px; font-size:26px; }
 .reviewDialog .form { display:grid; grid-template-columns:1fr 1fr; max-width:none; gap:16px; margin:0 0 16px; padding:8px 0; }
@@ -38,3 +38,23 @@
 .filters label { display:grid; gap:6px; min-width:0; font-size:12px; font-weight:600; color:var(--g600); }
 .filters select,.filters input { width:100%; min-width:0; min-height:36px; border:1px solid var(--g300); border-radius:8px; padding:8px 10px; font:inherit; color:var(--ink); background:white; }
 @media(max-width:640px){.library .filters{grid-template-columns:1fr;}}
+
+/* Readable library hierarchy; controls and tree semantics stay unchanged. */
+.library:global(.lib-page) { max-width:1000px; padding:28px 24px; }
+.library :global(.lib-title) { font-family:var(--fb); font-size:27px; font-weight:600; letter-spacing:-.5px; }
+.library button:global(.lbt-sched-name), .library :global(.lib-recent-name) { color:var(--ink); font-size:14px; font-weight:600; white-space:normal; overflow-wrap:anywhere; max-width:none; }
+.library :global(.lbt-sched-row) { gap:12px; padding-top:13px; padding-bottom:13px; }
+.library :global(.lbt-prod) { border-radius:4px; box-shadow:none; }
+.library :global(.lbt-prod-row) { background:#f7f7f8; }
+.library :global(.lib-recent) { border-radius:4px; background:white; }
+.library :global(.lib-recent-meta), .library :global(.lib-recent-time), .metadata { color:#5e5e68; font-size:12px; white-space:normal; overflow-wrap:anywhere; }
+.library :global(.lib-recent-item) { flex-wrap:wrap; gap:6px 16px; }
+.library :global(.lib-recent-name) { flex:1 1 240px; text-align:left; }
+.library :global(.lib-recent-meta) { max-width:none; }
+.library > details > summary { color:#5e5e68; font-size:13px; padding:10px 0; cursor:pointer; }
+@media(max-width:600px){
+ .library:global(.lib-page){padding:20px 16px;}
+ .library :global(.lib-header){flex-direction:row;align-items:center;}
+ .library :global(.lib-recent-name){flex-basis:100%;}
+ .library :global(.lib-recent-meta){flex:1 1 150px;}
+}

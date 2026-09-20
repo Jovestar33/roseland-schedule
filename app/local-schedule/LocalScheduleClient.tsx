@@ -376,7 +376,6 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
           <button onClick={()=>setReviewTool('transfers')}><strong>Move requests</strong><span>Review moves between productions</span></button>
           <button disabled={!selected} onClick={()=>setReviewTool('sharing')}><strong>Team and Client links</strong><span>Manage access to this schedule</span></button>
           <button disabled={busy||!selected} onClick={()=>{setReviewTool(null);guarded(()=>void run(()=>open(selected!)),'Reload and discard unsaved changes');}}><strong>Reload schedule</strong><span>Return to the latest saved version</span></button>
-          <button onClick={()=>{setReviewTool(null);workspace?.openSettings?.();}}><strong>Account & settings</strong><span>Your account and organization settings</span></button>
         </nav></ReviewToolPanel>}
         {workspace && <ReviewToolPanel enabled={review} open={active&&reviewTool==='files'} title="Backup and import" onClose={()=>setReviewTool(null)} onBack={selected?()=>setReviewTool('menu'):undefined}><div><LocalScheduleFiles client={client} actor={session?.user.id ?? accountRef.current} organization={workspace.organization?.id ?? null}
           enabled={active && ready && !confirmation} copyEnabled={!templateUses.length && !busy && !!selected && recordInScope && canEdit && permission?.copy===true && !documentDialogOpen && contact===null && notes===null && status===null}

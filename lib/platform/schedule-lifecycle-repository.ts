@@ -1,3 +1,4 @@
+import { dateLabel } from '../date-label.ts';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { createScheduleRepository, ScheduleRepositoryError, type StoredSchedule } from './schedule-repository.ts';
 import { parseInvitationId } from './contracts.ts';
@@ -32,7 +33,7 @@ export function createLifecycleRepository(client:SupabaseClient){
     const token=await bearer(actor);let q=client.from('production_days').select('id,production_id,calendar_date,day_number,position,phase_id,productions!inner(name,deleted_at),phases(deleted_at)').eq('organization_id',parseInvitationId(organization)).is('deleted_at',null).is('productions.deleted_at',null).order('id').limit(PAGE+1).setHeader('Authorization',`Bearer ${token}`);if(after)q=q.gt('id',parseInvitationId(after));const r=await q;fail(r.error,r.status);
     const rows=r.data??[],visible=rows.slice(0,PAGE);const permissions=new Map<string,boolean>();
     await Promise.all([...new Set(visible.map(row=>String(row.production_id)))].map(async production=>{const p=await client.rpc('schedule_capability',{action:'create',target_production_id:parseInvitationId(production)}).setHeader('Authorization',`Bearer ${token}`);fail(p.error,p.status);if(typeof p.data!=='boolean')throw new ScheduleRepositoryError('failed');permissions.set(production,p.data);}));
-    const items=visible.flatMap(row=>{const p=row.productions as unknown as {name:unknown},phase=row.phases as unknown as {deleted_at:string|null}|null;if(row.phase_id&&(!phase||phase.deleted_at))return [];if(typeof p.name!=='string')throw new ScheduleRepositoryError('failed');return [{id:parseInvitationId(row.id),productionId:parseInvitationId(row.production_id),label:`${p.name} · Day ${row.day_number??Number(row.position)+1}${row.calendar_date?' · '+row.calendar_date:''}`,editable:permissions.get(row.production_id)===true}];});return {items,more:rows.length>PAGE,cursor:visible.at(-1)?.id as string|undefined};
+    const items=visible.flatMap(row=>{const p=row.productions as unknown as {name:unknown},phase=row.phases as unknown as {deleted_at:string|null}|null;if(row.phase_id&&(!phase||phase.deleted_at))return [];if(typeof p.name!=='string')throw new ScheduleRepositoryError('failed');return [{id:parseInvitationId(row.id),productionId:parseInvitationId(row.production_id),label:`${p.name} · Day ${row.day_number??Number(row.position)+1}${' · '+dateLabel(row.calendar_date)}`,editable:permissions.get(row.production_id)===true}];});return {items,more:rows.length>PAGE,cursor:visible.at(-1)?.id as string|undefined};
   }
   return {read,history,historical,days,
     async list(actor:string,organization:string,filter:LifecycleFilter,after?:string){

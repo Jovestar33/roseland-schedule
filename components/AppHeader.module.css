@@ -4,3 +4,8 @@
   .withActions:global(.hdr) :global(.hdr-right) { display:flex !important; width:auto !important; max-width:65% !important; flex:0 1 auto !important; contain:none !important; }
   .withActions:global(.hdr) :global(.hdr-right .btn) { width:auto !important; min-height:44px !important; }
 }
+
+.compact:global(.hdr) { min-height:0!important; padding:13px 28px!important; gap:18px!important; flex-direction:row!important; }
+.compact:global(.hdr) img { height:52px!important; max-height:52px!important; width:auto!important; margin:0!important; }
+.compact:global(.hdr) :global(.hdr-title) { font-size:22px!important; letter-spacing:1.5px!important; line-height:1.1!important; position:static!important; transform:none!important; }
+@media(max-width:600px){.compact:global(.hdr){padding:12px 16px!important;}.compact:global(.hdr) :global(.hdr-title){font-size:20px!important;}}

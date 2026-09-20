@@ -1,4 +1,5 @@
 'use client';
+import { dateLabel } from '@/lib/date-label';
 import { useEffect, useRef, useState } from 'react';
 import ScheduleDocumentPreview from './ScheduleDocumentPreview';
 import type { SupabaseClient } from '@supabase/supabase-js';
@@ -53,7 +54,7 @@ export default function LocalScheduleFiles({client,actor,organization,enabled,co
       <legend>Review new schedules — no writes yet</legend>
       <p>All items become new drafts in the selected production. A production day is optional for file imports. Imported schedules start as new drafts. Schedule fields stay exactly as supplied. Existing schedules are never overwritten.</p>
       {!source&&<label>Destination production<select value={production} onChange={e=>{setProduction(e.target.value);setDay('');}}><option value="">Choose a production</option>{productions.map(p=><option key={p.id} value={p.id}>{p.name}</option>)}</select></label>}
-      <label>Destination production day<select value={day} onChange={e=>setDay(e.target.value)}><option value="">{source?'Choose an editable day':'No production day'}</option>{source?days.map(d=><option key={d.id} value={d.id}>{d.label}</option>):selectedProduction?.days.map(d=><option key={d.id} value={d.id}>Day {d.number??d.position+1}{d.date?' · '+d.date:''}</option>)}</select></label>
+      <label>Destination production day<select value={day} onChange={e=>setDay(e.target.value)}><option value="">{source?'Choose an editable day':'No production day'}</option>{source?days.map(d=><option key={d.id} value={d.id}>{d.label}</option>):selectedProduction?.days.map(d=><option key={d.id} value={d.id}>Day {d.number??d.position+1}{' · '+dateLabel(d.date)}</option>)}</select></label>
       {entries.map((entry,i)=><div key={i} className={styles.fileEntry}>
         <label>New schedule name {i+1}<input value={entry.name} onChange={e=>setEntries(all=>all.map((v,j)=>j===i?{...v,name:e.target.value}:v))}/></label>
         <label>New schedule slug {i+1}<input value={entry.slug} onChange={e=>setEntries(all=>all.map((v,j)=>j===i?{...v,slug:e.target.value}:v))}/></label>
