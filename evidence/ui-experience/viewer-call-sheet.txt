@@ -1,0 +1,95 @@
+    - button "⬆ Share ▾":
+      - generic: ⬆
+      - generic: Share
+      - generic: ▾
+    - button "Tools":
+      - generic: Tools
+    - button "Close":
+      - generic: Close
+    - paragraph: Read-only schedule access.
+    - generic: Overnight South day
+    - generic: Town / Location
+    - generic: Fictional overnight town
+    - generic: Date
+    - generic: —
+    - generic: Call Time
+    - generic: —
+    - generic: Producer
+    - generic: —
+    - generic: Director
+    - generic: —
+    - generic: Camera
+    - generic: —
+    - generic: ← Scroll to view time columns →
+    - table:
+      - rowgroup:
+        - row "Action Location Description Notes Time In Duration Time Out":
+          - columnheader
+          - columnheader "Action"
+          - columnheader "Location"
+          - columnheader "Description"
+          - columnheader "Notes"
+          - columnheader
+          - columnheader "Time In"
+          - columnheader "Duration"
+          - columnheader "Time Out"
+      - rowgroup:
+        - row "1 Shoot Fictional overnight note 00:30":
+          - cell "1"
+          - cell "Shoot":
+            - generic: Shoot
+          - cell
+          - cell
+          - cell "Fictional overnight note"
+          - cell
+          - cell
+          - cell "00:30"
+          - cell
+    - text: ▾ ‹ ›
+- generic "Notifications"
+- alert: Roseland Schedule
+- dialog "Call Sheet" [active]:
+  - heading "Call Sheet" [level=2]
+  - button "Close": ✕
+  - banner:
+    - heading "Overnight South day" [level=1]
+    - paragraph: Date not set
+    - generic: General Call
+    - strong: Not set
+  - heading "Location & weather" [level=2]
+  - paragraph:
+    - generic: Location
+    - text: Fictional overnight town
+  - heading "Arrival & emergency" [level=2]
+  - generic: Basecamp
+  - generic: —
+  - generic: Crew Parking
+  - generic: —
+  - generic: Nearest Hospital
+  - generic: —
+  - generic: Emergency Contact
+  - generic: —
+  - heading "Day schedule" [level=2]
+  - table:
+    - rowgroup:
+      - row "Time Action Location":
+        - columnheader "Time"
+        - columnheader "Action"
+        - columnheader "Location"
+    - rowgroup:
+      - row "Shoot":
+        - cell
+        - cell "Shoot"
+        - cell
+  - heading "Production notes & team" [level=2]
+  - generic: Meal Notes
+  - generic: —
+  - generic: Safety Notes
+  - generic: —
+  - generic: Special Instructions
+  - generic: —
+  - generic: General Notes
+  - generic: —
+  - checkbox "Include contacts"
+  - text: Include contacts
+  - button "🖨 Print"

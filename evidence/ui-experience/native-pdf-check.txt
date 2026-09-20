@@ -1,0 +1,9 @@
+{"file": "/private/tmp/roseland-ui-experience-refinement/output/pdf/ui-experience-native/empty-callsheet.pdf", "pages": 1, "checkedMarkers": 3, "missingMarkers": []}
+{"file": "/private/tmp/roseland-ui-experience-refinement/output/pdf/ui-experience-native/empty-contacts.pdf", "pages": 1, "checkedMarkers": 2, "missingMarkers": []}
+{"file": "/private/tmp/roseland-ui-experience-refinement/output/pdf/ui-experience-native/long-callsheet.pdf", "pages": 5, "checkedMarkers": 205, "missingMarkers": []}
+{"file": "/private/tmp/roseland-ui-experience-refinement/output/pdf/ui-experience-native/long-contacts.pdf", "pages": 9, "checkedMarkers": 257, "missingMarkers": []}
+{"file": "/private/tmp/roseland-ui-experience-refinement/output/pdf/ui-experience-native/ordinary-callsheet.pdf", "pages": 2, "checkedMarkers": 42, "missingMarkers": []}
+{"file": "/private/tmp/roseland-ui-experience-refinement/output/pdf/ui-experience-native/ordinary-contacts.pdf", "pages": 1, "checkedMarkers": 22, "missingMarkers": []}
+{"file": "/private/tmp/roseland-ui-experience-refinement/output/pdf/ui-experience-native/ordinary-schedule.pdf", "pages": 1, "checkedMarkers": 25, "missingMarkers": []}
+{"file": "/private/tmp/roseland-ui-experience-refinement/output/pdf/ui-experience-native/oversized-contacts.pdf", "pages": 4, "checkedMarkers": 75, "missingMarkers": []}
+{"file": "/private/tmp/roseland-ui-experience-refinement/output/pdf/ui-experience-native/sparse-callsheet.pdf", "pages": 2, "checkedMarkers": 23, "missingMarkers": []}

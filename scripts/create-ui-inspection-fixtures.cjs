@@ -11,7 +11,7 @@ const {fs,login,rpc}=require('./pre-review-common.cjs');
  try{for(const kind of ['keyboard','oversized']){
   const id=randomUUID(),document=structuredClone(source.document);
   if(kind==='oversized'){
-   document.rows=document.rows.slice(0,1);
+   document.rows=document.rows.filter(r=>!r.sunLocked).slice(0,1);
    Object.assign(document.rows[0],{contactName:'Zoë — Fictional Continuation',contactTitle:'Fictional café team / 照明',contactPhone:'',contactEmail:'long.fictional.contact@example.test',desc:Array.from({length:70},(_,i)=>`CONT-${i+1} Fictional continuation text — café, long assignment details remain readable on the following page. END-CONT-${i+1}`).join('\n')});
   }
   const name='UI refinement '+kind+' — fictional';

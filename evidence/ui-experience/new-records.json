@@ -1,0 +1,226 @@
+{
+  "organization_memberships": [],
+  "production_memberships": [],
+  "productions": [
+    {
+      "id": "1aa5fb7d-282d-4666-914d-231377046dc5",
+      "organization_id": "8ae21b75-edad-4ad2-9095-b8a1bc6ff737",
+      "name": "Pre-review fictional destination",
+      "slug": "pre-review-1aa5fb7d-282d-4666-914d-231377046dc5",
+      "status": "planning",
+      "timezone": "UTC",
+      "locale": "en",
+      "country_code": null,
+      "currency": null,
+      "version": 1,
+      "created_at": "2026-09-19T23:50:28.216001+00:00",
+      "updated_at": "2026-09-19T23:50:28.216001+00:00",
+      "created_by": "79574221-8137-47de-8313-d30132dfb433",
+      "updated_by": "79574221-8137-47de-8313-d30132dfb433",
+      "deleted_at": null
+    }
+  ],
+  "schedules": [
+    {
+      "id": "e4801bea-627a-4797-acdc-e86195dcee72",
+      "organization_id": "8ae21b75-edad-4ad2-9095-b8a1bc6ff737",
+      "production_id": "995be3f5-c3e2-48d6-8f97-2bd2f16c6153",
+      "production_day_id": null,
+      "display_name": "Pre-review source fixture",
+      "slug": "pre-review-e4801bea-627a-4797-acdc-e86195dcee72",
+      "status": "draft",
+      "town": "Fictional North Harbor",
+      "document_schema_version": 1,
+      "document": {
+        "meta": {
+          "date": "2026-09-22",
+          "town": "Fictional North Harbor",
+          "projectName": "Pre-review fictional production"
+        },
+        "rows": [
+          {
+            "dur": "00:30",
+            "desc": "PRE-REVIEW FICTIONAL ROW",
+            "notes": "Retention marker",
+            "action": "Shoot"
+          }
+        ]
+      },
+      "document_version": 1,
+      "created_at": "2026-09-19T23:50:42.331048+00:00",
+      "updated_at": "2026-09-19T23:50:42.331048+00:00",
+      "created_by": "79574221-8137-47de-8313-d30132dfb433",
+      "updated_by": "79574221-8137-47de-8313-d30132dfb433",
+      "deleted_at": null,
+      "archived_from_status": null,
+      "phase_id": null,
+      "library_position": 127
+    },
+    {
+      "id": "e80dbd91-8263-42d2-9016-a3e3e3f83fac",
+      "organization_id": "8ae21b75-edad-4ad2-9095-b8a1bc6ff737",
+      "production_id": "995be3f5-c3e2-48d6-8f97-2bd2f16c6153",
+      "production_day_id": null,
+      "display_name": "Pre-review control fixture",
+      "slug": "pre-review-e80dbd91-8263-42d2-9016-a3e3e3f83fac",
+      "status": "draft",
+      "town": "Fictional North Harbor",
+      "document_schema_version": 1,
+      "document": {
+        "meta": {
+          "date": "2026-09-22",
+          "town": "Fictional North Harbor",
+          "projectName": "Pre-review fictional production"
+        },
+        "rows": [
+          {
+            "dur": "00:30",
+            "desc": "PRE-REVIEW FICTIONAL ROW",
+            "notes": "Retention marker",
+            "action": "Shoot"
+          }
+        ]
+      },
+      "document_version": 1,
+      "created_at": "2026-09-19T23:50:42.344617+00:00",
+      "updated_at": "2026-09-19T23:50:42.344617+00:00",
+      "created_by": "79574221-8137-47de-8313-d30132dfb433",
+      "updated_by": "79574221-8137-47de-8313-d30132dfb433",
+      "deleted_at": null,
+      "archived_from_status": null,
+      "phase_id": null,
+      "library_position": 129
+    },
+    {
+      "id": "4eb79fff-487b-4795-ad1a-2d0f70629521",
+      "organization_id": "8ae21b75-edad-4ad2-9095-b8a1bc6ff737",
+      "production_id": "995be3f5-c3e2-48d6-8f97-2bd2f16c6153",
+      "production_day_id": null,
+      "display_name": "Pre-review target fixture",
+      "slug": "pre-review-4eb79fff-487b-4795-ad1a-2d0f70629521",
+      "status": "draft",
+      "town": "Fictional North Harbor",
+      "document_schema_version": 1,
+      "document": {
+        "meta": {
+          "date": "2026-09-22",
+          "town": "Fictional North Harbor",
+          "projectName": "Pre-review fictional production"
+        },
+        "rows": [
+          {
+            "dur": "00:30",
+            "desc": "PRE-REVIEW FICTIONAL ROW",
+            "notes": "Retention marker",
+            "action": "Shoot"
+          }
+        ]
+      },
+      "document_version": 2,
+      "created_at": "2026-09-19T23:50:42.338345+00:00",
+      "updated_at": "2026-09-19T23:50:42.39026+00:00",
+      "created_by": "79574221-8137-47de-8313-d30132dfb433",
+      "updated_by": "79574221-8137-47de-8313-d30132dfb433",
+      "deleted_at": null,
+      "archived_from_status": null,
+      "phase_id": null,
+      "library_position": 128
+    },
+    {
+      "id": "2d5b9bc2-b7c4-405a-9e26-7aaa14f903a1",
+      "organization_id": "8ae21b75-edad-4ad2-9095-b8a1bc6ff737",
+      "production_id": "1aa5fb7d-282d-4666-914d-231377046dc5",
+      "production_day_id": null,
+      "display_name": "Pre-review move fixture",
+      "slug": "pre-review-2d5b9bc2-b7c4-405a-9e26-7aaa14f903a1",
+      "status": "draft",
+      "town": "Fictional North Harbor",
+      "document_schema_version": 1,
+      "document": {
+        "meta": {
+          "date": "2026-09-22",
+          "town": "Fictional North Harbor",
+          "phase": "",
+          "projectName": "Pre-review fictional destination"
+        },
+        "rows": [
+          {
+            "dur": "00:30",
+            "desc": "PRE-REVIEW FICTIONAL ROW",
+            "notes": "Retention marker",
+            "action": "Shoot"
+          }
+        ]
+      },
+      "document_version": 2,
+      "created_at": "2026-09-19T23:50:42.324743+00:00",
+      "updated_at": "2026-09-19T23:50:42.448391+00:00",
+      "created_by": "79574221-8137-47de-8313-d30132dfb433",
+      "updated_by": "79574221-8137-47de-8313-d30132dfb433",
+      "deleted_at": null,
+      "archived_from_status": null,
+      "phase_id": null,
+      "library_position": 1
+    },
+    {
+      "id": "50fb2046-3079-4276-be85-87ea593d0357",
+      "organization_id": "8ae21b75-edad-4ad2-9095-b8a1bc6ff737",
+      "production_id": "1aa5fb7d-282d-4666-914d-231377046dc5",
+      "production_day_id": null,
+      "display_name": "Pre-review browser move",
+      "slug": "pre-review-browser-move",
+      "status": "draft",
+      "town": "Fictional Harbor",
+      "document_schema_version": 1,
+      "document": {
+        "meta": {
+          "dp": "",
+          "wx": null,
+          "dir": "",
+          "lat": null,
+          "lng": null,
+          "date": "",
+          "prod": "",
+          "town": "Fictional Harbor",
+          "phase": "",
+          "dayNumber": null,
+          "totalDays": null,
+          "projectName": "Pre-review fictional destination"
+        },
+        "rows": [
+          {
+            "dur": "",
+            "loc": "",
+            "desc": "BROWSER MOVE CONTENT MUST SURVIVE",
+            "done": false,
+            "notes": "Fictional review only",
+            "action": "Shoot",
+            "locLat": null,
+            "locLng": null,
+            "status": "",
+            "timeIn": "",
+            "fixedIn": false,
+            "fixedOut": false,
+            "otherText": "",
+            "sunLocked": false,
+            "contactName": "",
+            "contactEmail": "",
+            "contactPhone": "",
+            "contactTitle": "",
+            "fixedOutTime": ""
+          }
+        ],
+        "savedAt": 1789861974070
+      },
+      "document_version": 3,
+      "created_at": "2026-09-19T23:52:37.431893+00:00",
+      "updated_at": "2026-09-19T23:53:19.406335+00:00",
+      "created_by": "79574221-8137-47de-8313-d30132dfb433",
+      "updated_by": "79574221-8137-47de-8313-d30132dfb433",
+      "deleted_at": null,
+      "archived_from_status": null,
+      "phase_id": null,
+      "library_position": 2
+    }
+  ]
+}

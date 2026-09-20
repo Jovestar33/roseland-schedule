@@ -1,0 +1,18 @@
+✔ long document fields survive real store load, edits, undo/redo, serialization and reload (59.58225ms)
+✔ refresh/clear of sun rows retains ordinary row identities, nested content and zero duration (22.275791ms)
+✔ weather metadata and sun changes undo as one user operation without changing call sheet (14.037792ms)
+✔ sunrise precedes sunset when both markers share the insertion point before a late call (15.116917ms)
+✔ the actual Call Sheet renders all eight tested field types and carries the read-only boundary (76.370958ms)
+✔ Call Sheet uses native triggers for all eight fields; Escape discards drafts before a later blur and returns focus (94.528292ms)
+✔ Call Sheet Enter commits single-line edits, Tab/blur commits notes, and multiline Enter stays a newline (70.451ms)
+✔ Location autocomplete owns handled Enter and cancelled late selections cannot commit (7.246417ms)
+✔ Call Sheet maps require legacy or explicit live providers; read-only fields remain non-editable (116.565208ms)
+✔ Share Escape closes from opener or menu focus, restores opener, and preserves option order/outside/scroll dismissal (6.390625ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 10
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 502.29775

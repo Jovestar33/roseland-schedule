@@ -1,0 +1,65 @@
+{
+  "empty-callsheet.pdf": {
+    "sha256": "9928023f5f9ffe523a55d9be66b3b563fe83ee25034240b538c6968047f27965",
+    "applicationCommit": "dd922aaaca1acd54236c6ebd045c6cf28defe9c5",
+    "build": "6z38egc_cN3M5P1N2vgR7",
+    "savedVersion": 1,
+    "visualInspection": "passed: every PDFium-rendered page inspected; readable text, no clipping or overlap; running furniture and continuation checked"
+  },
+  "empty-contacts.pdf": {
+    "sha256": "686b0aa7ab9b8b4fefdbdf009333580c0e6442748b4c7b33f78cdbae8468d6d6",
+    "applicationCommit": "4857a03",
+    "build": "_oSlETlOvZ13oPq-jIdeC",
+    "savedVersion": 1,
+    "visualInspection": "passed: corrected single page rendered and inspected; reader-facing empty wording, no clipping or overlap"
+  },
+  "long-callsheet.pdf": {
+    "sha256": "7212ee1d65715d13ba77fa2eb49572ab66c5e0fe17f5c9c5017eaaf81b557924",
+    "applicationCommit": "dd922aaaca1acd54236c6ebd045c6cf28defe9c5",
+    "build": "6z38egc_cN3M5P1N2vgR7",
+    "savedVersion": 3,
+    "visualInspection": "passed: every PDFium-rendered page inspected; readable text, no clipping or overlap; running furniture and continuation checked"
+  },
+  "long-contacts.pdf": {
+    "sha256": "d93d14fd55aa38b0ba4c8f2926ec3b9c00f8cf47a5e440241fc96c3cc15c0a8b",
+    "applicationCommit": "dd922aaaca1acd54236c6ebd045c6cf28defe9c5",
+    "build": "6z38egc_cN3M5P1N2vgR7",
+    "savedVersion": 3,
+    "visualInspection": "passed: every PDFium-rendered page inspected; readable text, no clipping or overlap; running furniture and continuation checked"
+  },
+  "ordinary-callsheet.pdf": {
+    "sha256": "30825a1d3960da08710ce6c3de1569f4a2a0b0bd0f2d0e5138865cfa505ad188",
+    "applicationCommit": "dd922aaaca1acd54236c6ebd045c6cf28defe9c5",
+    "build": "6z38egc_cN3M5P1N2vgR7",
+    "savedVersion": 2,
+    "visualInspection": "passed: every PDFium-rendered page inspected; readable text, no clipping or overlap; running furniture and continuation checked"
+  },
+  "ordinary-contacts.pdf": {
+    "sha256": "cf0bdb700afa25a87220c6336d8df52a4f78ade78fb36cdc101ea9dda724bcf1",
+    "applicationCommit": "dd922aaaca1acd54236c6ebd045c6cf28defe9c5",
+    "build": "6z38egc_cN3M5P1N2vgR7",
+    "savedVersion": 2,
+    "visualInspection": "passed: every PDFium-rendered page inspected; readable text, no clipping or overlap; running furniture and continuation checked"
+  },
+  "ordinary-schedule.pdf": {
+    "sha256": "37705fd16db09c96e1d7d259bc57751d5ca741b373347cbbab5423b322f72aac",
+    "applicationCommit": "dd922aaaca1acd54236c6ebd045c6cf28defe9c5",
+    "build": "6z38egc_cN3M5P1N2vgR7",
+    "savedVersion": 2,
+    "visualInspection": "passed: every PDFium-rendered page inspected; readable text, no clipping or overlap; running furniture and continuation checked"
+  },
+  "oversized-contacts.pdf": {
+    "sha256": "e2c836bc3aa2464be9634c7cb8a96542fe98beb04b80aa5d800665af84cc1828",
+    "applicationCommit": "dd922aaaca1acd54236c6ebd045c6cf28defe9c5",
+    "build": "6z38egc_cN3M5P1N2vgR7",
+    "savedVersion": 2,
+    "visualInspection": "passed: every PDFium-rendered page inspected; readable text, no clipping or overlap; running furniture and continuation checked"
+  },
+  "sparse-callsheet.pdf": {
+    "sha256": "1a4bcc36dda43d78a5b5d6e3081afb5c53a4231bc6ebd8044c56317c6dc63479",
+    "applicationCommit": "dd922aaaca1acd54236c6ebd045c6cf28defe9c5",
+    "build": "6z38egc_cN3M5P1N2vgR7",
+    "savedVersion": 1,
+    "visualInspection": "passed: every PDFium-rendered page inspected; readable text, no clipping or overlap; running furniture and continuation checked"
+  }
+}

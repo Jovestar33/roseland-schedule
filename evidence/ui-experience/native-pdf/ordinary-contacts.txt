@@ -1,0 +1,29 @@
+B15 ordinary fictional day · Tuesday, October 20, 2026
+Page 1 of 1Contact Sheet
+B15 ordinary fictional day
+Tuesday, October 20, 2026
+Contact Sheet
+=Fictional Crew=Fictional Crew
+Fictional departm entFictional departm ent
++1 202 555 0142+1 202 555 0142
+crew1@ exam ple.testcrew1@ exam ple.test
+9:00 AM Crew Call
+Fictional location 1
+DESC-1 Fictional detail with a com m a, "quoted text", and m ultiple lines.
+Second line rem ains visible.  END-DESC-1
+Exam ple Crew 2Exam ple Crew 2
+Fictional departm entFictional departm ent
++1 202 555 0142+1 202 555 0142
+crew2@ exam ple.testcrew2@ exam ple.test
+9:00 AM Fictional scene 2
+Fictional location 2
+DESC-2 Fictional detail with a com m a, "quoted text", and m ultiple lines.
+Second line rem ains visible.  END-DESC-2
+Exam ple Crew 3Exam ple Crew 3
+Fictional departm entFictional departm ent
++1 202 555 0142+1 202 555 0142
+crew3@ exam ple.testcrew3@ exam ple.test
+9:15 AM Wrap
+Fictional location 3
+DESC-3 Fictional detail with a com m a, "quoted text", and m ultiple lines.
+Second line rem ains visible.  END-DESC-3

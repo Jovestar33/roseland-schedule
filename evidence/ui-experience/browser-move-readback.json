@@ -1,0 +1,60 @@
+{
+  "id": "50fb2046-3079-4276-be85-87ea593d0357",
+  "organization_id": "8ae21b75-edad-4ad2-9095-b8a1bc6ff737",
+  "production_id": "1aa5fb7d-282d-4666-914d-231377046dc5",
+  "production_day_id": null,
+  "display_name": "Pre-review browser move",
+  "slug": "pre-review-browser-move",
+  "status": "draft",
+  "town": "Fictional Harbor",
+  "document_schema_version": 1,
+  "document": {
+    "meta": {
+      "dp": "",
+      "wx": null,
+      "dir": "",
+      "lat": null,
+      "lng": null,
+      "date": "",
+      "prod": "",
+      "town": "Fictional Harbor",
+      "phase": "",
+      "dayNumber": null,
+      "totalDays": null,
+      "projectName": "Pre-review fictional destination"
+    },
+    "rows": [
+      {
+        "dur": "",
+        "loc": "",
+        "desc": "BROWSER MOVE CONTENT MUST SURVIVE",
+        "done": false,
+        "notes": "Fictional review only",
+        "action": "Shoot",
+        "locLat": null,
+        "locLng": null,
+        "status": "",
+        "timeIn": "",
+        "fixedIn": false,
+        "fixedOut": false,
+        "otherText": "",
+        "sunLocked": false,
+        "contactName": "",
+        "contactEmail": "",
+        "contactPhone": "",
+        "contactTitle": "",
+        "fixedOutTime": ""
+      }
+    ],
+    "savedAt": 1789861974070
+  },
+  "document_version": 3,
+  "created_at": "2026-09-19T23:52:37.431893+00:00",
+  "updated_at": "2026-09-19T23:53:19.406335+00:00",
+  "created_by": "79574221-8137-47de-8313-d30132dfb433",
+  "updated_by": "79574221-8137-47de-8313-d30132dfb433",
+  "deleted_at": null,
+  "archived_from_status": null,
+  "phase_id": null,
+  "library_position": 2
+}
