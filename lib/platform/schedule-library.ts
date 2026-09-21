@@ -7,9 +7,16 @@ export interface LibraryRecord {
  schedule_date:string|null;town:string|null;production_name:string;phase_name:string|null;day_number:number|null;calendar_date:string|null;
  can_edit:boolean;can_organize:boolean;can_trash:boolean;can_transfer:boolean;can_copy:boolean;
 }
-export interface ProductionDestination {id:string;name:string;create:boolean;organize:boolean;position?:number;version?:number;phases:{id:string;name:string;version?:number}[];days:{id:string;phase:string|null;date:string|null;number:number|null;position:number}[]}
+export interface ProductionDestination {id:string;name:string;create:boolean;organize:boolean;position?:number;version?:number;phases:{id:string;name:string;position?:number;version?:number}[];days:{id:string;phase:string|null;date:string|null;number:number|null;position:number}[]}
 export type LibraryFilter='active'|'archived'|'all'|'trash';
 export type LibrarySort='manual'|'name'|'date'|'updated';
+function isPhaseDestination(value:unknown):value is ProductionDestination['phases'][number]{
+ if(!value||typeof value!=='object')return false;
+ const phase=value as Record<string,unknown>;
+ return typeof phase.id==='string'&&typeof phase.name==='string'
+  &&(phase.position===undefined||typeof phase.position==='number'&&Number.isSafeInteger(phase.position))
+  &&(phase.version===undefined||typeof phase.version==='number'&&Number.isSafeInteger(phase.version)&&phase.version>=1);
+}
 export function libraryPhase(row:LibraryRecord){return row.effective_phase_id??row.phase_id??null;}
 export function libraryGroup(row:LibraryRecord){return row.production_id+':'+(libraryPhase(row)??'no-phase');}
 export function filterLibrary(rows:LibraryRecord[],query:string,status:LibraryFilter,production:string,dateFrom:string,dateTo:string,sort:LibrarySort){
@@ -25,8 +32,9 @@ export function createScheduleLibraryRepository(client:SupabaseClient){
     if(rows.length>10000)throw Error('This library exceeds 10,000 schedules. No partial search results were shown.');if(page.length<100)return rows;
    }
   },
-  async destinations(actor:string,organization:string):Promise<ProductionDestination[]>{const r=await rpc(actor,'schedule_creation_destinations',{target_organization_id:parseInvitationId(organization)});if(!r||!Array.isArray(r.productions))throw new ScheduleRepositoryError('failed');for(const p of r.productions){parseInvitationId(p.id);if(typeof p.name!=='string'||!Array.isArray(p.days)||!Array.isArray(p.phases)||typeof p.create!=='boolean'||typeof p.organize!=='boolean'||(p.position!==undefined&&!Number.isSafeInteger(p.position))||(p.version!==undefined&&(!Number.isSafeInteger(p.version)||p.version<1)))throw new ScheduleRepositoryError('failed');}return r.productions;},
+  async destinations(actor:string,organization:string):Promise<ProductionDestination[]>{const r=await rpc(actor,'schedule_creation_destinations',{target_organization_id:parseInvitationId(organization)});if(!r||!Array.isArray(r.productions))throw new ScheduleRepositoryError('failed');for(const p of r.productions){parseInvitationId(p.id);if(typeof p.name!=='string'||!Array.isArray(p.days)||!Array.isArray(p.phases)||typeof p.create!=='boolean'||typeof p.organize!=='boolean'||(p.position!==undefined&&!Number.isSafeInteger(p.position))||(p.version!==undefined&&(!Number.isSafeInteger(p.version)||p.version<1))||p.phases.some((f:unknown)=>!isPhaseDestination(f)))throw new ScheduleRepositoryError('failed');}return r.productions;},
   async moveHubs(actor:string,target:ProductionDestination,adjacent:ProductionDestination){if(target.id===adjacent.id||!target.organize||!adjacent.organize||!Number.isSafeInteger(target.version)||!Number.isSafeInteger(adjacent.version))throw new ScheduleRepositoryError('invalid');return rpc(actor,'move_production_hub',{target_production_id:parseInvitationId(target.id),adjacent_production_id:parseInvitationId(adjacent.id),expected_target_version:target.version,expected_adjacent_version:adjacent.version});},
+  async movePhases(actor:string,production:ProductionDestination,target:ProductionDestination['phases'][number],adjacent:ProductionDestination['phases'][number]){if(target.id===adjacent.id||!production.organize||!Number.isSafeInteger(target.version)||!Number.isSafeInteger(adjacent.version))throw new ScheduleRepositoryError('invalid');return rpc(actor,'move_library_phase',{target_production_id:parseInvitationId(production.id),target_phase_id:parseInvitationId(target.id),adjacent_phase_id:parseInvitationId(adjacent.id),expected_target_version:target.version,expected_adjacent_version:adjacent.version});},
   async order(actor:string,rows:LibraryRecord[]){if(!rows.length||rows.some(r=>libraryGroup(r)!==libraryGroup(rows[0])))throw new ScheduleRepositoryError('invalid');return rpc(actor,'order_schedule_phase_group',{target_production_id:rows[0].production_id,target_phase_id:libraryPhase(rows[0]),ordered_ids:rows.map(r=>r.id),expected_versions:rows.map(r=>r.document_version)});},
   async savePhase(actor:string,production:string,id:string,name:string,version:number|null){if(!name.trim()||name.trim().length>120||version!==null&&(!Number.isSafeInteger(version)||version<1))throw new ScheduleRepositoryError('invalid');return rpc(actor,'save_library_phase',{target_production_id:parseInvitationId(production),target_phase_id:parseInvitationId(id),next_name:name.trim(),expected_version:version});},
   async place(actor:string,row:LibraryRecord,day:string|null,phase:string|null){return rpc(actor,'place_schedule',{target_schedule_id:row.id,expected_version:row.document_version,target_day_id:day,target_phase_id:phase});}

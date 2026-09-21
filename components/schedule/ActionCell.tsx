@@ -48,16 +48,18 @@ export default function ActionCell({ index, row }: Props) {
   }
 
   const colorClass = actionClassMap[row.action] ?? '';
+  const storedAction = actions.find(action => action && action.toLocaleLowerCase() === row.action.trim().toLocaleLowerCase()) ?? row.action;
+  const knownAction = !!row.action && actions.some(action => action && action.toLocaleLowerCase() === row.action.trim().toLocaleLowerCase());
 
   return (
     <>
       <div className="action-select-wrap">
         <select
           className={`cs action-select${colorClass ? ` ${colorClass}` : ''}${locked ? ' locked' : ''}`}
-          value={row.action}
+          value={storedAction}
           onChange={(e) => handleSelectChange(e.target.value)}
         >
-          {row.action&&!actions.includes(row.action)&&<option value={row.action}>{row.action} (existing value)</option>}
+          {row.action&&!knownAction&&<option value={row.action}>{row.action}</option>}
           {actions.map((a) => (
             <option key={a} value={a}>{a || '—'}</option>
           ))}

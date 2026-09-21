@@ -18,6 +18,13 @@ test('hub moves bind both saved versions and refuse unversioned or unauthorized 
  for(const invalid of [{...adjacent,version:undefined},{...adjacent,organize:false},target])await assert.rejects(()=>repo.moveHubs(actor,target,invalid));assert.equal(calls,1);
 });
 
+test('phase hub moves bind the production and both phase versions',async()=>{
+ const target={id:id(80),name:'Prep',position:1,version:3},adjacent={id:id(81),name:'Shoot',position:2,version:8};
+ const production={id:prod,name:'Production',create:true,organize:true,phases:[target,adjacent],days:[]};let calls=0;
+ const sdk={auth:{getSession:async()=>({data:{session:{user:{id:actor},access_token:'fictional'}}})},rpc:(name:string,args:unknown)=>{calls++;assert.equal(name,'move_library_phase');assert.deepEqual(args,{target_production_id:prod,target_phase_id:target.id,adjacent_phase_id:adjacent.id,expected_target_version:3,expected_adjacent_version:8});return {setHeader:()=>Promise.resolve({data:[],error:null})};}} as unknown as SupabaseClient;
+ const repo=createScheduleLibraryRepository(sdk);await repo.movePhases(actor,production,target,adjacent);await assert.rejects(()=>repo.movePhases(actor,production,target,{...adjacent,version:undefined}));assert.equal(calls,1);
+});
+
 test('phase ordering combines dayless and day-assigned siblings but refuses other phases',async()=>{
  const phase=id(70),first={...row(1),phase_id:phase,effective_phase_id:phase},second={...row(2),production_day_id:id(71),effective_phase_id:phase};
  assert.equal(libraryGroup(first),libraryGroup(second));assert.notEqual(libraryGroup(first),libraryGroup(row(3)));

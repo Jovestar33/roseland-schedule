@@ -32,6 +32,7 @@
 .reviewDialog input:focus, .reviewDialog select:focus { outline:2px solid var(--pink); outline-offset:2px; }
 .reviewDialog button { color:var(--g800); background:white; border-color:var(--g200); border-radius:8px; padding:8px 12px; min-height:36px; margin:3px 3px 3px 0; }
 .reviewDialog button:global(.btn-pink) { background:var(--pink); border-color:var(--pink); color:white; }
+.dialogHeading{display:flex;align-items:center;justify-content:space-between;gap:16px}.dialogHeading h2{margin:0}.dialogClose{margin:0!important;min-width:36px!important;padding:4px 10px!important;font-size:24px!important;line-height:1!important;border:0!important;background:transparent!important}.dialogDescription{color:var(--g600);font-size:13px;line-height:1.5}.dialogActions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.advancedActions{margin-top:18px;border-top:1px solid var(--g200);padding-top:14px}.advancedActions summary{cursor:pointer;color:var(--g600);font-size:13px;font-weight:600}.advancedActions>div{margin-top:10px;display:flex;gap:6px;flex-wrap:wrap}
 @media(max-width:540px){.reviewDialog .form{grid-template-columns:1fr;}.library :global(.lib-recent-item){flex-wrap:wrap;}.library :global(.lib-recent-name){max-width:100%;flex:1 1 100%;}.reviewDialog{padding:20px;}}
 
 .library .filters { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; align-items:end; margin:12px 0; }

@@ -40,11 +40,15 @@ export default function LocalMfaAccess({review=false,managedRecovery=false,focus
   try{await action(()=>latest.current?.user.id===expected);}catch{if(latest.current?.user.id===expected)setMessage('Verification could not finish. Retry the current step; your work is retained.');}
   finally{working.current=false;setBusy(false);}
  }
+ async function cancelEnrollment(){await run(async current=>{const pending=factor;if(pending&&pendingFactor.current){const result=await client.auth.mfa.unenroll({factorId:pending});if(!current())return;if(result.error){setMessage('Setup could not be cancelled. Your account is unchanged; retry or complete verification.');return;}}
+   pendingFactor.current=false;setFactor('');setSecret('');setQr('');setCode('');setStage('enroll');setOpen(false);setMessage('Authenticator setup cancelled. You can return when you are ready.');
+  });}
  if(!session||authNeeded)return null;
  if(stage==='checking'||stage==='unavailable')return managedRecovery?null:<section aria-label="Access checks"><h2>{stage==='checking'?'Checking your access…':'Unable to check your access'}</h2><p role="status">{stage==='checking'?'Checking your organization and account security.':message}</p><p>Your open drafts and pending requests are retained.</p>{stage==='unavailable'&&<button onClick={()=>setRetry(v=>v+1)}>Try again</button>}</section>;
  return <section aria-label="Account security" style={{margin:'12px 0',maxWidth:720}}>
   {stage==='ready'&&<button onClick={()=>setOpen(v=>!v)} disabled={busy}>{review?'Two-step verification':'Account security'}</button>}
-  {(open||stage!=='ready')&&<div>
+  {!open&&stage!=='ready'&&<div><p role="status">Two-step verification is required before you can open this organization.</p><button onClick={()=>setOpen(true)} disabled={busy}>Continue two-step setup</button></div>}
+  {open&&<div>
    <h2 ref={heading} tabIndex={-1}>{stage==='ready'?(review?'Two-step verification':'Account security'):stage==='enroll'?'Set up two-step verification':'Verify your authenticator'}</h2>
    <p>{stage==='ready'?'An authenticator adds protection to your account.':stage==='enroll'?'Your access requires an authenticator. Set one up to continue.':'Enter the current six-digit code from your authenticator to continue.'}</p>
    <p role="status">{message}</p>
@@ -63,6 +67,8 @@ export default function LocalMfaAccess({review=false,managedRecovery=false,focus
     pendingFactor.current=false;setSecret('');setQr('');setMessage('Authenticator verified. Your retained work is ready to resume.');onVerified();setRetry(v=>v+1);
    });}}><label>Authenticator code <input required pattern="[0-9]{6}" inputMode="numeric" autoComplete="one-time-code" value={code} onChange={e=>setCode(e.target.value)}/></label><button disabled={busy}>Verify authenticator</button></form>}
    {stage!=='ready'&&<p>Your open drafts and pending requests are retained.</p>}
+   {pendingFactor.current&&<button type="button" disabled={busy} onClick={()=>void cancelEnrollment()}>Cancel authenticator setup</button>}
+   {stage==='ready'&&<button type="button" disabled={busy} onClick={()=>setOpen(false)}>Close security</button>}
    {stage==='code'&&!secret&&<details><summary>Can’t use your authenticator?</summary><p>Authenticator reset is not available here. Contact your organization’s administrator for help.</p></details>}
   </div>}
  </section>;

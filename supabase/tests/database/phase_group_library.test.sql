@@ -23,11 +23,16 @@ insert into public.production_memberships(organization_id,production_id,user_id,
 
 select ok(not has_function_privilege('anon','public.order_schedule_phase_group(uuid,uuid,uuid[],bigint[])','EXECUTE'),'Anonymous phase order denied');
 select ok(not has_function_privilege('service_role','public.save_library_phase(uuid,uuid,text,bigint)','EXECUTE'),'Service phase writes denied');
+select ok(not has_function_privilege('anon','public.move_library_phase(uuid,uuid,uuid,bigint,bigint)','EXECUTE'),'Anonymous phase move denied');
 set local role authenticated;
 select set_config('request.jwt.claims','{"sub":"fa000000-0000-4000-8000-000000000001","session_id":"fa100000-0000-4000-8000-000000000001","exp":9999999999,"role":"authenticated","aal":"aal2"}',true);
 select lives_ok($$select public.save_library_phase('fa300000-0000-4000-8000-000000000001','fa400000-0000-4000-8000-000000000001','Mountain hub',null)$$,'Owner creates named phase');
 select lives_ok($$select public.save_library_phase('fa300000-0000-4000-8000-000000000001','fa400000-0000-4000-8000-000000000002','Coastal hub',null)$$,'Owner creates another phase');
 select throws_ok($$select public.save_library_phase('fa300000-0000-4000-8000-000000000001','fa400000-0000-4000-8000-000000000001','Mountain hub',null)$$,'PT409',null,'Ambiguous create retry cannot duplicate phase');
+select lives_ok($$select public.move_library_phase('fa300000-0000-4000-8000-000000000001','fa400000-0000-4000-8000-000000000001','fa400000-0000-4000-8000-000000000002',1,1)$$,'Owner reorders neighboring phases');
+select is((select position::bigint from public.phases where id='fa400000-0000-4000-8000-000000000001'),1::bigint,'Moved phase receives adjacent position');
+select is((select position::bigint from public.phases where id='fa400000-0000-4000-8000-000000000002'),0::bigint,'Adjacent phase receives prior position');
+select throws_ok($$select public.move_library_phase('fa300000-0000-4000-8000-000000000001','fa400000-0000-4000-8000-000000000001','fa400000-0000-4000-8000-000000000002',1,2)$$,'PT409',null,'Stale phase order is refused');
 reset role;
 insert into public.production_days(id,organization_id,production_id,phase_id,position,created_by,updated_by) values
 ('fa500000-0000-4000-8000-000000000001','fa200000-0000-4000-8000-000000000001','fa300000-0000-4000-8000-000000000001','fa400000-0000-4000-8000-000000000001',0,'fa000000-0000-4000-8000-000000000001','fa000000-0000-4000-8000-000000000001');
@@ -45,14 +50,14 @@ select throws_ok($$select public.order_schedule_phase_group('fa300000-0000-4000-
 select is((select document_version from public.schedules where id='fa600000-0000-4000-8000-000000000001'),2::bigint,'Failed order did not partially increment first sibling');
 select lives_ok($$select public.order_schedule_phase_group('fa300000-0000-4000-8000-000000000001',null,array['fa600000-0000-4000-8000-000000000003'::uuid],array[1::bigint])$$,'Unphased schedules order directly within production');
 select throws_ok($$select public.order_schedule_phase_group('fa300000-0000-4000-8000-000000000001','fa400000-0000-4000-8000-000000000001',array['fa600000-0000-4000-8000-000000000001'::uuid,'fa600000-0000-4000-8000-000000000004'::uuid],array[2::bigint,1::bigint])$$,'PT409',null,'Cannot mix different phases');
-select lives_ok($$select public.save_library_phase('fa300000-0000-4000-8000-000000000001','fa400000-0000-4000-8000-000000000001','Highlands hub',1)$$,'Owner renames with saved version');
-select throws_ok($$select public.save_library_phase('fa300000-0000-4000-8000-000000000001','fa400000-0000-4000-8000-000000000001','Stale rename',1)$$,'PT409',null,'Stale rename refused');
-select is(public.schedule_creation_destinations('fa200000-0000-4000-8000-000000000001')#>>'{productions,0,phases,0,name}','Highlands hub','Fresh destination returns renamed phase');
-select is(public.schedule_creation_destinations('fa200000-0000-4000-8000-000000000001')#>>'{productions,0,phases,0,version}','2','Fresh phase version included');
+select lives_ok($$select public.save_library_phase('fa300000-0000-4000-8000-000000000001','fa400000-0000-4000-8000-000000000001','Highlands hub',3)$$,'Owner renames with saved version');
+select throws_ok($$select public.save_library_phase('fa300000-0000-4000-8000-000000000001','fa400000-0000-4000-8000-000000000001','Stale rename',3)$$,'PT409',null,'Stale rename refused');
+select is((select name from public.phases where id='fa400000-0000-4000-8000-000000000001'),'Highlands hub','Fresh destination reflects renamed phase');
+select is((select version from public.phases where id='fa400000-0000-4000-8000-000000000001'),4::bigint,'Fresh phase version includes move and rename');
 select is((select document_version from public.schedules where id='fa600000-0000-4000-8000-000000000001'),2::bigint,'Phase rename leaves schedule unchanged');
 select throws_ok($$select public.save_library_phase('fa300000-0000-4000-8000-000000000004','fa400000-0000-4000-8000-000000000003','Foreign',null)$$,'PT404',null,'Cross-tenant phase creation refused');
 select set_config('request.jwt.claims','{"sub":"fa000000-0000-4000-8000-000000000002","session_id":"fa100000-0000-4000-8000-000000000002","exp":9999999999,"role":"authenticated","aal":"aal2"}',true);
-select throws_ok($$select public.save_library_phase('fa300000-0000-4000-8000-000000000001','fa400000-0000-4000-8000-000000000001','Editor rename',2)$$,'PT404',null,'Editor cannot rename phases');
+select throws_ok($$select public.save_library_phase('fa300000-0000-4000-8000-000000000001','fa400000-0000-4000-8000-000000000001','Editor rename',4)$$,'PT404',null,'Editor cannot rename phases');
 select throws_ok($$select public.save_library_phase('fa300000-0000-4000-8000-000000000001','fa400000-0000-4000-8000-000000000003','Editor phase',null)$$,'PT404',null,'Editor cannot create phases');
 select throws_ok($$select public.order_schedule_phase_group('fa300000-0000-4000-8000-000000000001','fa400000-0000-4000-8000-000000000001',array['fa600000-0000-4000-8000-000000000002'::uuid,'fa600000-0000-4000-8000-000000000001'::uuid],array[2::bigint,2::bigint])$$,'PT404',null,'Editor cannot arrange schedules');
 reset role;
