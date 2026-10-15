@@ -14,7 +14,8 @@ export default function LoginPage() {
   function getRedirectTarget(): string {
     if (typeof window === 'undefined') return '/';
     const next = new URLSearchParams(window.location.search).get('next');
-    return next && next.startsWith('/') ? next : '/';
+    // Only local paths may be used as a post-login destination.
+    return next && next.startsWith('/') && !next.startsWith('//') && !next.includes('\\') ? next : '/';
   }
 
   useEffect(() => {
@@ -33,6 +34,8 @@ export default function LoginPage() {
     if (!password.trim()) return;
     setError('');
     setLoading(true);
+    // Capture before login changes auth state and the redirect effect runs.
+    const target = getRedirectTarget();
     const result = await login(password);
     setLoading(false);
     if (result.ok) {
@@ -45,7 +48,6 @@ export default function LoginPage() {
       document.body.scrollLeft = 0;
       // Short delay lets iOS finish the keyboard-dismiss scroll animation
       // so the next page inherits scrollY = 0, not the keyboard-induced offset.
-      const target = getRedirectTarget();
       setTimeout(() => router.replace(target), 80);
     } else {
       setError(result.error ?? 'Incorrect password');
