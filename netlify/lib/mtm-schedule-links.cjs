@@ -16,7 +16,8 @@ function selectLatest(schedules, targets, productionNames) {
   const towns = new Set(targets.map(t => normalizeTown(t.town)));
   const latest = new Map();
   for (const { name, data } of schedules) {
-    const town = normalizeTown(data?.meta?.town);
+    // Geocoded locations include locality/county/state after the town label.
+    const town = normalizeTown(String(data?.meta?.town || '').split(',')[0]);
     const production = normalizeTown(data?.meta?.projectName);
     if (!towns.has(town) || (production && !allowed.has(production))) continue;
     const savedAt = Number(data?.savedAt);
@@ -66,7 +67,8 @@ async function runSync({ readSchedules, listTasks, patchTask, targets, productio
   const schedules = await readSchedules();
   const tasks = await listTasks();
   const changes = planUpdates(schedules, tasks, targets, productionNames);
-  const result = { dryRun, matchedTasks: targets.length, pending: changes.length, updated: 0, changes: dryRun ? changes : undefined };
+  const matchedTowns = selectLatest(schedules, targets, productionNames).size;
+  const result = { dryRun, matchedTasks: targets.length, matchedTowns, pending: changes.length, updated: 0, changes: dryRun ? changes : undefined };
   if (dryRun) return result;
   for (const change of changes) {
     if (now() > deadline - 4000) break;
