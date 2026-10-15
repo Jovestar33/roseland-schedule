@@ -20,7 +20,8 @@ export default function AuthGate({ children }: { children: React.ReactNode }) {
     if (hydrated && !isAuthenticated) {
       // Clear the auth cookie so the next full-page load also redirects via middleware
       document.cookie = 'rp_auth_flag=; path=/; max-age=0; SameSite=lax';
-      router.replace('/login');
+      const next = window.location.pathname + window.location.search + window.location.hash;
+      router.replace(`/login?next=${encodeURIComponent(next)}`);
     }
   }, [hydrated, isAuthenticated, router]);
 
