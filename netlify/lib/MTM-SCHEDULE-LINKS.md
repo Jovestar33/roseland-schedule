@@ -29,3 +29,7 @@ Rollback: unset `MTM_LINK_SYNC_ENABLED` and redeploy. Existing links are preserv
 `npm run build`
 
 The tests cover latest selection, exact-town and production isolation, unchanged links, missing/changed destinations, failed reads, dry-run behavior, field-only updates, time budget, URL length, and mapping completeness. Live OAuth, source matching, first write, and the scheduled run still require verification.
+
+## Deployment dependency repair
+
+The existing audit gate required Next.js/eslint-config-next 15.5.28, sharp 0.35.5, brace-expansion 5.0.12, and source-map-js 1.2.2. The unpatched braces dependency was removed by aliasing only @next/eslint-plugin-next's fast-glob dependency to tinyglobby 0.2.17. That plugin uses only globSync with onlyDirectories; the compatibility test exercises its real getRootDirs helper for literal, wildcard, brace, array, and absent matches. Tinyglobby returns relative paths where fast-glob may return absolute paths; both resolve to the same directories for the plugin's filesystem operations. No application glob dependency or lint rule is disabled. CI now runs the integration and compatibility tests alongside its unchanged audit gate.

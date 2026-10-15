@@ -42,6 +42,9 @@ jobs:
       - name: Verify Google Places credentials stay server-only
         run: npm run test:credential-leaks
 
+      - name: Test schedule links and lint compatibility
+        run: node --test tests/integrations/*.test.cjs
+
       - name: Lint application
         run: npm run lint
 
