@@ -65,7 +65,8 @@ export default async (_request, context) => {
         await request(`${base}/${id}`, { method: 'PATCH', headers, body: JSON.stringify(fields) });
       }
     });
-    console.log('[MTM schedule links]', JSON.stringify(result));
+    for (const change of result.changes || []) console.log('[MTM schedule link preview]', JSON.stringify(change));
+    console.log('[MTM schedule links]', JSON.stringify({ ...result, changes: undefined }));
   } catch (error) {
     // Never log request headers, OAuth responses, tokens, or schedule contents.
     const message = /^[a-z_]+(?:_\d+)?$/.test(error.message) ? error.message : 'sync_failed';

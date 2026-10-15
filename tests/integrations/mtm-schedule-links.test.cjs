@@ -24,6 +24,14 @@ test('existing correct link is idempotent; absent schedule never clears it', () 
   assert.deepEqual(planUpdates([schedule('Current', 5)], [t], targets, names), []);
   assert.deepEqual(planUpdates([], [t], targets, names), []);
 });
+test('geocoded town labels match the town before county and state details', () => {
+  for (const location of ['Fuquay-Varina, Fuquay-Varina, NC', 'Fuquay-Varina, Wake County, North Carolina, USA']) {
+    const source = schedule('Geocoded', 4); source.data.meta.town = location;
+    assert.equal(planUpdates([source], [task()], targets, names).length, 1);
+  }
+  const other = schedule('Elsewhere', 4); other.data.meta.town = 'Raleigh, Fuquay-Varina, NC';
+  assert.deepEqual(planUpdates([other], [task()], targets, names), []);
+});
 test('renamed/moved/outside project destination aborts before any writes', async () => {
   for (const changed of [{ name: 'Film Shoot' }, { project: { id: 'other' } }, { tasklist: { id: 'other' } }]) {
     let writes = 0;
