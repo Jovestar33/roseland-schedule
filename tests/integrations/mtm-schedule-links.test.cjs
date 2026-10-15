@@ -57,3 +57,17 @@ test('live destination mapping contains 74 Overview records for exactly 72 towns
   assert.equal(new Set(mapping.map(t => t.id)).size, 74);
   assert.ok(mapping.every(t => t.name.endsWith(' Overview') || t.name === 'Garner'));
 });
+
+test('runtime deploy context blocks previews and unpublished deploys even with enabled environment flag', async () => {
+  const handler = (await import('../../netlify/functions/mtm-schedule-links.mjs')).default;
+  const old = process.env.MTM_LINK_SYNC_ENABLED;
+  process.env.MTM_LINK_SYNC_ENABLED = 'true';
+  try {
+    await handler(undefined, { deploy: { context: 'deploy-preview', published: true } });
+    await handler(undefined, { deploy: { context: 'production', published: false } });
+    await handler(undefined, undefined);
+  } finally {
+    if (old === undefined) delete process.env.MTM_LINK_SYNC_ENABLED;
+    else process.env.MTM_LINK_SYNC_ENABLED = old;
+  }
+});

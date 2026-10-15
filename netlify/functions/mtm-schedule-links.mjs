@@ -6,14 +6,18 @@ const targets = require('../lib/mtm-overview-targets.json');
 
 export const config = { schedule: '*/15 * * * *' };
 
-export default async () => {
+export default async (_request, context) => {
   // Only the published production site may access the live Zoho project.
-  if (process.env.CONTEXT !== 'production' || process.env.MTM_LINK_SYNC_ENABLED !== 'true') return;
+  if (context?.deploy?.context !== 'production' || context?.deploy?.published !== true || process.env.MTM_LINK_SYNC_ENABLED !== 'true') {
+    console.log('[MTM schedule links] disabled_or_unpublished');
+    return;
+  }
   const deadline = Date.now() + 24000;
   const signal = AbortSignal.timeout(24000);
   const request = async (url, options = {}) => {
     const response = await fetch(url, { ...options, signal, redirect: 'error' });
     if (!response.ok) throw new Error(`remote_http_${response.status}`);
+    if (response.status === 204) return {};
     const data = await response.json();
     if (data.error || data.error_code) throw new Error('remote_api_error');
     return data;
