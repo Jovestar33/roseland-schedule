@@ -154,6 +154,9 @@ body{font-family:var(--fb);background:var(--g100);color:var(--black);min-height:
 .mf input:focus{border-bottom-color:var(--pink)}
 .mf input::placeholder{color:var(--g300);font-weight:400}
 #m-town{white-space:normal}
+.date-value-line{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.date-value-line .date-field-wrap{flex:0 1 150px;max-width:100%}
+.date-weekday{font-size:11px;font-weight:400;color:var(--g400);white-space:nowrap}
 .date-field-wrap{position:relative;display:block}
 .date-unset{color:transparent!important;-webkit-text-fill-color:transparent!important}
 .date-placeholder{position:absolute;left:0;top:50%;transform:translateY(-50%);
