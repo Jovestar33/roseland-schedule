@@ -24,6 +24,11 @@ export default function ScheduleHeader({ readOnly = false }: Props) {
   const labelDate = useCmsLabel('metaDate', 'Date');
   const labelCall = useCmsLabel('metaCall', 'Call Time');
 
+  const selectedDate = meta.date ? new Date(`${meta.date}T00:00:00Z`) : null;
+  const weekday = selectedDate && !Number.isNaN(selectedDate.getTime())
+    ? selectedDate.toLocaleDateString('en-US', { weekday: 'long', timeZone: 'UTC' })
+    : '';
+
   const callTime = rows.find(r => !r.sunLocked)?.timeIn || '';
 
   function handleTownSelect(address: string, geo: GeoResult | null) {
@@ -70,21 +75,24 @@ export default function ScheduleHeader({ readOnly = false }: Props) {
         </div>
         <div className="mf">
           <label htmlFor="m-date">{labelDate}</label>
-          {readOnly ? (
-            <div className="call-disp">{meta.date || '—'}</div>
-          ) : (
-            <div className="date-field-wrap">
-              <input
-                id="m-date"
-                type="date"
-                autoComplete="off"
-                value={meta.date}
-                onChange={(e) => updateMeta({ date: e.target.value })}
-                className={meta.date ? '' : 'date-unset'}
-              />
-              {!meta.date && <span className="date-placeholder">— pick a date —</span>}
-            </div>
-          )}
+          <div className="date-value-line">
+            {readOnly ? (
+              <div className="call-disp">{meta.date || '—'}</div>
+            ) : (
+              <div className="date-field-wrap">
+                <input
+                  id="m-date"
+                  type="date"
+                  autoComplete="off"
+                  value={meta.date}
+                  onChange={(e) => updateMeta({ date: e.target.value })}
+                  className={meta.date ? '' : 'date-unset'}
+                />
+                {!meta.date && <span className="date-placeholder">— pick a date —</span>}
+              </div>
+            )}
+            {weekday && <span className="date-weekday">{weekday}</span>}
+          </div>
         </div>
         <div className="mf">
           <label>{labelCall}</label>
