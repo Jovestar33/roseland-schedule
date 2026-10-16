@@ -66,8 +66,11 @@ export default function ScheduleGrid({ onOpenContact, onOpenStatus, onOpenNotes 
   const totalMins = rows.reduce((sum, r) => sum + (r.sunLocked ? 0 : durm(r.dur)), 0);
   const totalLabel = `${String(Math.floor(totalMins / 60)).padStart(2, '0')}:${String(totalMins % 60).padStart(2, '0')}`;
 
-  // Assign sequential draggable indices to non-sun rows only.
-  let draggableIdx = 0;
+  // Droppable can invoke its render callback repeatedly during a drag without
+  // rerendering this component. Capture stable indices, not a mutable counter.
+  const draggableIndices = rows.map((row, index) =>
+    row.sunLocked ? -1 : rows.slice(0, index).filter(r => !r.sunLocked).length
+  );
 
   return (
     <>
@@ -111,7 +114,7 @@ export default function ScheduleGrid({ onOpenContact, onOpenStatus, onOpenNotes 
                     if (row.sunLocked) {
                       return <SunriseSunsetRow key={key} index={index} row={row} />;
                     }
-                    const dIdx = draggableIdx++;
+                    const dIdx = draggableIndices[index];
                     return (
                       <Draggable key={key} draggableId={key} index={dIdx}>
                         {(draggable, snapshot) => (
