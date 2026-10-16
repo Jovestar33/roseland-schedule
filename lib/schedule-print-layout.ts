@@ -58,10 +58,14 @@ export function layoutSchedulePrint(data: ScheduleData, name: string, mode: Sche
     meta.wx ? [meta.wx.sunrise && `Sunrise: ${meta.wx.sunrise}`, meta.wx.sunset && `Sunset: ${meta.wx.sunset}`, meta.wx.cond, meta.wx.maxF == null ? '' : `High: ${meta.wx.maxF}°F`, meta.wx.minF == null ? '' : `Low: ${meta.wx.minF}°F`, meta.wx.prec == null ? '' : `Rain: ${meta.wx.prec}%`].filter(Boolean).join(' · ') : '',
   ].filter(Boolean).flatMap(text => wrap(text, contentWidth - 160));
   const headerHeight = Math.max(90, header.length * LINE + 34);
-  const capacity = height - PAD * 2 - headerHeight - FOOTER - TABLE_HEAD;
-  if (capacity < LINE * 6) throw new Error('The schedule header is too long to fit this paper size. Shorten the header fields before printing.');
+  // Only page one carries the full identity/weather header. Later pages keep
+  // the section title and use the released space for schedule rows or notes.
+  const pageCapacity = (index: number, kind: Page['kind']) =>
+    height - PAD * 2 - (index === 0 ? headerHeight : 28) - FOOTER - (kind === 'schedule' ? TABLE_HEAD : 0);
+  if (pageCapacity(0, 'schedule') < LINE * 6) throw new Error('The schedule header is too long to fit this paper size. Shorten the header fields before printing.');
   const pages: Page[] = [{ kind: 'schedule', rows: [], notes: [] }];
   let used = 0;
+  const capacity = () => pageCapacity(pages.length - 1, pages[pages.length - 1].kind);
   const appendix: { ref: string; title: string; text: string }[] = [];
   data.rows.forEach((row, index) => {
     if (!(row.action || row.timeIn || row.notes || row.keyInstruction || row.desc || row.loc)) return;
@@ -82,11 +86,11 @@ export function layoutSchedulePrint(data: ScheduleData, name: string, mode: Sche
     const cells = [[], wrap(action, columns[1]).map(text => ({ text })), wrap(loc, columns[2]).map(text => ({ text })), detail(row.desc, 3, `D${index + 1}`, 'Description'), notes, wrap(row.timeIn, columns[5]).map(text => ({ text })), wrap(row.dur, columns[6]).map(text => ({ text })), wrap(computeTimeOut(row), columns[7]).map(text => ({ text }))];
     const totalLines = Math.max(1, ...cells.map(cell => cell.length));
     const rowHeight = totalLines * LINE + ROW_PAD;
-    if (used && rowHeight <= capacity && used + rowHeight > capacity) { pages.push({ kind: 'schedule', rows: [], notes: [] }); used = 0; }
+    if (used && rowHeight <= pageCapacity(pages.length, 'schedule') && used + rowHeight > capacity()) { pages.push({ kind: 'schedule', rows: [], notes: [] }); used = 0; }
     let offset = 0;
     while (offset < totalLines) {
-      let available = Math.floor((capacity - used - ROW_PAD) / LINE);
-      if (available < 1) { pages.push({ kind: 'schedule', rows: [], notes: [] }); used = 0; available = Math.floor((capacity - ROW_PAD) / LINE); }
+      let available = Math.floor((capacity() - used - ROW_PAD) / LINE);
+      if (available < 1) { pages.push({ kind: 'schedule', rows: [], notes: [] }); used = 0; available = Math.floor((capacity() - ROW_PAD) / LINE); }
       const count = Math.min(available, totalLines - offset);
       pages[pages.length - 1].rows.push({ number: index + 1, continued: offset > 0, cells: cells.map(cell => cell.slice(offset, offset + count)) });
       used += count * LINE + ROW_PAD;
@@ -95,15 +99,15 @@ export function layoutSchedulePrint(data: ScheduleData, name: string, mode: Sche
   });
   const schedulePages = pages.length;
   const references: Record<string, number> = {};
-  used = capacity;
+  used = Infinity;
   for (const note of appendix) {
     const title = wrap(note.title, contentWidth, true);
     const lines = wrap(note.text, contentWidth);
     let offset = 0;
     while (offset < lines.length) {
       const overhead = title.length * LINE + 24 + (offset > 0 ? 12 : 0);
-      if (capacity - used < overhead + LINE * 2) { pages.push({ kind: 'notes', rows: [], notes: [] }); used = 0; }
-      const count = Math.floor((capacity - used - overhead) / LINE);
+      if (capacity() - used < overhead + LINE * 2) { pages.push({ kind: 'notes', rows: [], notes: [] }); used = 0; }
+      const count = Math.floor((capacity() - used - overhead) / LINE);
       if (count < 1) throw new Error('A notes heading is too long to fit. Shorten its location name before printing.');
       references[note.ref] ??= pages.length;
       const block = { ref: note.ref, title, lines: lines.slice(offset, offset + count), continued: offset > 0 };
@@ -124,7 +128,7 @@ export function renderSchedulePrint(layout: PrintLayout, logoUrl = ''): string {
   const header = `<header>${lines(layout.header)}${logoUrl ? `<img class="logo" src="${esc(logoUrl)}" alt="Organization logo">` : ''}</header>`;
   const heads = ['#', 'Action', 'Location', 'Description', 'Notes / key instruction', 'Time in', 'Duration', 'Time out'];
   const cols = layout.columns.map(width => `<col style="width:${width}px">`).join('');
-  const pageHtml = layout.pages.map((page, index) => `<section class="paper" data-kind="${page.kind}">${header}
+  const pageHtml = layout.pages.map((page, index) => `<section class="paper" data-kind="${page.kind}">${index === 0 ? header : ''}
     <h2>${page.kind === 'notes' ? 'Schedule Notes' : 'Production Schedule'}</h2>
     ${page.kind === 'schedule' ? `<table><colgroup>${cols}</colgroup><thead><tr>${heads.map(text => `<th>${text}</th>`).join('')}</tr></thead><tbody>${page.rows.map(row => `<tr><td>${row.number}${row.continued ? '*' : ''}</td>${row.cells.slice(1).map(cell => `<td>${cell.map(line => line.ref ? `<a class="line reference" href="#${line.ref}">Full ${line.ref.startsWith('D') ? 'description' : 'notes'}: ${line.ref}, page ${layout.references[line.ref]}</a>` : `<span class="line${line.bold ? ' key' : ''}">${esc(line.text) || '&nbsp;'}</span>`).join('')}</td>`).join('')}</tr>`).join('')}</tbody></table>` : page.notes.map(note => `<article${note.continued ? '' : ` id="${note.ref}"`}><h3>${lines(note.title)}${note.continued ? '<span class="continued-label">(continued)</span>' : ''}</h3><div>${lines(note.lines)}</div></article>`).join('')}
     <footer><span>${page.kind === 'schedule' ? `Total ${layout.totalDuration} · ` : ''}${layout.mode === 'compact' ? 'Compact schedule + full notes' : 'All details inline'}${layout.pages.some(p => p.rows.some(r => r.continued)) ? ' · * Continued row' : ''}${page.kind === 'schedule' && layout.notesPages ? ` · Full supporting notes on ${layout.notesPages === 1 ? `page ${layout.pages.length}` : `pages ${layout.schedulePages + 1}-${layout.pages.length}`}` : ''}</span><span>Page ${index + 1} of ${layout.pages.length}</span></footer></section>`).join('');
