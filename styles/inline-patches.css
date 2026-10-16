@@ -1113,3 +1113,6 @@ body{overflow-x:hidden;max-width:100dvw}
   .tbl-wrap thead .th-notes { padding-left: 36px !important; }
   #mobile-grid-sticky .th-notes { padding-left: 36px !important; }
 }
+
+/* Exact duration entry uses a compact dialog on desktop and mobile. */
+.modal.duration-modal{max-width:min(420px,94vw)!important;}
