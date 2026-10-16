@@ -58,3 +58,25 @@ test('key instructions survive store edits, undo/redo and JSON serialization rou
  const saved=JSON.parse(JSON.stringify(store.getState().getScheduleData()));
  store.getState().loadSchedule('Reloaded',saved);assert.equal(store.getState().rows[0].keyInstruction,'Updated key instruction');
 });
+test('full header appears only on page one and continuation pages reclaim its space',()=>{
+ for (const paper of ['letter','a4']) for (const mode of ['compact','inline']) {
+  const data=fixture(); data.meta.prod='Unique producer\nProduction coordinator\nAssistant'; data.meta.projectName='Fictional production';
+  data.rows=Array.from({length:18},(_,i)=>makeRow({action:'Shoot',loc:`Location ${i+1}`,timeIn:'9:00 AM',dur:'00:15',desc:'Description',notes:'one\ntwo\nthree\nfour\nfive'}));
+  const layout=layoutSchedulePrint(data,'First page header',mode,paper,measure);
+  assert.ok(layout.schedulePages>1);
+  const html=renderSchedulePrint(layout,'logo.png');
+  assert.equal((html.match(/<header>/g)||[]).length,1);
+  assert.equal((html.match(/class="logo"/g)||[]).length,1);
+  assert.equal((html.match(/Unique producer/g)||[]).length,1);
+  const first=layout.pages[0].rows.reduce((n,r)=>n+Math.max(1,...r.cells.map(c=>c.length))*16+14,0);
+  const next=layout.pages[1].rows.reduce((n,r)=>n+Math.max(1,...r.cells.map(c=>c.length))*16+14,0);
+  assert.ok(next>first,'continuation pages use the released header space');
+  layout.pages.forEach((page,i)=>{
+   const used=page.kind==='schedule'
+    ? page.rows.reduce((n,r)=>n+Math.max(1,...r.cells.map(c=>c.length))*16+14,0)
+    : page.notes.reduce((n,b)=>n+b.title.length*16+24+(b.continued?12:0)+b.lines.length*16,0);
+   const available=layout.height-68-28-(i===0?layout.headerHeight:28)-(page.kind==='schedule'?30:0);
+   assert.ok(used<=available,`page ${i+1} fits`);
+  });
+ }
+});
