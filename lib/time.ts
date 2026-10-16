@@ -115,13 +115,13 @@ export function rowConflictInfo(rows: ScheduleRow[], i: number): ConflictInfo | 
   return null;
 }
 
-// Return the filtered DURATIONS list — exclude options that overrun the next fixed anchor.
-export function allowedDurationsForRow(rows: ScheduleRow[], i: number): string[] {
+// Maximum duration before an existing fixed time anchor.
+export function maxDurationForRow(rows: ScheduleRow[], i: number): number | null {
   const r = rows[i];
-  if (!r || r.sunLocked) return DURATIONS;
+  if (!r || r.sunLocked) return null;
 
   const tim = t12m(r.timeIn);
-  if (tim < 0) return DURATIONS;
+  if (tim < 0) return null;
 
   let max: number | null = null;
 
@@ -136,8 +136,23 @@ export function allowedDurationsForRow(rows: ScheduleRow[], i: number): string[]
     max = max === null ? diff : Math.min(max, diff);
   }
 
-  if (max === null) return DURATIONS;
-  return DURATIONS.filter(d => !d || durm(d) <= max!);
+  return max;
+}
+
+// Keep the preset choices within the same limits used by custom durations.
+export function allowedDurationsForRow(rows: ScheduleRow[], i: number): string[] {
+  const max = maxDurationForRow(rows, i);
+  return max === null ? DURATIONS : DURATIONS.filter(d => !d || durm(d) <= max);
+}
+
+/** Accept whole minutes or hours:minutes, retaining zero as an explicit duration. */
+export function parseCustomDuration(value: string): string | null {
+  const text = value.trim();
+  const clock = text.match(/^(\d+):([0-5]\d)$/);
+  const minutes = clock ? Number(clock[1]) * 60 + Number(clock[2])
+    : /^\d+$/.test(text) ? Number(text) : NaN;
+  if (!Number.isSafeInteger(minutes) || minutes < 0) return null;
+  return minutes === 0 ? '00:00' : mDur(minutes);
 }
 
 // Detect a gap or overlap between this fixedIn row and the previous row's computed time out.
