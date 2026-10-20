@@ -8,3 +8,6 @@ yarn-debug.log*
 yarn-error.log*
 .DS_Store
 *.tsbuildinfo
+
+# Local Vercel project linkage and downloaded environment files
+.vercel/
