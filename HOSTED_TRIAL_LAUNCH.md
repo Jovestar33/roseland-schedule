@@ -2,6 +2,20 @@
 
 Updated October 20, 2026. User selected Vercel for the new app and the existing Supabase project for data. The existing Netlify app continues during the trial. Both apps will receive real edits. No cutover has occurred.
 
+## Current launch checkpoint — October 20, 2026
+
+**Trial remains inactive.** The original Netlify schedules and hosted organization/Owner remain intact. Hosted schema is still the 56 verified versions; the additional durable-sync migration below has only been rehearsed locally.
+
+- Supabase invitation and recovery templates are now saved with the production `/workspace` fragment flow. Sender/SMTP, redirect settings and private Vercel secrets were previously saved. Actual delivery and deployed authentication remain unverified.
+- Vercel still shows Hobby. Safari is at the reviewed Pro checkout: $20 immediately and $20/month plus applicable taxes/usage. User handoff is pending; no purchase was submitted. Deployment hold remains in place.
+- Prepared disabled-by-default background sync: database checkpoints and exclusive leases, explicit machine audit attribution, expected-version writes, bounded worker execution and separate cron authorization. No scheduler is installed or enabled.
+- Prepared a restricted legacy bridge: only the current published Production deployment and canonical site/origin; private bearer authorization; writes only to explicit existing mapped keys; no creation/deletion/rename/library writes. It is not deployed/configured. `NETLIFY` is not assumed to exist at function runtime; binding uses documented `SITE_ID` plus native deployment context.
+- Prepared a source-only live capture tool for all six Blobs stores, retaining exact bytes/metadata and refusing changed inventories/content. A stable double-read is explicitly **not** represented as an atomic frozen snapshot. It has not yet captured the real source.
+- Clean backup restore into the network-disabled rehearsal container succeeded with original ownership and ACLs; temporary restore authority was revoked. All 52 forward migrations (51 already hosted plus the new sync migration) applied as restricted postgres. Rollback-only tests verified RPC grants, duplicate/expired leases, checkpoint CAS, document-version CAS, immutable recovery, integration attribution/history/audit, pause and current schedule restrictions. No test fixtures remain.
+- Clean isolated Next.js production build and type checking passed. Platform suite: 337 passed; four subsequently added capture/published-deploy tests also passed. Credential-leak check passed. Existing core sync fault-injection coverage is retained.
+
+**Remaining:** finish Vercel paid handoff; review/enable scoped bridge credentials; capture and review the complete real-source import/mapping; apply the new reviewed sync migration; wire visible sync/conflict controls; deploy and verify real email/authentication; test both directions, concurrent conflicts and restart recovery against the hosted pair; then activate the scheduler. Nancy/Melissa invitations and real-user acceptance still await those checks. No claim of a ready trial, completed import, or functioning hosted synchronization is justified yet.
+
 ## Verified preservation and destination
 
 - Supabase project: `roseland-schedule-dev`, `dapvzbzyozlthmhjlekj`, us-east-1. All 56 source migration versions are applied. The user-run guarded helper completed on October 20 at 22:12 UTC; fresh hosted SQL confirmed the ledger, original organization/Owner, zero schedules/productions and RLS on every public table.

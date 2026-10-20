@@ -75,3 +75,11 @@ test('lifecycle acknowledgements must advance the requested version exactly once
   await assert.rejects(repo.mutate(id,2,'archive'),failure('failed'));
   assert.throws(()=>repo.mutate(id,0,'delete'),failure('invalid'));
 });
+
+ test('machine updates require explicit integration attribution; human updates cannot claim both',async()=>{
+ for(const patch of [{updated_by:null,last_sync_integration_id:id},{updated_by:null},{updated_by:id,last_sync_integration_id:id}]){
+ const repo=createScheduleRepository({rpc:async()=>({data:{...record,...patch},error:null})});
+ if(patch.updated_by===null&&patch.last_sync_integration_id===id)assert.equal((await repo.read(id)).updated_by,null);
+ else await assert.rejects(repo.read(id),failure('failed'));
+ }
+});

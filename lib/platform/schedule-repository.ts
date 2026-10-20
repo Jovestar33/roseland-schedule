@@ -20,7 +20,8 @@ export interface StoredSchedule {
   document_version: number;
   document: Partial<ScheduleData>;
   updated_at: string;
-  updated_by: string;
+  updated_by: string | null;
+  last_sync_integration_id?: string | null;
 }
 
 type RpcResult = { data: unknown; error: { code?: string; message?: string } | null };
@@ -81,7 +82,8 @@ export function createScheduleRepository(client: ScheduleRpcClient): ScheduleRep
       || data.document_version < 1 || data.document_schema_version !== 1
       || !data.document || !Array.isArray(data.document.rows)
       || !data.document.meta || typeof data.document.meta !== 'object' || Array.isArray(data.document.meta)
-      || ![data.organization_id, data.production_id, data.updated_by].every(value => typeof value === 'string' && uuid.test(value))
+      || ![data.organization_id, data.production_id].every(value => typeof value === 'string' && uuid.test(value))
+      || !(typeof data.updated_by==='string'&&uuid.test(data.updated_by)&&data.last_sync_integration_id==null || data.updated_by===null&&typeof data.last_sync_integration_id==='string'&&uuid.test(data.last_sync_integration_id))
       || !(data.production_day_id===null||typeof data.production_day_id==='string'&&uuid.test(data.production_day_id))
       || typeof data.slug !== 'string' || !['draft','published','archived'].includes(data.status)
       || ![null,'draft','published'].includes(data.archived_from_status)
