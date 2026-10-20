@@ -19,7 +19,9 @@ This is the agreed rollout shape, not a report of completed hosted work. The des
 
 ### Editing during the mirror period — both apps accept real edits
 
-**User confirmed October 20: both apps will contain real edits.** This supersedes the earlier single-authoritative-writer assumption **during the mirror trial**. The initial import and existing one-way delta importer are not sufficient. Do not enable repeat refreshes that overwrite target changes. Bidirectional reconciliation must be implemented and tested before the trial starts; it is not currently a delivered feature.
+**Implementation update:** an operator-run document sync worker is now implemented locally in [scripts/trial-sync](./scripts/trial-sync/README.md), with version-conditional writes, durable checkpoints, exact-version conflict resolution and an HTML comparison report. It has not been connected to hosted schedules. Structural changes and related stores remain separate review work; this is not an always-on hosted service.
+
+**User confirmed October 20: both apps will contain real edits.** This supersedes the earlier single-authoritative-writer assumption **during the mirror trial**. The initial import and existing one-way delta importer are not sufficient. Do not enable repeat refreshes that overwrite target changes. The local document worker is implemented and tested; hosted activation and the structural/related-store operating procedure must be verified before the trial starts.
 
 Use a common last-reconciled baseline and stable schedule IDs. Compare both current documents with that baseline:
 

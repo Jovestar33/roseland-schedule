@@ -1,0 +1,90 @@
+# Trial schedule synchronization
+
+October 20, 2026. **Implemented locally, not activated against hosted schedules.** This is an operator-run bidirectional schedule-document synchronizer for the Roseland Pictures parallel trial. The new app continues to store documents in Supabase; the existing app continues to use Netlify Blobs.
+
+## What it does
+
+- Retains the last common document for every explicitly mapped schedule.
+- Propagates one-sided content changes through an atomic destination version check. Descriptions, contacts, notes, dates, time values, call sheets, unknown document fields and row order are preserved. Only the transport-level `savedAt` is excluded from comparison and regenerated on a write.
+- Stops when both copies changed differently. A passive HTML report compares changed fields and retains the complete common/Netlify/new-app documents. No timestamp winner or automatic field merge is used.
+- Ties an operator's resolution to the exact reviewed copies, checks both again, and retains the overwritten copy in private immutable recovery checkpoints.
+- Saves write intent before touching either backend. A missing acknowledgement is recovered by readback if the destination still matches the intent; otherwise it stays unresolved until explicit review. It is never blindly replayed.
+- Reads both stores after successful writes; errors and new edits remain visible rather than being marked synchronized.
+- Uses the current-session Supabase RPC and actor/organization checks, not privileged direct table writes. Authentication expiry or revoked access stops the affected operation.
+- Requires one protected journal per environment pair and operator identity. A file lock prevents overlapping workers using that journal. Checkpoints store only changed entries, while the index is replaced atomically and durably. Missing/corrupt checkpoint data fails closed.
+
+## Boundaries
+
+This first version syncs **already imported, explicitly mapped schedule contents**. It does not create accounts, import the initial library, or deploy anything. It is a command operated by the trial owner, not an always-on hosted service or an in-app Sync button.
+
+Renames, changes to production/phase/day placement, library ordering, archive/Trash and disappearance require structural reconciliation. They stop automatic writes rather than guessing identity or deleting/recreating documents. New schedules appear in an unmapped inventory; import/reconcile them and append their reviewed mapping. Existing mappings cannot silently be rebound or removed. A source-name change cannot be inferred from text similarity.
+
+Snapshots, templates, CMS/branding, public links, permissions and credentials are **not synchronized by this worker**. History created by saves remains in Supabase's existing immutable history; original conflict versions and write intents remain in the protected journal. Separate review is needed for related-store changes. The report's “up to date” applies only to the mapped document at its last check.
+
+Never run two workers with different journals against the same environment pair. The journal lock is local, not a distributed ownership lease. Keep the journal on a durable local filesystem supporting exclusive creation, atomic rename and fsync; back it up. Do not delete it or its checkpoints to clear a conflict. No pruning is automatic. A stopped mirror must preserve and reconcile edits from both systems before either store is abandoned.
+
+## Configuration
+
+Create a private directory (`chmod 700`) outside Git and shared folders. Keep the configuration, credentials, journal and reports there. A configuration has this shape; replace every identity with its verified launch identity:
+
+```json
+{
+  "format": 1,
+  "netlifySiteId": "00000000-0000-0000-0000-000000000001",
+  "supabaseUrl": "https://YOUR_PROJECT.supabase.co",
+  "organizationId": "00000000-0000-0000-0000-000000000002",
+  "actorId": "00000000-0000-0000-0000-000000000003",
+  "mappings": [
+    {
+      "id": "00000000-0000-0000-0000-000000000004",
+      "netlifyKey": "Exact legacy schedule key",
+      "supabaseId": "00000000-0000-0000-0000-000000000005"
+    }
+  ]
+}
+```
+
+Use the source-to-target identities from the verified initial import. Never derive a new target ID from a revision or schedule name. Duplicate source keys or target IDs are rejected. Additional mappings can be appended; existing ones cannot change without a separate identity reconciliation.
+
+`ROSELAND_SYNC_CREDENTIALS` points to a private regular JSON file (`chmod 600`) containing `netlifyToken`, `supabaseApiKey`, and `supabaseAccessToken`. The latter is a current ordinary authorized user's session token for the configured actor, with required MFA. Do not use a service-role token, weaken admission, auto-generate activity, or put credentials into command arguments, Git, browser bundles or reports. The command verifies the authenticated user. It does not log in, refresh credentials or create a privileged service account. Obtain/refresh the operator session through the approved account process when necessary.
+
+Run outside any inherited `NETLIFY_BLOBS_CONTEXT`: the SDK can otherwise override the configured source site. The CLI refuses such a context.
+
+## Operation
+
+From this worktree:
+
+```sh
+export ROSELAND_SYNC_CREDENTIALS=/private/path/credentials.json
+npm run sync:trial -- plan /private/path/config.json /private/path/journal
+npm run sync:trial -- run /private/path/config.json /private/path/journal
+```
+
+`plan` reads both sides and writes local review evidence but does not change schedules. It can reconcile a previously uncertain acknowledgement from readback. `run` establishes baselines only for matching initial copies and applies safe one-sided edits. Initial unequal copies need review; it never assumes either is authoritative.
+
+Open `report.html` in the journal directory. It is a private, escaped, script-free saved report, not a live dashboard. `report.json` and the recovery checkpoints include schedule content and contacts; protect them like a backup. Standard output contains only mapping IDs/statuses and the report location.
+
+For a document conflict, review both complete copies and run:
+
+```sh
+npm run sync:trial -- resolve /private/path/config.json /private/path/journal MAPPING_ID supabase REVIEW_HASH
+```
+
+Use `netlify` instead of `supabase` to select that current copy. The report supplies the mapping ID and review hash under Operator reference. This is an intentional replacement, with both prior versions retained. To combine changes, edit the desired combined version in one app first, generate a new report and select that reviewed copy. A stale hash is rejected. An uncertain write can also be resolved this way after reviewing current copies; changed structure cannot.
+
+Exit 0 means the command completed without unresolved/missing mappings; for `plan`, ready transfers still have not been applied. Exit 2 means review or mapping work remains. Exit 1 means the command stopped on a configuration, authentication, storage or command error. Inspect retained private evidence before retrying; never use force-save to bypass a sync conflict.
+
+After a process crash, verify its PID is no longer running before removing only `worker.lock`; preserve all state/checkpoint files. Run `plan` first. Do not remove a lock from an active worker or treat a lost journal as an empty baseline.
+
+## Validation and remaining activation checks
+
+- The full platform suite passes 291 tests; the production build passes. The sync command help and private conflict report were checked, including browser rendering.
+- 28 automated sync tests cover one-sided edits in both directions, unchanged/identical edits, conflicts, exact-version resolution, source/destination races, uncertain acknowledgements, disk failure before write, missing records, actor/tenant binding, private journal reopening/locking/corruption, metadata retention and escaped report content.
+- Genuine local Supabase password login + existing fictional MFA: copied a Netlify-side edit into the database, copied a database edit back, stopped conflicting edits, resolved an exact reviewed conflict, and verified stale SQL version rejection. Netlify storage in this round trip was an in-memory conditional store through the real sync adapter.
+- The actual installed Netlify SDK 10.7.13 was checked against its official local Blobs server for conditional PUT success/stale rejection. That emulator omits ETags on reads and encodes space-containing keys in listings; the sync adapter correctly refused its unversioned reads. This is not a complete Netlify-hosted end-to-end claim, and no provider code was weakened to hide the limitation.
+- Three fictional rehearsal schedules were created in the existing local Acceptance Studio. IDs: `ad0613e1-6f20-4c15-baf7-023ee70d6196` (initial empty-response diagnostic), `b0ce7319-b546-413e-9760-d4ade9d19ff4`, and `800853dc-88f8-438a-a41b-922766493e40`. Their fixtures/history stay local and are excluded from the launch import.
+- Latest genuine runtime evidence: `/private/tmp/roseland-trial-sync-800853dc-88f8-438a-a41b-922766493e40/result.json`. It contains no credentials. Existing acceptance schedules and memberships were not changed.
+
+Before connecting real schedules: bind the exact hosted source/destination/actor, verify the deployed legacy save paths and strong-read ETags, perform and reconcile the initial import, protect/back up the single operator journal, and exercise the real endpoint round trip on an explicitly identified pilot record with the team. Keep known structural/related-store limitations visible. No background sync, hosted role grants, real email or live writes have been enabled by this implementation.
+
+Provider references checked: [Netlify conditional Blobs writes](https://docs.netlify.com/build/data-and-storage/netlify-blobs/#set), [Supabase database functions](https://supabase.com/docs/guides/database/functions), and the [October 12 TLS notice](https://supabase.com/changelog/cbc-tls-ciphers-deprecated). The notice does not require TLS weakening for this modern Node worker.

@@ -17,7 +17,8 @@
     "db:lint": "supabase db lint --local --level warning",
     "db:advisors:security": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types scripts/security/supabase-advisor.ts --local",
     "db:advisors:security:linked": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types scripts/security/supabase-advisor.ts --linked",
-    "test:editor": "node --test tests/editor/*.test.cjs"
+    "test:editor": "node --test tests/editor/*.test.cjs",
+    "sync:trial": "node scripts/trial-sync/cli.cjs"
   },
   "dependencies": {
     "@hello-pangea/dnd": "^18.0.1",
