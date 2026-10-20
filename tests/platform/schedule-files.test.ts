@@ -39,3 +39,10 @@ test('production-only import retains its reviewed destination and document throu
   await review.execute(transport,()=>true);assert.equal(review.complete,true);assert.equal(sent,1);
   assert.equal(review.receipt()[0].production,attempt.productionId);assert.equal(review.receipt()[0].day,null);
 });
+
+test('legacy cast text survives file roundtrip and rejects malformed cast values',async()=>{
+ const r=record();r.document.rows![0].cast='  First performer\nSecond performer  ';
+ const file=await encodeScheduleFile([r]);const parsed=await parseScheduleFile(JSON.stringify(file),'');
+ assert.equal(parsed[0].data.rows![0].cast,r.document.rows![0].cast);
+ for(const cast of [null,{},42,'x'.repeat(10001)]){const d=structuredClone(r.document);(d.rows![0] as unknown as Record<string,unknown>).cast=cast;assert.throws(()=>validateFileDocument(d));}
+});

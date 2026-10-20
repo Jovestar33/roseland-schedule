@@ -7,3 +7,12 @@ test('refresh/clear of sun rows retains ordinary row identities, nested content 
 test('weather metadata and sun changes undo as one user operation without changing call sheet',()=>{const {store}=setup(3);const original=store.getState().getScheduleData();store.getState().pushUndo();store.getState().setWx({sunrise:'5:45 AM',sunset:'8:00 PM',noForecast:true});store.getState().insertSunRows('5:45 AM','8:00 PM');store.getState().undo();assert.deepEqual(store.getState().rows,original.rows);assert.deepEqual(store.getState().meta,original.meta);store.getState().redo();assert.equal(store.getState().meta.wx.noForecast,true);assert.deepEqual(store.getState().meta.callsheet,original.meta.callsheet);});
 
 test('sunrise precedes sunset when both markers share the insertion point before a late call',()=>{const {store}=setup(1);store.getState().updateRow(0,{timeIn:'11:45 PM',dur:'00:30'});store.getState().insertSunRows('7:00 AM','7:15 PM');assert.deepEqual(store.getState().rows.filter(r=>r.sunLocked).map(r=>r.action),['🌅 Sunrise','🌇 Sunset']);assert.equal(store.getState().rows.find(r=>!r.sunLocked).timeIn,'11:45 PM');});
+
+test('legacy cast survives editing, undo, export and reload separately from notes',()=>{
+ const {store}=setup(1);store.getState().updateRow(0,{cast:'First\nSecond',notes:'Different notes'});store.getState().pushUndo();store.getState().updateRow(0,{cast:'Updated cast'});store.getState().undo();assert.equal(store.getState().rows[0].cast,'First\nSecond');store.getState().redo();const saved=JSON.parse(JSON.stringify(store.getState().getScheduleData()));store.getState().loadSchedule('Reload',saved);assert.equal(store.getState().rows[0].cast,'Updated cast');assert.equal(store.getState().rows[0].notes,'Different notes');
+});
+
+test('solar rounding never emits minute 60 at hour boundaries',()=>{
+ const {calcSunTimes}=sourceLoader()('lib/weather.ts');
+ for(let day=1;day<=365;day++){const date=new Date(Date.UTC(2026,0,day)).toISOString().slice(0,10);const times=calcSunTimes(date,35.1085,-77.0441,'America/New_York');assert.ok(times);for(const value of Object.values(times))assert.match(value,/^(?:[1-9]|1[0-2]):[0-5][0-9] (?:AM|PM)$/);}
+});

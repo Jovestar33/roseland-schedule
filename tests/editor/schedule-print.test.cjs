@@ -80,3 +80,9 @@ test('full header appears only on page one and continuation pages reclaim its sp
   });
  }
 });
+
+test('legacy cast prints in full in both layouts without changing saved notes',()=>{
+ const data=fixture();data.rows[0].cast='Performer A\nPerformer B';const before=structuredClone(data);
+ for(const mode of ['compact','inline']){const layout=layoutSchedulePrint(data,'Cast',mode,'letter',measure);const all=layout.pages.flatMap(p=>[...p.rows.flatMap(r=>r.cells.flatMap(c=>c.map(x=>x.text))),...p.notes.flatMap(n=>n.lines)]).join('\n');assert.match(all,/Cast: Performer A/);assert.match(all,/Performer B/);}
+ assert.deepEqual(data,before);
+});

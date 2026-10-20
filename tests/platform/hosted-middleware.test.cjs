@@ -7,7 +7,7 @@ test('hosted routes use workspace auth and do not expose legacy or test pages',(
   const run=path=>middleware(new NextRequest('https://schedules.example.com'+path));
   assert.equal(new URL(run('/').headers.get('location')).pathname,'/workspace');
   assert.equal(new URL(run('/login?s=Legacy').headers.get('location')).pathname,'/workspace');
-  for(const path of ['/workspace?s=Legacy','/client','/api/platform/account/mail']){const response=run(path);assert.equal(response.status,200);assert.equal(response.headers.get('location'),null);assert.match(response.headers.get('cache-control'),/no-store/);}
-  for(const path of ['/review','/schedule/Legacy','/local-workspace','/platform/setup','/view'])assert.equal(run(path).status,404);
+  for(const path of ['/workspace?s=Legacy','/client','/api/platform/account/mail','/api/trial-sync/tick']){const response=run(path);assert.equal(response.status,200);assert.equal(response.headers.get('location'),null);assert.match(response.headers.get('cache-control'),/no-store/);}
+  for(const path of ['/review','/schedule/Legacy','/local-workspace','/platform/setup','/view','/api/trial-sync/other','/api/trial-sync/tick/extra'])assert.equal(run(path).status,404);
  }finally{for(const key of Object.keys(old)){if(old[key]===undefined)delete process.env[key];else process.env[key]=old[key];}}
 });

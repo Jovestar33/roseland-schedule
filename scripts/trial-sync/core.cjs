@@ -9,7 +9,19 @@ function canonical(x){
 const hash=x=>createHash('sha256').update(canonical(x)).digest('hex');
 function document(value){
  if(!value||typeof value!=='object'||Array.isArray(value)||!value.meta||typeof value.meta!=='object'||Array.isArray(value.meta)||!Array.isArray(value.rows))throw Error('Invalid schedule document');
- const d=copy(value);delete d.savedAt;return d;
+ const d=copy(value);delete d.savedAt;
+ // Legacy solar rounding emitted e.g. 5:60 AM. Canonicalize only a generated
+ // locked marker corroborated by its saved weather value, never an entered call.
+ for(const [field,action] of [['sunrise','🌅 Sunrise'],['sunset','🌇 Sunset']]){
+  const raw=d.meta.wx?.[field];if(typeof raw!=='string')continue;
+  const match=/^(0?[1-9]|1[0-2]):60 (AM|PM)$/.exec(raw);if(!match)continue;
+  const rows=d.rows.filter(r=>r.sunLocked===true&&r.action===action&&r.timeIn===raw);
+  if(!rows.length)continue;
+  const hour=(Number(match[1])%12+(match[2]==='PM'?12:0)+1)%24;
+  const fixed=`${hour%12||12}:00 ${hour>=12?'PM':'AM'}`;
+  d.meta.wx[field]=fixed;for(const row of rows)row.timeIn=fixed;
+ }
+ return d;
 }
 function snapshot(value){
  if(!value||typeof value.version!=='string'||!value.version||!value.guard||typeof value.guard!=='object')throw Error('Invalid adapter snapshot');

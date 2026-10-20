@@ -76,8 +76,9 @@ export function calcSunTimes(
 
   function fmtLocal(utcH: number): string {
     const total = ((utcH + offsetHours) % 24 + 24) % 24;
-    const hh = Math.floor(total);
-    const mm = Math.round((total - hh) * 60);
+    const minutes = Math.round(total * 60) % 1440;
+    const hh = Math.floor(minutes / 60);
+    const mm = minutes % 60;
     return rawToAP(String(hh).padStart(2, '0') + ':' + String(mm).padStart(2, '0'));
   }
 

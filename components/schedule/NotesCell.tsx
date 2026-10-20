@@ -3,6 +3,7 @@ import { useScheduleStore } from '@/lib/store/scheduleStore';
 import type { ScheduleRow } from '@/lib/types';
 import KeyInstruction from './KeyInstruction';
 import AutoResizeTextarea from './AutoResizeTextarea';
+import fieldStyles from './key-instruction.module.css';
 
 interface Props {
   index: number;
@@ -27,6 +28,11 @@ export default function NotesCell({ index, row, onOpenStatus, onOpenNotes }: Pro
         >&#10003;</button>
       </div>
       <div className="status-notes-slot">
+        {row.cast !== undefined && <div>
+          <span className={fieldStyles.label}>Cast</span>
+          <AutoResizeTextarea className="ci-ta" label="Cast" value={row.cast} onChange={(cast) => updateRow(index, { cast })} onFocus={pushUndo} placeholder="Cast…" />
+          {row.cast && <div className="print-field-text" aria-hidden="true">Cast: {row.cast}</div>}
+        </div>}
         <KeyInstruction value={row.keyInstruction} onChange={(keyInstruction) => updateRow(index, { keyInstruction })} onFocus={pushUndo} />
         <AutoResizeTextarea
           className="ci-ta"

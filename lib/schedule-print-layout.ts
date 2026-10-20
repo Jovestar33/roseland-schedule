@@ -68,7 +68,7 @@ export function layoutSchedulePrint(data: ScheduleData, name: string, mode: Sche
   const capacity = () => pageCapacity(pages.length - 1, pages[pages.length - 1].kind);
   const appendix: { ref: string; title: string; text: string }[] = [];
   data.rows.forEach((row, index) => {
-    if (!(row.action || row.timeIn || row.notes || row.keyInstruction || row.desc || row.loc)) return;
+    if (!(row.action || row.timeIn || row.notes || row.cast || row.keyInstruction || row.desc || row.loc)) return;
     const action = row.action === 'Other' ? row.otherText || 'Other' : row.action;
     const detail = (value: string, col: number, ref: string, label: string): Line[] => {
       const lines = wrap(value || '', columns[col]);
@@ -81,7 +81,7 @@ export function layoutSchedulePrint(data: ScheduleData, name: string, mode: Sche
     const loc = [row.locName || row.loc, row.locAddress, ...(row.subLocations || []).flatMap(sl => [sl.name || sl.loc, sl.address, sl.desc])].filter(Boolean).join('\n');
     const notes: Line[] = [
       ...wrap(row.keyInstruction ? `KEY: ${row.keyInstruction}` : '', columns[4], true).map(text => ({ text, bold: true })),
-      ...detail(row.notes, 4, `N${index + 1}`, 'Notes'),
+      ...detail([row.cast ? `Cast: ${row.cast}` : '', row.notes].filter(Boolean).join('\n\n'), 4, `N${index + 1}`, 'Notes'),
     ];
     const cells = [[], wrap(action, columns[1]).map(text => ({ text })), wrap(loc, columns[2]).map(text => ({ text })), detail(row.desc, 3, `D${index + 1}`, 'Description'), notes, wrap(row.timeIn, columns[5]).map(text => ({ text })), wrap(row.dur, columns[6]).map(text => ({ text })), wrap(computeTimeOut(row), columns[7]).map(text => ({ text }))];
     const totalLines = Math.max(1, ...cells.map(cell => cell.length));
