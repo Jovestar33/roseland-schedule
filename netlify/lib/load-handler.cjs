@@ -1,4 +1,3 @@
-const { connectLambda, getStore } = require('@netlify/blobs');
 const crypto = require('crypto');
 
 function makeEditorToken(password, secret) {
@@ -22,7 +21,7 @@ function isAuthorizedView(name, token) {
   return token === makeViewToken(name, AUTH_SECRET);
 }
 
-exports.handler = async (event) => {
+exports.createHandler = (getStore) => async (event) => {
   const headers = {
     'Content-Type': 'application/json',
     'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
@@ -35,8 +34,7 @@ exports.handler = async (event) => {
   if (event.httpMethod !== 'GET') return { statusCode: 405, headers, body: 'Method not allowed' };
 
   try {
-    connectLambda(event);
-    const store = getStore('schedules');
+    const store = getStore({ name: 'schedules', consistency: 'strong' });
 
     const name = event.queryStringParameters?.name;
     const editorToken = event.queryStringParameters?.editorToken;
@@ -47,7 +45,7 @@ exports.handler = async (event) => {
         return { statusCode: 403, headers, body: JSON.stringify({ error: 'Unauthorized editor access' }) };
       }
       // Strong consistency so a schedule saved via Save As appears in the list immediately.
-      const { blobs } = await store.list({ consistency: 'strong' });
+      const { blobs } = await store.list();
       return { statusCode: 200, headers, body: JSON.stringify({ schedules: blobs.map((b) => b.key) }) };
     }
 

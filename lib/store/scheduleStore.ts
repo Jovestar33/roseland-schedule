@@ -63,6 +63,9 @@ export interface ScheduleStore {
   rows: ScheduleRow[];
   rowKeys: string[];
   meta: ScheduleMeta;
+  documentExtras: Record<string, unknown>;
+  editRevision: number;
+  documentSession: number;
   scheduleName: string | null;
   dirty: boolean;
   undoStack: Snapshot[];
@@ -107,6 +110,9 @@ export const useScheduleStore = create<ScheduleStore>((set, get) => ({
   rows: makeDefaultRows(),
   rowKeys: makeDefaultKeys(DEFAULT_ROW_COUNT),
   meta: makeMeta(),
+  documentExtras: {},
+  editRevision: 0,
+  documentSession: 0,
   scheduleName: null,
   dirty: false,
   undoStack: [],
@@ -132,7 +138,7 @@ export const useScheduleStore = create<ScheduleStore>((set, get) => ({
       meta: prev.meta,
       undoStack: undoStack.slice(0, -1),
       redoStack: [...redoStack, cur],
-      dirty: true,
+      dirty: true, editRevision: get().editRevision + 1,
     });
   },
 
@@ -146,7 +152,7 @@ export const useScheduleStore = create<ScheduleStore>((set, get) => ({
       meta: next.meta,
       undoStack: [...undoStack, cur],
       redoStack: redoStack.slice(0, -1),
-      dirty: true,
+      dirty: true, editRevision: get().editRevision + 1,
     });
   },
 
@@ -154,7 +160,7 @@ export const useScheduleStore = create<ScheduleStore>((set, get) => ({
     const { rows, rowKeys } = get();
     const updated = rows.map((r, i) => (i === index ? { ...r, ...patch } : r));
     const result = repositionSunRows(updated, rowKeys);
-    set({ rows: result.rows, rowKeys: result.rowKeys, dirty: true });
+    set({ rows: result.rows, rowKeys: result.rowKeys, dirty: true, editRevision: get().editRevision + 1 });
   },
 
   addRowAfter(afterIndex) {
@@ -163,7 +169,7 @@ export const useScheduleStore = create<ScheduleStore>((set, get) => ({
     const updated = [...rows.slice(0, afterIndex + 1), newRow, ...rows.slice(afterIndex + 1)];
     const updatedKeys = [...rowKeys.slice(0, afterIndex + 1), newKey(), ...rowKeys.slice(afterIndex + 1)];
     const result = repositionSunRows(updated, updatedKeys);
-    set({ rows: result.rows, rowKeys: result.rowKeys, dirty: true });
+    set({ rows: result.rows, rowKeys: result.rowKeys, dirty: true, editRevision: get().editRevision + 1 });
   },
 
   deleteRow(index) {
@@ -172,7 +178,7 @@ export const useScheduleStore = create<ScheduleStore>((set, get) => ({
     const updated = rows.filter((_, i) => i !== index);
     const updatedKeys = rowKeys.filter((_, i) => i !== index);
     const result = repositionSunRows(updated, updatedKeys);
-    set({ rows: result.rows, rowKeys: result.rowKeys, dirty: true });
+    set({ rows: result.rows, rowKeys: result.rowKeys, dirty: true, editRevision: get().editRevision + 1 });
   },
 
   reorderRows(from, to) {
@@ -184,21 +190,25 @@ export const useScheduleStore = create<ScheduleStore>((set, get) => ({
     updatedRows.splice(to, 0, movedRow);
     updatedKeys.splice(to, 0, movedKey);
     const result = repositionSunRows(updatedRows, updatedKeys);
-    set({ rows: result.rows, rowKeys: result.rowKeys, dirty: true });
+    set({ rows: result.rows, rowKeys: result.rowKeys, dirty: true, editRevision: get().editRevision + 1 });
   },
 
   updateMeta(patch) {
     const { meta } = get();
-    set({ meta: { ...meta, ...patch }, dirty: true });
+    set({ meta: { ...meta, ...patch }, dirty: true, editRevision: get().editRevision + 1 });
   },
 
   loadSchedule(name, data) {
     const normalized = normalizeRows(data.rows);
+    const { rows: _rows, meta: _meta, savedAt: _savedAt, ...extras } = data;
     set({
+      documentExtras: structuredClone(extras),
       rows: recalcRows(normalized),
       rowKeys: makeDefaultKeys(normalized.length),
       meta: data.meta,
       scheduleName: name,
+      documentSession: get().documentSession + 1,
+      editRevision: get().editRevision + 1,
       dirty: false,
       undoStack: [],
       redoStack: [],
@@ -213,7 +223,10 @@ export const useScheduleStore = create<ScheduleStore>((set, get) => ({
       rows,
       rowKeys: makeDefaultKeys(rows.length),
       meta: makeMeta(),
+      documentExtras: {},
       scheduleName: name,
+      documentSession: get().documentSession + 1,
+      editRevision: get().editRevision + 1,
       dirty: false,
       undoStack: [],
       redoStack: [],
@@ -228,8 +241,8 @@ export const useScheduleStore = create<ScheduleStore>((set, get) => ({
   },
 
   getScheduleData(): ScheduleData {
-    const { rows, meta } = get();
-    return { rows, meta, savedAt: Date.now() };
+    const { rows, meta, documentExtras } = get();
+    return { ...structuredClone(documentExtras), rows, meta, savedAt: Date.now() };
   },
 
   insertSunRows(sunrise, sunset) {
@@ -268,19 +281,19 @@ export const useScheduleStore = create<ScheduleStore>((set, get) => ({
       newKeys.splice(pt.idx, 0, newKey());
     });
 
-    set({ rows: recalcRows(newRows), rowKeys: newKeys, dirty: true });
+    set({ rows: recalcRows(newRows), rowKeys: newKeys, dirty: true, editRevision: get().editRevision + 1 });
   },
 
   clearSunRows() {
     const { rows, rowKeys } = get();
     const newRows = rows.filter(r => !r.sunLocked);
     const newKeys = rowKeys.filter((_, i) => !rows[i].sunLocked);
-    set({ rows: recalcRows(newRows), rowKeys: newKeys, dirty: true });
+    set({ rows: recalcRows(newRows), rowKeys: newKeys, dirty: true, editRevision: get().editRevision + 1 });
   },
 
   setWx(wx) {
     const { meta } = get();
-    set({ meta: { ...meta, wx }, dirty: true });
+    set({ meta: { ...meta, wx }, dirty: true, editRevision: get().editRevision + 1 });
   },
 
   setSyncStatus(s) { set({ syncStatus: s }); },

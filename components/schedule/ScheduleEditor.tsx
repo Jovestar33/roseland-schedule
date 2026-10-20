@@ -47,7 +47,7 @@ export default function ScheduleEditor({ name, initMeta }: Props) {
     resolveConflictOverwrite,
     resolveConflictReload,
     closeSchedule,
-  } = useSaveActions();
+  } = useSaveActions(name);
 
   const { addToast } = useToast();
 
