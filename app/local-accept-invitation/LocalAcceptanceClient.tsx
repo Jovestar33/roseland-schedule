@@ -149,6 +149,7 @@ export default function LocalAcceptanceClient({ config, pendingInvitation, onInv
       <form className={styles.form} onSubmit={event => { event.preventDefault(); void reviewInvitation(); }}>
         <label>{workspace?.review?'Invitation ID':'Fictional invitation ID'}<input required autoComplete="off" maxLength={36} disabled={!ready || busy || !!attempt} value={invitationId} onChange={event => setInvitationId(event.target.value)} /></label>
         <button disabled={!ready || busy || !!attempt}>Review invitation</button>
+        <button type="button" className={styles.secondary} disabled={busy||!!attempt} onClick={()=>{setInvitationId('');setPreview(null);setMessage('Invitation draft cleared. Nothing was accepted.');}}>Cancel invitation draft</button>
       </form>
     </section>}
     {attempt && <section ref={review} tabIndex={-1} className={`${styles.card} ${styles.review}`} aria-label="Acceptance review">

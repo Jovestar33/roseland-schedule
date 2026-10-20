@@ -364,7 +364,7 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
         {authNeeded && <p>Sign in again to continue. Your edits are still here.</p>}
         <label>Email<input type="email" autoComplete="off" required readOnly={!!session} value={session?.user.email ?? email} onChange={e => setEmail(e.target.value)} /></label>
         <label>Password<input type="password" autoComplete="off" required value={password} onChange={e => setPassword(e.target.value)} /></label>
-        <button className="btn btn-primary" disabled={busy}>Sign in</button>
+        <button className="btn btn-pink" disabled={busy}>Sign in</button>
       </form>}
       {(session || (managed && accountRef.current)) && <>
         <div hidden={review} className={styles.toolbar}>
@@ -403,7 +403,7 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
           <div className={review?'toolbar':styles.toolbar}>
             <div className={review?'toolbar-head':undefined}><span className={review?'tbar-name':undefined}>{state().scheduleName}</span>{review?<SyncStatusPill/>:<span>Version {version} · {dirty ? 'Unsaved changes' : 'Saved'}</span>}</div>
             <div className={review?'toolbar-btns':styles.toolbar}>
-            {review?<SaveDropdown disabled={busy || !ready || !canEdit || !!controller.attempt} onSave={()=>void run(async()=>{if(await controller.save()){setVersion(controller.record!.document_version);setMessage(state().dirty?'Saved earlier edits. Newer edits remain unsaved.':'Schedule saved.');}})} onSaveAs={()=>startTransfer(selected,true)} onSnapshot={()=>openReviewTool('snapshots')}/>:<button className="btn btn-primary" disabled={busy || !dirty || !ready || !canEdit || !!controller.attempt} onClick={() => void run(async () => {
+            {review?<SaveDropdown disabled={busy || !ready || !canEdit || !!controller.attempt} onSave={()=>void run(async()=>{if(await controller.save()){setVersion(controller.record!.document_version);setMessage(state().dirty?'Saved earlier edits. Newer edits remain unsaved.':'Schedule saved.');}})} onSaveAs={()=>startTransfer(selected,true)} onSnapshot={()=>openReviewTool('snapshots')}/>:<button className="btn btn-pink" disabled={busy || !dirty || !ready || !canEdit || !!controller.attempt} onClick={() => void run(async () => {
               if (await controller.save()) { setVersion(controller.record!.document_version); setMessage(state().dirty ? 'Saved earlier edits. Newer edits remain unsaved.' : 'Schedule saved.'); }
             })}>Save schedule</button>}
             {!review&&<button className="btn btn-light" disabled={busy} onClick={() => guarded(() => void run(() => open(selected)), 'Reload and discard unsaved changes')}>Reload schedule</button>}
@@ -457,7 +457,7 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
           : 'Your unsaved changes will be discarded.'}</p>
         <button className="btn btn-light" onClick={() => setConfirmation(null)}>Keep editing</button>
         {dirty&&!controller.attempt&&canEdit&&<button className="btn btn-light" disabled={busy||!ready} onClick={() => {setConfirmation(null);void saveAndClose();}}>Save and close</button>}
-        <button className="btn btn-primary" onClick={() => { const action = confirmation?.action; setConfirmation(null); action?.(); }}>{confirmation?.label}</button>
+        <button className="btn btn-pink" onClick={() => { const action = confirmation?.action; setConfirmation(null); action?.(); }}>{confirmation?.label}</button>
       </dialog>
     </main>
     </DocumentProvidersContext.Provider>

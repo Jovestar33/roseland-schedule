@@ -156,3 +156,26 @@
 .administrationCard h3 { margin:0 0 8px; font-size:16px; font-weight:600; }
 .administrationCard header p { margin:0 0 18px; }
 .administrationCard input[type="checkbox"] { width:16px; height:16px; accent-color:var(--pink-dark); margin-right:8px; }
+
+/* One brand from welcome through workspace and administration. */
+.productPage{min-height:100dvh;background:var(--g100);color:var(--ink);font-family:var(--fb)}
+.productPage :global(.hdr){min-height:108px;padding:10px 22px!important}
+.productPage :global(.hdr) img{height:88px!important;max-height:88px!important;width:auto!important;margin:0!important}
+.productPage :global(.hdr-title){font-size:25px;letter-spacing:2.8px}
+.entryPage{min-height:100dvh;display:flex;align-items:center;justify-content:center;padding:32px 24px;background:radial-gradient(circle at 50% 18%,rgba(216,42,137,.22),transparent 32%),linear-gradient(180deg,#111116 0%,#050507 100%)}
+.entryPage .entryShell{width:min(460px,100%);max-width:460px;margin:0;padding:30px;border:1px solid #ffffff21;border-radius:22px;background:rgba(255,255,255,.97);box-shadow:0 28px 90px #0000007a}
+.entryBrand{text-align:center;margin-bottom:24px}.entryBrand img{display:block;height:124px;width:auto;max-width:100%;object-fit:contain;margin:0 auto}.entryBrand p{font-size:12px;color:var(--g600);margin:16px 0 0}
+.entryPage .login h2{font-size:32px;margin:0}.entryPage .login{gap:16px}.entryPage .login input{height:44px;border-radius:10px}
+.entryPage .login>button,.entryPage [data-account-primary]{background:#d82a89;border-color:#d82a89;color:white;border-radius:10px;min-height:44px}
+.entryPage .login>button:hover:not(:disabled),.entryPage [data-account-primary]:hover:not(:disabled){background:var(--pink-dark);border-color:var(--pink-dark)}
+.productPage button{transition:background .15s,border-color .15s,color .15s}
+.productPage .administrationCard button:hover:not(:disabled){border-color:var(--pink-dark);background:#fff8fb}
+.productPage .reviewShell button:global(.btn-pink),.productPage .administrationCard button:global(.btn-pink){background:var(--pink);border-color:var(--pink);color:white}
+.productPage .reviewShell button:global(.btn-pink):hover:not(:disabled),.productPage .administrationCard button:global(.btn-pink):hover:not(:disabled){background:var(--pink-dark);border-color:var(--pink-dark)}
+.productPage .dialog{background:white;border-color:var(--g200);color:var(--ink);box-shadow:0 20px 64px #0003}
+.productPage .dialog button{border-color:var(--g300);color:var(--ink)}
+@media(max-width:600px){.entryPage{padding:24px 16px}.entryPage .entryShell{padding:24px}.productPage :global(.hdr){min-height:92px;padding:10px 16px!important}.productPage :global(.hdr) img{height:72px!important;max-height:72px!important;max-width:132px!important}}
+@media(prefers-reduced-motion:reduce){.productPage button{transition:none}}
+
+.productPage .administrationCard{width:calc(100% - 48px)}
+@media(max-width:600px){.productPage .administrationCard{width:auto}}

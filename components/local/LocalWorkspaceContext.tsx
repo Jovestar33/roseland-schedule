@@ -21,6 +21,7 @@ export interface WorkspacePanel {
   report:(id:string,state:WorkspacePanelState|null)=>void;
   requireAuth:()=>void;
   openOrganization:(id:string)=>void;
+  closeHistory?:()=>void;
   openLifecycle?:(organization:string,id:string)=>void;
   openSchedule:(organization:string,id:string)=>void;
   onScheduleSelection?:(organization:string,id:string|null,replaceHistory?:boolean)=>void;

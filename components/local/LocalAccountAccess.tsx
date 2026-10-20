@@ -167,6 +167,7 @@ export default function LocalAccountAccess({ review=false, showMaintenance=true,
         </>}
         <p><button data-account-primary disabled={busy || (mode === 'signup' && !accepted)}>{busy?'Sending…':'Send email'}</button></p>
         <p>Local fictional testing only. Messages stay in the local mail sink. A sent request may complete even if its reply is lost.</p>
+        {review&&session&&!authNeeded&&<p><button type="button" disabled={busy} onClick={()=>{setMode(null);setMessage('');}}>Cancel password reset</button></p>}
         {review&&(!session||authNeeded)&&<div data-account-entry><button type="button" disabled={busy} onClick={()=>{returnEntry.current=mode;setMode(null);}}>Back to sign in</button></div>}
       </form>}
     </div>}

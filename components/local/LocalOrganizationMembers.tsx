@@ -23,7 +23,7 @@ export default function LocalOrganizationMembers(){
   try{const state=await repo.notify(actor!,org!,event);if(current())setMessage(state==='delivered'?'Membership change confirmed; affected-member notice delivered to the local mail sink.':'Membership change confirmed; notification needs retry.');}
   catch{if(current())setMessage('Membership change confirmed; notification delivery is unconfirmed. Refresh members and retry the notice.');}
  }
- return <section aria-label="Organization membership management"><button disabled={!ready||busy} onClick={()=>{setOpen(v=>!v);if(!open)void run(c=>load(c));}}>Organization members</button>
+ return <section aria-label="Organization membership management"><button aria-expanded={open} disabled={!ready||busy} onClick={()=>{setOpen(v=>!v);if(!open)void run(c=>load(c));}}>{open?'Close members':'Organization members'}</button>
  {open&&<div><h2>Organization members — {organization?.name}</h2><p role="status">{message}</p><p>Suspension affects this organization. Reinstatement retains the existing role and independent restrictions.</p>
  <button disabled={!ready||busy||!!pending} onClick={()=>void run(async c=>{await load(c);if(c()&&selected){const rows=await repo.list(actor!,org!);const row=rows.find(m=>m.id===selected.id);if(row){setSelected(row);setConfirmed(false);}else{setSelected(null);setReason('');}setMessage('Current membership reviewed. Confirm the named member again before submitting.');}})}>Review current members</button>
  <ul>{members.map(m=><li key={m.id}><strong>{m.name}</strong> — {roleName(m.role)}, {m.status}

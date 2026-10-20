@@ -25,3 +25,7 @@
 .compact { inset:0; margin:auto; width:min(460px,calc(100vw - 32px)); height:fit-content; max-height:calc(100dvh - 48px); border:1px solid var(--g200); border-radius:14px; box-shadow:0 20px 64px #0003; }
 .compact .header h2 { font-family:var(--fd); font-size:22px; letter-spacing:1.5px; }
 .compact .body { padding:8px; }
+
+.footer{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-shrink:0;padding:14px 20px;border-top:1px solid var(--g200);background:var(--g50)}.footer span{font-size:11px;color:var(--g600);line-height:1.5}.footer button{min-height:40px}
+.header h2{font-family:var(--fd);font-size:24px;letter-spacing:1px;font-weight:400}
+.body button:focus-visible,.footer button:focus-visible{outline:2px solid var(--pink-dark);outline-offset:3px}

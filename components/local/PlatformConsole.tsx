@@ -10,6 +10,7 @@ export default function PlatformConsole({onVerify}:{onVerify:()=>void}){
  const w=useLocalWorkspace()!,[tab,setTab]=useState<'organizations'|'create'>('organizations');
  const [rows,setRows]=useState<PlatformOrganization[]>([]),[search,setSearch]=useState(''),[query,setQuery]=useState(''),[more,setMore]=useState(false);
  const [state,setState]=useState<'loading'|'ready'|'denied'|'mfa'|'error'>('loading'),[busy,setBusy]=useState(false),[refresh,setRefresh]=useState(0);
+ const organizationsTab=useRef<HTMLButtonElement>(null);
  const ticket=useRef(0),busyRef=useRef(false),latest=useRef(w);latest.current=w;
  async function load(append=false){
   const session=w.session;if(!session||!w.active||w.authNeeded||busyRef.current)return;
@@ -36,7 +37,7 @@ export default function PlatformConsole({onVerify}:{onVerify:()=>void}){
   {state==='denied'&&<div className={styles.empty}><h3>Platform access unavailable</h3><p>This console requires an active Platform Super Admin designation. Organization roles do not grant platform access.</p></div>}
   {state==='mfa'&&<div className={styles.empty}><h3>Verify your authenticator</h3><p>Viewing platform organizations requires recent two-step verification. Your unfinished work is retained.</p><button className="btn btn-pink" onClick={onVerify}>Verify to continue</button></div>}
   {state==='error'&&<div className={styles.empty}><h3>Overview unavailable</h3><p>Organizations could not be loaded. Retry to check current access.</p><button className="btn btn-light" onClick={()=>setRefresh(x=>x+1)}>Try again</button></div>}
-  {ready&&<><nav className={styles.tabs} aria-label="Platform sections"><button aria-current={tab==='organizations'?'page':undefined} onClick={()=>setTab('organizations')}>Organizations</button><button aria-current={tab==='create'?'page':undefined} onClick={()=>setTab('create')}>New organization</button></nav>
+  {ready&&<><nav className={styles.tabs} aria-label="Platform sections"><button ref={organizationsTab} aria-current={tab==='organizations'?'page':undefined} onClick={()=>setTab('organizations')}>Organizations</button><button aria-current={tab==='create'?'page':undefined} onClick={()=>setTab('create')}>New organization</button></nav>
    <div hidden={tab!=='organizations'}>
     <form className={styles.search} onSubmit={e=>{e.preventDefault();setQuery(search.trim());if(query===search.trim())setRefresh(x=>x+1);}}><label>Find an organization<input placeholder="Search by name or address" maxLength={100} value={search} onChange={e=>setSearch(e.target.value)}/></label><button className="btn btn-light" disabled={busy}>Search</button></form>
     <p className={styles.caption}>Organization status is visible here. Opening a workspace still requires your own active membership.</p>
@@ -45,6 +46,6 @@ export default function PlatformConsole({onVerify}:{onVerify:()=>void}){
     <aside className={styles.billing}><h3>Billing & services</h3><p>Billing is not connected in this build. Subscription, payment, and service changes are unavailable.</p></aside>
    </div>
   </>}
-  <div hidden={!ready||tab!=='create'}><LocalProvisioningClient/></div>
+  <div hidden={!ready||tab!=='create'}><div className={styles.returnRow}><button className="btn btn-light" onClick={()=>{setTab('organizations');organizationsTab.current?.focus();}}>← Back to organizations</button><span>Your setup draft stays here until you clear it.</span></div><LocalProvisioningClient/></div>
  </section>;
 }

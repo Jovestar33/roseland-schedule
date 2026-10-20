@@ -24,7 +24,7 @@ export default function LocalBrowserTemplates({actor,organization,productions,di
     <label>Imported template name<input value={name} maxLength={150} onChange={e=>setName(e.target.value)}/></label>
     <label className="template-ownership"><input type="checkbox" checked={claimed} onChange={e=>setClaimed(e.target.checked)}/>I have reviewed this template and may assign its content to the selected production.</label>
     <p>Generated sun rows are omitted from the imported template. The complete original remains in its source. Organization publication requires a separate authorized review.</p>
-    <button className="btn btn-primary" disabled={!destination||!claimed||!name.trim()} onClick={()=>{try{onPrepare(captureTemplateAttempt({actor,organization,production:destination,id:crypto.randomUUID(),request:crypto.randomUUID(),version:0,operation:'import',name:name.trim(),rows:null,source:null,sourceVersion:null,browserSource:chosen,ownershipConfirmed:claimed,previewName:name.trim(),previewRows:templateDraftRows(chosen.rows)}));}catch(e){setMessage(e instanceof Error?e.message:'Import review could not be prepared.');}}}>Review production-only import</button>
+    <button className="btn btn-pink" disabled={!destination||!claimed||!name.trim()} onClick={()=>{try{onPrepare(captureTemplateAttempt({actor,organization,production:destination,id:crypto.randomUUID(),request:crypto.randomUUID(),version:0,operation:'import',name:name.trim(),rows:null,source:null,sourceVersion:null,browserSource:chosen,ownershipConfirmed:claimed,previewName:name.trim(),previewRows:templateDraftRows(chosen.rows)}));}catch(e){setMessage(e instanceof Error?e.message:'Import review could not be prepared.');}}}>Review production-only import</button>
    </>}
   </fieldset>
  </details>;

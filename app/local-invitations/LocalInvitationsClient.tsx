@@ -237,6 +237,7 @@ export default function LocalInvitationsClient({ config, reviewMode=false }: { c
           {productionMore && <button type="button" className={styles.secondary} onClick={() => void run(() => loadProductions(selected, true))}>Load more productions</button>}
           <label>Expires after (days)<input type="number" required min={1} max={30} value={days} onChange={event => setDays(Number(event.target.value))} /></label>
           <button ref={draftReview} disabled={!roleAvailable || !productionAvailable}>Review invitation</button>
+          <button type="button" className={styles.secondary} onClick={()=>{setRecipient('');setRole('member');setProduction('');setProductionRole('viewer');setDays(7);setMessage('Invitation draft cleared. Nothing was sent.');}}>Cancel invitation draft</button>
         </fieldset>
       </form>}
     </section><section className={styles.card} aria-label="Pending invitations"><div className={styles.sectionTitle}><h2>Pending invitations</h2><button className={styles.secondary} disabled={busy || !ready} onClick={() => void run(() => loadInvitations())}>Refresh invitations</button></div>

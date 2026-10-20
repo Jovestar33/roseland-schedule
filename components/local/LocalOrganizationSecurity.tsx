@@ -21,7 +21,7 @@ export default function LocalOrganizationSecurity(){
  // Each organization panel keeps its own draft through same-actor step-up.
  // eslint-disable-next-line react-hooks/exhaustive-deps
  },[ready,active,actor,org,session?.access_token]);
- return <section aria-label="Organization security settings"><button disabled={!ready||busy} onClick={()=>setOpen(v=>!v)}>Organization security</button>
+ return <section aria-label="Organization security settings"><button aria-expanded={open} disabled={!ready||busy} onClick={()=>setOpen(v=>!v)}>{open?'Close security settings':'Organization security'}</button>
  {open&&<div><h2>Organization security</h2><p>{organization?.name}. Organization Super Admins always require MFA; this cannot be disabled.</p><p role="status">{message}</p>
  {!record&&<button disabled={busy} onClick={()=>void run(async current=>{const r=await repo.read(actor!,org!);if(current()){setRecord(r);setRoles(r.required_roles);}})}>Load security settings</button>}
  <fieldset disabled={!ready||!record?.can_manage||busy||!!pending}><legend>Also require MFA for</legend>{MFA_ROLES.map(role=><label key={role} style={{display:'block'}}><input type="checkbox" checked={roles.includes(role)} onChange={e=>setRoles(e.target.checked?[...roles,role]:roles.filter(r=>r!==role))}/>{role==='admin'?'Organization Admin':role==='organizer'?'Production Organizer':role==='editor'?'Editor':'Viewer'}</label>)}</fieldset>

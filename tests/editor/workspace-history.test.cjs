@@ -8,10 +8,10 @@ const settle=()=>new Promise(resolve=>setImmediate(resolve));
 
 // Exercise the actual workspace callbacks/effects with controllable read IO.
 // The DOM journeys separately verify the editor's discard dialog and rendering.
-function harness({selected=null,busy=false}={}){
+function harness({selected=null,busy=false,role='member'}={}){
  const location={screen:'schedule',organization:organization.id,...(selected?{schedule:selected}:{})};
  const identity=new navigation.WorkspaceIdentity();identity.bind(session.user.id);
- const state={session,identity,location,scope:organization,visited:[organization],organizations:[organization],accountReady:true,mfaReady:true,mfaStage:'ready',directoryState:'ready',panels:{schedule:{dirty:false,busy}}};
+ const state={session,identity,location,scope:{...organization,role},visited:[{...organization,role}],organizations:[{...organization,role}],accountReady:true,mfaReady:true,mfaStage:'ready',directoryState:'ready',panels:{schedule:{dirty:false,busy}}};
  const refs={locationRef:{current:location},sessionRef:{current:session}},effects=[],events={},historyCalls=[],pending=[];
  const browser={location:{search:new URL(navigation.workspaceHref(location), 'http://localhost').search},addEventListener:(name,fn)=>{events[name]=fn;},removeEventListener:()=>{},setInterval:()=>1,clearInterval:()=>{}};
  const history={};for(const method of ['pushState','replaceState'])history[method]=(_s,_t,url)=>{historyCalls.push({method,url});browser.location.search=new URL(url,'http://localhost').search;};
@@ -33,10 +33,10 @@ function harness({selected=null,busy=false}={}){
  const source=ts.transpileModule(fs.readFileSync('app/local-workspace/LocalWorkspaceClient.tsx','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX},transformers:{before:[tagHooks]}}).outputText;
  const mod={exports:{}};
  vm.runInNewContext('(function(require,module,exports){'+source+'\n})',{window:browser,history,document:{visibilityState:'visible'},URL,URLSearchParams,console})(name=>mocks[name]??(name==='react/jsx-runtime'?require(name):name.endsWith('.css')?{default:{}}:{default:()=>null}),mod,mod.exports);
- const tree=mod.exports.default({config:{supabaseUrl:'http://localhost',anonymousKey:'fictional'},review:true});
+ let tree=mod.exports.default({config:{supabaseUrl:'http://localhost',anonymousKey:'fictional'},review:true});
  let panel;function walk(node){if(Array.isArray(node)){node.forEach(walk);return;}if(!node||typeof node!=='object')return;if(node.props?.value?.panelId==='schedule')panel=node.props.value;walk(node.props?.children);}walk(tree);
  assert.ok(panel);
- return {state,refs,historyCalls,pending,panel,refresh(){effects.find(fn=>fn.toString().includes('15000'))();events.focus();},pop(next){effects.find(fn=>fn.toString().includes('popstate'))();browser.location.search=new URL(navigation.workspaceHref(next),'http://localhost').search;events.popstate();}};
+ return {state,refs,historyCalls,pending,panel,render(){effects.length=0;tree=mod.exports.default({config:{supabaseUrl:'http://localhost',anonymousKey:'fictional'},review:true});walk(tree);},button(label){const text=n=>typeof n==='string'?n:React.Children.toArray(n?.props?.children).map(text).join('');let found;function find(n){if(!n||typeof n!=='object')return;if(n.type==='button'&&text(n)===label)found=n;React.Children.toArray(n.props?.children).forEach(find);}find(tree);assert.ok(found,label);return found.props;},refresh(){effects.find(fn=>fn.toString().includes('15000'))();events.focus();},pop(next){effects.find(fn=>fn.toString().includes('popstate'))();browser.location.search=new URL(navigation.workspaceHref(next),'http://localhost').search;events.popstate();}};
 }
 test('an older background scope read cannot replace a newer editor selection',async()=>{
  const h=harness();h.refresh();await settle();assert.equal(h.pending.length,1);
@@ -64,4 +64,36 @@ test('Forward from Library is an editor open request and preserves forward histo
  assert.equal(h.state.scheduleRequest.id,schedule);assert.equal(h.state.scheduleRequest.history,true);
  h.panel.onScheduleSelection(organization.id,schedule,true);
  assert.equal(h.historyCalls.at(-1).method,'replaceState');assert.equal(h.refs.locationRef.current.schedule,schedule);
+});
+
+test('settings round trip preserves the open schedule without reopening its saved copy',async()=>{
+ const h=harness({selected:schedule,role:'owner'});h.panel.openSettings();h.render();
+ assert.equal(h.state.showSettings,true);
+ h.button('Your invitations').onClick();h.pending.shift()({...organization,role:'owner'});await settle();h.render();
+ assert.equal(h.refs.locationRef.current.schedule,schedule);
+ h.button('Your account').onClick();h.pending.shift()({...organization,role:'owner'});await settle();h.render();
+ assert.equal(h.state.scheduleRequest,null,'settings tabs must not enqueue a reload of unsaved editor work');
+ h.button('← Back to schedule').onClick();h.pending.shift()({...organization,role:'owner'});await settle();h.render();
+ assert.equal(h.state.showSettings,false);assert.equal(h.refs.locationRef.current.schedule,schedule);
+ assert.equal(h.state.scheduleRequest,null,'returning reveals the retained draft, not a fresh saved copy');
+});
+test('opening a workspace closes settings only after successful navigation',async()=>{
+ const h=harness();h.panel.openSettings();h.render();h.panel.openOrganization(organization.id);
+ assert.equal(h.state.showSettings,true);h.pending.shift()(organization);await settle();h.render();
+ assert.equal(h.state.showSettings,false);assert.equal(h.refs.locationRef.current.screen,'schedule');
+});
+
+test('history Back reveals the original editor draft without requesting a saved reload',async()=>{
+ const h=harness({selected:schedule});h.panel.openLifecycle(organization.id,schedule);h.pending.shift()(organization);await settle();
+ assert.equal(h.state.scheduleRequest.target,'lifecycle');h.state.scheduleRequest=null;h.render();
+ h.panel.closeHistory();h.pending.shift()(organization);await settle();
+ assert.equal(h.state.scheduleRequest,null);assert.equal(h.refs.locationRef.current.schedule,schedule);assert.equal(h.refs.locationRef.current.screen,'schedule');
+});
+
+test('opening account settings from History does not enqueue an editor reload',async()=>{
+ const h=harness({selected:schedule});h.panel.openLifecycle(organization.id,schedule);h.pending.shift()(organization);await settle();h.state.scheduleRequest=null;h.render();
+ h.panel.openSettings();h.pending.shift()(organization);await settle();h.render();
+ assert.equal(h.state.scheduleRequest,null);assert.equal(h.state.showSettings,true);assert.equal(h.refs.settingsOrigin.current.screen,'lifecycle');
+ h.button('← Back to history').onClick();h.pending.shift()(organization);await settle();
+ assert.equal(h.refs.locationRef.current.screen,'lifecycle');assert.equal(h.state.showSettings,false);
 });
