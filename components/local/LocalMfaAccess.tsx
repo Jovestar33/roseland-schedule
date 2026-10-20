@@ -65,7 +65,7 @@ export default function LocalMfaAccess({review=false,managedRecovery=false,focus
     if(!current())return;setCode('');
     if(result.error){setMessage('That code was not accepted. Try the current code from your authenticator.');return;}
     pendingFactor.current=false;setSecret('');setQr('');setMessage('Authenticator verified. Your retained work is ready to resume.');onVerified();setRetry(v=>v+1);
-   });}}><label>Authenticator code <input required pattern="[0-9]{6}" inputMode="numeric" autoComplete="one-time-code" value={code} onChange={e=>setCode(e.target.value)}/></label><button disabled={busy}>Verify authenticator</button></form>}
+   });}}><label>Authenticator code <input required pattern="[0-9]{6}" inputMode="numeric" autoComplete="one-time-code" value={code} onChange={e=>setCode(e.target.value)}/></label><button className={review?"btn btn-pink":undefined} disabled={busy}>Verify authenticator</button></form>}
    {stage!=='ready'&&<p>Your open drafts and pending requests are retained.</p>}
    {pendingFactor.current&&<button type="button" disabled={busy} onClick={()=>void cancelEnrollment()}>Cancel authenticator setup</button>}
    {stage==='ready'&&<button type="button" disabled={busy} onClick={()=>setOpen(false)}>Close security</button>}

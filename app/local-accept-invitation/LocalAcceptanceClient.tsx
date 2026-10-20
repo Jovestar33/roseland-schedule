@@ -148,7 +148,7 @@ export default function LocalAcceptanceClient({ config, pendingInvitation, onInv
       <p>Enter the invitation ID sent to you. You can review the organization and access before accepting.</p>
       <form className={styles.form} onSubmit={event => { event.preventDefault(); void reviewInvitation(); }}>
         <label>{workspace?.review?'Invitation ID':'Fictional invitation ID'}<input required autoComplete="off" maxLength={36} disabled={!ready || busy || !!attempt} value={invitationId} onChange={event => setInvitationId(event.target.value)} /></label>
-        <button className={styles.invitationReview} disabled={!ready || busy || !!attempt}>Review invitation</button>
+        <button disabled={!ready || busy || !!attempt}>Review invitation</button>
         <button type="button" className={styles.secondary} disabled={busy||!!attempt} onClick={()=>{setInvitationId('');setPreview(null);setMessage('Invitation draft cleared. Nothing was accepted.');}}>Cancel invitation draft</button>
       </form>
     </section>}

@@ -1,4 +1,4 @@
-.panel { position:fixed; inset:0 0 0 auto; margin:0; width:min(580px,100vw); max-width:100vw; height:100dvh; max-height:100dvh; border:0; padding:0; color:var(--ink); background:white; box-shadow:-8px 0 40px #0002; }
+.panel { position:fixed; inset:0 0 0 auto; margin:0; width:min(580px,100vw); max-width:100vw; height:100dvh; max-height:100dvh; border:0; padding:0; color:var(--ui-ink); background:white; box-shadow:-8px 0 40px #0002; }
 .panel[open] { display:flex; flex-direction:column; }
 .panel::backdrop { background:#0005; }
 .header { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:18px 20px; border-bottom:1px solid var(--g200); flex-shrink:0; }
@@ -18,14 +18,16 @@
 
 .body [hidden] { display:none !important; }
 .body input[type="file"] { border:0; padding:0; font-size:12px; }
-.body input[type="file"]::file-selector-button { font:inherit; font-weight:600; border:1px solid var(--g300); border-radius:8px; background:var(--g50); color:var(--ink); min-height:40px; padding:8px 12px; margin-right:10px; cursor:pointer; }
+.body input[type="file"]::file-selector-button { font:inherit; font-weight:600; border:1px solid var(--g300); border-radius:8px; background:var(--g50); color:var(--ui-ink); min-height:40px; padding:8px 12px; margin-right:10px; cursor:pointer; }
 .body details > summary { cursor:pointer; font-size:12px; font-weight:600; color:var(--g600); padding:8px 0; }
 
 /* The tool chooser is a short menu; working panels retain their full height. */
 .compact { inset:0; margin:auto; width:min(460px,calc(100vw - 32px)); height:fit-content; max-height:calc(100dvh - 48px); border:1px solid var(--g200); border-radius:14px; box-shadow:0 20px 64px #0003; }
-.compact .header h2 { font-family:var(--fd); font-size:22px; letter-spacing:1.5px; }
+.compact .header h2 { font-family:var(--fd); font-size:var(--ui-dialog-title-size); letter-spacing:1.5px; }
 .compact .body { padding:8px; }
 
 .footer{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-shrink:0;padding:14px 20px;border-top:1px solid var(--g200);background:var(--g50)}.footer span{font-size:11px;color:var(--g600);line-height:1.5}.footer button{min-height:40px}
 .header h2{font-family:var(--fd);font-size:24px;letter-spacing:1px;font-weight:400}
-.body button:focus-visible,.footer button:focus-visible{outline:2px solid var(--pink-dark);outline-offset:3px}
+.body button:focus-visible,.footer button:focus-visible{outline:2px solid var(--ui-accent-strong);outline-offset:3px}
+
+.header h2{font-size:var(--ui-dialog-title-size);letter-spacing:1.5px}.body h2{font-family:var(--fb);font-size:var(--ui-section-size)}.body :is(input,select,textarea,button){font-family:var(--fb);font-size:var(--ui-body-size)}.footer span{font-size:var(--ui-label-size)}

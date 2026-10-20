@@ -1,0 +1,39 @@
+/* Shared application chrome. Schedule action colors and print styling stay independent. */
+:root {
+  --ui-ink:#171717; --ui-muted:#52525b; --ui-subtle:#66666f;
+  --ui-page:#f4f4f5; --ui-surface:#fff; --ui-border:#e4e4e7;
+  --ui-accent:#d81f82; --ui-accent-strong:#9d1468; --ui-accent-soft:#fff3f9;
+  --ui-primary:linear-gradient(180deg,#f03a98 0%,#d81f82 100%);
+  --ui-primary-hover:linear-gradient(180deg,#e62f8f 0%,#be186f 100%);
+  --ui-primary-shadow:0 4px 14px rgba(233,30,140,.18);
+  --ui-danger:#b91c1c; --ui-danger-hover:#991b1b;
+  --ui-success:#346747; --ui-success-soft:#eaf4ed;
+  --ui-warning:#805715; --ui-warning-soft:#fff4df;
+  --ui-title-size:26px; --ui-dialog-title-size:24px;
+  --ui-section-size:18px; --ui-card-title-size:16px;
+  --ui-body-size:13px; --ui-label-size:12px;
+}
+@media screen {
+  /* Include portals mounted under body as well as the workspace itself. */
+  body:has([data-review-ui]) { --ink:var(--ui-ink); --g500:var(--ui-subtle); }
+  body:has([data-review-ui]) :is(.modal,dialog,.lib-page) {
+    --pink:var(--ui-accent); --pink-dark:var(--ui-accent-strong); --pink-light:var(--ui-accent-soft); --g100:var(--ui-page);
+  }
+  body:has([data-review-ui]) .btn-pink {
+    background:var(--ui-primary)!important; border-color:var(--ui-accent)!important;
+    color:white!important; box-shadow:var(--ui-primary-shadow);
+  }
+  body:has([data-review-ui]) .btn-pink:hover:not(:disabled) { background:var(--ui-primary-hover)!important; }
+  body:has([data-review-ui]) .btn-danger {
+    background:var(--ui-danger)!important; border-color:var(--ui-danger)!important; color:white!important;
+  }
+  body:has([data-review-ui]) .btn-danger:hover:not(:disabled) { background:var(--ui-danger-hover)!important; }
+  body:has([data-review-ui]) :is(.modal,dialog) :is(button,input,textarea,select,a[href]):focus-visible {
+    outline:2px solid var(--ui-accent-strong)!important; outline-offset:3px;
+  }
+  body:has([data-review-ui]) :is(.modal,dialog) { color:var(--ui-ink); font-family:var(--fb); }
+  body:has([data-review-ui]) .mhdr h2 { font-family:var(--fd);font-size:var(--ui-dialog-title-size);letter-spacing:1.5px; }
+  body:has([data-review-ui]) .btn { font-family:var(--fb);font-size:var(--ui-body-size);font-weight:600; }
+  body:has([data-review-ui]) .hdr { border-bottom-color:var(--ui-accent); }
+  body:has([data-review-ui]) :is(.mtab,.cms-tab).active { color:var(--ui-accent-strong);border-bottom-color:var(--ui-accent); }
+}

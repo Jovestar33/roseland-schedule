@@ -26,7 +26,7 @@ export default function LocalOrganizationSecurity(){
  {!record&&<button disabled={busy} onClick={()=>void run(async current=>{const r=await repo.read(actor!,org!);if(current()){setRecord(r);setRoles(r.required_roles);}})}>Load security settings</button>}
  <fieldset disabled={!ready||!record?.can_manage||busy||!!pending}><legend>Also require MFA for</legend>{MFA_ROLES.map(role=><label key={role} style={{display:'block'}}><input type="checkbox" checked={roles.includes(role)} onChange={e=>setRoles(e.target.checked?[...roles,role]:roles.filter(r=>r!==role))}/>{role==='admin'?'Organization Admin':role==='organizer'?'Production Organizer':role==='editor'?'Editor':'Viewer'}</label>)}</fieldset>
  <p>Changes apply on the next protected request. Ordinary schedule saves do not ask for a new code.</p>
- {record?.can_manage&&<button disabled={!ready||busy||!dirty} onClick={()=>void run(async current=>{
+ {record?.can_manage&&<button className="btn btn-pink" disabled={!ready||busy||!dirty} onClick={()=>void run(async current=>{
   const a=pending??captureMfaAttempt({actor:actor!,organization:org!,request:crypto.randomUUID(),version:record.version,roles});setPending(a);
   try{await repo.save(a);}catch(e){if(current()&&e instanceof MfaPolicyError&&e.kind==='conflict')setPending(null);throw e;}
   if(!current())return;setPending(null);const r=await repo.read(actor!,org!);if(current()){setRecord(r);setRoles(r.required_roles);setMessage('Organization MFA policy saved.');}
