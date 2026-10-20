@@ -241,7 +241,7 @@ export default function LocalWorkspaceClient({config,review=false}:{config:Local
     const page=await loadOrganizations(false,true).catch(()=>null);
     if(page)await navigate(directoryLocation(page),false);
   }
-  const entryMessage=review&&authNeeded&&message.startsWith('Sign in again with the same account.')?'Your session has expired. Sign in again with the same account to continue. Your unfinished work is retained.':message;
+  const entryMessage=review&&authNeeded&&message.startsWith('Sign in again with the same account.')?'Your session has expired. Your unfinished work is still here.':message;
   function tab(screen:WorkspaceScreen){if(authNeeded||!session||!accountReady){return;}void navigate({...locationRef.current,screen},true,false,true);}
   return <div data-review-ui={review?true:undefined} className={review?(entryActive?styles.entryPage:styles.productPage):styles.page}>
     {review?(entryActive?null:<AppHeader/>):<header className={styles.header}><div><span className={styles.eyebrow}>LOCAL WORKSPACE</span><h1>Roseland rehearsals</h1><p>One account, with unfinished work kept in this tab.</p></div><span className={styles.badge}>Fictional data only</span></header>}
@@ -254,18 +254,17 @@ export default function LocalWorkspaceClient({config,review=false}:{config:Local
         {/* The bundled brand asset uses the same fixed proportions as the original login. */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={loginLogo.src} alt="Roseland Pictures"/>
-        <p>Your next great production starts here.</p>
       </div>}
       {!review&&<p className={styles.notice}>Switching local screens keeps drafts and request details. Closing or reloading loses tab-only requests. Duplicate source backups and template or appearance request receipts can be recovered by the original account on this computer. {config.accountOnboarding?'Email stays in the local mail sink. Remember me retains sign-in only; idle expiry still applies.':'No email is sent.'}</p>}
-      {!accessRecovery&&!accessChallenge&&(!review||((!accountTask||authNeeded)&&! /^(Your remembered|Checking your remembered|Signed in|Sign in once)/.test(message)))&&<p role="status" aria-live="polite" className={styles.status}>{entryMessage}</p>}
+      {!accessRecovery&&!accessChallenge&&!(review&&authNeeded)&&(!review||((!accountTask||authNeeded)&&! /^(Your remembered|Checking your remembered|Signed in|Sign in once)/.test(message)))&&<p role="status" aria-live="polite" className={styles.status}>{entryMessage}</p>}
       {accessRecovery&&<section className={styles.accessRecovery} aria-labelledby="access-recovery-title" aria-busy={checkingAccess}>
         <h1 id="access-recovery-title" tabIndex={-1} ref={recoveryHeading}>{checkingAccess?'Checking your access…':'Unable to check your access'}</h1>
         <p role="status" aria-live="polite">{checkingAccess?'Checking your organization and account security.':'We couldn’t confirm your organization or account security. Try again to continue.'}</p>
         <p className={styles.retainedWork}>Your open drafts and pending requests are retained in this tab.</p>
         <button disabled={checkingAccess} onClick={()=>void retryAccess()}>{checkingAccess?'Checking…':'Try again'}</button>
       </section>}
-      {review&&session&&(accessRecovery||accessChallenge||!accountReady)&&<button className="btn btn-light" disabled={busy||working} onClick={()=>dirty?setConfirmSignOut(true):void signOut()}>Back to sign in</button>}
-      {(!session||authNeeded)&&<form hidden={review&&accountTask} className={styles.login} aria-busy={busy} onSubmit={login} aria-label="Workspace sign in"><h2 ref={sessionHeading} tabIndex={-1}>{identity.actor?'Sign in again':'Sign in'}</h2><label>{review?'Email address':'Fictional account email'}<input type="email" required autoComplete="off" readOnly={!!identity.actor} value={session?.user.email??email} onChange={event=>setEmail(event.target.value)}/></label><label>Password<input type="password" required autoComplete="off" value={password} onChange={event=>setPassword(event.target.value)}/></label><button disabled={busy||working}>{busy?'Signing in…':'Sign in'}</button>{config.accountOnboarding&&<label><input type="checkbox" checked={rememberSession} onChange={event=>setRememberSession(event.target.checked)}/> Remember me on this personal device</label>}</form>}
+      {review&&session&&!entryActive&&(accessRecovery||accessChallenge||!accountReady)&&<button className="btn btn-light" disabled={busy||working} onClick={()=>dirty?setConfirmSignOut(true):void signOut()}>Back to sign in</button>}
+      {(!session||authNeeded)&&<form hidden={review&&accountTask} className={styles.login} aria-busy={busy} onSubmit={login} aria-label="Workspace sign in"><h2 ref={sessionHeading} tabIndex={-1}>{identity.actor?'Sign in again':'Sign in'}</h2>{review&&authNeeded&&<p className={styles.entryHint} role="status" aria-live="polite">{entryMessage}</p>}<label>{review?'Email address':'Fictional account email'}<input type="email" required autoComplete="off" readOnly={!!identity.actor} value={session?.user.email??email} onChange={event=>setEmail(event.target.value)}/></label><label>Password<input type="password" required autoComplete="off" value={password} onChange={event=>setPassword(event.target.value)}/></label><button disabled={busy||working}>{busy?'Signing in…':'Sign in'}</button>{config.accountOnboarding&&<label><input type="checkbox" checked={rememberSession} onChange={event=>setRememberSession(event.target.checked)}/> Remember me on this personal device</label>}</form>}
         {settingsVisible&&<section className={styles.settingsIntro}>
           <div className={styles.settingsTitle}>
             <div><h1>Account &amp; settings</h1><p>{platformActor===session?.user.id?'Manage your account and platform.':scope?.role==='member'?'Your sign-in, security, and invitations.':'Manage your account, people, and organization.'}</p></div>

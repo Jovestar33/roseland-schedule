@@ -4,3 +4,6 @@
 .controls{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap;padding:16px 20px 8px}.controls label{display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:600}.controls select{font:inherit;font-size:13px;padding:8px;border:1px solid #ccc;border-radius:6px;background:white}.controls button{margin-left:auto}
 .help{font-size:12px;color:#555;padding:0 20px;margin:4px 0}.count{font-size:13px;font-weight:600;padding:0 20px;margin:10px 0}.preview{flex:1;min-height:180px;width:100%;border:0;background:#e9eaed}.error{color:#a11;padding:0 20px;font-size:13px}
 @media(max-width:600px){.overlay{padding:4px}.dialog{height:calc(100dvh - 8px)}.controls{gap:8px;padding:12px}.controls button{margin-left:0}.help{padding:0 12px}}
+
+.controls label{min-width:0;max-width:100%}.controls select{max-width:100%;box-sizing:border-box;padding-right:28px;min-height:36px}.header{gap:12px}.header h2{min-width:0;overflow-wrap:anywhere}.header button{flex-shrink:0}
+@media(max-width:600px){.controls label{width:100%}.controls select{width:100%}}

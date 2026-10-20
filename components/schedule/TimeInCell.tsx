@@ -47,11 +47,13 @@ export default function TimeInCell({ index, row }: Props) {
         />
         {showSelect ? (
           <select
+            aria-label="Time in"
             className={`cs${gap ? ' time-conflict' : ''}`}
             value={row.timeIn}
             onChange={(e) => handleTimeChange(e.target.value)}
           >
             <option value="">— set —</option>
+            {row.timeIn && !TIMES.includes(row.timeIn) && <option value={row.timeIn}>{row.timeIn}</option>}
             {TIMES.map((t) => (
               <option key={t} value={t}>{t}</option>
             ))}

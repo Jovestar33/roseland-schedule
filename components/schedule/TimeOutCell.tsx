@@ -32,11 +32,13 @@ export default function TimeOutCell({ index, row }: Props) {
     <div className="time-cell-wrap">
       {row.fixedOut ? (
         <select
+          aria-label="Time out"
           className="cs"
           value={row.fixedOutTime}
           onChange={(e) => handleTimeChange(e.target.value)}
         >
           <option value="">— set —</option>
+          {row.fixedOutTime && !TIMES.includes(row.fixedOutTime) && <option value={row.fixedOutTime}>{row.fixedOutTime}</option>}
           {TIMES.map((t) => (
             <option key={t} value={t}>{t}</option>
           ))}

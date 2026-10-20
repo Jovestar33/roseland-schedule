@@ -42,6 +42,8 @@ test('expired session has one sign-in task and no visible workspace controls, re
  assert.equal(all.filter(({node,shown})=>shown&&node.type==='nav').length,0);
  const messages=all.filter(({node,shown})=>shown&&node.props?.role==='status');
  assert.equal(messages.length,1);assert.match(messages[0].node.props.children,/Your session has expired/);
+ assert.ok(!all.some(({node,shown})=>shown&&node.type==='button'&&node.props.children==='Back to sign in'));
+ assert.ok(!all.some(({node,shown})=>shown&&node.type==='p'&&/next great production/.test(String(node.props.children))));
  assert.ok(all.some(({node,shown})=>!shown&&node.props?.panelId===undefined&&node.props?.value?.panelId==='schedule'));
  const normal=workspace({authNeeded:false,message:'Signed in'});
  assert.ok(normal.some(({node,shown})=>shown&&node.props?.value?.panelId==='schedule'));

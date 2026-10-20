@@ -1,0 +1,42 @@
+/* Screen controls reserve room for values, native arrows, and adjacent buttons.
+   Print documents have their own measured column layout. */
+.action-value { display:none; }
+@media screen {
+  .tbl-wrap table.sched { min-width:1341px !important; }
+  .tbl-wrap colgroup .c-ti, .tbl-wrap colgroup .c-to { width:160px !important; }
+  .tbl-wrap colgroup .c-du { width:112px !important; }
+  .tbl-wrap .time-cell-wrap { gap:6px !important; justify-content:flex-start !important; }
+  .tbl-wrap .time-lock-btn { flex:0 0 28px; width:28px; min-width:28px; padding:4px !important; }
+  .tbl-wrap td .time-cell-wrap .cs { flex:1 0 104px; width:104px !important; min-width:104px !important; }
+  .tbl-wrap td.tc-t .cs { padding:6px 24px 6px 6px !important; min-height:36px; line-height:1.4; }
+  .tbl-wrap .time-cell-wrap :is(.tdsp,.anchor-text) {
+    flex:1 0 auto; min-width:0 !important; padding:6px !important;
+    white-space:nowrap !important; font-variant-numeric:tabular-nums;
+  }
+  .tbl-wrap td .action-select-wrap { position:relative; display:block !important; width:100% !important; }
+  .tbl-wrap .action-select-wrap .action-value { display:block; width:100%; min-width:0 !important; white-space:normal; overflow-wrap:anywhere; padding-right:24px; line-height:1.5; }
+  .tbl-wrap td .action-select-wrap .action-select { position:absolute; inset:0; width:100% !important; height:100%; min-width:0 !important; opacity:0; }
+  .action-select-wrap:focus-within { outline:2px solid var(--ui-accent-strong); outline-offset:2px; border-radius:5px; }
+  .time-warn,.dur-warn { white-space:normal; overflow-wrap:anywhere; }
+  .date-value-line { flex-wrap:wrap; }
+  .date-field-wrap { min-width:11rem; }
+  .mf input[type="date"] { min-width:11rem; text-overflow:clip !important; }
+  .call-disp,.date-weekday { white-space:nowrap; flex-shrink:0; }
+
+  /* Shared entry, administration, library, and portal forms. Inputs still allow
+     native caret scrolling; labels and read-only content wrap instead of hiding. */
+  body:has([data-review-ui]) :is(dialog,.modal,[data-review-ui]) :is(label,fieldset) { min-width:0; }
+  body:has([data-review-ui]) :is(dialog,.modal,[data-review-ui]) :is(input,select,textarea) { box-sizing:border-box; max-width:100%; }
+  body:has([data-review-ui]) :is(dialog,.modal,[data-review-ui]) select:not(.cs) { padding-right:2em; min-height:36px; line-height:1.4; }
+  body:has([data-review-ui]) :is(dialog,.modal) :is(h2,h3,p,label,legend) { overflow-wrap:anywhere; }
+  body:has([data-review-ui]) :is(dialog,.modal) button:not(.mclose) { white-space:normal; overflow-wrap:anywhere; height:auto; }
+  body:has([data-review-ui]) :is(.mhdr,.mfoot) { gap:12px; flex-wrap:wrap; }
+  body:has([data-review-ui]) .mhdr h2 { min-width:0; flex:1; }
+  body:has([data-review-ui]) .mhdr .mclose { flex:0 0 34px; }
+  .combo-option { white-space:normal; overflow:visible; overflow-wrap:anywhere; }
+  .combo-dropdown { max-width:min(360px,calc(100vw - 32px)); }
+  .snapshot-badge { white-space:normal; overflow:visible; overflow-wrap:anywhere; }
+}
+@media screen and (max-width:760px) {
+  .tbl-wrap table.sched { min-width:1463px !important; width:1463px !important; }
+}

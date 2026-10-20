@@ -31,3 +31,5 @@
 .body button:focus-visible,.footer button:focus-visible{outline:2px solid var(--ui-accent-strong);outline-offset:3px}
 
 .header h2{font-size:var(--ui-dialog-title-size);letter-spacing:1.5px}.body h2{font-family:var(--fb);font-size:var(--ui-section-size)}.body :is(input,select,textarea,button){font-family:var(--fb);font-size:var(--ui-body-size)}.footer span{font-size:var(--ui-label-size)}
+
+.header h2{min-width:0;overflow-wrap:anywhere}.header button{flex-shrink:0}.footer{flex-wrap:wrap}.footer button{white-space:normal;height:auto}.body fieldset{min-width:0}.body :is(input,select,textarea){box-sizing:border-box;max-width:100%}

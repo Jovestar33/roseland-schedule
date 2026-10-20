@@ -37,7 +37,7 @@ export default function LocalAcceptanceClient({ config, pendingInvitation, onInv
   const [message, setMessage] = useState(workspace?.review ? '' : managed ? 'Review the invitation ID supplied for this fictional account.' : 'Sign in with the fictional account that received the invitation.');
   const [confirmClear, setConfirmClear] = useState<'signout' | 'review' | null>(null);
   const dialog = useRef<HTMLDialogElement>(null), review = useRef<HTMLElement>(null);
-  const dirty = !!invitationId || !!controller.attempt;
+  const dirty = controller.phase !== 'success' && (!!invitationId || !!controller.attempt);
   const ready = !!session && !authNeeded && !workspace?.authNeeded;
   useWorkspacePanelState(dirty, busy);
   function clearAccount() {

@@ -54,7 +54,9 @@ export default function ActionCell({ index, row }: Props) {
   return (
     <>
       <div className="action-select-wrap">
+        <span aria-hidden="true" className={`cs action-value${colorClass ? ` ${colorClass}` : ''}${locked ? ' locked' : ''}`}>{storedAction || '—'}</span>
         <select
+          aria-label="Action"
           className={`cs action-select${colorClass ? ` ${colorClass}` : ''}${locked ? ' locked' : ''}`}
           value={storedAction}
           onChange={(e) => handleSelectChange(e.target.value)}

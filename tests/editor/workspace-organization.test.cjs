@@ -19,6 +19,7 @@ test('multiple and paginated memberships retain a labeled switcher and current s
 });
 test('switch selection forwards the organization identity without mutating memberships',()=>{
  let chosen=null;const tree=component({...props,organizations:[one,two],onChange:id=>{chosen=id;}});
- const select=tree.props.children[0].props.children[1];select.props.onChange({target:{value:'org-b'}});
+ const findSelect=node=>!node||typeof node!=='object'?null:node.type==='select'?node:React.Children.toArray(node.props?.children).map(findSelect).find(Boolean);
+ const select=findSelect(tree);select.props.onChange({target:{value:'org-b'}});
  assert.equal(chosen,'org-b');assert.equal(one.id,'org-a');assert.equal(props.current,one);
 });

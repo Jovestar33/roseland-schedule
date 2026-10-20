@@ -192,3 +192,10 @@
 .productPage .dialog h2{font-family:var(--fd);font-size:var(--ui-dialog-title-size);letter-spacing:1.5px}
 .productPage .accessRecovery>button,.productPage .accessShell form>button{background:var(--ui-primary);border-color:var(--ui-accent);color:white}
 .productPage .accessRecovery>button:hover:not(:disabled),.productPage .accessShell form>button:hover:not(:disabled){background:var(--ui-primary-hover)}
+
+.entryHint{font-size:13px;line-height:1.55;color:var(--ui-muted);margin:0}
+
+/* Long account names, status messages and actions must remain readable. */
+.productPage :is(h1,h2,h3,p,legend),.entryPage :is(h1,h2,p,label){overflow-wrap:anywhere}
+.productPage button:not(:global(.time-lock-btn)),.entryPage button{white-space:normal;overflow-wrap:anywhere}
+.account,.organizationBar,.settingsNavigation,.scopeNavigation{min-width:0;flex-wrap:wrap}.account>span{min-width:0;overflow-wrap:anywhere}
