@@ -11,7 +11,7 @@ const host='schedules.example.com';
 test('hosted configuration returns only public fields and does not open the local review gate',()=>{
   const result=readHostedWorkspaceConfig(env,host);
   assert.deepEqual(result,{appOrigin:`https://${host}`,projectRef:project,supabaseUrl:env.SUPABASE_URL,
-    anonymousKey:env.SUPABASE_PUBLISHABLE_KEY,accountOnboarding:true,liveDocumentProviders:true});
+    anonymousKey:env.SUPABASE_PUBLISHABLE_KEY,hosted:true,accountOnboarding:true,liveDocumentProviders:true});
   assert.ok(!JSON.stringify(result).includes(env.SUPABASE_SECRET_KEY));
   assert.equal(readLocalWorkspaceConfig({...env,ROSELAND_LOCAL_WORKSPACE:'supabase'},host),null);
 });

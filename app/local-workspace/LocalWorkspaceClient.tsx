@@ -35,7 +35,7 @@ export default function LocalWorkspaceClient({config,review=false}:{config:Local
   const [platformActor,setPlatformActor]=useState<string|null>(null);
   const [settingsSection,setSettingsSection]=useState<'account'|'organization'|'permissions'>('account');
   const [accountTask,setAccountTask]=useState(false);
-  const href=(value:WorkspaceLocation)=>workspaceHref(value,review?'/review':'/local-workspace');
+  const href=(value:WorkspaceLocation)=>workspaceHref(value,config.hosted?'/workspace':review?'/review':'/local-workspace');
   const [authStorage]=useState(()=>accountSessionStorage('rp-b08:'+config.supabaseUrl));
   const [rememberSession,setRememberSession]=useState(false),[accountReady,setAccountReady]=useState(!config.accountOnboarding);
   const [organizationLifecycles,setOrganizationLifecycles]=useState<Record<string,OrganizationLifecycle>>({}),[lifecycleRevision,setLifecycleRevision]=useState(0);
@@ -55,7 +55,7 @@ export default function LocalWorkspaceClient({config,review=false}:{config:Local
     auth:config.accountOnboarding?{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false,storage:authStorage,storageKey:'account-session'}:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false},
     global:{async fetch(input,init){
       const url=new URL(typeof input==='string'?input:input instanceof URL?input.href:input.url);
-      if(url.origin!==config.supabaseUrl)throw new Error('Local request required');
+      if(url.origin!==config.supabaseUrl)throw new Error('Configured backend required');
       const response=await fetch(input,{...init,cache:'no-store',redirect:'error',signal:AbortSignal.timeout(15000)});
       if((response.status===403||response.status===404)&&url.pathname.startsWith('/rest/v1/')){const body=await response.clone().json().catch(()=>null);mfaRequired.current(new Headers(init?.headers ?? (input instanceof Request ? input.headers : undefined)).get('authorization'),body?.message==='mfa_recent_required');}
       if(response.status===423&&url.pathname.startsWith('/rest/v1/'))lifecycleDenied.current();
@@ -187,7 +187,7 @@ export default function LocalWorkspaceClient({config,review=false}:{config:Local
   useEffect(()=>{if(organizationSwitch)switchDialog.current?.showModal();else switchDialog.current?.close();},[organizationSwitch]);
   async function login(event:React.FormEvent){
     event.preventDefault();if(busyRef.current||working)return;busyRef.current=true;setBusy(true);
-    try{if(config.accountOnboarding)authStorage.setRemember(rememberSession);const r=await client.auth.signInWithPassword({email:sessionRef.current?.user.email??email,password});setPassword('');if(r.error||!r.data.session){setMessage(review?'Sign-in failed. Check your email and password.':'Sign-in failed. Check your fictional account details.');return;}if(config.accountOnboarding)client.auth.startAutoRefresh();setEmail(r.data.user.email??email);setAuthNeeded(false);setMessage('Signed in. Choose an organization or accept a fictional invitation.');}
+    try{if(config.accountOnboarding)authStorage.setRemember(rememberSession);const r=await client.auth.signInWithPassword({email:sessionRef.current?.user.email??email,password});setPassword('');if(r.error||!r.data.session){setMessage(review?'Sign-in failed. Check your email and password.':'Sign-in failed. Check your fictional account details.');return;}if(config.accountOnboarding)client.auth.startAutoRefresh();setEmail(r.data.user.email??email);setAuthNeeded(false);setMessage(config.hosted?'Signed in. Choose an organization or review an invitation.':'Signed in. Choose an organization or accept a fictional invitation.');}
     catch{setPassword('');setMessage('Sign-in could not finish. Your drafts are retained.');}finally{busyRef.current=false;setBusy(false);}
   }
   async function signOut(){

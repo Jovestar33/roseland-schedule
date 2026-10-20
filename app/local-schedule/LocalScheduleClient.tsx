@@ -142,7 +142,7 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
     const result=await client.auth.getSession();
     if(result.error||!result.data.session||controller.record!==record)throw new Error('Sign in again.');
     return {token:result.data.session.access_token,schedule:record.id};
-  }) : {...fictionalDocumentProviders}, [config.liveDocumentProviders,client,controller,documentSession,workspace?.organization?.id,session?.user.id]);
+  },fetch,config.hosted?'/api/platform/document-providers':'/api/platform/local-document-providers') : {...fictionalDocumentProviders}, [config.liveDocumentProviders,config.hosted,client,controller,documentSession,workspace?.organization?.id,session?.user.id]);
 
   useEffect(() => {
     const requestEpoch = epoch, requests = listTicket;
@@ -416,7 +416,7 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
           </div>
 
           {!review&&<div className={styles.toolbar}>{shareTools}</div>}
-          {workspace&&controller.record&&<ReviewToolPanel enabled={review} open={active&&reviewTool==='sharing'} title="Team and Client links" onClose={()=>setReviewTool(null)} onBack={()=>setReviewTool('menu')}><div><LocalScheduleSharing expanded={review&&reviewTool==='sharing'} workspacePath={review?'/review':'/local-workspace'} key={`${session?.user.id}:${controller.record.id}`} client={client} actor={session?.user.id??null} organization={controller.record.organization_id} schedule={controller.record.id} enabled={active&&recordInScope&&ready&&permission?.read===true&&!confirmation} readOnly={workspace.readOnly===true}/></div></ReviewToolPanel>}
+          {workspace&&controller.record&&<ReviewToolPanel enabled={review} open={active&&reviewTool==='sharing'} title="Team and Client links" onClose={()=>setReviewTool(null)} onBack={()=>setReviewTool('menu')}><div><LocalScheduleSharing expanded={review&&reviewTool==='sharing'} workspacePath={config.hosted?'/workspace':review?'/review':'/local-workspace'} key={`${session?.user.id}:${controller.record.id}`} client={client} actor={session?.user.id??null} organization={controller.record.organization_id} schedule={controller.record.id} enabled={active&&recordInScope&&ready&&permission?.read===true&&!confirmation} readOnly={workspace.readOnly===true}/></div></ReviewToolPanel>}
           <LocalSchedulePrint visible={active && recordInScope && ready && !confirmation} />
           {(controller.attempt || controller.result) && <section className={styles.recovery} aria-label="Save recovery">
             <h2>{controller.result?.state === 'matched' ? 'Saved version confirmed' : 'Save needs review'}</h2>

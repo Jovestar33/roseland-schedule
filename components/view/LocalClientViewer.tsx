@@ -3,18 +3,18 @@ import {useEffect,useRef,useState} from 'react';
 import ScheduleReadView from './ScheduleReadView';
 import {printSchedule} from '@/lib/print';
 import type {ScheduleData} from '@/lib/types';
-export default function LocalClientViewer({legacyName,legacyToken}:{legacyName?:string;legacyToken?:string}){
+export default function LocalClientViewer({legacyName,legacyToken,endpoint='/api/platform/local-client-view'}:{legacyName?:string;legacyToken?:string;endpoint?:'/api/platform/client-view'|'/api/platform/local-client-view'}){
  const [view,setView]=useState<{name:string;document:ScheduleData}|null>(null),[message,setMessage]=useState('Loading shared schedule…'),[busy,setBusy]=useState(false);
  const token=useRef(''),recipient=useRef(''),generation=useRef(0),working=useRef(false);
  async function refresh(){
   if(working.current)return null;working.current=true;setBusy(true);const ticket=++generation.current;
   try{
    if(token.current){
-    const exchange=await fetch('/api/platform/local-client-view',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({token:token.current,...(legacyName?{legacyName}:{})}),credentials:'same-origin',cache:'no-store',referrerPolicy:'no-referrer'});
+    const exchange=await fetch(endpoint,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({token:token.current,...(legacyName?{legacyName}:{})}),credentials:'same-origin',cache:'no-store',referrerPolicy:'no-referrer'});
     if(!exchange.ok)throw Error('unavailable');const data=await exchange.json();if(ticket!==generation.current)return null;if(!/^[a-f0-9]{32}$/.test(data.recipient))throw Error('unavailable');recipient.current=data.recipient;
    }
    if(!/^[a-f0-9]{32}$/.test(recipient.current))throw Error('unavailable');
-   const response=await fetch(`/api/platform/local-client-view/${recipient.current}`,{method:'POST',credentials:'same-origin',cache:'no-store',referrerPolicy:'no-referrer'});
+   const response=await fetch(`${endpoint}/${recipient.current}`,{method:'POST',credentials:'same-origin',cache:'no-store',referrerPolicy:'no-referrer'});
    if(!response.ok)throw Error(response.status===428?'cookies':'unavailable');const data=await response.json();
    if(ticket===generation.current){token.current='';history.replaceState(null,'',`${window.location.pathname}?recipient=${recipient.current}`);setView(data);setMessage('');return data;}
   }catch(error){if(ticket===generation.current){setView(null);setMessage(error instanceof Error&&error.message==='cookies'?(token.current?'This shared schedule needs cookies. Allow cookies for this site, then try again or reopen the original link.':'This shared session is unavailable. Reopen the original link, or ask the sender for a current link.'):'Shared schedule unavailable. Try again, or ask the sender for a current link.');}}
@@ -32,6 +32,6 @@ export default function LocalClientViewer({legacyName,legacyToken}:{legacyName?:
   return()=>{generationRef.current++;working.current=false;clearInterval(timer);window.removeEventListener('focus',focus);window.removeEventListener('hashchange',navigation);window.removeEventListener('popstate',navigation);};
  // Pending exchange material lives in memory only; confirmed reads use an HttpOnly cookie.
  // eslint-disable-next-line react-hooks/exhaustive-deps
- },[legacyName,legacyToken]);
+ },[legacyName,legacyToken,endpoint]);
  return <main>{view?<><div className="readonly-bar" style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'10px 24px'}}><span>Read-only Client schedule</span><button className="btn btn-light btn-sm" disabled={busy} onClick={async()=>{const current=await refresh();if(current)await printSchedule(current.name, current.document, async()=>!!await refresh());}}>Print / Save PDF</button></div><ScheduleReadView data={view.document} name={view.name}/></>:<section style={{maxWidth:480,margin:'40px auto',padding:24}}><p role="status">{message}</p><button className="btn btn-light" disabled={busy} onClick={()=>void refresh()}>{busy?'Checking…':'Try again'}</button></section>}</main>;
 }

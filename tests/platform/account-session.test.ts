@@ -23,3 +23,14 @@ test('unremembered auth does not survive a new tab; origin namespaces and accoun
  assert.equal(accountSessionStorage('b',{local,tab}).getItem('auth'),null);
  a.setRemember(true);a.setItem('auth','account-b');assert.equal(a.getItem('auth'),'account-b');a.setRemember(false);assert.equal(local.getItem('a:auth'),null);assert.equal(tab.getItem('a:auth'),'account-b');
 });
+
+
+test('hosted policy entry respects enforcement and rejects missing deployment metadata', async()=>{
+ const {accountPolicyAllowsEntry}=await import('../../lib/platform/account-session.ts');
+ assert.equal(accountPolicyAllowsEntry({accepted:false,enforced:false},true),true);
+ assert.equal(accountPolicyAllowsEntry({accepted:false,enforced:true},true),false);
+ assert.equal(accountPolicyAllowsEntry({accepted:true,enforced:true},true),true);
+ assert.equal(accountPolicyAllowsEntry({accepted:true},true),false);
+ assert.equal(accountPolicyAllowsEntry({accepted:false,enforced:false},false),false);
+ assert.equal(accountPolicyAllowsEntry({accepted:true},false),true);
+});

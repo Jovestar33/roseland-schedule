@@ -5,7 +5,7 @@ export function parseWorkspaceLocation(search:string):WorkspaceLocation {
   const params=new URLSearchParams(search),screen=params.get('screen'),organization=params.get('org');
   return {screen:screen==='invitations'||screen==='acceptance'||screen==='lifecycle'||screen==='provisioning'?screen:'schedule',organization:organization&&uuid.test(organization)?organization:null,...(params.get('schedule')&&uuid.test(params.get('schedule')!)?{schedule:params.get('schedule')!}:{})};
 }
-export function workspaceHref(value:WorkspaceLocation,base:'/local-workspace'|'/review'='/local-workspace'):string {
+export function workspaceHref(value:WorkspaceLocation,base:'/local-workspace'|'/review'|'/workspace'='/local-workspace'):string {
   const params=new URLSearchParams({screen:value.screen});
   if(value.organization&&uuid.test(value.organization))params.set('org',value.organization);
   if(value.schedule&&uuid.test(value.schedule))params.set('schedule',value.schedule);

@@ -2,9 +2,9 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { createClient, type Session, type SupabaseClient } from '@supabase/supabase-js';
 import type { LocalEditorConfig } from '@/lib/platform/local-editor-config';
-import { FICTIONAL_PRIVACY, FICTIONAL_TERMS, parseAccountCallback, type AccountCallback } from '@/lib/platform/account-session';
+import { FICTIONAL_PRIVACY, FICTIONAL_TERMS, accountPolicyAllowsEntry, parseAccountCallback, type AccountCallback } from '@/lib/platform/account-session';
 
-type Policy = { termsVersion: string; privacyVersion: string; accepted: boolean };
+type Policy = { termsVersion: string; privacyVersion: string; accepted: boolean; enforced?: boolean };
 type Props = { review?:boolean; showMaintenance?:boolean; config: LocalEditorConfig; client: SupabaseClient; session: Session | null; authNeeded: boolean;
   onEntryTaskChange?(active:boolean):void; onReady(ready: boolean): void; requireAuth(): void; policyRevision: number; onInvitation(value: {actor:string;id:string}): void };
 export default function LocalAccountAccess({ review=false, showMaintenance=true, onEntryTaskChange, config, client, session, authNeeded, onReady, requireAuth, policyRevision, onInvitation }: Props) {
@@ -56,10 +56,10 @@ export default function LocalAccountAccess({ review=false, showMaintenance=true,
       if (clock.error || policies.error || !Number.isFinite(Date.parse(clock.data)) || !policies.data) {
         setMessage('Account checks are unavailable. Your unfinished work is retained. Retry when connected.'); return;
       }
-      deadline.current = Date.parse(clock.data); setPolicy(policies.data); onReady(policies.data.accepted === true);
+      deadline.current = Date.parse(clock.data); setPolicy(policies.data); onReady(accountPolicyAllowsEntry(policies.data, config.hosted === true));
     }).catch(() => { if (ticket === accountGeneration.current) setMessage('Account checks could not finish. Your unfinished work is retained.'); });
     return () => { accountGeneration.current++; };
-  }, [sessionToken, authNeeded, client, onReady, requireAuth, retry, policyRevision]);
+  }, [sessionToken, authNeeded, client, onReady, requireAuth, retry, policyRevision, config.hosted]);
   useEffect(() => {
     if (!sessionToken || authNeeded) return;
     let inFlight = false, lastSignal = 0, active = true;
@@ -94,8 +94,8 @@ export default function LocalAccountAccess({ review=false, showMaintenance=true,
   }
   async function requestMail(event: React.FormEvent) {
     event.preventDefault(); await run(async () => {
-      const result = await fetch('/api/platform/local-account/mail', { method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: mode, email, ...(mode === 'signup' ? { invitationId: invitation, accepted } : {}) }),
+      const result = await fetch(config.hosted?'/api/platform/account/mail':'/api/platform/local-account/mail', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: mode, email, ...(mode === 'signup' ? { invitationId: invitation, ...(config.hosted?{}:{accepted}) } : {}) }),
         cache: 'no-store', redirect: 'error', signal: AbortSignal.timeout(15000) });
       const data = await result.json(); setMessage(data.message ?? 'Request unavailable.');
     });
@@ -126,7 +126,8 @@ export default function LocalAccountAccess({ review=false, showMaintenance=true,
   return <section aria-label="Account access" data-account-task={entry&&!!mode||review&&!!callback||undefined} aria-busy={busy} style={{ margin: '12px 0', maxWidth: 720 }}>
     <p hidden={!message||(review&&authNeeded&&/^(You have been inactive|Account checks)/.test(message))} role="status" aria-live="polite">{message}</p>
     {session && !authNeeded && !policy && (!review||!callback) && <button disabled={busy} onClick={() => setRetry(value => value + 1)}>Retry account checks</button>}
-    {policy && !policy.accepted && (!review||(!callback&&!!session&&!authNeeded)) && <form onSubmit={event => { event.preventDefault(); void run(async () => {
+    {config.hosted && policy && !accountPolicyAllowsEntry(policy,true) && <p role="alert">Account notices are not ready for review. Contact your administrator. Your unfinished work is retained.</p>}
+    {!config.hosted && policy && !policy.accepted && (!review||(!callback&&!!session&&!authNeeded)) && <form onSubmit={event => { event.preventDefault(); void run(async () => {
       if (!policyChecked || !session) return;
       const token = session.access_token;
       const result = await client.rpc('accept_account_policies', { terms_version: policy.termsVersion, privacy_version: policy.privacyVersion }).setHeader('Authorization', `Bearer ${token}`);
@@ -162,11 +163,11 @@ export default function LocalAccountAccess({ review=false, showMaintenance=true,
         <label>Email <input required type="email" maxLength={320} autoComplete="email" value={email} onChange={e => setEmail(e.target.value)}/></label>
         {mode === 'signup' && <>
           <p><label>Invitation ID <input required value={invitation} onChange={e => setInvitation(e.target.value)}/></label></p>
-          <FictionalNotices terms={FICTIONAL_TERMS} privacy={FICTIONAL_PRIVACY}/>
-          <label style={{display:'flex',alignItems:'flex-start'}}><input type="checkbox" checked={accepted} onChange={e => setAccepted(e.target.checked)}/> I accept the Terms of Service and acknowledge the Privacy Policy.</label>
+          {!config.hosted&&<FictionalNotices terms={FICTIONAL_TERMS} privacy={FICTIONAL_PRIVACY}/>}
+          {!config.hosted&&<label style={{display:'flex',alignItems:'flex-start'}}><input type="checkbox" checked={accepted} onChange={e => setAccepted(e.target.checked)}/> I accept the Terms of Service and acknowledge the Privacy Policy.</label>}
         </>}
-        <p><button data-account-primary disabled={busy || (mode === 'signup' && !accepted)}>{busy?'Sending…':'Send email'}</button></p>
-        <p>Local fictional testing only. Messages stay in the local mail sink. A sent request may complete even if its reply is lost.</p>
+        <p><button data-account-primary disabled={busy || (mode === 'signup' && !config.hosted && !accepted)}>{busy?'Sending…':'Send email'}</button></p>
+        {config.hosted?<p>Check your email before requesting another message.</p>:<p>Local fictional testing only. Messages stay in the local mail sink. A sent request may complete even if its reply is lost.</p>}
         {review&&session&&!authNeeded&&<p><button type="button" disabled={busy} onClick={()=>{setMode(null);setMessage('');}}>Cancel password reset</button></p>}
         {review&&(!session||authNeeded)&&<div data-account-entry><button type="button" disabled={busy} onClick={()=>{returnEntry.current=mode;setMode(null);}}>Back to sign in</button></div>}
       </form>}

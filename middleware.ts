@@ -6,7 +6,9 @@ import type { NextRequest } from 'next/server';
 const AUTH_COOKIE = 'rp_auth_flag';
 
 function isPublicPath(pathname: string): boolean {
-  return pathname === '/local-client' // Independently gated loopback Client projection.
+  return pathname === '/workspace' // Hosted configuration gate and Supabase-authenticated workspace.
+    || pathname === '/client' // Independently gated hosted Client projection.
+    || pathname === '/local-client' // Independently gated loopback Client projection.
     || pathname === '/login'
     || pathname === '/review' // Same independent loopback/configuration gate and authenticated workspace.
     || pathname === '/local-workspace' // Independent loopback/configuration gate.
@@ -41,6 +43,21 @@ export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const searchParams = request.nextUrl.searchParams;
 
+  // The hosted app has its own authenticated workspace; never serve legacy PIN
+  // screens or interpret legacy schedule query parameters on the Vercel site.
+  if (process.env.ROSELAND_HOSTED_APP === 'supabase' && process.env.VERCEL === '1') {
+    if (pathname === '/' || pathname === '/login') return redirect(request, '/workspace');
+    if (pathname !== '/workspace' && pathname !== '/client' && !pathname.startsWith('/api/platform/')) {
+      return new NextResponse(null, {status:404});
+    }
+    const response = NextResponse.next();
+    response.headers.set('Cache-Control','private, no-store');
+    response.headers.set('Referrer-Policy','no-referrer');
+    response.headers.set('X-Robots-Tag','noindex, nofollow');
+    response.headers.set('X-Frame-Options','DENY');
+    return response;
+  }
+
   // Legacy query-param redirects (must run before auth check)
   const s = searchParams.get('s');
   const v = searchParams.get('v');
@@ -58,7 +75,7 @@ export function middleware(request: NextRequest) {
   // Public paths need no cookie
   if (isPublicPath(pathname)) {
     const response=NextResponse.next();
-    if(pathname==='/local-client'||pathname.startsWith('/view')){response.headers.set('Referrer-Policy','no-referrer');response.headers.set('Cache-Control','private, no-store');response.headers.set('X-Robots-Tag','noindex, nofollow');response.headers.set('X-Frame-Options','DENY');}
+    if(pathname==='/client'||pathname==='/workspace'||pathname==='/local-client'||pathname.startsWith('/view')){response.headers.set('Referrer-Policy','no-referrer');response.headers.set('Cache-Control','private, no-store');response.headers.set('X-Robots-Tag','noindex, nofollow');response.headers.set('X-Frame-Options','DENY');}
     return response;
   }
 

@@ -44,3 +44,9 @@ export function accountSessionStorage(namespace: string, stores?: { local: Stora
     removeItem(key: string) { const storage = access(); const id = keyFor(key); storage?.local.removeItem(id); storage?.tab.removeItem(id); },
   };
 }
+
+/** Hosted entry respects the database switch; missing enforcement metadata fails closed. */
+export function accountPolicyAllowsEntry(policy: {accepted?: unknown; enforced?: unknown}, hosted: boolean): boolean {
+  return hosted ? typeof policy.enforced === 'boolean' && (policy.enforced === false || policy.accepted === true)
+    : policy.accepted === true;
+}

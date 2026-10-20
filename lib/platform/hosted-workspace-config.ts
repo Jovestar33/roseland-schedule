@@ -42,5 +42,5 @@ export function readHostedWorkspaceConfig(env: Environment, host: string | null)
     } catch { return null; }
   }
   return { appOrigin: origin.origin, projectRef, supabaseUrl: backend.origin, anonymousKey: key,
-    accountOnboarding: true, liveDocumentProviders: true };
+    hosted: true, accountOnboarding: true, liveDocumentProviders: true };
 }

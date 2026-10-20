@@ -78,3 +78,8 @@ test('organization switches block active work and review retained drafts without
  assert.equal(workspaceOrganizationSwitch({screen:'schedule',organization:null},other,false,false),'ready');
  assert.deepEqual(current,{screen:'schedule',organization:org,schedule:prod});
 });
+
+
+test('hosted navigation retains its independent workspace route',()=>{
+ assert.equal(workspaceHref({screen:'schedule',organization:null},'/workspace'),'/workspace?screen=schedule');
+});
