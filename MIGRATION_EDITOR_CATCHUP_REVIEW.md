@@ -51,3 +51,7 @@ Appearance controls use a scrollable form with persistent Save/Cancel actions. A
 4. Export a native PDF and inspect pagination on the intended printer/paper settings.
 
 Fresh native PDF export and mobile viewport verification are still outstanding. The separate Platform Super Admin console, billing/service management, and top-level production creation/rename are not completed by this pass. Existing automated platform tests do not replace an end-to-end acceptance review of every administration workflow. Deployment and cutover require a separate decision.
+
+## Subsequent platform console increment
+
+The initial Platform Super Admin overview and organization-creation entry point are now implemented locally; see [Platform console review](PLATFORM_CONSOLE_REVIEW.md). Billing/service management and the other acceptance boundaries above remain open.

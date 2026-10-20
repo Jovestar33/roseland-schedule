@@ -220,6 +220,7 @@ export async function callPlatformJsonRpc(
   if (
     !config.actor
     || ![
+      'read_platform_console',
       'claim_organization_lifecycle_notice',
       'finish_organization_lifecycle_notice',
       'claim_membership_notification',
@@ -255,6 +256,9 @@ export async function callPlatformJsonRpc(
 
   if (!response.ok) {
     if (response.status === 401) throw new PlatformHttpError(401, 'Authentication required');
+    if (functionName === 'read_platform_console' && response.status === 403) {
+      throw new PlatformHttpError(403, 'Platform access unavailable');
+    }
     if (response.status === 409) {
       throw new PlatformHttpError(409, 'Request key conflict; review the original result before retrying');
     }

@@ -23,11 +23,14 @@ import LocalAccountAccess from '@/components/local/LocalAccountAccess';
 import LocalSchedulePermissions from '@/components/local/LocalSchedulePermissions';
 import LocalLifecycleClient from './LocalLifecycleClient';
 import LocalProvisioningClient from './LocalProvisioningClient';
+import PlatformConsole from '@/components/local/PlatformConsole';
+import {readPlatformConsole} from '@/lib/platform/console-repository';
 import LocalOrganizationSettings from '@/components/local/LocalOrganizationSettings';
 
 const initial:WorkspaceLocation={screen:'schedule',organization:null};
 export default function LocalWorkspaceClient({config,review=false}:{config:LocalEditorConfig;review?:boolean}){
   const [showSettings,setShowSettings]=useState(false);
+  const [platformActor,setPlatformActor]=useState<string|null>(null);
   const [settingsSection,setSettingsSection]=useState<'account'|'organization'|'permissions'>('account');
   const [accountTask,setAccountTask]=useState(false);
   const href=(value:WorkspaceLocation)=>workspaceHref(value,review?'/review':'/local-workspace');
@@ -86,8 +89,7 @@ export default function LocalWorkspaceClient({config,review=false}:{config:Local
   mfaRequired.current=(token,recent)=>{if(token===`Bearer ${sessionRef.current?.access_token}`){if(recent)setRecentMfa(true);setMfaRevision(v=>v+1);}};
   const remember=(organization:WorkspaceOrganization)=>setVisited(previous=>[...previous.filter(item=>item.id!==organization.id),organization]);
   async function navigate(next:WorkspaceLocation,push=true){
-    if(review&&next.screen==='provisioning')next={screen:'schedule',organization:next.organization};
-    if(review&&(next.screen==='acceptance'||next.screen==='invitations'))setShowSettings(true);
+    if(review&&(next.screen==='acceptance'||next.screen==='invitations'||next.screen==='provisioning'))setShowSettings(true);
     const ticket=++navigationTicket.current,generation=identity.capture(),actor=identity.actor;
     if(!actor)return;
     try{
@@ -211,6 +213,14 @@ export default function LocalWorkspaceClient({config,review=false}:{config:Local
   const checkingAccess=directoryState==='loading'||mfaStage==='checking';
   const settingsVisible=review&&showSettings&&accountReady&&!entryActive&&!accessRecovery&&!accessChallenge;
   useEffect(()=>{
+    let current=true;setPlatformActor(null);
+    if(review&&session&&accountReady&&mfaReady&&!authNeeded){
+      const actor=session.user.id;
+      void readPlatformConsole(session,'access').then(result=>{if(current&&result.authorized)setPlatformActor(actor);}).catch(()=>{});
+    }
+    return()=>{current=false;};
+  },[review,session,accountReady,mfaReady,authNeeded]);
+  useEffect(()=>{
     if(accessRecovery&&!wasRecovering.current)recoveryHeading.current?.focus();
     if(!accessRecovery&&wasRecovering.current&&!entryActive&&!accessChallenge)accountNavigation.current?.focus();
     wasRecovering.current=accessRecovery;
@@ -228,7 +238,7 @@ export default function LocalWorkspaceClient({config,review=false}:{config:Local
   return <div className={review?(accessRecovery||accessChallenge?styles.accessPage:undefined):styles.page}>
     {review?<AppHeader compact/>:<header className={styles.header}><div><span className={styles.eyebrow}>LOCAL WORKSPACE</span><h1>Roseland rehearsals</h1><p>One account, with unfinished work kept in this tab.</p></div><span className={styles.badge}>Fictional data only</span></header>}
     {review&&session&&!entryActive&&<nav className={styles.organizationBar} aria-label="Organization context">
-      <div className={styles.organizationIdentity}>{accessRecovery?<span>{scope?.name??'Workspace'}</span>:authNeeded?<span role="status">Sign in again to continue.</span>:<WorkspaceOrganizationContext organizations={organizations} current={scope} state={!accountReady?'loading':directoryState} more={more} disabled={busy||working||!accountReady||!mfaReady} onChange={id=>requestNavigation({screen:'schedule',organization:id})} onRetry={()=>void loadOrganizations().then(page=>page?navigate(directoryLocation(page),false):undefined).catch(()=>{})} onMore={()=>void loadOrganizations(true).catch(()=>{})}/>}</div>
+      <div className={styles.organizationIdentity}>{accessRecovery?<span>{scope?.name??'Workspace'}</span>:authNeeded?<span role="status">Sign in again to continue.</span>:active==='provisioning'&&platformActor===session?.user.id?<span>Platform administration · All organizations</span>:<WorkspaceOrganizationContext organizations={organizations} current={scope} state={!accountReady?'loading':directoryState} more={more} disabled={busy||working||!accountReady||!mfaReady} onChange={id=>requestNavigation({screen:'schedule',organization:id})} onRetry={()=>void loadOrganizations().then(page=>page?navigate(directoryLocation(page),false):undefined).catch(()=>{})} onMore={()=>void loadOrganizations(true).catch(()=>{})}/>}</div>
       <button ref={accountNavigation} disabled={accessRecovery||accessChallenge||!accountReady} className={styles.accountEntry} aria-expanded={showSettings} onClick={()=>{if(showSettings&&(active!=='schedule'||settingsSection!=='account'))tab('schedule');setShowSettings(v=>!v);}}>Account &amp; settings</button>
     </nav>}
     <div className={`${styles.shell} ${review?styles.reviewShell:''} ${settingsVisible?styles.settingsShell:''} ${entryActive?styles.entryShell:''} ${accessRecovery||accessChallenge?styles.accessShell:''}`} style={review&&!entryActive&&!accessRecovery&&!accessChallenge&&!!location.schedule&&!showSettings?{padding:0}:undefined}>
@@ -243,7 +253,7 @@ export default function LocalWorkspaceClient({config,review=false}:{config:Local
       {(!session||authNeeded)&&<form hidden={review&&accountTask} className={styles.login} aria-busy={busy} onSubmit={login} aria-label="Workspace sign in"><h2 ref={sessionHeading} tabIndex={-1}>{identity.actor?'Sign in again':'Sign in'}</h2><label>{review?'Email address':'Fictional account email'}<input type="email" required autoComplete="off" readOnly={!!identity.actor} value={session?.user.email??email} onChange={event=>setEmail(event.target.value)}/></label><label>Password<input type="password" required autoComplete="off" value={password} onChange={event=>setPassword(event.target.value)}/></label><button disabled={busy||working}>{busy?'Signing in…':'Sign in'}</button>{config.accountOnboarding&&<label><input type="checkbox" checked={rememberSession} onChange={event=>setRememberSession(event.target.checked)}/> Remember me on this personal device</label>}</form>}
         {settingsVisible&&<section className={styles.settingsIntro}>
           <div className={styles.settingsTitle}>
-            <div><h1>Account &amp; settings</h1><p>{scope?.role==='member'?'Your sign-in, security, and invitations.':'Manage your account, people, and organization.'}</p></div>
+            <div><h1>Account &amp; settings</h1><p>{platformActor===session?.user.id?'Manage your account and platform.':scope?.role==='member'?'Your sign-in, security, and invitations.':'Manage your account, people, and organization.'}</p></div>
             <button className="btn btn-light" onClick={()=>{setShowSettings(false);tab('schedule');}}>← Back to schedules</button>
           </div>
           <nav aria-label="Account navigation" className={styles.settingsNavigation}>
@@ -254,6 +264,7 @@ export default function LocalWorkspaceClient({config,review=false}:{config:Local
               <button aria-current={active==='schedule'&&settingsSection==='organization'?'page':undefined} onClick={()=>{setSettingsSection('organization');tab('schedule');}}>Organization</button>
               <button aria-current={active==='schedule'&&settingsSection==='permissions'?'page':undefined} onClick={()=>{setSettingsSection('permissions');tab('schedule');}}>Permissions</button>
             </>}
+            {platformActor===session?.user.id&&<button aria-current={active==='provisioning'?'page':undefined} onClick={()=>tab('provisioning')}>Platform</button>}
           </nav>
         </section>}
       <div className={settingsVisible?styles.accountPanels:undefined} hidden={accessRecovery||(review&&!entryActive&&!accessChallenge&&((showSettings&&(active!=='schedule'||settingsSection!=='account'))||(!showSettings&&!!session&&accountReady&&mfaReady&&!authNeeded)))}>
@@ -277,7 +288,7 @@ export default function LocalWorkspaceClient({config,review=false}:{config:Local
       {visited.map(o=><div className={review&&showSettings&&active==='schedule'&&settingsSection==='organization'&&o.role==='owner'?styles.administrationCard:undefined} key={'deletion:'+o.id} hidden={scope?.id!==o.id}><LocalWorkspaceContext.Provider value={panel('deletion:'+o.id,o,scope?.id===o.id)}><>{review&&showSettings&&active==='schedule'&&settingsSection==='organization'&&o.role==='owner'&&<header><h3>Organization lifecycle</h3><p>Review deletion and recovery options for this organization.</p></header>}<LocalOrganizationDeletion showControls={!review||(showSettings&&active==='schedule'&&settingsSection==='organization')}/></></LocalWorkspaceContext.Provider></div>)}
       <div hidden={active!=='schedule'||(review&&showSettings)}><LocalWorkspaceContext.Provider value={panel('schedule',scope,active==='schedule'&&(!review||!showSettings))}><LocalScheduleClient config={config}/></LocalWorkspaceContext.Provider></div>
       <div hidden={active!=='acceptance'}><LocalWorkspaceContext.Provider value={panel('acceptance',null,active==='acceptance')}><LocalAcceptanceClient config={config} pendingInvitation={pendingInvitation?.actor===session?.user.id?pendingInvitation:null} onInvitationUsed={()=>setPendingInvitation(null)}/></LocalWorkspaceContext.Provider></div>
-      <div hidden={review||active!=='provisioning'}><LocalWorkspaceContext.Provider value={panel('provisioning',null,!review&&active==='provisioning')}><LocalProvisioningClient/></LocalWorkspaceContext.Provider></div>
+      <div hidden={active!=='provisioning'||(review&&!showSettings)}><LocalWorkspaceContext.Provider value={panel('provisioning',null,active==='provisioning'&&(!review||showSettings))}>{review?<PlatformConsole onVerify={()=>{setRecentMfa(true);setMfaRevision(x=>x+1);}}/>:<LocalProvisioningClient/>}</LocalWorkspaceContext.Provider></div>
       {lifecyclePanels.map(id=>{const organization=visited.find(item=>item.id===id)!;const enabled=active==='lifecycle'&&(!review||!showSettings)&&scope?.id===id;return <div key={id} hidden={!enabled}><LocalWorkspaceContext.Provider value={panel('lifecycle:'+id,organization,enabled)}><LocalLifecycleClient/></LocalWorkspaceContext.Provider></div>;})}
       {managementPanels.map(id=>{const organization=visited.find(item=>item.id===id)!;const enabled=(!review||showSettings)&&active==='invitations'&&scope?.id===id&&scope.role!=='member';return <div key={id} hidden={!enabled}><LocalWorkspaceContext.Provider value={panel('invitations:'+id,organization,enabled)}><LocalInvitationsClient config={config} reviewMode={review}/></LocalWorkspaceContext.Provider></div>;})}
     </div>}
