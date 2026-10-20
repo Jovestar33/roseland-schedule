@@ -60,3 +60,7 @@
 .product .form>button:not(.secondary){background:var(--pink);border-color:var(--pink);color:white}
 .product .form>button:not(.secondary):hover:not(:disabled),.product .form fieldset>button:not(.secondary):hover:not(:disabled),.product .actions>button:not(.secondary):hover:not(:disabled){background:var(--pink-dark);border-color:var(--pink-dark)}
 .product .main .secondary{background:white;border-color:var(--g300);color:var(--ink)}.product .main .secondary:hover:not(:disabled){background:var(--g50);border-color:var(--pink-dark)}
+
+/* Match the original primary button, independent of an organization's action accent. */
+.product .main button.invitationReview{background:linear-gradient(180deg,#f03a98 0%,#d81f82 100%);border-color:#d81f82;color:white;box-shadow:0 4px 14px rgba(233,30,140,.18)}
+.product .main button.invitationReview:hover:not(:disabled){background:linear-gradient(180deg,#e62f8f 0%,#be186f 100%);border-color:#be186f}
