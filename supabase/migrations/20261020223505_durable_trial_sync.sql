@@ -210,7 +210,7 @@ begin
  if not private.organization_lifecycle_owner(auth.uid(),target_organization_id) then raise sqlstate 'PT404' using message='Sync unavailable';end if;
  select * into i from private.trial_sync_integrations where organization_id=target_organization_id;
  if not found then return jsonb_build_object('configured',false);end if;
- return jsonb_build_object('configured',true,'id',i.id,'revision',i.revision,'enabled',i.enabled,'authorized',private.trial_sync_authorized(i),
+ return jsonb_build_object('configured',true,'id',i.id,'revision',i.revision,'legacy_origin',i.legacy_origin,'enabled',i.enabled,'authorized',private.trial_sync_authorized(i),
  'mappings',(select coalesce(jsonb_agg(jsonb_build_object('id',m.id,'schedule_id',m.schedule_id,'legacy_key',m.legacy_key,'status',m.state->>'status','error',m.state->>'error','checked_at',m.checked_at,'completed_at',m.completed_at) order by m.legacy_key),'[]') from private.trial_sync_mappings m where integration_id=i.id));
 end;$$;
 revoke all on function private.lock_trial_sync_integration(uuid),private.trial_sync_authorized(private.trial_sync_integrations),private.require_trial_sync_claim(uuid,uuid),private.trial_sync_write_allowed(public.schedules,public.schedules) from public,anon,authenticated,service_role;
