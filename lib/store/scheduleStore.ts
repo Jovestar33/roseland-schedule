@@ -63,6 +63,8 @@ export interface ScheduleStore {
   rows: ScheduleRow[];
   rowKeys: string[];
   meta: ScheduleMeta;
+  // Retain fields introduced by the other app across a legacy editor round trip.
+  documentExtras: Record<string, unknown>;
   scheduleName: string | null;
   dirty: boolean;
   // In-memory request guards; never serialized into ScheduleData.
@@ -113,6 +115,7 @@ export const useScheduleStore = create<ScheduleStore>((set, get) => ({
   rows: makeDefaultRows(),
   rowKeys: makeDefaultKeys(DEFAULT_ROW_COUNT),
   meta: makeMeta(),
+  documentExtras: {},
   scheduleName: null,
   dirty: false,
   editRevision: 0,
@@ -209,7 +212,9 @@ export const useScheduleStore = create<ScheduleStore>((set, get) => ({
 
   loadSchedule(name, data) {
     const normalized = normalizeRows(data.rows);
+    const { rows: _rows, meta: _meta, savedAt: _savedAt, ...extras } = data;
     set({
+      documentExtras: structuredClone(extras),
       rows: recalcRows(normalized),
       rowKeys: makeDefaultKeys(normalized.length),
       meta: data.meta,
@@ -231,6 +236,7 @@ export const useScheduleStore = create<ScheduleStore>((set, get) => ({
       rows,
       rowKeys: makeDefaultKeys(rows.length),
       meta: makeMeta(),
+      documentExtras: {},
       scheduleName: name,
       documentSession: get().documentSession + 1,
       editRevision: get().editRevision + 1,
@@ -260,8 +266,8 @@ export const useScheduleStore = create<ScheduleStore>((set, get) => ({
   },
 
   getScheduleData(): ScheduleData {
-    const { rows, meta } = get();
-    return { rows, meta, savedAt: Date.now() };
+    const { rows, meta, documentExtras } = get();
+    return { ...structuredClone(documentExtras), rows, meta, savedAt: Date.now() };
   },
 
   insertSunRows(sunrise, sunset) {

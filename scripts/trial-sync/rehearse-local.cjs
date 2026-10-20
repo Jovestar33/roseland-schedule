@@ -20,7 +20,7 @@ function totp(secret){let bits='';for(const x of secret)bits+='ABCDEFGHIJKLMNOPQ
  console.log('Local rehearsal checkpoint: '+root);
  await fs.writeFile(root+'/fixture.json',JSON.stringify({scheduleId:id,organizationId:seed.organization_id,createdAt:new Date().toISOString()}),{mode:0o600});
  let legacy={data:structuredClone(created.document),etag:'1',metadata:{fixture:true}},version=1;
- const store={getWithMetadata:async()=>structuredClone(legacy),set:async(key,payload,options)=>{if(options.onlyIfMatch!==legacy.etag)return{modified:false};legacy={data:JSON.parse(payload),etag:String(++version),metadata:options.metadata};return{modified:true,etag:legacy.etag};}};
+ const store={list:async function*(){yield{blobs:[{key:m.netlifyKey}]};},getWithMetadata:async()=>structuredClone(legacy),set:async(key,payload,options)=>{if(options.onlyIfMatch!==legacy.etag)return{modified:false};legacy={data:JSON.parse(payload),etag:String(++version),metadata:options.metadata};return{modified:true,etag:legacy.etag};}};
  const adapters={netlify:netlifyAdapter({store,library:{get:async()=>({folders:[],scheduleFolderMap:{}})}}),supabase:supabaseAdapter({url:settings.API_URL,apiKey:settings.ANON_KEY,accessToken:session.access_token,actorId:session.user.id,organizationId:seed.organization_id})};
  await adapters.supabase.verify();const config={organizationId:seed.organization_id,mappings:[m]};const journal=await openJournal(root+'/journal',config);let checks=[];
  const run=async(options)=>apply(journal.state,m,adapters,journal.checkpoint,options);
@@ -36,6 +36,15 @@ function totp(secret){let bits='';for(const x of secret)bits+='ABCDEFGHIJKLMNOPQ
   const reviewHash=hash(journal.state.entries[m.id].observed);assert.equal((await run({resolution:{take:'supabase',reviewHash}})).status,'synced');assert.equal(legacy.data.rows[0].desc,'New-app competing edit');checks.push('Exact reviewed resolution converges while checkpoints retain both originals');
   const before=await adapters.supabase.read(m),change=structuredClone(before.document);change.rows[0].notes='Concurrent local change';await adapters.supabase.write(m,before,change);
   await assert.rejects(adapters.supabase.write(m,before,before.document),e=>e.code==='CONFLICT');checks.push('Real database rejects stale expected_version');
+  const {watch}=require('./worker.cjs'),stop=new AbortController();let passes=0;
+  await watch({journal,config,adaptersFactory:async()=>adapters,signal:stop.signal,intervalSeconds:15,
+   publish:async(result,health)=>{await fs.writeFile(root+'/worker-health.json',JSON.stringify(health,null,2),{mode:0o600});},
+   wait:async()=>{passes++;
+    if(passes===1){legacy.data.rows[0].notes='Foreground worker legacy edit';legacy.etag=String(++version);}
+    if(passes===2){assert.equal((await adapters.supabase.read(m)).document.rows[0].notes,'Foreground worker legacy edit');const current=await adapters.supabase.read(m);current.document.rows[0].notes='Foreground worker Supabase edit';await adapters.supabase.write(m,current,current.document);}
+    if(passes===3){assert.equal(legacy.data.rows[0].notes,'Foreground worker Supabase edit');stop.abort();}
+   }});
+  checks.push('Foreground worker verifies existing Auth each pass and carries real database edits both ways, then stops cleanly');
   const result={localOnly:true,netlify:'In-memory conditional store through production sync adapter',supabase:'Genuine existing fictional Auth + MFA and current session RPCs',scheduleId:id,checks};await fs.writeFile(root+'/result.json',JSON.stringify(result,null,2),{mode:0o600});console.log(JSON.stringify({root,scheduleId:id,checks},null,2));
  }finally{await journal.release();await client.auth.signOut({scope:'local'});}
 })().catch(e=>{console.error(e.message);process.exitCode=1;});

@@ -1,6 +1,6 @@
 # Trial schedule synchronization
 
-October 20, 2026. **Implemented locally, not activated against hosted schedules.** This is an operator-run bidirectional schedule-document synchronizer for the Roseland Pictures parallel trial. The new app continues to store documents in Supabase; the existing app continues to use Netlify Blobs.
+October 20, 2026. **Implemented locally, not activated against hosted schedules.** This is an operator-controlled bidirectional schedule-document synchronizer for the Roseland Pictures parallel trial. The new app continues to store documents in Supabase; the existing app continues to use Netlify Blobs.
 
 ## What it does
 
@@ -11,11 +11,12 @@ October 20, 2026. **Implemented locally, not activated against hosted schedules.
 - Saves write intent before touching either backend. A missing acknowledgement is recovered by readback if the destination still matches the intent; otherwise it stays unresolved until explicit review. It is never blindly replayed.
 - Reads both stores after successful writes; errors and new edits remain visible rather than being marked synchronized.
 - Uses the current-session Supabase RPC and actor/organization checks, not privileged direct table writes. Authentication expiry or revoked access stops the affected operation.
-- Requires one protected journal per environment pair and operator identity. A file lock prevents overlapping workers using that journal. Checkpoints store only changed entries, while the index is replaced atomically and durably. Missing/corrupt checkpoint data fails closed.
+- Rechecks in foreground watch mode, reloads renewed operator credentials between passes, backs off after provider failures, and records whether checks are running, stopped or awaiting review. Ctrl-C/SIGTERM finishes an in-flight save and its recovery record before stopping.
+- Requires one protected journal per environment pair and operator identity. A file lock prevents overlapping workers using that journal. Checkpoints store only changed recovery content and versions (poll timestamps stay in the replaceable index), while the index is replaced atomically and durably. Missing/corrupt checkpoint data or a missing index with retained checkpoints fails closed.
 
 ## Boundaries
 
-This first version syncs **already imported, explicitly mapped schedule contents**. It does not create accounts, import the initial library, or deploy anything. It is a command operated by the trial owner, not an always-on hosted service or an in-app Sync button.
+This first version syncs **already imported, explicitly mapped schedule contents**. It does not create accounts, import the initial library, or deploy anything. The trial owner can run one batch or a foreground watch process. No always-on hosted service, system scheduler, or in-app Sync button is installed.
 
 Renames, changes to production/phase/day placement, library ordering, archive/Trash and disappearance require structural reconciliation. They stop automatic writes rather than guessing identity or deleting/recreating documents. New schedules appear in an unmapped inventory; import/reconcile them and append their reviewed mapping. Existing mappings cannot silently be rebound or removed. A source-name change cannot be inferred from text similarity.
 
@@ -46,7 +47,7 @@ Create a private directory (`chmod 700`) outside Git and shared folders. Keep th
 
 Use the source-to-target identities from the verified initial import. Never derive a new target ID from a revision or schedule name. Duplicate source keys or target IDs are rejected. Additional mappings can be appended; existing ones cannot change without a separate identity reconciliation.
 
-`ROSELAND_SYNC_CREDENTIALS` points to a private regular JSON file (`chmod 600`) containing `netlifyToken`, `supabaseApiKey`, and `supabaseAccessToken`. The latter is a current ordinary authorized user's session token for the configured actor, with required MFA. Do not use a service-role token, weaken admission, auto-generate activity, or put credentials into command arguments, Git, browser bundles or reports. The command verifies the authenticated user. It does not log in, refresh credentials or create a privileged service account. Obtain/refresh the operator session through the approved account process when necessary.
+`ROSELAND_SYNC_CREDENTIALS` points to a private regular JSON file (`chmod 600`) containing `netlifyToken`, `supabaseApiKey`, and `supabaseAccessToken`. The latter is a current ordinary authorized user's session token for the configured actor, with required MFA. Do not use a service-role token, weaken admission, auto-generate activity, or put credentials into command arguments, Git, browser bundles or reports. The command verifies the authenticated user. It does not log in, generate activity to extend a session, refresh credentials or create a privileged service account. Watch rereads the same private credential file each pass and checks the actor/session again; a renewed authorized session can resume checks without restarting. Invalid credential-file permissions/configuration or a disk failure stops the process. Obtain/refresh the operator session through the approved account process when necessary.
 
 Run outside any inherited `NETLIFY_BLOBS_CONTEXT`: the SDK can otherwise override the configured source site. The CLI refuses such a context.
 
@@ -61,6 +62,17 @@ npm run sync:trial -- run /private/path/config.json /private/path/journal
 ```
 
 `plan` reads both sides and writes local review evidence but does not change schedules. It can reconcile a previously uncertain acknowledgement from readback. `run` establishes baselines only for matching initial copies and applies safe one-sided edits. Initial unequal copies need review; it never assumes either is authoritative.
+
+For repeated checks, keep one foreground process running on the designated operator machine:
+
+```sh
+npm run sync:trial -- watch /private/path/config.json /private/path/journal 30
+npm run sync:trial -- status /private/path/journal
+```
+
+The interval is 15–3600 seconds, measured after a pass finishes. Provider failures back off to five minutes (or the configured interval if longer). Conflicts and missing mappings remain visible while unaffected mapped schedules can continue. An unavailable or uncertain schedule is never force-replayed. Stop watch with Ctrl-C before running `resolve`, changing mappings or using another command that writes the journal. There is no auto-start after reboot, no external notification delivery, and no distributed lock. Sleep, shutdown, lost access or stopped processes stop synchronization; neither app should be described as continuously current when this process is unavailable.
+
+`health.json` records the worker state and last completed/successful pass. `status` checks the saved heartbeat's freshness; it explicitly does **not** claim that a heartbeat proves a process is alive. Stopped/error/expired snapshots exit 2. Reports are saved snapshots, even while watch is running. Reopen them to read fresh results. A failure banner takes precedence over previously current schedule rows.
 
 Open `report.html` in the journal directory. It is a private, escaped, script-free saved report, not a live dashboard. `report.json` and the recovery checkpoints include schedule content and contacts; protect them like a backup. Standard output contains only mapping IDs/statuses and the report location.
 
@@ -78,13 +90,14 @@ After a process crash, verify its PID is no longer running before removing only 
 
 ## Validation and remaining activation checks
 
-- The full platform suite passes 291 tests; the production build passes. The sync command help and private conflict report were checked, including browser rendering.
-- 28 automated sync tests cover one-sided edits in both directions, unchanged/identical edits, conflicts, exact-version resolution, source/destination races, uncertain acknowledgements, disk failure before write, missing records, actor/tenant binding, private journal reopening/locking/corruption, metadata retention and escaped report content.
+- The full platform suite passes 303 tests and the editor suite passes 138 tests; the production build passes. The sync command help and private conflict report were checked, including browser rendering.
+- 40 automated sync tests cover one-sided edits in both directions, unchanged/identical edits, conflicts, exact-version resolution, source/destination races, uncertain acknowledgements, disk failure before write, missing records, actor/tenant binding, private journal reopening/locking/corruption, metadata retention and escaped report content. Watch tests additionally cover repeated bidirectional propagation, conflicts across passes, expired/renewed sessions, backoff, graceful interruption, failed health persistence, stale heartbeat reporting, bounded recovery storage, and the real legacy save handler rejecting a stale editor after a sync write.
 - Genuine local Supabase password login + existing fictional MFA: copied a Netlify-side edit into the database, copied a database edit back, stopped conflicting edits, resolved an exact reviewed conflict, and verified stale SQL version rejection. Netlify storage in this round trip was an in-memory conditional store through the real sync adapter.
 - The actual installed Netlify SDK 10.7.13 was checked against its official local Blobs server for conditional PUT success/stale rejection. That emulator omits ETags on reads and encodes space-containing keys in listings; the sync adapter correctly refused its unversioned reads. This is not a complete Netlify-hosted end-to-end claim, and no provider code was weakened to hide the limitation.
-- Three fictional rehearsal schedules were created in the existing local Acceptance Studio. IDs: `ad0613e1-6f20-4c15-baf7-023ee70d6196` (initial empty-response diagnostic), `b0ce7319-b546-413e-9760-d4ade9d19ff4`, and `800853dc-88f8-438a-a41b-922766493e40`. Their fixtures/history stay local and are excluded from the launch import.
-- Latest genuine runtime evidence: `/private/tmp/roseland-trial-sync-800853dc-88f8-438a-a41b-922766493e40/result.json`. It contains no credentials. Existing acceptance schedules and memberships were not changed.
+- The legacy editor now retains unknown top-level document fields through ordinary saves and Save As; metadata and row extension fields are also covered by the regression test. This fix is local and must ship to the legacy app before trial activation.
+- Three earlier fictional rehearsal schedules were created in the existing local Acceptance Studio. IDs: `ad0613e1-6f20-4c15-baf7-023ee70d6196` (initial empty-response diagnostic), `b0ce7319-b546-413e-9760-d4ade9d19ff4`, and `800853dc-88f8-438a-a41b-922766493e40`. Their fixtures/history stay local and are excluded from the launch import.
+- Latest genuine runtime evidence: `/private/tmp/roseland-trial-sync-9d2d39e0-b36d-444b-90a6-58841d52fa9c/result.json`. This additional fictional schedule also exercised foreground watch against real Supabase RPCs in both directions and stopped cleanly. It contains no credentials. Existing acceptance schedules and memberships were not changed.
 
-Before connecting real schedules: bind the exact hosted source/destination/actor, verify the deployed legacy save paths and strong-read ETags, perform and reconcile the initial import, protect/back up the single operator journal, and exercise the real endpoint round trip on an explicitly identified pilot record with the team. Keep known structural/related-store limitations visible. No background sync, hosted role grants, real email or live writes have been enabled by this implementation.
+Before connecting real schedules: bind the exact hosted source/destination/actor, verify the deployed legacy save paths and strong-read ETags, perform and reconcile the initial import, protect/back up the single operator journal, and exercise the real endpoint round trip on an explicitly identified pilot record with the team. Keep known structural/related-store limitations visible. No ongoing worker, hosted role grants, real email or live sync writes have been enabled by this implementation. The two real Lexington drafts created separately are not linked to an active worker.
 
 Provider references checked: [Netlify conditional Blobs writes](https://docs.netlify.com/build/data-and-storage/netlify-blobs/#set), [Supabase database functions](https://supabase.com/docs/guides/database/functions), and the [October 12 TLS notice](https://supabase.com/changelog/cbc-tls-ciphers-deprecated). The notice does not require TLS weakening for this modern Node worker.

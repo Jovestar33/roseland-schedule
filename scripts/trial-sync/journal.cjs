@@ -1,6 +1,9 @@
 'use strict';
 const fs=require('node:fs/promises'),path=require('node:path'),{randomUUID}=require('node:crypto');
 const {hash}=require('./core.cjs');
+const healthKeys=['checkedAt','syncedAt','status','error'];
+function recoveryEntry(entry){const out=structuredClone(entry);for(const key of healthKeys)delete out[key];return out;}
+function entryHealth(entry){return Object.fromEntries(healthKeys.filter(k=>entry[k]!==undefined).map(k=>[k,entry[k]]));}
 async function privateDirectory(root){
  await fs.mkdir(root,{recursive:true,mode:0o700});const s=await fs.lstat(root);
  if(!s.isDirectory()||s.isSymbolicLink()||(s.mode&0o077))throw Error('Journal directory must be private (chmod 700), and not a symlink');
@@ -26,13 +29,14 @@ async function openJournal(root,binding){
     refs=state.entries;state.entries={};
     for(const [id,ref]of Object.entries(refs)){
      if(!ref||typeof ref.file!=='string'||!/^\d+-[a-f0-9-]+\.json$/.test(ref.file))throw Error('Invalid checkpoint reference');
-     const archived=await privateRead(path.join(archiveRoot,ref.file));if(hash(archived.entries?.[id])!==ref.hash)throw Error('Checkpoint integrity failure');state.entries[id]=archived.entries[id];
+     const archived=await privateRead(path.join(archiveRoot,ref.file));if(hash(archived.entries?.[id])!==ref.hash)throw Error('Checkpoint integrity failure');state.entries[id]={...archived.entries[id],...(ref.health||{})};
     }
     delete state.storage;
    }
   }catch(e){if(e.code!=='ENOENT')throw e;
    // A missing referenced checkpoint is data corruption, never a fresh journal.
    if(state)throw Error('Missing recovery checkpoint');
+   if((await fs.readdir(archiveRoot)).length)throw Error('Missing journal index with retained checkpoints; restore the index before continuing');
    state={format:1,binding:hash(binding),sequence:0,entries:{}};
   }
   if(state.format!==1||state.binding!==hash(binding))throw Error('Journal belongs to a different environment or mapping. Do not reuse it.');
@@ -40,7 +44,8 @@ async function openJournal(root,binding){
   return {state,release,async checkpoint(next){
    for(const id of Object.keys(refs))if(!(id in next.entries))throw Error('Cannot silently remove a mapped journal entry');
    next.sequence++;
-   const changed=Object.fromEntries(Object.entries(next.entries).filter(([id,e])=>refs[id]?.hash!==hash(e)));
+   const recovery=Object.fromEntries(Object.entries(next.entries).map(([id,e])=>[id,recoveryEntry(e)]));
+   const changed=Object.fromEntries(Object.entries(recovery).filter(([id,e])=>refs[id]?.hash!==hash(e)));
    const nextRefs={...refs};
    if(Object.keys(changed).length){
     const name=String(next.sequence).padStart(10,'0')+'-'+randomUUID()+'.json';
@@ -49,6 +54,9 @@ async function openJournal(root,binding){
     await syncDirectory(archiveRoot);
     for(const [id,e]of Object.entries(changed))nextRefs[id]={file:name,hash:hash(e)};
    }
+   // Poll timestamps and status live in the replaceable index; immutable recovery
+   // documents are appended only when their actual content or versions change.
+   for(const [id,e]of Object.entries(next.entries))nextRefs[id]={...nextRefs[id],health:entryHealth(e)};
    await atomic(file,{...next,storage:'entry-checkpoints-v1',entries:nextRefs});refs=nextRefs;
   },async report(value){await atomic(path.join(root,'report.json'),value);},root};
  }catch(e){await release();throw e;}

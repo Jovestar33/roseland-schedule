@@ -53,6 +53,6 @@ function createNetlifyStores(config,token,localAPI){
  const {getStore}=require('@netlify/blobs');
  // SDK 10 can misreport non-412 transport failures as successful conditional PUTs.
  const guardedFetch=async(url,options)=>{const r=await fetch(url,{...options,redirect:'error',signal:AbortSignal.timeout(30000)});if(options?.method?.toUpperCase()==='PUT'&&!r.ok&&r.status!==412)throw failure('NETLIFY_WRITE_UNCERTAIN');return r;};
- return{store:getStore({name:'schedules',siteID:config.netlifySiteId,token,fetch:guardedFetch,...(localAPI?{apiURL:localAPI}:{})}),library:getStore({name:'schedule-library',siteID:config.netlifySiteId,token,fetch:guardedFetch,...(localAPI?{apiURL:localAPI}:{})})};
+ return{store:getStore({name:'schedules',consistency:'strong',siteID:config.netlifySiteId,token,fetch:guardedFetch,...(localAPI?{apiURL:localAPI}:{})}),library:getStore({name:'schedule-library',consistency:'strong',siteID:config.netlifySiteId,token,fetch:guardedFetch,...(localAPI?{apiURL:localAPI}:{})})};
 }
 module.exports={failure,placement,netlifyAdapter,supabaseAdapter,createNetlifyStores};

@@ -184,3 +184,26 @@ test('snapshot copy name collision leaves the source unchanged and can be retrie
   h.requests[1].resolve({ savedAt: 20 }); await retry;
   assert.equal(h.store.getState().scheduleName, 'Unused');
 });
+
+test('ordinary edits and Save As preserve fields supplied by the other app', async () => {
+  const h = setup();
+  const source = {...h.store.getState().getScheduleData(), extension: {futureNotes: 'Keep me', nested: [1, {unknown: true}]}};
+  source.meta.callsheet = {safetyNotes: 'Retain access details'};
+  source.rows[0].futureField = {retained: true};
+  h.store.getState().loadSchedule('A', source);
+  h.store.getState().updateRow(0, {desc: 'Edited in legacy'});
+  h.store.getState().updateMeta({town: 'Changed town'});
+  const saving = h.actions.saveAs('Copy');
+  const sent = h.requests[0].args[1];
+  assert.deepEqual(sent.extension, source.extension);
+  assert.deepEqual(sent.meta.callsheet, source.meta.callsheet);
+  assert.deepEqual(sent.rows[0].futureField, {retained: true});
+  assert.equal(sent.rows[0].desc, 'Edited in legacy');
+  h.requests[0].resolve({savedAt: 20}); await saving;
+  sent.extension.futureNotes = 'External mutation';
+  assert.equal(h.store.getState().getScheduleData().extension.futureNotes, 'Keep me');
+  h.store.getState().newSchedule('Unrelated');
+  assert.equal(h.store.getState().getScheduleData().extension, undefined);
+  h.store.getState().loadSchedule('Other', {meta:source.meta,rows:source.rows,savedAt:1});
+  assert.equal(h.store.getState().getScheduleData().extension, undefined);
+});
