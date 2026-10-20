@@ -15,6 +15,20 @@ begin
  raise exception 'Expected failure % but statement succeeded',wanted;
 end;$$;
 
+insert into public.schedules(id,organization_id,production_id,display_name,slug,document,created_by,updated_by)values('10000000-0000-4000-8000-000000000017','820f7fc4-e364-4aae-a29a-65f7d84eef61','10000000-0000-4000-8000-000000000010','Unmapped rehearsal','unmapped-rehearsal','{"meta":{},"rows":[]}','71280ab3-541c-4e7f-95f3-f646ac2d701b','71280ab3-541c-4e7f-95f3-f646ac2d701b');
+set local role authenticated;
+select pg_temp.expect_error($q$select public.record_trial_sync_inventory('10000000-0000-4000-8000-000000000012','820f7fc4-e364-4aae-a29a-65f7d84eef61','10000000-0000-4000-8000-000000000013','https://fictional-rehearsal.netlify.app',array['new-in-legacy'])$q$,'42501');
+set local role service_role;
+select pg_temp.expect_error($q$select public.record_trial_sync_inventory('10000000-0000-4000-8000-000000000012','10000000-0000-4000-8000-000000000099','10000000-0000-4000-8000-000000000013','https://fictional-rehearsal.netlify.app',array['new-in-legacy'])$q$,'PT409');
+select pg_temp.expect_error($q$select public.record_trial_sync_inventory('10000000-0000-4000-8000-000000000012','820f7fc4-e364-4aae-a29a-65f7d84eef61','10000000-0000-4000-8000-000000000013','https://fictional-rehearsal.netlify.app',array['duplicate','duplicate'])$q$,'PT400');
+do $$begin
+ if (public.record_trial_sync_inventory('10000000-0000-4000-8000-000000000012','820f7fc4-e364-4aae-a29a-65f7d84eef61','10000000-0000-4000-8000-000000000013','https://fictional-rehearsal.netlify.app',array['new-in-legacy'])->>'attention')::int<>3 then raise exception 'Inventory differences not detected';end if;
+end;$$;
+reset role;
+do $$declare v jsonb;begin
+ select inventory into v from private.trial_sync_integrations where id='10000000-0000-4000-8000-000000000012';
+ if v->'legacy_unmapped'<>'["new-in-legacy"]'::jsonb or v->'legacy_missing'<>'["fictional-rehearsal"]'::jsonb or v->'target_unmapped'->0->>'id'<>'10000000-0000-4000-8000-000000000017' then raise exception 'Inventory attribution incorrect';end if;
+end;$$;
 set local role anon;
 select pg_temp.expect_error($q$select public.claim_trial_sync_mapping('10000000-0000-4000-8000-000000000012','10000000-0000-4000-8000-000000000015')$q$,'42501');
 set local role authenticated;

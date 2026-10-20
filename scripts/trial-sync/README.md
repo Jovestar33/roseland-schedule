@@ -2,7 +2,17 @@
 
 October 20, 2026. **Implemented locally, not activated against hosted schedules.** This is an operator-controlled bidirectional schedule-document synchronizer for the Roseland Pictures parallel trial. The new app continues to store documents in Supabase; the existing app continues to use Netlify Blobs.
 
-## What it does
+## Hosted trial preparation (current)
+
+The gated Vercel worker now uses private database leases and durable checkpoints, with separate machine attribution rather than a fabricated user session. The migration files are `20261020223505_durable_trial_sync.sql` and `20261020225810_trial_sync_inventory_visibility.sql`; neither is applied to the hosted project yet. The Owner status screen exposes pause/resume, conflicts, last checks and new/missing/unmapped schedules. A complete library inventory is checked before each worker batch. Inventory discovery never imports, rebinds or deletes a schedule. Explicit conflict-resolution controls and reviewed initial mappings remain launch gates.
+
+The restricted Netlify bridge shipped disabled via PR #23. Only the published Production deployment with the exact site/origin and private credential can use it. `ROSELAND_TRIAL_SYNC_KEYS=[]` keeps every schedule write blocked while permitting the approved read-only capture of all six stores. Do not enable it until the scoped credential and access approval are complete. Do not put the secret into chat, argv, source, browser bundles or logs.
+
+`capture-command.cjs` reads the bridge credential from stdin supplied by the private hidden-prompt helper; it admits only `inventory` and `raw` operations. `verifyCapture(folder)` independently verifies the completed manifest and exact private files. Capture success is a stable double-read observation, not an atomic freeze or an import. Keep the source bytes and metadata even for stores or fields the current importer cannot map. Do not pass a live capture into the synthetic-only rehearsal contract or relabel it as synthetic.
+
+The Vercel project remains on deployment hold; no scheduler or real synchronization is active. The sections below document the earlier foreground operator tool, which remains useful for rehearsal but is not the hosted trial service.
+
+## Foreground operator tool: what it does
 
 - Retains the last common document for every explicitly mapped schedule.
 - Propagates one-sided content changes through an atomic destination version check. Descriptions, contacts, notes, dates, time values, call sheets, unknown document fields and row order are preserved. Only the transport-level `savedAt` is excluded from comparison and regenerated on a write.

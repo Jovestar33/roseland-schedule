@@ -3,7 +3,8 @@ import {useRef,useState} from 'react';
 import Modal from '@/components/modals/Modal';
 import {useLocalWorkspace} from './LocalWorkspaceContext';
 type Mapping={id:string;schedule_id:string;legacy_key:string;status:string;checked_at:string|null;completed_at:string|null};
-type Status={configured:boolean;id?:string;revision?:number;enabled?:boolean;authorized?:boolean;legacy_origin?:string;mappings?:Mapping[]};
+type Inventory={checked_at:string;legacy_unmapped:string[];legacy_missing:string[];target_unmapped:{id:string;name:string}[];target_missing:string[]};
+type Status={configured:boolean;id?:string;revision?:number;enabled?:boolean;authorized?:boolean;legacy_origin?:string;mappings?:Mapping[];inventory?:Inventory|null};
 const labels:Record<string,string>={synced:'Up to date',unchanged:'Up to date','content-conflict':'Both copies changed','structure-conflict':'Organization or placement changed','initial-conflict':'Starting copies differ',uncertain:'Save needs verification',unavailable:'Connection or permission needs attention','changed-before-write':'Changed during check',pending:'Save in progress',uninitialized:'Not yet compared'};
 export default function LocalTrialSync(){
  const workspace=useLocalWorkspace()!,{client,session,organization,active,authNeeded}=workspace;
@@ -25,11 +26,13 @@ export default function LocalTrialSync(){
    const result=await client.rpc('read_trial_sync_status',{target_organization_id:organization.id}).setHeader('Authorization',`Bearer ${token}`);
    if(result.error)throw Error(toggle===undefined?'Synchronization status is unavailable. No setting was changed by this status check.':'The setting may have been saved, but its status could not be verified. Refresh status before retrying.');
    const value=result.data;if(!value||typeof value.configured!=='boolean'||value.configured&&(!Array.isArray(value.mappings)||typeof value.enabled!=='boolean'||typeof value.legacy_origin!=='string'||!/^https:\/\/[a-z0-9-]+[.]netlify[.]app$/.test(value.legacy_origin)))throw Error('The status response could not be verified.');
+   if(value.inventory){const i=value.inventory;if(!Number.isFinite(Date.parse(i.checked_at))||!['legacy_unmapped','legacy_missing','target_missing'].every(k=>Array.isArray(i[k])&&i[k].every((x:unknown)=>typeof x==='string'))||!Array.isArray(i.target_unmapped)||!i.target_unmapped.every((x:{id?:unknown;name?:unknown})=>x&&typeof x.id==='string'&&typeof x.name==='string'))throw Error('The inventory response could not be verified.');}
    if(valid()){setStatus(value);setMessage(toggle===undefined?'':toggle?'Synchronization resumed. The next check will compare both copies.':'Synchronization paused. Both apps retain their saved changes.');}
   }catch(e){if(valid())setMessage(e instanceof Error?e.message:'Status unavailable.');}
   finally{running.current=false;if(ticket.current===n)setBusy(false);}
  }
  const rows=status?.mappings??[],stale=(r:Mapping)=>!r.completed_at||Date.now()-Date.parse(r.completed_at)>300000,attention=rows.filter(r=>!['synced','unchanged'].includes(r.status)||stale(r));
+ const inventory=status?.inventory,inventoryStale=!inventory||Date.now()-Date.parse(inventory.checked_at)>300000,inventoryCount=inventory?inventory.legacy_unmapped.length+inventory.legacy_missing.length+inventory.target_unmapped.length+inventory.target_missing.length:0;
  return <section aria-label="Trial synchronization">
   <p>Keep the two schedule apps connected during the trial. If both copies change, syncing stops for that schedule so you can review them.</p>
   <button className="btn btn-light" onClick={()=>{setOpen(true);void load();}}>Review synchronization</button>
@@ -37,8 +40,10 @@ export default function LocalTrialSync(){
    <p role="status">{busy?'Checking synchronization…':message}</p>
    {status&&!status.configured&&<p>The trial connection is being prepared. Your schedules are not being synchronized yet.</p>}
    {status?.configured&&<>
-    <h3>{!status.enabled?'Paused':!status.authorized?'Permission needs attention':attention.length?'Schedules need review':'Synchronization enabled'}</h3>
+    <h3>{!status.enabled?'Paused':!status.authorized?'Permission needs attention':attention.length||inventoryCount||inventoryStale?'Schedules need review':'Synchronization enabled'}</h3>
     <p>{rows.length} {rows.length===1?'schedule':'schedules'} connected. {attention.length} {attention.length===1?'needs':'need'} review. Check the times below to confirm the worker is running.</p>
+    {inventoryStale&&<p role="status">The full library inventory has not been checked recently. Connected schedules alone do not confirm that every schedule is synchronized.</p>}
+    {!!inventoryCount&&<div><h4>Schedules awaiting reconciliation</h4><p>{inventoryCount} inventory {inventoryCount===1?'difference':'differences'} found. New schedules are not connected automatically; missing entries may have been renamed, moved or deleted.</p><details><summary>Review inventory differences</summary><ul>{inventory!.legacy_unmapped.map(key=><li key={'new:'+key}>Legacy app, not connected: {key}</li>)}{inventory!.legacy_missing.map(key=><li key={'missing:'+key}>Legacy app, no longer found: {key}</li>)}{inventory!.target_unmapped.map(row=><li key={row.id}>New app, not connected: {row.name}</li>)}{inventory!.target_missing.length>0&&<li>{inventory!.target_missing.length} connected schedules are no longer available in the new app.</li>}</ul></details></div>}
     <p>Renames, moves, new schedules, templates and library changes require separate reconciliation during the trial. They are not automatically copied.</p>
     <div style={{display:'grid',gap:12}}>{rows.map(row=><article key={row.id} style={{border:'1px solid var(--g200, #e5e7eb)',borderRadius:12,padding:16,display:'flex',flexWrap:'wrap',alignItems:'center',justifyContent:'space-between',gap:16}}>
      <div style={{minWidth:0,flex:'1 1 280px'}}><h4 style={{margin:'0 0 6px',overflowWrap:'anywhere'}}>{row.legacy_key}</h4><p style={{margin:0}}>{labels[row.status]??'Needs review'}{stale(row)&&' · Check overdue'}</p><p style={{margin:'4px 0 0',fontSize:14}}>Last completed check: {row.completed_at?new Date(row.completed_at).toLocaleString():'Not checked yet'}</p></div>

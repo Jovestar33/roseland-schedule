@@ -49,4 +49,11 @@ async function runHosted({rpc,bridge,integrationId,legacyOrigin,netlifySiteId,or
  }
  return totals;
 }
-module.exports={authorized,decode,transport,runHosted};
+async function checkHostedInventory({rpc,bridge,integrationId,organizationId,netlifySiteId,legacyOrigin}){
+ const inventory=await bridge({operation:'inventory',store:'schedules'});
+ if(inventory?.siteId!==netlifySiteId||inventory.store!=='schedules'||!Array.isArray(inventory.keys)||inventory.keys.length>10000||inventory.keys.some(k=>typeof k!=='string'||!k||k.length>1000)||new Set(inventory.keys).size!==inventory.keys.length)throw failure('INVALID_INVENTORY');
+ const result=await rpc('record_trial_sync_inventory',{target_integration_id:integrationId,expected_organization_id:organizationId,expected_site_id:netlifySiteId,expected_origin:legacyOrigin,legacy_keys:inventory.keys});
+ if(!Number.isSafeInteger(result?.attention)||result.attention<0)throw failure('INVALID_RESPONSE');
+ return result.attention;
+}
+module.exports={authorized,decode,transport,runHosted,checkHostedInventory};
