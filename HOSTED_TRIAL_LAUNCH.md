@@ -128,3 +128,8 @@ Saved 12 non-secret Vercel Config variables to Production only: hosted-app flag,
 Prepared two blank Vercel Secret fields scoped only to Production: `ROSELAND_SMTP_PASSWORD` and `SUPABASE_SECRET_KEY`. User has been asked to enter the saved Zoho app password and copy the existing default Supabase Secret key privately from the adjacent API Keys tab, then save. No secret value was revealed, read, copied or persisted by the agent. These two saves are not yet verified. No new Supabase key was created.
 
 Prepared production invitation/recovery templates under `supabase/hosted-account-templates/`, separate from fictional local templates. Links use the app's existing fragment-based explicit verification flow on `/workspace`; missing invitation metadata is omitted. These templates still need review and saving in Supabase before real invitations/password recovery are tested. All deployment, schedule import/mapping, durable synchronization and real trial acceptance gates remain outstanding.
+
+
+### Vercel secrets saved — October 20, 2026
+
+User populated both private value fields after key names were restored. The form still had Save; the agent completed the authorized save. Vercel returned “Added Environment Variable successfully. A new deployment is needed for changes to take effect.” Readback showed `ROSELAND_SMTP_PASSWORD` and `SUPABASE_SECRET_KEY` as Secret environment variables scoped to Production. Values were not revealed or copied into chat/source. The Redeploy button was not clicked. Saved configuration is not proof that credentials authenticate; SMTP delivery and authenticated deployed API checks remain pending.
