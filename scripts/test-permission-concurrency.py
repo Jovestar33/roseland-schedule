@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Real two-connection races. Docker-local only; use a disposable Supabase stack.
 
-Fixtures are committed because connections must share them, then deleted by ID.
+Fixtures are committed because connections must share them and remain in the
+disposable stack until it is removed, matching the schedule concurrency tests.
 Never accepts a hosted database URL or credentials.
 """
 import argparse
@@ -26,7 +27,10 @@ def command(app='permission-race-check'):
 
 
 def sql(statement):
-    return subprocess.run(command(), input=statement, text=True, capture_output=True, check=True, timeout=30).stdout.strip()
+    result = subprocess.run(command(), input=statement, text=True, capture_output=True, timeout=30)
+    if result.returncode:
+        raise RuntimeError(result.stderr)
+    return result.stdout.strip()
 
 
 def session(app):
@@ -127,15 +131,10 @@ def race(scope, first_action, preexisting=True):
             if proc is not None and proc.poll() is None:
                 proc.kill()
                 proc.wait(timeout=5)
-        sql(f"""begin;
-          delete from public.audit_events where organization_id='{org}';
-          delete from public.organization_invitations where organization_id='{org}';
-          delete from public.production_memberships where organization_id='{org}';
-          delete from public.productions where organization_id='{org}';
-          delete from public.organization_memberships where organization_id='{org}';
-          delete from public.organizations where id='{org}';
-          delete from auth.users where id in ('{owner}','{member}');
-          commit;""")
+        # Leave this random, fictional fixture in the disposable local stack.
+        # Deleting the final Owner is intentionally forbidden by the real schema;
+        # do not disable that protection to clean up a concurrency test.
+
 
 
 for scope in ('organization', 'production'):
