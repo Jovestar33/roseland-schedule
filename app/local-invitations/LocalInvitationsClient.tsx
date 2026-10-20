@@ -15,6 +15,7 @@ const errors: Record<FailureKind, string> = {
   conflict: 'This request key already has a different or unverifiable result. Review it before starting another request.',
   unknown: 'The result is uncertain. Check for a completed result or retry the same request.',
 };
+const organizationRoleName = (role: string) => role === 'owner' ? 'Organization Super Admin' : role === 'admin' ? 'Organization Admin' : role === 'member' ? 'Member' : role;
 type MfaStage = 'checking' | 'enroll' | 'code' | 'ready';
 
 export default function LocalInvitationsClient({ config, reviewMode=false }: { config: LocalEditorConfig; reviewMode?:boolean }) {
@@ -47,7 +48,7 @@ export default function LocalInvitationsClient({ config, reviewMode=false }: { c
   const [recipient, setRecipient] = useState(''), [role, setRole] = useState('member');
   const [production, setProduction] = useState(''), [productionRole, setProductionRole] = useState('viewer'), [days, setDays] = useState(7);
   const [revoking, setRevoking] = useState<PendingInvitation | null>(null), [reason, setReason] = useState('');
-  const [message, setMessage] = useState(managed ? 'Review access for the selected fictional organization.' : 'Sign in with a fictional local account to manage invitations.');
+  const [message, setMessage] = useState(managed ? '' : 'Sign in with a fictional local account to manage invitations.');
   const [confirmation, setConfirmation] = useState<{ title: string; text: string; label: string; action: () => void } | null>(null);
   const dialog = useRef<HTMLDialogElement>(null), review = useRef<HTMLElement>(null);
   const currentOrg = organizations.find(item => item.id === selected);
@@ -140,7 +141,7 @@ export default function LocalInvitationsClient({ config, reviewMode=false }: { c
       if (result.error || !result.data.session) { setMessage('Sign-in failed. Check your fictional account details.'); return; }
       setEmail(result.data.user.email ?? email); setAuthNeeded(false);
       const count = await loadOrganizations(); await inspectMfa();
-      setMessage(count === 0 ? 'Signed in. No Owner/Admin organizations are available to this account.' : 'Signed in. Verify your authenticator to manage invitations.');
+      setMessage(count === 0 ? 'Signed in. No organizations with administration access are available to this account.' : 'Signed in. Verify your authenticator to manage invitations.');
     } catch { setMessage('Sign-in could not finish. Your draft is retained.'); }
     finally { busyRef.current = false; setBusy(false); }
   }
@@ -180,9 +181,9 @@ export default function LocalInvitationsClient({ config, reviewMode=false }: { c
     else setConfirmation({ title: 'Discard local request?', text: 'This request may already have changed access. Discarding its local record does not undo it. Review its result before starting another request.', label: 'Discard local request', action });
   }
 
-  return <div className={styles.page}><main className={styles.main}>
+  return <div className={`${styles.page} ${reviewMode?styles.product:''}`}><main className={styles.main}>
     <header className={styles.header}><div>{!reviewMode&&<span className={styles.eyebrow}>LOCAL ACCOUNT REHEARSAL</span>}<h1>Invitations</h1><p>{reviewMode?`Manage invitations for ${workspace?.organization?.name??'your organization'}.`:'Manage access for fictional organizations on this computer.'}</p></div>{!reviewMode&&<span className={styles.badge}>Local only</span>}</header>
-    <p className={styles.notice}>Creating an invitation records access; this rehearsal does not send email. Drafts stay in this tab and are lost when it closes or reloads.</p>
+    <p className={styles.notice}>{reviewMode ? 'Choose organization and optional production access, then review before creating the invitation. Email delivery is disabled in this local preview.' : 'Creating an invitation records access; this rehearsal does not send email. Drafts stay in this tab and are lost when it closes or reloads.'}</p>
     <p className={styles.status} role="status" aria-live="polite">{message}</p>
     {!workspace && (!session || authNeeded) && <section className={styles.card} aria-label="Account sign in"><h2>{account.current ? 'Sign in again' : 'Sign in'}</h2>
       {account.current && <p>Your draft and original request key are retained for this account.</p>}
@@ -220,17 +221,17 @@ export default function LocalInvitationsClient({ config, reviewMode=false }: { c
     </section>}
     {!workspace && session && <section className={styles.card} aria-label="Organization selection"><div className={styles.sectionTitle}><h2>Organization</h2><button className={styles.secondary} disabled={busy || !ready} onClick={() => void run(() => loadOrganizations())}>Refresh organizations</button></div>
       <label>Manage invitations for<select value={selected} disabled={busy || !ready || !!attempt} onChange={event => chooseOrganization(event.target.value)}><option value="">Select an organization</option>{selected && !currentOrg && <option value={selected}>Previous selection unavailable — refresh or load more</option>}{organizations.map(item => <option key={item.id} value={item.id}>{item.name} · {item.role}</option>)}</select></label>
-      {!organizations.length && <p>No Owner/Admin organizations are available to this account.</p>}
+      {!organizations.length && <p>No organizations with administration access are available to this account.</p>}
       {orgMore && <button className={styles.secondary} disabled={busy || !ready} onClick={() => void run(() => loadOrganizations(true))}>Load more organizations</button>}
     </section>}
     {selected && <div className={styles.columns}><section className={styles.card} aria-label="Invitation draft"><h2>{revoking ? 'Revoke invitation' : 'New invitation'}</h2>
-      {revoking ? <form className={styles.form} onSubmit={event => { event.preventDefault(); prepare('revoke'); }}><p><strong>{revoking.email}</strong><br />{revoking.role} access</p>
+      {revoking ? <form className={styles.form} onSubmit={event => { event.preventDefault(); prepare('revoke'); }}><p><strong>{revoking.email}</strong><br />{organizationRoleName(revoking.role)} access</p>
         <label>Reason for revocation<textarea required maxLength={500} disabled={busy || !!attempt || !ready} value={reason} onChange={event => setReason(event.target.value)} /></label>
         <button ref={draftReview} disabled={busy || !!attempt || !ready || !currentOrg}>Review revocation</button><button type="button" className={styles.secondary} disabled={busy || !!attempt} onClick={() => { setRevoking(null); setReason(''); }}>Back to invitation draft</button>
       </form> : <form className={styles.form} onSubmit={event => { event.preventDefault(); prepare('create'); }}>
         <fieldset disabled={busy || !!attempt || !ready || !currentOrg}>
           <label>Recipient email<input type="email" required maxLength={320} autoComplete="off" value={recipient} onChange={event => setRecipient(event.target.value)} /></label>
-          <label>Organization role<select value={role} onChange={event => setRole(event.target.value)}><option value="member">Member</option>{!roleAvailable && <option value={role}>{role} — no longer available</option>}{currentOrg?.role === 'owner' && <><option value="admin">Admin</option><option value="owner">Owner</option></>}</select></label>
+          <label>Organization role<select value={role} onChange={event => setRole(event.target.value)}><option value="member">Member</option>{!roleAvailable && <option value={role}>{organizationRoleName(role)} — no longer available</option>}{currentOrg?.role === 'owner' && <><option value="admin">Organization Admin</option><option value="owner">Organization Super Admin</option></>}</select></label>
           <label>Production access<select value={production} onChange={event => setProduction(event.target.value)}><option value="">No production assignment</option>{!productionAvailable && <option value={production}>Previous production unavailable</option>}{productions.map(item => <option key={item.id} value={item.id}>{item.name}</option>)}</select></label>
           {production && <label>Production role<select value={productionRole} onChange={event => setProductionRole(event.target.value)}><option value="viewer">Viewer</option><option value="editor">Editor</option><option value="organizer">Organizer</option></select></label>}
           {productionMore && <button type="button" className={styles.secondary} onClick={() => void run(() => loadProductions(selected, true))}>Load more productions</button>}
@@ -240,13 +241,13 @@ export default function LocalInvitationsClient({ config, reviewMode=false }: { c
       </form>}
     </section><section className={styles.card} aria-label="Pending invitations"><div className={styles.sectionTitle}><h2>Pending invitations</h2><button className={styles.secondary} disabled={busy || !ready} onClick={() => void run(() => loadInvitations())}>Refresh invitations</button></div>
       {!invitations.length && <p>No pending invitations in this organization.</p>}
-      <ul className={styles.list}>{invitations.map(item => <li key={item.id}><div><strong>{item.email}</strong><span>{item.role}{item.productionId ? ` · ${item.productionRole} in ${productions.find(p => p.id === item.productionId)?.name ?? 'assigned production'}` : ''}</span><small>{Date.parse(item.expiresAt) <= Date.now() ? 'Expired' : 'Expires'} {new Date(item.expiresAt).toLocaleString()}</small></div>
+      <ul className={styles.list}>{invitations.map(item => <li key={item.id}><div><strong>{item.email}</strong><span>{organizationRoleName(item.role)}{item.productionId ? ` · ${item.productionRole} in ${productions.find(p => p.id === item.productionId)?.name ?? 'assigned production'}` : ''}</span><small>{Date.parse(item.expiresAt) <= Date.now() ? 'Expired' : 'Expires'} {new Date(item.expiresAt).toLocaleString()}</small></div>
         <button className={styles.secondary} disabled={busy || !!attempt || !ready || !currentOrg || (currentOrg.role === 'admin' && item.role !== 'member')} onClick={() => { setRevoking(item); setReason(''); }}>Revoke</button></li>)}</ul>
       {invitationMore && <button className={styles.secondary} disabled={busy || !ready} onClick={() => void run(() => loadInvitations(selected, true))}>Load more invitations</button>}
     </section></div>}
     {attempt && <section ref={review} tabIndex={-1} className={`${styles.card} ${styles.review}`} aria-label="Request review"><div className={styles.sectionTitle}><h2>{controller.phase === 'success' ? 'Result confirmed' : 'Review request'}</h2><span className={styles.badge}>{controller.phase}</span></div>
       <p><strong>{attempt.kind === 'create' ? `Invite ${attempt.body.email}` : `Revoke ${revoking?.email ?? attempt.target}`}</strong><br />{organizations.find(item => item.id === attempt.organization)?.name ?? attempt.organization}</p>
-      {attempt.kind === 'create' ? <p>{String(attempt.body.organizationRole)} · {Number(attempt.body.expiresInDays)} days{attempt.body.productionId ? ` · ${attempt.body.productionRole} in ${productions.find(item => item.id === attempt.body.productionId)?.name ?? attempt.body.productionId}` : ' · no production assignment'}</p> : <p>Reason: {String(attempt.body.reason)}</p>}
+      {attempt.kind === 'create' ? <p>{organizationRoleName(String(attempt.body.organizationRole))} · {Number(attempt.body.expiresInDays)} days{attempt.body.productionId ? ` · ${attempt.body.productionRole} in ${productions.find(item => item.id === attempt.body.productionId)?.name ?? attempt.body.productionId}` : ' · no production assignment'}</p> : <p>Reason: {String(attempt.body.reason)}</p>}
       <details><summary>Request details</summary><p className={styles.identifier}>Request key: {attempt.key}</p>{controller.result && <p className={styles.identifier}>Invitation: {controller.result.id}</p>}</details>
       {controller.failure && <p role="alert">{errors[controller.failure]}</p>}
       {controller.result && <p>{controller.result.description}{!controller.result.matches && ' — this does not match the current request.'}</p>}

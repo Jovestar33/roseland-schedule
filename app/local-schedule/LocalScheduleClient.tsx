@@ -359,7 +359,7 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
         <p>Fictional data only · Supabase on this computer</p>
         <p>Authenticated editing and document tools with fictional location and weather responses. Library parity review remains open.</p>
       </header>}
-      {message && !(dirty && message === 'Schedule saved.') && (!review||! /^(Schedules loaded\.|Schedule loaded\.|Choose an authorized organization above\.|Schedule closed\. Choose a schedule from the library\.)$/.test(message))&&<p role="status" aria-live="polite">{message}</p>}
+      {message && !(dirty && message === 'Schedule saved.') && (!review||! /^(Schedule saved\.|Schedules loaded\.|Schedule loaded\.|Choose an authorized organization above\.|Schedule closed\. Choose a schedule from the library\.)$/.test(message))&&<p className={styles.feedback} role="status" aria-live="polite">{message}</p>}
       {!workspace && (!session || authNeeded) && <form className={styles.login} onSubmit={login}>
         {authNeeded && <p>Sign in again to continue. Your edits are still here.</p>}
         <label>Email<input type="email" autoComplete="off" required readOnly={!!session} value={session?.user.email ?? email} onChange={e => setEmail(e.target.value)} /></label>
@@ -378,7 +378,7 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
           <button ref={libraryReturnRef} className="btn btn-light" disabled={busy || !ready} onClick={() => review?guarded(closeSchedule,'Return to library and discard unsaved changes'):void run(() => list(false))}>{review?'Library':'Refresh list'}</button>
 
         </div>
-        {review&&<ReviewToolPanel enabled open={active&&reviewTool==='menu'} title="Tools" onClose={()=>setReviewTool(null)}><nav className={styles.toolMenu} aria-label="Schedule tools">
+        {review&&<ReviewToolPanel compact enabled open={active&&reviewTool==='menu'} title="Tools" onClose={()=>setReviewTool(null)}><nav className={styles.toolMenu} aria-label="Schedule tools">
           <button onClick={()=>openReviewTool('templates')}><strong>Templates</strong><span>Reuse rows and saved layouts</span></button>
           <button disabled={!selected} onClick={()=>openReviewTool('snapshots')}><strong>Snapshots</strong><span>Save or restore a schedule checkpoint</span></button>
           <button onClick={()=>setReviewTool('files')}><strong>Backup and import</strong><span>Download schedules or import a JSON backup</span></button>

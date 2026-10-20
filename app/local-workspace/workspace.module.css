@@ -91,3 +91,68 @@
 .accessShell [role="status"]:empty{display:none}
 
 .accountEntry{border:0;background:transparent;color:var(--g600);font:inherit;font-size:13px;padding:8px 4px;min-height:40px;cursor:pointer}.accountEntry:hover,.accountEntry[aria-expanded="true"]{color:var(--ink);text-decoration:underline;text-underline-offset:4px}.accountEntry:focus-visible{outline:2px solid var(--pink);outline-offset:3px}
+
+/* Account and administration use the same Roseland controls as the editor. */
+.reviewShell { color:var(--ink); }
+.reviewShell button,.reviewDialog button { color:var(--ink); background:#fff; border-color:var(--g200); border-radius:8px; font-family:var(--fb); box-shadow:0 1px 2px #00000005; }
+.reviewShell button:hover:not(:disabled),.reviewDialog button:hover:not(:disabled) { background:var(--g50); border-color:var(--g300); }
+.reviewShell input:not([type="checkbox"]),.reviewShell select { color:var(--ink); border-color:var(--g300); background:white; border-radius:8px; min-height:40px; }
+.reviewShell input:focus,.reviewShell select:focus,.reviewShell button:focus-visible { outline:2px solid var(--pink-dark); outline-offset:3px; }
+.reviewShell input[type="checkbox"] { accent-color:var(--pink-dark); width:16px; height:16px; }
+.settingsShell { padding:28px 24px 0; }
+.settingsShell .settingsIntro h1 { font-family:var(--fd); font-size:26px; letter-spacing:2px; text-transform:uppercase; }
+.settingsTitle p { color:var(--g600); font-size:13px; margin-top:8px; }
+.settingsNavigation { gap:4px 20px; border-bottom:1px solid var(--g200); padding:0; margin-top:22px; }
+.settingsNavigation button { border:0; border-bottom:2px solid transparent; border-radius:0; background:transparent; padding:12px 0; box-shadow:none; color:var(--g600); min-height:44px; }
+.settingsNavigation button[aria-current="page"] { background:transparent; color:var(--pink-dark); border-bottom-color:var(--pink); font-weight:600; }
+.settingsNavigation button:hover:not(:disabled) { background:transparent; color:var(--ink); }
+.accountPanels { border-radius:12px; padding:24px; }
+.settingsShell .account { border-radius:12px; }
+.administrationHeading { max-width:900px; padding:4px 24px 0; margin:0 auto 16px; }
+.administrationHeading h2 { font-size:18px; margin:0 0 6px; }
+.administrationHeading p { color:var(--g600); font-size:13px; line-height:1.6; margin:0; }
+.administrationCard { max-width:852px; border-radius:12px; padding:24px; margin:12px auto; }
+.administrationCard button { color:var(--ink); border:1px solid var(--g200); background:white; padding:9px 12px; border-radius:8px; font:inherit; font-size:13px; cursor:pointer; }
+.administrationCard button:disabled { opacity:.45; cursor:not-allowed; }
+.administrationCard button:focus-visible { outline:2px solid var(--pink-dark); outline-offset:3px; }
+.administrationCard input:not([type="checkbox"]),.administrationCard select,.administrationCard textarea { color:var(--ink); border:1px solid var(--g300); background:white; padding:10px 12px; border-radius:8px; font:inherit; max-width:100%; }
+.administrationCard summary { cursor:pointer; font-weight:600; font-size:15px; padding:4px 0; }
+.administrationCard p { color:var(--g600); font-size:13px; line-height:1.6; }
+.administrationCard .shell { padding:0; color:var(--ink); }
+.reviewShell .status:empty { display:none; }
+.entryShell { margin:40px auto; padding:28px; background:white; border:1px solid var(--g200); border-radius:14px; box-shadow:0 6px 24px #00000005; }
+.entryShell .login h2,.entryShell [data-account-task] h2 { font-family:var(--fd); text-transform:uppercase; letter-spacing:2px; color:var(--ink); }
+.entryShell .login>button,.entryShell [data-account-primary] { color:white; background:var(--ink); border-color:var(--ink); }
+.entryShell .login>button:hover,.entryShell [data-account-primary]:hover { color:white; background:#333; }
+@media(max-width:600px) {
+ .settingsShell { padding:24px 16px 0; }
+ .settingsNavigation { gap:0 18px; flex-wrap:wrap; }
+ .settingsNavigation button { font-size:12px; }
+ .accountPanels { padding:20px; }
+ .administrationCard { margin:12px 16px; padding:20px; }
+ .administrationHeading { padding:4px 16px 0; }
+ .entryShell { margin:24px 16px; padding:24px; }
+}
+
+.scopeNavigation { display:flex; gap:4px; flex-wrap:wrap; padding:4px; margin:20px 0 12px; width:fit-content; background:var(--g100); border-radius:10px; }
+.scopeNavigation button { background:transparent; border-color:transparent; font-size:13px; min-height:40px; }
+.scopeNavigation button[aria-pressed="true"] { background:white; border-color:var(--g200); color:var(--pink-dark); font-weight:600; box-shadow:0 1px 3px #00000008; }
+
+.reviewShell .settingsNavigation button[aria-current="page"] { color:var(--pink-dark); border-bottom-color:var(--pink); background:transparent; }
+.administrationCard fieldset { min-width:0; padding:20px; margin:20px 0 12px; border:1px solid var(--g200); border-radius:10px; }
+.administrationCard legend { padding:0 8px; font-size:14px; font-weight:600; }
+.administrationCard label { display:grid; gap:6px; font-size:12px; font-weight:500; }
+.administrationCard .permissionChoice { display:flex; align-items:center; gap:10px; margin:0; padding:8px 0; font-size:13px; line-height:1.5; }
+.permissionChoice input { width:16px; height:16px; flex-shrink:0; accent-color:var(--pink-dark); }
+.permissionActions { margin:18px 0; }
+.permissionActions>div { display:grid; grid-template-columns:1fr 1fr; gap:0 24px; margin-top:8px; }
+.administrationCard button:global(.btn-pink) { background:var(--pink); color:white; border-color:var(--pink); }
+.administrationCard form+button,.administrationCard button+button { margin-right:8px; }
+.administrationCard [role="status"]:empty { display:none; }
+.effectiveAccess { margin:12px 0; padding:10px 14px; background:var(--g50); border-radius:8px; }
+.effectiveAccess>summary { font-size:12px; color:var(--g600); }
+@media(max-width:600px){.permissionActions>div{grid-template-columns:1fr}.administrationCard fieldset{padding:16px}.scopeNavigation{width:100%}.scopeNavigation button{flex:1; padding:8px;}}
+
+.administrationCard h3 { margin:0 0 8px; font-size:16px; font-weight:600; }
+.administrationCard header p { margin:0 0 18px; }
+.administrationCard input[type="checkbox"] { width:16px; height:16px; accent-color:var(--pink-dark); margin-right:8px; }

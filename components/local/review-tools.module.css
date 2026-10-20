@@ -20,3 +20,8 @@
 .body input[type="file"] { border:0; padding:0; font-size:12px; }
 .body input[type="file"]::file-selector-button { font:inherit; font-weight:600; border:1px solid var(--g300); border-radius:8px; background:var(--g50); color:var(--ink); min-height:40px; padding:8px 12px; margin-right:10px; cursor:pointer; }
 .body details > summary { cursor:pointer; font-size:12px; font-weight:600; color:var(--g600); padding:8px 0; }
+
+/* The tool chooser is a short menu; working panels retain their full height. */
+.compact { inset:0; margin:auto; width:min(460px,calc(100vw - 32px)); height:fit-content; max-height:calc(100dvh - 48px); border:1px solid var(--g200); border-radius:14px; box-shadow:0 20px 64px #0003; }
+.compact .header h2 { font-family:var(--fd); font-size:22px; letter-spacing:1.5px; }
+.compact .body { padding:8px; }

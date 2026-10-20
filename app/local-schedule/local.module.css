@@ -39,3 +39,11 @@
 .toolMenu button:hover { background:var(--g50); border-color:var(--g300); }
 .toolMenu button:focus-visible { outline:2px solid var(--pink); outline-offset:2px; }
 .toolMenu button:disabled { opacity:.45; cursor:not-allowed; }
+
+.toolMenu { gap:0; }
+.toolMenu button { border:0; border-radius:8px; padding:12px 16px; }
+.toolMenu button + button { border-top:1px solid var(--g100); }
+.toolMenu button span { color:var(--g600); }
+.toolMenu button:hover:not(:disabled) { background:var(--pink-light,#fff3f9); }
+
+.feedback { margin:16px 20px; padding:12px 16px; border:1px solid var(--g200); border-left:3px solid var(--pink); border-radius:8px; background:white; color:var(--ink); font-size:13px; line-height:1.6; }

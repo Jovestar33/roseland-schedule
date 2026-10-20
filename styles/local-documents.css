@@ -66,3 +66,18 @@
   /* Screen sticky headers and hidden editor columns must not control pagination. */
   body[data-local-document] :is(thead,thead tr,thead th) { position:static !important; top:auto !important; transform:none !important; break-inside:avoid !important; }
 }
+
+/* Shared modal framing keeps primary actions visible while settings scroll. */
+.appearance-modal .mbody { font-size:13px; line-height:1.6; }
+.appearance-modal .appearance-intro { margin:0 0 18px; color:var(--g600); }
+.appearance-modal nav { display:flex; gap:20px; border-bottom:1px solid var(--g200); margin-bottom:24px; }
+.appearance-modal nav button { border:0; border-bottom:2px solid transparent; background:transparent; padding:10px 0; border-radius:0; box-shadow:none; color:var(--g600); }
+.appearance-modal nav button[aria-pressed="true"] { color:var(--pink-dark); border-bottom-color:var(--pink); font-weight:600; }
+.appearance-fields { display:grid; gap:16px 20px; margin:0 0 24px; }
+.appearance-labels,.appearance-colors { grid-template-columns:repeat(2,minmax(0,1fr)); }
+.appearance-fields label { margin:0!important; display:grid; align-content:start; gap:6px; font-size:12px; font-weight:500; min-width:0; }
+.appearance-fields input:not([type="color"]),.appearance-fields select { margin:0!important; font-size:13px; min-height:40px; }
+.appearance-fields h3,.appearance-fields>p { grid-column:1 / -1; }
+.appearance-actions>div { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:10px 16px; padding:16px; background:var(--g50); border:1px solid var(--g200); border-radius:10px; }
+.appearance-modal [role="status"]:empty { display:none; }
+@media(max-width:600px){.appearance-labels,.appearance-colors,.appearance-actions>div{grid-template-columns:1fr}.appearance-modal nav{gap:18px}.appearance-modal .mfoot{flex-wrap:wrap}}
