@@ -25,7 +25,8 @@
     "@netlify/blobs": "10.7.13",
     "@supabase/supabase-js": "^2.110.8",
     "lucide-react": "^0.441.0",
-    "next": "^15.5.25",
+    "next": "15.5.27",
+    "nodemailer": "10.1.7",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "zustand": "^5.0.0"
@@ -33,6 +34,7 @@
   "devDependencies": {
     "@netlify/plugin-nextjs": "^5.0.0",
     "@types/node": "^22",
+    "@types/nodemailer": "8.0.2",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
@@ -49,7 +51,7 @@
     },
     "next": {
       "postcss": "8.5.28",
-      "sharp": "0.35.4"
+      "sharp": "0.35.5"
     }
   }
 }

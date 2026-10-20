@@ -7,6 +7,7 @@ export interface WorkspacePanelState { dirty:boolean; busy:boolean }
 export interface WorkspaceScheduleRequest {id:string;organization:string;sequence:number;target?:'lifecycle'|'library';history?:boolean}
 export interface WorkspacePanel {
   review?:boolean;
+  hosted?:boolean;
   openSettings?:()=>void;
   client:SupabaseClient;
   session:Session|null;

@@ -9,7 +9,7 @@ export function captureMembershipAttempt(a:MembershipAttempt):MembershipAttempt{
 }
 type MembershipErrorKind='mfa'|'conflict'|'denied'|'auth'|'unknown';
 export class MembershipError extends Error{kind:MembershipErrorKind;constructor(kind:MembershipErrorKind){super(kind);this.kind=kind;}}
-export function createMembershipRepository(client:SupabaseClient){
+export function createMembershipRepository(client:SupabaseClient,options:{hosted?:boolean}={}){
  async function token(actor:string){const s=await client.auth.getSession();if(s.data.session?.user.id!==actor)throw new MembershipError('auth');return s.data.session.access_token;}
  async function rpc(actor:string,name:string,args:Record<string,unknown>){
   const accessToken=await token(actor);
@@ -26,7 +26,7 @@ export function createMembershipRepository(client:SupabaseClient){
    if(r?.confirmed!==true||r.request_id!==a.request||r.organization_id!==a.organization||r.membership_id!==a.member||r.status!==a.status||!Number.isSafeInteger(r.revision)||typeof r.changed!=='boolean'||r.revision!==a.revision+(r.changed?1:0))throw new MembershipError('unknown');return r as {notification_id:string|null};
   },
   async notify(actor:string,org:string,event:string){
-   const r=await fetch('/api/platform/local-membership-notifications',{method:'POST',headers:{'content-type':'application/json',authorization:`Bearer ${await token(actor)}`},body:JSON.stringify({organizationId:org,eventId:event})});
+   const r=await fetch(options.hosted?'/api/platform/membership-notifications':'/api/platform/local-membership-notifications',{method:'POST',headers:{'content-type':'application/json',authorization:`Bearer ${await token(actor)}`},body:JSON.stringify({organizationId:org,eventId:event})});
    if(!r.ok)throw new MembershipError(r.status===401?'auth':'unknown');
    const data=await r.json();if(!['delivered','failed','sending'].includes(data.state))throw new MembershipError('unknown');return data.state as string;
   }

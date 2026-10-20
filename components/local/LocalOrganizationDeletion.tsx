@@ -3,9 +3,9 @@ import {useEffect,useMemo,useRef,useState} from 'react';
 import {useLocalWorkspace,useWorkspacePanelState} from './LocalWorkspaceContext';
 import {captureLifecycleAttempt,createOrganizationLifecycleRepository,LifecycleError,type LifecycleAttempt,type OrganizationLifecycle} from '@/lib/platform/organization-lifecycle';
 export default function LocalOrganizationDeletion({showControls=true}:{showControls?:boolean}){
- const {client,session,organization,authNeeded,active,requireAuth,onLifecycleChange,lifecycleRevision}=useLocalWorkspace()!;
+ const {hosted,client,session,organization,authNeeded,active,requireAuth,onLifecycleChange,lifecycleRevision}=useLocalWorkspace()!;
  const actor=session?.user.id,org=organization?.id,ready=!!actor&&!!org&&!authNeeded;
- const repo=useMemo(()=>createOrganizationLifecycleRepository(client),[client]);
+ const repo=useMemo(()=>createOrganizationLifecycleRepository(client,{hosted}),[client,hosted]);
  const [record,setRecord]=useState<OrganizationLifecycle|null>(null),[pending,setPending]=useState<LifecycleAttempt|null>(null),[open,setOpen]=useState(false),[confirmed,setConfirmed]=useState(false),[name,setName]=useState('');
  const [message,setMessage]=useState(''),[busy,setBusy]=useState(false),working=useRef(false),latest=useRef({actor,org,ready});latest.current={actor,org,ready};
  useWorkspacePanelState(!!pending||confirmed||!!name,busy);
@@ -33,6 +33,6 @@ export default function LocalOrganizationDeletion({showControls=true}:{showContr
  {(record.can_request||pending?.operation==='request')&&<button className="btn btn-danger" disabled={!ready||busy||(!pending&&(!confirmed||name!==organization?.name))} onClick={()=>void run(()=>submit('request'))}>{pending?'Retry exact deletion request':'Request organization deletion'}</button>}
  {(record.can_cancel||pending?.operation==='cancel')&&<button disabled={!ready||busy} onClick={()=>void run(()=>submit('cancel'))}>{pending?'Retry exact cancellation':'Cancel organization deletion'}</button>}
  {!pending&&(confirmed||name)&&<button disabled={busy} onClick={()=>{setName('');setConfirmed(false);}}>Discard deletion draft</button>}
- <ul>{record.notifications.map(n=><li key={n.event_id+':'+n.recipient_id}>{n.event_kind==='deletion_requested'?'Deletion request':'Cancellation'} notice, change {n.lifecycle_version}: {n.delivery_state} <button disabled={!ready||busy} onClick={()=>void run(async()=>{const state=await repo.notify(actor!,org!,n.event_id,n.recipient_id);setMessage(state==='delivered'?'Notice delivered to the local mail sink.':'Notice needs retry.');await load();})}>Retry notice for {n.recipient_name}</button></li>)}</ul>
+ <ul>{record.notifications.map(n=><li key={n.event_id+':'+n.recipient_id}>{n.event_kind==='deletion_requested'?'Deletion request':'Cancellation'} notice, change {n.lifecycle_version}: {n.delivery_state} <button disabled={!ready||busy} onClick={()=>void run(async()=>{const state=await repo.notify(actor!,org!,n.event_id,n.recipient_id);setMessage(state==='delivered'?(hosted?'Email provider accepted the notice.':'Notice delivered to the local mail sink.'):'Notice needs retry.');await load();})}>Retry notice for {n.recipient_name}</button></li>)}</ul>
  </div>}</section>;
 }

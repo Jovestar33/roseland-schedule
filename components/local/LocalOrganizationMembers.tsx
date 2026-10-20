@@ -4,9 +4,9 @@ import {useLocalWorkspace,useWorkspacePanelState} from './LocalWorkspaceContext'
 import {captureMembershipAttempt,createMembershipRepository,MembershipError,type MembershipAttempt,type OrganizationMember} from '@/lib/platform/organization-members';
 const roleName=(role:string)=>role==='owner'?'Organization Super Admin':role==='admin'?'Organization Admin':'Member';
 export default function LocalOrganizationMembers(){
- const {client,session,organization,authNeeded,active,requireAuth}=useLocalWorkspace()!;
+ const {hosted,client,session,organization,authNeeded,active,requireAuth}=useLocalWorkspace()!;
  const actor=session?.user.id,org=organization?.id,ready=!!actor&&!!org&&!authNeeded;
- const repo=useMemo(()=>createMembershipRepository(client),[client]);
+ const repo=useMemo(()=>createMembershipRepository(client,{hosted}),[client,hosted]);
  const [open,setOpen]=useState(false),[members,setMembers]=useState<OrganizationMember[]>([]),[more,setMore]=useState(false);
  const [selected,setSelected]=useState<OrganizationMember|null>(null),[reason,setReason]=useState(''),[confirmed,setConfirmed]=useState(false),[pending,setPending]=useState<MembershipAttempt|null>(null);
  const [message,setMessage]=useState(''),[busy,setBusy]=useState(false),working=useRef(false),latest=useRef({actor,ready});latest.current={actor,ready};
@@ -20,7 +20,7 @@ export default function LocalOrganizationMembers(){
  }
  async function load(current:()=>boolean,append=false){const rows=await repo.list(actor!,org!,append?members.at(-1)?.id??null:null);if(current()){setMore(rows.length>25);setMembers(old=>append?[...old,...rows.slice(0,25)]:rows.slice(0,25));}}
  async function deliver(event:string,current:()=>boolean){
-  try{const state=await repo.notify(actor!,org!,event);if(current())setMessage(state==='delivered'?'Membership change confirmed; affected-member notice delivered to the local mail sink.':'Membership change confirmed; notification needs retry.');}
+  try{const state=await repo.notify(actor!,org!,event);if(current())setMessage(state==='delivered'?(hosted?'Membership change confirmed; email provider accepted the notice.':'Membership change confirmed; affected-member notice delivered to the local mail sink.'):'Membership change confirmed; notification needs retry.');}
   catch{if(current())setMessage('Membership change confirmed; notification delivery is unconfirmed. Refresh members and retry the notice.');}
  }
  return <section aria-label="Organization membership management"><button aria-expanded={open} disabled={!ready||busy} onClick={()=>{setOpen(v=>!v);if(!open)void run(c=>load(c));}}>{open?'Close members':'Organization members'}</button>
