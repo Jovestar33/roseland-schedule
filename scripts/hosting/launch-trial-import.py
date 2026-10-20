@@ -20,6 +20,14 @@ def validate_review(review):
  if sha(plan)!=review['planFileSha256']:raise RuntimeError('Reviewed import plan changed')
  if review['migrationPlan']['appliedCount']!=56 or review['migrationPlan']['pendingCount']!=4:raise RuntimeError('Unexpected migration boundary')
  return json.loads(plan.read_text())
+def validate_bridge_secret(secret):
+ if not secret:raise RuntimeError('No Netlify bridge secret entered. Paste its saved VALUE at the hidden prompt, then press Return')
+ if secret=='ROSELAND_TRIAL_SYNC_BRIDGE_SECRET':raise RuntimeError('You entered the variable NAME. Enter its saved secret VALUE instead')
+ if any(c.isspace() for c in secret):raise RuntimeError('The bridge secret contains whitespace. Copy only its exact saved VALUE, without spaces or a newline')
+ if any(ord(c)<33 or ord(c)>126 for c in secret):raise RuntimeError('The bridge secret contains unsupported characters. Copy its exact saved VALUE using plain text')
+ if not 32<=len(secret)<=512:raise RuntimeError('The bridge secret must be 32 to 512 characters. Use the saved Netlify bridge secret VALUE, not a database password or the variable name')
+ return secret
+
 def cli(backup,dry):
  url='postgresql://postgres.'+PROJECT+'@aws-0-us-east-1.pooler.supabase.com:5432/postgres?sslmode=verify-full&sslrootcert='+quote(str(backup.CA_FILE),safe='')
  return [str(ROOT/'node_modules/.bin/supabase'),'db','push','--db-url',url,'--workdir',str(ROOT)]+(['--dry-run']if dry else ['--yes'])
@@ -33,7 +41,8 @@ def main(review_path):
  print('Typing and pasting are invisible. Press Return after each secret.')
  with warnings.catch_warnings():
   warnings.simplefilter('error',getpass.GetPassWarning)
-  bridge=getpass.getpass('Netlify bridge secret (hidden): ')
+  bridge=validate_bridge_secret(getpass.getpass('Netlify bridge secret VALUE (hidden): '))
+  print('Bridge secret format accepted; its value has not been displayed or saved.')
   password=getpass.getpass('Supabase database password (hidden): ')
  if not password:raise RuntimeError('No database password entered')
  env=dict(os.environ,PGPASSWORD=password,SUPABASE_DB_PASSWORD=password)
