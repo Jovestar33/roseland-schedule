@@ -3,10 +3,10 @@ import type { GeoResult, PlaceSuggestion } from '../googlePlaces.ts';
 import type { WeatherData } from '../types.ts';
 
 /** Session and schedule context go only to the same-origin authenticated proxy. */
-export function createLiveDocumentProviders(context:()=>Promise<{token:string;schedule:string}>, request:typeof fetch=fetch):DocumentProviders {
+export function createLiveDocumentProviders(context:()=>Promise<{token:string;schedule:string}>, request:typeof fetch=fetch, endpoint:'/api/platform/local-document-providers'|'/api/platform/document-providers'='/api/platform/local-document-providers'):DocumentProviders {
   async function call<T>(payload:Record<string,unknown>):Promise<T> {
     const {token,schedule}=await context();
-    const response=await request('/api/platform/local-document-providers',{
+    const response=await request(endpoint,{
       method:'POST',headers:{'Content-Type':'application/json',Authorization:`Bearer ${token}`},
       body:JSON.stringify({...payload,schedule}),cache:'no-store',redirect:'error',referrerPolicy:'no-referrer',
       signal:AbortSignal.timeout(35000),

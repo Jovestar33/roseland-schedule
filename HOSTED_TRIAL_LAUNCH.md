@@ -14,7 +14,7 @@ Updated October 20, 2026. User selected Vercel for the new app and the existing 
 
 ## Hosted configuration foundation
 
-`readHostedWorkspaceConfig` is a separate configuration validator; it is not yet connected to a public route. It does not bypass the existing loopback-only guards. It returns public fields only and requires:
+`readHostedWorkspaceConfig` is a separate configuration validator; the hosted workspace entry page is not yet implemented. It does not bypass the existing loopback-only guards. It returns public fields only and requires:
 
 - `ROSELAND_HOSTED_APP=supabase`
 - `VERCEL=1` and `VERCEL_ENV=production`; preview builds are rejected.
@@ -40,7 +40,7 @@ Before hosted application: preserve the hosted schema/data and review the forwar
 
 ## Remaining launch work
 
-1. Finish Vercel account/team signup and select Pro Trial if eligible. Account creation/terms and payment entry are user steps. No subscription purchase has been made by the agent.
+1. Existing Vercel account verified in Safari: team Roseland Pictures (`roseland-pictures`), Hobby plan, signed-in GitHub identity `jovestar33`. Dashboard displayed "Deploy your first project". The internal browser signup/onboarding is a separate uncompleted session; do not create a duplicate account. The existing-team upgrade dialog offered immediate billing of $20/month, not a free trial. No upgrade or payment was submitted. Finish preparation before the user authorizes paid activation for business deployment. The user approved the GitHub App permissions for `Jovestar33/roseland-schedule` only. That exact single-repository selection was submitted; GitHub requires fresh mobile/password identity confirmation before installation can finish. Do not claim the connection is complete until the callback and repository listing confirm it.
 2. Add the hosted workspace entry and authenticated provider endpoints. Preserve the polished review layout while replacing loopback URLs, fictional notice copy, local mail sinks and local-only Client link routes with deliberate production implementations. Keep original local routes closed in Vercel. Avoid connecting the legacy `main` branch to a new-app production project; it still deploys the legacy app.
 3. Complete hosted account callback/recovery and delivery configuration using exact canonical redirects. Fictional policies must never become real user terms. Server email admission, verified sessions, MFA, organization scope and idle expiry must remain enforced.
 4. Apply the reviewed schema plan with preservation/readback and security checks. Use the existing organization and John account. Set up only the two approved organization Admins.
@@ -52,3 +52,9 @@ Before hosted application: preserve the hosted schema/data and review the forwar
 ## Validation for this preparation
 
 63 targeted tests passed: hosted configuration boundaries, migration-plan history checks, existing local workspace/navigation and both sync suites. No hosted schema, schedule data, memberships or email settings were changed. The hosted configuration module is a tested foundation, not a deployed app.
+
+### Hosted provider endpoint preparation
+
+`/api/platform/document-providers` now uses the hosted configuration guard, exact canonical-origin check, ordinary user bearer token, active-session RPC and effective schedule edit permission before requesting weather/location data. The browser provider factory can target this same-origin route explicitly; existing local callers keep their local endpoint. Preview deployments are denied. No server secret is used for tenant admission or passed to upstream providers. The per-process request budget is not a distributed quota; production spend/rate controls still need review.
+
+Sixteen focused hosted/local provider and configuration tests passed, and `tsc --noEmit --incremental false` passed. This code is not deployed and no live provider configuration was changed.

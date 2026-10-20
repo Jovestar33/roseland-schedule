@@ -43,3 +43,13 @@ test('client sends auth only to local proxy and keeps town text out of weather p
 });
 
 test('selected place name stays in the address without sending it to the details provider',async()=>{const provider=createLiveDocumentProviders(async()=>({token:'local-session',schedule:'local-schedule'}),async(input,init)=>{assert.deepEqual(JSON.parse(init!.body as string),{operation:'geocode',id:'public-place',schedule:'local-schedule'});return Response.json({lat:35,lng:-78,address:'510 W Martin St, Raleigh, NC'});});assert.equal((await provider.geocode('public-place','Raleigh Union Station'))?.address,'Raleigh Union Station, 510 W Martin St, Raleigh, NC');});
+
+test('hosted client uses only the same-origin hosted provider endpoint',async()=>{
+ const provider=createLiveDocumentProviders(async()=>({token:'session',schedule:'schedule'}),async(input,init)=>{
+  assert.equal(input,'/api/platform/document-providers');
+  assert.equal(new Headers(init!.headers).get('Authorization'),'Bearer session');
+  assert.equal(init!.redirect,'error');assert.equal(init!.referrerPolicy,'no-referrer');
+  return Response.json([]);
+ },'/api/platform/document-providers');
+ assert.deepEqual(await provider.search('Raleigh'),[]);
+});
