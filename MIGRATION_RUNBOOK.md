@@ -1,5 +1,44 @@
 # Platform Migration Runbook
 
+## October 20 direction — multi-week mirror before cutover
+
+**Current user direction supersedes the earlier small-production pilot sequence below.** Launch the new application as a parallel mirror for a few weeks before any full migration or authority switch. Keep Netlify operating throughout the trial. The launch organization, **Roseland Pictures**, will contain the user as **Organization Super Admin** and two named **Organization Admins**. Copy **all existing Netlify schedules**, verify their contents and placement, and remove test/fictional data from the launch environment. No cutover, Netlify retirement or billing cancellation follows automatically from launching the mirror or reaching a date.
+
+This is the agreed rollout shape, not a report of completed hosted work. The destination environment/URL and the three account identities must be bound to concrete records before account provisioning, data cleanup or imports. The user confirmed the following intended organization memberships in this conversation: John (`john@roseland-pictures.com`) as Organization Super Admin; Nancy Saade Sammon (`nancy@roseland-pictures.com`) and Melissa Fakhri (`melissa@roseland-pictures.com`) as Organization Admins. These are intended recipients/roles, not a claim that accounts or invitations have been created. Do not infer a Platform Super Admin grant from the requested organization role.
+
+### Preparation and launch checklist
+
+1. Finish the launch-critical permission/navigation review and confirm the exact release candidate. Record known limitations explicitly; do not call the whole platform complete because a build passes.
+2. Inventory the selected hosted destination read-only, including current identities and all organizations/records. Prefer an empty, isolated launch database. If it already contains fictional data, back it up and generate an exact removal manifest from verified fixture ownership/IDs. Remove only those confirmed fixtures and test identities in that destination; never guess from names or wipe shared environments. Keep local regression/recovery fixtures separate from the launch environment.
+3. Provision the real organization and the three named accounts through the reviewed onboarding/role flows. Confirm the user's Organization Super Admin role and both Admin roles; verify real login, MFA where required, invitation delivery, and effective permissions. Do not send invitations until the actual recipients and destination are known.
+4. Read-only capture the complete latest Netlify inventory and a recoverable backup. Preserve stable source-to-target IDs, full schedule documents, contacts, time values, row order, production/phase/day placement, archive/trash status, snapshots/history and related stores supported by the migration contract. Explicitly enumerate exceptions; “all schedules” must not silently mean just currently visible active schedules. Preserve original legacy URLs and source data.
+5. Dry-run, import idempotently, and reconcile every source schedule and related record against the target. Produce a ledger of missing/duplicate/mismatched/failed records, source hashes/revisions and target readback. Confirm zero unexplained discrepancies and check representative difficult schedules in the real hosted runtime, including printing and drag/drop.
+6. Verify the destination contains the intended real organization/accounts and no fictional launch records. Verify backup/restore, endpoint configuration, role isolation and current authentication/session behavior. Launch the mirror at its distinct URL and document who operates imports and resolves conflicts.
+7. Run both apps for a few weeks. Track real-use defects and fixes in one checklist, perform repeatable catch-up and reconciliation, and retain target-only experiments/edits explicitly. Trial duration is observation time, not automatic acceptance.
+8. Decide full migration only after the team accepts the experience and data is fully reconciled. At that later stage, use the final catch-up/freeze and rollback procedures below, with explicit authority-switch sign-off. Keep Netlify available under the agreed fallback policy.
+
+### Editing during the mirror period — both apps accept real edits
+
+**User confirmed October 20: both apps will contain real edits.** This supersedes the earlier single-authoritative-writer assumption **during the mirror trial**. The initial import and existing one-way delta importer are not sufficient. Do not enable repeat refreshes that overwrite target changes. Bidirectional reconciliation must be implemented and tested before the trial starts; it is not currently a delivered feature.
+
+Use a common last-reconciled baseline and stable schedule IDs. Compare both current documents with that baseline:
+
+- Only one side changed: propose propagation to the unchanged side, conditional on its revision/hash still matching the reviewed state.
+- Both sides changed identically: record convergence without duplicating records or replaying the write.
+- Both sides changed differently: retain both versions and stop that schedule for explicit comparison/resolution. Start with whole-schedule conflict review; do not silently merge time calculations, row order, contacts, or deletions.
+- New, renamed, moved, archived, trashed or restored schedules: reconcile stable mappings and lifecycle state explicitly. A disappeared source key is not proof of deletion; a display-name match is not proof of identity.
+- A write races with propagation: reject/re-read and re-plan. A lost response must be safely retryable through a durable receipt/checkpoint, without duplicate creation or audit loops. Multi-store or multi-schedule batches must report partial outcomes and resume from known state.
+
+Retain source/target versions, common baseline, originating side, change content/hash, applied outcome and unresolved conflicts in a protected reconciliation ledger. Preserve edits created on either side during outages. Show last successful reconciliation and outstanding conflicts; never label a stale copy current. Do not sync authentication credentials, organization/production permissions, or public-sharing grants automatically. New-app-only fields require preserved sidecar/state or a supported mapping, never silent stripping when legacy data returns.
+
+Local source inspection on October 20 found ETag-conditional normal schedule writes and `expectedSavedAt` conflict rejection in `netlify/lib/save-handler.cjs`. This is source evidence, not verification of the deployed version. The same handler's delete path is unconditional; snapshots, CMS and library writes also lack equivalent conditional-write coverage in their current handlers, and rename spans several stores. These paths need a complete concurrency review and a tested reconciliation contract before bidirectional live use. Never use the `force` save option to bypass a sync conflict.
+
+The initial implementation should use reviewed, operator-triggered reconciliation batches with a dry run, per-schedule preview and conflict queue; automatic background/two-way propagation is not yet promised. Before writing back to Netlify, prove conditional write support across every relevant legacy write path; if it is absent, implement it or use a coordinated brief write pause for the affected records. A pre-write read alone does not prevent an intervening save. Test concurrent edits, offline edits, retries, renames and lifecycle conflicts using fictional fixtures first.
+
+This changes rollback too: stopping the mirror means retaining and reconciling all new-app edits back to Netlify, not simply abandoning the new database. Final migration later establishes a single authority using a coordinated freeze/catch-up of both systems. The historical one-writer instructions below describe that later cutover and must not be presented as the agreed trial behavior.
+
+This plan permits useful parallel testing without claiming that the older total-parity ledger has already passed. Record known trial defects candidly while preserving data integrity, account isolation and recoverability. Final migration acceptance remains separate.
+
 ## Executed local recovery procedure
 
 See [RECOVERY_REHEARSAL.md](./RECOVERY_REHEARSAL.md) for the September 15 tested fictional checkpoint → ordered replay → post-recovery edit → independent file-only restore procedure. It preserves exact schedule/related-store histories, tests partial failures and retries, and finishes with frozen writers. This is supporting SQL data-recovery evidence. Hosted Auth/role/service restoration, actual endpoint fallback, complete real-data coverage and paired runtime parity remain release gates; synthetic success does not authorize migration.
