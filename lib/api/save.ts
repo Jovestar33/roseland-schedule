@@ -2,6 +2,7 @@ import type { ScheduleData } from '../types';
 
 interface SaveOpts {
   force?: boolean;
+  createOnly?: boolean;
   expectedSavedAt?: number;
 }
 
@@ -11,6 +12,7 @@ export interface SaveResult {
 }
 
 export interface SaveError extends Error {
+  nameExists?: boolean;
   conflict?: boolean;
   remoteSavedAt?: number;
   remoteData?: ScheduleData | null;
@@ -31,6 +33,7 @@ export async function postSave(
       data,
       editorToken,
       force: opts.force ?? false,
+      createOnly: opts.createOnly ?? false,
       expectedSavedAt: opts.expectedSavedAt ?? 0,
     }),
   });
@@ -38,12 +41,14 @@ export async function postSave(
   if (!res.ok) {
     const body = await res.json().catch(() => ({ error: 'Unknown error' })) as {
       error?: string;
+      code?: string;
       remoteSavedAt?: number;
       remoteData?: ScheduleData | null;
     };
     const err = new Error(body.error ?? `Save failed: HTTP ${res.status}`) as SaveError;
     if (res.status === 409) {
-      err.conflict = true;
+      err.nameExists = body.code === 'NAME_EXISTS';
+      err.conflict = !err.nameExists;
       err.remoteSavedAt = body.remoteSavedAt ?? 0;
       err.remoteData = body.remoteData ?? null;
     }

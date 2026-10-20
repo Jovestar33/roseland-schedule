@@ -45,6 +45,9 @@ jobs:
       - name: Test schedule links and lint compatibility
         run: node --test tests/integrations/*.test.cjs
 
+      - name: Test editor save safeguards
+        run: npm run test:editor
+
       - name: Lint application
         run: npm run lint
 
