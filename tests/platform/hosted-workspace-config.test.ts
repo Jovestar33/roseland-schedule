@@ -46,3 +46,11 @@ test('rejects privileged browser keys and keys belonging to another project',()=
     assert.equal(readHostedWorkspaceConfig({...legacy,SUPABASE_SERVICE_ROLE_KEY:jwt(claims)},host),null);
   assert.equal(readHostedWorkspaceConfig({...env,SUPABASE_SECRET_KEY:env.SUPABASE_PUBLISHABLE_KEY},host),null);
 });
+
+test('configuration diagnostics report fixed reason codes without values or credentials',()=>{
+ const reasons:string[]=[];
+ assert.equal(readHostedWorkspaceConfig({...env,SUPABASE_SECRET_KEY:'private-invalid-value'},host,r=>reasons.push(r)),null);
+ assert.deepEqual(reasons,['server-key-format']);
+ assert.ok(!JSON.stringify(reasons).includes('private-invalid-value'));
+ reasons.length=0;assert.ok(readHostedWorkspaceConfig(env,host,r=>reasons.push(r)));assert.deepEqual(reasons,[]);
+});

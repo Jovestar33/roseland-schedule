@@ -5,7 +5,7 @@ import LocalWorkspaceClient from '../local-workspace/LocalWorkspaceClient';
 export const dynamic='force-dynamic';
 export const metadata={title:'Roseland Schedule',robots:{index:false,follow:false},referrer:'no-referrer' as const};
 export default async function WorkspacePage(){
- const config=readHostedWorkspaceConfig(process.env,(await headers()).get('host'));
+ const config=readHostedWorkspaceConfig(process.env,(await headers()).get('host'), reason => console.error('Hosted workspace configuration rejected:', reason));
  if(!config)notFound();
  return <LocalWorkspaceClient config={config} review/>;
 }
