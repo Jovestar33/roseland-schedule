@@ -1,11 +1,12 @@
 'use client';
 import {useRef,useState} from 'react';
 import Modal from '@/components/modals/Modal';
+import LocalTrialSyncComparison from './LocalTrialSyncComparison';
 import {useLocalWorkspace} from './LocalWorkspaceContext';
 type Mapping={id:string;schedule_id:string;legacy_key:string;status:string;checked_at:string|null;completed_at:string|null};
 type Inventory={checked_at:string;legacy_unmapped:string[];legacy_missing:string[];target_unmapped:{id:string;name:string}[];target_missing:string[]};
 type Status={configured:boolean;id?:string;revision?:number;enabled?:boolean;authorized?:boolean;legacy_origin?:string;mappings?:Mapping[];inventory?:Inventory|null};
-const labels:Record<string,string>={synced:'Up to date',unchanged:'Up to date','content-conflict':'Both copies changed','structure-conflict':'Organization or placement changed','initial-conflict':'Starting copies differ',uncertain:'Save needs verification',unavailable:'Connection or permission needs attention','changed-before-write':'Changed during check',pending:'Save in progress',uninitialized:'Not yet compared'};
+const labels:Record<string,string>={'imported-awaiting-live-check':'Imported · Automatic checks have not started',synced:'Up to date',unchanged:'Up to date','content-conflict':'Both copies changed','structure-conflict':'Organization or placement changed','initial-conflict':'Starting copies differ',uncertain:'Save needs verification',unavailable:'Connection or permission needs attention','changed-before-write':'Changed during check',pending:'Save in progress',uninitialized:'Not yet compared'};
 export default function LocalTrialSync(){
  const workspace=useLocalWorkspace()!,{client,session,organization,active,authNeeded}=workspace;
  const [open,setOpen]=useState(false),[status,setStatus]=useState<Status|null>(null),[busy,setBusy]=useState(false),[message,setMessage]=useState('');
@@ -37,11 +38,13 @@ export default function LocalTrialSync(){
   <p>Keep the two schedule apps connected during the trial. If both copies change, syncing stops for that schedule so you can review them.</p>
   <button className="btn btn-light" onClick={()=>{setOpen(true);void load();}}>Review synchronization</button>
   <Modal open={open&&active&&!authNeeded} onClose={()=>setOpen(false)} title="Trial synchronization" className="template-modal" footer={<><button className="btn btn-light" onClick={()=>setOpen(false)}>Close</button><button className="btn btn-light" disabled={busy} onClick={()=>void load()}>Refresh status</button>{status?.configured&&<button className={status.enabled?'btn btn-light':'btn btn-pink'} disabled={busy} onClick={()=>void load(!status.enabled)}>{status.enabled?'Pause synchronization':'Resume synchronization'}</button>}</>}>
+   <LocalTrialSyncComparison />
    <p role="status">{busy?'Checking synchronization…':message}</p>
    {status&&!status.configured&&<p>The trial connection is being prepared. Your schedules are not being synchronized yet.</p>}
    {status?.configured&&<>
-    <h3>{!status.enabled?'Paused':!status.authorized?'Permission needs attention':attention.length||inventoryCount||inventoryStale?'Schedules need review':'Synchronization enabled'}</h3>
-    <p>{rows.length} {rows.length===1?'schedule':'schedules'} connected. {attention.length} {attention.length===1?'needs':'need'} review. Check the times below to confirm the worker is running.</p>
+    <h3>Automatic synchronization</h3>
+    <h4>{!status.enabled?'Paused':!status.authorized?'Permission needs attention':attention.length||inventoryCount||inventoryStale?'Schedules need review':'Synchronization enabled'}</h4>
+    <p>{rows.length} {rows.length===1?'schedule':'schedules'} connected. {attention.length} await a completed automatic check or review. The comparison above does not start the worker.</p>
     {inventoryStale&&<p role="status">The full library inventory has not been checked recently. Connected schedules alone do not confirm that every schedule is synchronized.</p>}
     {!!inventoryCount&&<div><h4>Schedules awaiting reconciliation</h4><p>{inventoryCount} inventory {inventoryCount===1?'difference':'differences'} found. New schedules are not connected automatically; missing entries may have been renamed, moved or deleted.</p><details><summary>Review inventory differences</summary><ul>{inventory!.legacy_unmapped.map(key=><li key={'new:'+key}>Legacy app, not connected: {key}</li>)}{inventory!.legacy_missing.map(key=><li key={'missing:'+key}>Legacy app, no longer found: {key}</li>)}{inventory!.target_unmapped.map(row=><li key={row.id}>New app, not connected: {row.name}</li>)}{inventory!.target_missing.length>0&&<li>{inventory!.target_missing.length} connected schedules are no longer available in the new app.</li>}</ul></details></div>}
     <p>Renames, moves, new schedules, templates and library changes require separate reconciliation during the trial. They are not automatically copied.</p>
