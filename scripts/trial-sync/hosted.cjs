@@ -26,25 +26,33 @@ function transport({supabaseUrl,secret,legacyOrigin,bridgeSecret,fetchImpl=fetch
  return {rpc:(name,body)=>request(new URL('/rest/v1/rpc/'+name,database),{apikey:secret},body),
   bridge:body=>request(new URL('/.netlify/functions/trial-sync',legacy),{Authorization:'Bearer '+bridgeSecret},body)};
 }
-async function runHosted({rpc,bridge,integrationId,legacyOrigin,netlifySiteId,organizationId,deadline,now=Date.now,maxMappings=100,inspectOnly=false}){
- if(![integrationId,netlifySiteId,organizationId].every(x=>uuid.test(x)))throw Error('Invalid sync binding');
- const totals={checked:0,current:0,review:0,unavailable:0};
- while(now()<deadline-15000&&totals.checked<maxMappings){
-  const claim=randomUUID(),job=await rpc('claim_trial_sync_mapping',{target_integration_id:integrationId,claim_id:claim});
-  if(job?.state==='idle')break;
-  if(job?.state!=='claimed'||job.organizationId!==organizationId||job.legacyOrigin!==legacyOrigin||job.netlifySiteId!==netlifySiteId||!uuid.test(job.mapping?.id)||!uuid.test(job.mapping?.supabaseId)||typeof job.mapping?.netlifyKey!=='string'||!Number.isSafeInteger(job.sequence)||job.sequence<0||!job.entry||typeof job.entry!=='object'||Date.parse(job.leaseUntil)<=now())throw failure('TARGET_IDENTITY_OR_STATE');
+async function runClaim({rpc,bridge,job,claim,organizationId,now=Date.now,inspectOnly=false,resolution,authorize=async()=>{}}){
+  await authorize();
+  const guardedRpc=async(n,b)=>{await authorize();return rpc(n,b);};
+  const guardedBridge=async(b)=>{await authorize();return bridge(b);};
   const m=job.mapping,ids={target_mapping_id:m.id,claim_id:claim};let sequence=job.sequence;
   const state={entries:{[m.id]:structuredClone(job.entry)}};
-  const checkpoint=async()=>{const next=await rpc('checkpoint_trial_sync',{...ids,expected_sequence:sequence,next_state:state.entries[m.id],release_claim:false});if(next!==sequence+1)throw failure('INVALID_RESPONSE');sequence=next;};
+  const checkpoint=async()=>{const next=await guardedRpc('checkpoint_trial_sync',{...ids,expected_sequence:sequence,next_state:state.entries[m.id],release_claim:false});if(next!==sequence+1)throw failure('INVALID_RESPONSE');sequence=next;};
   const adapters={
-   netlify:{read:()=>bridge({operation:'read',key:m.netlifyKey}),write:(_m,expected,next)=>bridge({operation:'write',key:m.netlifyKey,expected,document:next})},
-   supabase:{read:async()=>decode(await rpc('read_trial_sync_schedule',ids),m,organizationId),write:async(_m,expected,next)=>decode(await rpc('write_trial_sync_schedule',{...ids,expected_version:Number(expected.version),expected_guard:expected.guard,next_document:{...document(next),savedAt:now()}}),m,organizationId)}
+   netlify:{read:()=>guardedBridge({operation:'read',key:m.netlifyKey}),write:(_m,expected,next)=>guardedBridge({operation:'write',key:m.netlifyKey,expected,document:next})},
+   supabase:{read:async()=>decode(await guardedRpc('read_trial_sync_schedule',ids),m,organizationId),write:async(_m,expected,next)=>decode(await guardedRpc('write_trial_sync_schedule',{...ids,expected_version:Number(expected.version),expected_guard:expected.guard,next_document:{...document(next),savedAt:now()}}),m,organizationId)}
   };
   // Never release a lease after an uncertain checkpoint: its saved pending intent
   // must remain available for the next worker after lease expiry.
-  const entry=inspectOnly?await inspect(state,m,adapters,checkpoint):await apply(state,m,adapters,checkpoint);
-  const released=await rpc('checkpoint_trial_sync',{...ids,expected_sequence:sequence,next_state:entry,release_claim:true});
+  const entry=inspectOnly?await inspect(state,m,adapters,checkpoint):await apply(state,m,adapters,checkpoint,{resolution});
+  const released=await guardedRpc('checkpoint_trial_sync',{...ids,expected_sequence:sequence,next_state:entry,release_claim:true});
   if(released!==sequence+1)throw failure('INVALID_RESPONSE');
+  return entry;
+}
+async function runHosted({rpc,bridge,integrationId,legacyOrigin,netlifySiteId,organizationId,deadline,now=Date.now,maxMappings=100,inspectOnly=false,mappingIds}){
+ if(![integrationId,netlifySiteId,organizationId].every(x=>uuid.test(x)))throw Error('Invalid sync binding');
+ const totals={checked:0,current:0,review:0,unavailable:0};
+ while(now()<deadline-15000&&totals.checked<maxMappings){
+  const claim=randomUUID(),job=await rpc(mappingIds?'claim_scoped_trial_sync_mapping':'claim_trial_sync_mapping',{target_integration_id:integrationId,claim_id:claim,...(mappingIds?{allowed_mapping_ids:mappingIds}:{})});
+  if(job?.state==='idle')break;
+  if(mappingIds&&!mappingIds.includes(job?.mapping?.id))throw failure('TARGET_IDENTITY_OR_STATE');
+  if(job?.state!=='claimed'||job.organizationId!==organizationId||job.legacyOrigin!==legacyOrigin||job.netlifySiteId!==netlifySiteId||!uuid.test(job.mapping?.id)||!uuid.test(job.mapping?.supabaseId)||typeof job.mapping?.netlifyKey!=='string'||!Number.isSafeInteger(job.sequence)||job.sequence<0||!job.entry||typeof job.entry!=='object'||!Number.isFinite(Date.parse(job.leaseUntil))||Date.parse(job.leaseUntil)<=now())throw failure('TARGET_IDENTITY_OR_STATE');
+  const entry=await runClaim({rpc,bridge,job,claim,organizationId,now,inspectOnly});
   totals.checked++;if(['synced','unchanged'].includes(entry.status))totals.current++;else if(entry.status==='unavailable')totals.unavailable++;else totals.review++;
  }
  return totals;
@@ -56,4 +64,4 @@ async function checkHostedInventory({rpc,bridge,integrationId,organizationId,net
  if(!Number.isSafeInteger(result?.attention)||result.attention<0)throw failure('INVALID_RESPONSE');
  return result.attention;
 }
-module.exports={authorized,decode,transport,runHosted,checkHostedInventory};
+module.exports={authorized,decode,transport,runHosted,runClaim,checkHostedInventory};

@@ -18,6 +18,20 @@ The restricted Netlify bridge is deployed. Only its published Production deploym
 
 The sections below document the earlier foreground operator tool. It is separate from the hosted worker and must not run concurrently against the same records.
 
+## Conflict review and scheduled pilot (October 20 evening)
+
+The hosted database now includes `read_trial_sync_review`, `begin_trial_sync_resolution` and `claim_scoped_trial_sync_mapping` (migration `20261021010540`). These are additive functions: no accounts, memberships, documents or baselines are changed by their installation. The two human RPCs verify the current session, organization Owner, MFA and schedule export permissions; requesting a replacement additionally requires recent TOTP and an exact checkpoint sequence. Only the machine role can claim scoped automated work. The hosted advisor's two new authenticated SECURITY DEFINER notices are intentional bounded RPC entry points, tested for anonymous, expired-session, MFA and scope denial. See [the advisor explanation](https://supabase.com/docs/guides/database/database-linter?lint=0029_authenticated_security_definer_function_executable). Private tables remain inaccessible; no role gets direct table access.
+
+**Review differences** shows the last compared common/legacy/new-app documents and changed fields. A separate selection and confirmation submits an exact review hash. The server rechecks session authority before each backend operation, acquires the same exclusive lease used by the worker, compares both live versions again, persists recovery intent, and performs the existing conditional write. Missing acknowledgements retain recovery intent and are not blindly replayed. A renamed/moved/archived document cannot be resolved as a content conflict. Closing the review never submits a choice; an already-submitted save is not cancelled by closing the browser.
+
+`vercel.json` schedules `/api/trial-sync/tick` every minute; the endpoint remains inactive unless its Production enable flag, private `CRON_SECRET`, database activation and explicit mapping scope are all configured. `ROSELAND_TRIAL_SYNC_MAPPING_IDS` must be a nonempty JSON UUID array; only those mappings can receive worker leases or conflict replacements. `ROSELAND_TRIAL_SYNC_WRITE_ENABLED=true` separately permits schedule writes. The legacy key allowlist must match the pilot scope. Overlapping invocations share database leases. A failed request is rechecked on a later scheduled pass, retaining uncertain-write recovery records.
+
+The initial intended pilot is **Lexington – Nov 10 – DRAFT**, mapping `dc83a6e3-a7a1-44dc-b18c-116b032bd698`. At preparation time, writes and automatic synchronization are still OFF. Live round-trip/conflict/recovery and complete-library scheduling remain unverified; do not describe the trial as active from local tests or a deployment alone.
+
+User launch order: finish synchronization, then a comprehensive user review of every UI screen/text/layout; only after that approval may Nancy and Melissa be invited. No invitations have been sent.
+
+Validation: production build, 144 editor tests, platform regression suite and 17 rollback-only local database assertions passed. Focused tests cover two-way explicit choice, changed versions, failed checkpoints, lost acknowledgements, revocation, same-mapping lease exclusion, paused writes and pilot scope. Local advisor found no issues. The current hosted advisor reports intended RPC exposure notices rather than permission-test failures.
+
 ## Foreground operator tool: what it does
 
 - Retains the last common document for every explicitly mapped schedule.
