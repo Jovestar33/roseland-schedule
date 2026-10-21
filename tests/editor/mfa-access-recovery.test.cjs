@@ -26,7 +26,7 @@ test('failed background check revokes ready state; repeated failure remains unav
  f.update({revision:2});f.reply(f.batches[2],{error:true});await f.flush();assert.equal(f.stage.at(-1),'unavailable');
 });
 test('only a successful required-factor check shows a code challenge',async()=>{
- const f=fixture();f.reply(f.batches[0],{required:true,verified:true});await f.flush();assert.equal(f.stage.at(-1),'code');assert.equal(f.ready.at(-1),false);assert.match(text(f.tree),/Verify your authenticator/);assert.doesNotMatch(text(f.tree),/local batch|Retry MFA checks/);
+ const f=fixture();f.reply(f.batches[0],{required:true,verified:true});await f.flush();assert.equal(f.stage.at(-1),'code');assert.equal(f.ready.at(-1),false);assert.match(text(f.tree),/Two-step verification/);assert.doesNotMatch(text(f.tree),/local batch|Retry MFA checks/);
 });
 test('required access without a factor shows setup, not a code prompt',async()=>{
  const f=fixture();f.reply(f.batches[0],{required:true});await f.flush();assert.equal(f.stage.at(-1),'enroll');assert.match(text(f.tree),/Set up two-step verification/);assert.doesNotMatch(text(f.tree),/Authenticator code/);

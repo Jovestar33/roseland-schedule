@@ -12,6 +12,7 @@ export default function LocalAccountAccess({ review=false, showMaintenance=true,
   const taskHeading=useRef<HTMLHeadingElement>(null), returnEntry=useRef<'signup'|'recovery'|null>(null);
   const invitationEntry=useRef<HTMLButtonElement>(null), recoveryEntry=useRef<HTMLButtonElement>(null);
   const [email, setEmail] = useState(''), [invitation, setInvitation] = useState(''), [accepted, setAccepted] = useState(false);
+  const [mailSent, setMailSent] = useState(false);
   const [message, setMessage] = useState(''), [busy, setBusy] = useState(false), busyRef = useRef(false);
   const [policy, setPolicy] = useState<Policy | null>(null), [policyChecked, setPolicyChecked] = useState(false);
   const [retry, setRetry] = useState(0), deadline = useRef<number | null>(null), generation = useRef(0);
@@ -21,6 +22,7 @@ export default function LocalAccountAccess({ review=false, showMaintenance=true,
     global: { fetch: (input, init) => fetch(input, { ...init, cache: 'no-store', redirect: 'error', signal: AbortSignal.timeout(15000) }) },
   }));
   const [password, setPassword] = useState(''), [confirmation, setConfirmation] = useState('');
+  const [factorChecked, setFactorChecked] = useState(false);
   const [factor, setFactor] = useState<string | null>(null), [code, setCode] = useState('');
   const entry=review&&(!session||authNeeded);
   useLayoutEffect(()=>{onEntryTaskChange?.(!!callback||(entry&&!!mode));},[callback,entry,mode,onEntryTaskChange]);
@@ -37,9 +39,9 @@ export default function LocalAccountAccess({ review=false, showMaintenance=true,
       if (!location.hash) return;
       const parsed = parseAccountCallback(location.hash);
       history.replaceState(null, '', location.pathname + location.search);
-      if (callbackActive.current || busyRef.current) { setMessage('Finish or close the current email action before opening another link.'); return; }
-      if (parsed) { callbackActive.current=true; setCallback(parsed); setMessage('Review this email action before continuing. Your open workspace has not changed.'); }
-      else setMessage('This email link is unavailable. Request a new message if needed.');
+      if (callbackActive.current || busyRef.current) { setMessage('Finish this step or cancel before opening another link.'); return; }
+      if (parsed) { callbackActive.current=true; setCallback(parsed); setMessage(''); }
+      else setMessage('This link has expired or is invalid. Please request a new one.');
     };
     receive(); window.addEventListener('hashchange',receive);
     return () => window.removeEventListener('hashchange',receive);
@@ -86,10 +88,10 @@ export default function LocalAccountAccess({ review=false, showMaintenance=true,
     const timer = window.setInterval(expired, 1000);
     return () => { active = false; clearInterval(timer); events.forEach(name => window.removeEventListener(name, activity)); };
   }, [sessionToken, authNeeded, client, onReady, requireAuth]);
-  useEffect(() => { setEmail(''); setInvitation(''); setAccepted(false); setMode(null); if (!callbackActive.current) setMessage(''); }, [session?.user.id]);
-  async function run(action: () => Promise<void>) {
+  useEffect(() => { setEmail(''); setInvitation(''); setAccepted(false); setMailSent(false); setMode(null); if (!callbackActive.current) setMessage(''); }, [session?.user.id]);
+  async function run(action: () => Promise<void>, failure = 'Something went wrong. Please try again.') {
     if (busyRef.current) return; busyRef.current = true; setBusy(true);
-    try { await action(); } catch { setMessage('Please check your inbox. If no email arrives, try again in a few minutes.'); }
+    try { await action(); } catch { setMessage(failure); }
     finally { busyRef.current = false; setBusy(false); }
   }
   async function requestMail(event: React.FormEvent) {
@@ -97,34 +99,44 @@ export default function LocalAccountAccess({ review=false, showMaintenance=true,
       const result = await fetch(config.hosted?'/api/platform/account/mail':'/api/platform/local-account/mail', { method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action: mode, email, ...(mode === 'signup' ? { invitationId: invitation, ...(config.hosted?{}:{accepted}) } : {}) }),
         cache: 'no-store', redirect: 'error', signal: AbortSignal.timeout(15000) });
-      const data = await result.json(); setMessage(data.message ?? 'Request unavailable.');
-    });
+      const data = await result.json(); setMessage(data.message ?? 'We couldn’t send the link. Please try again.');
+      if (result.ok) setMailSent(true);
+    }, 'Please check your inbox. If no email arrives, try again in a few minutes.');
+  }
+  async function checkCallbackSecurity() {
+    setFactorChecked(false);
+    const factors = await callbackClient.auth.mfa.listFactors();
+    if (factors.error || !factors.data) { setMessage('We couldn’t check your account security. Please try again.'); return; }
+    setFactor(factors.data.totp.find(value => value.status === 'verified')?.id ?? null);
+    setFactorChecked(true); setMessage('');
   }
   async function verifyLink() { await run(async () => {
     if (!callback) return;
     const result = await callbackClient.auth.verifyOtp({ token_hash: callback.tokenHash, type: callback.type });
-    if (result.error || !result.data.session) { setMessage('This email link is unavailable or has already been used. Try signing in or request a new message.'); return; }
+    if (result.error || !result.data.session) { setMessage('This link has expired or has already been used. Please request a new one.'); return; }
     setCallbackEmail(result.data.user?.email ?? 'Verified account');
-    const factors = await callbackClient.auth.mfa.listFactors();
-    setFactor(factors.data?.totp.find(value => value.status === 'verified')?.id ?? null);
-    setMessage('Email verified. Set your password below; then sign in again. This has not accepted organization access.');
+    await checkCallbackSecurity();
   }); }
   async function changePassword(event: React.FormEvent) { event.preventDefault(); await run(async () => {
+    if (!factorChecked) { setMessage('Please retry the security check before continuing.'); return; }
     if (password !== confirmation) { setMessage('Passwords must match.'); return; }
     if (factor) {
       const verified = await callbackClient.auth.mfa.challengeAndVerify({ factorId: factor, code }); setCode('');
-      if (verified.error) { setMessage('Authenticator verification is required. No recovery bypass is available.'); return; }
+      if (verified.error) { setMessage('That code wasn’t accepted. Enter the current 6-digit code from your authenticator app.'); return; }
     }
-    const result = await callbackClient.auth.updateUser({ password }); setPassword(''); setConfirmation('');
-    if (result.error) { setMessage('Password change was not confirmed. Check password requirements and required MFA, or try signing in before using another link.'); return; }
+    const result = await callbackClient.auth.updateUser({ password });
+    if (result.error) { setMessage('We couldn’t update your password. Check the requirements below and try again.'); return; }
+    setPassword(''); setConfirmation('');
     await callbackClient.auth.signOut({ scope: 'local' });
     if (sessionRef.current?.user.id === result.data.user.id) { onReady(false); requireAuth(); }
     const id = callback?.invitationId; if (id) onInvitation({actor:result.data.user.id,id});
-    callbackActive.current=false; setCallback(null); setCallbackEmail(''); setFactor(null);
-    setMessage('Password saved. Existing sessions are invalidated. Sign in with your new password and any required MFA, then review your invitation.');
+    callbackActive.current=false; setCallback(null); setCallbackEmail(''); setFactor(null); setFactorChecked(false);
+    setMode(null); setMailSent(false);
+    setMessage(id ? 'Password updated. Sign in to finish joining your team.' : 'Password updated. Sign in with your new password.');
   }); }
+  const notice = <p hidden={!message||(review&&authNeeded&&/^(You have been inactive|Account checks)/.test(message))} role="status" aria-live="polite">{message}</p>;
   return <section aria-label="Account access" data-account-task={entry&&!!mode||review&&!!callback||undefined} aria-busy={busy} style={{ margin: '12px 0', maxWidth: 720 }}>
-    <p hidden={!message||(review&&authNeeded&&/^(You have been inactive|Account checks)/.test(message))} role="status" aria-live="polite">{message}</p>
+    {!callback&&!mode&&notice}
     {session && !authNeeded && !policy && (!review||!callback) && <button disabled={busy} onClick={() => setRetry(value => value + 1)}>Retry account checks</button>}
     {config.hosted && policy && !accountPolicyAllowsEntry(policy,true) && <p role="alert">Account notices are not ready for review. Contact your administrator. Your unfinished work is retained.</p>}
     {!config.hosted && policy && !policy.accepted && (!review||(!callback&&!!session&&!authNeeded)) && <form onSubmit={event => { event.preventDefault(); void run(async () => {
@@ -139,17 +151,26 @@ export default function LocalAccountAccess({ review=false, showMaintenance=true,
       <label style={{display:'flex',alignItems:'flex-start'}}><input type="checkbox" checked={policyChecked} onChange={e => setPolicyChecked(e.target.checked)}/> I accept the Terms of Service and acknowledge the Privacy Policy.</label>
       <p><button disabled={busy || !policyChecked}>Continue</button></p>
     </form>}
-    {callback ? <div>
-      <h2 ref={taskHeading} tabIndex={-1}>{callback.type === 'invite' ? 'Verify your invited account' : 'Reset your password'}</h2>
-      {!callbackEmail ? <button disabled={busy} onClick={() => void verifyLink()}>Verify email link</button> : <form onSubmit={changePassword}>
-        <p>Verified account: {callbackEmail}. Your current workspace is kept separately.</p>
-        <label>New password <input required minLength={12} maxLength={128} type="password" autoComplete="new-password" value={password} onChange={e => setPassword(e.target.value)}/></label>
-        <p>Use at least 12 characters including upper/lowercase letters and a number.</p>
-        <label>Repeat password <input required type="password" autoComplete="new-password" value={confirmation} onChange={e => setConfirmation(e.target.value)}/></label>
-        {factor && <label>Authenticator code <input required inputMode="numeric" autoComplete="one-time-code" value={code} onChange={e => setCode(e.target.value)}/></label>}
-        <p><button disabled={busy}>Save password and sign out existing sessions</button></p>
+    {callback ? <div data-account-flow>
+      <h2 ref={taskHeading} tabIndex={-1}>{callback.type === 'invite' ? 'Set your password' : callbackEmail ? 'Choose a new password' : 'Reset your password'}</h2>
+      {notice}
+      {!callbackEmail ? <>
+        <p>Continue to choose a new password for your account.</p>
+        <button data-account-primary disabled={busy} onClick={() => void verifyLink()}>{busy?'Opening link…':'Continue'}</button>
+      </> : !factorChecked ? <button data-account-primary disabled={busy} onClick={()=>void run(checkCallbackSecurity)}>{busy?'Checking account…':'Retry security check'}</button> : <form onSubmit={changePassword}>
+        <p data-account-address>{callbackEmail}</p>
+        <label>New password <input required minLength={12} maxLength={128} type="password" autoComplete="new-password" aria-describedby="reset-password-help" value={password} onChange={e => setPassword(e.target.value)}/></label>
+        <p id="reset-password-help" data-account-help>At least 12 characters, with uppercase and lowercase letters and a number.</p>
+        <label>Confirm password <input required type="password" autoComplete="new-password" value={confirmation} onChange={e => setConfirmation(e.target.value)}/></label>
+        {factor && <div data-account-verification>
+          <label>Authenticator code <input required pattern="[0-9]{6}" maxLength={6} inputMode="numeric" autoComplete="one-time-code" aria-describedby="reset-authenticator-help" value={code} onChange={e => setCode(e.target.value)}/></label>
+          <p id="reset-authenticator-help" data-account-help>Enter the 6-digit code from the authenticator app linked to your account.</p>
+          <details><summary>Can’t access your authenticator?</summary><p>Contact your organization’s administrator for help recovering access. Resetting your password does not remove two-step verification.</p></details>
+        </div>}
+        <button data-account-primary disabled={busy}>{busy?'Updating password…':callback.type==='invite'?'Set password':'Update password'}</button>
+        <p data-account-help>For security, you’ll be signed out of your other sessions.</p>
       </form>}
-      <button disabled={busy} onClick={() => void run(async () => { await callbackClient.auth.signOut({ scope: 'local' }); callbackActive.current=false; returnEntry.current='recovery'; setCallback(null); setCallbackEmail(''); setFactor(null); setPassword(''); setConfirmation(''); setCode(''); setMessage(''); })}>Close email action</button>
+      <div data-account-entry><button disabled={busy} onClick={() => void run(async () => { await callbackClient.auth.signOut({ scope: 'local' }); callbackActive.current=false; returnEntry.current='recovery'; setCallback(null); setCallbackEmail(''); setFactor(null); setFactorChecked(false); setPassword(''); setConfirmation(''); setCode(''); setMessage(''); setMode(null); setMailSent(false); })}>Cancel</button></div>
     </div> : <div hidden={!showMaintenance}>
       {review&&(!session||authNeeded)?<div data-account-entry hidden={!!mode}>
         <button ref={recoveryEntry} type="button" disabled={busy} aria-expanded={mode==='recovery'} onClick={()=>setMode(mode==='recovery'?null:'recovery')}>Forgot password?</button>
@@ -158,19 +179,27 @@ export default function LocalAccountAccess({ review=false, showMaintenance=true,
         {!review&&<><button disabled={busy} onClick={() => setMode(mode === 'signup' ? null : 'signup')}>Create invited account</button>{' '}</>}
         <button disabled={busy} onClick={() => setMode(mode === 'recovery' ? null : 'recovery')}>{review&&session&&!authNeeded?'Reset password':'Forgot password'}</button>
       </>}
-      {mode && <form onSubmit={requestMail} aria-label={mode==='signup'?'Invitation setup':'Password recovery'}>
-        <h2 ref={taskHeading} tabIndex={-1}>{review?(mode==='signup'?'Set up your invited account':'Reset your password'):(mode==='signup'?'Create an invited account':'Request password recovery')}</h2>
-        <label>Email <input required type="email" maxLength={320} autoComplete="email" value={email} onChange={e => setEmail(e.target.value)}/></label>
+      {mode && (mailSent ? <div data-account-flow>
+        <h2 ref={taskHeading} tabIndex={-1}>Check your email</h2>
+        <p data-account-address>{email}</p>
+        {notice}
+        <p data-account-help>No email yet? Check your spam folder, or try again in a few minutes.</p>
+        <button data-account-primary disabled={busy} onClick={()=>{returnEntry.current=mode;setMode(null);setMailSent(false);setMessage('');}}>{session&&!authNeeded?'Back to account settings':'Back to sign in'}</button>
+        <div data-account-entry><button disabled={busy} onClick={()=>{setMailSent(false);setMessage('');}}>Try another email</button></div>
+      </div> : <form onSubmit={requestMail} aria-label={mode==='signup'?'Invitation setup':'Password recovery'}>
+        <h2 ref={taskHeading} tabIndex={-1}>{mode==='signup'?'Accept your invitation':'Reset your password'}</h2>
+        {notice}
+        <p>{mode==='signup'?'Enter your email and the invitation ID from your invitation.':'Enter your account email and we’ll send you a reset link.'}</p>
+        <label>Email address <input required type="email" maxLength={320} autoComplete="email" value={email} onChange={e => setEmail(e.target.value)}/></label>
         {mode === 'signup' && <>
-          <p><label>Invitation ID <input required value={invitation} onChange={e => setInvitation(e.target.value)}/></label></p>
+          <label>Invitation ID <input required value={invitation} onChange={e => setInvitation(e.target.value)}/></label>
           {!config.hosted&&<FictionalNotices terms={FICTIONAL_TERMS} privacy={FICTIONAL_PRIVACY}/>}
           {!config.hosted&&<label style={{display:'flex',alignItems:'flex-start'}}><input type="checkbox" checked={accepted} onChange={e => setAccepted(e.target.checked)}/> I accept the Terms of Service and acknowledge the Privacy Policy.</label>}
         </>}
-        <p><button data-account-primary disabled={busy || (mode === 'signup' && !config.hosted && !accepted)}>{busy?'Sending…':'Send email'}</button></p>
-        {config.hosted?null:<p>Local fictional testing only. Messages stay in the local mail sink. A sent request may complete even if its reply is lost.</p>}
-        {review&&session&&!authNeeded&&<p><button type="button" disabled={busy} onClick={()=>{setMode(null);setMessage('');}}>Cancel password reset</button></p>}
-        {review&&(!session||authNeeded)&&<div data-account-entry><button type="button" disabled={busy} onClick={()=>{returnEntry.current=mode;setMode(null);}}>Back to sign in</button></div>}
-      </form>}
+        <button data-account-primary disabled={busy || (mode === 'signup' && !config.hosted && !accepted)}>{busy?'Sending…':mode==='signup'?'Send invitation link':'Send reset link'}</button>
+        {!config.hosted&&<p>Local fictional testing only. Messages stay in the local mail sink.</p>}
+        <div data-account-entry><button type="button" disabled={busy} onClick={()=>{returnEntry.current=mode;setMode(null);setMessage('');}}>{session&&!authNeeded?'Cancel':'Back to sign in'}</button></div>
+      </form>)}
     </div>}
   </section>;
 }

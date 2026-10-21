@@ -3,7 +3,6 @@ import { createClient } from '@supabase/supabase-js';
 import { NextRequest, NextResponse } from 'next/server';
 import { readHostedWorkspaceConfig } from '@/lib/platform/hosted-workspace-config';
 export const dynamic = 'force-dynamic';
-const generic = { message: 'If this request is eligible, check your email. You may also sign in with an existing account.' };
 export async function POST(request: NextRequest) {
   const config = readHostedWorkspaceConfig(process.env, request.headers.get('host'));
   const secret = process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -53,7 +52,9 @@ export async function POST(request: NextRequest) {
     // A common lower bound removes the obvious fast ineligible-user path. This
     // is not a claim of constant-time network/provider behavior.
     await new Promise(resolve => setTimeout(resolve, Math.max(0, 800 - (Date.now() - began))));
-    return NextResponse.json(generic, { status: 202, headers });
+    return NextResponse.json({ message: body.action === 'recovery'
+      ? 'If an account matches this email, you’ll receive a password reset link shortly.'
+      : 'If your invitation matches this email, you’ll receive a link to set up your account.' }, { status: 202, headers });
   } catch {
     return NextResponse.json({ message: 'Please check your inbox. If no email arrives, try again in a few minutes.' }, { status: 503, headers });
   }

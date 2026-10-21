@@ -47,16 +47,16 @@ export default function LocalMfaAccess({review=false,managedRecovery=false,focus
  if(stage==='checking'||stage==='unavailable')return managedRecovery?null:<section aria-label="Access checks"><h2>{stage==='checking'?'Checking your access…':'Unable to check your access'}</h2><p role="status">{stage==='checking'?'Checking your organization and account security.':message}</p><p>Your open drafts and pending requests are retained.</p>{stage==='unavailable'&&<button onClick={()=>setRetry(v=>v+1)}>Try again</button>}</section>;
  return <section aria-label="Account security" style={{margin:'12px 0',maxWidth:720}}>
   {stage==='ready'&&<button onClick={()=>setOpen(v=>!v)} disabled={busy}>{review?'Two-step verification':'Account security'}</button>}
-  {!open&&stage!=='ready'&&<div><p role="status">Two-step verification is required before you can open this organization.</p><button onClick={()=>setOpen(true)} disabled={busy}>Continue two-step setup</button></div>}
+  {!open&&stage!=='ready'&&<div><p role="status">Two-step verification is required before you can open this organization.</p><button onClick={()=>setOpen(true)} disabled={busy}>Continue</button></div>}
   {open&&<div>
-   <h2 ref={heading} tabIndex={-1}>{stage==='ready'?(review?'Two-step verification':'Account security'):stage==='enroll'?'Set up two-step verification':'Verify your authenticator'}</h2>
-   <p>{stage==='ready'?'An authenticator adds protection to your account.':stage==='enroll'?'Your access requires an authenticator. Set one up to continue.':'Enter the current six-digit code from your authenticator to continue.'}</p>
+   <h2 ref={heading} tabIndex={-1}>{stage==='ready'?(review?'Two-step verification':'Account security'):stage==='enroll'?'Set up two-step verification':'Two-step verification'}</h2>
+   <p>{stage==='ready'?'An authenticator adds protection to your account.':stage==='enroll'?'Set up an authenticator app to protect your account.':'Enter the current six-digit code from your authenticator to continue.'}</p>
    <p role="status">{message}</p>
-   {stage==='ready'&&<p>{factor?'Authenticator verified for this session.':'MFA is optional for your current access.'}</p>}
+   {stage==='ready'&&<p>{factor?'Authenticator verified for this session.':'Two-step verification is optional for your account.'}</p>}
    {(stage==='enroll'||stage==='ready'&&!factor)&&!secret&&<button disabled={busy} onClick={()=>void run(async current=>{
     const result=await client.auth.mfa.enroll({factorType:'totp',friendlyName:'Roseland '+crypto.randomUUID().slice(0,8)});
     if(!current())return;
-    if(result.error||!result.data){setMessage('Enrollment could not start. Retry when connected. Existing authenticators are unchanged.');return;}
+    if(result.error||!result.data){setMessage('We couldn’t start setup. Please try again.');return;}
     pendingFactor.current=true;setFactor(result.data.id);setSecret(result.data.totp.secret);setQr(result.data.totp.qr_code);setStage('code');onReady(false);setMessage('Scan the code, then enter the six-digit code from your authenticator.');
    })}>Set up authenticator</button>}
    {secret&&<div><img src={qr} alt="Authenticator setup QR code" width={200} height={200}/><p>Manual setup secret: <code>{secret}</code></p></div>}
@@ -64,11 +64,10 @@ export default function LocalMfaAccess({review=false,managedRecovery=false,focus
     const result=await client.auth.mfa.challengeAndVerify({factorId:factor,code});
     if(!current())return;setCode('');
     if(result.error){setMessage('That code was not accepted. Try the current code from your authenticator.');return;}
-    pendingFactor.current=false;setSecret('');setQr('');setMessage('Authenticator verified. Your retained work is ready to resume.');onVerified();setRetry(v=>v+1);
-   });}}><label>Authenticator code <input required pattern="[0-9]{6}" inputMode="numeric" autoComplete="one-time-code" value={code} onChange={e=>setCode(e.target.value)}/></label><button className={review?"btn btn-pink":undefined} disabled={busy}>Verify authenticator</button></form>}
-   {stage!=='ready'&&<p>Your open drafts and pending requests are retained.</p>}
+    pendingFactor.current=false;setSecret('');setQr('');setMessage('Verification complete.');onVerified();setRetry(v=>v+1);
+   });}}><label>Authenticator code <input required pattern="[0-9]{6}" inputMode="numeric" autoComplete="one-time-code" value={code} onChange={e=>setCode(e.target.value)}/></label><button className={review?"btn btn-pink":undefined} disabled={busy}>Continue</button></form>}
    {pendingFactor.current&&<button type="button" disabled={busy} onClick={()=>void cancelEnrollment()}>Cancel authenticator setup</button>}
-   {stage==='ready'&&<button type="button" disabled={busy} onClick={()=>setOpen(false)}>Close security</button>}
+   {stage==='ready'&&<button type="button" disabled={busy} onClick={()=>setOpen(false)}>Close</button>}
    {stage==='code'&&!secret&&<details><summary>Can’t use your authenticator?</summary><p>Authenticator reset is not available here. Contact your organization’s administrator for help.</p></details>}
   </div>}
  </section>;

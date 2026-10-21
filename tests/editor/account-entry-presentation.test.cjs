@@ -73,7 +73,7 @@ test('expired child notice is suppressed while callback errors remain visible an
  all=nodes(render('components/local/LocalAccountAccess.tsx',{mode:'signup',callback:{type:'recovery'},message:'This email link is unavailable.'},props));
  assert.ok(all.some(({node,shown})=>shown&&node.props?.role==='status'));
  assert.equal(all.filter(({node,shown})=>shown&&node.type==='form').length,0);
- assert.ok(all.some(({node,shown})=>shown&&node.type==='button'&&node.props.children==='Close email action'));
+ assert.ok(all.some(({node,shown})=>shown&&node.type==='button'&&node.props.children==='Cancel'));
 });
 
 test('unavailable organization and MFA checks form one recovery task and preserve mounted disabled drafts',()=>{
@@ -97,4 +97,35 @@ test('password maintenance stays hidden outside account settings while account c
  const all=nodes(render('components/local/LocalAccountAccess.tsx',{}, {config,review:true,showMaintenance:false,session,authNeeded:false,onReady:()=>{},requireAuth:()=>{},onInvitation:()=>{}}));
  assert.ok(all.some(({node,shown})=>!shown&&node.type==='button'&&node.props.children==='Reset password'));
  assert.ok(all.some(({node,shown})=>shown&&node.type==='button'&&node.props.children==='Retry account checks'));
+});
+
+test('reset confirmation replaces the request form and provides a clear return path',()=>{
+ const props={config:{...config,hosted:true},review:true,session:null,authNeeded:false,onReady:()=>{},requireAuth:()=>{},onInvitation:()=>{}};
+ const all=nodes(render('components/local/LocalAccountAccess.tsx',{mode:'recovery',mailSent:true,email:'fixture@example.test',message:'If an account matches this email, you’ll receive a password reset link shortly.'},props));
+ assert.equal(all.filter(({node,shown})=>shown&&node.type==='form').length,0);
+ assert.ok(all.some(({node,shown})=>shown&&node.type==='h2'&&node.props.children==='Check your email'));
+ assert.equal(all.filter(({node,shown})=>shown&&node.type==='button'&&node.props['data-account-primary']!==undefined).length,1);
+ assert.ok(all.some(({node,shown})=>shown&&node.type==='button'&&node.props.children==='Try another email'));
+});
+test('verified recovery retains required MFA and uses one primary password action',()=>{
+ const props={config:{...config,hosted:true},review:true,session:null,authNeeded:false,onReady:()=>{},requireAuth:()=>{},onInvitation:()=>{}};
+ const all=nodes(render('components/local/LocalAccountAccess.tsx',{callback:{type:'recovery'},callbackEmail:'fixture@example.test',factor:'existing-factor',factorChecked:true},props));
+ const fields=all.filter(({node,shown})=>shown&&node.type==='input');
+ assert.equal(fields.filter(({node})=>node.props.type==='password'&&node.props.required).length,2);
+ assert.ok(fields.some(({node})=>node.props.autoComplete==='one-time-code'&&node.props.required&&node.props.pattern==='[0-9]{6}'));
+ assert.equal(all.filter(({node,shown})=>shown&&node.type==='button'&&node.props['data-account-primary']!==undefined).length,1);
+ assert.ok(all.some(({node,shown})=>shown&&node.type==='button'&&node.props.children==='Update password'));
+ assert.ok(all.some(({node,shown})=>shown&&node.type==='button'&&node.props.children==='Cancel'));
+});
+
+test('password changes cannot proceed until account security is checked or when the MFA code is rejected',async()=>{
+ const props={config:{...config,hosted:true},review:true,session:null,authNeeded:false,onReady:()=>{},requireAuth:()=>{},onInvitation:()=>{}};
+ const state={callback:{type:'recovery'},callbackEmail:'fixture@example.test',factor:'existing-factor',password:'Test-password-123',confirmation:'Test-password-123'};
+ const blocked=nodes(render('components/local/LocalAccountAccess.tsx',state,props));
+ assert.equal(blocked.filter(({node,shown})=>shown&&node.type==='form').length,0);
+ let writes=0,checks=0;
+ const callbackClient={auth:{mfa:{challengeAndVerify:async()=>{checks++;return {error:{message:'Invalid code'}};}},updateUser:async()=>{writes++;return {data:{user:{id:'fixture'}}};}}};
+ const verified=nodes(render('components/local/LocalAccountAccess.tsx',{...state,factorChecked:true,code:'000000',callbackClient},props));
+ await verified.find(({node})=>node.type==='form').node.props.onSubmit({preventDefault(){}});
+ assert.equal(checks,1);assert.equal(writes,0);
 });
