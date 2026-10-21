@@ -1,6 +1,6 @@
 'use strict';
 const {randomUUID,timingSafeEqual,createHash}=require('node:crypto');
-const {apply,document}=require('./core.cjs');
+const {apply,inspect,document}=require('./core.cjs');
 const {failure,placement}=require('./adapters.cjs');
 const uuid=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 function authorized(header,secret){
@@ -26,7 +26,7 @@ function transport({supabaseUrl,secret,legacyOrigin,bridgeSecret,fetchImpl=fetch
  return {rpc:(name,body)=>request(new URL('/rest/v1/rpc/'+name,database),{apikey:secret},body),
   bridge:body=>request(new URL('/.netlify/functions/trial-sync',legacy),{Authorization:'Bearer '+bridgeSecret},body)};
 }
-async function runHosted({rpc,bridge,integrationId,legacyOrigin,netlifySiteId,organizationId,deadline,now=Date.now,maxMappings=100}){
+async function runHosted({rpc,bridge,integrationId,legacyOrigin,netlifySiteId,organizationId,deadline,now=Date.now,maxMappings=100,inspectOnly=false}){
  if(![integrationId,netlifySiteId,organizationId].every(x=>uuid.test(x)))throw Error('Invalid sync binding');
  const totals={checked:0,current:0,review:0,unavailable:0};
  while(now()<deadline-15000&&totals.checked<maxMappings){
@@ -42,7 +42,7 @@ async function runHosted({rpc,bridge,integrationId,legacyOrigin,netlifySiteId,or
   };
   // Never release a lease after an uncertain checkpoint: its saved pending intent
   // must remain available for the next worker after lease expiry.
-  const entry=await apply(state,m,adapters,checkpoint);
+  const entry=inspectOnly?await inspect(state,m,adapters,checkpoint):await apply(state,m,adapters,checkpoint);
   const released=await rpc('checkpoint_trial_sync',{...ids,expected_sequence:sequence,next_state:entry,release_claim:true});
   if(released!==sequence+1)throw failure('INVALID_RESPONSE');
   totals.checked++;if(['synced','unchanged'].includes(entry.status))totals.current++;else if(entry.status==='unavailable')totals.unavailable++;else totals.review++;

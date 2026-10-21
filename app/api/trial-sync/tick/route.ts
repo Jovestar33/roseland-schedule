@@ -15,7 +15,8 @@ export async function GET(request:NextRequest){
   const connections=transport({supabaseUrl:config.supabaseUrl,secret:env.SUPABASE_SECRET_KEY??env.SUPABASE_SERVICE_ROLE_KEY!,legacyOrigin,bridgeSecret,deadline});
   const binding={...connections,integrationId,organizationId,netlifySiteId,legacyOrigin,deadline};
   const inventoryAttention=await checkHostedInventory(binding);
-  const result=await runHosted(binding);
-  return NextResponse.json({state:result.review||result.unavailable||inventoryAttention?'attention':'checked',...result,inventoryAttention},{headers:{'Cache-Control':'no-store'}});
+  const inspectOnly=env.ROSELAND_TRIAL_SYNC_WRITE_ENABLED!=='true';
+  const result=await runHosted({...binding,inspectOnly});
+  return NextResponse.json({state:result.review||result.unavailable||inventoryAttention?'attention':'checked',mode:inspectOnly?'read-only':'synchronize',...result,inventoryAttention},{headers:{'Cache-Control':'no-store'}});
  }catch{return NextResponse.json({state:'attention'},{status:503,headers:{'Cache-Control':'no-store'}});}
 }

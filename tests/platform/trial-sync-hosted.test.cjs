@@ -29,3 +29,16 @@ test('legacy bridge refuses unmapped writes, rename/delete and extra arguments',
 test('legacy bridge preserves exact backup bytes and metadata',async()=>{const handler=testHandler(()=>({getWithMetadata:async()=>({data:Buffer.from(' {"hello": "world"}\n'),etag:'etag',metadata:{custom:true}})}),env);const response=await handler(request({operation:'raw',store:'cms',key:'rp_cms_config'}));assert.equal(response.status,200);const value=await response.json();assert.equal(Buffer.from(value.bytes,'base64').toString(),' {"hello": "world"}\n');assert.deepEqual(value.metadata,{custom:true});assert.equal(value.siteId,id(3));});
 
 test('preview and superseded legacy deployments cannot use the bridge',async()=>{const handler=createHandler(()=>{throw Error('No store access');},env);for(const deploy of [{context:'deploy-preview',published:true},{context:'production',published:false}])assert.equal((await handler(request({operation:'inventory',store:'schedules'}),{site:{id:env.SITE_ID},deploy})).status,404);});
+
+test('hosted read-only acceptance checks checkpoint comparisons without writing either schedule',async()=>{
+ for(const side of ['left','right','both']){
+  const h=setup();if(side!=='right')h.state.left.meta.town='Legacy edit';if(side!=='left')h.state.right.meta.town='New app edit';
+  const before={left:structuredClone(h.state.left),right:structuredClone(h.state.right)};
+  const result=await runHosted({...args,...h,inspectOnly:true});
+  assert.equal(result.checked,1);assert.equal(result.review,1);
+  assert.deepEqual(h.state.left,before.left);assert.deepEqual(h.state.right,before.right);
+  assert.equal(h.state.events.includes('write_trial_sync_schedule'),false);
+  assert.equal(h.state.entry.pending,null);
+  assert.equal(h.state.entry.status,side==='left'?'to-supabase':side==='right'?'to-netlify':'content-conflict');
+ }
+});

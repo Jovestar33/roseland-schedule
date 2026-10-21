@@ -35,6 +35,8 @@ def sql(statement):
 def race(kind, operation):
     owner, editor, org, production, day, schedule = [str(uuid.uuid4()) for _ in range(6)]
     marker = uuid.uuid4().hex
+    # Archiving requires Organizer permission; an Editor can edit documents.
+    production_role = 'organizer' if operation == 'archive' else 'editor'
     sql(f"""begin;
     insert into auth.users(id,email,role,aud,email_confirmed_at) values
       ('{owner}','owner-{marker}@example.test','authenticated','authenticated',now()),
@@ -44,7 +46,7 @@ def race(kind, operation):
       ('{org}','{owner}','owner','active',now()),('{org}','{editor}','member','active',now());
     insert into public.productions(id,organization_id,name,slug) values('{production}','{org}','Fictional race','race');
     insert into public.production_memberships(organization_id,production_id,user_id,role,status,joined_at)
-      values('{org}','{production}','{editor}','editor','active',now());
+      values('{org}','{production}','{editor}','{production_role}','active',now());
     insert into public.production_days(id,organization_id,production_id,position,created_by,updated_by)
       values('{day}','{org}','{production}',0,'{owner}','{owner}');
     insert into public.schedules(id,organization_id,production_id,production_day_id,display_name,slug,document,created_by,updated_by)
@@ -65,15 +67,23 @@ def race(kind, operation):
                              stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, bufsize=1)
     lines = queue.Queue()
     def reader():
-        for line in first.stdout:
-            lines.put(line.strip())
+        try:
+            for line in first.stdout:
+                lines.put(line.strip())
+        finally:
+            lines.put(None)
     threading.Thread(target=reader, daemon=True).start()
     second = None
     try:
         first.stdin.write("begin; set local statement_timeout='20s'; " + first_sql + " select 'READY';\n")
         first.stdin.flush()
         deadline = time.monotonic() + 15
-        while lines.get(timeout=max(0.01, deadline-time.monotonic())) != 'READY':
+        while True:
+            line = lines.get(timeout=max(0.01, deadline-time.monotonic()))
+            if line is None:
+                raise AssertionError('First transaction exited before taking its locks: ' + first.stderr.read())
+            if line == 'READY':
+                break
             assert time.monotonic() < deadline, 'First transaction failed to lock'
         second_app = 'schedule-second-' + marker
         second = subprocess.Popen(command(second_app), stdin=subprocess.PIPE, stdout=subprocess.PIPE,
