@@ -1,3 +1,4 @@
+import { enrollLocalTestMfa } from './local-test-mfa.ts';
 // Genuine fictional Auth -> shared local workspace -> existing Data API policies.
 // Never accepts credentials or an arbitrary URL; discovers only the named local
 // CLI project and refuses any non-loopback request. Synthetic fixtures remain in
@@ -111,6 +112,7 @@ async function denied(operation:()=>Promise<unknown>,kind:string){try{await oper
 function totp(secret:string){const alphabet='ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';let bits='';for(const char of secret.toUpperCase().replace(/=+$/,'')){const i=alphabet.indexOf(char);ensure(i>=0,'Invalid fictional factor');bits+=i.toString(2).padStart(5,'0');}const bytes=Buffer.from(bits.match(/.{8}/g)!.map(value=>parseInt(value,2)));const counter=Buffer.alloc(8);counter.writeBigUInt64BE(BigInt(Math.floor(Date.now()/30000)));const hash=createHmac('sha1',bytes).update(counter).digest(),offset=hash[hash.length-1]&15;return ((hash.readUInt32BE(offset)&0x7fffffff)%1000000).toString().padStart(6,'0');}
 try{
   const owner=await identity('workspace-owner'),admin=await identity('workspace-admin'),viewer=await identity('workspace-viewer'),outside=await identity('workspace-outside'),recipient=await identity('workspace-recipient');
+  await enrollLocalTestMfa(owner.c,base.origin);
   type Identity=typeof owner;
   function fixture(label:string){const [org,prod,day,schedule]=Array.from({length:4},()=>randomUUID());sql(`begin;
     insert into public.organizations(id,name,slug) values('${org}','Fictional ${label} studio','workspace-${org}');

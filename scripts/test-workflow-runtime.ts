@@ -134,7 +134,7 @@ async function actor(label:string):Promise<Actor> {
   const token=(await user.c.auth.getSession()).data.session!.access_token;
   const verified=parseVerifiedJwtClaims(token,user.id,base.origin+'/auth/v1',Math.floor(Date.now()/1000),900);
   return {id:user.id,token,aal:verified.aal,authenticatedAt:verified.authenticatedAt,headers:{
-    'x-actor-user-id':user.id,'x-actor-session-id':verified.sessionId,'x-actor-session-exp':String(verified.expiresAt)}};
+    'x-actor-user-id':user.id,'x-actor-session-id':verified.sessionId,'x-actor-session-exp':String(verified.expiresAt),'x-actor-aal':verified.aal}};
 }
 const serviceKey=status.SERVICE_ROLE_KEY;
 ensure(typeof serviceKey==='string','Local service fixture key unavailable');

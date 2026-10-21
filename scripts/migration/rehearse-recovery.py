@@ -38,6 +38,8 @@ def run():
     runtime=LocalRecovery(args.workdir)
     run_id=str(uuid.uuid4()); ns=uuid.UUID(run_id)
     ids={name:str(uuid.uuid5(ns,name)) for name in ['owner','org','production','phase','alpha','bravo','charlie','day-alpha','day-bravo','day-charlie']}
+    # owner_id is the historical checkpoint field name for this sole fixture
+    # actor. Use Admin so freezing it never bypasses the last-Owner guard.
     owner,org,prod,phase=[ids[k] for k in ['owner','org','production','phase']]
     schema=runtime.schema(); save(output/'schema.sql',schema)
     commit=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
@@ -62,7 +64,7 @@ def run():
     setup=f"""insert into auth.users(id,email,role,aud,email_confirmed_at) values
       ('{owner}','recovery-{run_id}@example.test','authenticated','authenticated',now());
       insert into public.organizations(id,name,slug) values('{org}','Fictional recovery tenant','recovery-{run_id}');
-      insert into public.organization_memberships(organization_id,user_id,role,status,joined_at) values('{org}','{owner}','owner','active',now());
+      insert into public.organization_memberships(organization_id,user_id,role,status,joined_at) values('{org}','{owner}','admin','active',now());
       insert into public.productions(id,organization_id,name,slug) values('{prod}','{org}','Fictional recovery production','recovery');
       insert into public.phases(id,organization_id,production_id,name,position,created_by,updated_by) values('{phase}','{org}','{prod}','Fictional shoot',0,'{owner}','{owner}');"""
     for position,name in enumerate(['alpha','bravo']):
@@ -161,7 +163,7 @@ def run():
       'latest_recovery':second,'integrity':integrity,'artifacts_sha256':manifest['sha256'],
       'writer_state':'all rehearsal fixture writers frozen at completion; original unrelated tenants untouched',
       'application_parity':False,'migration_complete':False,
-      'excluded':['Auth credentials/sessions and real account lifecycle','membership/permission recovery beyond the explicit fictional owner freeze',
+      'excluded':['Auth credentials/sessions and real account lifecycle','membership/permission recovery beyond the explicit fictional Admin freeze',
         'hosted configuration/Storage/Realtime','Netlify reverse export or endpoint cutover','actual paired runtime parity',
         'real related-store ownership/retention policies','global F01-F05 security/account/projection gaps']}
     save(output/'report.json',report)

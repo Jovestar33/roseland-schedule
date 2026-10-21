@@ -89,7 +89,7 @@ export default function LocalAccountAccess({ review=false, showMaintenance=true,
   useEffect(() => { setEmail(''); setInvitation(''); setAccepted(false); setMode(null); if (!callbackActive.current) setMessage(''); }, [session?.user.id]);
   async function run(action: () => Promise<void>) {
     if (busyRef.current) return; busyRef.current = true; setBusy(true);
-    try { await action(); } catch { setMessage('The outcome is uncertain. Check your email or try signing in before requesting another message.'); }
+    try { await action(); } catch { setMessage('Please check your inbox. If no email arrives, try again in a few minutes.'); }
     finally { busyRef.current = false; setBusy(false); }
   }
   async function requestMail(event: React.FormEvent) {
@@ -167,7 +167,7 @@ export default function LocalAccountAccess({ review=false, showMaintenance=true,
           {!config.hosted&&<label style={{display:'flex',alignItems:'flex-start'}}><input type="checkbox" checked={accepted} onChange={e => setAccepted(e.target.checked)}/> I accept the Terms of Service and acknowledge the Privacy Policy.</label>}
         </>}
         <p><button data-account-primary disabled={busy || (mode === 'signup' && !config.hosted && !accepted)}>{busy?'Sending…':'Send email'}</button></p>
-        {config.hosted?<p>Check your email before requesting another message.</p>:<p>Local fictional testing only. Messages stay in the local mail sink. A sent request may complete even if its reply is lost.</p>}
+        {config.hosted?null:<p>Local fictional testing only. Messages stay in the local mail sink. A sent request may complete even if its reply is lost.</p>}
         {review&&session&&!authNeeded&&<p><button type="button" disabled={busy} onClick={()=>{setMode(null);setMessage('');}}>Cancel password reset</button></p>}
         {review&&(!session||authNeeded)&&<div data-account-entry><button type="button" disabled={busy} onClick={()=>{returnEntry.current=mode;setMode(null);}}>Back to sign in</button></div>}
       </form>}

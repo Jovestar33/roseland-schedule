@@ -55,6 +55,6 @@ export async function POST(request: NextRequest) {
     await new Promise(resolve => setTimeout(resolve, Math.max(0, 800 - (Date.now() - began))));
     return NextResponse.json(generic, { status: 202, headers });
   } catch {
-    return NextResponse.json({ message: 'Request outcome is uncertain. Check your email or try signing in before requesting another message.' }, { status: 503, headers });
+    return NextResponse.json({ message: 'Please check your inbox. If no email arrives, try again in a few minutes.' }, { status: 503, headers });
   }
 }

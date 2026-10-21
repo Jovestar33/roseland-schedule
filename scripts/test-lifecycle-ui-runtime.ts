@@ -1,3 +1,4 @@
+import { enrollLocalTestMfa, verifyLocalTestMfa } from './local-test-mfa.ts';
 // Genuine fictional Auth -> versioned lifecycle UI transport -> existing SQL/RLS.
 // Never accepts credentials or an arbitrary URL; discovers only the named local
 // CLI project and refuses any non-loopback request. Synthetic fixtures remain in
@@ -101,6 +102,7 @@ function pass(message:string){console.log('PASS: '+message);}
 async function denied(operation:()=>Promise<unknown>,kind:string){try{await operation();throw new Error('Unexpected authorization');}catch(error){ensure((error as {kind?:string}).kind===kind,'Unexpected denial kind: '+kind);}}
 try{
   const owner=await identity('lifecycle-owner'),editor=await identity('lifecycle-editor'),viewer=await identity('lifecycle-viewer'),outside=await identity('lifecycle-outside');
+ const ownerFactor=await enrollLocalTestMfa(owner.c,base.origin);
   const repository=createLifecycleRepository(owner.c),editRepository=createLifecycleRepository(editor.c),viewRepository=createLifecycleRepository(viewer.c),outsideRepository=createLifecycleRepository(outside.c),raw=createScheduleRepository(owner.c),editorDocs=createSessionScheduleRepository(editor.c),ownerDocs=createSessionScheduleRepository(owner.c);
   function fixture(label:string){const [org,prod,day]=Array.from({length:3},()=>randomUUID());sql(`begin;
     insert into public.organizations(id,name,slug) values('${org}','Fictional ${label} studio','lifecycle-${org}');
@@ -114,7 +116,7 @@ try{
   async function create(name:string,slug?:string,scope=a){const c=makeCreate(name,slug,scope);await c.execute(repository);ensure(c.phase==='success'&&c.result?.current,'Fictional lifecycle create failed');return c.result.current;}
   async function change(record:StoredSchedule,kind:ScheduleLifecycle,payload:Record<string,unknown>={},sourceVersion?:number){const c=new ScheduleLifecycleController();c.bind(owner.id);const source=sourceVersion?await repository.historical(owner.id,record.organization_id,record.id,sourceVersion):null;c.prepare(record,kind,payload,source??undefined);await c.execute(repository);ensure(c.phase==='success'&&c.result?.current,'Fictional lifecycle '+kind+' failed');return c.result.current;}
   const destinations=await repository.days(owner.id,a.org);ensure(destinations.items[0]?.id===a.day&&destinations.items[0].editable,'Owner destination not available');
-  ensure((await editRepository.days(editor.id,a.org)).items[0]?.editable===true && (await viewRepository.days(viewer.id,a.org)).items[0]?.editable===false && (await outsideRepository.days(outside.id,a.org)).items.length===0,'Destination permission boundary failed');
+  ensure((await editRepository.days(editor.id,a.org)).items[0]?.editable===false && (await viewRepository.days(viewer.id,a.org)).items[0]?.editable===false && (await outsideRepository.days(outside.id,a.org)).items.length===0,'Destination permission boundary failed');
   let item=await create('Lifecycle initial','lifecycle-initial');const original=await repository.historical(owner.id,a.org,item.id,1);
   ensure((await repository.list(owner.id,a.org,'active')).items.some(row=>row.id===item.id),'Created schedule missing from active discovery');
   await denied(()=>outsideRepository.read(outside.id,a.org,item.id),'unavailable');
@@ -161,6 +163,7 @@ try{
   ensure(heldOperation.result?.matchedVersion===2&&heldOperation.result.current?.document_version===3,'Reconciliation lost matching old history or newer current version');
   pass('held committed response followed by a genuine newer editor save reconciles matching version 2 and current version 3 without replaying the operation');
 
+  sql(`update public.production_memberships set role='organizer' where production_id='${a.prod}' and user_id='${editor.id}';`);
   const raced=await create('Concurrent lifecycle review');
   const contenders=[new ScheduleLifecycleController(),new ScheduleLifecycleController()];
   contenders[0].bind(owner.id);contenders[1].bind(editor.id);
@@ -168,7 +171,8 @@ try{
   await Promise.all([contenders[0].execute(repository),contenders[1].execute(editRepository)]);
   ensure(contenders.filter(c=>c.phase==='success').length===1&&contenders.filter(c=>c.phase==='conflict').length===1,'Concurrent reviewed versions did not produce one winner');
   ensure((await raw.read(raced.id)).document_version===2&&sql(`select count(*) from public.audit_events where resource_id='${raced.id}' and action='schedule.archive';`)==='1','Concurrent lifecycle produced duplicate history/audit');
-  pass('simultaneous genuine owner/editor archive requests produce one version/audit and one retained stale-version conflict (HTTP concurrency, not a measured lock-wait test)');
+  sql(`update public.production_memberships set role='editor' where production_id='${a.prod}' and user_id='${editor.id}';`);
+  pass('simultaneous genuine owner/organizer archive requests produce one version/audit and one retained stale-version conflict (HTTP concurrency, not a measured lock-wait test)');
 
   const paging=fixture('Pagination');
   sql(`insert into public.production_days(id,organization_id,production_id,position,created_by,updated_by)
@@ -186,7 +190,7 @@ try{
   pass('real 25+2 day, schedule and descending history pages have no gaps/duplicates and preserve tenant visibility');
 
   const inactive=fixture('Inactive parent'),orphan=await change(await create('Deleted under inactive day',undefined,inactive),'delete');
-  sql(`begin;select set_config('request.jwt.claim.sub','${owner.id}',true);update public.production_days set deleted_at=now() where id='${inactive.day}';commit;`);
+  ensure(!(await owner.c.from('production_days').update({deleted_at:new Date().toISOString()}).eq('id',inactive.day)).error,'Genuine parent deletion failed');
   const blockedRecovery=new ScheduleLifecycleController();blockedRecovery.bind(owner.id);blockedRecovery.prepare(orphan,'restore');await blockedRecovery.execute(repository);
   ensure(blockedRecovery.failure==='unavailable'&&sql(`select document_version::text||':'||(deleted_at is not null)::text from public.schedules where id='${orphan.id}';`)==='2:true','Inactive parent recovery changed a schedule');
   ensure((await repository.days(owner.id,inactive.org)).items.length===0,'Inactive day offered as destination');
@@ -194,8 +198,8 @@ try{
 
   const expirationTarget=await create('Session recovery lifecycle'),reauth=new ScheduleLifecycleController();reauth.bind(owner.id);reauth.prepare(expirationTarget,'archive');const reviewed=reauth.attempt;
   sql(`update auth.sessions set not_after=now()-interval '1 second' where user_id='${owner.id}';`);await reauth.execute(repository);ensure(reauth.failure==='unauthenticated','Expired session changed lifecycle');
-  ensure(!(await owner.c.auth.signInWithPassword({email:owner.email,password:owner.password})).error,'Owner reauthentication failed');reauth.bind(owner.id);await reauth.execute(repository);ensure(reauth.phase==='success'&&reauth.attempt===reviewed,'Same-account recovery lost reviewed request');
-  sql(`delete from auth.sessions where user_id='${owner.id}';`);await denied(()=>repository.list(owner.id,a.org,'active'),'unauthenticated');ensure(!(await owner.c.auth.signInWithPassword({email:owner.email,password:owner.password})).error,'Revoked session reauthentication failed');
+  ensure(!(await owner.c.auth.signInWithPassword({email:owner.email,password:owner.password})).error,'Owner reauthentication failed');await verifyLocalTestMfa(owner.c,base.origin,ownerFactor);reauth.bind(owner.id);await reauth.execute(repository);ensure(reauth.phase==='success'&&reauth.attempt===reviewed,'Same-account recovery lost reviewed request');
+  sql(`delete from auth.sessions where user_id='${owner.id}';`);await denied(()=>repository.list(owner.id,a.org,'active'),'unauthenticated');ensure(!(await owner.c.auth.signInWithPassword({email:owner.email,password:owner.password})).error,'Revoked session reauthentication failed');await verifyLocalTestMfa(owner.c,base.origin,ownerFactor);
   pass('expired/revoked genuine sessions deny lifecycle and discovery; same-account reauthentication retains the original operation');
 
   const browserBase=await create('Browser Harbour day','browser-harbour');const browserRecord=await ownerDocs.update(browserBase.id,1,{meta:{town:'Fictional browser original'},rows:[{action:'Shoot',dur:'00:00',notes:'Original fictional note'}]},1);

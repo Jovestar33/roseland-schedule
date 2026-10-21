@@ -1,3 +1,4 @@
+import { enrollLocalTestMfa, verifyLocalTestMfa, type LocalTestFactor } from './local-test-mfa.ts';
 // Genuine local Auth -> user-session SDK -> PostgREST RPC -> PostgreSQL/RLS.
 // Never accepts credentials or an arbitrary URL; discovers only the named local
 // CLI project and refuses any non-loopback request. Synthetic fixtures remain in
@@ -5,7 +6,7 @@
 import { execFileSync, spawn } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { randomBytes, randomUUID, createHmac } from 'node:crypto';
+import { randomBytes, randomUUID } from 'node:crypto';
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import { createScheduleRepository, ScheduleRepositoryError } from '../lib/platform/schedule-repository.ts';
 import { parseVerifiedJwtClaims } from '../lib/platform/contracts.ts';
@@ -99,10 +100,13 @@ async function graphql(token: string) {
     body:JSON.stringify({query:'{ __typename }'})});
   return {status:response.status,data:await response.json()};
 }
+const factors = new Map<string, LocalTestFactor>();
 async function login(email: string, password: string) {
   const c=client();const result=await c.auth.signInWithPassword({email,password});
   ensure(!result.error && result.data.session,'Genuine password session unavailable');
-  const token=result.data.session.access_token; const claims=claimsOf(token);
+  const factor = factors.get(email);
+  if (factor) await verifyLocalTestMfa(c, base.origin, factor);
+  const token=(await c.auth.getSession()).data.session!.access_token; const claims=claimsOf(token);
   ensure(/^[a-f0-9-]{36}$/.test(claims.session_id),'Missing genuine session ID');
   return {c,token,claims};
 }
@@ -132,17 +136,10 @@ async function waitBlocked(blocker:number, role?:string): Promise<number> {
   }
   throw new Error('Expected a real database lock wait');
 }
-function totp(secret:string) {
-  const alphabet='ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';let bits='';
-  for(const char of secret.toUpperCase().replace(/=+$/,'')){const value=alphabet.indexOf(char);ensure(value>=0,'Invalid local MFA fixture');bits+=value.toString(2).padStart(5,'0');}
-  const bytes=Buffer.from(bits.match(/.{8}/g)!.map(value=>parseInt(value,2)));
-  const counter=Buffer.alloc(8);counter.writeBigUInt64BE(BigInt(Math.floor(Date.now()/30000)));
-  const hmac=createHmac('sha1',bytes).update(counter).digest();const offset=hmac[hmac.length-1]&15;
-  return ((hmac.readUInt32BE(offset)&0x7fffffff)%1000000).toString().padStart(6,'0');
-}
 
 try {
   const owner=await identity('admission-owner'); const outsider=await identity('admission-outsider'); const viewer=await identity('admission-viewer');
+  factors.set(owner.email, await enrollLocalTestMfa(owner.c, base.origin));
   const [org,prod,day,scheduleId]=Array.from({length:4},()=>randomUUID());
   sql(`begin;
     insert into public.organizations(id,name,slug) values('${org}','Fictional session admission','session-${org}');
@@ -167,9 +164,17 @@ try {
     ['session_update_schedule_document',{target_schedule_id:scheduleId,expected_version:1,next_document:{meta:{},rows:[]},schema_version:1}],
     ['require_active_schedule_session',{}],['check_application_session',{}],
   ];
-  const exposed=sql(`select string_agg(p.proname,',' order by p.proname) from pg_proc p join pg_namespace n on n.oid=p.pronamespace
-    where n.nspname='public' and p.prorettype<>'trigger'::regtype and has_function_privilege('authenticated',p.oid,'EXECUTE');`);
-  ensure(exposed===routes.map(([name])=>name).sort().join(','),'Authenticated function inventory changed; extend admission coverage');
+  // Exercise every currently exposed authenticated RPC, including additions since
+  // this test was written. Null arguments resolve names/types; revoked-session
+  // admission must reject before any function body or input validation executes.
+  const exposed: Array<{name:string;payload:Record<string,unknown>}> = JSON.parse(sql(`
+    select json_agg(json_build_object('name',p.proname,'payload',coalesce((
+      select json_object_agg(arg,null) from unnest(p.proargnames[1:p.pronargs]) arg
+    ),'{}'::json))) from pg_proc p join pg_namespace n on n.oid=p.pronamespace
+    where n.nspname='public' and p.prorettype<>'trigger'::regtype
+      and has_function_privilege('authenticated',p.oid,'EXECUTE');`));
+  ensure(routes.every(([name])=>exposed.some(item=>item.name===name)), 'Required admission RPC removed');
+  for (const item of exposed) if (!routes.some(([name])=>name===item.name)) routes.push([item.name,item.payload]);
   const graph=await graphql(token);
   const graphqlEnabled=sql("select exists(select 1 from pg_extension where extname='pg_graphql');")==='t';
   ensure(graph.status===200 && (graphqlEnabled ? typeof graph.data.data?.__typename==='string' : Array.isArray(graph.data.errors)),
@@ -200,7 +205,7 @@ try {
   ensure(!(await owner.c.auth.signOut({scope:'local'})).error,'Genuine sign-out failed');
   await assertBlocked(token,'Revoked session');
   ensure(sql(`select document_version from public.schedules where id='${scheduleId}';`)==='1','Blocked endpoints mutated schedule');
-  pass('expired sessions and retained tokens after real sign-out denied on all 16 authenticated RPCs, all 11 table routes across five HTTP methods, and GET RPC');
+  pass(`expired/revoked sessions denied on all ${routes.length} authenticated RPCs, all 11 table routes across five HTTP methods, and GET RPC`);
   pass('GraphQL gateway and alternate graphql_public RPC also reject expired/revoked sessions; extension '+(graphqlEnabled?'enabled':'not enabled (route admission only)'));
 
   const [raceDay,raceSchedule]=[randomUUID(),randomUUID()];
@@ -254,14 +259,10 @@ try {
   // Genuine local MFA upgrades this fictional owner's session. No shared or
   // actual credential/factor is read, changed, written to disk or printed.
   const admin=await login(owner.email,owner.password);
-  const enrolled=await admin.c.auth.mfa.enroll({factorType:'totp',friendlyName:'Fictional admission check'});
-  ensure(!enrolled.error && enrolled.data.type==='totp','Fictional MFA enrollment failed');
-  const mfa=await admin.c.auth.mfa.challengeAndVerify({factorId:enrolled.data.id,code:totp(enrolled.data.totp.secret)});
-  ensure(!mfa.error,'Fictional MFA verification failed');
   const adminToken=(await admin.c.auth.getSession()).data.session!.access_token;
   ensure(!(await admin.c.auth.getUser()).error,'MFA session verification failed');
   const verified=parseVerifiedJwtClaims(adminToken,owner.id,base.origin+'/auth/v1',Math.floor(Date.now()/1000),1800);
-  const actorHeaders={'x-actor-user-id':verified.userId,'x-actor-session-id':verified.sessionId,'x-actor-session-exp':String(verified.expiresAt)};
+  const actorHeaders={'x-actor-user-id':verified.userId,'x-actor-session-id':verified.sessionId,'x-actor-session-exp':String(verified.expiresAt),'x-actor-aal':verified.aal};
   const serviceKey=status.SERVICE_ROLE_KEY;ensure(typeof serviceKey==='string','Local trusted workflow key unavailable');
   const invitation={p_actor_user_id:owner.id,p_organization_id:org,p_email:`invited-${randomUUID()}@example.test`,p_organization_role:'member',p_production_id:null,p_production_role:null,
     p_expires_at:new Date(Date.now()+86400000).toISOString(),p_actor_aal:verified.aal,p_actor_authenticated_at:verified.authenticatedAt,p_request_id:randomUUID()};

@@ -151,7 +151,7 @@ class LocalRecovery:
             statements.append(f'alter table {table} enable trigger user;')
         org, owner = header['organization_id'], header['owner_id']
         statements.append(f"""insert into public.organization_memberships(organization_id,user_id,role,status,joined_at)
-          values({literal(org)},{literal(owner)},'owner','suspended',now()) on conflict(organization_id,user_id) do nothing;
+          values({literal(org)},{literal(owner)},'admin','suspended',now()) on conflict(organization_id,user_id) do nothing;
           do $$begin if exists(select 1 from public.organization_memberships where status='active') then raise exception 'Recovery write access must remain frozen';end if;end;$$;""")
         statements.append(f"""do $$declare actual jsonb := {self.capture_sql(header, scoped=False)}; expected jsonb := {encoded(after['tables'])};
           begin if exists(select 1 from jsonb_each(expected) e where

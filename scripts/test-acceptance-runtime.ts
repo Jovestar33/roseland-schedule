@@ -100,9 +100,9 @@ try {
   function fixture(who:Identity,mode='pending',organizationRole='member',productionRole='viewer'){
     const [org,prod,invitation]=Array.from({length:3},()=>randomUUID());
     sql(`begin;
-      insert into public.organizations(id,name,slug) values('${org}','Fictional acceptance studio','accept-${org}');
+      insert into public.organizations(id,name,slug,deleted_at) values('${org}','Fictional acceptance studio','accept-${org}',${mode==='organization-deleted'?'now()':'null'});
       insert into public.organization_memberships(organization_id,user_id,role,status,joined_at) values('${org}','${owner.id}','owner','active',now());
-      insert into public.productions(id,organization_id,name,slug) values('${prod}','${org}','Fictional acceptance production','accept');
+      insert into public.productions(id,organization_id,name,slug,deleted_at) values('${prod}','${org}','Fictional acceptance production','accept',${mode==='production-deleted'?'now()':'null'});
       insert into public.organization_invitations(id,organization_id,email,organization_role,production_id,production_role,created_at,expires_at,created_by,status,revoked_at,revoked_by)
       values('${invitation}','${org}','${who.email}','${organizationRole}','${prod}','${productionRole}',now()-interval '2 days',${mode==='elapsed'?"now()-interval '1 day'":"now()+interval '1 day'"},'${owner.id}','${mode==='revoked'?'revoked':mode==='expired'?'expired':'pending'}',${mode==='revoked'?'now()':'null'},${mode==='revoked'?`'${owner.id}'`:'null'});commit;`);
     return {org,prod,invitation};
@@ -135,11 +135,11 @@ try {
   const uc=controller(unverified,u.invitation);await uc.execute(createAcceptanceRepository(unverified.c));ensure(uc.failure==='unavailable','Unverified email accepted');noGrant(u,unverified);
   pass('elapsed, expired, revoked and unverified-email invitations fail unchanged with no grant/audit');
   for(const mode of ['organization-suspended','production-suspended','organization-deleted','production-deleted']){
-    const f=fixture(recipient);
+    const f=fixture(recipient,mode);
     if(mode.includes('suspended')){
       sql(`insert into public.organization_memberships(organization_id,user_id,role,status,joined_at) values('${f.org}','${recipient.id}','admin','${mode==='organization-suspended'?'suspended':'active'}',now());`);
       if(mode==='production-suspended')sql(`insert into public.production_memberships(organization_id,production_id,user_id,role,status) values('${f.org}','${f.prod}','${recipient.id}','editor','suspended');`);
-    }else sql(`begin;select set_config('request.jwt.claims','{"sub":"${owner.id}","role":"authenticated"}',true);update public.${mode==='organization-deleted'?'organizations':'productions'} set deleted_at=now() where id='${mode==='organization-deleted'?f.org:f.prod}';commit;`);
+    } // Deleted-parent fixtures start deleted; no obsolete direct deletion bypass.
     const before=sql(`select coalesce(string_agg(role::text||'/'||status::text,','),'') from public.organization_memberships where organization_id='${f.org}' and user_id='${recipient.id}';`);
     const c=controller(recipient,f.invitation);await c.execute(repository);ensure(c.failure==='unavailable' && audit(f.invitation)===0,'Inactive boundary accepted: '+mode);
     ensure(sql(`select coalesce(string_agg(role::text||'/'||status::text,','),'') from public.organization_memberships where organization_id='${f.org}' and user_id='${recipient.id}';`)===before,'Denied acceptance changed membership');

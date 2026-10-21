@@ -2,6 +2,7 @@
 // Never accepts credentials or an arbitrary URL; discovers only the named local
 // CLI project and refuses any non-loopback request. Synthetic fixtures remain in
 // the disposable database; passwords/tokens exist only in memory.
+import { enrollLocalTestMfa } from './local-test-mfa.ts';
 import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
@@ -58,7 +59,10 @@ function sql(statement: string): string {
     return execFileSync('docker', ['exec','-i',container,'psql','-X','-qAt','-v','ON_ERROR_STOP=1','-U','postgres','-d','postgres'], {
       input: statement, encoding: 'utf8', stdio: ['pipe','pipe','pipe'], timeout: 15000,
     }).trim();
-  } catch { throw new Error('Local fixture SQL failed'); }
+  } catch (error) {
+    const detail = (error as { stderr?: Buffer | string }).stderr;
+    throw new Error('Local fixture SQL failed: ' + String(detail ?? 'unknown database error'));
+  }
 }
 function pass(message: string) { console.log(`PASS: ${message}`); }
 async function identity(label: string) {
@@ -88,6 +92,8 @@ try {
   const a = await identity('session-owner');
   const b = await identity('session-outsider');
   const viewer = await identity('session-viewer');
+  await enrollLocalTestMfa(a.c, base.origin);
+
   const [org, prod, day, first, second, deleted] = Array.from({ length: 6 }, () => randomUUID());
   sql(`begin;
     insert into public.organizations(id,name,slug) values ('${org}','Local editor fiction','local-${org}');
@@ -122,11 +128,11 @@ try {
   await denied(() => outside.read(first), 'unavailable', 404);
   await denied(() => repo.update(first,2,{meta:{},rows:[{dur:'99:99'}]},1), 'invalid', 400);
   pass('session read/save/reload preserves optional fields; stale, invalid and unauthorized saves rejected');
-  sql(`begin; select set_config('request.jwt.claim.sub','${a.id}',true); update public.production_days set deleted_at=now() where id='${day}'; commit;`);
+  ensure(!(await a.c.from('production_days').update({deleted_at:new Date().toISOString()}).eq('id',day)).error, 'Genuine Owner parent deletion failed');
   ensure((await repo.list()).length === 0, 'Deleted parent leaked through list');
   await denied(() => repo.read(first), 'unavailable', 404);
-  sql(`begin; select set_config('request.jwt.claim.sub','${a.id}',true); update public.production_days set deleted_at=null where id='${day}';
-    update public.organization_memberships set status='suspended' where organization_id='${org}' and user_id='${viewer.id}'; commit;`);
+  ensure(!(await a.c.from('production_days').update({deleted_at:null}).eq('id',day)).error, 'Genuine Owner parent restoration failed');
+  sql(`update public.organization_memberships set status='suspended' where organization_id='${org}' and user_id='${viewer.id}';`);
   ensure((await readOnly.list()).length === 0, 'Suspended member leaked through list');
   await denied(() => readOnly.read(first), 'unavailable', 404);
   pass('list/read enforce inactive parents and current membership');

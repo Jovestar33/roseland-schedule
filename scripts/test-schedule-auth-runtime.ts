@@ -2,6 +2,7 @@
 // Never accepts credentials or an arbitrary URL; discovers only the named local
 // CLI project and refuses any non-loopback request. Synthetic fixtures remain in
 // the disposable database; passwords/tokens exist only in memory.
+import { enrollLocalTestMfa } from './local-test-mfa.ts';
 import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
@@ -88,6 +89,9 @@ try {
   const a = await identity('owner-a');
   const b = await identity('owner-b');
   const viewer = await identity('viewer-a');
+  await enrollLocalTestMfa(a.c, base.origin);
+  await enrollLocalTestMfa(b.c, base.origin);
+
   pass('three synthetic identities signed up and then authenticated with password-grant sessions');
   const wrong = await client().auth.signInWithPassword({ email: a.email, password: 'Wrong-local-password-9aA' });
   ensure(wrong.error && !wrong.data.session, 'Wrong password unexpectedly created a session');
@@ -163,6 +167,7 @@ try {
     && lifecycleHistory.data[6].metadata.display_name==='Renamed fixture','Lifecycle history missing');
   pass('real-session create, rename, archive/unarchive, document restore and soft-delete recovery preserve versioned history');
   // Permissions must be current even while the previously issued JWT remains valid.
+  sql(`insert into public.organization_memberships(organization_id,user_id,role,status,joined_at) values ('${orgA}','${b.id}','owner','active',now());`);
   sql(`update public.organization_memberships set status='suspended' where organization_id='${orgA}' and user_id='${a.id}';`);
   ensure(!(await a.c.auth.getUser()).error, 'Expected login session to remain valid during permission test');
   await denied(()=>repo.read(scheduleA),'unavailable',404);

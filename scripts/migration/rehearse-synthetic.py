@@ -63,11 +63,13 @@ def run():
         'schedule-templates': {'templates': {'Fictional template': base[0]['document']}},
         'cms': {'rp_cms_config': {'title': 'Fictional rehearsal'}},
     }
+    # This SQL-only import rehearsal uses an Admin fixture. Genuine Owner MFA
+    # is covered by the Auth runtime suite; no synthetic MFA claims are added.
     owner, org, prod, phase = [stable_id('fixture', x) for x in ['owner', 'org', 'production', 'phase']]
     sql = [f'''begin; set local statement_timeout='30s';
     insert into auth.users(id,email,role,aud,email_confirmed_at) values('{owner}','migration-rehearsal@example.test','authenticated','authenticated',now());
     insert into public.organizations(id,name,slug) values('{org}','Synthetic migration rehearsal','synthetic-migration-rehearsal');
-    insert into public.organization_memberships(organization_id,user_id,role,status,joined_at) values('{org}','{owner}','owner','active',now());
+    insert into public.organization_memberships(organization_id,user_id,role,status,joined_at) values('{org}','{owner}','admin','active',now());
     insert into public.productions(id,organization_id,name,slug) values('{prod}','{org}','Fictional production','fictional');
     insert into public.phases(id,organization_id,production_id,name,position,created_by,updated_by) values('{phase}','{org}','{prod}','Fictional phase',0,'{owner}','{owner}');
     do $$begin
