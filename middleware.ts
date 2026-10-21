@@ -8,6 +8,7 @@ const AUTH_COOKIE = 'rp_auth_flag';
 function isPublicPath(pathname: string): boolean {
   return pathname === '/workspace' // Hosted configuration gate and Supabase-authenticated workspace.
     || pathname === '/api/trial-sync/tick' // Independently gated production cron endpoint.
+    || pathname === '/api/trial-sync/preview' // Independently verifies organization Owner, session and MFA.
     || pathname === '/client' // Independently gated hosted Client projection.
     || pathname === '/local-client' // Independently gated loopback Client projection.
     || pathname === '/login'
@@ -48,7 +49,7 @@ export function middleware(request: NextRequest) {
   // screens or interpret legacy schedule query parameters on the Vercel site.
   if (process.env.ROSELAND_HOSTED_APP === 'supabase' && process.env.VERCEL === '1') {
     if (pathname === '/' || pathname === '/login') return redirect(request, '/workspace');
-    if (pathname !== '/workspace' && pathname !== '/client' && pathname !== '/api/trial-sync/tick' && !pathname.startsWith('/api/platform/')) {
+    if (pathname !== '/workspace' && pathname !== '/client' && pathname !== '/api/trial-sync/tick' && pathname !== '/api/trial-sync/preview' && !pathname.startsWith('/api/platform/')) {
       return new NextResponse(null, {status:404});
     }
     const response = NextResponse.next();
