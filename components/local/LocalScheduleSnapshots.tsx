@@ -1,4 +1,7 @@
 'use client';
+import styles from './snapshot-recovery.module.css';
+import ScheduleToolsTabs from './ScheduleToolsTabs';
+import toolStyles from './schedule-tools.module.css';
 import { dateLabel } from '@/lib/date-label';
 import {useEffect,useRef,useState} from 'react';
 import type {SupabaseClient} from '@supabase/supabase-js';
@@ -9,7 +12,7 @@ import {ScheduleRepositoryError,type StoredSchedule} from '@/lib/platform/schedu
 import {captureSnapshotAttempt,createSnapshotRepository,retainSnapshotRequest,readSnapshotRequest,clearSnapshotRequest,SnapshotTimer,type SnapshotOperation,type SnapshotReceipt,type ScheduleSnapshot,type RetainedSnapshotRequest,type SnapshotPolicy} from '@/lib/platform/schedule-snapshots';
 import {captureSnapshotExtra,createSnapshotExtras,retainSnapshotExtra,readSnapshotExtra,clearSnapshotExtra,type RetainedSnapshotExtra} from '@/lib/platform/schedule-snapshot-extras';
 import type {ProductionDestination} from '@/lib/platform/schedule-library';
-interface Props {onClose?:()=>void;openRequest?:number;review?:boolean;client:SupabaseClient;actor:string|null;organization:string|null;schedule:string|null;enabled:boolean;readOnly?:boolean;canWrite:boolean;canCopy:boolean;getSource:()=>StoredSchedule|null;onState:(dirty:boolean,busy:boolean)=>void;requireAuth:()=>void;beforeRestore:(sourceVersion:number)=>unknown;onRestored:(receipt:SnapshotReceipt,context:unknown)=>Promise<boolean>;captureOpen:()=>unknown;onCopy:(id:string,context:unknown)=>Promise<boolean>}
+interface Props {onTemplates?:()=>void;onHistory?:()=>void;onReload?:()=>void;onClose?:()=>void;openRequest?:number;review?:boolean;client:SupabaseClient;actor:string|null;organization:string|null;schedule:string|null;enabled:boolean;readOnly?:boolean;canWrite:boolean;canCopy:boolean;getSource:()=>StoredSchedule|null;onState:(dirty:boolean,busy:boolean)=>void;requireAuth:()=>void;beforeRestore:(sourceVersion:number)=>unknown;onRestored:(receipt:SnapshotReceipt,context:unknown)=>Promise<boolean>;captureOpen:()=>unknown;onCopy:(id:string,context:unknown)=>Promise<boolean>}
 const labels:Record<SnapshotOperation,string>={capture:'Capture snapshot',name:'Name snapshot',trash:'Move snapshot to Trash',restore_trash:'Restore snapshot from Trash',purge:'Permanently delete snapshot',restore_content:'Restore snapshot content'};
 export default function LocalScheduleSnapshots(p:Props){
  const [repo]=useState(()=>createSnapshotRepository(p.client)),[extras]=useState(()=>createSnapshotExtras(p.client));
@@ -73,7 +76,14 @@ export default function LocalScheduleSnapshots(p:Props){
     {pending.started?<button className="btn btn-light" disabled={busy} onClick={()=>void run(current=>send(pending,current,true))}>Check snapshot result</button>:<button className="btn btn-light" disabled={busy} onClick={()=>{clearSnapshotRequest(localStorage,pending.attempt);setPending(readSnapshotRequest(localStorage,p.actor!,p.organization!,p.schedule!));setMessage('Review cancelled. Nothing was sent.');}}>Cancel review</button>}</div>:undefined;
  return <section aria-label="Snapshots"><button className="btn btn-light" disabled={!ready||busy} onClick={()=>{setOpen(true);void run(current=>refresh(current));}}>Snapshots{pending||extra?' · request retained':''}</button>
   {!open&&message&&<p role="status">{message}</p>}
-  <ModalVisibilityContext.Provider value={ready}><Modal open={open} onClose={()=>{setOpen(false);p.onClose?.();}} title="Snapshots" className="template-modal" footer={reviewFooter??<button className="btn btn-light" onClick={()=>{setOpen(false);p.onClose?.();}}>Close</button>} retainWhenHidden>
+  <ModalVisibilityContext.Provider value={ready}><Modal open={open} onClose={()=>{setOpen(false);p.onClose?.();}} title={p.onTemplates?"Tools":p.review?"Recovery":"Snapshots"} className={`template-modal ${p.onTemplates?toolStyles.drawer:''}`} footer={reviewFooter??<button className="btn btn-light" onClick={()=>{setOpen(false);p.onClose?.();}}>Close</button>} retainWhenHidden>
+   {p.onTemplates&&<ScheduleToolsTabs active="recovery" onTemplates={()=>{setOpen(false);p.onTemplates!();}} onRecovery={()=>{}}/>}
+   {p.review&&<div className={styles.actions}>
+    {p.onHistory&&<button className="btn btn-light" disabled={disabled} onClick={()=>{setOpen(false);p.onHistory!();}}>Version history</button>}
+    {p.onReload&&<button className="btn btn-light" disabled={disabled} onClick={()=>{setOpen(false);p.onReload!();}}>Reload saved version</button>}
+    <p>Version history contains saved changes. Reload returns to the latest saved version; you’ll be asked before discarding unsaved edits.</p>
+    <h3>Snapshots</h3>
+   </div>}
    <p>{p.readOnly?'Organization is read-only. Snapshot capture, changes and retention are paused; existing history remains available.':'Capture the current draft without saving it. Automatic snapshots capture dirty drafts every five minutes while this schedule is active.'}</p><p role="status" aria-live="polite">{message}</p>
    <fieldset hidden={!!pending||!!extra} disabled={disabled} style={{border:0,padding:0}}>
     <label>Snapshot collection<select value={trash?'trash':'active'} onChange={e=>{const mode=e.target.value==='trash';setTrash(mode);setSelected(null);void run(current=>refresh(current,mode));}}><option value="active">Available snapshots</option><option value="trash">Snapshot Trash</option></select></label>

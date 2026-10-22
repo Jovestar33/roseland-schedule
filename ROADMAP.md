@@ -1,5 +1,10 @@
 # Roseland Schedule — Master Roadmap
 
+## October 22, 2026 — review follow-up
+
+- [ ] Build a useful, curated production template library after the current UI review. Review the proposed templates with John before publishing them. Wilson v2 is not an approved starter template; retire it from the available template list while retaining its recovery record.
+
+
 > **B11 local completion — September 18:** scoped Team/Client sharing and the queued B10-B stale-draft browser follow-up passed [bounded acceptance](B11_LOCAL_ACCEPTANCE.md). The authorized next checkpoint is the isolated fictional preview followed by B12 reconciliation; all later gates remain explicit.
 
 > **September 18 completed-batch planning:** [B11 → stable fictional preview → B12](B11_B12_READY_BUNDLE.md) is ready for implementation dispatch; this consolidation starts no implementation or services. B13/B14 and formal B15 acceptance remain required before B16. See the synchronized [accelerated handoff](ACCELERATED_PRE_RESKIN_HANDOFF.md).

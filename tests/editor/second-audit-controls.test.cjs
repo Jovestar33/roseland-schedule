@@ -163,3 +163,21 @@ test('Share Escape closes from opener or menu focus, restores opener, and preser
     opener().props.onClick();f.render();f.context.visible=false;f.render();assert.equal(opener().props['aria-expanded'],false);
   }finally{f?.dispose();global.document=oldDocument;global.window=oldWindow;}
 });
+
+
+test('hosted Share opens link management after closing its menu; legacy Share stays unchanged',()=>{
+  const oldDocument=global.document,oldWindow=global.window;
+  global.document={addEventListener(){},removeEventListener(){}};
+  global.window={innerWidth:1200,addEventListener(){},removeEventListener(){}};
+  let hosted,legacy,calls=0;
+  try{
+    hosted=fixture('components/toolbar/ShareDropdown.tsx','default',{onManageLinks:()=>calls++});
+    hosted.find(n=>n.props?.title==='Share').props.onClick();hosted.render();
+    const links=hosted.find(n=>n.type==='button'&&text(n)==='🔗 Team and Client links');assert.ok(links);
+    links.props.onClick();hosted.render();assert.equal(calls,1);
+    assert.equal(hosted.find(n=>n.props?.title==='Share').props['aria-expanded'],false);
+    legacy=fixture('components/toolbar/ShareDropdown.tsx','default');
+    legacy.find(n=>n.props?.title==='Share').props.onClick();legacy.render();
+    assert.equal(legacy.find(n=>n.type==='button'&&text(n).includes('Team and Client')),undefined);
+  }finally{hosted?.dispose();legacy?.dispose();global.document=oldDocument;global.window=oldWindow;}
+});

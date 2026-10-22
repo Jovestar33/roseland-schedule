@@ -4,14 +4,16 @@ import type {SupabaseClient} from '@supabase/supabase-js';
 import LocalBrowserTemplates from './LocalBrowserTemplates';
 import TemplateRowsPreview from './TemplateRowsPreview';
 import styles from './template-library.module.css';
+import ScheduleToolsTabs from './ScheduleToolsTabs';
+import toolStyles from './schedule-tools.module.css';
 import Modal,{ModalVisibilityContext} from '@/components/modals/Modal';
 import {useScheduleStore} from '@/lib/store/scheduleStore';
 import {ScheduleRepositoryError,type StoredSchedule} from '@/lib/platform/schedule-repository';
 import {templateDraftRows,captureTemplateAttempt,clearTemplateRequest,createTemplateRepository,readTemplateRequest,retainTemplateRequest,type RetainedTemplateRequest,type TemplateApplyReview,type TemplateOperation,type TemplateProduction,type TemplateRecord} from '@/lib/platform/schedule-templates';
 export interface TemplateDraftContext {id:string;version:number;documentSession:number;editRevision:number}
 const operationLabel:Record<TemplateOperation,string>={create:'Save template',replace:'Replace template',rename:'Rename template',trash:'Move to Trash',restore:'Restore template',publish:'Publish template',unpublish:'Withdraw publication',import:'Import browser template'};
-interface Props {embedded?:boolean;onClose?:()=>void;openRequest?:number;client:SupabaseClient;actor:string|null;organization:string|null;enabled:boolean;canWriteCurrent:boolean;getSource:()=>StoredSchedule|null;canApply:()=>boolean;onApply:(review:TemplateApplyReview,context:TemplateDraftContext)=>boolean;onState:(dirty:boolean,busy:boolean)=>void;requireAuth:()=>void}
-export default function LocalScheduleTemplates({embedded=false,onClose,openRequest,client,actor,organization,enabled,canWriteCurrent,getSource,canApply,onApply,onState,requireAuth}:Props){
+interface Props {onRecovery?:()=>void;embedded?:boolean;onClose?:()=>void;openRequest?:number;client:SupabaseClient;actor:string|null;organization:string|null;enabled:boolean;canWriteCurrent:boolean;getSource:()=>StoredSchedule|null;canApply:()=>boolean;onApply:(review:TemplateApplyReview,context:TemplateDraftContext)=>boolean;onState:(dirty:boolean,busy:boolean)=>void;requireAuth:()=>void}
+export default function LocalScheduleTemplates({embedded=false,onRecovery,onClose,openRequest,client,actor,organization,enabled,canWriteCurrent,getSource,canApply,onApply,onState,requireAuth}:Props){
  const [repo]=useState(()=>createTemplateRepository(client));
  const [open,setOpen]=useState(false),[productions,setProductions]=useState<TemplateProduction[]>([]),[production,setProduction]=useState('');
  const [mode,setMode]=useState<'production'|'organization'|'trash'>('production'),[items,setItems]=useState<TemplateRecord[]>([]),[name,setName]=useState(''),[newName,setNewName]=useState('');
@@ -61,7 +63,8 @@ export default function LocalScheduleTemplates({embedded=false,onClose,openReque
  return <section aria-label="Templates">
   {!embedded&&<button className="btn btn-light" disabled={!enabled||busy||!actor||!organization} onClick={()=>{visibility.current++;setOpen(true);void run(current=>refresh(current));}}>Templates{inScope&&pending?' · request retained':''}</button>}
   {!embedded&&!open&&inScope&&message&&<p role="status">{message}</p>}
-  <ModalVisibilityContext.Provider value={enabled&&inScope}><Modal open={open} onClose={()=>{visibility.current++;setOpen(false);onClose?.();}} title="Templates" className="template-modal" footer={reviewFooter??<button className="btn btn-light" onClick={()=>{setOpen(false);onClose?.();}}>Close</button>} retainWhenHidden>
+  <ModalVisibilityContext.Provider value={enabled&&inScope}><Modal open={open} onClose={()=>{visibility.current++;setOpen(false);onClose?.();}} title={onRecovery?"Tools":"Templates"} className={`template-modal ${onRecovery?toolStyles.drawer:''}`} footer={reviewFooter??<button className="btn btn-light" onClick={()=>{setOpen(false);onClose?.();}}>Close</button>} retainWhenHidden>
+   {onRecovery&&<ScheduleToolsTabs active="templates" onTemplates={()=>{}} onRecovery={()=>{visibility.current++;setOpen(false);onRecovery();}}/>}
    <p className={styles.intro}>Browse reusable schedule rows for your production, or templates shared across your organization.</p>
    <p hidden={!message} role="status" aria-live="polite" className={styles.feedback}>{message}</p>
    {pendingUses>0&&<p>Save the applied template in your schedule before saving that draft as another template or making a copy.</p>}

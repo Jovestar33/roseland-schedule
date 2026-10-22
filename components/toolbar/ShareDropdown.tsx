@@ -7,7 +7,7 @@ import { ModalVisibilityContext } from '@/components/modals/Modal';
 import ContactSheetModal from '@/components/modals/ContactSheetModal';
 import CallSheetModal from '@/components/modals/CallSheetModal';
 
-export default function ShareDropdown({ readOnly = false, onModalChange, authorizeOutput }: { readOnly?: boolean; onModalChange?: (open: boolean) => void; authorizeOutput?:()=>Promise<boolean> } = {}) {
+export default function ShareDropdown({ readOnly = false, onModalChange, authorizeOutput, onManageLinks }: { readOnly?: boolean; onModalChange?: (open: boolean) => void; authorizeOutput?:()=>Promise<boolean>; onManageLinks?:()=>void } = {}) {
   const local = useLocalEditor(), visible = useContext(ModalVisibilityContext);
   const scheduleName    = useScheduleStore((s) => s.scheduleName);
   const getScheduleData = useScheduleStore((s) => s.getScheduleData);
@@ -109,6 +109,7 @@ export default function ShareDropdown({ readOnly = false, onModalChange, authori
           className="tbar-drop"
           style={{ position: 'fixed', top: dropPos.top, right: dropPos.right, left: 'auto', zIndex: 9999 }}
         >
+          {onManageLinks && <button className="tbar-drop-item" onClick={()=>{close();onManageLinks();}}>🔗 Team and Client links</button>}
           <button className="tbar-drop-item" onClick={handlePrint}>🖨 Print / PDF</button>
           <button className="tbar-drop-item" onClick={handleExportJson}>⬇ Export JSON</button>
           <button className="tbar-drop-item" onClick={handleContactSheet}>📋 Contact Sheet</button>
