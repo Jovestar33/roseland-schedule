@@ -6,9 +6,11 @@ function harness(){
  const repo={inventory(){const d=deferred();requests.push(d);return d.promise;},destinations:async()=>[{id:'production',name:'Fictional production',create:true,organize:true,phases:[{id:'hub',name:'Fictional hub',version:1}],days:[]}]};
  const jsx=(type,props)=>({type,props});
  const storage=new Map();
+ // Browser effects subscribe normally; these loading tests do not dispatch DOM clicks.
+ const document=new EventTarget();
  const mocks={'./LocalWorkspaceContext':{useLocalWorkspace:()=>null},'@/lib/platform/production-details':{createProductionDetailsRepository:()=>({})},react,'react/jsx-runtime':{jsx,jsxs:jsx},'@hello-pangea/dnd':{},'@/lib/platform/schedule-library':{createScheduleLibraryRepository:()=>repo,filterLibrary:rows=>rows,libraryGroup:r=>r.production_id+':'+(r.effective_phase_id??r.phase_id??'no-phase'),libraryPhase:r=>r.effective_phase_id??r.phase_id??null},'@/lib/platform/schedule-lifecycle-repository':{createLifecycleRepository:()=>({})},'@/lib/platform/schedule-lifecycle-controller':{ScheduleLifecycleController:class{bind(){} }},'@/lib/platform/schedule-files':{suggestedSlug:x=>x}};
  const source=ts.transpileModule(fs.readFileSync(path.resolve(__dirname,'../../components/local/LocalScheduleLibrary.tsx'),'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,jsx:ts.JsxEmit.ReactJSX}}).outputText;
- const mod={exports:{}};vm.runInNewContext('(function(require,module,exports){'+source+'\n})',{Error,localStorage:{getItem:key=>storage.get(key)??null,setItem:(key,value)=>storage.set(key,value)},crypto:{randomUUID:()=>''},console})(name=>mocks[name]??{default:{}},mod,mod.exports);
+ const mod={exports:{}};vm.runInNewContext('(function(require,module,exports){'+source+'\n})',{Error,document,localStorage:{getItem:key=>storage.get(key)??null,setItem:(key,value)=>storage.set(key,value)},crypto:{randomUUID:()=>''},console})(name=>mocks[name]??{default:{}},mod,mod.exports);
  function render(patch={}){props={...props,...patch};index=0;tree=mod.exports.default(props);const run=queued;queued=[];run.forEach(f=>f());return tree;}
  function text(node){if(node==null||typeof node==='boolean')return '';if(typeof node!=='object')return String(node);if(Array.isArray(node))return node.map(text).join('');return text(node.props?.children);}
  function nodes(node,predicate,result=[]){if(Array.isArray(node))node.forEach(n=>nodes(n,predicate,result));else if(node&&typeof node==='object'){if(predicate(node))result.push(node);nodes(node.props?.children,predicate,result);}return result;}
@@ -51,4 +53,17 @@ test('a failed refresh keeps saved rows and hides the competing result count',as
  assert.ok(h.text().includes('Your last loaded schedules are still shown below.'));
  assert.equal(h.find(n=>n.type==='p'&&n.props.children==='1 schedule'&&!n.props.hidden).length,0);
  assert.equal(h.find(n=>n.type==='div'&&n.props.className==='empty').length,0);
+});
+
+
+test('returning from the editor and closing a Library tool refresh saved records',async()=>{
+ const h=harness();h.render();h.requests[0].resolve([]);await h.flush();
+ h.render({selected:'schedule'});assert.equal(h.requests.length,1,'opening an editor must not load its hidden Library');
+ h.render({selected:null});assert.equal(h.requests.length,2,'returning must refresh saved metadata');
+ h.render({refreshKey:'files'});assert.equal(h.requests.length,3);
+ h.render({refreshKey:'library'});assert.equal(h.requests.length,4,'closing a tool must include newly imported schedules');
+ h.requests[1].resolve([{id:'old',production_id:'production',display_name:'Old'}]);
+ h.requests[2].resolve([{id:'older',production_id:'production',display_name:'Older'}]);
+ h.requests[3].resolve([]);await h.flush();
+ assert.ok(h.text().includes('0 visible schedules'));assert.ok(!h.text().includes('Loading complete library'));
 });
