@@ -1,0 +1,30 @@
+.sharing{min-width:0;color:var(--ui-ink)}
+.scheduleName{font-weight:700;overflow-wrap:anywhere;margin:0 0 18px!important}
+.section{border:1px solid var(--g200);border-radius:12px;padding:18px;margin:0 0 18px;background:var(--white,#fff)}
+.sectionHeading{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.section h3{font-family:var(--fb);font-size:17px;line-height:1.4;margin:0;font-weight:700;letter-spacing:0}
+.section h4{font-family:var(--fb);font-size:14px;font-weight:700;margin:0 0 10px;letter-spacing:0}
+.badge{display:inline-block;border:1px solid var(--g200);border-radius:20px;padding:3px 9px;background:var(--g50);color:var(--g700);font-size:11px;white-space:nowrap;line-height:1.5}
+.linkField{display:block;font-size:12px;font-weight:600;margin:16px 0 0}
+.copyRow{display:flex;align-items:stretch;gap:8px;margin-top:6px;min-width:0}
+.copyRow input{min-width:0;flex:1;width:100%;padding:10px 12px;background:var(--g50);font-size:13px!important;line-height:1.5;text-overflow:ellipsis;height:auto}
+.copyRow button{flex-shrink:0;white-space:nowrap;align-self:stretch}
+.hint{font-size:12px!important;color:var(--g600);line-height:1.6!important}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.actions button{white-space:normal}
+.created{padding:14px;border:1px solid var(--g300);border-radius:10px;margin:16px 0;background:var(--g50)}
+.created .linkField{margin:0}
+.created input{background:#fff}
+.feedback{padding:12px 14px;background:var(--g50);border-left:3px solid var(--ui-accent-strong);border-radius:0 8px 8px 0;overflow-wrap:anywhere}
+.disclosure{margin-top:12px}
+.disclosure>summary{font-size:12px;font-weight:600;color:var(--g700);padding:6px 0;cursor:pointer}
+.confirmation{padding:16px;border:1px solid var(--g300);border-radius:10px;margin-top:16px;background:var(--g50)}
+.inventory{margin-top:22px;border-top:1px solid var(--g200);padding-top:18px}
+.links{padding:0;margin:0;list-style:none}
+.linkRow{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:14px 0;border-bottom:1px solid var(--g200)}
+.linkRow>div{min-width:0}
+.linkRow strong{font-size:12px;line-height:1.6;display:block;overflow-wrap:anywhere}
+.linkRow span:not(.badge),.linkRow small{display:block;font-size:12px;line-height:1.6;color:var(--g600);margin-top:4px}
+.rowActions{display:flex;align-items:flex-end;flex-direction:column;gap:8px;flex-shrink:0}
+.empty{color:var(--g600)}
+@media(max-width:440px){.section{padding:14px}.copyRow{flex-wrap:wrap}.copyRow input{flex-basis:100%}.copyRow button{width:100%}.linkRow{flex-wrap:wrap}.rowActions{flex-direction:row;align-items:center}.actions>*{flex:1}.badge{white-space:normal}}

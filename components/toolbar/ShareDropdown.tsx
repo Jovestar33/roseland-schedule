@@ -109,7 +109,7 @@ export default function ShareDropdown({ readOnly = false, onModalChange, authori
           className="tbar-drop"
           style={{ position: 'fixed', top: dropPos.top, right: dropPos.right, left: 'auto', zIndex: 9999 }}
         >
-          {onManageLinks && <button className="tbar-drop-item" onClick={()=>{close();onManageLinks();}}>🔗 Team and Client links</button>}
+          {onManageLinks && <button className="tbar-drop-item" onClick={()=>{close();onManageLinks();}}>🔗 Share schedule</button>}
           <button className="tbar-drop-item" onClick={handlePrint}>🖨 Print / PDF</button>
           <button className="tbar-drop-item" onClick={handleExportJson}>⬇ Export JSON</button>
           <button className="tbar-drop-item" onClick={handleContactSheet}>📋 Contact Sheet</button>

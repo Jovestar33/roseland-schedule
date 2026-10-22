@@ -183,7 +183,7 @@ export default function LocalInvitationsClient({ config, reviewMode=false }: { c
 
   return <div className={`${styles.page} ${reviewMode?styles.product:''}`}><main className={styles.main}>
     <header className={styles.header}><div>{!reviewMode&&<span className={styles.eyebrow}>LOCAL ACCOUNT REHEARSAL</span>}<h1>Invitations</h1><p>{reviewMode?`Manage invitations for ${workspace?.organization?.name??'your organization'}.`:'Manage access for fictional organizations on this computer.'}</p></div>{!reviewMode&&<span className={styles.badge}>Local only</span>}</header>
-    <p className={styles.notice}>{reviewMode ? 'Choose organization and optional production access, then review before creating the invitation. Email delivery is disabled in this local preview.' : 'Creating an invitation records access; this rehearsal does not send email. Drafts stay in this tab and are lost when it closes or reloads.'}</p>
+    <p className={styles.notice}>{config.hosted ? 'Choose their role and production access, then review the invitation.' : reviewMode ? 'Choose organization and optional production access, then review before creating the invitation. Email delivery is disabled in this local preview.' : 'Creating an invitation records access; this rehearsal does not send email. Drafts stay in this tab and are lost when it closes or reloads.'}</p>
     <p className={styles.status} role="status" aria-live="polite">{message}</p>
     {!workspace && (!session || authNeeded) && <section className={styles.card} aria-label="Account sign in"><h2>{account.current ? 'Sign in again' : 'Sign in'}</h2>
       {account.current && <p>Your draft and original request key are retained for this account.</p>}

@@ -9,6 +9,7 @@ export interface WorkspacePanel {
   review?:boolean;
   hosted?:boolean;
   openSettings?:()=>void;
+  openInvitations?:()=>void;
   client:SupabaseClient;
   session:Session|null;
   authNeeded:boolean;
