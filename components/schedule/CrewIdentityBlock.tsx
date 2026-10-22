@@ -43,7 +43,10 @@ export default function CrewIdentityBlock({ readOnly = false }: Props) {
 
   function confirm(returnToTrigger = false) {
     if (!editing) return;
-    updateMeta({ [editing]: draft });
+    if (draft !== meta[editing]) {
+      useScheduleStore.getState().pushUndo();
+      updateMeta({ [editing]: draft });
+    }
     returnFocus.current = returnToTrigger ? editing : null;
     setEditing(null);
   }

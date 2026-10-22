@@ -50,6 +50,12 @@ export default function LocationCell({ index, row }: Props) {
   const pushUndo  = useScheduleStore((s) => s.pushUndo);
 
   const subLocs = row.subLocations ?? [];
+  const rowKey = useScheduleStore(s => s.rowKeys[index]);
+  function currentIndex() { return useScheduleStore.getState().rowKeys.indexOf(rowKey); }
+  function patchLocation(patch: Partial<ScheduleRow>) {
+    const current = currentIndex();
+    if (current >= 0) updateRow(current, patch);
+  }
 
   // Collapsible address rows — existing saved addresses start collapsed so the
   // schedule stays compact; selecting/adding an address opens the row in-session.
@@ -63,14 +69,14 @@ export default function LocationCell({ index, row }: Props) {
     // Keep loc in sync for backward compat with consumers that only read loc.
     // PlacesAutocomplete calls onChange(s.main) on selection — the short place
     // name — so the name field always receives the concise label, not the address.
-    updateRow(index, { locName: v, loc: v });
+    patchLocation({ locName: v, loc: v, locAddress: '', locLat: null, locLng: null });
   }
 
   function handleNameSelect(addr: string, geo: GeoResult | null) {
     // Places onSelect fires AFTER onChange(s.main), so locName is already the
     // short name. Here we capture the full formatted address and coordinates,
     // and auto-open the address row so the user can see / edit it.
-    updateRow(index, {
+    patchLocation({
       locAddress: addr,
       locLat: geo?.lat ?? null,
       locLng: geo?.lng ?? null,
@@ -79,7 +85,7 @@ export default function LocationCell({ index, row }: Props) {
   }
 
   function handleAddrSelect(addr: string, geo: GeoResult | null) {
-    updateRow(index, {
+    patchLocation({
       locAddress: addr,
       locLat: geo?.lat ?? null,
       locLng: geo?.lng ?? null,
@@ -88,7 +94,7 @@ export default function LocationCell({ index, row }: Props) {
 
   function openMainMap() {
     if (!linksEnabled) return;
-    const url = row.locLat && row.locLng
+    const url = row.locLat != null && row.locLng != null
       ? `https://www.google.com/maps/dir/?api=1&destination=${row.locLat},${row.locLng}`
       : row.locAddress
       ? `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(row.locAddress)}`
@@ -98,11 +104,16 @@ export default function LocationCell({ index, row }: Props) {
     if (url) window.open(url, '_blank', 'noopener,noreferrer');
   }
 
-  const hasMainMap = !!(row.locLat && row.locLng) || !!(row.locAddress) || !!(row.loc);
+  const hasMainMap = !!(row.locLat != null && row.locLng != null) || !!(row.locAddress) || !!(row.loc);
 
   function patchSubLoc(i: number, patch: Partial<SubLocation>) {
-    const next = subLocs.map((sl, j) => j === i ? { ...sl, ...patch } : sl);
-    updateRow(index, { subLocations: next });
+    // Place details arrive asynchronously. Merge into the latest row and locate
+    // the sub-location by identity so edits/reordering made meanwhile survive.
+    const current = currentIndex(), id = subLocs[i]?.id;
+    if (current < 0 || !id) return;
+    const latest = useScheduleStore.getState().rows[current].subLocations ?? [];
+    if (!latest.some(sl => sl.id === id)) return;
+    updateRow(current, { subLocations: latest.map(sl => sl.id === id ? { ...sl, ...patch } : sl) });
   }
 
   function addSubLoc() {
@@ -120,7 +131,7 @@ export default function LocationCell({ index, row }: Props) {
 
   function openSubMap(sl: SubLocation) {
     if (!linksEnabled) return;
-    const url = sl.locLat && sl.locLng
+    const url = sl.locLat != null && sl.locLng != null
       ? `https://www.google.com/maps/dir/?api=1&destination=${sl.locLat},${sl.locLng}`
       : sl.address
       ? `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(sl.address)}`
@@ -182,7 +193,7 @@ export default function LocationCell({ index, row }: Props) {
       {subLocs.map((sl, i) => {
         const subNameValue = sl.name !== undefined ? sl.name : sl.loc;
         const subAddrIsOpen = !!(subAddrOpen[sl.id]);
-        const hasSubMap = !!(sl.locLat && sl.locLng) || !!(sl.address) || !!(sl.loc);
+        const hasSubMap = !!(sl.locLat != null && sl.locLng != null) || !!(sl.address) || !!(sl.loc);
         return (
           <div key={sl.id} className="loc-subloc-row">
             <div className="loc-subloc-main">
@@ -198,7 +209,7 @@ export default function LocationCell({ index, row }: Props) {
                 <PlacesAutocomplete
                   className="ci-ta loc-subloc-name-input"
                   value={subNameValue}
-                  onChange={(v) => patchSubLoc(i, { name: v, loc: v })}
+                  onChange={(v) => patchSubLoc(i, { name: v, loc: v, address: '', locLat: null, locLng: null })}
                   onSelect={(addr, geo) => {
                     // onChange already set the short name; capture address + coords
                     // and auto-open the sub-location address row

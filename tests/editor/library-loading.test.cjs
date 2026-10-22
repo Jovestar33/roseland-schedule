@@ -22,7 +22,7 @@ test('readiness pause during library load starts a replacement read and rejects 
 });
 test('failed library load reports an error instead of claiming it is still loading',async()=>{
  const h=harness();h.render();h.requests[0].reject(new Error('Fictional connection unavailable'));await h.flush();
- assert.ok(h.text().includes('Fictional connection unavailable'));assert.ok(!h.text().includes('Loading complete library'));
+ assert.ok(h.text().includes('We couldn’t load your library.'));assert.ok(!h.text().includes('Loading complete library'));assert.equal(h.find(n=>n.type==='div'&&n.props.className==='empty').length,0,'a failed read is not an empty library');assert.equal(h.find(n=>n.props.role==='alert').length,1);
 });
 
 test('phase-only and day-assigned records share a hub and collapse stays actor/org scoped',async()=>{
@@ -41,4 +41,14 @@ test('phase-only and day-assigned records share a hub and collapse stays actor/o
  assert.equal(h.find(n=>n.type==='details'&&n.props.className==='lbt-phase')[0].props.open,true);
  h.render({organization:'org'});h.requests[2].resolve([]);await h.flush();
  assert.equal(h.find(n=>n.type==='details'&&n.props.className==='lbt-phase')[0].props.open,false);
+});
+
+test('a failed refresh keeps saved rows and hides the competing result count',async()=>{
+ const h=harness();h.render({review:true});h.requests[0].resolve([{id:'saved',production_id:'production',display_name:'Saved schedule',can_organize:false}]);await h.flush();
+ h.find(n=>n.type==='button'&&n.props.children==='↻ Refresh')[0].props.onClick();
+ h.requests[1].reject(new Error('Connection unavailable'));await h.flush();
+ assert.ok(h.text().includes('We couldn’t refresh your library.'));
+ assert.ok(h.text().includes('Your last loaded schedules are still shown below.'));
+ assert.equal(h.find(n=>n.type==='p'&&n.props.children==='1 schedule'&&!n.props.hidden).length,0);
+ assert.equal(h.find(n=>n.type==='div'&&n.props.className==='empty').length,0);
 });

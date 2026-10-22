@@ -55,6 +55,11 @@ function repositionSunRows(rows: ScheduleRow[], rowKeys: string[]): { rows: Sche
 }
 
 type Snapshot = { rows: ScheduleRow[]; meta: ScheduleMeta; templateUses?: TemplateUse[] };
+const snapshotKey = (s: Snapshot) => JSON.stringify({ rows:s.rows, meta:s.meta, templateUses:s.templateUses ?? [] });
+export function hasUndoChanges(state: Snapshot & { undoStack: Snapshot[] }): boolean {
+  const current = snapshotKey(state);
+  return state.undoStack.some(snapshot => snapshotKey(snapshot) !== current);
+}
 
 let keySeq = 0;
 function newKey(): string { return `rk_${++keySeq}`; }
@@ -131,20 +136,25 @@ export const useScheduleStore = create<ScheduleStore>((set, get) => ({
   pushUndo() {
     const { rows, meta, undoStack, templateUses } = get();
     const snap: Snapshot = { rows: structuredClone(rows), meta: structuredClone(meta), templateUses: structuredClone(templateUses) };
-    set({ undoStack: [...undoStack, snap].slice(-UNDO_LIMIT), redoStack: [] });
+    if (undoStack.length && snapshotKey(undoStack[undoStack.length - 1]) === snapshotKey(snap)) return;
+    set({ undoStack: [...undoStack, snap].slice(-UNDO_LIMIT) });
   },
 
   undo() {
     const { rows, meta, undoStack, redoStack, templateUses } = get();
     if (!undoStack.length) return;
-    const prev = undoStack[undoStack.length - 1];
     const cur: Snapshot = { rows: structuredClone(rows), meta: structuredClone(meta), templateUses: structuredClone(templateUses) };
+    const current = snapshotKey(cur);
+    let position = undoStack.length - 1;
+    while (position >= 0 && snapshotKey(undoStack[position]) === current) position--;
+    if (position < 0) { set({ undoStack: [] }); return; }
+    const prev = undoStack[position];
     set({
       rows: recalcRows(prev.rows),
       rowKeys: makeDefaultKeys(prev.rows.length),
       meta: prev.meta,
       templateUses: prev.templateUses ?? [],
-      undoStack: undoStack.slice(0, -1),
+      undoStack: undoStack.slice(0, position),
       redoStack: [...redoStack, cur],
       dirty: true,
       editRevision: get().editRevision + 1,
@@ -172,7 +182,7 @@ export const useScheduleStore = create<ScheduleStore>((set, get) => ({
     const { rows, rowKeys } = get();
     const updated = rows.map((r, i) => (i === index ? { ...r, ...patch } : r));
     const result = repositionSunRows(updated, rowKeys);
-    set({ rows: result.rows, rowKeys: result.rowKeys, dirty: true, editRevision: get().editRevision + 1 });
+    set({ rows: result.rows, rowKeys: result.rowKeys, dirty: true, redoStack: [], editRevision: get().editRevision + 1 });
   },
 
   addRowAfter(afterIndex) {
@@ -181,7 +191,7 @@ export const useScheduleStore = create<ScheduleStore>((set, get) => ({
     const updated = [...rows.slice(0, afterIndex + 1), newRow, ...rows.slice(afterIndex + 1)];
     const updatedKeys = [...rowKeys.slice(0, afterIndex + 1), newKey(), ...rowKeys.slice(afterIndex + 1)];
     const result = repositionSunRows(updated, updatedKeys);
-    set({ rows: result.rows, rowKeys: result.rowKeys, dirty: true, editRevision: get().editRevision + 1 });
+    set({ rows: result.rows, rowKeys: result.rowKeys, dirty: true, redoStack: [], editRevision: get().editRevision + 1 });
   },
 
   deleteRow(index) {
@@ -190,7 +200,7 @@ export const useScheduleStore = create<ScheduleStore>((set, get) => ({
     const updated = rows.filter((_, i) => i !== index);
     const updatedKeys = rowKeys.filter((_, i) => i !== index);
     const result = repositionSunRows(updated, updatedKeys);
-    set({ rows: result.rows, rowKeys: result.rowKeys, dirty: true, editRevision: get().editRevision + 1 });
+    set({ rows: result.rows, rowKeys: result.rowKeys, dirty: true, redoStack: [], editRevision: get().editRevision + 1 });
   },
 
   reorderRows(from, to) {
@@ -202,12 +212,17 @@ export const useScheduleStore = create<ScheduleStore>((set, get) => ({
     updatedRows.splice(to, 0, movedRow);
     updatedKeys.splice(to, 0, movedKey);
     const result = repositionSunRows(updatedRows, updatedKeys);
-    set({ rows: result.rows, rowKeys: result.rowKeys, dirty: true, editRevision: get().editRevision + 1 });
+    set({ rows: result.rows, rowKeys: result.rowKeys, dirty: true, redoStack: [], editRevision: get().editRevision + 1 });
   },
 
   updateMeta(patch) {
-    const { meta } = get();
-    set({ meta: { ...meta, ...patch }, dirty: true, editRevision: get().editRevision + 1 });
+    const { meta, rows, rowKeys } = get();
+    const locationChanged = (['date', 'lat', 'lng'] as const).some(key => key in patch && patch[key] !== meta[key]);
+    const next = { ...meta, ...patch };
+    if (locationChanged) next.wx = null;
+    set({ meta: next,
+      ...(locationChanged ? { rows: recalcRows(rows.filter(row => !row.sunLocked)), rowKeys: rowKeys.filter((_, i) => !rows[i].sunLocked) } : {}),
+      dirty: true, redoStack: [], editRevision: get().editRevision + 1 });
   },
 
   loadSchedule(name, data) {
@@ -255,7 +270,7 @@ export const useScheduleStore = create<ScheduleStore>((set, get) => ({
     const normalized = recalcRows(normalizeRows(structuredClone(rows).map(row => ({...row,sunLocked:false}))));
     // Every row is replaced; Undo retains the previous rows and their provenance.
     const templateUses = [structuredClone(use)];
-    set({rows:normalized,rowKeys:makeDefaultKeys(normalized.length),templateUses,dirty:true,editRevision:get().editRevision+1});
+    set({rows:normalized,rowKeys:makeDefaultKeys(normalized.length),templateUses,dirty:true,redoStack:[],editRevision:get().editRevision+1});
   },
   acknowledgeTemplateUses(uses) {
     const remove=(values:TemplateUse[]=[])=>values.filter(v=>!uses.some(u=>u.id===v.id&&u.version===v.version&&u.policy===v.policy));
@@ -307,19 +322,19 @@ export const useScheduleStore = create<ScheduleStore>((set, get) => ({
       newKeys.splice(pt.idx, 0, newKey());
     });
 
-    set({ rows: recalcRows(newRows), rowKeys: newKeys, dirty: true, editRevision: get().editRevision + 1 });
+    set({ rows: recalcRows(newRows), rowKeys: newKeys, dirty: true, redoStack: [], editRevision: get().editRevision + 1 });
   },
 
   clearSunRows() {
     const { rows, rowKeys } = get();
     const newRows = rows.filter(r => !r.sunLocked);
     const newKeys = rowKeys.filter((_, i) => !rows[i].sunLocked);
-    set({ rows: recalcRows(newRows), rowKeys: newKeys, dirty: true, editRevision: get().editRevision + 1 });
+    set({ rows: recalcRows(newRows), rowKeys: newKeys, dirty: true, redoStack: [], editRevision: get().editRevision + 1 });
   },
 
   setWx(wx) {
     const { meta } = get();
-    set({ meta: { ...meta, wx }, dirty: true, editRevision: get().editRevision + 1 });
+    set({ meta: { ...meta, wx }, dirty: true, redoStack: [], editRevision: get().editRevision + 1 });
   },
 
   setSyncStatus(s) { set({ syncStatus: s }); },

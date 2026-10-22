@@ -56,8 +56,9 @@ export default function ContactModal({ open, row, onSave, onClose }: Props) {
       className="location-contact-modal"
       footer={
         <>
-          <button className="btn btn-light" onClick={() => { window.location.href = `mailto:${email}`; }}>Email</button>
-          <button className="btn btn-light" onClick={() => { window.location.href = `tel:${phone}`; }}>Call</button>
+          <button className="btn btn-light" onClick={onClose}>Cancel</button>
+          <button className="btn btn-light" disabled={!email.trim()} onClick={() => { window.location.href = `mailto:${email.trim()}`; }}>Email</button>
+          <button className="btn btn-light" disabled={!phone.trim()} onClick={() => { window.location.href = `tel:${phone.trim()}`; }}>Call</button>
           <button className="btn btn-pink" onClick={handleSave}>Save Contact</button>
         </>
       }

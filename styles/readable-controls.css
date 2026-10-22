@@ -40,3 +40,10 @@
 @media screen and (max-width:760px) {
   .tbl-wrap table.sched { min-width:1463px !important; width:1463px !important; }
 }
+
+/* Flex boundaries must not swallow the space in “Day 12 of 15”. */
+.hi-day-wrap { gap: .25em; }
+@media screen and (max-width:760px) {
+  /* Suggestions now use a viewport-aware portal; no blank buffer is needed. */
+  .tbl-wrap { padding-bottom:16px !important; }
+}

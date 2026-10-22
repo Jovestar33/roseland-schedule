@@ -216,3 +216,34 @@
 .entryShell [data-account-task] [role="status"]:not([hidden]){margin:0;padding:12px 14px;border:1px solid var(--g200);border-radius:8px;background:white}
 .entryShell [data-account-task] [data-account-primary]{font-weight:600}
 .entryShell [data-account-flow]>[data-account-entry]{justify-content:center}
+
+/* Review pass 1: inline credential feedback and a consistent security task. */
+.entryShell .loginFeedback { margin: -4px 0 0; color: #b42335; font-size: 13px; line-height: 1.5; font-weight: 500; }
+.entryShell :global([data-mfa-flow]), .accessShell :global([data-mfa-flow]), .accountPanels :global([data-mfa-flow]) { width:100%; min-width:0; }
+.entryShell :global([data-mfa-panel]), .accessShell :global([data-mfa-panel]), .accountPanels :global([data-mfa-panel]) { display:grid; gap:16px; }
+.entryShell :global([data-mfa-panel]) h2, .accessShell :global([data-mfa-panel]) h2, .accountPanels :global([data-mfa-panel]) h2 { margin:0; font-family:var(--fd); font-size:32px; letter-spacing:1px; line-height:1.15; }
+.entryShell :global([data-mfa-panel]) h2:focus, .accessShell :global([data-mfa-panel]) h2:focus { outline:none; }
+.entryShell :global([data-mfa-panel]) p, .accessShell :global([data-mfa-panel]) p, .accountPanels :global([data-mfa-panel]) p { margin:0; font-size:14px; line-height:1.6; color:var(--g600); }
+.entryShell :global([data-mfa-context]), .accessShell :global([data-mfa-context]), .accountPanels :global([data-mfa-context]) { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; color:var(--g600); font-size:12px; }
+.shell :global([data-mfa-optional]) { display:grid; gap:8px; padding:16px; border:1px solid #e7c1d5; border-left:3px solid var(--ui-accent); border-radius:8px; background:#fff8fc; }
+.shell :global([data-mfa-optional]) strong { color:var(--ui-accent-strong); font-family:var(--fb); font-size:15px; line-height:1.4; }
+.entryShell :global([data-mfa-panel]) form, .accessShell :global([data-mfa-panel]) form, .accountPanels :global([data-mfa-panel]) form { display:grid; gap:16px; margin:0; }
+.entryShell :global([data-mfa-panel]) label, .accessShell :global([data-mfa-panel]) label, .accountPanels :global([data-mfa-panel]) label { display:grid; gap:8px; font-size:13px; font-weight:600; }
+.entryShell :global([data-mfa-panel]) input, .accessShell :global([data-mfa-panel]) input, .accountPanels :global([data-mfa-panel]) input { box-sizing:border-box; width:100%; min-width:0; height:44px; padding:10px 12px; border:1px solid var(--g300); border-radius:10px; font-family:var(--fb); font-size:18px; letter-spacing:4px; background:#fff; color:var(--ui-ink); }
+.entryShell :global([data-mfa-primary]), .accessShell :global([data-mfa-primary]), .accountPanels :global([data-mfa-primary]) { width:100%; min-height:44px; padding:10px 16px; border-radius:10px; background:var(--ui-primary); border:1px solid var(--ui-accent); color:white; font-family:var(--fb); font-size:14px; font-weight:600; }
+.entryShell :global([data-mfa-primary]):hover:not(:disabled), .accessShell :global([data-mfa-primary]):hover:not(:disabled), .accountPanels :global([data-mfa-primary]):hover:not(:disabled) { background:var(--ui-primary-hover); color:white; }
+.entryShell :global([data-mfa-secondary]), .accessShell :global([data-mfa-secondary]), .accountPanels :global([data-mfa-secondary]) { justify-self:center; background:transparent; border:0; box-shadow:none; color:var(--g600); padding:8px 12px; min-height:40px; text-decoration:underline; text-underline-offset:3px; }
+.entryShell :global([data-mfa-feedback]), .accessShell :global([data-mfa-feedback]), .accountPanels :global([data-mfa-feedback]) { padding:10px 12px; border:1px solid var(--g200); border-radius:8px; background:white; }
+.entryShell :global([data-mfa-panel]) details, .accessShell :global([data-mfa-panel]) details, .accountPanels :global([data-mfa-panel]) details { padding-top:16px; margin:0; border-top:1px solid var(--g200); font-size:13px; line-height:1.6; }
+.shell :global([data-mfa-panel]) summary { cursor:pointer; color:var(--g600); }
+.shell :global([data-mfa-panel]) details[open] p { margin-top:12px; }
+.shell :global([data-mfa-setup]) { display:grid; gap:12px; justify-items:center; min-width:0; }
+.shell :global([data-mfa-setup]) img { max-width:100%; height:auto; }
+.shell :global([data-mfa-setup]) code { overflow-wrap:anywhere; }
+
+.entryShell :global([data-mfa-panel]) :global([data-mfa-error]), .accessShell :global([data-mfa-panel]) :global([data-mfa-error]), .accountPanels :global([data-mfa-panel]) :global([data-mfa-error]) { color:#b42335; border-color:#efc2c8; background:#fff8f8; }
+
+/* Review pass 2: open recovery help has its own breathing room. */
+.shell :global([data-mfa-recovery])[open] { padding:16px; border:1px solid var(--g200); border-radius:10px; background:white; }
+.shell :global([data-mfa-recovery])[open] summary { font-size:14px; font-weight:600; color:var(--ui-ink); line-height:1.5; }
+.shell :global([data-mfa-recovery])[open] p { margin-top:12px; line-height:1.7; }

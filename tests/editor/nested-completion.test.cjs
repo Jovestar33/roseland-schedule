@@ -24,7 +24,7 @@ test('nested completion Undo preserves an earlier row edit, and Redo restores co
   }).outputText;
   const mocks = {
     react: { ...React, useState: value => [value, () => {}], useRef: value => ({ current: value }), useLayoutEffect: () => {} },
-    '@/lib/store/scheduleStore': { useScheduleStore: select => select(store.getState()) },
+    '@/lib/store/scheduleStore': { useScheduleStore: Object.assign(select => select(store.getState()), { getState: store.getState }) },
     '@/components/local/DocumentProvidersContext': { useDocumentProviders: () => null },
     './LocalEditorContext': { useLocalEditor: () => ({}) },
     './PlacesAutocomplete': { default: () => null },

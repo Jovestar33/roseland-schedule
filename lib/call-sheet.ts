@@ -1,7 +1,7 @@
 import type { ScheduleRow, WeatherData } from './types.ts';
 
 export interface CallSheetLine {
-  timeIn: string; action: string; description: string; notes: string;
+  timeIn: string; action: string; description: string; notes: string; keyInstruction: string; cast: string;
   locations: { name: string; address: string; description: string }[];
   isSun: boolean; long: boolean;
 }
@@ -28,8 +28,8 @@ export function callSheetLines(rows: ScheduleRow[]): CallSheetLine[] {
     const locations = [location(row.locName, row.locAddress, row.loc),
       ...(row.subLocations || []).map(sub => location(sub.name, sub.address, sub.loc, sub.desc))]
       .filter(loc => loc.name || loc.address || loc.description);
-    const line = { timeIn: row.timeIn, action: activity(row), description: row.desc || '', notes: row.notes || '', locations, isSun: !!row.sunLocked };
-    if (!line.timeIn && !line.action && !line.description && !line.notes && !locations.length) return [];
+    const line = { timeIn: row.timeIn, action: activity(row), description: row.desc || '', notes: row.notes || '', keyInstruction: row.keyInstruction || '', cast: row.cast || '', locations, isSun: !!row.sunLocked };
+    if (!line.timeIn && !line.action && !line.description && !line.notes && !line.keyInstruction && !line.cast && !locations.length) return [];
     return [{ ...line, long: JSON.stringify(line).length > 1800 }];
   });
 }

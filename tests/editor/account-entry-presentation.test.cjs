@@ -129,3 +129,17 @@ test('password changes cannot proceed until account security is checked or when 
  await verified.find(({node})=>node.type==='form').node.props.onSubmit({preventDefault(){}});
  assert.equal(checks,1);assert.equal(writes,0);
 });
+
+
+test('invalid sign-in feedback is inside the unchanged sign-in form and associated with the password',()=>{
+ const all=workspace({session:null,authNeeded:false,message:'Email or password is incorrect. Please try again.'});
+ const visible=all.filter(v=>v.shown);
+ const form=visible.find(({node})=>node.props?.['aria-label']==='Workspace sign in').node;
+ const children=nodes(form).filter(v=>v.shown);
+ assert.equal(visible.filter(({node})=>node.props?.role==='alert').length,1);
+ assert.ok(children.some(({node})=>node.props?.id==='signin-feedback'));
+ assert.ok(children.some(({node})=>node.type==='input'&&node.props.type==='password'&&node.props['aria-invalid']===true&&node.props['aria-describedby']==='signin-feedback'));
+ assert.ok(!visible.some(({node})=>node.props?.role==='status'&&node.props.children==='Email or password is incorrect. Please try again.'));
+ const clean=workspace({session:null,authNeeded:false,message:''}).filter(v=>v.shown);
+ assert.ok(!clean.some(({node})=>node.props?.id==='signin-feedback'));
+});

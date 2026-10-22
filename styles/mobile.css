@@ -818,3 +818,10 @@ body.readonly .readonly-bar{display:flex}
     overflow-wrap:normal !important;
   }
 }
+
+/* Feedback belongs below its field, never beside it in the location flex row. */
+.places-field { min-width:0; width:100%; }
+.loc-name-row > .places-field { flex:1 1 0; }
+.places-field > :is(input,textarea) { width:100%; min-width:0; box-sizing:border-box; }
+.places-feedback { display:block; margin:4px 0; color:var(--g600); font-size:11px; line-height:1.45; white-space:normal; overflow-wrap:break-word; }
+@media print { .places-feedback { display:none!important; } }

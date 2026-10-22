@@ -43,32 +43,33 @@ export default function LocalMfaAccess({review=false,managedRecovery=false,focus
  async function cancelEnrollment(){await run(async current=>{const pending=factor;if(pending&&pendingFactor.current){const result=await client.auth.mfa.unenroll({factorId:pending});if(!current())return;if(result.error){setMessage('Setup could not be cancelled. Your account is unchanged; retry or complete verification.');return;}}
    pendingFactor.current=false;setFactor('');setSecret('');setQr('');setCode('');setStage('enroll');setOpen(false);setMessage('Authenticator setup cancelled. You can return when you are ready.');
   });}
+ const codeRejected=message.startsWith('That code was not accepted');
  if(!session||authNeeded)return null;
  if(stage==='checking'||stage==='unavailable')return managedRecovery?null:<section aria-label="Access checks"><h2>{stage==='checking'?'Checking your access…':'Unable to check your access'}</h2><p role="status">{stage==='checking'?'Checking your organization and account security.':message}</p><p>Your open drafts and pending requests are retained.</p>{stage==='unavailable'&&<button onClick={()=>setRetry(v=>v+1)}>Try again</button>}</section>;
- return <section aria-label="Account security" style={{margin:'12px 0',maxWidth:720}}>
-  {stage==='ready'&&<button onClick={()=>setOpen(v=>!v)} disabled={busy}>{review?'Two-step verification':'Account security'}</button>}
+ return <section aria-label="Account security" data-mfa-flow style={{margin:'12px 0',maxWidth:720}}>
+  {stage==='ready'&&!open&&<button onClick={()=>setOpen(v=>!v)} disabled={busy}>{review?'Two-step verification':'Account security'}</button>}
   {!open&&stage!=='ready'&&<div><p role="status">Two-step verification is required before you can open this organization.</p><button onClick={()=>setOpen(true)} disabled={busy}>Continue</button></div>}
-  {open&&<div>
+  {open&&<div data-mfa-panel>
+   <div data-mfa-context>{stage==='ready'?'Account settings':recentRequired?'Confirm your identity':'Account security'}</div>
    <h2 ref={heading} tabIndex={-1}>{stage==='ready'?(review?'Two-step verification':'Account security'):stage==='enroll'?'Set up two-step verification':'Two-step verification'}</h2>
-   <p>{stage==='ready'?'An authenticator adds protection to your account.':stage==='enroll'?'Set up an authenticator app to protect your account.':'Enter the current six-digit code from your authenticator to continue.'}</p>
-   <p role="status">{message}</p>
-   {stage==='ready'&&<p>{factor?'Authenticator verified for this session.':'Two-step verification is optional for your account.'}</p>}
-   {(stage==='enroll'||stage==='ready'&&!factor)&&!secret&&<button disabled={busy} onClick={()=>void run(async current=>{
+   {stage==='ready'&&!factor?<div data-mfa-optional><strong>This step is optional</strong><p>Add extra protection to your account, or choose Not now to continue without setting it up.</p></div>:<p>{stage==='ready'?'Your authenticator is connected.':stage==='enroll'?'Your account requires two-step verification. Connect an authenticator app to continue.':recentRequired?'For this change, confirm your identity with the six-digit code from your authenticator.':'Enter the six-digit code from your authenticator app.'}</p>}
+   {message&&<p id="mfa-feedback" role={codeRejected?'alert':'status'} data-mfa-feedback data-mfa-error={codeRejected||undefined}>{message}</p>}
+   {(stage==='enroll'||stage==='ready'&&!factor)&&!secret&&<button className={review?'btn btn-pink':undefined} data-mfa-primary disabled={busy} onClick={()=>void run(async current=>{
     const result=await client.auth.mfa.enroll({factorType:'totp',friendlyName:'Roseland '+crypto.randomUUID().slice(0,8)});
     if(!current())return;
     if(result.error||!result.data){setMessage('We couldn’t start setup. Please try again.');return;}
     pendingFactor.current=true;setFactor(result.data.id);setSecret(result.data.totp.secret);setQr(result.data.totp.qr_code);setStage('code');onReady(false);setMessage('Scan the code, then enter the six-digit code from your authenticator.');
    })}>Set up authenticator</button>}
-   {secret&&<div><img src={qr} alt="Authenticator setup QR code" width={200} height={200}/><p>Manual setup secret: <code>{secret}</code></p></div>}
+   {secret&&<div data-mfa-setup><img src={qr} alt="Authenticator setup QR code" width={200} height={200}/><p>Manual setup secret: <code>{secret}</code></p></div>}
    {stage==='code'&&<form onSubmit={e=>{e.preventDefault();void run(async current=>{
     const result=await client.auth.mfa.challengeAndVerify({factorId:factor,code});
     if(!current())return;setCode('');
     if(result.error){setMessage('That code was not accepted. Try the current code from your authenticator.');return;}
     pendingFactor.current=false;setSecret('');setQr('');setMessage('Verification complete.');onVerified();setRetry(v=>v+1);
-   });}}><label>Authenticator code <input required pattern="[0-9]{6}" inputMode="numeric" autoComplete="one-time-code" value={code} onChange={e=>setCode(e.target.value)}/></label><button className={review?"btn btn-pink":undefined} disabled={busy}>Continue</button></form>}
+   });}}><label>Authenticator code<input required pattern="[0-9]{6}" maxLength={6} aria-invalid={codeRejected} aria-describedby={message?'mfa-feedback':undefined} inputMode="numeric" autoComplete="one-time-code" value={code} onChange={e=>setCode(e.target.value)}/></label><button data-mfa-primary className={review?"btn btn-pink":undefined} disabled={busy}>{busy?'Verifying…':'Continue'}</button></form>}
    {pendingFactor.current&&<button type="button" disabled={busy} onClick={()=>void cancelEnrollment()}>Cancel authenticator setup</button>}
-   {stage==='ready'&&<button type="button" disabled={busy} onClick={()=>setOpen(false)}>Close</button>}
-   {stage==='code'&&!secret&&<details><summary>Can’t use your authenticator?</summary><p>Authenticator reset is not available here. Contact your organization’s administrator for help.</p></details>}
+   {stage==='ready'&&<button data-mfa-secondary type="button" disabled={busy} onClick={()=>setOpen(false)}>{factor?'Close':'Not now'}</button>}
+   {stage==='code'&&!secret&&<details data-mfa-recovery><summary>Can’t use your authenticator?</summary><p>Contact your organization’s administrator for help signing in.</p></details>}
   </div>}
  </section>;
 }

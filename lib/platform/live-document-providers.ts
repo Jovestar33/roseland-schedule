@@ -23,6 +23,11 @@ export function createLiveDocumentProviders(context:()=>Promise<{token:string;sc
       const included=result.address.split(',').some(part=>part.trim().toLocaleLowerCase()===fallbackName.trim().toLocaleLowerCase());
       return {...result,address:[included?'':fallbackName,result.address].filter(Boolean).join(', ')};
     },
-    async weather(date,lat,lng,town){const result=await call<WeatherData|null>({operation:'weather',date,lat,lng});return result?{...result,town}:null;},
+    async weather(date,lat,lng,town){
+      const result=await call<WeatherData|null>({operation:'weather',date,lat,lng});
+      // Match the legacy editor's refresh time in the viewer's timezone. The
+      // authenticated proxy runs in UTC, so its formatted clock is not local.
+      return result?{...result,town,fetchedAt:new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'})}:null;
+    },
   };
 }

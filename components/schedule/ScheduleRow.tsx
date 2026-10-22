@@ -1,7 +1,7 @@
 'use client';
 import { forwardRef } from 'react';
 import type { DraggableProvidedDragHandleProps, DraggableProvidedDraggableProps } from '@hello-pangea/dnd';
-import { ACTION_CLASS_MAP } from '@/lib/constants';
+import { useCmsActionClassMap } from '@/lib/store/cmsStore';
 import { useScheduleStore } from '@/lib/store/scheduleStore';
 import type { ScheduleRow as ScheduleRowType } from '@/lib/types';
 import ActionCell from './ActionCell';
@@ -30,7 +30,8 @@ const ScheduleRow = forwardRef<HTMLTableRowElement, Props>(
     const deleteRow = useScheduleStore((s) => s.deleteRow);
     const pushUndo  = useScheduleStore((s) => s.pushUndo);
 
-    const actionClass = ACTION_CLASS_MAP[row.action] ?? '';
+    const actionClassMap = useCmsActionClassMap();
+    const actionClass = actionClassMap[row.action] ?? '';
     const isInactive  = !row.action;
 
     const trClass = [

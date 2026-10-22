@@ -1116,3 +1116,8 @@ body{overflow-x:hidden;max-width:100dvw}
 
 /* Exact duration entry uses a compact dialog on desktop and mobile. */
 .modal.duration-modal{max-width:min(420px,94vw)!important;}
+
+/* Duration is a form entry, not an unbordered table cell. */
+.duration-modal label { display:grid; gap:8px; font-size:13px; font-weight:500; }
+.duration-modal input.ci-ta { width:100%; min-height:44px; padding:10px 12px; border:1px solid var(--g300); border-radius:8px; background:white; font-size:14px; line-height:1.5; }
+.duration-modal .dur-warn { margin-top:10px; font-size:12px; line-height:1.5; }

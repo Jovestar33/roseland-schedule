@@ -116,7 +116,7 @@ export default function ScheduleGrid({ onOpenContact, onOpenStatus, onOpenNotes 
                     }
                     const dIdx = draggableIndices[index];
                     return (
-                      <Draggable key={key} draggableId={key} index={dIdx}>
+                      <Draggable key={key} draggableId={key} index={dIdx} isDragDisabled={dIdx === 0}>
                         {(draggable, snapshot) => (
                           <ScheduleRow
                             ref={draggable.innerRef}

@@ -103,7 +103,7 @@ async function fetchSunOnly(
       `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&daily=sunrise&timezone=auto&start_date=${today}&end_date=${today}`
     );
     const tzJ = await tzRes.json() as { timezone?: string };
-    if (tzJ.timezone && tzJ.timezone !== 'GMT' && tzJ.timezone !== 'UTC') {
+    if (tzRes.ok && tzJ.timezone) {
       ianaTimezone = tzJ.timezone;
     }
   } catch { /* ignore */ }
@@ -112,7 +112,7 @@ async function fetchSunOnly(
     try {
       const r = await request(url);
       const j = await r.json() as { daily?: { sunrise?: string[]; sunset?: string[] } };
-      if (j.daily?.sunrise?.length) {
+      if (r.ok && j.daily?.sunrise?.[0] && j.daily?.sunset?.[0]) {
         return {
           sunrise: rawToAP(j.daily.sunrise[0].slice(11)),
           sunset: rawToAP(j.daily.sunset![0].slice(11)),
@@ -121,7 +121,8 @@ async function fetchSunOnly(
     } catch { /* try next */ }
   }
 
-  return calcSunTimes(date, lat, lng, ianaTimezone);
+  // Never calculate destination sun times using the server/browser timezone.
+  return ianaTimezone ? calcSunTimes(date, lat, lng, ianaTimezone) : null;
 }
 
 export async function fetchWeather(
@@ -133,11 +134,10 @@ export async function fetchWeather(
 ): Promise<WeatherData | null> {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  const shoot = new Date(date + 'T12:00:00');
-  const diff = Math.round((shoot.getTime() - today.getTime()) / 86400000);
+  const diff = Math.round((Date.parse(date + 'T00:00:00Z') - Date.UTC(today.getFullYear(), today.getMonth(), today.getDate())) / 86400000);
   const fetchedAt = new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
 
-  if (diff > 16) {
+  if (diff >= 16) {
     const sun = await fetchSunOnly(date, lat, lng, request);
     if (!sun) return null;
     return { ...sun, fetchedAt, town, noForecast: true };
@@ -160,13 +160,10 @@ export async function fetchWeather(
       };
     };
 
-    if (!wx.daily?.time?.length) {
-      const sun = await fetchSunOnly(date, lat, lng, request);
-      if (!sun) return null;
-      return { ...sun, fetchedAt, town, noForecast: true };
-    }
+    if (!res.ok || wx.daily?.time?.[0] !== date) return null;
 
     const d = wx.daily;
+    if (!d.sunrise?.[0] || !d.sunset?.[0] || ![d.temperature_2m_max?.[0], d.temperature_2m_min?.[0], d.precipitation_probability_max?.[0], d.weathercode?.[0]].every(v => typeof v === 'number' && Number.isFinite(v))) return null;
     const sunrise = rawToAP(d.sunrise![0].slice(11));
     const sunset = rawToAP(d.sunset![0].slice(11));
     const maxC = d.temperature_2m_max![0];
@@ -188,8 +185,7 @@ export async function fetchWeather(
       town,
     };
   } catch {
-    const sun = await fetchSunOnly(date, lat, lng, request);
-    if (!sun) return null;
-    return { ...sun, fetchedAt, town, noForecast: true };
+    // A failed in-range request is an outage, not an unavailable future forecast.
+    return null;
   }
 }

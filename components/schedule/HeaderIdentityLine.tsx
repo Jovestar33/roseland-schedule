@@ -22,7 +22,13 @@ function readOptions(key: string): string[] {
 export default function HeaderIdentityLine({ readOnly = false }: Props) {
   const localEditor = useLocalEditor();
   const meta       = useScheduleStore((s) => s.meta);
-  const updateMeta = useScheduleStore((s) => s.updateMeta);
+  const saveMeta = useScheduleStore((s) => s.updateMeta);
+  function updateMeta(patch: Partial<typeof meta>) {
+    if (Object.entries(patch).some(([key, value]) => meta[key as keyof typeof meta] !== value)) {
+      useScheduleStore.getState().pushUndo();
+      saveMeta(patch);
+    }
+  }
   const [editing,       setEditing]       = useState<Field | null>(null);
   const [draft,         _setDraft]        = useState('');
   const draftRef                          = useRef('');
@@ -75,8 +81,6 @@ export default function HeaderIdentityLine({ readOnly = false }: Props) {
   // Enforced slash-format input handler — only digits and one slash accepted
   function handleDayChange(e: React.ChangeEvent<HTMLInputElement>) {
     const newRaw     = e.target.value;
-    const prevVal    = draftRef.current;
-    const isDeleting = newRaw.length < prevVal.length;
 
     let filtered = newRaw.replace(/[^\d/]/g, '');
     if (filtered.startsWith('/')) filtered = filtered.slice(1);
@@ -88,18 +92,11 @@ export default function HeaderIdentityLine({ readOnly = false }: Props) {
     let result = parts[0].slice(0, 3);
     if (parts.length > 1) result += '/' + parts[1].slice(0, 3);
 
-    // Auto-insert slash when typing (not deleting) and no slash present yet
-    const autoSlash = !isDeleting && !result.includes('/') && result.length > 0;
-    if (autoSlash) result += '/';
-
     // Clear any standing validation error as the user types a correction
     if (validationMsg) setValidationMsg('');
 
     setDraft(result);
 
-    if (autoSlash) {
-      setTimeout(() => dayInputRef.current?.setSelectionRange(result.length, result.length), 0);
-    }
   }
 
   function commitDay(raw: string, returnToTrigger = false) {

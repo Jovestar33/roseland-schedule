@@ -27,3 +27,9 @@ test('weather preserves supplied zero precipitation, partial temperatures and da
  assert.deepEqual(callSheetWeather(null),[]);
  assert.deepEqual(callSheetWeather({noForecast:true,sunset:'7:15 PM'}),['Sunset 7:15 PM']);
 });
+
+test('call sheet retains key instructions and legacy cast even on otherwise empty rows',()=>{
+ const source=row({action:'',timeIn:'',desc:'',notes:'',loc:'',locName:'',locAddress:'',subLocations:[],keyInstruction:'Keep entrance clear',cast:'Host and guest'});
+ const [line]=callSheetLines([source]);
+ assert.equal(line.keyInstruction,'Keep entrance clear');assert.equal(line.cast,'Host and guest');
+});

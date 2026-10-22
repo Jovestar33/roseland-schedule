@@ -36,6 +36,7 @@ export default function NotesModal({ open, notes, onSave, onClose }: Props) {
       <textarea
         autoFocus
         className="ci-ta"
+        aria-label="Notes"
         value={value}
         onChange={(e) => setValue(e.target.value)}
         placeholder="Notes…"

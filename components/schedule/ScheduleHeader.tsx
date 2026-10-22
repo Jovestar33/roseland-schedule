@@ -19,6 +19,7 @@ export default function ScheduleHeader({ readOnly = false }: Props) {
   const meta       = useScheduleStore((s) => s.meta);
   const rows       = useScheduleStore((s) => s.rows);
   const updateMeta = useScheduleStore((s) => s.updateMeta);
+  const pushUndo = useScheduleStore((s) => s.pushUndo);
 
   const labelTown = useCmsLabel('metaTown', 'Town / Location');
   const labelDate = useCmsLabel('metaDate', 'Date');
@@ -41,7 +42,7 @@ export default function ScheduleHeader({ readOnly = false }: Props) {
 
   function openTownMap() {
     if (!linksEnabled) return;
-    const url = meta.lat && meta.lng
+    const url = meta.lat !== null && meta.lng !== null
       ? `https://www.google.com/maps/search/?api=1&query=${meta.lat},${meta.lng}`
       : `https://www.google.com/maps/search/${encodeURIComponent(meta.town)}`;
     window.open(url, '_blank', 'noopener,noreferrer');
@@ -61,8 +62,9 @@ export default function ScheduleHeader({ readOnly = false }: Props) {
               <PlacesAutocomplete
                 id="m-town"
                 value={meta.town}
-                onChange={(v) => updateMeta({ town: v })}
+                onChange={(v) => updateMeta({ town: v, lat: null, lng: null })}
                 onSelect={handleTownSelect}
+                onFocus={pushUndo}
                 placeholder="e.g. Garner, NC"
               />
               {linksEnabled && meta.lat !== null && meta.lng !== null && (
@@ -85,6 +87,7 @@ export default function ScheduleHeader({ readOnly = false }: Props) {
                   type="date"
                   autoComplete="off"
                   value={meta.date}
+                  onFocus={pushUndo}
                   onChange={(e) => updateMeta({ date: e.target.value })}
                   className={meta.date ? '' : 'date-unset'}
                 />

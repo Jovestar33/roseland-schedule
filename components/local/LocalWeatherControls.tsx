@@ -42,7 +42,7 @@ export default function LocalWeatherControls({ enabled, scope }: { enabled: bool
           state.pushUndo();
           state.insertSunRows(meta.wx.sunrise, meta.wx.sunset);
         }
-      } else if (!meta.wx || sameDocument) void refresh();
+      } else if (!meta.wx) void refresh();
     }
     return () => { pending.current++; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -51,8 +51,10 @@ export default function LocalWeatherControls({ enabled, scope }: { enabled: bool
     if (!enabled) return; ticket.current++; setBusy(false); lastKey.current = key;
     const state = useScheduleStore.getState(); state.pushUndo(); state.setWx(null); state.clearSunRows();
   }
+  const unavailableReason = !meta.date ? 'Choose a shoot date to load weather.'
+    : meta.lat === null || meta.lng === null ? 'Choose a town from the location suggestions to load weather.' : undefined;
   return <>
     <WxStrip onRefresh={() => void refresh()} onClear={clear} readOnly={!enabled || busy} />
-    {!meta.wx && <button className="btn btn-light btn-sm weather-empty-refresh" aria-busy={busy} disabled={!enabled || !provider || busy || !meta.date || meta.lat === null || meta.lng === null} onClick={() => void refresh()}>{busy?'Refreshing…':'Refresh weather'}</button>}
+    {!meta.wx && <button className="btn btn-light btn-sm weather-empty-refresh" title={unavailableReason} aria-busy={busy} disabled={!enabled || !provider || busy || !meta.date || meta.lat === null || meta.lng === null} onClick={() => void refresh()}>{busy?'Refreshing…':'Refresh weather'}</button>}
   </>;
 }

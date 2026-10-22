@@ -79,3 +79,25 @@
  .library :global(.lbt-phase) .newInProduction{margin-left:48px;}
  .emptyPhase{margin-left:48px;}
 }
+
+/* Review pass 1: labels above controls, with room for native date affordances. */
+.library .filters { grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr)); gap:16px; align-items:start; }
+.library .filters label { display:grid; grid-template-columns:minmax(0,1fr); gap:8px; align-items:start; min-width:0; width:100%; line-height:1.4; }
+.library .filters select, .library .filters input { display:block; box-sizing:border-box; width:100%; min-width:0; height:44px; padding:10px 36px 10px 12px; font-family:var(--fb); font-size:14px; line-height:1.4; }
+.library .filters input[type="date"] { padding-right:12px; }
+.library :global(.lib-header)>div { display:flex; flex-wrap:wrap; align-items:center; gap:8px; }
+.library :global(.lib-header) { flex-wrap:wrap; gap:16px; }
+.library button:global(.btn-pink):not(:disabled) { background:var(--ui-primary); border-color:var(--ui-accent); color:white; opacity:1; }
+.library button:global(.btn-pink):hover:not(:disabled) { background:var(--ui-primary-hover); }
+.library button:global(.btn-pink):disabled { opacity:.45; cursor:not-allowed; }
+
+/* Review pass 2: loading errors and result counts are separate, readable states. */
+.library .loadError { display:grid; gap:10px; margin:24px 0; padding:20px; border:1px solid var(--g200); border-left:3px solid var(--ui-accent); border-radius:10px; background:white; font-family:var(--fb); }
+.library .loadError strong { font-family:var(--fb); font-size:16px; font-weight:600; line-height:1.5; }
+.library .loadError p { margin:0; color:var(--g600); font-family:var(--fb); font-size:14px; line-height:1.6; }
+.library .loadError button { justify-self:start; margin:4px 0 0; }
+.library .libraryStatus { margin:18px 0; font-family:var(--fb); font-size:14px; font-weight:400; line-height:1.6; color:var(--g600); }
+.library :global(.lbt-prod-count), .library :global(.lbt-phase-count) { font-family:var(--fb); font-size:12px; font-weight:400; line-height:1.5; }
+
+/* Review pass 3: separate filter controls from the production list. */
+.library .clearFilters { margin-bottom:20px; }

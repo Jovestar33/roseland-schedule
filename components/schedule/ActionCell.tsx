@@ -32,18 +32,21 @@ export default function ActionCell({ index, row }: Props) {
 
   if (isOther) {
     return (
+      <>
       <div className="other-wrap">
         <input
           className={`other-inp-inline cs aOther`}
           type="text"
+          aria-label="Custom action"
           value={row.otherText}
           onChange={(e) => updateRow(index, { otherText: e.target.value })}
           onFocus={pushUndo}
           placeholder="Describe…"
         />
         <button className="other-back" onClick={handleBackClick} title="Change action" aria-label="Change action">↩</button>
-        {showHint && <div className="lock-hint">⏱ Set duration above</div>}
       </div>
+      {showHint && <div className="lock-hint">⏱ Set duration above</div>}
+      </>
     );
   }
 

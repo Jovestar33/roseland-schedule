@@ -1,5 +1,5 @@
 'use client';
-import { useState, useRef, useCallback, useEffect } from 'react';
+import { useState, useRef, useCallback, useEffect, useId } from 'react';
 import {observeTextareaSize} from '@/lib/observe-textarea-size';
 import { createPortal } from 'react-dom';
 import { useLocalEditor } from './LocalEditorContext';
@@ -33,9 +33,20 @@ export default function PlacesAutocomplete({
   disabled = false,
   ariaLabel,
 }: Props) {
+  const listId = useId();
+  const feedbackId = useId();
   const localEditor = useLocalEditor();
   const providers = useDocumentProviders();
   const request = useRef(0);
+  const expectedValue = useRef(value);
+  // Undo, reload, and other external edits must invalidate an older lookup.
+  useEffect(() => {
+    if (expectedValue.current === value) return;
+    expectedValue.current = value;
+    request.current++;
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    setOpen(false); setSuggestions([]); setFeedback('');
+  }, [value]);
   useEffect(() => {
     const pending = request;
     pending.current++; setOpen(false);setFeedback('');
@@ -86,7 +97,7 @@ export default function PlacesAutocomplete({
       if(localEditor&&providers?.kind==='live')setFeedback(failed?'Location search unavailable. You can enter a location manually.':results.length?'':'No matching locations. You can enter one manually.');
       if (results.length > 0) {
         setRect(elementRef.current?.getBoundingClientRect() ?? null);
-        setOpen(true);
+        setOpen(elementRef.current === document.activeElement);
       } else {
         setOpen(false);
       }
@@ -96,6 +107,7 @@ export default function PlacesAutocomplete({
 
   function handleInput(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     const v = e.target.value;
+    expectedValue.current = v;
     onChange(v);
     search(v);
   }
@@ -103,6 +115,7 @@ export default function PlacesAutocomplete({
   async function handleSelect(s: PlaceSuggestion) {
     setOpen(false);
     setSuggestions([]);
+    expectedValue.current = s.main || s.label;
     onChange(s.main || s.label);
     const ticket = ++request.current;
     if (onSelect && (!localEditor || providers)) {
@@ -113,6 +126,13 @@ export default function PlacesAutocomplete({
   }
 
   function handleKeyDown(e: React.KeyboardEvent) {
+    if (e.key === 'Escape') {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+      request.current++;
+      setOpen(false);
+      setSuggestions([]);
+      return;
+    }
     // Prevent newlines in textarea mode
     if (multiline && e.key === 'Enter') e.preventDefault();
     if (!open || !suggestions.length) return;
@@ -122,21 +142,43 @@ export default function PlacesAutocomplete({
     else if (e.key === 'Escape')  { setOpen(false); }
   }
 
+  const popupWidth = rect ? Math.min(Math.max(rect.width, 280), window.innerWidth - 16) : 0;
+  const below = rect ? window.innerHeight - rect.bottom - 8 : 0;
+  const above = rect ? rect.top - 8 : 0;
+  const opensAbove = below < 180 && above > below;
+  const popupHeight = Math.min(280, Math.max(0, opensAbove ? above : below));
+
+  useEffect(() => {
+    if (open) document.getElementById(`${listId}-${focused}`)?.scrollIntoView({ block: 'nearest' });
+  }, [focused, open, listId]);
+
   const dropdown = (!localEditor || providers) && open && suggestions.length > 0 && mounted && rect
     ? createPortal(
         <div
+          id={listId}
+          role="listbox"
+          aria-label="Location suggestions"
           className={`${dropdownClass} open`}
           style={{
             position: 'fixed',
-            top:   rect.bottom,
-            left:  rect.left,
-            width: rect.width,
+            top: opensAbove ? undefined : rect.bottom,
+            bottom: opensAbove ? window.innerHeight - rect.top : undefined,
+            left: Math.max(8, Math.min(rect.left, window.innerWidth - popupWidth - 8)),
+            right: 'auto',
+            width: popupWidth,
+            maxHeight: popupHeight,
+            overflowY: 'auto',
+            border: '1.5px solid var(--pink)',
+            borderRadius: '8px',
             zIndex: 99999,
           }}
         >
           {suggestions.map((s, i) => (
             <div
               key={s.placeId || i}
+              id={`${listId}-${i}`}
+              role="option"
+              aria-selected={i === focused}
               className={`ac-item${i === focused ? ' focused' : ''}`}
               onMouseDown={(e) => e.preventDefault()}
               onClick={() => handleSelect(s)}
@@ -154,7 +196,13 @@ export default function PlacesAutocomplete({
   const sharedProps = {
     id,
     disabled,
-    'aria-label': ariaLabel,
+    'aria-label': ariaLabel ?? (id ? undefined : placeholder?.replace('…', '')),
+    role: 'combobox' as const,
+    'aria-autocomplete': 'list' as const,
+    'aria-expanded': open,
+    'aria-controls': open ? listId : undefined,
+    'aria-activedescendant': open ? `${listId}-${focused}` : undefined,
+    'aria-describedby': feedback ? feedbackId : undefined,
     className,
     value,
     placeholder,
@@ -166,7 +214,7 @@ export default function PlacesAutocomplete({
   };
 
   return (
-    <>
+    <div className="places-field">
       {multiline ? (
         <textarea
           ref={(el) => { elementRef.current = el; }}
@@ -182,7 +230,7 @@ export default function PlacesAutocomplete({
         />
       )}
       {dropdown}
-      {feedback&&<small role="status" style={{display:'block',whiteSpace:'normal'}}>{feedback}</small>}
-    </>
+      {feedback&&<small id={feedbackId} className="places-feedback" role="status">{feedback}</small>}
+    </div>
   );
 }

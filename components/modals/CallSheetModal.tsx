@@ -284,6 +284,8 @@ function CallSheetDocument({
           <td className="csh-td-t">{l.timeIn}</td>
           <td className="csh-td-a"><strong>{l.action}</strong>
             {l.description && <span className="csh-work-description">{l.description}</span>}
+            {l.keyInstruction && <span className="csh-work-notes"><strong>Key instruction: {l.keyInstruction}</strong></span>}
+            {l.cast && <span className="csh-work-notes"><b>Cast: </b>{l.cast}</span>}
             {l.notes && <span className="csh-work-notes"><b>Notes: </b>{l.notes}</span>}
           </td>
           <td className="csh-td-l">{l.locations.map((loc, j) => <div className="csh-work-location" key={j}>

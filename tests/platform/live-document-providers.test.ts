@@ -53,3 +53,20 @@ test('hosted client uses only the same-origin hosted provider endpoint',async()=
  },'/api/platform/document-providers');
  assert.deepEqual(await provider.search('Raleigh'),[]);
 });
+
+
+test('weather refresh time uses the client timezone instead of the server clock',async(t)=>{
+ const timezone=process.env.TZ;
+ process.env.TZ='America/New_York';
+ t.mock.timers.enable({apis:['Date'],now:new Date('2026-10-22T04:27:00Z')});
+ try {
+  const provider=createLiveDocumentProviders(async()=>({token:'session',schedule:'schedule'}),async()=>Response.json({sunrise:'7:29 AM',sunset:'6:30 PM',fetchedAt:'4:27 AM'}),'/api/platform/document-providers');
+  const result=await provider.weather('2026-10-22',36.39,-78.98,'Roxboro');
+  assert.equal(result?.fetchedAt,'12:27 AM');
+  assert.equal(result?.sunrise,'7:29 AM');
+  assert.equal(result?.sunset,'6:30 PM');
+ } finally {
+  if(timezone===undefined)delete process.env.TZ;else process.env.TZ=timezone;
+  t.mock.timers.reset();
+ }
+});
