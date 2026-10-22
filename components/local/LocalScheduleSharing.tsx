@@ -9,6 +9,7 @@ const date=(value:string)=>new Date(value).toLocaleString(undefined,{dateStyle:'
 const expired=(link:ClientLink)=>!!link.expires_at&&Date.parse(link.expires_at)<=Date.now();
 export default function LocalScheduleSharing({expanded=false,workspacePath='/local-workspace',client,actor,organization,schedule,name,enabled,readOnly,onInvite,onState}:Props){
  const repository=useMemo(()=>createClientLinksRepository(client),[client]);
+ const [more,setMore]=useState(false);
  const [review,setReview]=useState<LinkReview|null>(null),[busy,setBusy]=useState(false),[message,setMessage]=useState(''),[error,setError]=useState('');
  const [origin,setOrigin]=useState(''),[issued,setIssued]=useState<{id:string;url:string;expires:string}|null>(null);
  const [confirm,setConfirm]=useState<ClientLink|null>(null),[creating,setCreating]=useState(false),[pending,setPending]=useState<ClientLinkAttempt|null>(null);
@@ -24,6 +25,7 @@ export default function LocalScheduleSharing({expanded=false,workspacePath='/loc
  async function load(append=false){
   if(!actor)return;const data=await repository.read(actor,schedule,append?review?.links.at(-1)?.id??null:null);
   if(same()){
+   setMore(data.links.length===100);
    setReview(append?{...data,links:[...(review?.links??[]),...data.links]}:data);
    setIssued(previous=>{const item=data.links.find(link=>link.id===previous?.id);return item&&(item.revoked_at||expired(item))?null:previous;});
   }
@@ -87,7 +89,7 @@ export default function LocalScheduleSharing({expanded=false,workspacePath='/loc
    {review&&<div className={styles.inventory}><h4>Available links{available.length?` (${available.length})`:''}</h4>{available.length?<><ul className={styles.links}>{[...available].sort((a,b)=>b.created_at.localeCompare(a.created_at)).map(linkRow)}</ul><p className={styles.hint}>Previously created URLs aren’t stored. If you no longer have a link, create a new one.</p></>:<p className={styles.empty}>No active client links.</p>}
     {!!inactive.length&&<details className={styles.disclosure}><summary>Expired &amp; revoked ({inactive.length})</summary><ul className={styles.links}>{[...inactive].sort((a,b)=>b.created_at.localeCompare(a.created_at)).map(linkRow)}</ul></details>}
    </div>}
-   {review&&review.links.length>0&&review.links.length%100===0&&<button type="button" className="btn btn-light btn-sm" disabled={busy||!enabled} onClick={()=>void run(()=>load(true))}>Load more links</button>}
+   {more&&<button type="button" className="btn btn-light btn-sm" disabled={busy||!enabled} onClick={()=>void run(()=>load(true))}>Load more links</button>}
   </section>
  </details>;
 }
