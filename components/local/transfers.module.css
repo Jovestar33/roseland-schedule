@@ -18,3 +18,8 @@
 .preview :global(col.c-du) { width:85px !important; }
 
 .dialog h2{font-family:var(--fd);font-size:var(--ui-dialog-title-size);letter-spacing:1.5px}.dialog :is(p,label,input,select,button){font-family:var(--fb);font-size:var(--ui-body-size)}
+
+.embedded { width:100%; max-height:none; margin:0; padding:0; overflow:visible; border:0; box-shadow:none; }
+.embedded[hidden] { display:none; }
+.embedded p { overflow-wrap:anywhere; }
+.embedded :is(input,select) { width:100%; min-width:0; }

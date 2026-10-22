@@ -101,3 +101,35 @@
 
 /* Review pass 3: separate filter controls from the production list. */
 .library .clearFilters { margin-bottom:20px; }
+
+/* Library parity: visible reordering and contextual actions without crowding the name. */
+.library .scheduleIdentity { flex:1 1 180px; min-width:0; display:grid; gap:3px; }
+.library .scheduleIdentity .metadata { padding:0; }
+.library .dragHandle { display:flex; align-items:center; justify-content:center; flex:0 0 28px; min-height:36px; color:var(--g600); border-radius:6px; cursor:grab; font-size:22px; touch-action:manipulation; }
+.library .dragHandle[tabindex]:hover { background:var(--ui-accent-soft); color:var(--ui-accent-strong); }
+.library .dragHandle:focus-visible { outline:2px solid var(--ui-accent-strong); outline-offset:2px; }
+.library .dragHandle:not([tabindex]) { opacity:.4; cursor:default; }
+.library .dragging { background:var(--ui-accent-soft); box-shadow:0 6px 20px #0002; border-radius:8px; }
+.rowActions { display:flex; gap:6px; align-items:center; flex-shrink:0; }
+.rowActions > button { font-size:12px; min-height:32px; padding:5px 9px; white-space:nowrap; }
+.rowMenu { position:relative; flex-shrink:0; }
+.rowMenu > summary { list-style:none; cursor:pointer; border:1px solid var(--g200); background:white; border-radius:7px; font-size:20px; line-height:24px; padding:3px 9px; }
+.rowMenu > summary::-webkit-details-marker { display:none; }
+.rowMenu > summary:focus-visible { outline:2px solid var(--ui-accent-strong); outline-offset:2px; }
+.rowMenuItems { position:absolute; right:0; top:calc(100% + 5px); z-index:30; width:230px; padding:6px; background:white; border:1px solid var(--g200); border-radius:10px; box-shadow:0 8px 28px #0002; }
+.library .rowMenuItems > button { display:block; width:100%; padding:9px 10px; border:0; background:transparent; box-shadow:none; color:var(--ui-ink); text-align:left; font:inherit; font-size:13px; border-radius:5px; }
+.library .rowMenuItems > button:hover:not(:disabled) { background:var(--ui-accent-soft); }
+.arrangeHint,.modeNotice { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px; margin:14px 0; color:var(--g600); font-size:12px; line-height:1.5; }
+.modeNotice { padding:12px 14px; border:1px solid var(--g200); border-radius:8px; background:white; font-size:14px; }
+@media(max-width:640px){
+ .library :global(.lbt-sched-row) { flex-wrap:wrap; gap:6px; }
+ .library .scheduleIdentity { flex-basis:calc(100% - 110px); }
+ .library .rowActions { margin-left:34px; flex-basis:calc(100% - 34px); justify-content:flex-end; }
+ .library .rowActions > [role="group"] { margin-right:auto; }
+ .library .rowActions > button,.rowMenu > summary { min-height:36px; }
+ .rowMenuItems { max-width:calc(100vw - 80px); }
+}
+
+.library :global(.lbt-prod) { overflow:visible; }
+.library :global(.lbt-prod-row) { border-radius:11px 11px 0 0; }
+.library :global(.lbt-prod):not([open]) > summary { border-radius:11px; }

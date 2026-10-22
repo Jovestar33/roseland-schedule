@@ -9,7 +9,7 @@ export interface LibraryRecord {
 }
 export interface ProductionDestination {id:string;name:string;create:boolean;organize:boolean;position?:number;version?:number;phases:{id:string;name:string;position?:number;version?:number}[];days:{id:string;phase:string|null;date:string|null;number:number|null;position:number}[]}
 export type LibraryFilter='active'|'archived'|'all'|'trash';
-export type LibrarySort='manual'|'name'|'date'|'updated';
+export type LibrarySort='manual'|'name'|'date'|'date-desc'|'updated';
 function isPhaseDestination(value:unknown):value is ProductionDestination['phases'][number]{
  if(!value||typeof value!=='object')return false;
  const phase=value as Record<string,unknown>;
@@ -21,7 +21,13 @@ export function libraryPhase(row:LibraryRecord){return row.effective_phase_id??r
 export function libraryGroup(row:LibraryRecord){return row.production_id+':'+(libraryPhase(row)??'no-phase');}
 export function filterLibrary(rows:LibraryRecord[],query:string,status:LibraryFilter,production:string,dateFrom:string,dateTo:string,sort:LibrarySort){
  const term=query.trim().toLocaleLowerCase();return rows.filter(r=>(status==='trash'?!!r.deleted_at:!r.deleted_at&&(status==='all'||(status==='archived'?r.status==='archived':r.status!=='archived')))&&(!production||r.production_id===production)&&(!dateFrom||!!r.schedule_date&&r.schedule_date>=dateFrom)&&(!dateTo||!!r.schedule_date&&r.schedule_date<=dateTo)&&(!term||[r.display_name,r.production_name,r.phase_name,r.town].some(v=>v?.toLocaleLowerCase().includes(term))))
- .sort((a,b)=>sort==='name'?a.display_name.localeCompare(b.display_name)||a.id.localeCompare(b.id):sort==='date'?(a.schedule_date??'9999').localeCompare(b.schedule_date??'9999')||a.id.localeCompare(b.id):sort==='updated'?b.updated_at.localeCompare(a.updated_at)||a.id.localeCompare(b.id):a.library_position-b.library_position||(a.day_number??Infinity)-(b.day_number??Infinity)||b.updated_at.localeCompare(a.updated_at)||a.id.localeCompare(b.id));
+ .sort((a,b)=>sort==='name'?a.display_name.localeCompare(b.display_name)||a.id.localeCompare(b.id):sort==='date'||sort==='date-desc'?(!a.schedule_date?(!b.schedule_date?0:1):!b.schedule_date?-1:(sort==='date'?1:-1)*a.schedule_date.localeCompare(b.schedule_date))||a.id.localeCompare(b.id):sort==='updated'?b.updated_at.localeCompare(a.updated_at)||a.id.localeCompare(b.id):a.library_position-b.library_position||(a.day_number??Infinity)-(b.day_number??Infinity)||b.updated_at.localeCompare(a.updated_at)||a.id.localeCompare(b.id));
+}
+/** Only complete, editable sibling groups can be reordered. A cancelled/no-op drop never writes. */
+export function reorderLibraryItems(items:LibraryRecord[],id:string,from:number,to:number):LibraryRecord[]|null {
+ if(!Number.isInteger(from)||!Number.isInteger(to)||from===to||from<0||to<0||from>=items.length||to>=items.length||items[from]?.id!==id)return null;
+ if(new Set(items.map(r=>r.id)).size!==items.length||items.some(r=>!r.can_organize||r.deleted_at||r.status==='archived'||libraryGroup(r)!==libraryGroup(items[0])))return null;
+ const next=[...items];const [moved]=next.splice(from,1);next.splice(to,0,moved);return next;
 }
 export function createScheduleLibraryRepository(client:SupabaseClient){
  async function rpc(actor:string,name:string,args:Record<string,unknown>){const session=await client.auth.getSession();if(session.error||session.data.session?.user.id!==actor)throw new ScheduleRepositoryError('unauthenticated');const r=await client.rpc(name,args).setHeader('Authorization',`Bearer ${session.data.session.access_token}`);if(r.error)throw new ScheduleRepositoryError(r.status===401||r.error.code==='PT401'?'unauthenticated':r.error.code==='PT400'?'invalid':r.error.code==='PT409'?'conflict':r.error.code==='PT404'?'unavailable':'failed');return r.data;}

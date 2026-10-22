@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import type { SupabaseClient } from '@supabase/supabase-js';
-import {createScheduleLibraryRepository,filterLibrary,libraryGroup,type LibraryRecord} from '../../lib/platform/schedule-library.ts';
+import {createScheduleLibraryRepository,filterLibrary,libraryGroup,reorderLibraryItems,type LibraryRecord} from '../../lib/platform/schedule-library.ts';
 import {ScheduleLifecycleController,acknowledgementMatches} from '../../lib/platform/schedule-lifecycle-controller.ts';
 import type {StoredSchedule} from '../../lib/platform/schedule-repository.ts';
 const actor='11111111-1111-4111-8111-111111111111',org='22222222-2222-4222-8222-222222222222',prod='33333333-3333-4333-8333-333333333333';
@@ -30,4 +30,27 @@ test('phase ordering combines dayless and day-assigned siblings but refuses othe
  assert.equal(libraryGroup(first),libraryGroup(second));assert.notEqual(libraryGroup(first),libraryGroup(row(3)));
  let calls=0;const sdk={auth:{getSession:async()=>({data:{session:{user:{id:actor},access_token:'fictional'}}})},rpc:(name:string,args:unknown)=>{calls++;assert.equal(name,'order_schedule_phase_group');assert.deepEqual(args,{target_production_id:prod,target_phase_id:phase,ordered_ids:[second.id,first.id],expected_versions:[1,1]});return {setHeader:()=>Promise.resolve({data:[],error:null})};}} as unknown as SupabaseClient;
  const repo=createScheduleLibraryRepository(sdk);await repo.order(actor,[second,first]);await assert.rejects(()=>repo.order(actor,[first,row(3)]));assert.equal(calls,1);
+});
+
+
+test('drag and arrow ordering preserve identities and versions without mutating the current view',()=>{
+ const items=[1,2,3].map(n=>({...row(n),can_organize:true}));
+ const reordered=reorderLibraryItems(items,id(1),0,2)!;
+ assert.deepEqual(reordered.map(r=>r.id),[id(2),id(3),id(1)]);
+ assert.deepEqual(items.map(r=>r.id),[id(1),id(2),id(3)]);
+ assert.equal(reordered[2],items[0]);
+ assert.deepEqual(reorderLibraryItems(reordered,id(1),2,0),items);
+});
+test('no-op, stale, out-of-range and incomplete authority drags cannot prepare an order write',()=>{
+ const items=[1,2,3].map(n=>({...row(n),can_organize:true}));
+ for(const [idValue,from,to] of [[id(1),0,0],[id(2),0,1],[id(1),0,-1],[id(1),0,3],[id(1),0,1.5]] as [string,number,number][])assert.equal(reorderLibraryItems(items,idValue,from,to),null);
+ for(const changed of [{can_organize:false},{deleted_at:'2026-10-22'},{status:'archived' as const},{phase_id:id(8)}])assert.equal(reorderLibraryItems([items[0],{...items[1],...changed}],id(1),0,1),null);
+ assert.equal(reorderLibraryItems([items[0],items[0]],id(1),0,1),null);
+});
+test('both date directions leave undated schedules last and preserve collection boundaries',()=>{
+ const rows=[{...row(1),schedule_date:'2026-10-01'},{...row(2),schedule_date:'2026-11-01'},row(3),{...row(4),status:'archived' as const},{...row(5),deleted_at:'2026-10-22'}];
+ assert.deepEqual(filterLibrary(rows,'','active','','','','date').map(r=>r.id),[id(1),id(2),id(3)]);
+ assert.deepEqual(filterLibrary(rows,'','active','','','','date-desc').map(r=>r.id),[id(2),id(1),id(3)]);
+ assert.deepEqual(filterLibrary(rows,'','archived','','','','manual').map(r=>r.id),[id(4)]);
+ assert.deepEqual(filterLibrary(rows,'','trash','','','','manual').map(r=>r.id),[id(5)]);
 });
