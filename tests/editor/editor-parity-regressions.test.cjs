@@ -20,7 +20,7 @@ test('location details merge into the same sub-location after concurrent edits a
  const hook=selector=>selector(store.getState());hook.getState=store.getState;
  const Location=component('components/schedule/LocationCell.tsx',{react:{...React,useState:x=>[x,()=>{}],useLayoutEffect(){},useRef:x=>({current:x})},'@/lib/observe-textarea-size':{},'@/lib/store/scheduleStore':{useScheduleStore:hook},'@/components/local/DocumentProvidersContext':{useDocumentProviders:()=>({kind:'live'})},'./LocalEditorContext':{useLocalEditor:()=>true},'./PlacesAutocomplete':{default:'Places'}});
  const tree=Location({index:0,row:store.getState().rows[0]});const sub=elements(tree,n=>n.type==='Places'&&n.props.placeholder==='Sub-location…')[0];
- sub.props.onChange('New place');store.getState().updateRow(0,{notes:'Concurrent note'});store.getState().reorderRows(0,1);
+ sub.props.onSelectionStart();sub.props.onChange('New place');store.getState().updateRow(0,{notes:'Concurrent note'});store.getState().reorderRows(0,1);
  sub.props.onSelect('Public address',{lat:0,lng:0});
  const saved=store.getState().rows[1];assert.equal(saved.notes,'Concurrent note');assert.equal(saved.subLocations[0].name,'New place');assert.equal(saved.subLocations[0].desc,'Original');assert.equal(saved.subLocations[0].address,'Public address');assert.equal(saved.subLocations[0].locLat,0);
 });

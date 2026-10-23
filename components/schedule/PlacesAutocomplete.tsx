@@ -11,6 +11,7 @@ interface Props {
   onChange: (value: string) => void;
   onSelect?: (value: string, geo: GeoResult | null) => void;
   onFocus?: () => void;
+  onSelectionStart?: () => void;
   placeholder?: string;
   id?: string;
   className?: string;
@@ -24,6 +25,7 @@ export default function PlacesAutocomplete({
   value,
   onChange,
   onSelect,
+  onSelectionStart,
   onFocus,
   placeholder,
   id,
@@ -115,6 +117,7 @@ export default function PlacesAutocomplete({
   async function handleSelect(s: PlaceSuggestion) {
     setOpen(false);
     setSuggestions([]);
+    onSelectionStart?.();
     expectedValue.current = s.main || s.label;
     onChange(s.main || s.label);
     const ticket = ++request.current;

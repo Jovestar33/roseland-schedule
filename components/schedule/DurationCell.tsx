@@ -2,7 +2,7 @@
 import { useRef, useState } from 'react';
 import Modal from '@/components/modals/Modal';
 import { useScheduleStore } from '@/lib/store/scheduleStore';
-import { allowedDurationsForRow, rowConflictInfo, maxDurationForRow, parseCustomDuration, durm, mDur } from '@/lib/time';
+import { DURATIONS, rowConflictInfo, maxDurationForRow, parseCustomDuration, durm, mDur } from '@/lib/time';
 import type { ScheduleRow } from '@/lib/types';
 
 interface Props {
@@ -22,15 +22,16 @@ export default function DurationCell({ index, row }: Props) {
   const closeCustom = () => { setEditing(false); selectRef.current?.focus(); };
 
   const disabled = !row.action;
-  const allowed  = allowedDurationsForRow(rows, index);
-  const opts     = allowed.includes(row.dur) ? allowed : [...allowed, row.dur].filter(Boolean);
+  const max = maxDurationForRow(rows, index);
+  const opts = DURATIONS.includes(row.dur) ? DURATIONS : [...DURATIONS, row.dur].filter(Boolean);
+  const exceedsLock = (dur: string) => max !== null && durm(dur) > max;
   const conflict = rowConflictInfo(rows, index);
 
   function handleChange(dur: string) {
     if (dur === '__custom__') {
       setCustom(row.dur); setError(''); setEditing(true); return;
     }
-    if (dur === row.dur) return;
+    if (dur === row.dur || exceedsLock(dur)) return;
     pushUndo();
     updateRow(index, { dur });
   }
@@ -51,6 +52,7 @@ export default function DurationCell({ index, row }: Props) {
       <select
         ref={selectRef}
         aria-label="Duration"
+        title={max !== null ? `Durations over ${mDur(max) || '00:00'} are unavailable because a time is locked.` : 'Duration'}
         className={`cs${disabled ? ' locked' : ''}${conflict ? ' time-conflict' : ''}`}
         value={row.dur}
         disabled={disabled}
@@ -58,7 +60,7 @@ export default function DurationCell({ index, row }: Props) {
       >
         <option value="">—</option>
         {opts.map((d) => (
-          <option key={d} value={d}>{d}</option>
+          <option key={d} value={d} disabled={exceedsLock(d)}>{d}</option>
         ))}
         <option value="__custom__">Custom…</option>
       </select>

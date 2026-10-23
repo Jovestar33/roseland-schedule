@@ -6,7 +6,7 @@ function render(file,row){
  const code=ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX}}).outputText;
  const mod={exports:{}};
  const mocks={'react/jsx-runtime':{jsx,jsxs:jsx},'@/lib/time':time,'@/lib/store/scheduleStore':{useScheduleStore:fn=>fn({rows:[row],updateRow(){},pushUndo(){}})}};
- vm.runInThisContext('(function(require,module,exports){'+code+'\n})')(name=>mocks[name],mod,mod.exports);
+ vm.runInThisContext('(function(require,module,exports){'+code+'\n})')(name=>mocks[name]??require(name),mod,mod.exports);
  return mod.exports.default({index:0,row});
 }
 function nodes(n,type){if(!n||typeof n!=='object')return [];if(Array.isArray(n))return n.flatMap(x=>nodes(x,type));return [...(n.type===type?[n]:[]),...nodes(n.props.children,type)];}

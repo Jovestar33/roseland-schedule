@@ -9,14 +9,10 @@ export const TIMES: string[] = Array.from({ length: 96 }, (_, i) => {
   return `${h12}:${String(min).padStart(2, '0')} ${ampm}`;
 });
 
-// Common duration presets for the Duration selector
-export const DURATIONS: string[] = [
-  '00:00', '00:15', '00:30', '00:45',
-  '01:00', '01:15', '01:30', '01:45',
-  '02:00', '02:30', '03:00', '03:30',
-  '04:00', '04:30', '05:00', '06:00',
-  '07:00', '08:00',
-];
+// Every quarter hour through eight hours, including zero-duration markers.
+export const DURATIONS: string[] = Array.from({ length: 33 }, (_, i) =>
+  `${String(Math.floor(i / 4)).padStart(2, '0')}:${String((i % 4) * 15).padStart(2, '0')}`
+);
 
 // Parse 12-hour time string ("7:00 AM") to minutes since midnight. Returns -1 if invalid.
 export function t12m(s: string): number {

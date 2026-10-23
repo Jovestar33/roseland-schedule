@@ -45,7 +45,7 @@ export default function StatusModal({ open, row, onSave, onClear, onClose }: Pro
       <textarea
         autoFocus
         className="ci-ta status-ta"
-        aria-label="Booking status"
+        aria-label="Status"
         value={value}
         onChange={(e) => setValue(e.target.value)}
         placeholder="Add booking progress, outreach status, confirmations, issues, next steps, or other status notes."

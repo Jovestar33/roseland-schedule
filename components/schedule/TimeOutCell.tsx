@@ -1,4 +1,5 @@
 'use client';
+import { LockKeyhole, LockKeyholeOpen } from 'lucide-react';
 import { TIMES, computeTimeOut } from '@/lib/time';
 import { useScheduleStore } from '@/lib/store/scheduleStore';
 import type { ScheduleRow } from '@/lib/types';
@@ -51,8 +52,13 @@ export default function TimeOutCell({ index, row }: Props) {
       <button
         className={`time-lock-btn out${row.fixedOut ? ' active' : ''}`}
         onClick={toggleFixedOut}
+          type="button"
+          aria-pressed={!!row.fixedOut}
+          aria-label={row.fixedOut ? 'Unlock time-out' : 'Lock time-out'}
         title={row.fixedOut ? 'Unlock time-out' : 'Lock time-out'}
-      />
+      >
+          {row.fixedOut ? <LockKeyhole size={14} aria-hidden="true" /> : <LockKeyholeOpen size={14} aria-hidden="true" />}
+        </button>
     </div>
   );
 }

@@ -69,10 +69,31 @@ export default function LocationCell({ index, row }: Props) {
     // Keep loc in sync for backward compat with consumers that only read loc.
     // PlacesAutocomplete calls onChange(s.main) on selection — the short place
     // name — so the name field always receives the concise label, not the address.
-    patchLocation({ locName: v, loc: v, locAddress: '', locLat: null, locLng: null });
+    patchLocation({ locName: v, loc: v });
+  }
+
+  // A manual address edit takes precedence over an in-flight name lookup.
+  const addressRevision = useRef<Record<string, number>>({});
+  const selections = useRef<Record<string, { revision: number; address: string }>>({});
+  function beginNameSelection(id = 'main') {
+    const latest = useScheduleStore.getState().rows[currentIndex()];
+    selections.current[id] = {
+      revision: addressRevision.current[id] ?? 0,
+      address: (id === 'main' ? latest?.locAddress : latest?.subLocations?.find(s => s.id === id)?.address) ?? '',
+    };
+  }
+  function acceptsNameSelection(id = 'main') {
+    const pending = selections.current[id];
+    const latest = useScheduleStore.getState().rows[currentIndex()];
+    const address = (id === 'main' ? latest?.locAddress : latest?.subLocations?.find(s => s.id === id)?.address) ?? '';
+    return pending && pending.revision === (addressRevision.current[id] ?? 0) && pending.address === address;
+  }
+  function addressChanged(id = 'main') {
+    addressRevision.current[id] = (addressRevision.current[id] ?? 0) + 1;
   }
 
   function handleNameSelect(addr: string, geo: GeoResult | null) {
+    if (!acceptsNameSelection()) return;
     // Places onSelect fires AFTER onChange(s.main), so locName is already the
     // short name. Here we capture the full formatted address and coordinates,
     // and auto-open the address row so the user can see / edit it.
@@ -150,7 +171,9 @@ export default function LocationCell({ index, row }: Props) {
           className="ci-ta loc-name-input"
           value={mainNameValue}
           onChange={handleNameChange}
+          onSelectionStart={() => beginNameSelection()}
           onSelect={handleNameSelect}
+          ariaLabel="Location name"
           onFocus={pushUndo}
           placeholder="Location…"
           dropdownClass="loc-ac"
@@ -179,7 +202,8 @@ export default function LocationCell({ index, row }: Props) {
           <PlacesAutocomplete
             className="ci-ta loc-addr-input"
             value={row.locAddress ?? ''}
-            onChange={(v) => updateRow(index, { locAddress: v, locLat: null, locLng: null })}
+            ariaLabel="Full address"
+            onChange={(v) => { addressChanged(); patchLocation({ locAddress: v, locLat: null, locLng: null }); }}
             onSelect={handleAddrSelect}
             onFocus={pushUndo}
             placeholder="Full address…"
@@ -209,8 +233,11 @@ export default function LocationCell({ index, row }: Props) {
                 <PlacesAutocomplete
                   className="ci-ta loc-subloc-name-input"
                   value={subNameValue}
-                  onChange={(v) => patchSubLoc(i, { name: v, loc: v, address: '', locLat: null, locLng: null })}
+                  ariaLabel="Sub-location name"
+                  onChange={(v) => patchSubLoc(i, { name: v, loc: v })}
+                  onSelectionStart={() => beginNameSelection(sl.id)}
                   onSelect={(addr, geo) => {
+                    if (!acceptsNameSelection(sl.id)) return;
                     // onChange already set the short name; capture address + coords
                     // and auto-open the sub-location address row
                     patchSubLoc(i, { address: addr, locLat: geo?.lat ?? null, locLng: geo?.lng ?? null });
@@ -246,7 +273,8 @@ export default function LocationCell({ index, row }: Props) {
                 <PlacesAutocomplete
                   className="ci-ta loc-addr-input"
                   value={sl.address ?? ''}
-                  onChange={(v) => patchSubLoc(i, { address: v, locLat: null, locLng: null })}
+                  ariaLabel="Sub-location full address"
+                  onChange={(v) => { addressChanged(sl.id); patchSubLoc(i, { address: v, locLat: null, locLng: null }); }}
                   onSelect={(addr, geo) => patchSubLoc(i, {
                     address: addr,
                     locLat: geo?.lat ?? null,

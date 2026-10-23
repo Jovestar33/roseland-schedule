@@ -24,7 +24,7 @@ export default function NotesCell({ index, row, onOpenStatus, onOpenNotes }: Pro
         <button
           className={`status-mini-btn${hasStatus ? ' has-status' : ''}`}
           onClick={onOpenStatus}
-          title={hasStatus ? 'Edit booking status' : 'Add booking status'}
+          title={hasStatus ? 'Edit status' : 'Add status'}
         >&#10003;</button>
       </div>
       <div className="status-notes-slot">

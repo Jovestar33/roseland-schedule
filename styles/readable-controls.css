@@ -2,17 +2,52 @@
    Print documents have their own measured column layout. */
 .action-value { display:none; }
 @media screen {
-  .tbl-wrap table.sched { min-width:1341px !important; }
-  .tbl-wrap colgroup .c-ti, .tbl-wrap colgroup .c-to { width:160px !important; }
-  .tbl-wrap colgroup .c-du { width:112px !important; }
-  .tbl-wrap .time-cell-wrap { gap:6px !important; justify-content:flex-start !important; }
-  .tbl-wrap .time-lock-btn { flex:0 0 28px; width:28px; min-width:28px; padding:4px !important; }
-  .tbl-wrap td .time-cell-wrap .cs { flex:1 0 104px; width:104px !important; min-width:104px !important; }
-  .tbl-wrap td.tc-t .cs { padding:6px 24px 6px 6px !important; min-height:36px; line-height:1.4; }
-  .tbl-wrap .time-cell-wrap :is(.tdsp,.anchor-text) {
-    flex:1 0 auto; min-width:0 !important; padding:6px !important;
-    white-space:nowrap !important; font-variant-numeric:tabular-nums;
+  /* Keep the legacy text-column balance; put locks below values instead of
+     charging each time column for a second control beside its value. */
+  .tbl-wrap { min-width:0; max-width:100%; overflow-x:auto; }
+  .tbl-wrap table.sched { width:100% !important; min-width:1200px !important; table-layout:fixed; }
+  .tbl-wrap colgroup .c-n { width:38px !important; }
+  .tbl-wrap colgroup .c-a { width:11% !important; }
+  .tbl-wrap colgroup .c-l { width:16% !important; }
+  .tbl-wrap colgroup .c-d { width:auto !important; }
+  .tbl-wrap colgroup .c-nt { width:14% !important; }
+  .tbl-wrap colgroup .c-dv { width:3px !important; }
+  .tbl-wrap colgroup .c-ti, .tbl-wrap colgroup .c-to { width:118px !important; }
+  .tbl-wrap colgroup .c-du { width:92px !important; }
+  .tbl-wrap colgroup .c-cb { width:76px !important; }
+  .tbl-wrap colgroup .c-x { width:36px !important; }
+  .tbl-wrap .time-cell-wrap { flex-direction:column; gap:3px !important; align-items:center; justify-content:flex-start !important; }
+  .tbl-wrap .time-lock-btn {
+    order:2; flex:0 0 28px; width:28px; min-width:28px; height:28px; padding:4px !important;
+    display:inline-flex; align-items:center; justify-content:center;
+    border:1px solid var(--g300); background:white; color:var(--g600); opacity:1;
   }
+  .tbl-wrap .time-lock-btn::before,.tbl-wrap .time-lock-btn::after { content:none; }
+  .tbl-wrap .time-lock-btn.active { background:var(--row-hover); color:var(--pink-dark); border-color:var(--pink); }
+  .tbl-wrap td .time-cell-wrap .cs { flex:0 0 auto; width:100% !important; min-width:0 !important; }
+  .tbl-wrap td.tc-t .cs { padding:6px 18px 6px 3px !important; min-height:36px; font-size:14px; line-height:1.4; }
+  .tbl-wrap .time-cell-wrap :is(.tdsp,.anchor-text) {
+    flex:0 0 auto; min-width:0 !important; min-height:36px; padding:6px 0 !important;
+    white-space:nowrap !important; font-size:14px; font-variant-numeric:tabular-nums;
+  }
+  .tbl-wrap .done-tools { display:flex; align-items:center; justify-content:center; gap:8px; min-height:36px; }
+  .tbl-wrap .done-cb { flex:0 0 18px; width:18px; height:18px; opacity:1; }
+  .tbl-wrap .contact-done-btn { flex:0 0 30px; width:30px; height:30px; display:inline-flex; align-items:center; justify-content:center; padding:0; border:1px solid var(--g400); color:var(--g600); background:white; }
+  .tbl-wrap .contact-done-btn.has-contact { background:var(--pink); color:white; border-color:var(--pink); }
+  /* Keep row actions in view while the text columns scroll on a narrow
+     window. Explicit cell padding leaves the delete button room in Safari. */
+  .tbl-wrap .sched :is(thead,tbody) tr > :nth-child(10) {
+    position:sticky; right:36px; z-index:2; background:var(--g50);
+    box-shadow:-1px 0 0 var(--g200);
+  }
+  .tbl-wrap .sched :is(thead,tbody) tr > :nth-child(11) {
+    position:sticky; right:0; z-index:2; background:var(--g50); padding:4px !important;
+  }
+  .tbl-wrap .sched thead tr > :is(:nth-child(10),:nth-child(11)) { background:var(--black); z-index:3; }
+  .tbl-wrap .sched .del-btn { width:28px; min-width:28px; height:32px; padding:0; margin:0; }
+  .tbl-wrap .sched tr.dragging > :is(:nth-child(10),:nth-child(11)) { position:static; }
+  .crew-val,.crew-input { font-size:16px; line-height:1.5; }
+  .date-weekday { font-size:14px; color:var(--g600); }
   .tbl-wrap td .action-select-wrap { position:relative; display:block !important; width:100% !important; }
   .tbl-wrap .action-select-wrap .action-value { display:block; width:100%; min-width:0 !important; white-space:normal; overflow-wrap:anywhere; padding-right:24px; line-height:1.5; }
   .tbl-wrap td .action-select-wrap .action-select { position:absolute; inset:0; width:100% !important; height:100%; min-width:0 !important; opacity:0; }
@@ -38,7 +73,10 @@
   .snapshot-badge { white-space:normal; overflow:visible; overflow-wrap:anywhere; }
 }
 @media screen and (max-width:760px) {
-  .tbl-wrap table.sched { min-width:1463px !important; width:1463px !important; }
+  .tbl-wrap table.sched { min-width:1361px !important; width:1361px !important; }
+  .tbl-wrap colgroup .c-a { width:180px !important; }
+  .tbl-wrap colgroup .c-l { width:250px !important; }
+  .tbl-wrap colgroup .c-nt { width:190px !important; }
 }
 
 /* Flex boundaries must not swallow the space in “Day 12 of 15”. */
