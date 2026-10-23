@@ -95,6 +95,9 @@ jobs:
       - name: Test Data API session admission and genuine revocation races
         run: node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types scripts/test-session-admission.ts --workdir .
 
+      - name: Test remembered sessions and inactivity enforcement
+        run: node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types scripts/test-remembered-session.ts --workdir .
+
       - name: Build local application for account workflow integration
         run: npm run build
 

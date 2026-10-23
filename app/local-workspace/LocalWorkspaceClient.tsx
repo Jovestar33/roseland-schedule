@@ -188,8 +188,22 @@ export default function LocalWorkspaceClient({config,review=false}:{config:Local
   useEffect(()=>{if(organizationSwitch)switchDialog.current?.showModal();else switchDialog.current?.close();},[organizationSwitch]);
   async function login(event:React.FormEvent){
     event.preventDefault();if(busyRef.current||working)return;busyRef.current=true;setBusy(true);setMessage('');
-    try{if(config.accountOnboarding)authStorage.setRemember(rememberSession);const r=await client.auth.signInWithPassword({email:sessionRef.current?.user.email??email,password});setPassword('');if(r.error||!r.data.session){setMessage(review?'Email or password is incorrect. Please try again.':'Sign-in failed. Check your fictional account details.');return;}if(config.accountOnboarding)client.auth.startAutoRefresh();setEmail(r.data.user.email??email);setAuthNeeded(false);setMessage(config.hosted?'Signed in. Choose an organization or review an invitation.':'Signed in. Choose an organization or accept a fictional invitation.');}
-    catch{setPassword('');setMessage('Sign-in could not finish. Your drafts are retained.');}finally{busyRef.current=false;setBusy(false);}
+    let signedIn=false;
+    try{if(config.accountOnboarding){setAuthNeeded(true);setAccountReady(false);authStorage.setRemember(false);}const r=await client.auth.signInWithPassword({email:sessionRef.current?.user.email??email,password});setPassword('');if(r.error||!r.data.session){setMessage(review?'Email or password is incorrect. Please try again.':'Sign-in failed. Check your fictional account details.');return;}signedIn=true;if(config.accountOnboarding){
+        const preference=await client.rpc('set_account_session_remembered',{remember:rememberSession}).setHeader('Authorization',`Bearer ${r.data.session.access_token}`);
+        if(preference.error||!Number.isFinite(Date.parse(preference.data))){
+          throw new Error('Session preference unavailable');
+        }
+        authStorage.setRemember(rememberSession);client.auth.startAutoRefresh();
+      }setEmail(r.data.user.email??email);setAuthNeeded(false);setMessage(config.hosted?'Signed in. Choose an organization or review an invitation.':'Signed in. Choose an organization or accept a fictional invitation.');}
+    catch{
+      if(config.accountOnboarding&&signedIn){
+        client.auth.stopAutoRefresh();setAuthNeeded(true);setAccountReady(false);
+        try{await client.auth.signOut({scope:'local'});}catch{ /* Local entry stays blocked. */ }
+        authStorage.removeItem('account-session');
+      }
+      setPassword('');setMessage('Sign-in could not finish. Your drafts are retained.');
+    }finally{busyRef.current=false;setBusy(false);}
   }
   async function signOut(){
     if(busyRef.current||working)return;busyRef.current=true;setBusy(true);
@@ -268,7 +282,7 @@ export default function LocalWorkspaceClient({config,review=false}:{config:Local
         <button disabled={checkingAccess} onClick={()=>void retryAccess()}>{checkingAccess?'Checking…':'Try again'}</button>
       </section>}
       {review&&session&&!entryActive&&(accessRecovery||accessChallenge||!accountReady)&&<button className="btn btn-light" disabled={busy||working} onClick={()=>dirty?setConfirmSignOut(true):void signOut()}>Back to sign in</button>}
-      {(!session||authNeeded)&&<form hidden={review&&accountTask} className={styles.login} aria-busy={busy} onSubmit={login} aria-label="Workspace sign in"><h2 ref={sessionHeading} tabIndex={-1}>{identity.actor?'Sign in again':'Sign in'}</h2>{review&&authNeeded&&!loginFeedback&&<p className={styles.entryHint} role="status" aria-live="polite">{entryMessage}</p>}<label>{review?'Email address':'Fictional account email'}<input type="email" required autoComplete="off" readOnly={!!identity.actor} value={session?.user.email??email} onChange={event=>setEmail(event.target.value)}/></label><label>Password<input type="password" required autoComplete="off" aria-invalid={!!loginFeedback} aria-describedby={loginFeedback?'signin-feedback':undefined} value={password} onChange={event=>setPassword(event.target.value)}/></label>{loginFeedback&&<p id="signin-feedback" role="alert" className={styles.loginFeedback}>{loginFeedback==='Invalid login credentials'?'Email or password is incorrect. Please try again.':loginFeedback}</p>}<button disabled={busy||working}>{busy?'Signing in…':'Sign in'}</button>{config.accountOnboarding&&<label><input type="checkbox" checked={rememberSession} onChange={event=>setRememberSession(event.target.checked)}/> Remember me on this personal device</label>}</form>}
+      {(!session||authNeeded)&&<form hidden={review&&accountTask} className={styles.login} aria-busy={busy} onSubmit={login} aria-label="Workspace sign in"><h2 ref={sessionHeading} tabIndex={-1}>{identity.actor?'Sign in again':'Sign in'}</h2>{review&&authNeeded&&!loginFeedback&&<p className={styles.entryHint} role="status" aria-live="polite">{entryMessage}</p>}<label>{review?'Email address':'Fictional account email'}<input type="email" required autoComplete="off" readOnly={!!identity.actor} value={session?.user.email??email} onChange={event=>setEmail(event.target.value)}/></label><label>Password<input type="password" required autoComplete="off" aria-invalid={!!loginFeedback} aria-describedby={loginFeedback?'signin-feedback':undefined} value={password} onChange={event=>setPassword(event.target.value)}/></label>{loginFeedback&&<p id="signin-feedback" role="alert" className={styles.loginFeedback}>{loginFeedback==='Invalid login credentials'?'Email or password is incorrect. Please try again.':loginFeedback}</p>}<button disabled={busy||working}>{busy?'Signing in…':'Sign in'}</button>{config.accountOnboarding&&<label><input type="checkbox" checked={rememberSession} onChange={event=>setRememberSession(event.target.checked)}/> <span>Remember me on this personal device<small className={styles.rememberHint}>Stay signed in for 7 days without activity.</small></span></label>}</form>}
         {settingsVisible&&<section className={styles.settingsIntro}>
           <div className={styles.settingsTitle}>
             <div><h1>Account &amp; settings</h1><p>{platformActor===session?.user.id?'Manage your account and platform.':scope?.role==='member'?'Your sign-in, security, and invitations.':'Manage your account, people, and organization.'}</p></div>

@@ -66,22 +66,42 @@ export default function LocalAccountAccess({ review=false, showMaintenance=true,
     if (!sessionToken || authNeeded) return;
     let inFlight = false, lastSignal = 0, active = true;
     const token = sessionToken;
+    let checkingExpiry = false, lastExpiryCheck = 0;
+    const expireSession = () => {
+      deadline.current = null; client.auth.stopAutoRefresh(); onReady(false); requireAuth();
+      setMessage('Your session has expired. Sign in again; your unfinished work is retained.');
+    };
     const expired = () => {
-      if (deadline.current !== null && Date.now() >= deadline.current) {
-        deadline.current = null; client.auth.stopAutoRefresh(); onReady(false); requireAuth();
-        setMessage('You have been inactive for one hour. Sign in again; unfinished work is retained for this account.');
-        return true;
+      if (deadline.current === null || Date.now() < deadline.current) return false;
+      // Another tab may have recorded real activity. Check without extending the deadline.
+      if (!checkingExpiry && Date.now() - lastExpiryCheck >= 5000) {
+        checkingExpiry = true; lastExpiryCheck = Date.now();
+        void Promise.resolve(client.rpc('get_account_session_deadline').setHeader('Authorization', `Bearer ${token}`)).then(clock => {
+          if (!active || sessionRef.current?.access_token !== token) return;
+          if (clock.status === 401) expireSession();
+          else if (!clock.error && Number.isFinite(Date.parse(clock.data))) {
+            deadline.current = Date.parse(clock.data);
+            if (Date.now() >= deadline.current) expireSession();
+          }
+        }).catch(() => { /* Retry when connected; never renew an unconfirmed session. */ })
+          .finally(() => { checkingExpiry = false; });
       }
-      return false;
+      return true;
     };
     const activity = (event: Event) => {
       if (!event.isTrusted || document.visibilityState !== 'visible' || expired() || !deadline.current || inFlight || Date.now() - lastSignal < 5000) return;
       lastSignal = Date.now(); inFlight = true;
-      void Promise.resolve(client.rpc('record_account_activity').setHeader('Authorization', `Bearer ${token}`)).then(result => {
+      void Promise.resolve(client.rpc('record_account_activity').setHeader('Authorization', `Bearer ${token}`)).then(async result => {
         if (!active || sessionRef.current?.access_token !== token) return;
         if (result.status === 401) { onReady(false); requireAuth(); }
-        else if (!result.error && Number.isFinite(Date.parse(result.data))) deadline.current = Date.parse(result.data) + 3600000;
-      }).finally(() => { inFlight = false; });
+        else if (!result.error) {
+          // The server owns the idle window; never assume one hour or renew on refresh.
+          const clock = await client.rpc('get_account_session_deadline').setHeader('Authorization', `Bearer ${token}`);
+          if (!active || sessionRef.current?.access_token !== token) return;
+          if (clock.status === 401) { onReady(false); requireAuth(); }
+          else if (!clock.error && Number.isFinite(Date.parse(clock.data))) deadline.current = Date.parse(clock.data);
+        }
+      }).catch(() => { /* Keep the last confirmed deadline while offline. */ }).finally(() => { inFlight = false; });
     };
     const events = ['pointerdown', 'keydown', 'wheel', 'touchstart'];
     events.forEach(name => window.addEventListener(name, activity, { passive: true }));

@@ -247,3 +247,5 @@
 .shell :global([data-mfa-recovery])[open] { padding:16px; border:1px solid var(--g200); border-radius:10px; background:white; }
 .shell :global([data-mfa-recovery])[open] summary { font-size:14px; font-weight:600; color:var(--ui-ink); line-height:1.5; }
 .shell :global([data-mfa-recovery])[open] p { margin-top:12px; line-height:1.7; }
+
+.login .rememberHint { display:block; color:var(--ui-subtle); font-size:12px; font-weight:400; line-height:1.5; margin-top:2px; }

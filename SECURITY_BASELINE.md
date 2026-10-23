@@ -1,5 +1,12 @@
 # Security Baseline
 
+## Remembered-session amendment — October 22, 2026
+
+The user approved **7 days without activity** when **Remember me on this personal device** is checked. This supersedes the September 17 one-hour limit for remembered sessions only. Unremembered sessions retain the 60-minute idle window. A fresh password sign-in registers the preference for that specific Auth session before browser persistence is enabled; existing sessions are not automatically promoted. Fresh Owner sign-ins still require MFA, and critical operations retain their existing recent-TOTP checks. Only trusted foreground user interaction records activity; refresh, polling, reopen and deadline reads do not renew it. The browser uses server deadlines and checks for another tab's activity before declaring an idle session expired. Password changes, sign-out, session deletion, bans and authorization checks remain binding.
+
+Verification: genuine local Auth/PostgREST tests cover one-hour and seven-day expiry, refresh without activity, AAL2 preservation, fresh MFA admission, separate sessions, rejected late preference changes, ban/sign-out/password-change invalidation. Transactional SQL tests additionally verify Owner MFA, recent verification, exact seven-day boundary, private-table/RPC grants and provider deadline caps. Controlled clock aging is used; this is not a literal seven-day observation. Hosted migration `20261023015900` preserves all 63 schedules and the original account/factor.
+
+
 > **September 16 current-state reconciliation:** The current audit maps the completed local session/workflow/UI security evidence and outstanding F01–F05 gates. September 11 dependency findings cited below are historical: the September 16 audit at `379e066` reported no high/critical runtime findings. This does not complete comprehensive internal or hosted security acceptance. See [TECHNICAL_ACCEPTANCE_AUDIT.md](./TECHNICAL_ACCEPTANCE_AUDIT.md) for evidence, gates and bounded dispatch proposals.
 
 Status: Phase 0 requirements with Phase 1 automation in progress. See
