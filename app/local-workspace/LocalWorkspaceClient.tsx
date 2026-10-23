@@ -286,7 +286,7 @@ export default function LocalWorkspaceClient({config,review=false}:{config:Local
         {settingsVisible&&<section className={styles.settingsIntro}>
           <div className={styles.settingsTitle}>
             <div><h1>Account &amp; settings</h1><p>{platformActor===session?.user.id?'Manage your account and platform.':scope?.role==='member'?'Your sign-in, security, and invitations.':'Manage your account, people, and organization.'}</p></div>
-            <button className="btn btn-light" onClick={closeSettings}>← {settingsOrigin.current?.screen==='lifecycle'?'Back to history':settingsOrigin.current?.schedule?'Back to schedule':'Back to schedules'}</button>
+            <button className="btn btn-light" onClick={closeSettings}>← Back</button>
           </div>
           <nav aria-label="Account navigation" className={styles.settingsNavigation}>
             <button aria-current={active==='schedule'&&settingsSection==='account'?'page':undefined} onClick={()=>{setSettingsSection('account');tab('schedule');}}>Your account</button>

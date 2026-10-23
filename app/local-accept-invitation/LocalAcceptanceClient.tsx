@@ -164,7 +164,7 @@ export default function LocalAcceptanceClient({ config, pendingInvitation, onInv
           <button disabled={!ready || busy || (config.accountOnboarding&&controller.phase==='review'&&!preview)} onClick={() => void execute(false)}>{controller.phase === 'review' ? 'Confirm acceptance' : 'Retry same invitation'}</button>
           <button className={styles.secondary} disabled={!ready || busy} onClick={() => void execute(true)}>Check acceptance result</button>
           {controller.phase !== 'review' && <button className={styles.secondary} disabled={busy} onClick={() => setConfirmClear('review')}>Discard local review</button>}
-          {controller.phase === 'review' && <button className={styles.secondary} disabled={busy} onClick={() => { controller.clear(); refresh(); setMessage('Review closed. Your invitation ID is still here.'); }}>Back to draft</button>}
+          {controller.phase === 'review' && <button className={styles.secondary} disabled={busy} onClick={() => { controller.clear(); refresh(); setMessage('Review closed. Your invitation ID is still here.'); }}>← Back</button>}
         </>}
       </div>
       {controller.phase !== 'success' && controller.phase !== 'review' && <p>Keep this invitation ID when retrying. To review another invitation, explicitly discard this local review. Sign out to use a different account. Clearing the review does not undo accepted access.</p>}

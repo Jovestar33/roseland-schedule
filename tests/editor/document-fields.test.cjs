@@ -16,3 +16,13 @@ test('solar rounding never emits minute 60 at hour boundaries',()=>{
  const {calcSunTimes}=sourceLoader()('lib/weather.ts');
  for(let day=1;day<=365;day++){const date=new Date(Date.UTC(2026,0,day)).toISOString().slice(0,10);const times=calcSunTimes(date,35.1085,-77.0441,'America/New_York');assert.ok(times);for(const value of Object.values(times))assert.match(value,/^(?:[1-9]|1[0-2]):[0-5][0-9] (?:AM|PM)$/);}
 });
+
+test('production contacts and logistics survive undo, redo and store reload independently of row contacts',()=>{
+ const {store}=setup(1),before=store.getState().getScheduleData();const productionContacts=[{id:'crew-1',type:'crew',name:'Example crew',role:'Sound',phone:'555-0100',email:'crew@example.test',callTime:'9:15 AM'}];
+ store.getState().pushUndo();store.getState().updateMeta({productionContacts,callsheet:{productionOffice:'Office',hospitalPhone:'555-0199',hospitalNotes:'Main entrance',advanceSchedule:'Tomorrow'}});
+ store.getState().undo();assert.deepEqual(store.getState().meta,before.meta);store.getState().redo();const saved=JSON.parse(JSON.stringify(store.getState().getScheduleData()));store.getState().loadSchedule('Reload',saved);assert.deepEqual(store.getState().meta.productionContacts,productionContacts);assert.deepEqual(store.getState().rows,before.rows);assert.equal(store.getState().meta.callsheet.hospitalPhone,'555-0199');
+});
+test('contact CSV includes unassigned directory contacts and escapes formulas while retaining role and call time',()=>{
+ const {contactsCsv}=sourceLoader()('lib/document-tools.ts');const csv=contactsCsv([{name:'=Example',title:'Camera',phone:'555-0100',email:'crew@example.test',rows:[],type:'crew',callTime:'9:15 AM',department:'Camera',reportTo:'Basecamp'}]);
+ assert.match(csv,/Contact type/);assert.match(csv,/9:15 AM/);assert.match(csv,/Basecamp/);assert.match(csv,/'=Example/);assert.match(csv,/Camera/);
+});

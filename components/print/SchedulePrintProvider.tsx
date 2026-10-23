@@ -47,7 +47,7 @@ export default function SchedulePrintProvider() {
       const next = layoutSchedulePrint(request.data, request.name, mode, paper, (text, bold, size) => {
         context.font = `${bold ? 'bold ' : ''}${size}px Arial`;
         return context.measureText(text).width;
-      });
+      },request.castUnderDescription);
       setLayout(next);
       setHtml(renderSchedulePrint(next, new URL(logo || '/logo-header.png', window.location.href).href).replace('<head>', '<head><base href="about:srcdoc">'));
     } catch (err) { setLayout(null); setError((err as Error).message); }

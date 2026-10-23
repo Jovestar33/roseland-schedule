@@ -6,11 +6,16 @@ import { InvitationError, type FailureKind } from '@/lib/platform/invitation-con
 import styles from '../local-invitations/invitations.module.css';
 import consoleStyles from '@/components/local/platform-console.module.css';
 
-const blank = { ownerUserId:'', name:'', slug:'', timezone:'UTC', locale:'en', countryCode:'', currency:'', reason:'' };
+const blank = { ownerUserId:'', name:'', slug:'', timezone:'UTC', locale:'en', countryCode:'', currency:'', reason:'Organization created through platform administration.' };
 const fields = [
-  ['ownerUserId','Organization Super Admin account ID',36],['name','Organization name',120],['slug','Organization address name',120],
-  ['timezone','Timezone',100],['locale','Locale',35],['countryCode','Country code (optional)',2],['currency','Currency (optional)',3],['reason','Provisioning reason',500],
+  ['ownerUserId','Organization Super Admin account ID',36],['name','Organization name',120],['slug','Organization address',120],
+  ['timezone','Timezone',100],['locale','Language & region',35],['countryCode','Country (optional)',2],['currency','Currency (optional)',3],
 ] as const;
+const timezones=['UTC',...(Intl as typeof Intl & {supportedValuesOf?:(key:string)=>string[]}).supportedValuesOf?.('timeZone')??[]];
+const countries='AD AE AF AG AI AL AM AO AQ AR AS AT AU AW AX AZ BA BB BD BE BF BG BH BI BJ BL BM BN BO BQ BR BS BT BV BW BY BZ CA CC CD CF CG CH CI CK CL CM CN CO CR CU CV CW CX CY CZ DE DJ DK DM DO DZ EC EE EG EH ER ES ET FI FJ FK FM FO FR GA GB GD GE GF GG GH GI GL GM GN GP GQ GR GS GT GU GW GY HK HM HN HR HT HU ID IE IL IM IN IO IQ IR IS IT JE JM JO JP KE KG KH KI KM KN KP KR KW KY KZ LA LB LC LI LK LR LS LT LU LV LY MA MC MD ME MF MG MH MK ML MM MN MO MP MQ MR MS MT MU MV MW MX MY MZ NA NC NE NF NG NI NL NO NP NR NU NZ OM PA PE PF PG PH PK PL PM PN PR PS PT PW PY QA RE RO RS RU RW SA SB SC SD SE SG SH SI SJ SK SL SM SN SO SR SS ST SV SX SY SZ TC TD TF TG TH TJ TK TL TM TN TO TR TT TV TW TZ UA UG UM US UY UZ VA VC VE VG VI VN VU WF WS YE YT ZA ZM ZW'.split(' ');
+const currencies=(Intl as typeof Intl & {supportedValuesOf?:(key:string)=>string[]}).supportedValuesOf?.('currency')??['USD','CAD','GBP','EUR','AED'];
+const languages=['en','en-US','en-GB','fr','fr-CA','de','es','es-MX','it','pt','pt-BR','ar','hi','ja','ko','zh-CN','zh-TW'];
+const regionNames=new Intl.DisplayNames(['en'],{type:'region'}),currencyNames=new Intl.DisplayNames(['en'],{type:'currency'}),languageNames=new Intl.DisplayNames(['en'],{type:'language'});
 const errors: Record<FailureKind,string> = {
   auth:'Sign in again with the same account. Your draft and original request are retained.',
   mfa:'Verify a fresh authenticator code, then retry the same request.',
@@ -75,18 +80,22 @@ export default function LocalProvisioningClient() {
       });}}><label>Authenticator code<input required inputMode="numeric" pattern="[0-9]{6}" maxLength={6} autoComplete="off" value={code} onChange={event=>setCode(event.target.value)}/></label><button disabled={busy}>Verify authenticator</button></form>}
     </section>}
     <section className={styles.card} aria-label="Organization provisioning draft"><h2>Organization details</h2><p>The new organization will belong to the verified account below. Creating it does not add you to its team.</p>
-      <form className={styles.form} onSubmit={event=>{event.preventDefault();if(!ready||busyRef.current||attempt)return;try{controller.prepare(draft);refresh();setMessage('Review the exact owner and organization settings before confirming.');}catch{setMessage('Check the owner UUID, name, address, timezone, locale, optional codes and required reason.');}}}>
-        <fieldset disabled={!ready||busy||!!attempt}>{fields.map(([key,label,max])=><label key={key}>{label}<input required={!['countryCode','currency'].includes(key)} maxLength={max} autoComplete="off" value={draft[key]} onChange={event=>setDraft(previous=>({...previous,[key]:event.target.value}))}/></label>)}</fieldset>
-        <button disabled={!ready||busy||!!attempt}>Review organization</button><button type="button" className={styles.secondary} disabled={busy||!!attempt} onClick={()=>setDraft({...blank})}>Clear provisioning draft</button>
+      <form className={styles.form} onSubmit={event=>{event.preventDefault();if(!ready||busyRef.current||attempt)return;try{controller.prepare(draft);refresh();setMessage('Review the exact owner and organization settings before confirming.');}catch{setMessage('Check the Super Admin account ID, organization name and address, and regional settings.');}}}>
+        <fieldset disabled={!ready||busy||!!attempt}>{fields.map(([key,label,max])=>{
+ const options=key==='timezone'?timezones:key==='locale'?languages:key==='countryCode'?countries:key==='currency'?currencies:null;
+ const values=options?[...new Set([...options,...(draft[key]?[draft[key]]:[])])]:[];
+ return <label key={key}>{label}{options?<select required={!['countryCode','currency'].includes(key)} value={draft[key]} onChange={event=>setDraft(previous=>({...previous,[key]:event.target.value}))}>{['countryCode','currency'].includes(key)&&<option value="">Not specified</option>}{values.map(value=><option key={value} value={value}>{key==='countryCode'?regionNames.of(value):key==='currency'?`${currencyNames.of(value)} (${value})`:key==='locale'?languageNames.of(value):value.replaceAll('_',' ')}</option>)}</select>:<input required maxLength={max} autoComplete="off" value={draft[key]} onChange={event=>setDraft(previous=>({...previous,[key]:event.target.value}))}/>}{key==='slug'&&<small>Used in the organization’s web address. Use lowercase letters, numbers and hyphens.</small>}{key==='locale'&&<small>Controls language and regional date and number formats where supported.</small>}</label>;
+ })}</fieldset>
+        <button disabled={!ready||busy||!!attempt}>Review organization</button>
       </form>
     </section>
-    {attempt&&<section ref={review} tabIndex={-1} className={`${styles.card} ${styles.review}`} aria-label="Provisioning request review" style={{overflowWrap:'anywhere'}}><div className={styles.sectionTitle}><h2>Review organization provisioning</h2><span className={styles.badge}>{controller.phase}</span></div>
+    {attempt&&<section ref={review} tabIndex={-1} className={`${styles.card} ${styles.review}`} aria-label="Provisioning request review" style={{overflowWrap:'anywhere'}}><div className={styles.sectionTitle}><h2>Review organization</h2><span className={styles.badge}>{controller.phase}</span></div>
       <p className={styles.identifier}>Request key: {attempt.key}</p>{fields.map(([key,label])=><p key={key}><strong>{label}:</strong> <span className={key==='ownerUserId'?styles.identifier:undefined}>{attempt.body[key]||'Not supplied'}</span></p>)}
       {controller.failure&&<p role="alert">{errors[controller.failure]}</p>}
       {controller.result&&<><p className={styles.identifier}>Organization: {controller.result}</p><p>Creating an organization for another owner does not add your account as a member.</p><button disabled={!ready||busy} onClick={()=>workspace.openOrganization(controller.result!)}>Open organization if accessible</button></>}
-      <div className={styles.actions}>{controller.phase==='success'?<button disabled={busy} onClick={()=>{controller.clear();setDraft({...blank});refresh();setMessage('Result acknowledged.');}}>Acknowledge provisioning result</button>:<>
+      <div className={styles.actions}>{controller.phase==='success'?<button disabled={busy} onClick={()=>{controller.clear();setDraft({...blank});refresh();setMessage('Result acknowledged.');}}>Done</button>:<>
         <button disabled={!ready||mfa!=='ready'||busy||controller.phase==='conflict'} onClick={()=>void submit()}>{controller.phase==='review'?'Create organization':'Retry same request'}</button>
-        <button className={styles.secondary} disabled={busy} onClick={()=>controller.phase==='review'?clearReview():setDiscard(true)}>{controller.phase==='review'?'Back to provisioning draft':'Discard provisioning review'}</button>
+        <button className={styles.secondary} disabled={busy} onClick={()=>controller.phase==='review'?clearReview():setDiscard(true)}>{controller.phase==='review'?'← Back':'Discard provisioning review'}</button>
       </>}</div>
     </section>}
     <dialog ref={dialog} className={styles.dialog} aria-label="Discard provisioning review" onCancel={()=>setDiscard(false)}><h2>Discard this local review?</h2><p>An earlier request may have completed. Discarding its key does not undo it; a new key could create another organization. Retry the same request to recover its result first.</p><div className={styles.actions}><button onClick={()=>setDiscard(false)}>Keep review</button><button onClick={clearReview}>Discard local review</button></div></dialog>

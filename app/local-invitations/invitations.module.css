@@ -68,3 +68,6 @@
 .product .main :is(input,select,textarea){font-family:var(--fb);font-size:var(--ui-body-size)}
 .product .review{background:var(--ui-surface);border-color:var(--ui-accent)}
 .product .dialog{font-family:var(--fb)}.product .dialog h2{font-family:var(--fd);font-size:var(--ui-dialog-title-size);letter-spacing:1.5px}
+
+/* Keep the refresh control centered on the heading at every width. */
+.product .sectionTitle{align-items:center}.product .sectionTitle h2{margin:0}

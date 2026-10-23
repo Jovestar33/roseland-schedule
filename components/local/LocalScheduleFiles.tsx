@@ -67,7 +67,7 @@ export default function LocalScheduleFiles({embedded=false,client,actor,organiza
         <details><summary>Review full document {i+1} ({entry.data.rows?.length??0} rows)</summary><ScheduleDocumentPreview document={entry.data}/></details>
       </div>)}
       <button className="btn btn-pink" disabled={source?!day:!selectedProduction} onClick={()=>void run(async current=>{const placement=source?undefined:{productionId:production,phaseId:null};const proposed=new ScheduleFileImport(actor!,organization!,day||null,entries,undefined,placement);await repo.preflight(actor!,organization!,day||null,entries,placement);if(current()){setReview(proposed);setMessage('Review locked. Confirm to create these exact documents; later source edits remain in your draft.');}})}>Continue to review</button>
-      <button className="btn btn-light" onClick={clear}>Cancel review</button>
+      <button className="btn btn-light" onClick={clear}>Cancel</button>
     </fieldset>}
     {inScope&&review&&<div className={styles.recovery}>
       <h3>{review.complete?'New schedules confirmed':'Confirm or recover creation'}</h3>
@@ -76,7 +76,7 @@ export default function LocalScheduleFiles({embedded=false,client,actor,organiza
       <button className="btn btn-pink" disabled={!enabled||busy||review.complete} onClick={()=>void run(async current=>{await review.execute({...repo.lifecycle,send:attempt=>repo.lifecycle.send(attempt,source??undefined),probe:attempt=>repo.lifecycle.probe(attempt,source??undefined)},current);if(current()){setMessage(review.complete?'Creation confirmed. Source and newer draft edits are unchanged.':'Stopped at an unconfirmed item. Check the original IDs before retrying.');if(review.items.some(c=>c.failure==='unauthenticated'))requireAuth();}})}>{review.started?'Retry unconfirmed original IDs':'Confirm create new schedules'}</button>
       {review.started&&!review.complete&&<button className="btn btn-light" disabled={!enabled||busy} onClick={()=>void run(async current=>{await review.execute({...repo.lifecycle,send:attempt=>repo.lifecycle.send(attempt,source??undefined),probe:attempt=>repo.lifecycle.probe(attempt,source??undefined)},current,true);if(current())setMessage('Original IDs checked. Review the recorded results.');})}>Check original IDs</button>}
       <button className="btn btn-light" disabled={busy} onClick={()=>download({format:'schedule-create-receipt',fictional:true,items:review.receipt()},safeDownloadName('Schedule-create','receipt.json'))}>Download creation receipt</button>
-      {(!review.started||review.complete)&&<button className="btn btn-light" disabled={busy} onClick={clear}>{review.complete?'Close completed review':'Cancel review'}</button>}
+      {(!review.started||review.complete)&&<button className="btn btn-light" disabled={busy} onClick={clear}>{review.complete?'Close':'Cancel'}</button>}
     </div>}
   </section>;
 }

@@ -204,7 +204,7 @@ export default function LocalAccountAccess({ review=false, showMaintenance=true,
         <p data-account-address>{email}</p>
         {notice}
         <p data-account-help>No email yet? Check your spam folder, or try again in a few minutes.</p>
-        <button data-account-primary disabled={busy} onClick={()=>{returnEntry.current=mode;setMode(null);setMailSent(false);setMessage('');}}>{session&&!authNeeded?'Back to account settings':'Back to sign in'}</button>
+        <button data-account-primary disabled={busy} onClick={()=>{returnEntry.current=mode;setMode(null);setMailSent(false);setMessage('');}}>{session&&!authNeeded?'← Back':'Back to sign in'}</button>
         <div data-account-entry><button disabled={busy} onClick={()=>{setMailSent(false);setMessage('');}}>Try another email</button></div>
       </div> : <form onSubmit={requestMail} aria-label={mode==='signup'?'Invitation setup':'Password recovery'}>
         <h2 ref={taskHeading} tabIndex={-1}>{mode==='signup'?'Accept your invitation':'Reset your password'}</h2>

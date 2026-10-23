@@ -46,3 +46,11 @@ test('legacy cast text survives file roundtrip and rejects malformed cast values
  assert.equal(parsed[0].data.rows![0].cast,r.document.rows![0].cast);
  for(const cast of [null,{},42,'x'.repeat(10001)]){const d=structuredClone(r.document);(d.rows![0] as unknown as Record<string,unknown>).cast=cast;assert.throws(()=>validateFileDocument(d));}
 });
+
+test('typed production contacts and expanded call sheets survive file export/import; malformed contacts fail closed',async()=>{
+ const r=record();r.document.meta!.productionContacts=[{id:'crew-1',type:'crew',name:'Example crew',role:'Camera',phone:'555-0100',email:'crew@example.test',callTime:'8:15 AM',department:'Camera',reportTo:'Basecamp',notes:'Bring radio'}];
+ r.document.meta!.callsheet={productionOffice:'Office',hospitalPhone:'555-0199',hospitalNotes:'Main entrance',advanceSchedule:'Day two'};
+ const file=await encodeScheduleFile([r]);assert.deepEqual((await parseScheduleFile(JSON.stringify(file),'')).map(e=>e.data),[r.document]);
+ for(const edit of [(c:any)=>delete c.role,(c:any)=>c.type='admin',(c:any)=>c.callTime='25:00',(c:any)=>c.phone=null,(c:any)=>c.secret='hidden',(c:any)=>c.id='']){const d=structuredClone(r.document);edit(d.meta!.productionContacts![0]);assert.throws(()=>validateFileDocument(d));}
+ const duplicate=structuredClone(r.document);duplicate.meta!.productionContacts!.push(duplicate.meta!.productionContacts![0]);assert.throws(()=>validateFileDocument(duplicate));
+});

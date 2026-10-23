@@ -241,8 +241,8 @@ export default function ScheduleReadView({ data, name }: Props) {
                         <SubLocList subLocations={row.subLocations} />
                       )}
                     </td>
-                    <td><CollapsibleText value={row.desc} label="Description" /></td>
-                    <td>{row.cast && <div><strong>Cast</strong><CollapsibleText value={row.cast} label="Cast" /></div>}{row.keyInstruction && <div style={{ fontWeight: 600, whiteSpace: 'pre-wrap', overflowWrap: 'anywhere', marginBottom: 5 }}>Key instruction: {row.keyInstruction}</div>}<CollapsibleText value={row.notes} label="Notes" /></td>
+                    <td><CollapsibleText value={row.desc} label="Description" />{local&&row.cast&&<div style={{marginTop:8}}><strong>Cast / participants</strong><CollapsibleText value={row.cast} label="Cast / participants"/></div>}</td>
+                    <td>{!local && row.cast && <div><strong>Cast</strong><CollapsibleText value={row.cast} label="Cast" /></div>}{row.keyInstruction && <div style={{ fontWeight: 600, whiteSpace: 'pre-wrap', overflowWrap: 'anywhere', marginBottom: 5 }}>Key instruction: {row.keyInstruction}</div>}<CollapsibleText value={row.notes} label="Notes" /></td>
                     <td className="col-dv" />
                     <td className="tc">{row.timeIn}</td>
                     <td className="tc">{row.dur}</td>

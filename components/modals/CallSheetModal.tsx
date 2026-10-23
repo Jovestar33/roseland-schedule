@@ -12,6 +12,8 @@ import DocumentPrintFurniture from './DocumentPrintFurniture';
 import { dateLabel } from '@/lib/date-label';
 const CallSheetReadOnly = createContext(false);
 import PlacesAutocomplete from '@/components/schedule/PlacesAutocomplete';
+import ProductionContacts,{ProductionContactGroups} from '@/components/local/ProductionContacts';
+import type {ProductionContact} from '@/lib/types';
 import type { CallSheetData } from '@/lib/types';
 import { callSheetCall, callSheetLines, callSheetWeather, type CallSheetLine } from '@/lib/call-sheet';
 
@@ -214,12 +216,14 @@ interface PrintDocProps {
   cs: CallSheetData;
   contacts: Contact[];
   showContacts: boolean;
+  productionContacts: ProductionContact[];
+  enhanced: boolean;
 }
 
 /** One content order for the editable view and its read-only print portal. */
 function CallSheetDocument({
   scheduleName, formattedDate, dayStr, projectName, phase, prod, dir, dp,
-  town, weather, generalCall, lines, cs, contacts, showContacts,
+  town, weather, generalCall, lines, cs, contacts, showContacts, productionContacts = [], enhanced = false,
   print = false, onCommit,
 }: PrintDocProps & {print?: boolean; onCommit: (key: CSKey, value: string) => void}) {
   const organizationLogo = useCmsStore(s => s.config.logo);
@@ -255,15 +259,18 @@ function CallSheetDocument({
       </div>}
     </header>
     {!print && !readOnly && <p className="csh-edit-help">Select an underlined detail to edit. Changes save with your schedule.</p>}
-    {(!print || cs.basecamp || cs.parking || cs.hospital || cs.emergency) && <section className="csh-section">
+    {(!print || cs.basecamp || cs.parking || cs.hospital || cs.emergency || cs.productionOffice || cs.hospitalPhone || cs.hospitalNotes) && <section className="csh-section">
       <h2 className="csh-sh">Arrival &amp; emergency</h2>
       <div className="csh-logistics-grid">
         <div className="csh-fields">
+          {enhanced&&(!print||cs.productionOffice)&&<Field label="Production office / contact" fieldKey="productionOffice" value={cs.productionOffice??''} onCommit={onCommit}/>}
           {(!print || cs.basecamp) && <LocationField label="Basecamp" fieldKey="basecamp" value={cs.basecamp ?? ''} onCommit={onCommit} />}
           {(!print || cs.parking) && <LocationField label="Crew Parking" fieldKey="parking" value={cs.parking ?? ''} onCommit={onCommit} />}
         </div>
         <div className="csh-fields">
           {(!print || cs.hospital) && <LocationField label="Nearest Hospital" fieldKey="hospital" value={cs.hospital ?? ''} onCommit={onCommit} />}
+          {enhanced&&(!print||cs.hospitalPhone)&&<Field label="Hospital phone" fieldKey="hospitalPhone" value={cs.hospitalPhone??''} onCommit={onCommit}/>}
+          {enhanced&&(!print||cs.hospitalNotes)&&<Notes label="Hospital / emergency directions" fieldKey="hospitalNotes" value={cs.hospitalNotes??''} onCommit={onCommit}/>}
           {(!print || cs.emergency) && <Field label="Emergency Contact" fieldKey="emergency" value={cs.emergency ?? ''} onCommit={onCommit} />}
         </div>
       </div>
@@ -274,6 +281,11 @@ function CallSheetDocument({
         {(!print || cs.safetyNotes) && <Notes label="Safety Notes" fieldKey="safetyNotes" value={cs.safetyNotes ?? ''} onCommit={onCommit} />}
         {(!print || cs.specialInstructions) && <Notes label="Special Instructions" fieldKey="specialInstructions" value={cs.specialInstructions ?? ''} onCommit={onCommit} />}
       </div>
+    </section>}
+    {enhanced&&(!print||productionContacts.some(c=>c.type==='crew'||c.type==='cast'))&&<section className="csh-section"><h2 className="csh-sh">Crew &amp; cast calls</h2>
+      <ProductionContactGroups contacts={productionContacts.filter(c=>c.type==='crew'||c.type==='cast')} showPrivate={showContacts}/>
+      {!productionContacts.some(c=>c.type==='crew'||c.type==='cast')&&!print&&<p className="csh-empty">Add crew and cast contacts below to include individual call times.</p>}
+      {!print&&!readOnly&&<details className="pc-manage"><summary>Edit production contacts</summary><ProductionContacts/></details>}
     </section>}
     <section className="csh-section">
       <h2 className="csh-sh">Day schedule</h2>
@@ -302,15 +314,17 @@ function CallSheetDocument({
         {(!print || cs.notes) && <Notes label="General Notes" fieldKey="notes" value={cs.notes ?? ''} onCommit={onCommit} />}
       </div>
     </section>}
-    {showContacts && <section className="csh-section">
-      <h2 className="csh-sh">Contacts</h2>
+    {enhanced&&(!print||cs.advanceSchedule)&&<section className="csh-section"><h2 className="csh-sh">Next day / advance schedule</h2><Notes label="Advance notes" fieldKey="advanceSchedule" value={cs.advanceSchedule??''} onCommit={onCommit}/></section>}
+    {enhanced&&showContacts&&<ProductionContactGroups contacts={productionContacts.filter(c=>c.type!=='crew'&&c.type!=='cast')} showPrivate/>}
+    {showContacts && (!print||contacts.length>0||!enhanced) && <section className="csh-section">
+      <h2 className="csh-sh">Schedule contacts</h2>
       {contacts.length ? <table className="csh-contacts-table csh-pdoc-contacts">
         <thead><tr><th scope="col">Name / role</th><th scope="col">Phone</th><th scope="col">Email</th></tr></thead>
         <tbody>{contacts.map((c, i) => <tr key={i}>
           <td><strong>{c.name || 'Unnamed'}</strong>{c.title && <span className="csh-contact-role">{c.title}</span>}</td>
           <td>{c.phone}</td><td>{c.email}</td>
         </tr>)}</tbody>
-      </table> : <p className="csh-empty">No contacts on this schedule.</p>}
+      </table> : <p className="csh-empty">No contacts attached to schedule actions.</p>}
     </section>}
   </div>;
 }
@@ -370,7 +384,7 @@ export default function CallSheetModal({ open, onClose, readOnly = false, author
                 checked={showContacts}
                 onChange={(e) => setShowContacts(e.target.checked)}
               />
-              {' Include contacts'}
+              {' Include contact details'}
             </label>
             <button
               type="button"
@@ -385,7 +399,7 @@ export default function CallSheetModal({ open, onClose, readOnly = false, author
         <CallSheetDocument scheduleName={scheduleName} formattedDate={formattedDate} dayStr={dayStr}
           projectName={meta.projectName} phase={meta.phase} prod={meta.prod} dir={meta.dir} dp={meta.dp}
           town={meta.town} weather={weather} generalCall={generalCall} lines={lines} cs={cs}
-          contacts={contacts} showContacts={showContacts} onCommit={commit} />
+          contacts={contacts} showContacts={showContacts} productionContacts={meta.productionContacts??[]} enhanced={local} onCommit={commit} />
       </Modal>
 
       {/* Print portal — rendered on document.body, outside modal DOM */}
@@ -396,7 +410,7 @@ export default function CallSheetModal({ open, onClose, readOnly = false, author
             <CallSheetDocument print scheduleName={scheduleName} formattedDate={formattedDate} dayStr={dayStr}
           projectName={meta.projectName} phase={meta.phase} prod={meta.prod} dir={meta.dir} dp={meta.dp}
           town={meta.town} weather={weather} generalCall={generalCall} lines={lines} cs={cs}
-          contacts={contacts} showContacts={showContacts} onCommit={commit} />
+          contacts={contacts} showContacts={showContacts} productionContacts={meta.productionContacts??[]} enhanced={local} onCommit={commit} />
           </CallSheetReadOnly.Provider>
         </div>,
         document.body

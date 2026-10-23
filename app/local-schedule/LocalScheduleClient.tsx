@@ -40,6 +40,8 @@ import {useCmsStore,useCmsLabel} from '@/lib/store/cmsStore';
 import LocalSchedulePrint from '@/components/local/LocalSchedulePrint';
 import { DocumentProvidersContext } from '@/components/local/DocumentProvidersContext';
 import {createLiveDocumentProviders} from '@/lib/platform/live-document-providers';
+import {ContactDirectoryContext} from '@/components/local/ContactDirectoryContext';
+import {createContactDirectoryRepository} from '@/lib/platform/contact-directory';
 import { fictionalDocumentProviders } from '@/lib/platform/document-providers';
 
 export default function LocalScheduleClient({ config }: { config: LocalEditorConfig }) {
@@ -132,6 +134,19 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
   const lifecycleVersion=workspace?.lifecycleVersion??0,lifecycleVersionRef=useRef(lifecycleVersion);lifecycleVersionRef.current=lifecycleVersion;
   const canEdit = (!workspace?.readOnly && lifecycleVersion>=0 && permission?.lifecycleVersion===lifecycleVersion && permission?.recordId === controller.record?.id && permission?.token === session?.access_token && permission?.allowed === true);
 
+  const contactDirectory=useMemo(()=>{
+    const record=controller.record,actor=session?.user.id,token=session?.access_token,sourceSession=documentSession;
+    if(!record||!actor||!token||!active||!recordInScope||!ready||permission?.read!==true)return null;
+    const current=()=>activeRef.current&&useScheduleStore.getState().documentSession===sourceSession&&controller.record?.id===record.id&&accountRef.current===actor&&sessionRef.current?.access_token===token&&permissionRef.current?.read===true;
+    const repository=createContactDirectoryRepository({async rpc(name,args){
+      if(!current())return {data:null,error:{code:'PT401'}};
+      const result=await client.rpc(name,args).setHeader('Authorization','Bearer '+token);
+      if(!current())return {data:null,error:{code:'PT401'}};
+      return result;
+    }});
+    return {schedule:record.id,repository,current};
+  },[client,controller,documentSession,session?.user.id,session?.access_token,active,recordInScope,ready,permission]);
+
   useEffect(()=>{
     if(!selected){shownEditor.current=null;return;}
     if(review&&recordInScope&&permission?.read&&shownEditor.current!==selected){
@@ -140,6 +155,7 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
   },[review,selected,recordInScope,permission?.read]);
 
   // A fresh provider identity invalidates pending selections when document/account scope changes.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const documentProviders = useMemo(() => config.liveDocumentProviders ? createLiveDocumentProviders(async()=>{
     const record=controller.record;
@@ -357,7 +373,7 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
           </ModalVisibilityContext.Provider>
   </>;
 
-  return <LocalEditorContext.Provider value={true}>
+  return <LocalEditorContext.Provider value={true}><ContactDirectoryContext.Provider value={contactDirectory}>
     <DocumentProvidersContext.Provider value={active && recordInScope && ready && canEdit && !confirmation ? documentProviders : null}>
     <main className={`${styles.main} ${review?styles.reviewMain:''}`}>
       {!review&&<header className={styles.banner}>
@@ -387,7 +403,7 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
         {workspace && <ReviewToolPanel enabled={review} open={active&&reviewTool==='files'} title="Backup & import" onClose={()=>setReviewTool(null)}><div><LocalScheduleFiles embedded={review} client={client} actor={session?.user.id ?? accountRef.current} organization={workspace.organization?.id ?? null}
           enabled={active && ready && !confirmation} copyEnabled={!templateUses.length && !busy && !!selected && recordInScope && canEdit && permission?.copy===true && !documentDialogOpen && contact===null && notes===null && status===null}
           getSource={()=>controller.record} getDraft={()=>state().getScheduleData()} name={state().scheduleName ?? 'Schedule'} onState={reportFiles} requireAuth={workspace.requireAuth} onCopy={()=>{if(selected)startTransfer(selected,true);}}/></div></ReviewToolPanel>}
-        {workspace&&<div hidden={review&&reviewTool!=='snapshots'}><LocalScheduleSnapshots animateEntry={animateTools} onTemplates={review?()=>openReviewTool('templates',true):undefined} onHistory={review&&workspace.openLifecycle&&selected?()=>{setReviewTool(null);workspace.openLifecycle!(workspace.organization!.id,selected);}:undefined} onReload={review&&selected?()=>{setReviewTool(null);guarded(()=>void run(()=>open(selected)),'Reload and discard unsaved changes');}:undefined} onClose={review?()=>setReviewTool(null):undefined} review={review} openRequest={review&&reviewTool==='snapshots'?toolRequest:undefined} client={client} actor={session?.user.id??null} organization={workspace.organization?.id??null} schedule={selected} enabled={active&&ready&&recordInScope&&permission?.read===true&&!confirmation&&!busy&&!controller.attempt&&!documentDialogOpen&&contact===null&&status===null&&notes===null} readOnly={workspace.readOnly} canWrite={canEdit} canCopy={permission?.copy===true&&permission?.output===true} getSource={()=>controller.record} onState={reportSnapshots} requireAuth={workspace.requireAuth} beforeRestore={beforeSnapshotRestore} onRestored={onSnapshotRestored} captureOpen={captureCopyOpen} onCopy={openConfirmedCopy}/></div>}
+        {workspace&&<div hidden={review&&reviewTool!=='snapshots'}><LocalScheduleSnapshots animateEntry={animateTools} onTemplates={review?()=>openReviewTool('templates',true):undefined} onHistory={review&&workspace.openLifecycle&&selected?()=>{workspace.openLifecycle!(workspace.organization!.id,selected);}:undefined} onReload={review&&selected?()=>{setReviewTool(null);guarded(()=>void run(()=>open(selected)),'Reload and discard unsaved changes');}:undefined} onClose={review?()=>setReviewTool(null):undefined} review={review} openRequest={review&&reviewTool==='snapshots'?toolRequest:undefined} client={client} actor={session?.user.id??null} organization={workspace.organization?.id??null} schedule={selected} enabled={active&&ready&&recordInScope&&permission?.read===true&&!confirmation&&!busy&&!controller.attempt&&!documentDialogOpen&&contact===null&&status===null&&notes===null} readOnly={workspace.readOnly} canWrite={canEdit} canCopy={permission?.copy===true&&permission?.output===true} getSource={()=>controller.record} onState={reportSnapshots} requireAuth={workspace.requireAuth} beforeRestore={beforeSnapshotRestore} onRestored={onSnapshotRestored} captureOpen={captureCopyOpen} onCopy={openConfirmedCopy}/></div>}
         {workspace&&<div hidden={review&&reviewTool!=='templates'}><LocalScheduleTemplates animateEntry={animateTools} onRecovery={review&&selected?()=>openReviewTool('snapshots',true):undefined} embedded={review} onClose={review?()=>setReviewTool(null):undefined} openRequest={review&&reviewTool==='templates'?toolRequest:undefined} client={client} actor={session?.user.id??null} organization={workspace.organization?.id??null} enabled={active&&ready&&!confirmation&&!busy} canWriteCurrent={canEdit&&recordInScope&&permission?.output===true&&!controller.attempt} getSource={()=>controller.record} canApply={()=>!!controller.record&&canEdit&&recordInScope&&!controller.attempt&&!busyRef.current&&!documentDialogOpen&&contact===null&&status===null&&notes===null} onState={reportTemplates} requireAuth={workspace.requireAuth} onApply={(review,capture)=>{const st=state();if(!activeRef.current||!canEdit||!recordInScope||controller.attempt||busyRef.current||controller.record?.id!==capture.id||controller.record.document_version!==capture.version||st.documentSession!==capture.documentSession||st.editRevision!==capture.editRevision)return false;st.applyTemplateRows(review.template.rows,{id:review.template.id,version:review.template.version,policy:review.policy});setMessage('Template applied to draft. Save schedule retains its source restrictions.');return true;}}/></div>}
         {workspace&&<div className={review?styles.reviewLibrary:undefined} hidden={review&&!!selected&&recordInScope}><LocalScheduleLibrary refreshKey={reviewTool??'library'} restoreMode={reviewTool==='restore'} onCancelRestore={()=>setReviewTool(null)} onTool={openLibraryTool} review={review} navigation={review?<div className="mtabs lib-tabs"><button className={`mtab${!reviewTool?' active':''}`} onClick={()=>setReviewTool(null)}>📁 Library</button><button className={`mtab${reviewTool==='templates'?' active':''}`} onClick={()=>openReviewTool('templates')}>★ Templates</button><button className={`mtab${reviewTool==='files'?' active':''}`} onClick={()=>setReviewTool('files')}>⬇ Backup &amp; import</button><button className={`mtab${reviewTool==='transfers'?' active':''}`} onClick={()=>setReviewTool('transfers')}>⇄ Move requests</button><button className={`mtab${reviewTool==='restore'?' active':''}`} onClick={()=>setReviewTool('restore')}>🕐 Restore</button></div>:undefined} client={client} actor={session?.user.id??accountRef.current} organization={workspace.organization?.id??null} enabled={active&&ready&&!confirmation} selected={selected} onOpen={id=>guarded(()=>void run(()=>open(id)),'Open schedule and discard unsaved changes')} onInspect={id=>workspace.openLifecycle?.(workspace.organization!.id,id)} onState={reportLibrary} onTransfer={startTransfer}/></div>}
         {workspace&&<ReviewToolPanel enabled={review} open={active&&reviewTool==='transfers'} title="Move requests" onClose={()=>setReviewTool(null)}><div><LocalScheduleTransfers embedded={review} onClose={()=>setReviewTool(null)} client={client} actor={session?.user.id??null} organization={workspace.organization?.id??null} enabled={active&&ready&&!confirmation} request={transferRequest} onState={reportTransfers} getDraft={id=>controller.record?.id===id?{record:controller.record,document:structuredClone(state().getScheduleData())}:null} captureOpen={captureCopyOpen} onCopy={openConfirmedCopy}/></div></ReviewToolPanel>}
@@ -460,5 +476,5 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
       </dialog>
     </main>
     </DocumentProvidersContext.Provider>
-  </LocalEditorContext.Provider>;
+  </ContactDirectoryContext.Provider></LocalEditorContext.Provider>;
 }

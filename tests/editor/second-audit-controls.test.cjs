@@ -45,6 +45,7 @@ function fixture(file, component, props = {}, options = {}) {
   const mocks={
     react,
     'react-dom':{createPortal:()=>null},
+    '@/components/local/ProductionContacts':{default:function ProductionContacts(){},ProductionContactGroups:function ProductionContactGroups(){}},
     '@/lib/store/scheduleStore':{useScheduleStore:select=>select(schedule)},
     '@/lib/store/cmsStore':{useCmsStore:select=>select({config:{}})},
     '@/components/schedule/LocalEditorContext':{useLocalEditor:()=>context.local},
@@ -80,7 +81,7 @@ const callFile='components/modals/CallSheetModal.tsx';
 const fields=[['LocationField','Basecamp','basecamp'],['LocationField','Crew Parking','parking'],['LocationField','Nearest Hospital','hospital'],['Field','Emergency Contact','emergency'],['Notes','Safety Notes','safetyNotes'],['Notes','Special Instructions','specialInstructions'],['Notes','Meal Notes','mealNotes'],['Notes','General Notes','notes']];
 
 test('the actual Call Sheet renders all eight tested field types and carries the read-only boundary',()=>{
-  const f=fixture(callFile,'default',{open:true,readOnly:true,onClose:()=>{}});
+  const f=fixture(callFile,'default',{open:true,readOnly:true,onClose:()=>{}},{local:false});
   assert.equal(f.tree.props.value,true);
   const content=f.find(n=>n.type?.name==='CallSheetDocument');
   const shared=fixture(callFile,'CallSheetDocument',content.props);
@@ -180,4 +181,11 @@ test('hosted Share opens link management after closing its menu; legacy Share st
     legacy.find(n=>n.props?.title==='Share').props.onClick();legacy.render();
     assert.equal(legacy.find(n=>n.type==='button'&&text(n).includes('Share schedule')),undefined);
   }finally{hosted?.dispose();legacy?.dispose();global.document=oldDocument;global.window=oldWindow;}
+});
+
+test('new-app call sheet includes expanded logistics and crew/cast while keeping contact details optional',()=>{
+ const f=fixture(callFile,'default',{open:true,readOnly:false,onClose:()=>{}});const content=f.find(n=>n.type?.name==='CallSheetDocument');assert.equal(content.props.enhanced,true);assert.equal(content.props.showContacts,false);
+ const doc=fixture(callFile,'CallSheetDocument',{...content.props,productionContacts:[{id:'crew',type:'crew',name:'Crew',role:'Camera',callTime:'8:00 AM',phone:'PRIVATE',email:''},{id:'location',type:'location',name:'Location',role:'Host',phone:'PRIVATE',email:'',callTime:''}]});
+ for(const field of ['productionOffice','hospitalPhone','hospitalNotes','advanceSchedule'])assert.ok(doc.find(n=>n.props?.fieldKey===field));
+ const people=doc.find(n=>n.type?.name==='ProductionContactGroups');assert.equal(people.props.contacts.length,1);assert.equal(people.props.showPrivate,false);
 });

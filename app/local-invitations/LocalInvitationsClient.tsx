@@ -227,7 +227,7 @@ export default function LocalInvitationsClient({ config, reviewMode=false }: { c
     {selected && <div className={styles.columns}><section className={styles.card} aria-label="Invitation draft"><h2>{revoking ? 'Revoke invitation' : 'New invitation'}</h2>
       {revoking ? <form className={styles.form} onSubmit={event => { event.preventDefault(); prepare('revoke'); }}><p><strong>{revoking.email}</strong><br />{organizationRoleName(revoking.role)} access</p>
         <label>Reason for revocation<textarea required maxLength={500} disabled={busy || !!attempt || !ready} value={reason} onChange={event => setReason(event.target.value)} /></label>
-        <button ref={draftReview} disabled={busy || !!attempt || !ready || !currentOrg}>Review revocation</button><button type="button" className={styles.secondary} disabled={busy || !!attempt} onClick={() => { setRevoking(null); setReason(''); }}>Back to invitation draft</button>
+        <button ref={draftReview} disabled={busy || !!attempt || !ready || !currentOrg}>Review revocation</button><button type="button" className={styles.secondary} disabled={busy || !!attempt} onClick={() => { setRevoking(null); setReason(''); }}>← Back</button>
       </form> : <form className={styles.form} onSubmit={event => { event.preventDefault(); prepare('create'); }}>
         <fieldset disabled={busy || !!attempt || !ready || !currentOrg}>
           <label>Recipient email<input type="email" required maxLength={320} autoComplete="off" value={recipient} onChange={event => setRecipient(event.target.value)} /></label>
@@ -268,7 +268,7 @@ export default function LocalInvitationsClient({ config, reviewMode=false }: { c
           if (attempt.kind === 'create') { setRecipient(''); setRole('member'); setProduction(''); setDays(7); }
           else { setRevoking(null); setReason(''); }
           controller.clear(); redraw(); setMessage('Result acknowledged. You can prepare another request.');
-        }}>Acknowledge result</button> : <button className={styles.secondary} disabled={busy} onClick={discardRequest}>{controller.phase === 'review' ? 'Back to draft' : 'Discard local request'}</button>}
+        }}>Acknowledge result</button> : <button className={styles.secondary} disabled={busy} onClick={discardRequest}>{controller.phase === 'review' ? '← Back' : 'Discard local request'}</button>}
       </div>
     </section>}
     <dialog ref={dialog} className={styles.dialog} onCancel={() => setConfirmation(null)} aria-label={confirmation?.title ?? 'Confirm action'}><h2>{confirmation?.title}</h2><p>{confirmation?.text}</p><div className={styles.actions}><button className={styles.secondary} onClick={() => setConfirmation(null)}>Keep working</button><button onClick={() => { const action = confirmation?.action; setConfirmation(null); action?.(); }}>{confirmation?.label}</button></div></dialog>

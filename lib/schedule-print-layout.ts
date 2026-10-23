@@ -43,7 +43,7 @@ export function wrapPrintText(value: string, width: number, measure: (text: stri
 }
 
 const LINE = 16, PAD = 34, ROW_PAD = 14, FOOTER = 28, TABLE_HEAD = 30;
-export function layoutSchedulePrint(data: ScheduleData, name: string, mode: SchedulePrintMode, paper: SchedulePaper, measure: MeasureText): PrintLayout {
+export function layoutSchedulePrint(data: ScheduleData, name: string, mode: SchedulePrintMode, paper: SchedulePaper, measure: MeasureText, castUnderDescription=false): PrintLayout {
   const width = paper === 'a4' ? 1122.52 : 1056;
   const height = paper === 'a4' ? 793.7 : 816;
   const contentWidth = width - PAD * 2;
@@ -81,9 +81,9 @@ export function layoutSchedulePrint(data: ScheduleData, name: string, mode: Sche
     const loc = [row.locName || row.loc, row.locAddress, ...(row.subLocations || []).flatMap(sl => [sl.name || sl.loc, sl.address, sl.desc])].filter(Boolean).join('\n');
     const notes: Line[] = [
       ...wrap(row.keyInstruction ? `KEY: ${row.keyInstruction}` : '', columns[4], true).map(text => ({ text, bold: true })),
-      ...detail([row.cast ? `Cast: ${row.cast}` : '', row.notes].filter(Boolean).join('\n\n'), 4, `N${index + 1}`, 'Notes'),
+      ...detail([!castUnderDescription && row.cast ? `Cast: ${row.cast}` : '', row.notes].filter(Boolean).join('\n\n'), 4, `N${index + 1}`, 'Notes'),
     ];
-    const cells = [[], wrap(action, columns[1]).map(text => ({ text })), wrap(loc, columns[2]).map(text => ({ text })), detail(row.desc, 3, `D${index + 1}`, 'Description'), notes, wrap(row.timeIn, columns[5]).map(text => ({ text })), wrap(row.dur, columns[6]).map(text => ({ text })), wrap(computeTimeOut(row), columns[7]).map(text => ({ text }))];
+    const cells = [[], wrap(action, columns[1]).map(text => ({ text })), wrap(loc, columns[2]).map(text => ({ text })), [...detail(row.desc, 3, `D${index + 1}`, 'Description'),...wrap(castUnderDescription&&row.cast?`Cast / participants: ${row.cast}`:'',columns[3]).map(text=>({text}))], notes, wrap(row.timeIn, columns[5]).map(text => ({ text })), wrap(row.dur, columns[6]).map(text => ({ text })), wrap(computeTimeOut(row), columns[7]).map(text => ({ text }))];
     const totalLines = Math.max(1, ...cells.map(cell => cell.length));
     const rowHeight = totalLines * LINE + ROW_PAD;
     if (used && rowHeight <= pageCapacity(pages.length, 'schedule') && used + rowHeight > capacity()) { pages.push({ kind: 'schedule', rows: [], notes: [] }); used = 0; }

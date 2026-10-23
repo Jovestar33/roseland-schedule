@@ -2,6 +2,7 @@
 import { createPortal } from 'react-dom';
 import { useScheduleStore } from '@/lib/store/scheduleStore';
 import Modal from './Modal';
+import ProductionContacts,{ProductionContactGroups} from '@/components/local/ProductionContacts';
 import { documentContacts, contactsCsv, safeDownloadName, type DocumentContact } from '@/lib/document-tools';
 import { printDocument } from '@/lib/print';
 import DocumentPrintFurniture from './DocumentPrintFurniture';
@@ -33,7 +34,7 @@ function ContactCards({ contacts, print = false }: { contacts: DocumentContact[]
         <thead><tr><th colSpan={2} scope="colgroup">
           <div className="cs-identity">
             <div className="cs-card-head"><span className="cs-name">{c.name || 'Unnamed'}</span>
-              {c.title && <span className="cs-title">{c.title}</span>}
+              <span className="cs-title"><b>Role / title</b> {c.title||'Not specified'}</span>
             </div>
             <div className="cs-contact-row">
               {c.phone && <a href={`tel:${c.phone}`} className="cs-phone">{c.phone}</a>}
@@ -57,11 +58,12 @@ function ContactCards({ contacts, print = false }: { contacts: DocumentContact[]
 
 interface Props {
   authorizeOutput?:()=>Promise<boolean>;
+  readOnly?: boolean;
   open: boolean;
   onClose: () => void;
 }
 
-export default function ContactSheetModal({ open, onClose, authorizeOutput }: Props) {
+export default function ContactSheetModal({ open, onClose, authorizeOutput, readOnly=false }: Props) {
   const rows         = useScheduleStore((s) => s.rows);
   const scheduleName = useScheduleStore((s) => s.scheduleName) ?? '';
   const meta         = useScheduleStore((s) => s.meta);
@@ -69,6 +71,8 @@ export default function ContactSheetModal({ open, onClose, authorizeOutput }: Pr
   const contacts = documentContacts(rows);
   const visible = useContext(ModalVisibilityContext);
   const local = useLocalEditor();
+  const productionContacts=local?(meta.productionContacts??[]):[];
+  const exportContacts:DocumentContact[]=[...productionContacts.map(c=>({name:c.name,title:c.role,phone:c.phone,email:c.email,rows:[],type:c.type,callTime:c.callTime,department:c.department,reportTo:c.reportTo})),...contacts];
 
   const formattedDate = dateLabel(meta.date) !== 'Date not set'
     ? new Date(meta.date + 'T12:00:00').toLocaleDateString('en-US', {
@@ -96,7 +100,7 @@ export default function ContactSheetModal({ open, onClose, authorizeOutput }: Pr
             <button
               type="button"
               className="btn btn-light btn-sm"
-              onClick={async()=>{if(!authorizeOutput||await authorizeOutput())downloadCsv(contacts,scheduleName);}}
+              onClick={async()=>{if(!authorizeOutput||await authorizeOutput())downloadCsv(exportContacts,scheduleName);}}
             >
               ⬇ Download CSV
             </button>
@@ -106,9 +110,10 @@ export default function ContactSheetModal({ open, onClose, authorizeOutput }: Pr
         <div className="cs-subtitle">
           <h1 className="cs-sched-name">{scheduleName || 'Contact Sheet'}</h1>
           <span className="cs-date">{formattedDate || 'Date not set'}</span>
-          <span className="cs-count">· {contacts.length} contact{contacts.length !== 1 ? 's' : ''}</span>
+          <span className="cs-count">· {contacts.length+productionContacts.length} contact{contacts.length+productionContacts.length !== 1 ? 's' : ''}</span>
         </div>
-        <ContactCards contacts={contacts} />
+        {local&&<ProductionContacts readOnly={readOnly}/>}
+        {local&&<h2 className="cs-section-heading">Schedule contacts</h2>}<ContactCards contacts={contacts} />
       </Modal>
 
       {/* ── Print-only clone ──────────────────────────────────────────────
@@ -125,7 +130,7 @@ export default function ContactSheetModal({ open, onClose, authorizeOutput }: Pr
             {formattedDate && <div className="cs-print-date">{formattedDate}</div>}
             <h1 className="cs-print-title">Contact Sheet</h1>
           </div>
-          <ContactCards contacts={contacts} print />
+          <ProductionContactGroups contacts={productionContacts} showPrivate/>{(contacts.length>0||productionContacts.length===0)&&<>{local&&contacts.length>0&&<h2 className="cs-section-heading">Schedule contacts</h2>}<ContactCards contacts={contacts} print /></>}
         </div>,
         document.body
       )}

@@ -2,6 +2,8 @@
 import { useScheduleStore } from '@/lib/store/scheduleStore';
 import type { ScheduleRow } from '@/lib/types';
 import AutoResizeTextarea from './AutoResizeTextarea';
+import CastAssignment from './CastAssignment';
+import {useLocalEditor} from './LocalEditorContext';
 
 interface Props {
   index: number;
@@ -9,6 +11,7 @@ interface Props {
 }
 
 export default function DescriptionCell({ index, row }: Props) {
+  const local=useLocalEditor();
   const updateRow = useScheduleStore((s) => s.updateRow);
   const pushUndo  = useScheduleStore((s) => s.pushUndo);
 
@@ -27,6 +30,7 @@ export default function DescriptionCell({ index, row }: Props) {
           {row.desc}
         </div>
       )}
+      {local&&<CastAssignment index={index} row={row}/>}
     </>
   );
 }

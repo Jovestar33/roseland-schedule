@@ -79,7 +79,7 @@ export default function LocalScheduleSnapshots(p:Props){
   <ModalVisibilityContext.Provider value={ready}><Modal exitDuration={p.onTemplates?200:0} open={open} onClose={()=>{setOpen(false);p.onClose?.();}} title={p.onTemplates?"Tools":p.review?"Recovery":"Snapshots"} className={`template-modal ${p.onTemplates?toolStyles.drawer:''} ${p.onTemplates&&p.animateEntry===false?toolStyles.stationary:''}`} footer={reviewFooter??<button data-modal-close className="btn btn-light" onClick={()=>{setOpen(false);p.onClose?.();}}>Close</button>} retainWhenHidden>
    {p.onTemplates&&<ScheduleToolsTabs active="recovery" onTemplates={()=>{setOpen(false);p.onTemplates!();}} onRecovery={()=>{}}/>}
    {p.review&&<div className={styles.actions}>
-    {p.onHistory&&<button className="btn btn-light" disabled={disabled} onClick={()=>{setOpen(false);p.onHistory!();}}>Version history</button>}
+    {p.onHistory&&<button className="btn btn-light" disabled={disabled} onClick={()=>p.onHistory!()}>Version history</button>}
     {p.onReload&&<button className="btn btn-light" disabled={disabled} onClick={()=>{setOpen(false);p.onReload!();}}>Reload saved version</button>}
     <p>Version history contains saved changes. Reload returns to the latest saved version; you’ll be asked before discarding unsaved edits.</p>
     <h3>Snapshots</h3>

@@ -1,4 +1,5 @@
 'use strict';
+const vercelDetails=require('./vercel-details.cjs');
 const {document,hash,same}=require('./core.cjs');
 function failure(code){return Object.assign(Error(code),{code});}
 function placement(d){return Object.fromEntries(['projectName','phase','dayNumber','totalDays'].map(k=>[k,d.meta[k]??null]));}
@@ -33,8 +34,8 @@ function supabaseAdapter({url,apiKey,accessToken,organizationId,actorId,fetchImp
  const rpc=(name,args)=>request('/rest/v1/rpc/'+name,args);
  function decode(row,m){
   if(row?.id!==m.supabaseId||row.organization_id!==organizationId||row.deleted_at!==null||row.document_schema_version!==1||!Number.isSafeInteger(row.document_version)||row.document_version<1)throw failure('TARGET_IDENTITY_OR_STATE');
-  const d=document(row.document);
-  return{version:String(row.document_version),document:d,guard:{production:row.production_id,day:row.production_day_id,phase:row.phase_id??null,name:row.display_name,slug:row.slug,status:row.status,position:row.library_position,placement:placement(d)}};
+  const full=document(row.document),details=vercelDetails.split(full),d=details.document;
+  return{version:String(row.document_version),document:d,...(details.extensions?{extensions:details.extensions}:{}),guard:{production:row.production_id,day:row.production_day_id,phase:row.phase_id??null,name:row.display_name,slug:row.slug,status:row.status,position:row.library_position,placement:placement(d)}};
  }
  return {
   async verify(){const u=await request('/auth/v1/user');if(u.id!==actorId)throw failure('ACTOR_MISMATCH');await rpc('require_active_schedule_session',{});},
@@ -42,7 +43,7 @@ function supabaseAdapter({url,apiKey,accessToken,organizationId,actorId,fetchImp
   async read(m){return decode(await rpc('session_read_schedule',{target_schedule_id:m.supabaseId}),m);},
   async write(m,expected,next){
    if(!same(placement(next),placement(expected.document)))throw failure('STRUCTURE_REVIEW_REQUIRED');
-   const r=decode(await rpc('session_update_schedule_document',{target_schedule_id:m.supabaseId,expected_version:Number(expected.version),next_document:{...document(next),savedAt:Date.now()},schema_version:1}),m);
+   const r=decode(await rpc('session_update_schedule_document',{target_schedule_id:m.supabaseId,expected_version:Number(expected.version),next_document:{...vercelDetails.restore(document(next),expected.extensions),savedAt:Date.now()},schema_version:1}),m);
    if(Number(r.version)!==Number(expected.version)+1)throw failure('WRITE_UNCERTAIN');return r;
   }
  };

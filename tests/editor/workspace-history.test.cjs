@@ -73,7 +73,7 @@ test('settings round trip preserves the open schedule without reopening its save
  assert.equal(h.refs.locationRef.current.schedule,schedule);
  h.button('Your account').onClick();h.pending.shift()({...organization,role:'owner'});await settle();h.render();
  assert.equal(h.state.scheduleRequest,null,'settings tabs must not enqueue a reload of unsaved editor work');
- h.button('← Back to schedule').onClick();h.pending.shift()({...organization,role:'owner'});await settle();h.render();
+ h.button('← Back').onClick();h.pending.shift()({...organization,role:'owner'});await settle();h.render();
  assert.equal(h.state.showSettings,false);assert.equal(h.refs.locationRef.current.schedule,schedule);
  assert.equal(h.state.scheduleRequest,null,'returning reveals the retained draft, not a fresh saved copy');
 });
@@ -94,6 +94,16 @@ test('opening account settings from History does not enqueue an editor reload',a
  const h=harness({selected:schedule});h.panel.openLifecycle(organization.id,schedule);h.pending.shift()(organization);await settle();h.state.scheduleRequest=null;h.render();
  h.panel.openSettings();h.pending.shift()(organization);await settle();h.render();
  assert.equal(h.state.scheduleRequest,null);assert.equal(h.state.showSettings,true);assert.equal(h.refs.settingsOrigin.current.screen,'lifecycle');
- h.button('← Back to history').onClick();h.pending.shift()(organization);await settle();
+ h.button('← Back').onClick();h.pending.shift()(organization);await settle();
  assert.equal(h.refs.locationRef.current.screen,'lifecycle');assert.equal(h.state.showSettings,false);
+});
+
+test('settings Back returns to the originating Library without opening a schedule',async()=>{
+ const h=harness();h.panel.openSettings();h.render();
+ assert.equal(h.state.showSettings,true);
+ h.button('← Back').onClick();h.pending.shift()(organization);await settle();h.render();
+ assert.equal(h.state.showSettings,false);
+ assert.equal(h.refs.locationRef.current.screen,'schedule');
+ assert.equal(h.refs.locationRef.current.schedule,undefined);
+ assert.equal(h.state.scheduleRequest,null);
 });

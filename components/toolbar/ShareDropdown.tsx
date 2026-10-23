@@ -56,7 +56,7 @@ export default function ShareDropdown({ readOnly = false, onModalChange, authori
   async function handlePrint() {
     if (authorizeOutput && !await authorizeOutput()) return;
     close();
-    void printSchedule(scheduleName ?? 'Schedule', getScheduleData(), authorizeOutput);
+    void printSchedule(scheduleName ?? 'Schedule', getScheduleData(), authorizeOutput, local);
   }
 
   async function handleContactSheet() {
@@ -118,6 +118,7 @@ export default function ShareDropdown({ readOnly = false, onModalChange, authori
       )}
     </div>
     <ContactSheetModal
+      readOnly={readOnly}
       authorizeOutput={authorizeOutput}
       open={contactSheetOpen}
       onClose={() => setContactSheetOpen(false)}

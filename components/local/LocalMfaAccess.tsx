@@ -67,7 +67,7 @@ export default function LocalMfaAccess({review=false,managedRecovery=false,focus
     if(result.error){setMessage('That code was not accepted. Try the current code from your authenticator.');return;}
     pendingFactor.current=false;setSecret('');setQr('');setMessage('Verification complete.');onVerified();setRetry(v=>v+1);
    });}}><label>Authenticator code<input required pattern="[0-9]{6}" maxLength={6} aria-invalid={codeRejected} aria-describedby={message?'mfa-feedback':undefined} inputMode="numeric" autoComplete="one-time-code" value={code} onChange={e=>setCode(e.target.value)}/></label><button data-mfa-primary className={review?"btn btn-pink":undefined} disabled={busy}>{busy?'Verifying…':'Continue'}</button></form>}
-   {pendingFactor.current&&<button type="button" disabled={busy} onClick={()=>void cancelEnrollment()}>Cancel authenticator setup</button>}
+   {pendingFactor.current&&<button type="button" disabled={busy} onClick={()=>void cancelEnrollment()}>Cancel setup</button>}
    {stage==='ready'&&<button data-mfa-secondary type="button" disabled={busy} onClick={()=>setOpen(false)}>{factor?'Close':'Not now'}</button>}
    {stage==='code'&&!secret&&<details data-mfa-recovery><summary>Can’t use your authenticator?</summary><p>Contact your organization’s administrator for help signing in.</p></details>}
   </div>}

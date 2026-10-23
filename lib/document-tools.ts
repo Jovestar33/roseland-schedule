@@ -1,7 +1,7 @@
 import type { ScheduleRow } from './types.ts';
 
 export interface ContactContext { timeIn: string; action: string; loc: string; desc: string }
-export interface DocumentContact { name: string; title: string; phone: string; email: string; rows: ContactContext[] }
+export interface DocumentContact { name: string; title: string; phone: string; email: string; rows: ContactContext[]; type?:string; callTime?:string; department?:string; reportTo?:string }
 
 /** Group only identical contact values; two titles/emails must not be lost. */
 export function documentContacts(rows: ScheduleRow[]): DocumentContact[] {
@@ -27,8 +27,9 @@ export function safeDownloadName(value: string, suffix: string): string {
 }
 
 export function contactsCsv(contacts: DocumentContact[]): string {
-  const rows = [['Name', 'Title', 'Phone', 'Email', 'Time In', 'Action', 'Location', 'Description'],
-    ...contacts.flatMap(c => c.rows.map(r => [c.name, c.title, c.phone, c.email, r.timeIn, r.action, r.loc, r.desc]))];
+  const extended=contacts.some(c=>c.type);
+  const rows = [['Name', 'Title', 'Phone', 'Email', 'Time In', 'Action', 'Location', 'Description',...(extended?['Contact type','Call time','Department','Report to']:[])],
+    ...contacts.flatMap(c => (c.rows.length?c.rows:[{timeIn:'',action:'',loc:'',desc:''}]).map(r => [c.name, c.title, c.phone, c.email, r.timeIn, r.action, r.loc, r.desc,...(extended?[c.type??'schedule',c.callTime??'',c.department??'',c.reportTo??'']:[])]))];
   const escape = (value: string) => {
     // Quoting alone does not stop spreadsheet formulas, including whitespace prefixes.
     const literal = /^[\s\u0000-\u001f]*[=+\-@]/u.test(value) || /^[\t\r\n]/.test(value) ? `'${value}` : value;

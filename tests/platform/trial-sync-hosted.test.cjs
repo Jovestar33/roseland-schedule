@@ -42,3 +42,33 @@ test('hosted read-only acceptance checks checkpoint comparisons without writing 
   assert.equal(h.state.entry.status,side==='left'?'to-supabase':side==='right'?'to-netlify':'content-conflict');
  }
 });
+
+test('actual hosted worker preserves new-app contacts on a legacy write, including lost acknowledgement',async()=>{
+ const h=setup();const people=[{id:'crew-1',type:'crew',name:'Example',role:'Camera',phone:'',email:'',callTime:'8:00 AM'}];
+ h.state.right.meta.productionContacts=people;h.state.right.meta.callsheet={hospitalPhone:'555-0100',advanceSchedule:'Next day'};
+ h.state.left.meta.town='Updated in legacy';h.state.lostAck=true;
+ await runHosted({...args,...h});assert.deepEqual(h.state.right.meta.productionContacts,people);assert.equal(h.state.right.meta.callsheet.advanceSchedule,'Next day');
+ h.state.lostAck=false;assert.equal((await runHosted({...args,...h})).current,1);assert.deepEqual(h.state.right.meta.productionContacts,people);
+ assert.equal(h.state.events.filter(x=>x==='write_trial_sync_schedule').length,1);
+});
+test('actual hosted worker sends only shared fields to legacy and leaves exclusive contact edits untouched',async()=>{
+ const h=setup();h.state.right.meta.productionContacts=[];h.state.right.meta.callsheet={productionOffice:'New office'};
+ assert.equal((await runHosted({...args,...h})).current,1);assert.equal(h.state.events.includes('write_trial_sync_schedule'),false);
+ h.state.right.meta.town='New app change';let version='legacy-2',writes=0;
+ h.bridge=async body=>{if(body.operation==='write'){writes++;assert.equal(body.document.meta.productionContacts,undefined);assert.equal(body.document.meta.callsheet,undefined);h.state.left=structuredClone(body.document);version='legacy-3';}return{version,document:structuredClone(h.state.left),guard:{source:'legacy'}};};
+ assert.equal((await runHosted({...args,...h})).current,1);assert.equal(writes,1);assert.equal(h.state.right.meta.callsheet.productionOffice,'New office');
+});
+test('a concurrent new-app contact edit prevents a stale legacy overwrite',async()=>{
+ const h=setup();h.state.left.meta.town='Changed legacy';const rpc=h.rpc;let raced=false;
+ h.rpc=async(name,body)=>{if(name==='write_trial_sync_schedule'&&!raced){raced=true;h.state.right.meta.productionContacts=[{id:'new',type:'crew',name:'Latest',role:'Director',phone:'',email:'',callTime:''}];h.state.version++;throw Object.assign(new Error('Version changed'),{code:'CONFLICT'});}return rpc(name,body);};
+ await runHosted({...args,...h});assert.equal(h.state.right.meta.productionContacts[0].name,'Latest');assert.equal(h.state.right.meta.town,'Fictional');
+});
+
+test('choosing the legacy copy in a conflict preserves new-app-only contact details',async()=>{
+ const h=setup();const {runClaim}=require('../../scripts/trial-sync/hosted.cjs'),{hash}=require('../../scripts/trial-sync/core.cjs');
+ h.state.left.meta.town='Legacy choice';h.state.right.meta.town='New app choice';h.state.right.meta.productionContacts=[];h.state.right.meta.callsheet={hospitalPhone:'555-0199'};
+ await runHosted({...args,...h});assert.equal(h.state.entry.status,'content-conflict');
+ const job=await h.rpc('claim_trial_sync_mapping',{});
+ const result=await runClaim({...h,job,claim:id(11),organizationId:args.organizationId,now:args.now,resolution:{take:'netlify',reviewHash:hash(h.state.entry.observed)}});
+ assert.equal(result.status,'synced');assert.equal(h.state.right.meta.town,'Legacy choice');assert.deepEqual(h.state.right.meta.productionContacts,[]);assert.equal(h.state.right.meta.callsheet.hospitalPhone,'555-0199');
+});

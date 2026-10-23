@@ -11,3 +11,7 @@
 .returnRow{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin:0 0 20px}.returnRow span{font-size:12px;color:var(--g600)}
 
 .heading h2{font-size:var(--ui-title-size);letter-spacing:1.5px;line-height:1.2}.console button{font-family:var(--fb);font-size:var(--ui-body-size);font-weight:600}
+
+.provisioning form{margin-top:24px}.provisioning fieldset{gap:24px}.provisioning fieldset label{min-width:0}.provisioning select{width:100%;min-width:0}
+
+.provisioning fieldset label{align-content:start;gap:8px}.provisioning fieldset :is(input,select){height:42px;box-sizing:border-box}

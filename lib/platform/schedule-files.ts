@@ -22,8 +22,19 @@ export function validateFileDocument(doc: unknown): asserts doc is Doc {
       for (const [field,x] of Object.entries(v)) {
         if ('sunrise sunset cond fetchedAt town'.split(' ').includes(field) ? !text(x) : 'maxC minC maxF minF prec code'.split(' ').includes(field) ? !number(x,1000000) : field==='noForecast' ? typeof x!=='boolean' : true) invalid('Invalid weather field: '+field);
       }
+    } else if (k==='productionContacts') {
+      if (!Array.isArray(v)||v.length>300) invalid('Invalid production contacts.');
+      const ids=new Set<string>();
+      for(const c of v){
+        if(!object(c)||typeof c.id!=='string'||!c.id.trim()||c.id.length>100||ids.has(c.id)||!['crew','cast','location','other'].includes(String(c.type))||typeof c.name!=='string'||!c.name.trim()) invalid('Invalid production contact.');
+        if(['role','phone','email','callTime'].some(field=>typeof c[field]!=='string')) invalid('Missing contact field.');
+        if(('directoryScope' in c || 'directoryLabel' in c) && (!['organization','production','phase'].includes(String(c.directoryScope)) || typeof c.directoryLabel!=='string' || !c.directoryLabel.trim())) invalid('Invalid contact source.');
+        ids.add(c.id);
+        for(const [field,x] of Object.entries(c)) if(!'id type name role phone email callTime department reportTo notes directoryScope directoryLabel'.split(' ').includes(field)||!text(x)) invalid('Invalid contact field.');
+        if(c.callTime&& !/^(0?[1-9]|1[0-2]):[0-5][0-9] (AM|PM)$/.test(String(c.callTime))) invalid('Invalid contact call time.');
+      }
     } else if (k==='callsheet') {
-      if (!object(v) || Object.entries(v).some(([field,x])=> !'basecamp parking hospital emergency mealNotes safetyNotes specialInstructions notes'.split(' ').includes(field)||!text(x))) invalid('Invalid Call Sheet.');
+      if (!object(v) || Object.entries(v).some(([field,x])=> !'basecamp parking hospital emergency mealNotes safetyNotes specialInstructions notes productionOffice hospitalPhone hospitalNotes advanceSchedule'.split(' ').includes(field)||!text(x))) invalid('Invalid Call Sheet.');
     } else invalid('Unrecognized metadata: '+k);
   }
   if (typeof doc.meta.town==='string' && [...doc.meta.town.trim()].length>160) invalid('Town exceeds 160 characters.');
@@ -62,7 +73,7 @@ export async function encodeScheduleFile(records:StoredSchedule[]):Promise<Sched
   if(records.length>FILE_COUNT) invalid('More than 500 schedules are readable. No partial file was produced.');
   const schedules:FileEntry[]=[];
   for(const r of records) {validateFileDocument(r.document);schedules.push({name:r.display_name,slug:r.slug,data:structuredClone(r.document),sha256:await documentHash(r.document),source:{id:r.id,organization:r.organization_id,production:r.production_id,day:r.production_day_id,version:r.document_version,status:r.status,deletedAt:r.deleted_at}});}
-  const result:ScheduleFile={format:'production-command-schedule-only',version:1,exportedAt:new Date().toISOString(),scope:'All schedules readable by the signed-in account, including readable archived and deleted schedules. Saved documents only; not a transactional database snapshot.',excludes:['history','snapshots','templates','CMS','memberships','hierarchy definitions','legacy aliases','browser-only data'],schedules};
+  const result:ScheduleFile={format:'production-command-schedule-only',version:1,exportedAt:new Date().toISOString(),scope:'All schedules readable by the signed-in account, including readable archived and deleted schedules. Saved documents only; not a transactional database snapshot.',excludes:['history','snapshots','templates','CMS','memberships','hierarchy definitions','shared contact directories','legacy aliases','browser-only data'],schedules};
   if(bytes(result)>FILE_BYTES) invalid('Export exceeds 20 MB. No partial file was produced.');return result;
 }
 export async function parseScheduleFile(contents:string,singleName:string):Promise<FileEntry[]> {

@@ -86,3 +86,9 @@ test('legacy cast prints in full in both layouts without changing saved notes',(
  for(const mode of ['compact','inline']){const layout=layoutSchedulePrint(data,'Cast',mode,'letter',measure);const all=layout.pages.flatMap(p=>[...p.rows.flatMap(r=>r.cells.flatMap(c=>c.map(x=>x.text))),...p.notes.flatMap(n=>n.lines)]).join('\n');assert.match(all,/Cast: Performer A/);assert.match(all,/Performer B/);}
  assert.deepEqual(data,before);
 });
+
+test('new-app print puts cast beneath each description, including compact output with a long description',()=>{
+ const data=fixture();data.rows[0].desc='Long description. '.repeat(120);data.rows[0].cast='Taylor Reed\nMorgan Smith';
+ data.meta.productionContacts=[{id:'p',type:'cast',name:'Taylor Reed',role:'Presenter',phone:'PRIVATE-PHONE',email:'PRIVATE-EMAIL',callTime:'8:30 AM'}];
+ for(const mode of ['compact','inline']){const result=layoutSchedulePrint(data,'Cast',mode,'letter',measure,true);const desc=result.pages.flatMap(p=>p.rows).flatMap(r=>r.cells[3]).map(x=>x.text).join('');const notes=result.pages.flatMap(p=>p.rows).flatMap(r=>r.cells[4]).map(x=>x.text).join('');assert.match(desc,/Taylor Reed/);assert.match(desc,/Morgan Smith/);assert.doesNotMatch(notes,/Taylor Reed/);assert.doesNotMatch(renderSchedulePrint(result),/PRIVATE-/);}
+});

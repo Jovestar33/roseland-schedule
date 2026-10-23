@@ -1,4 +1,5 @@
 'use strict';
+const vercelDetails=require('./vercel-details.cjs');
 const {randomUUID,timingSafeEqual,createHash}=require('node:crypto');
 const {apply,inspect,document}=require('./core.cjs');
 const {failure,placement}=require('./adapters.cjs');
@@ -10,8 +11,8 @@ function authorized(header,secret){
 }
 function decode(row,m,org){
  if(row?.id!==m.supabaseId||row.organization_id!==org||row.deleted_at!==null||row.document_schema_version!==1||!Number.isSafeInteger(row.document_version)||row.document_version<1)throw failure('TARGET_IDENTITY_OR_STATE');
- const d=document(row.document);
- return{version:String(row.document_version),document:d,guard:{production:row.production_id,day:row.production_day_id,phase:row.phase_id??null,name:row.display_name,slug:row.slug,status:row.status,position:row.library_position,placement:placement(d)}};
+ const full=document(row.document),details=vercelDetails.split(full),d=details.document;
+ return{version:String(row.document_version),document:d,...(details.extensions?{extensions:details.extensions}:{}),guard:{production:row.production_id,day:row.production_day_id,phase:row.phase_id??null,name:row.display_name,slug:row.slug,status:row.status,position:row.library_position,placement:placement(d)}};
 }
 function transport({supabaseUrl,secret,legacyOrigin,bridgeSecret,fetchImpl=fetch,deadline,now=Date.now}){
  const database=new URL(supabaseUrl),legacy=new URL(legacyOrigin);
@@ -35,7 +36,7 @@ async function runClaim({rpc,bridge,job,claim,organizationId,now=Date.now,inspec
   const checkpoint=async()=>{const next=await guardedRpc('checkpoint_trial_sync',{...ids,expected_sequence:sequence,next_state:state.entries[m.id],release_claim:false});if(next!==sequence+1)throw failure('INVALID_RESPONSE');sequence=next;};
   const adapters={
    netlify:{read:()=>guardedBridge({operation:'read',key:m.netlifyKey}),write:(_m,expected,next)=>guardedBridge({operation:'write',key:m.netlifyKey,expected,document:next})},
-   supabase:{read:async()=>decode(await guardedRpc('read_trial_sync_schedule',ids),m,organizationId),write:async(_m,expected,next)=>decode(await guardedRpc('write_trial_sync_schedule',{...ids,expected_version:Number(expected.version),expected_guard:expected.guard,next_document:{...document(next),savedAt:now()}}),m,organizationId)}
+   supabase:{read:async()=>decode(await guardedRpc('read_trial_sync_schedule',ids),m,organizationId),write:async(_m,expected,next)=>decode(await guardedRpc('write_trial_sync_schedule',{...ids,expected_version:Number(expected.version),expected_guard:expected.guard,next_document:{...vercelDetails.restore(document(next),expected.extensions),savedAt:now()}}),m,organizationId)}
   };
   // Never release a lease after an uncertain checkpoint: its saved pending intent
   // must remain available for the next worker after lease expiry.

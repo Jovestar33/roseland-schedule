@@ -57,7 +57,26 @@ export interface WeatherData {
   noForecast?: boolean;
 }
 
+export type ProductionContactType = 'crew' | 'cast' | 'location' | 'other';
+export interface ProductionContact {
+  id: string;
+  type: ProductionContactType;
+  name: string;
+  role: string;
+  phone: string;
+  email: string;
+  callTime: string;
+  directoryScope?: 'organization' | 'production' | 'phase';
+  directoryLabel?: string;
+  department?: string;
+  reportTo?: string;
+  notes?: string;
+}
 export interface CallSheetData {
+  productionOffice?: string;
+  hospitalPhone?: string;
+  hospitalNotes?: string;
+  advanceSchedule?: string;
   basecamp?: string;
   parking?: string;
   hospital?: string;
@@ -82,6 +101,7 @@ export interface ScheduleMeta {
   dayNumber: number | null;
   totalDays: number | null;
   callsheet?: CallSheetData;
+  productionContacts?: ProductionContact[];
 }
 
 // Wire format stored in Netlify Blobs — must stay compatible with save.js / load.js

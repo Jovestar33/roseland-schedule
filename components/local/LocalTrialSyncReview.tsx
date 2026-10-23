@@ -31,7 +31,7 @@ export default function LocalTrialSyncReview({mappingId,onBack,onResolved}:{mapp
  // Opening a review is read-only. Resolving always requires a separate choice and confirmation.
  useEffect(()=>{void load();return()=>{request.current?.abort();};},[mappingId]); // eslint-disable-line react-hooks/exhaustive-deps
  return <section className={styles.review} aria-label="Compare saved schedule copies">
-  <div className={styles.actions}><button className="btn btn-light" onClick={onBack}>Back to synchronization</button><button className="btn btn-light" disabled={busy} onClick={()=>void load()}>Refresh comparison</button></div>
+  <div className={styles.actions}><button className="btn btn-light" onClick={onBack}>← Back</button><button className="btn btn-light" disabled={busy} onClick={()=>void load()}>Refresh comparison</button></div>
   <h3>{review?.name??'Review schedule copies'}</h3>
   {(busy||message)&&<p role="status" aria-live="polite">{busy?'Checking the saved copies…':message}</p>}
   {review&&<>

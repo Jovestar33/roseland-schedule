@@ -46,6 +46,6 @@ export default function PlatformConsole({onVerify}:{onVerify:()=>void}){
     <aside className={styles.billing}><h3>Billing & services</h3><p>Billing is not connected in this build. Subscription, payment, and service changes are unavailable.</p></aside>
    </div>
   </>}
-  <div hidden={!ready||tab!=='create'}><div className={styles.returnRow}><button className="btn btn-light" onClick={()=>{setTab('organizations');organizationsTab.current?.focus();}}>← Back to organizations</button><span>Your setup draft stays here until you clear it.</span></div><LocalProvisioningClient/></div>
+  <div hidden={!ready||tab!=='create'}><div className={styles.returnRow}><button className="btn btn-light" onClick={()=>{setTab('organizations');organizationsTab.current?.focus();}}>← Back</button><span>Your setup draft stays here until you clear it.</span></div><LocalProvisioningClient/></div>
  </section>;
 }
