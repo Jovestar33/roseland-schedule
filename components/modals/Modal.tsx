@@ -1,5 +1,5 @@
 'use client';
-import { createContext, useContext, useEffect, useId, useRef, type ReactNode } from 'react';
+import { createContext, useContext, useEffect, useId, useRef, useState, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 
 /** Retained local panels can hide portals without discarding their form state. */
@@ -23,13 +23,37 @@ interface ModalProps {
   className?: string;
   zIndex?: number;
   retainWhenHidden?: boolean;
+  exitDuration?: number;
 }
 
-export default function Modal({ open, onClose, title, children, footer, className, zIndex, retainWhenHidden = false }: ModalProps) {
+export default function Modal({ open, onClose, title, children, footer, className, zIndex, retainWhenHidden = false, exitDuration = 0 }: ModalProps) {
   const visible = useContext(ModalVisibilityContext);
   const dialogRef = useRef<HTMLDivElement>(null);
-  const closeRef = useRef(onClose);
-  closeRef.current = onClose;
+  const [closing, setClosing] = useState(false);
+  const exitTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
+  function requestClose() {
+    if (exitTimer.current) return;
+    if (!exitDuration || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      onCloseRef.current(); return;
+    }
+    setClosing(true);
+    exitTimer.current = setTimeout(() => {
+      exitTimer.current = null;
+      setClosing(false);
+      onCloseRef.current();
+    }, exitDuration);
+  }
+  const closeRef = useRef(requestClose);
+  closeRef.current = requestClose;
+  useEffect(() => {
+    if (!open || !visible) setClosing(false);
+    return () => {
+      if (exitTimer.current) clearTimeout(exitTimer.current);
+      exitTimer.current = null;
+    };
+  }, [open, visible]);
   const titleId = useId();
   const shown = open && visible;
   const previousShown = useRef(false);
@@ -89,16 +113,22 @@ export default function Modal({ open, onClose, title, children, footer, classNam
   return createPortal(
     <div
       className="overlay open"
+      data-closing={closing || undefined}
       style={{ zIndex, display: visible ? undefined : 'none' }}
-      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+      onClick={(e) => { if (e.target === e.currentTarget) requestClose(); }}
     >
       <div className={`modal ${className ?? ''}`} ref={dialogRef} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby={titleId}>
         <div className="mhdr">
           <h2 id={titleId}>{title}</h2>
-          <button className="mclose" onClick={onClose} aria-label="Close">✕</button>
+          <button className="mclose" onClick={requestClose} aria-label="Close">✕</button>
         </div>
         <div className="mbody">{children}</div>
-        {footer && <div className="mfoot">{footer}</div>}
+        {footer && <div className="mfoot" onClickCapture={event => {
+          const button = (event.target as HTMLElement).closest('button');
+          if (exitDuration && button?.hasAttribute('data-modal-close')) {
+            event.preventDefault(); event.stopPropagation(); requestClose();
+          }
+        }}>{footer}</div>}
       </div>
     </div>,
     document.body,

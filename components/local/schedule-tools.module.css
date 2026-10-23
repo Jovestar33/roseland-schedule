@@ -7,3 +7,47 @@
 .tabs button[aria-current="page"] { color:var(--ui-accent-strong); background:var(--ui-accent-soft); }
 .tabs button:focus-visible { outline:2px solid var(--ui-accent-strong); outline-offset:2px; }
 @media(max-width:640px) { .drawer.drawer { inset:auto 0 0; width:100%!important; height:92dvh; max-height:92dvh!important; border-radius:18px 18px 0 0!important; } }
+
+/* Match the legacy Tools entrance; changing tabs keeps the drawer in place. */
+.drawer.drawer { animation: tools-slide-right 250ms ease backwards; }
+:global(.overlay):has(> .drawer:not(.stationary)) { animation: tools-backdrop-in 200ms ease; }
+.drawer.stationary { animation:none; }
+@keyframes tools-slide-right {
+  from { transform:translateX(100%); }
+  to { transform:translateX(0); }
+}
+@keyframes tools-slide-bottom {
+  from { transform:translateY(100%); }
+  to { transform:translateY(0); }
+}
+@keyframes tools-backdrop-in {
+  from { background-color:rgba(0,0,0,0); }
+  to { background-color:rgba(0,0,0,.55); }
+}
+@media(max-width:640px) {
+  .drawer.drawer:not(.stationary) { animation-name:tools-slide-bottom; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .drawer.drawer, :global(.overlay):has(> .drawer) { animation:none!important; }
+}
+
+:global(.overlay)[data-closing]:has(> .drawer) { animation:tools-backdrop-out 200ms ease forwards; }
+:global(.overlay)[data-closing] > .drawer { animation:tools-exit-right 200ms ease forwards; pointer-events:none; }
+@keyframes tools-exit-right {
+  from { transform:translateX(0); }
+  to { transform:translateX(100%); }
+}
+@keyframes tools-exit-bottom {
+  from { transform:translateY(0); }
+  to { transform:translateY(100%); }
+}
+@keyframes tools-backdrop-out {
+  from { background-color:rgba(0,0,0,.55); }
+  to { background-color:rgba(0,0,0,0); }
+}
+@media(max-width:640px) {
+  :global(.overlay)[data-closing] > .drawer { animation-name:tools-exit-bottom; }
+}
+@media(prefers-reduced-motion:reduce) {
+  :global(.overlay)[data-closing]:has(> .drawer), :global(.overlay)[data-closing] > .drawer { animation:none!important; }
+}
