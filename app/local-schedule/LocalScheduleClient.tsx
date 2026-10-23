@@ -134,6 +134,8 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
   const lifecycleVersion=workspace?.lifecycleVersion??0,lifecycleVersionRef=useRef(lifecycleVersion);lifecycleVersionRef.current=lifecycleVersion;
   const canEdit = (!workspace?.readOnly && lifecycleVersion>=0 && permission?.lifecycleVersion===lifecycleVersion && permission?.recordId === controller.record?.id && permission?.token === session?.access_token && permission?.allowed === true);
 
+  // Permission polling creates a new result object even when access is unchanged.
+  // Keep the directory session stable so focus/20-second refreshes do not erase an open form.
   const contactDirectory=useMemo(()=>{
     const record=controller.record,actor=session?.user.id,token=session?.access_token,sourceSession=documentSession;
     if(!record||!actor||!token||!active||!recordInScope||!ready||permission?.read!==true)return null;
@@ -145,7 +147,7 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
       return result;
     }});
     return {schedule:record.id,repository,current};
-  },[client,controller,documentSession,session?.user.id,session?.access_token,active,recordInScope,ready,permission]);
+  },[client,controller,documentSession,session?.user.id,session?.access_token,active,recordInScope,ready,permission?.read]);
 
   useEffect(()=>{
     if(!selected){shownEditor.current=null;return;}
