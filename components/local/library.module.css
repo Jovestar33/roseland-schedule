@@ -133,3 +133,24 @@
 .library :global(.lbt-prod) { overflow:visible; }
 .library :global(.lbt-prod-row) { border-radius:11px 11px 0 0; }
 .library :global(.lbt-prod):not([open]) > summary { border-radius:11px; }
+
+/* Match the original Library hierarchy without workspace button styling inflating tabs. */
+.library:global(.lib-page){width:100%;max-width:1280px;box-sizing:border-box;padding:28px clamp(20px,3vw,40px)}
+.library :global(.lib-header){margin-bottom:20px;align-items:center;gap:12px}
+.library .headerActions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.library .headerActions :is(button,summary){font-size:12px;line-height:1.4;min-height:36px;padding:8px 12px;white-space:nowrap;overflow-wrap:normal}
+.headerMore{position:relative}.headerMore>summary{list-style:none;cursor:pointer}.headerMore>summary::-webkit-details-marker{display:none}.headerMore>div{position:absolute;right:0;top:calc(100% + 6px);z-index:20;padding:6px;min-width:180px;background:white;border:1px solid var(--g200);border-radius:10px;box-shadow:0 6px 24px #0002}.headerMore>div button{width:100%;text-align:left;border:0!important;box-shadow:none!important}
+.library :global(.lib-tabs){display:flex;align-items:center;gap:4px;flex-wrap:wrap;border-bottom:2px solid var(--g200);padding:0;margin:0 0 18px;overflow:visible;white-space:normal}
+.library :global(.lib-tabs .mtab){border:0;border-bottom:2px solid transparent;border-radius:0;background:transparent;box-shadow:none;padding:8px 10px;margin-bottom:-2px;font-size:12px;line-height:1.4;min-height:36px;font-weight:600;color:var(--g600);white-space:nowrap;overflow-wrap:normal}
+.library :global(.lib-tabs .mtab.active){color:var(--ui-accent-strong);border-bottom-color:var(--ui-accent);background:transparent}
+.library :global(.lib-tabs .mtab:hover){background:var(--g50);color:var(--ui-ink)}
+.library :global(.lib-search-row){display:flex;align-items:center;gap:12px;margin-bottom:16px}.library :global(.lib-search-row) button{font-size:12px;min-height:36px}
+.library .arrangeHint{font-size:11px;padding:0;margin:0 0 12px}.arrangeHint details{width:100%}.arrangeHint summary{cursor:pointer;color:var(--g600)}.arrangeHint p{margin:6px 0;font-size:12px}
+@media(max-width:600px){.library:global(.lib-page){padding:16px 12px}.library :global(.lib-header){flex-direction:column;align-items:flex-start;gap:8px}.library .headerActions{gap:6px}.library :global(.lib-tabs){gap:0;flex-wrap:wrap}.library :global(.lib-tabs .mtab){padding:8px;font-size:11px}}
+
+/* Reserve space for search and clear icons inside the shared workspace shell. */
+.library input:global(.lib-search-input){padding:9px 36px;font-size:13px;line-height:1.4;min-height:40px}
+.library button:global(.lib-search-clear){width:26px;min-width:26px;height:26px;min-height:26px;padding:3px;border:0;box-shadow:none;background:transparent;color:var(--g600)}
+
+/* Override the legacy overlay tab strip only inside the new Library. */
+.library :global(.lib-tabs){flex-wrap:wrap!important;overflow:visible!important;white-space:normal;gap:4px!important}

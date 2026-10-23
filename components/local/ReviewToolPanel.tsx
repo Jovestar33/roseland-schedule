@@ -16,6 +16,6 @@ export default function ReviewToolPanel({enabled,open,title,onClose,onBack,child
     <div className={styles.header}><h2>{title}</h2><button className="btn btn-light btn-sm" aria-label={`Close ${title}`} onClick={onClose}><X size={18}/></button></div>
     {onBack&&<div className={styles.back}><button className="btn btn-light btn-sm" onClick={onBack}>← All tools</button></div>}
     <div className={styles.body}>{children}</div>
-    {!compact&&<footer className={styles.footer}><span>Closing keeps your unfinished work.</span><button className="btn btn-light" onClick={onClose}>Close</button></footer>}
+    {!compact&&<footer className={styles.footer}><button className="btn btn-light" onClick={onClose}>Close</button></footer>}
   </dialog>;
 }

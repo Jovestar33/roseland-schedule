@@ -18,6 +18,7 @@ export default function LocalScheduleTransfers({embedded=false,onClose,client,ac
  const [inbox,setInbox]=useState<TransferRequest[]>([]),[source,setSource]=useState<StoredSchedule|null>(null),[choices,setChoices]=useState<TransferDestination[]>([]),[placements,setPlacements]=useState<ProductionDestination[]>([]);
  const [mode,setMode]=useState<'move'|'copy'|'approve'>('move'),[destination,setDestination]=useState(''),[phase,setPhase]=useState(''),[day,setDay]=useState(''),[name,setName]=useState(''),[slug,setSlug]=useState('');
  const [preview,setPreview]=useState<TransferReview|null>(null),[incoming,setIncoming]=useState<TransferRequest|null>(null),[attempt,setAttempt]=useState<TransferAttempt|null>(null),[complete,setComplete]=useState(false),[message,setMessage]=useState(''),[busy,setBusy]=useState(false),[scope,setScope]=useState('');
+ const [inboxLoaded,setInboxLoaded]=useState(false),[inboxError,setInboxError]=useState('');
  const dialog=useRef<HTMLDialogElement>(null),busyRef=useRef(false),generation=useRef(0),latest=useRef({actor,organization,enabled}),context=useRef<unknown>(null),draft=useRef<ReturnType<Props['getDraft']>>(null);
  latest.current={actor,organization,enabled};const scopeKey=actor+':'+organization,inScope=scope===scopeKey;
  useEffect(()=>{generation.current++;if(!enabled)setPreview(null);},[actor,organization,enabled]);
@@ -25,8 +26,8 @@ export default function LocalScheduleTransfers({embedded=false,onClose,client,ac
  useEffect(()=>{if(!embedded&&source&&inScope&&enabled)dialog.current?.showModal();else dialog.current?.close();},[source,inScope,enabled,embedded]);
  const current=(g:number)=>generation.current===g&&latest.current.actor===actor&&latest.current.organization===organization&&latest.current.enabled;
  async function run(work:(g:number)=>Promise<void>){if(!actor||!organization||!enabled||busyRef.current)return;busyRef.current=true;setBusy(true);const g=generation.current;try{await work(g);}catch(e){if(current(g))setMessage(e instanceof Error?e.message:'Action not confirmed. Keep this review and retry the original request.');}finally{busyRef.current=false;setBusy(false);}}
- async function load(g:number){const rows=await repo.inbox(actor!,organization!);if(current(g))setInbox(rows);}
- useEffect(()=>{setInbox([]);if(actor&&organization&&enabled)void run(load);
+ async function load(g:number){setInboxError('');try{const rows=await repo.inbox(actor!,organization!);if(current(g)){setInbox(rows);setInboxLoaded(true);}}catch(e){if(current(g))setInboxError('Couldn’t load move requests. Please try again.');}}
+ useEffect(()=>{setInbox([]);setInboxLoaded(false);setInboxError('');if(actor&&organization&&enabled)void run(load);
  // eslint-disable-next-line react-hooks/exhaustive-deps
  },[actor,organization,enabled]);
  function clear(){setSource(null);setPreview(null);setAttempt(null);setIncoming(null);setComplete(false);draft.current=null;if(embedded)onClose?.();}
@@ -60,8 +61,19 @@ export default function LocalScheduleTransfers({embedded=false,onClose,client,ac
   if(attempt.kind==='copy'&&current(g)){const opened=await onCopy(attempt.id,context.current);if(current(g)){setMessage(opened?'Copy opened. The source draft is retained on this computer.':'Copy saved. Opening was deferred to preserve your current work. Open it from the library when ready.');if(opened)clear();}}
  }
  const TransferSurface=embedded?'section':'dialog';
- return <section className={styles.shell} aria-label="Schedule transfers"><div hidden={embedded&&!!source&&inScope} className={styles.directory}>{!embedded&&<h2>Move requests</h2>}<button disabled={!enabled||busy} onClick={()=>void run(load)}>Refresh requests</button></div><p hidden={embedded&&!!source&&inScope} role="status">{message}</p>
- {!(embedded&&source&&inScope)&&inbox.map(item=><div key={item.id}><p>{item.source} → {item.destination} · {item.status}</p>{item.reviewable&&<button disabled={busy||!!source||!!attempt} onClick={()=>void run(g=>receive(item,g))}>Review schedule</button>}{item.outgoing&&item.status==='pending'&&<button disabled={busy} onClick={()=>void run(async g=>{await repo.close(actor!,item.id,'cancelled');if(current(g))await load(g);})}>Cancel request</button>}</div>)}
+ return <section className={`${styles.shell} ${styles.reviewShell} ${transferStyles.requests}`} aria-label="Schedule transfers">
+ <div hidden={embedded&&!!source&&inScope}>
+  {!embedded&&<h2>Move requests</h2>}
+  <p className={transferStyles.intro}>Review moves between productions that need another admin’s approval. To start a move, choose <strong>Move to</strong> beside a schedule in the Library.</p>
+  <div className={transferStyles.inboxHeading}><h3>Requests</h3><button className="btn btn-light btn-sm" disabled={!enabled||busy} onClick={()=>void run(load)}>{busy?'Checking…':'↻ Refresh'}</button></div>
+  {inboxError?<p role="alert" className={transferStyles.notice}>{inboxError}</p>:!inboxLoaded?<p role="status">{enabled?'Loading requests…':'Checking access…'}</p>:!inbox.length?<div className={transferStyles.empty}><strong>No move requests</strong><p>Incoming requests and moves awaiting approval will appear here.</p></div>:<ul className={transferStyles.requestList}>{inbox.map(item=><li key={item.id}>
+   <div className={transferStyles.requestHeading}><strong>{item.outgoing?'Sent request':'Incoming request'}</strong><span className={transferStyles.badge}>{({pending:'Awaiting approval',approved:'Approved',cancelled:'Cancelled',declined:'Declined',expired:'Expired'} as Record<string,string>)[item.status]??item.status}</span></div>
+   <dl><div><dt>From production</dt><dd>{item.source}</dd></div><div><dt>To production</dt><dd>{item.destination}</dd></div></dl>
+   {item.status==='pending'&&<p className={transferStyles.expiry}>Expires {dateLabel(item.expires_at.slice(0,10))}</p>}
+   <div className={transferStyles.requestActions}>{item.reviewable&&<button className="btn btn-pink btn-sm" disabled={busy||!!source||!!attempt} onClick={()=>void run(g=>receive(item,g))}>Review schedule</button>}{item.outgoing&&item.status==='pending'&&<button className="btn btn-light btn-sm" disabled={busy} onClick={()=>void run(async g=>{await repo.close(actor!,item.id,'cancelled');if(current(g))await load(g);})}>Cancel request</button>}</div>
+  </li>)}</ul>}
+  {message&&!inboxError&&<p role="status" className={transferStyles.notice}>{message}</p>}
+ </div>
  {source&&!inScope&&<p>A transfer review is retained in another account or organization.</p>}
  <TransferSurface ref={embedded?undefined:dialog} hidden={embedded&&(!source||!inScope||!enabled)} className={`${transferStyles.dialog} ${embedded?transferStyles.embedded:''}`} aria-label="Move or Duplicate schedule" onCancel={e=>{if(busy||attempt){e.preventDefault();return;}clear();}}><h2>{mode==='approve'?'Review incoming schedule':mode==='copy'?'Duplicate schedule':'Move schedule'}</h2><p>{source?.display_name}</p><p role="status">{message}</p>
  {!attempt&&<><div className={styles.login}>{mode!=='approve'&&<label>Destination production<select value={destination} disabled={busy} onChange={e=>{const p=placements.find(v=>v.id===e.target.value);setDestination(e.target.value);setPhase(previous=>p?.phases.some(f=>f.id===previous)?previous:'');setDay('');setPreview(null);}}><option value="">Choose destination</option>{choices.map(p=><option key={p.id} value={p.id}>{p.name}{!p.direct?' · Request approval':''}</option>)}</select></label>}

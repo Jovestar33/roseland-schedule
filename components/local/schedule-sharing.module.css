@@ -28,3 +28,5 @@
 .rowActions{display:flex;align-items:flex-end;flex-direction:column;gap:8px;flex-shrink:0}
 .empty{color:var(--g600)}
 @media(max-width:440px){.section{padding:14px}.copyRow{flex-wrap:wrap}.copyRow input{flex-basis:100%}.copyRow button{width:100%}.linkRow{flex-wrap:wrap}.rowActions{flex-direction:row;align-items:center}.actions>*{flex:1}.badge{white-space:normal}}
+
+.sharing [hidden]{display:none!important}
