@@ -2,7 +2,7 @@
 import { useRef, useState } from 'react';
 import Modal from '@/components/modals/Modal';
 import { useScheduleStore } from '@/lib/store/scheduleStore';
-import { DURATIONS, rowConflictInfo, maxDurationForRow, parseCustomDuration, durm, mDur } from '@/lib/time';
+import { DURATIONS, rowConflictInfo, parseCustomDuration } from '@/lib/time';
 import type { ScheduleRow } from '@/lib/types';
 
 interface Props {
@@ -22,16 +22,14 @@ export default function DurationCell({ index, row }: Props) {
   const closeCustom = () => { setEditing(false); selectRef.current?.focus(); };
 
   const disabled = !row.action;
-  const max = maxDurationForRow(rows, index);
   const opts = DURATIONS.includes(row.dur) ? DURATIONS : [...DURATIONS, row.dur].filter(Boolean);
-  const exceedsLock = (dur: string) => max !== null && durm(dur) > max;
   const conflict = rowConflictInfo(rows, index);
 
   function handleChange(dur: string) {
     if (dur === '__custom__') {
       setCustom(row.dur); setError(''); setEditing(true); return;
     }
-    if (dur === row.dur || exceedsLock(dur)) return;
+    if (dur === row.dur) return;
     pushUndo();
     updateRow(index, { dur });
   }
@@ -39,10 +37,6 @@ export default function DurationCell({ index, row }: Props) {
   function saveCustom() {
     const dur = parseCustomDuration(custom);
     if (dur === null) { setError('Enter whole minutes (20) or hours:minutes (01:20).'); return; }
-    const max = maxDurationForRow(rows, index);
-    if (max !== null && durm(dur) > max) {
-      setError(`Maximum ${mDur(max) || '00:00'} before the locked time.`); return;
-    }
     handleChange(dur);
     closeCustom();
   }
@@ -52,7 +46,7 @@ export default function DurationCell({ index, row }: Props) {
       <select
         ref={selectRef}
         aria-label="Duration"
-        title={max !== null ? `Durations over ${mDur(max) || '00:00'} are unavailable because a time is locked.` : 'Duration'}
+        title="Duration — locked times stay fixed; conflicts are shown below."
         className={`cs${disabled ? ' locked' : ''}${conflict ? ' time-conflict' : ''}`}
         value={row.dur}
         disabled={disabled}
@@ -60,7 +54,7 @@ export default function DurationCell({ index, row }: Props) {
       >
         <option value="">—</option>
         {opts.map((d) => (
-          <option key={d} value={d} disabled={exceedsLock(d)}>{d}</option>
+          <option key={d} value={d}>{d}</option>
         ))}
         <option value="__custom__">Custom…</option>
       </select>
@@ -77,7 +71,7 @@ export default function DurationCell({ index, row }: Props) {
         </label>
         {error && <p role="alert" className="dur-warn">{error}</p>}
       </Modal>}
-      {conflict && <div className="dur-warn">{conflict.msg}</div>}
+      {conflict && <div className="dur-warn" role="status" title={conflict.detail || conflict.msg}>{conflict.msg}</div>}
     </>
   );
 }

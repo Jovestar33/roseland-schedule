@@ -8,11 +8,11 @@ test('custom durations accept exact whole minutes or HH:MM and reject malformed 
  for(const [input,expected] of [['20','00:20'],[' 7 ','00:07'],['1:20','01:20'],['125','02:05'],['0','00:00'],['00:00','00:00']]) assert.equal(parseCustomDuration(input),expected);
  for(const input of ['','-5','1.5','1:75','1:5','abc','1h','Infinity','999999999999999999999']) assert.equal(parseCustomDuration(input),null);
 });
-test('custom duration limits match preset limits at fixed anchors',()=>{
+test('fixed anchors describe available time without removing duration choices',()=>{
  const rows=[makeRow({action:'Shoot',timeIn:'9:00 AM',dur:'00:20'}),makeRow({action:'Shoot',timeIn:'9:30 AM',fixedIn:true,dur:'00:15'})];
  assert.equal(maxDurationForRow(rows,0),30);
  assert.ok(allowedDurationsForRow(rows,0).includes('00:30'));
- assert.ok(!allowedDurationsForRow(rows,0).includes('00:45'));
+ assert.ok(allowedDurationsForRow(rows,0).includes('08:00'));
  rows[0].fixedOut=true; rows[0].fixedOutTime='9:25 AM';
  assert.equal(maxDurationForRow(rows,0),25);
 });

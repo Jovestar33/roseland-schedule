@@ -14,16 +14,21 @@
   .tbl-wrap colgroup .c-dv { width:3px !important; }
   .tbl-wrap colgroup .c-ti, .tbl-wrap colgroup .c-to { width:118px !important; }
   .tbl-wrap colgroup .c-du { width:92px !important; }
-  .tbl-wrap colgroup .c-cb { width:76px !important; }
-  .tbl-wrap colgroup .c-x { width:36px !important; }
+  .tbl-wrap colgroup .c-cb { width:50px !important; }
+  .tbl-wrap colgroup .c-x { width:62px !important; }
   .tbl-wrap .time-cell-wrap { flex-direction:column; gap:3px !important; align-items:center; justify-content:flex-start !important; }
   .tbl-wrap .time-lock-btn {
-    order:2; flex:0 0 28px; width:28px; min-width:28px; height:28px; padding:4px !important;
+    order:2; flex:0 0 24px; width:24px; min-width:24px; height:24px; padding:4px !important;
     display:inline-flex; align-items:center; justify-content:center;
-    border:1px solid var(--g300); background:white; color:var(--g600); opacity:1;
+    border:0; border-radius:4px; background:transparent; color:var(--g600); opacity:1;
   }
-  .tbl-wrap .time-lock-btn::before,.tbl-wrap .time-lock-btn::after { content:none; }
-  .tbl-wrap .time-lock-btn.active { background:var(--row-hover); color:var(--pink-dark); border-color:var(--pink); }
+  .tbl-wrap .time-lock-btn::before,.tbl-wrap .time-lock-btn::after { content:none !important; }
+  .tbl-wrap .time-lock-btn.active { background:transparent; color:var(--pink-dark); }
+  .tbl-wrap .time-lock-btn:hover,.tbl-wrap .time-lock-btn:focus-visible { background:var(--g100); color:var(--pink-dark); }
+  @media (hover:hover) and (pointer:fine) {
+    .tbl-wrap .time-lock-btn:not(.active) { opacity:0; }
+    .tbl-wrap tr:hover .time-lock-btn,.tbl-wrap tr:focus-within .time-lock-btn { opacity:1; }
+  }
   .tbl-wrap td .time-cell-wrap .cs { flex:0 0 auto; width:100% !important; min-width:0 !important; }
   .tbl-wrap td.tc-t .cs { padding:6px 18px 6px 3px !important; min-height:36px; font-size:14px; line-height:1.4; }
   .tbl-wrap .time-cell-wrap :is(.tdsp,.anchor-text) {
@@ -31,17 +36,18 @@
     white-space:nowrap !important; font-size:14px; font-variant-numeric:tabular-nums;
   }
   .tbl-wrap .done-tools { display:flex; align-items:center; justify-content:center; gap:8px; min-height:36px; }
+  .tbl-wrap .row-tools { display:flex; align-items:center; justify-content:center; gap:2px; min-height:36px; }
   .tbl-wrap .done-cb { flex:0 0 18px; width:18px; height:18px; opacity:1; }
-  .tbl-wrap .contact-done-btn { flex:0 0 30px; width:30px; height:30px; display:inline-flex; align-items:center; justify-content:center; padding:0; border:1px solid var(--g400); color:var(--g600); background:white; }
+  .tbl-wrap .contact-done-btn { flex:0 0 28px; width:28px; height:28px; display:inline-flex; align-items:center; justify-content:center; padding:0; border:1px solid var(--g400); color:var(--g600); background:white; }
   .tbl-wrap .contact-done-btn.has-contact { background:var(--pink); color:white; border-color:var(--pink); }
   /* Keep row actions in view while the text columns scroll on a narrow
      window. Explicit cell padding leaves the delete button room in Safari. */
   .tbl-wrap .sched :is(thead,tbody) tr > :nth-child(10) {
-    position:sticky; right:36px; z-index:2; background:var(--g50);
+    position:sticky; right:62px; z-index:2; background:var(--g50);
     box-shadow:-1px 0 0 var(--g200);
   }
   .tbl-wrap .sched :is(thead,tbody) tr > :nth-child(11) {
-    position:sticky; right:0; z-index:2; background:var(--g50); padding:4px !important;
+    position:sticky; right:0; z-index:2; background:var(--g50); padding:4px 2px !important; border-left:1px solid var(--g200);
   }
   .tbl-wrap .sched thead tr > :is(:nth-child(10),:nth-child(11)) { background:var(--black); z-index:3; }
   .tbl-wrap .sched .del-btn { width:28px; min-width:28px; height:32px; padding:0; margin:0; }

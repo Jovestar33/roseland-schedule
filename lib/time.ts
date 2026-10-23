@@ -83,7 +83,7 @@ export function nextFixedAnchorMin(
   return null;
 }
 
-export type ConflictInfo = { kind: string; msg: string };
+export type ConflictInfo = { kind: string; msg: string; detail?: string };
 export type GapInfo = { kind: 'gap' | 'overlap'; minutes: number; msg: string };
 
 // Detect duration conflicts: overrun, fixedOut mismatch, negative duration.
@@ -94,11 +94,15 @@ export function rowConflictInfo(rows: ScheduleRow[], i: number): ConflictInfo | 
   // Natural (duration-only) time out — ignoring fixedOut override
   const tim = t12m(r.timeIn);
   const dur = durm(r.dur);
-  const naturalOut = tim >= 0 && dur > 0 ? m12(tim + dur) : '';
+  const naturalOut = tim >= 0 && r.dur !== '' ? m12(tim + dur) : '';
   const natm = t12m(naturalOut);
 
   if (r.fixedOut && r.fixedOutTime && naturalOut && naturalOut !== r.fixedOutTime) {
-    return { kind: 'fixedOutMismatch', msg: `Duration implies ${naturalOut}; fixed out is ${r.fixedOutTime}.` };
+    const difference = tim + dur - t12m(r.fixedOutTime);
+    return { kind: 'fixedOutMismatch',
+      msg: `${Math.abs(difference)} min ${difference > 0 ? 'over' : 'short of'} locked finish.`,
+      detail: `Planned finish ${naturalOut}; Time Out is locked at ${r.fixedOutTime}. Adjust the duration or unlock the time.`,
+    };
   }
   const next = nextFixedAnchorMin(rows, i);
   if (next && natm >= 0 && natm > next.min) {
@@ -135,10 +139,9 @@ export function maxDurationForRow(rows: ScheduleRow[], i: number): number | null
   return max;
 }
 
-// Keep the preset choices within the same limits used by custom durations.
-export function allowedDurationsForRow(rows: ScheduleRow[], i: number): string[] {
-  const max = maxDurationForRow(rows, i);
-  return max === null ? DURATIONS : DURATIONS.filter(d => !d || durm(d) <= max);
+// Locks constrain the plan, not the available duration choices. Conflicts are advisory.
+export function allowedDurationsForRow(_rows: ScheduleRow[], _i: number): string[] {
+  return [...DURATIONS];
 }
 
 /** Accept whole minutes or hours:minutes, retaining zero as an explicit duration. */
@@ -200,7 +203,7 @@ export function isLocked(rows: ScheduleRow[], i: number): boolean {
 //   sunLocked        — display-only marker; timeIn is set externally; does NOT advance cursor
 //   fixedIn          — timeIn is user-pinned; cursor advances past it but incoming cascade skips it
 //   first editable   — treated like fixedIn: call time is owned by the user, never overwritten
-//   fixedOut         — timeOut is user-pinned via fixedOutTime; dur is back-computed; cursor advances past it
+//   fixedOut         — timeOut is user-pinned via fixedOutTime; preserve requested duration and warn on mismatch
 //   default          — timeIn = previous timeOut; timeOut = timeIn + dur
 export function recalcRows(rows: ScheduleRow[]): ScheduleRow[] {
   const result = rows.map((r) => ({ ...r }));
@@ -227,9 +230,7 @@ export function recalcRows(rows: ScheduleRow[]): ScheduleRow[] {
     if (r.fixedOut && r.fixedOutTime) {
       const fixedOutMins = t12m(r.fixedOutTime);
       if (fixedOutMins >= 0) {
-        if (timeInMins >= 0 && fixedOutMins > timeInMins) {
-          r.dur = mDur(fixedOutMins - timeInMins);
-        }
+        // A locked finish is a boundary, not permission to rewrite planned work.
         cursor = fixedOutMins;
       }
     } else {

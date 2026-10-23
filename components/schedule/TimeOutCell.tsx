@@ -55,7 +55,7 @@ export default function TimeOutCell({ index, row }: Props) {
           type="button"
           aria-pressed={!!row.fixedOut}
           aria-label={row.fixedOut ? 'Unlock time-out' : 'Lock time-out'}
-        title={row.fixedOut ? 'Unlock time-out' : 'Lock time-out'}
+        title={row.fixedOut ? 'Unlock time-out — let it follow the schedule' : 'Lock time-out — keep this time fixed; duration stays editable'}
       >
           {row.fixedOut ? <LockKeyhole size={14} aria-hidden="true" /> : <LockKeyholeOpen size={14} aria-hidden="true" />}
         </button>

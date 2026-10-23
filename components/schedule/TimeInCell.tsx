@@ -47,7 +47,7 @@ export default function TimeInCell({ index, row }: Props) {
           type="button"
           aria-pressed={!!row.fixedIn}
           aria-label={row.fixedIn ? 'Unlock time-in' : 'Lock time-in'}
-          title={row.fixedIn ? 'Unlock time-in' : 'Lock time-in'}
+          title={row.fixedIn ? 'Unlock time-in — let it follow the schedule' : 'Lock time-in — keep this time fixed; duration stays editable'}
         >
           {row.fixedIn ? <LockKeyhole size={14} aria-hidden="true" /> : <LockKeyholeOpen size={14} aria-hidden="true" />}
         </button>

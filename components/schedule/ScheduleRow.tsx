@@ -78,12 +78,7 @@ const ScheduleRow = forwardRef<HTMLTableRowElement, Props>(
         <td className="tc-t">
           <TimeOutCell index={index} row={row} />
         </td>
-        <td>
-          <DoneContactCell index={index} row={row} onOpenContact={onOpenContact} />
-        </td>
-        <td>
-          <button className="del-btn" onClick={handleDelete} title="Delete row">✕</button>
-        </td>
+        <DoneContactCell index={index} row={row} onOpenContact={onOpenContact} onDelete={handleDelete} />
       </tr>
     );
   }

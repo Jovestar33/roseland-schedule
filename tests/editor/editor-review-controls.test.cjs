@@ -28,13 +28,27 @@ test('Places selection fills address, but a later manual address edit wins over 
 test('delayed main and sub-location selections follow row identity after reordering',()=>{
  const h=harness('LocationCell',[row,{action:'Shoot',dur:'00:15',loc:'Other'}]);const main=field(h,'Location name'),sub=field(h,'Sub-location name');main.props.onSelectionStart();sub.props.onSelectionStart();h.store.getState().reorderRows(0,1);main.props.onSelect('Updated museum address',{lat:1,lng:2});sub.props.onSelect('Updated lobby address',{lat:3,lng:4});assert.equal(h.store.getState().rows[1].locAddress,'Updated museum address');assert.equal(h.store.getState().rows[1].subLocations[0].address,'Updated lobby address');assert.equal(h.store.getState().rows[0].loc,'Other');
 });
-test('all 33 quarter-hour durations remain visible; locked-time limits disable choices and reject edits',()=>{
+test('all 33 quarter-hour durations remain visible; locked-time conflicts leave all choices enabled',()=>{
  assert.equal(time.DURATIONS.length,33);assert.deepEqual(time.DURATIONS.map(time.durm),Array.from({length:33},(_,i)=>i*15));
- const h=harness('DurationCell',[row,{action:'Shoot',dur:'00:15',fixedIn:true,timeIn:'10:00 AM'}]);const select=h.find(n=>n.type==='select'),options=nodes(select).filter(n=>n.type==='option');assert.equal(options.length,35);assert.equal(options.find(n=>n.props.value==='08:00').props.disabled,true);assert.equal(options.find(n=>n.props.value==='01:00').props.disabled,false);select.props.onChange({target:{value:'08:00'}});assert.equal(h.store.getState().rows[0].dur,'00:30');select.props.onChange({target:{value:'00:45'}});assert.equal(h.store.getState().rows[0].dur,'00:45');h.store.getState().undo();assert.equal(h.store.getState().rows[0].dur,'00:30');
+ const h=harness('DurationCell',[row,{action:'Shoot',dur:'00:15',fixedIn:true,timeIn:'10:00 AM'}]);const select=h.find(n=>n.type==='select'),options=nodes(select).filter(n=>n.type==='option');assert.equal(options.length,35);assert.ok(options.every(n=>!n.props.disabled));select.props.onChange({target:{value:'08:00'}});assert.equal(h.store.getState().rows[0].dur,'08:00');assert.equal(time.rowConflictInfo(h.store.getState().rows,0).kind,'overrun');h.store.getState().undo();select.props.onChange({target:{value:'00:45'}});assert.equal(h.store.getState().rows[0].dur,'00:45');h.store.getState().undo();assert.equal(h.store.getState().rows[0].dur,'00:30');
 });
 test('Done is reversible, preserves timing, and contact opens independently',()=>{
  const h=harness('DoneContactCell',[row]);h.find(n=>n.props?.['aria-label']==='Mark action done').props.onChange({target:{checked:true}});assert.equal(h.store.getState().rows[0].done,true);assert.equal(h.store.getState().rows[0].timeIn,'9:00 AM');assert.equal(h.store.getState().rows[0].dur,'00:30');h.store.getState().undo();assert.equal(h.store.getState().rows[0].done,false);h.find(n=>n.props?.['aria-label']==='Add contact').props.onClick();assert.equal(h.contactOpened,1);
 });
 test('both time locks expose an icon, accessible state, and reversible toggle',()=>{
  for(const [component,key] of [['TimeInCell','fixedIn'],['TimeOutCell','fixedOut']]){const h=harness(component,[row]);let button=h.find(n=>n.type==='button');assert.equal(button.props['aria-pressed'],false);assert.ok(button.props.children);button.props.onClick();assert.equal(h.store.getState().rows[0][key],true);h.render();button=h.find(n=>n.type==='button');assert.equal(button.props['aria-pressed'],true);button.props.onClick();assert.equal(h.store.getState().rows[0][key],false);}
+});
+
+test('Done and row tools occupy separate cells without an extra table column',()=>{
+ const h=harness('DoneContactCell',[row]),tree=h.render();const cells=nodes(tree).filter(n=>n.type==='td');
+ assert.equal(cells.length,2);assert.equal(nodes(cells[0]).filter(n=>n.type==='button').length,0);assert.equal(nodes(cells[0]).filter(n=>n.type==='input').length,1);
+ assert.equal(nodes(cells[1]).filter(n=>n.type==='button').length,2);assert.equal(nodes(cells[1]).filter(n=>n.type==='input').length,0);
+});
+test('custom durations remain editable with both boundaries locked and warn without rewriting the plan',()=>{
+ const h=harness('DurationCell',[{...row,fixedIn:true,fixedOut:true,fixedOutTime:'10:00 AM'}]);
+ h.find(n=>n.type==='select').props.onChange({target:{value:'__custom__'}});h.render();
+ h.find(n=>n.props?.['aria-label']==='Custom duration').props.onChange({target:{value:'01:37'}});h.render();
+ const modal=h.find(n=>n.props?.title==='Custom duration');nodes(modal.props.footer).find(n=>n.type==='button'&&n.props.children==='Apply').props.onClick();
+ const saved=h.store.getState().rows[0];assert.equal(saved.dur,'01:37');assert.equal(saved.timeIn,'9:00 AM');assert.equal(saved.fixedOutTime,'10:00 AM');assert.equal(time.rowConflictInfo([saved],0).kind,'fixedOutMismatch');
+ h.store.getState().undo();assert.equal(h.store.getState().rows[0].dur,'00:30');h.store.getState().redo();assert.equal(h.store.getState().rows[0].dur,'01:37');
 });

@@ -103,7 +103,7 @@ export default function ScheduleGrid({ onOpenContact, onOpenStatus, onOpenNotes 
                 <th className="tc tp">{colDur}</th>
                 <th className="tc tp">{colTimeOut}</th>
                 <th className="tc">{colDone}</th>
-                <th />
+                <th aria-label="Row tools" />
               </tr>
             </thead>
             <Droppable droppableId="schedule">
