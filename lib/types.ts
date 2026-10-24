@@ -57,7 +57,7 @@ export interface WeatherData {
   noForecast?: boolean;
 }
 
-export type ProductionContactType = 'crew' | 'cast' | 'location' | 'other';
+export type ProductionContactType = 'crew' | 'cast' | 'client' | 'location' | 'other';
 export interface ProductionContact {
   id: string;
   type: ProductionContactType;
@@ -66,13 +66,37 @@ export interface ProductionContact {
   phone: string;
   email: string;
   callTime: string;
+  makeupTime?: string;
+  readyTime?: string;
+  releaseTime?: string;
+  pickup?: string;
+  availability?: string;
+
   directoryScope?: 'organization' | 'production' | 'phase';
   directoryLabel?: string;
   department?: string;
+  company?: string;
   reportTo?: string;
   notes?: string;
 }
 export interface CallSheetData {
+  reportLocation?: string;
+  reportInstructions?: string;
+  primaryContact?: string;
+  primaryPhone?: string;
+  crewCall?: string;
+  firstShot?: string;
+  mealTime?: string;
+  estimatedWrap?: string;
+  timeZone?: string;
+  mealLocation?: string;
+  mealContact?: string;
+  mealHeadcount?: string;
+  departmentNotes?: string;
+  walkieChannels?: string;
+  preparedBy?: string;
+  revisionNotes?: string;
+
   productionOffice?: string;
   hospitalPhone?: string;
   hospitalNotes?: string;

@@ -1,6 +1,6 @@
 'use strict';
 // These new-app details have no legacy editor. Keep them exclusively in Supabase.
-const callSheetFields=['productionOffice','hospitalPhone','hospitalNotes','advanceSchedule'];
+const callSheetFields=['productionOffice','hospitalPhone','hospitalNotes','advanceSchedule','reportLocation','reportInstructions','primaryContact','primaryPhone','crewCall','firstShot','mealTime','estimatedWrap','timeZone','mealLocation','mealContact','mealHeadcount','departmentNotes','walkieChannels','preparedBy','revisionNotes'];
 function split(value){
  const document=structuredClone(value),extensions={};
  if(Object.hasOwn(document.meta,'productionContacts')){extensions.productionContacts=document.meta.productionContacts;delete document.meta.productionContacts;}

@@ -1,4 +1,6 @@
-import type { ScheduleRow, WeatherData } from './types.ts';
+import {t12m} from './time.ts';
+import {computeTimeOut} from './time.ts';
+import type { ScheduleMeta, ScheduleRow, WeatherData } from './types.ts';
 
 export interface CallSheetLine {
   timeIn: string; action: string; description: string; notes: string; keyInstruction: string; cast: string;
@@ -28,14 +30,15 @@ export function callSheetLines(rows: ScheduleRow[]): CallSheetLine[] {
     const locations = [location(row.locName, row.locAddress, row.loc),
       ...(row.subLocations || []).map(sub => location(sub.name, sub.address, sub.loc, sub.desc))]
       .filter(loc => loc.name || loc.address || loc.description);
-    const line = { timeIn: row.timeIn, action: activity(row), description: row.desc || '', notes: row.notes || '', keyInstruction: row.keyInstruction || '', cast: row.cast || '', locations, isSun: !!row.sunLocked };
+    const line = { timeIn: row.timeIn, action: activity(row), description: row.desc?.trim() || '', notes: row.notes?.trim() || '', keyInstruction: row.keyInstruction?.trim() || '', cast: row.cast?.trim() || '', locations, isSun: !!row.sunLocked };
     if (!line.timeIn && !line.action && !line.description && !line.notes && !line.keyInstruction && !line.cast && !locations.length) return [];
     return [{ ...line, long: JSON.stringify(line).length > 1800 }];
   });
 }
 
 export function callSheetWeather(wx: WeatherData | null | undefined): string[] {
-  if (!wx) return [];
+  if (!wx) return ['Forecast not added'];
+  if(wx.noForecast)return ['Forecast unavailable for this date',...(wx.sunrise?[`Sunrise ${wx.sunrise}`]:[]),...(wx.sunset?[`Sunset ${wx.sunset}`]:[])];
   const parts: string[] = [];
   if (wx.cond) parts.push(wx.cond);
   if (wx.minF != null && wx.maxF != null) parts.push(`${wx.minF}–${wx.maxF}°F`);
@@ -44,5 +47,29 @@ export function callSheetWeather(wx: WeatherData | null | undefined): string[] {
   if (wx.prec != null) parts.push(`Precipitation ${wx.prec}%`);
   if (wx.sunrise) parts.push(`Sunrise ${wx.sunrise}`);
   if (wx.sunset) parts.push(`Sunset ${wx.sunset}`);
+  if(wx.fetchedAt&&Number.isFinite(Date.parse(wx.fetchedAt)))parts.push(`Updated ${new Date(wx.fetchedAt).toLocaleString('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'})}`);
   return parts;
+}
+
+/** Derive only labelled events; never relabel a prep time as a crew call. */
+export function callSheetOverview(rows:ScheduleRow[]){
+ const work=rows.filter(r=>!r.sunLocked),find=(test:RegExp)=>work.find(r=>test.test(activity(r)))?.timeIn||'';
+ const last=[...work].reverse().find(r=>r.timeIn);
+ return {crewCall:find(/^crew call$/i),firstShot:find(/shoot|film|interview/i),mealTime:find(/lunch|dinner|meal/i),estimatedWrap:find(/^wrap$/i)||(last?computeTimeOut(last):'')};
+}
+export function callSheetChecks(meta:ScheduleMeta,rows:ScheduleRow[],now=Date.now()):string[]{
+ const cs=meta.callsheet??{},times=callSheetOverview(rows),checks:string[]=[];
+ if(!meta.date)checks.push('Set the shoot date.');
+ if(!cs.crewCall&&!times.crewCall)checks.push('Set a crew call time.');
+ if(!cs.reportLocation?.trim())checks.push('Add the first reporting address.');
+ if(!cs.primaryContact?.trim()||!cs.primaryPhone?.trim())checks.push('Add an on-set contact and phone number.');
+ if(!cs.hospital?.trim())checks.push('Confirm the hospital and emergency directions.');
+ if(!cs.timeZone)checks.push('Choose the location’s time zone.');
+ if(!meta.wx||meta.wx.noForecast)checks.push('A weather forecast is not available.');
+ else if(!meta.wx.fetchedAt||!Number.isFinite(Date.parse(meta.wx.fetchedAt))||now-Date.parse(meta.wx.fetchedAt)>24*60*60*1000)checks.push('Refresh the weather before sharing.');
+ for(const c of meta.productionContacts??[]){
+  if(c.type==='cast'&&!c.callTime)checks.push(`Set an individual call for ${c.name}.`);
+  if(c.callTime&&c.readyTime&&t12m(c.readyTime)<t12m(c.callTime))checks.push(`Check ${c.name}’s arrival and ready-on-set times, including any overnight call.`);
+ }
+ return checks;
 }

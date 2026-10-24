@@ -1,5 +1,14 @@
 # Roseland Schedule — Master Roadmap
 
+## October 23, 2026 — contacts and call-sheet release
+
+- Central Contacts is available from the Library, with production/phase/type/level filters, sorting, shared profiles, and source-schedule links. Existing schedule-row contacts are included without duplicating or changing their source records.
+- Call sheets include reporting and key times, parking/basecamp, hospital/safety, individual crew/cast calls, meals, department and next-day notes, explicit issued versions, expiring recipient links, receipt confirmation, and paginated Letter/A4 printing.
+- New-app contact/call-sheet details stay in Supabase during two-way schedule synchronization; no legacy feature expansion is required.
+- Next: John reviews the updated whole call sheet and Contacts screens, then the functionality pass. Invitations remain on hold until review approval.
+- Future CRM work: contact deduplication/merge review, company records, relationship history, tags, and activity tracking. These are roadmap items, not part of this release.
+- Follow-up requested by John: discuss schedule-editor time functions after this release completes.
+
 ## October 22, 2026 — review follow-up
 
 - [ ] Build a useful, curated production template library after the current UI review. Review the proposed templates with John before publishing them. Wilson v2 is not an approved starter template; retire it from the available template list while retaining its recovery record.

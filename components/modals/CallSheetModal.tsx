@@ -14,8 +14,13 @@ const CallSheetReadOnly = createContext(false);
 import PlacesAutocomplete from '@/components/schedule/PlacesAutocomplete';
 import ProductionContacts,{ProductionContactGroups} from '@/components/local/ProductionContacts';
 import type {ProductionContact} from '@/lib/types';
+import CallSheetPrintPreview,{type CallSheetPrintRequest} from '@/components/print/CallSheetPrintPreview';
+import CallSheetPublishing from '@/components/local/CallSheetPublishing';
+import {useCallSheetPublishing} from '@/components/local/CallSheetPublishingContext';
+import type {ScheduleData} from '@/lib/types';
 import type { CallSheetData } from '@/lib/types';
-import { callSheetCall, callSheetLines, callSheetWeather, type CallSheetLine } from '@/lib/call-sheet';
+import {m12,t12m} from '@/lib/time';
+import { callSheetCall, callSheetLines, callSheetWeather, callSheetOverview, callSheetChecks, type CallSheetLine } from '@/lib/call-sheet';
 
 // ---- Derived-data helpers ----
 
@@ -198,6 +203,17 @@ function Notes({ label, fieldKey, value, onCommit }: {
   );
 }
 
+function TimeField({label,fieldKey,value,onCommit}:{label:string;fieldKey:CSKey;value:string;onCommit:(key:CSKey,value:string)=>void}) {
+ const readOnly=useContext(CallSheetReadOnly),minutes=t12m(value);
+ const clock=minutes<0?'':`${String(Math.floor(minutes/60)).padStart(2,'0')}:${String(minutes%60).padStart(2,'0')}`;
+ return <div className="csh-field"><span className="csh-fl">{label}</span>{readOnly?<strong className="csh-fv">{value||'Not set'}</strong>:<input className="csh-time-input" aria-label={label} type="time" value={clock} onChange={e=>{const [h,m]=e.target.value.split(':').map(Number);onCommit(fieldKey,e.target.value?m12(h*60+m):'');}}/>}</div>;
+}
+function TimeZoneField({value,onCommit}:{value:string;onCommit:(key:CSKey,value:string)=>void}) {
+ const readOnly=useContext(CallSheetReadOnly);
+ const zones=Intl.supportedValuesOf('timeZone');
+ return <div className="csh-field"><span className="csh-fl">Local time zone</span>{readOnly?<span>{value||'Not set'}</span>:<select aria-label="Local time zone" className="csh-fi" value={value} onChange={e=>onCommit('timeZone',e.target.value)}><option value="">Choose time zone…</option>{value&&!zones.includes(value)&&<option>{value}</option>}{zones.map(z=><option key={z}>{z}</option>)}</select>}</div>;
+}
+
 // ---- Print-only document ----
 
 interface PrintDocProps {
@@ -218,13 +234,15 @@ interface PrintDocProps {
   showContacts: boolean;
   productionContacts: ProductionContact[];
   enhanced: boolean;
+  fullDetails?: boolean;
+  overview?: ReturnType<typeof callSheetOverview>;
 }
 
 /** One content order for the editable view and its read-only print portal. */
 function CallSheetDocument({
   scheduleName, formattedDate, dayStr, projectName, phase, prod, dir, dp,
   town, weather, generalCall, lines, cs, contacts, showContacts, productionContacts = [], enhanced = false,
-  print = false, onCommit,
+  print = false, onCommit, fullDetails = true, overview,
 }: PrintDocProps & {print?: boolean; onCommit: (key: CSKey, value: string) => void}) {
   const organizationLogo = useCmsStore(s => s.config.logo);
   const readOnly = useContext(CallSheetReadOnly);
@@ -258,16 +276,23 @@ function CallSheetDocument({
         </div>}
       </div>}
     </header>
-    {!print && !readOnly && <p className="csh-edit-help">Select an underlined detail to edit. Changes save with your schedule.</p>}
-    {(!print || cs.basecamp || cs.parking || cs.hospital || cs.emergency || cs.productionOffice || cs.hospitalPhone || cs.hospitalNotes) && <section className="csh-section">
-      <h2 className="csh-sh">Arrival &amp; emergency</h2>
+    {!print && !readOnly && <p className="csh-edit-help">Edit details below, then save your schedule. Use Print to review or save a PDF.</p>}
+    {enhanced&&<section className="csh-section csh-overview" id={print?undefined:'csh-overview'} aria-label="Day at a glance">
+      <h2 className="csh-sh">Day at a glance</h2>
+      <div className="csh-day-times"><TimeField label="Crew call" fieldKey="crewCall" value={cs.crewCall||overview?.crewCall||''} onCommit={onCommit}/><TimeField label="First filming" fieldKey="firstShot" value={cs.firstShot||overview?.firstShot||''} onCommit={onCommit}/><TimeField label="Meal" fieldKey="mealTime" value={cs.mealTime||overview?.mealTime||''} onCommit={onCommit}/><TimeField label="Estimated wrap" fieldKey="estimatedWrap" value={cs.estimatedWrap||overview?.estimatedWrap||''} onCommit={onCommit}/></div>
+      {!print&&!readOnly&&<p className="csh-edit-help">Times follow the schedule unless you enter an override here.</p>}
+      <div className="csh-report-grid"><div><LocationField label="First reporting location / address" fieldKey="reportLocation" value={cs.reportLocation??''} onCommit={onCommit}/>{(!print||cs.reportInstructions)&&<Notes label="Entrance / arrival instructions" fieldKey="reportInstructions" value={cs.reportInstructions??''} onCommit={onCommit}/>}</div><div><Field label="On-set contact" fieldKey="primaryContact" value={cs.primaryContact??''} onCommit={onCommit}/><Field label="On-set phone" fieldKey="primaryPhone" value={cs.primaryPhone??''} onCommit={onCommit}/><TimeZoneField value={cs.timeZone??''} onCommit={onCommit}/></div></div>
+    </section>}
+    {(!print || cs.basecamp || cs.parking || cs.hospital || cs.emergency || cs.productionOffice || cs.hospitalPhone || cs.hospitalNotes) && <section className="csh-section" id={print?undefined:'csh-arrival'}>
+      <h2 className="csh-sh">Arrival &amp; parking</h2>
       <div className="csh-logistics-grid">
         <div className="csh-fields">
           {enhanced&&(!print||cs.productionOffice)&&<Field label="Production office / contact" fieldKey="productionOffice" value={cs.productionOffice??''} onCommit={onCommit}/>}
           {(!print || cs.basecamp) && <LocationField label="Basecamp" fieldKey="basecamp" value={cs.basecamp ?? ''} onCommit={onCommit} />}
           {(!print || cs.parking) && <LocationField label="Crew Parking" fieldKey="parking" value={cs.parking ?? ''} onCommit={onCommit} />}
         </div>
-        <div className="csh-fields">
+        <div className="csh-fields csh-emergency">
+          <h3>Hospital &amp; emergency</h3>
           {(!print || cs.hospital) && <LocationField label="Nearest Hospital" fieldKey="hospital" value={cs.hospital ?? ''} onCommit={onCommit} />}
           {enhanced&&(!print||cs.hospitalPhone)&&<Field label="Hospital phone" fieldKey="hospitalPhone" value={cs.hospitalPhone??''} onCommit={onCommit}/>}
           {enhanced&&(!print||cs.hospitalNotes)&&<Notes label="Hospital / emergency directions" fieldKey="hospitalNotes" value={cs.hospitalNotes??''} onCommit={onCommit}/>}
@@ -275,19 +300,19 @@ function CallSheetDocument({
         </div>
       </div>
     </section>}
-    {(!print || cs.safetyNotes || cs.specialInstructions) && <section className="csh-section csh-bulletin">
+    {(!print || cs.safetyNotes || cs.specialInstructions) && <section className="csh-section csh-bulletin" id={print?undefined:'csh-safety'}>
       <h2 className="csh-sh">Safety &amp; instructions</h2>
       <div className="csh-bulletin-grid">
         {(!print || cs.safetyNotes) && <Notes label="Safety Notes" fieldKey="safetyNotes" value={cs.safetyNotes ?? ''} onCommit={onCommit} />}
         {(!print || cs.specialInstructions) && <Notes label="Special Instructions" fieldKey="specialInstructions" value={cs.specialInstructions ?? ''} onCommit={onCommit} />}
       </div>
     </section>}
-    {enhanced&&(!print||productionContacts.some(c=>c.type==='crew'||c.type==='cast'))&&<section className="csh-section"><h2 className="csh-sh">Crew &amp; cast calls</h2>
+    {enhanced&&(!print||productionContacts.some(c=>c.type==='crew'||c.type==='cast'))&&<section className="csh-section" id={print?undefined:'csh-people'}><h2 className="csh-sh">Crew &amp; cast calls</h2>
       <ProductionContactGroups contacts={productionContacts.filter(c=>c.type==='crew'||c.type==='cast')} showPrivate={showContacts}/>
       {!productionContacts.some(c=>c.type==='crew'||c.type==='cast')&&!print&&<p className="csh-empty">Add crew and cast contacts below to include individual call times.</p>}
-      {!print&&!readOnly&&<details className="pc-manage"><summary>Edit production contacts</summary><ProductionContacts/></details>}
+      {!print&&!readOnly&&<details className="pc-manage"><summary>Add or edit people &amp; individual calls</summary><ProductionContacts/></details>}
     </section>}
-    <section className="csh-section">
+    <section className="csh-section" id={print?undefined:'csh-schedule'}>
       <h2 className="csh-sh">Day schedule</h2>
       {lines.length ? <table className="csh-sched-table csh-pdoc-sched">
         <colgroup><col className="csh-time-col" /><col /><col className="csh-location-col" /></colgroup>
@@ -295,7 +320,7 @@ function CallSheetDocument({
         <tbody>{lines.map((l, i) => <tr key={i} className={`${l.isSun ? 'csh-sun-row' : 'csh-sched-row'}${l.long ? ' csh-long-row' : ''}`}>
           <td className="csh-td-t">{l.timeIn}</td>
           <td className="csh-td-a"><strong>{l.action}</strong>
-            {l.description && <span className="csh-work-description">{l.description}</span>}
+            {fullDetails && l.description && <span className="csh-work-description">{l.description}</span>}
             {l.keyInstruction && <span className="csh-work-notes"><strong>Key instruction: {l.keyInstruction}</strong></span>}
             {l.cast && <span className="csh-work-notes"><b>Cast: </b>{l.cast}</span>}
             {l.notes && <span className="csh-work-notes"><b>Notes: </b>{l.notes}</span>}
@@ -307,14 +332,20 @@ function CallSheetDocument({
         </tr>)}</tbody>
       </table> : <p className="csh-empty">No scheduled activity.</p>}
     </section>
-    {(!print || cs.mealNotes || cs.notes) && <section className="csh-section">
-      <h2 className="csh-sh">Production notes</h2>
-      <div className="csh-fields csh-production-notes">
-        {(!print || cs.mealNotes) && <Notes label="Meal Notes" fieldKey="mealNotes" value={cs.mealNotes ?? ''} onCommit={onCommit} />}
-        {(!print || cs.notes) && <Notes label="General Notes" fieldKey="notes" value={cs.notes ?? ''} onCommit={onCommit} />}
-      </div>
+    {(!print || cs.mealNotes || cs.mealLocation || cs.mealContact || cs.mealHeadcount) && <section className="csh-section" id={print?undefined:'csh-meals'}>
+      <h2 className="csh-sh">Meals</h2><div className="csh-logistics-grid"><div>
+        {enhanced&&(!print||cs.mealLocation)&&<LocationField label="Meal location" fieldKey="mealLocation" value={cs.mealLocation??''} onCommit={onCommit}/>}
+        {(!print||cs.mealNotes)&&<Notes label="Meal notes" fieldKey="mealNotes" value={cs.mealNotes??''} onCommit={onCommit}/>}</div><div>
+        {enhanced&&(!print||cs.mealContact)&&<Field label="Catering contact" fieldKey="mealContact" value={cs.mealContact??''} onCommit={onCommit}/>}
+        {enhanced&&(!print||cs.mealHeadcount)&&<Field label="Expected headcount" fieldKey="mealHeadcount" value={cs.mealHeadcount??''} onCommit={onCommit}/>}</div></div>
     </section>}
-    {enhanced&&(!print||cs.advanceSchedule)&&<section className="csh-section"><h2 className="csh-sh">Next day / advance schedule</h2><Notes label="Advance notes" fieldKey="advanceSchedule" value={cs.advanceSchedule??''} onCommit={onCommit}/></section>}
+    {(!print||cs.notes||cs.departmentNotes||cs.walkieChannels||cs.advanceSchedule)&&<section className="csh-section" id={print?undefined:'csh-notes'}><h2 className="csh-sh">Notes &amp; next day</h2><div className="csh-bulletin-grid"><div>
+      {(!print||cs.notes)&&<Notes label="General notes" fieldKey="notes" value={cs.notes??''} onCommit={onCommit}/>}
+      {enhanced&&(!print||cs.departmentNotes)&&<Notes label="Department notes" fieldKey="departmentNotes" value={cs.departmentNotes??''} onCommit={onCommit}/>}
+      {enhanced&&(!print||cs.walkieChannels)&&<Notes label="Walkie channels" fieldKey="walkieChannels" value={cs.walkieChannels??''} onCommit={onCommit}/>}</div><div>
+      {enhanced&&(!print||cs.advanceSchedule)&&<Notes label="Next day / advance notes" fieldKey="advanceSchedule" value={cs.advanceSchedule??''} onCommit={onCommit}/>}</div></div>
+    </section>}
+    {enhanced&&(!print||cs.preparedBy||cs.revisionNotes)&&<section className="csh-section csh-prepared"><h2 className="csh-sh">Prepared by &amp; changes</h2><Field label="Prepared by" fieldKey="preparedBy" value={cs.preparedBy??''} onCommit={onCommit}/>{(!print||cs.revisionNotes)&&<Notes label="Changes for this version" fieldKey="revisionNotes" value={cs.revisionNotes??''} onCommit={onCommit}/>}</section>}
     {enhanced&&showContacts&&<ProductionContactGroups contacts={productionContacts.filter(c=>c.type!=='crew'&&c.type!=='cast')} showPrivate/>}
     {showContacts && (!print||contacts.length>0||!enhanced) && <section className="csh-section">
       <h2 className="csh-sh">Schedule contacts</h2>
@@ -341,8 +372,11 @@ export default function CallSheetModal({ open, onClose, readOnly = false, author
   const updateMeta   = useScheduleStore((s) => s.updateMeta);
 
   const local = useLocalEditor();
+  const publishing=useCallSheetPublishing();
   const visible = useContext(ModalVisibilityContext);
   const [showContacts, setShowContacts] = useState(false);
+  const [fullDetails,setFullDetails]=useState(true);
+  const [printRequest,setPrintRequest]=useState<CallSheetPrintRequest|null>(null);
 
   // Reset contacts toggle to OFF each time the modal opens
   useEffect(() => {
@@ -351,7 +385,9 @@ export default function CallSheetModal({ open, onClose, readOnly = false, author
 
   const cs          = meta.callsheet ?? {};
   const lines       = callSheetLines(rows);
-  const generalCall = callSheetCall(rows);
+  const generalCall = cs.crewCall ? {label:'Crew Call',time:cs.crewCall} : callSheetCall(rows);
+  const overview = callSheetOverview(rows);
+  const checks=callSheetChecks(meta,rows);
   const contacts    = documentContacts(rows);
   const weather     = callSheetWeather(meta.wx);
   const dayStr      = buildDayStr(meta.dayNumber, meta.totalDays);
@@ -386,28 +422,32 @@ export default function CallSheetModal({ open, onClose, readOnly = false, author
               />
               {' Include contact details'}
             </label>
+            {local&&<label className="csh-contacts-toggle"><input type="checkbox" checked={fullDetails} onChange={e=>setFullDetails(e.target.checked)}/> Full shooting descriptions</label>}
             <button
               type="button"
               className="btn btn-light btn-sm"
-              onClick={async()=>{if(!authorizeOutput||await authorizeOutput())void printDocument(scheduleName,'callsheet',local);}}
+              onClick={async()=>{if(authorizeOutput&&!await authorizeOutput())return;if(local)setPrintRequest({name:scheduleName,data:structuredClone(useScheduleStore.getState().getScheduleData()),options:{contacts:showContacts,details:fullDetails}});else void printDocument(scheduleName,'callsheet',false);}}
             >
               🖨 Print
             </button>
           </>
         }
       >
-        <CallSheetDocument scheduleName={scheduleName} formattedDate={formattedDate} dayStr={dayStr}
+        {local&&<><nav className="csh-section-nav" aria-label="Call sheet sections">{[['overview','Overview'],['arrival','Arrival & parking'],['safety','Safety'],['people','People & calls'],['schedule','Schedule'],['meals','Meals'],['notes','Notes & next day'],...(publishing?[["issue","Issue & share"]]:[])].map(([id,label])=><button type="button" key={id} onClick={()=>document.getElementById('csh-'+id)?.scrollIntoView({block:'start',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'})}>{label}</button>)}</nav>{!readOnly&&checks.length>0&&<details className="csh-readiness"><summary>{checks.length} {checks.length===1?'detail':'details'} to review before sharing</summary><ul>{checks.map(check=><li key={check}>{check}</li>)}</ul></details>}</>}
+        <CallSheetDocument fullDetails={fullDetails} overview={overview} scheduleName={scheduleName} formattedDate={formattedDate} dayStr={dayStr}
           projectName={meta.projectName} phase={meta.phase} prod={meta.prod} dir={meta.dir} dp={meta.dp}
           town={meta.town} weather={weather} generalCall={generalCall} lines={lines} cs={cs}
           contacts={contacts} showContacts={showContacts} productionContacts={meta.productionContacts??[]} enhanced={local} onCommit={commit} />
+        {local&&publishing&&<CallSheetPublishing includeContacts={showContacts} fullDetails={fullDetails} checks={checks} renderEdition={value=><IssuedCallSheet value={value}/>}/>}
       </Modal>
 
+      {printRequest&&<CallSheetPrintPreview request={printRequest} onClose={()=>setPrintRequest(null)} authorize={authorizeOutput}/>}
       {/* Print portal — rendered on document.body, outside modal DOM */}
       {open && visible && typeof document !== 'undefined' && createPortal(
         <div className="callsheet-print-only">
           <DocumentPrintFurniture name={scheduleName} date={formattedDate} kind="Call Sheet" />
           <CallSheetReadOnly.Provider value={true}>
-            <CallSheetDocument print scheduleName={scheduleName} formattedDate={formattedDate} dayStr={dayStr}
+            <CallSheetDocument print fullDetails={fullDetails} overview={overview} scheduleName={scheduleName} formattedDate={formattedDate} dayStr={dayStr}
           projectName={meta.projectName} phase={meta.phase} prod={meta.prod} dir={meta.dir} dp={meta.dp}
           town={meta.town} weather={weather} generalCall={generalCall} lines={lines} cs={cs}
           contacts={contacts} showContacts={showContacts} productionContacts={meta.productionContacts??[]} enhanced={local} onCommit={commit} />
@@ -417,4 +457,10 @@ export default function CallSheetModal({ open, onClose, readOnly = false, author
       )}
     </CallSheetReadOnly.Provider>
   );
+}
+
+export interface IssuedCallSheetData {name:string;document:ScheduleData;edition:number;created_at:string;include_contacts:boolean;full_details:boolean;acknowledged?:boolean;recipient?:boolean}
+export function IssuedCallSheet({value}:{value:IssuedCallSheetData}){
+ const {meta,rows}=value.document,cs=meta.callsheet??{};
+ return <CallSheetReadOnly.Provider value={true}><div className="csh-issued-stamp"><strong>{value.edition===1?'Issued':'Revised'} · Version {value.edition}</strong><span>{new Date(value.created_at).toLocaleString()}</span></div><CallSheetDocument scheduleName={value.name} formattedDate={dateLabel(meta.date)} dayStr={buildDayStr(meta.dayNumber,meta.totalDays)} projectName={meta.projectName} phase={meta.phase} prod={meta.prod} dir={meta.dir} dp={meta.dp} town={meta.town} weather={callSheetWeather(meta.wx)} generalCall={cs.crewCall?{label:'Crew Call',time:cs.crewCall}:callSheetCall(rows)} lines={callSheetLines(rows)} cs={cs} contacts={documentContacts(rows)} showContacts={value.include_contacts} productionContacts={meta.productionContacts??[]} enhanced fullDetails={value.full_details} overview={callSheetOverview(rows)} onCommit={()=>{}} print/></CallSheetReadOnly.Provider>;
 }

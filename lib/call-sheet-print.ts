@@ -1,0 +1,48 @@
+import type {ScheduleData} from './types';
+import {wrapPrintText,escapePrintHtml,type MeasureText} from './schedule-print-layout';
+import {callSheetCall,callSheetLines,callSheetOverview,callSheetWeather} from './call-sheet';
+import {dateLabel} from './date-label';
+export interface CallSheetPrintOptions {contacts:boolean;details:boolean;edition?:number;issuedAt?:string;paper?:'letter'|'a4'}
+interface Row {cells:string[][];continued:boolean;label:string}
+interface Section {title:string;heads:string[];widths:number[];rows:Row[]}
+interface Page {sections:Section[]}
+export interface CallSheetPrintLayout {pages:Page[];width:number;height:number;name:string;identity:string[];options:CallSheetPrintOptions;preparedBy:string}
+const PAD=36,LINE=17,ROW=14,HEAD=45,HEADER=65,FOOT=32;
+export function layoutCallSheetPrint(data:ScheduleData,name:string,options:CallSheetPrintOptions,measure:MeasureText):CallSheetPrintLayout{
+ const width=options.paper==='a4'?793.7:816,height=options.paper==='a4'?1122.52:1056,contentWidth=width-PAD*2,capacity=height-PAD*2-HEADER-FOOT;
+ const pages:Page[]=[{sections:[]}];let used=0;
+ const meta=data.meta,cs=meta.callsheet??{},times=callSheetOverview(data.rows);
+ function section(title:string,heads:string[],ratios:number[],values:string[][]){
+  if(!values.length)return;const widths=ratios.map(n=>n*contentWidth);let group:Section|null=null;
+  const newPage=()=>{pages.push({sections:[]});used=0;group=null;};
+  function ensure(){if(!group){group={title,heads,widths,rows:[]};pages.at(-1)!.sections.push(group);used+=HEAD;}}
+  for(const valuesRow of values){
+   const cells=valuesRow.map((text,i)=>wrapPrintText(text||'',widths[i]-16,t=>measure(t,false,13))),total=Math.max(1,...cells.map(c=>c.length)),rowHeight=total*LINE+ROW;
+   if(used&&used+(group?0:HEAD)+rowHeight>capacity&&rowHeight+HEAD<=capacity)newPage();
+   let offset=0;
+   while(offset<total){if(capacity-used-(group?0:HEAD)-ROW<LINE)newPage();ensure();const extra=offset>0?LINE:0;const count=Math.min(total-offset,Math.floor((capacity-used-ROW-extra)/LINE));if(count<1)throw Error('Unable to fit call-sheet content.');group!.rows.push({cells:cells.map((c,i)=>offset>0?[i===0?'(continued)':'',...c.slice(offset,offset+count)]:c.slice(offset,offset+count)),continued:offset>0,label:valuesRow[0]});used+=count*LINE+ROW+extra;offset+=count;if(offset<total)newPage();}
+  }
+ }
+ const fields=(pairs:(string|undefined)[][])=>pairs.filter(([,v])=>v?.trim()).map(([label,value])=>[label!,value!.trim()]);
+ section('Day at a glance',['Detail','Instructions'],[.24,.76],fields([
+ ['Production',[meta.projectName,meta.phase,meta.dayNumber?`Day ${meta.dayNumber}${meta.totalDays?` of ${meta.totalDays}`:''}`:''].filter(Boolean).join(' · ')],
+ ['Key times',`Crew call: ${cs.crewCall||times.crewCall||'Not set'}   ·   First filming: ${cs.firstShot||times.firstShot||'Not set'}\nMeal: ${cs.mealTime||times.mealTime||'Not set'}   ·   Estimated wrap: ${cs.estimatedWrap||times.estimatedWrap||'Not set'}`],
+ ['Report to',cs.reportLocation||'Reporting location not set'],['Arrival',cs.reportInstructions],['On-set contact',[cs.primaryContact,cs.primaryPhone].filter(Boolean).join(' · ')||'On-set contact not set'],['Local time zone',cs.timeZone],['Production team',[meta.prod&&`Producer: ${meta.prod}`,meta.dir&&`Director: ${meta.dir}`,meta.dp&&`Camera: ${meta.dp}`].filter(Boolean).join('\n')],['Weather',callSheetWeather(meta.wx).join(' · ')]
+ ]));
+ section('Arrival, parking & safety',['Detail','Instructions'],[.24,.76],fields([['Production office',cs.productionOffice],['Basecamp',cs.basecamp],['Crew parking',cs.parking],['Hospital',cs.hospital],['Hospital phone',cs.hospitalPhone],['Emergency directions',cs.hospitalNotes],['Emergency contact',cs.emergency],['Safety',cs.safetyNotes],['Special instructions',cs.specialInstructions]]));
+ for(const [type,title] of [['crew','Crew calls'],['cast','Cast / participant calls'],['client','Client'],['location','Location contacts'],['other','Other contacts']]){
+  const people=(meta.productionContacts??[]).filter(c=>c.type===type);if(!['crew','cast'].includes(type)&&!options.contacts)continue;
+  section(title,options.contacts?['Name / role','Individual call & instructions','Contact']:['Name / role','Individual call & instructions'],options.contacts?[.27,.45,.28]:[.34,.66],people.map(c=>[[c.name,c.role,c.company,c.department].filter(Boolean).join('\n'),[c.callTime&&`Call: ${c.callTime}`,c.makeupTime&&`Hair / makeup: ${c.makeupTime}`,c.readyTime&&`Ready on set: ${c.readyTime}`,c.releaseTime&&`Est. release: ${c.releaseTime}`,c.reportTo&&`Report to: ${c.reportTo}`,c.pickup&&`Pickup: ${c.pickup}`,c.availability&&`Availability: ${c.availability}`,c.notes].filter(Boolean).join('\n'),...(options.contacts?[[c.phone,c.email].filter(Boolean).join('\n')]:[])]));
+ }
+ section('Day schedule',['Time','Activity / instructions','Location'],[.12,.55,.33],callSheetLines(data.rows).map(l=>[l.timeIn,[l.action,options.details?l.description:'',l.keyInstruction&&`KEY: ${l.keyInstruction}`,l.cast&&`Cast: ${l.cast}`,l.notes&&`Notes: ${l.notes}`].filter(Boolean).join('\n'),l.locations.map(loc=>[loc.name,loc.address,loc.description].filter(Boolean).join('\n')).join('\n\n')]));
+ section('Meals',['Detail','Instructions'],[.24,.76],fields([['Meal time',cs.mealTime||times.mealTime],['Location',cs.mealLocation],['Catering contact',cs.mealContact],['Headcount',cs.mealHeadcount],['Notes',cs.mealNotes]]));
+ section('Notes & next day',['Detail','Instructions'],[.24,.76],fields([['Department notes',cs.departmentNotes],['Walkie channels',cs.walkieChannels],['General notes',cs.notes],['Next day / advance',cs.advanceSchedule],['Prepared by',cs.preparedBy],['Changes',cs.revisionNotes]]));
+ if(options.contacts){const seen=new Set<string>();section('Schedule contacts',['Name / role','Phone','Email'],[.4,.25,.35],data.rows.flatMap(r=>{if(!r.contactName&&!r.contactPhone&&!r.contactEmail)return[];const cells=[[r.contactName,r.contactTitle].filter(Boolean).join('\n'),r.contactPhone,r.contactEmail],key=JSON.stringify(cells);if(seen.has(key))return[];seen.add(key);return[cells];}));}
+ const identity=wrapPrintText(`${name||'Call sheet'} · ${dateLabel(meta.date)}`,contentWidth-180,t=>measure(t,true,12));if(identity.length>3)throw Error('The schedule name is too long for the continuation header. Shorten it before printing.');
+ return{pages,width,height,name,identity,options,preparedBy:cs.preparedBy??''};
+}
+export function renderCallSheetPrint(layout:CallSheetPrintLayout):string{
+ const esc=escapePrintHtml,lines=(text:string[])=>text.map(t=>`<span class="line">${esc(t)||'&nbsp;'}</span>`).join('');
+ const status=layout.options.edition?`${layout.options.edition===1?'Issued':'Revised'} · Version ${layout.options.edition}`:'Draft';
+ return `<!doctype html><html lang="en"><head><meta charset="utf-8"><title>${esc(layout.name)} — Call sheet</title><style>@page{size:${layout.options.paper==='a4'?'A4':'letter'} portrait;margin:0}*{box-sizing:border-box}html,body{margin:0;padding:0;font:13px Arial,Helvetica,sans-serif;color:#202025;background:#eee}.paper{background:white;position:relative;width:${layout.width}px;height:${layout.height}px;padding:${PAD}px;margin:16px auto;break-after:page;page-break-after:always}.paper:last-child{break-after:auto;page-break-after:auto}.identity{height:${HEADER}px;border-bottom:2px solid #9d1468;margin:0;display:flex;justify-content:space-between;font-size:12px}.identity>div:first-child{min-width:0}.identity>div:last-child{text-align:right;max-width:176px;font-size:11px}.identity b{display:block;font-size:16px;margin-bottom:6px}.section{padding:0;margin:0}h2{height:24px;padding:6px 0 3px;margin:0;font-size:13px;line-height:15px}table{border-collapse:collapse;table-layout:fixed;width:100%}th{text-align:left;height:21px;padding:3px 7px;font:600 11px Arial;background:#f3edf1;color:#41353d;line-height:15px}td{padding:6px 7px;border-bottom:2px solid #e6e3e5;vertical-align:top;line-height:${LINE}px}.line{display:block;height:${LINE}px;line-height:${LINE}px;white-space:pre}.continued{color:#666;font-size:10px;float:right;margin-right:2px}footer{position:absolute;bottom:${PAD}px;left:${PAD}px;right:${PAD}px;display:flex;justify-content:space-between;border-top:1px solid #ccc;padding-top:7px;font-size:10px;height:24px}@media print{html,body{background:white}.paper{margin:0}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}}</style></head><body>${layout.pages.map((page,i)=>`<section class="paper"><header class="identity"><div><b>Call sheet${i?' · continued':''}</b>${lines(layout.identity)}</div><div><strong>${esc(status)}</strong>${layout.options.issuedAt?`<div>${esc(new Date(layout.options.issuedAt).toLocaleString())}</div>`:''}</div></header>${page.sections.map(s=>`<section class="section"><h2>${esc(s.title)}</h2><table><colgroup>${s.widths.map(w=>`<col style="width:${w}px">`).join('')}</colgroup><thead><tr>${s.heads.map(h=>`<th>${esc(h)}</th>`).join('')}</tr></thead><tbody>${s.rows.map(r=>`<tr>${r.cells.map((c,j)=>`<td>${lines(c)}</td>`).join('')}</tr>`).join('')}</tbody></table></section>`).join('')}<footer><span>${esc(status)} · ${layout.options.details?'Full shooting details':'Daily instructions'}</span><span>Page ${i+1} of ${layout.pages.length}</span></footer></section>`).join('')}</body></html>`;
+}

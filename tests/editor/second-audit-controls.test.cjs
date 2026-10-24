@@ -45,6 +45,10 @@ function fixture(file, component, props = {}, options = {}) {
   const mocks={
     react,
     'react-dom':{createPortal:()=>null},
+    '@/components/print/CallSheetPrintPreview':{default:()=>null},
+    '@/components/local/CallSheetPublishing':{default:()=>null},
+    '@/components/local/CallSheetPublishingContext':{useCallSheetPublishing:()=>null},
+    '@/lib/time':require('./source-loader.cjs').sourceLoader()('lib/time.ts'),
     '@/components/local/ProductionContacts':{default:function ProductionContacts(){},ProductionContactGroups:function ProductionContactGroups(){}},
     '@/lib/store/scheduleStore':{useScheduleStore:select=>select(schedule)},
     '@/lib/store/cmsStore':{useCmsStore:select=>select({config:{}})},
@@ -78,7 +82,7 @@ function fixture(file, component, props = {}, options = {}) {
   return {render,context,get tree(){return tree;},get focusCount(){return focusCount;},find:predicate=>nodes(tree).find(predicate),all:()=>nodes(tree),dispose(){for(const h of hooks)h?.cleanup?.();}};
 }
 const callFile='components/modals/CallSheetModal.tsx';
-const fields=[['LocationField','Basecamp','basecamp'],['LocationField','Crew Parking','parking'],['LocationField','Nearest Hospital','hospital'],['Field','Emergency Contact','emergency'],['Notes','Safety Notes','safetyNotes'],['Notes','Special Instructions','specialInstructions'],['Notes','Meal Notes','mealNotes'],['Notes','General Notes','notes']];
+const fields=[['LocationField','Basecamp','basecamp'],['LocationField','Crew Parking','parking'],['LocationField','Nearest Hospital','hospital'],['Field','Emergency Contact','emergency'],['Notes','Safety Notes','safetyNotes'],['Notes','Special Instructions','specialInstructions'],['Notes','Meal notes','mealNotes'],['Notes','General notes','notes']];
 
 test('the actual Call Sheet renders all eight tested field types and carries the read-only boundary',()=>{
   const f=fixture(callFile,'default',{open:true,readOnly:true,onClose:()=>{}},{local:false});

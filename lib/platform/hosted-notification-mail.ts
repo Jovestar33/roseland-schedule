@@ -6,9 +6,9 @@ export function readNotificationMailConfig(env:NodeJS.ProcessEnv=process.env){
  const host=env.ROSELAND_SMTP_HOST,port=Number(env.ROSELAND_SMTP_PORT);
  const user=env.ROSELAND_SMTP_USERNAME,password=env.ROSELAND_SMTP_PASSWORD,from=env.ROSELAND_SMTP_FROM;
  // This deployment is authorized to send from John's Roseland alias only.
- if(env.ROSELAND_HOSTED_NOTIFICATIONS!=='smtp'||!host||!['smtp.zoho.com','smtppro.zoho.com'].includes(host)||![465,587].includes(port)||user!=='john@roseland-pictures.com'||from!=='action@roseland-pictures.com'||!password)
+ if(env.ROSELAND_HOSTED_NOTIFICATIONS!=='smtp'||!host||!['smtp.zoho.com','smtppro.zoho.com'].includes(host)||![465,587].includes(port)||!['john@salukimedia.com','john@roseland-pictures.com'].includes(user??'')||from!=='action@roseland-pictures.com'||!password)
   throw new PlatformHttpError(503,'Notification delivery unavailable');
- return {host,port,user,password,from};
+ return {host,port,user:user!,password,from};
 }
 export async function sendHostedNotification(config:ReturnType<typeof readNotificationMailConfig>,message:{recipient:string;event:string;subject:string;text:string}):Promise<boolean>{
  if(!/^[^\s<>@,;]+@[^\s<>@,;]+\.[^\s<>@,;]+$/.test(message.recipient)||message.recipient.length>254)throw new Error('Invalid notification recipient');

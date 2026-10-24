@@ -6,7 +6,8 @@ import type { NextRequest } from 'next/server';
 const AUTH_COOKIE = 'rp_auth_flag';
 
 function isPublicPath(pathname: string): boolean {
-  return pathname === '/workspace' // Hosted configuration gate and Supabase-authenticated workspace.
+  return pathname === '/call-sheet' || pathname === '/api/call-sheet/read' || pathname === '/api/call-sheet/email'
+    || pathname === '/workspace' // Hosted configuration gate and Supabase-authenticated workspace.
     || pathname === '/api/trial-sync/tick' // Independently gated production cron endpoint.
     || pathname === '/api/trial-sync/review' // Independently verifies Owner/MFA and exact conflict versions.
     || pathname === '/api/trial-sync/preview' // Independently verifies organization Owner, session and MFA.
@@ -50,7 +51,7 @@ export function middleware(request: NextRequest) {
   // screens or interpret legacy schedule query parameters on the Vercel site.
   if (process.env.ROSELAND_HOSTED_APP === 'supabase' && process.env.VERCEL === '1') {
     if (pathname === '/' || pathname === '/login') return redirect(request, '/workspace');
-    if (pathname !== '/workspace' && pathname !== '/client' && pathname !== '/api/trial-sync/tick' && pathname !== '/api/trial-sync/review' && pathname !== '/api/trial-sync/preview' && !pathname.startsWith('/api/platform/')) {
+    if (pathname !== '/workspace' && pathname !== '/call-sheet' && pathname !== '/api/call-sheet/read' && pathname !== '/api/call-sheet/email' && pathname !== '/client' && pathname !== '/api/trial-sync/tick' && pathname !== '/api/trial-sync/review' && pathname !== '/api/trial-sync/preview' && !pathname.startsWith('/api/platform/')) {
       return new NextResponse(null, {status:404});
     }
     const response = NextResponse.next();

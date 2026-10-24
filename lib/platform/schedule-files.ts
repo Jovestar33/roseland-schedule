@@ -26,15 +26,15 @@ export function validateFileDocument(doc: unknown): asserts doc is Doc {
       if (!Array.isArray(v)||v.length>300) invalid('Invalid production contacts.');
       const ids=new Set<string>();
       for(const c of v){
-        if(!object(c)||typeof c.id!=='string'||!c.id.trim()||c.id.length>100||ids.has(c.id)||!['crew','cast','location','other'].includes(String(c.type))||typeof c.name!=='string'||!c.name.trim()) invalid('Invalid production contact.');
+        if(!object(c)||typeof c.id!=='string'||!c.id.trim()||c.id.length>100||ids.has(c.id)||!['crew','cast','client','location','other'].includes(String(c.type))||typeof c.name!=='string'||!c.name.trim()) invalid('Invalid production contact.');
         if(['role','phone','email','callTime'].some(field=>typeof c[field]!=='string')) invalid('Missing contact field.');
         if(('directoryScope' in c || 'directoryLabel' in c) && (!['organization','production','phase'].includes(String(c.directoryScope)) || typeof c.directoryLabel!=='string' || !c.directoryLabel.trim())) invalid('Invalid contact source.');
         ids.add(c.id);
-        for(const [field,x] of Object.entries(c)) if(!'id type name role phone email callTime department reportTo notes directoryScope directoryLabel'.split(' ').includes(field)||!text(x)) invalid('Invalid contact field.');
-        if(c.callTime&& !/^(0?[1-9]|1[0-2]):[0-5][0-9] (AM|PM)$/.test(String(c.callTime))) invalid('Invalid contact call time.');
+        for(const [field,x] of Object.entries(c)) if(!'id type name role phone email callTime department company reportTo notes directoryScope directoryLabel makeupTime readyTime releaseTime pickup availability'.split(' ').includes(field)||!text(x)) invalid('Invalid contact field.');
+        for (const key of ['callTime','makeupTime','readyTime','releaseTime']) if(c[key]&& !/^(0?[1-9]|1[0-2]):[0-5][0-9] (AM|PM)$/.test(String(c[key]))) invalid('Invalid contact call time.');
       }
     } else if (k==='callsheet') {
-      if (!object(v) || Object.entries(v).some(([field,x])=> !'basecamp parking hospital emergency mealNotes safetyNotes specialInstructions notes productionOffice hospitalPhone hospitalNotes advanceSchedule'.split(' ').includes(field)||!text(x))) invalid('Invalid Call Sheet.');
+      if (!object(v) || Object.entries(v).some(([field,x])=> !'basecamp parking hospital emergency mealNotes safetyNotes specialInstructions notes productionOffice hospitalPhone hospitalNotes advanceSchedule reportLocation reportInstructions primaryContact primaryPhone crewCall firstShot mealTime estimatedWrap timeZone mealLocation mealContact mealHeadcount departmentNotes walkieChannels preparedBy revisionNotes'.split(' ').includes(field)||!text(x))) invalid('Invalid Call Sheet.');
     } else invalid('Unrecognized metadata: '+k);
   }
   if (typeof doc.meta.town==='string' && [...doc.meta.town.trim()].length>160) invalid('Town exceeds 160 characters.');

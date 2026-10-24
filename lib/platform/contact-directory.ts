@@ -1,12 +1,12 @@
 import type {ProductionContact} from '../types.ts';
 import type {ScheduleRpcClient} from './schedule-repository.ts';
 export type ContactScope='organization'|'production'|'phase';
-export type DirectoryPerson=Pick<ProductionContact,'id'|'type'|'name'|'role'|'phone'|'email'|'department'>;
+export type DirectoryPerson=Pick<ProductionContact,'id'|'type'|'name'|'role'|'phone'|'email'|'department'|'company'>;
 export interface DirectoryEntry {id:string;scope:ContactScope;label:string;version:number;contact:DirectoryPerson;canManage:boolean}
 export interface ContactDirectory {entries:DirectoryEntry[];scopes:{scope:ContactScope;label:string;canManage:boolean}[]}
-export function directoryPerson(c:ProductionContact):DirectoryPerson {return {id:c.id,type:c.type,name:c.name.trim(),role:c.role.trim(),phone:c.phone.trim(),email:c.email.trim(),department:c.department??''};}
+export function directoryPerson(c:ProductionContact):DirectoryPerson {return {id:c.id,type:c.type,name:c.name.trim(),role:c.role.trim(),phone:c.phone.trim(),email:c.email.trim(),department:c.department??'',company:c.company??''};}
 export function assignDirectoryContact(entry:DirectoryEntry,current?:ProductionContact):ProductionContact {
- return {...entry.contact,directoryScope:entry.scope,directoryLabel:entry.label,callTime:current?.callTime??'',reportTo:current?.reportTo??'',notes:current?.notes??''};
+ return {...entry.contact,directoryScope:entry.scope,directoryLabel:entry.label,callTime:current?.callTime??'',reportTo:current?.reportTo??'',notes:current?.notes??'',makeupTime:current?.makeupTime??'',readyTime:current?.readyTime??'',releaseTime:current?.releaseTime??'',pickup:current?.pickup??'',availability:current?.availability??''};
 }
 export function createContactDirectoryRepository(client:ScheduleRpcClient){
  async function invoke(name:string,args:Record<string,unknown>){

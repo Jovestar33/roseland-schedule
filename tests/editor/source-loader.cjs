@@ -16,7 +16,7 @@ exports.sourceLoader = (mocks = {}) => {
     }).outputText;
     const localRequire = name => {
       if (mocks[name]) return mocks[name];
-      if (name.startsWith('.')) return load(path.resolve(path.dirname(file), name + '.ts'));
+      if (name.startsWith('.')) return load(path.resolve(path.dirname(file), name.endsWith('.ts') ? name : name + '.ts'));
       return require(name);
     };
     vm.runInThisContext('(function(require,module,exports){' + source + '\n})', { filename: file })(localRequire, mod, mod.exports);

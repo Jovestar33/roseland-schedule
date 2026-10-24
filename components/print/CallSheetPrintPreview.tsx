@@ -1,0 +1,15 @@
+'use client';
+import {useEffect,useRef,useState} from 'react';
+import {createPortal} from 'react-dom';
+import type {ScheduleData} from '@/lib/types';
+import {layoutCallSheetPrint,renderCallSheetPrint,type CallSheetPrintOptions} from '@/lib/call-sheet-print';
+import styles from './schedule-print.module.css';
+export interface CallSheetPrintRequest {data:ScheduleData;name:string;options:CallSheetPrintOptions}
+export default function CallSheetPrintPreview({request,onClose,authorize}:{request:CallSheetPrintRequest;onClose:()=>void;authorize?:()=>Promise<boolean>}){
+ const [paper,setPaper]=useState<'letter'|'a4'>('letter'),[html,setHtml]=useState(''),[pages,setPages]=useState(0),[error,setError]=useState(''),[ready,setReady]=useState(false),[busy,setBusy]=useState(false);
+ const frame=useRef<HTMLIFrameElement>(null),close=useRef<HTMLButtonElement>(null);
+ useEffect(()=>{const previous=document.activeElement as HTMLElement|null;close.current?.focus();return()=>{if(previous?.isConnected)previous.focus();};},[]);
+ useEffect(()=>{setReady(false);setError('');try{const context=document.createElement('canvas').getContext('2d');if(!context)throw Error('Print preview unavailable.');const layout=layoutCallSheetPrint(request.data,request.name,{...request.options,paper},(text,bold,size)=>{context.font=`${bold?'bold ':''}${size}px Arial`;return context.measureText(text).width;});setPages(layout.pages.length);setHtml(renderCallSheetPrint(layout));}catch(e){setError((e as Error).message);}},[request,paper]);
+ async function print(){if(!ready||!frame.current?.contentWindow)return;setBusy(true);try{if(authorize&&!await authorize())throw Error('Reopen the call sheet to verify access before printing.');const target=frame.current.contentWindow;await target.document.fonts.ready;target.focus();target.print();}catch(e){setError((e as Error).message);}finally{setBusy(false);}}
+ return createPortal(<div className={styles.overlay} onKeyDown={e=>{if(e.key==='Escape'){e.preventDefault();e.stopPropagation();onClose();}}}><section className={styles.dialog} role="dialog" aria-modal="true" aria-label="Call sheet print preview"><header className={styles.header}><h2>Call Sheet · Print / PDF</h2><button type="button" ref={close} onClick={onClose}>Close</button></header><div className={styles.controls}><label>Paper<select value={paper} onChange={e=>setPaper(e.target.value as 'letter'|'a4')}><option value="letter">US Letter · portrait</option><option value="a4">A4 · portrait</option></select></label><button type="button" className="btn btn-pink" disabled={!ready||busy||!!error} onClick={()=>void print()}>Print / Save PDF</button></div><p className={styles.help}>Use the selected paper size, portrait, 100% scale, and no browser headers or footers. All pages include the date, version and page number.</p><p className={styles.count} role="status">{pages} {pages===1?'page':'pages'}</p>{error&&<p role="alert" className={styles.error}>{error}</p>}<iframe ref={frame} className={styles.preview} title="Call sheet print preview" srcDoc={html} onLoad={()=>setReady(true)}/></section></div>,document.body);
+}

@@ -24,8 +24,8 @@ test('work brief retains untimed descriptions, notes, separate addresses and nes
 });
 test('weather preserves supplied zero precipitation, partial temperatures and daylight without inference',()=>{
  assert.deepEqual(callSheetWeather({prec:0,minF:0,sunrise:'6:30 AM'}),['Low 0°F','Precipitation 0%','Sunrise 6:30 AM']);
- assert.deepEqual(callSheetWeather(null),[]);
- assert.deepEqual(callSheetWeather({noForecast:true,sunset:'7:15 PM'}),['Sunset 7:15 PM']);
+ assert.deepEqual(callSheetWeather(null),['Forecast not added']);
+ assert.deepEqual(callSheetWeather({noForecast:true,sunset:'7:15 PM'}),['Forecast unavailable for this date','Sunset 7:15 PM']);
 });
 
 test('call sheet retains key instructions and legacy cast even on otherwise empty rows',()=>{
