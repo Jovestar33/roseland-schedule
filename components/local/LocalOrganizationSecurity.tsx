@@ -15,7 +15,7 @@ export default function LocalOrganizationSecurity(){
  async function run(work:(current:()=>boolean)=>Promise<void>){
   if(!ready||!active||working.current)return;working.current=true;setBusy(true);const who=actor;
   try{await work(()=>latest.current.actor===who&&latest.current.ready);}catch(e){if(latest.current.actor===who){
-   setMessage(e instanceof MfaPolicyError&&e.kind==='mfa'?'Verify your authenticator, then retry the exact retained policy request.':e instanceof MfaPolicyError&&e.kind==='conflict'?'Policy changed elsewhere. Review current settings; your draft is retained.':'Request not confirmed. Your draft and exact request are retained.');
+   setMessage(e instanceof MfaPolicyError&&e.kind==='mfa'?'Verify your identity, then retry saving your changes.':e instanceof MfaPolicyError&&e.kind==='conflict'?'These settings changed elsewhere. Compare the saved settings before saving your changes.':'We couldn’t confirm the save. Your changes are still here; retry to check the same save.');
    if(e instanceof MfaPolicyError&&e.kind==='auth')requireAuth();
   }}finally{working.current=false;setBusy(false);}
  }

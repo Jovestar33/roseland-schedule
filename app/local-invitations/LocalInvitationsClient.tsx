@@ -9,11 +9,11 @@ import { useLocalWorkspace, useWorkspacePanelState } from '@/components/local/Lo
 
 const errors: Record<FailureKind, string> = {
   auth: 'Sign in again. Your draft and request are still here.',
-  mfa: 'Verify a new authenticator code, then retry the same request.',
+  mfa: 'Confirm your identity, then retry the invitation.',
   denied: 'This action is unavailable for this account or input. Your draft is still here.',
   rate: 'Too many requests. Wait before retrying the same request; your draft is still here.',
-  conflict: 'This request key already has a different or unverifiable result. Review it before starting another request.',
-  unknown: 'The result is uncertain. Check for a completed result or retry the same request.',
+  conflict: 'We couldn’t match this invitation to its saved result. Check the result before starting again.',
+  unknown: 'We couldn’t confirm the result. Check its status or retry the same invitation.',
 };
 const organizationRoleName = (role: string) => role === 'owner' ? 'Organization Super Admin' : role === 'admin' ? 'Organization Admin' : role === 'member' ? 'Member' : role;
 type MfaStage = 'checking' | 'enroll' | 'code' | 'ready';
@@ -178,7 +178,7 @@ export default function LocalInvitationsClient({ config, reviewMode=false }: { c
   function discardRequest() {
     const action = () => { returnToDraft.current=true;controller.clear(); setMessage('Request review closed. Your draft is still here.'); redraw(); };
     if (controller.phase === 'review') action();
-    else setConfirmation({ title: 'Discard local request?', text: 'This request may already have changed access. Discarding its local record does not undo it. Review its result before starting another request.', label: 'Discard local request', action });
+    else setConfirmation({ title: 'Close this review?', text: 'The invitation may already have been processed. Closing this review won’t undo it. Check the result before starting again.', label: 'Close review', action });
   }
 
   return <div className={`${styles.page} ${reviewMode?styles.product:''}`}><main className={styles.main}>
@@ -237,7 +237,7 @@ export default function LocalInvitationsClient({ config, reviewMode=false }: { c
           {productionMore && <button type="button" className={styles.secondary} onClick={() => void run(() => loadProductions(selected, true))}>Load more productions</button>}
           <label>Expires after (days)<input type="number" required min={1} max={30} value={days} onChange={event => setDays(Number(event.target.value))} /></label>
           <button ref={draftReview} disabled={!roleAvailable || !productionAvailable}>Review invitation</button>
-          <button type="button" className={styles.secondary} onClick={()=>{setRecipient('');setRole('member');setProduction('');setProductionRole('viewer');setDays(7);setMessage('Invitation draft cleared. Nothing was sent.');}}>Cancel invitation draft</button>
+          <button type="button" className={styles.secondary} onClick={()=>{setRecipient('');setRole('member');setProduction('');setProductionRole('viewer');setDays(7);setMessage('Invitation draft cleared. Nothing was sent.');}}>Cancel</button>
         </fieldset>
       </form>}
     </section><section className={styles.card} aria-label="Pending invitations"><div className={styles.sectionTitle}><h2>Pending invitations</h2><button className={styles.secondary} disabled={busy || !ready} onClick={() => void run(() => loadInvitations())}>Refresh invitations</button></div>
@@ -246,7 +246,7 @@ export default function LocalInvitationsClient({ config, reviewMode=false }: { c
         <button className={styles.secondary} disabled={busy || !!attempt || !ready || !currentOrg || (currentOrg.role === 'admin' && item.role !== 'member')} onClick={() => { setRevoking(item); setReason(''); }}>Revoke</button></li>)}</ul>
       {invitationMore && <button className={styles.secondary} disabled={busy || !ready} onClick={() => void run(() => loadInvitations(selected, true))}>Load more invitations</button>}
     </section></div>}
-    {attempt && <section ref={review} tabIndex={-1} className={`${styles.card} ${styles.review}`} aria-label="Request review"><div className={styles.sectionTitle}><h2>{controller.phase === 'success' ? 'Result confirmed' : 'Review request'}</h2><span className={styles.badge}>{controller.phase}</span></div>
+    {attempt && <section ref={review} tabIndex={-1} className={`${styles.card} ${styles.review}`} aria-label="Request review"><div className={styles.sectionTitle}><h2>{controller.phase === 'success' ? 'Result confirmed' : attempt.kind==='create'?'Review invitation':'Review revocation'}</h2><span className={styles.badge}>{{review:'Ready to review',pending:'Working…',unknown:'Needs checking',blocked:'Action needed',conflict:'Changed elsewhere',success:'Complete'}[controller.phase]}</span></div>
       <p><strong>{attempt.kind === 'create' ? `Invite ${attempt.body.email}` : `Revoke ${revoking?.email ?? attempt.target}`}</strong><br />{organizations.find(item => item.id === attempt.organization)?.name ?? attempt.organization}</p>
       {attempt.kind === 'create' ? <p>{organizationRoleName(String(attempt.body.organizationRole))} · {Number(attempt.body.expiresInDays)} days{attempt.body.productionId ? ` · ${attempt.body.productionRole} in ${productions.find(item => item.id === attempt.body.productionId)?.name ?? attempt.body.productionId}` : ' · no production assignment'}</p> : <p>Reason: {String(attempt.body.reason)}</p>}
       <details><summary>Request details</summary><p className={styles.identifier}>Request key: {attempt.key}</p>{controller.result && <p className={styles.identifier}>Invitation: {controller.result.id}</p>}</details>
@@ -267,8 +267,8 @@ export default function LocalInvitationsClient({ config, reviewMode=false }: { c
         {controller.phase === 'success' ? <button disabled={busy} onClick={() => {
           if (attempt.kind === 'create') { setRecipient(''); setRole('member'); setProduction(''); setDays(7); }
           else { setRevoking(null); setReason(''); }
-          controller.clear(); redraw(); setMessage('Result acknowledged. You can prepare another request.');
-        }}>Acknowledge result</button> : <button className={styles.secondary} disabled={busy} onClick={discardRequest}>{controller.phase === 'review' ? '← Back' : 'Discard local request'}</button>}
+          controller.clear(); redraw(); setMessage('You can now prepare another invitation.');
+        }}>Done</button> : <button className={styles.secondary} disabled={busy} onClick={discardRequest}>{controller.phase === 'review' ? '← Back' : 'Close review'}</button>}
       </div>
     </section>}
     <dialog ref={dialog} className={styles.dialog} onCancel={() => setConfirmation(null)} aria-label={confirmation?.title ?? 'Confirm action'}><h2>{confirmation?.title}</h2><p>{confirmation?.text}</p><div className={styles.actions}><button className={styles.secondary} onClick={() => setConfirmation(null)}>Keep working</button><button onClick={() => { const action = confirmation?.action; setConfirmation(null); action?.(); }}>{confirmation?.label}</button></div></dialog>

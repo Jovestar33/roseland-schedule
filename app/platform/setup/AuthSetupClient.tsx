@@ -252,23 +252,30 @@ export default function AuthSetupClient({
   async function signOut() {
     setBusy(true);
     setError('');
-    await supabase.auth.signOut({ scope: 'local' });
-    setStage('signed-out');
-    setUserEmail('');
-    setUserId('');
-    setVerifiedFactorId(null);
-    setEnrollment(null);
-    setCode('');
-    setShowSecret(false);
-    setBusy(false);
+    try {
+      const result = await supabase.auth.signOut({ scope: 'local' });
+      if (result.error) throw result.error;
+      setStage('signed-out');
+      setUserEmail('');
+      setUserId('');
+      setVerifiedFactorId(null);
+      setEnrollment(null);
+      setCode('');
+      setShowSecret(false);
+    } catch {
+      setError('We couldn’t sign you out. Please try again.');
+    } finally {
+      setBusy(false);
+    }
   }
 
   return (
     <main className={styles.shell}>
       <section className={styles.card} aria-labelledby="setup-title">
+        <Image className={styles.brand} src="/logo-login.png" alt="Roseland Pictures" width={220} height={174} priority />
         <div className={styles.eyebrow}>
           <span className={styles.statusDot} aria-hidden="true" />
-          Isolated development environment
+          Development account setup
         </div>
 
         <header className={styles.header}>
@@ -323,7 +330,7 @@ export default function AuthSetupClient({
               />
             </label>
             <button className={styles.primaryButton} type="submit" disabled={busy}>
-              {busy ? 'Signing in…' : 'Continue securely'}
+              {busy ? 'Signing in…' : 'Sign in'}
             </button>
           </form>
         )}
@@ -424,8 +431,8 @@ export default function AuthSetupClient({
               <div>
                 <h2>Verify your authenticator</h2>
                 <p>
-                  This account already has MFA. Enter the current code to
-                  upgrade this development session to AAL2.
+                  Enter the current six-digit code from the authenticator
+                  connected to this development account.
                 </p>
               </div>
             </div>
@@ -453,12 +460,11 @@ export default function AuthSetupClient({
         {stage === 'ready' && (
           <div className={styles.ready}>
             <div className={styles.check} aria-hidden="true">✓</div>
-            <p className={styles.readyLabel}>AAL2 verified</p>
+            <p className={styles.readyLabel}>Two-step verification complete</p>
             <h2>Your development account is ready.</h2>
             <p>
-              The next step is the controlled, one-time Roseland organization
-              bootstrap. Tell Codex that MFA is complete; do not send your
-              password or authenticator code.
+              Account setup is complete. Your administrator can now continue
+              with organization setup.
             </p>
             <dl>
               <div>

@@ -47,3 +47,5 @@
 .toolMenu button:hover:not(:disabled) { background:var(--ui-accent-soft,#fff3f9); }
 
 .feedback { margin:16px 20px; padding:12px 16px; border:1px solid var(--g200); border-left:3px solid var(--ui-accent); border-radius:8px; background:white; color:var(--ui-ink); font-size:13px; line-height:1.6; }
+
+.confirm h2{font:400 var(--ui-dialog-title-size)/1.2 var(--fd);letter-spacing:1.5px;margin:0 0 16px}.confirm p{font-size:var(--ui-body-size);line-height:1.65;margin:0 0 20px}.confirmActions{display:flex;flex-wrap:wrap;gap:12px;justify-content:flex-end}.confirmActions button{margin:0;max-width:100%;min-height:42px;padding:10px 14px}.recovery{background:var(--ui-accent-soft);border-color:var(--ui-border);border-left:3px solid var(--ui-accent)}.recovery h2{font-family:var(--fb);font-size:var(--ui-section-size)}.recovery p{line-height:1.65}.recovery button{max-width:100%;height:auto;padding:10px 14px;line-height:1.4}@media(max-width:480px){.confirm{box-sizing:border-box;width:calc(100vw - 32px);padding:20px}.confirmActions button{flex:1 1 100%}}

@@ -4,6 +4,8 @@ import { createPortal } from 'react-dom';
 
 /** Retained local panels can hide portals without discarding their form state. */
 export const ModalVisibilityContext = createContext(true);
+/** Child navigation can finish the shared exit before changing its route. */
+export const ModalCloseContext = createContext<((afterClose?: () => void) => void) | null>(null);
 
 // Only the frontmost visible modal owns keyboard focus. A nested native dialog
 // already has a browser focus scope and must not be intercepted here.
@@ -31,32 +33,45 @@ export default function Modal({ open, onClose, title, children, footer, classNam
   const visible = useContext(ModalVisibilityContext);
   const dialogRef = useRef<HTMLDivElement>(null);
   const [closing, setClosing] = useState(false);
+  const [retained, setRetained] = useState(open);
   const exitTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const onCloseRef = useRef(onClose);
   onCloseRef.current = onClose;
-  function requestClose() {
+  function requestClose(afterClose?: () => void) {
     if (exitTimer.current || beforeClose?.() === false) return;
+    const finish = () => { onCloseRef.current(); afterClose?.(); };
     if (!exitDuration || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      onCloseRef.current(); return;
+      finish(); return;
     }
     setClosing(true);
     exitTimer.current = setTimeout(() => {
       exitTimer.current = null;
       setClosing(false);
-      onCloseRef.current();
+      setRetained(false);
+      finish();
     }, exitDuration);
   }
   const closeRef = useRef(requestClose);
   closeRef.current = requestClose;
+  // Retain the surface for exits triggered by child actions too (Apply, Back,
+  // Cancel), not only the header close button. Permission changes still hide it
+  // immediately through ModalVisibilityContext.
   useEffect(() => {
-    if (!open || !visible) setClosing(false);
-    return () => {
-      if (exitTimer.current) clearTimeout(exitTimer.current);
-      exitTimer.current = null;
-    };
-  }, [open, visible]);
+    if (exitTimer.current) clearTimeout(exitTimer.current);
+    exitTimer.current = null;
+    if (open && visible) { setRetained(true); setClosing(false); }
+    else if (!visible || !exitDuration || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setRetained(false); setClosing(false);
+    } else if (retained) {
+      setClosing(true);
+      exitTimer.current = setTimeout(() => { exitTimer.current = null; setRetained(false); setClosing(false); }, exitDuration);
+    }
+    return () => { if (exitTimer.current) clearTimeout(exitTimer.current); exitTimer.current = null; };
+    // retained is the state at the open/visibility transition, not a new trigger.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, visible, exitDuration]);
   const titleId = useId();
-  const shown = open && visible;
+  const shown = (open || retained) && visible;
   const previousShown = useRef(false);
   const openerRef = useRef<HTMLElement | null>(null);
   // Capture before React commits descendant autoFocus controls. A passive effect
@@ -67,7 +82,7 @@ export default function Modal({ open, onClose, title, children, footer, classNam
   previousShown.current = shown;
   useEffect(() => {
     const current = dialogRef.current;
-    if (!open || !visible || !current) return;
+    if (!shown || !current) return;
     const node: HTMLDivElement = current;
     const opener = openerRef.current;
     const entry = { node, layer: zIndex ?? (Number(getComputedStyle(node.parentElement!).zIndex) || 0) };
@@ -75,7 +90,7 @@ export default function Modal({ open, onClose, title, children, footer, classNam
     const ownsFocus = () => {
       const front = [...openModals].sort((a,b) => a.layer-b.layer).at(-1);
       const native = document.querySelector('dialog:modal');
-      return front === entry && (!native || node.contains(native));
+      return front === entry && !native;
     };
     const candidates = () => [...node.querySelectorAll<HTMLElement>(focusable)]
       .filter(element => element.tabIndex >= 0 && canFocus(element));
@@ -107,9 +122,9 @@ export default function Modal({ open, onClose, title, children, footer, classNam
       document.removeEventListener('focusin', onFocus);
       if (wasFront && opener?.isConnected && canFocus(opener)) opener.focus({preventScroll:true});
     };
-  }, [open, visible, zIndex]);
+  }, [shown, zIndex]);
 
-  if (!open || (!visible && !retainWhenHidden) || typeof document === 'undefined') return null;
+  if ((!open && !retained) || (!visible && !retainWhenHidden) || typeof document === 'undefined') return null;
 
   return createPortal(
     <div
@@ -121,15 +136,15 @@ export default function Modal({ open, onClose, title, children, footer, classNam
       <div className={`modal ${className ?? ''}`} ref={dialogRef} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby={titleId}>
         <div className="mhdr">
           <h2 id={titleId}>{title}</h2>
-          <button className="mclose" onClick={requestClose} aria-label="Close">✕</button>
+          <button className="mclose" onClick={()=>requestClose()} aria-label="Close">✕</button>
         </div>
-        <div className="mbody">{children}</div>
+        <ModalCloseContext.Provider value={requestClose}><div className="mbody">{children}</div>
         {footer && <div className="mfoot" onClickCapture={event => {
           const button = (event.target as HTMLElement).closest('button');
           if (exitDuration && button?.hasAttribute('data-modal-close')) {
             event.preventDefault(); event.stopPropagation(); requestClose();
           }
-        }}>{footer}</div>}
+        }}>{footer}</div>}</ModalCloseContext.Provider>
       </div>
     </div>,
     document.body,

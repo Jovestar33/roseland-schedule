@@ -2,3 +2,21 @@
 .actions p { width:100%; margin:0 0 12px; color:var(--g600); line-height:1.6; }
 .actions h3 { width:100%; margin:0; padding-top:18px; border-top:1px solid var(--g200); font-family:var(--fb); font-size:var(--ui-section-size); }
 @media(max-width:480px) { .actions button { width:100%; } }
+.surface :global(.mbody){min-width:0}
+.surface [hidden]{display:none!important}
+.surface fieldset{min-width:0}
+.surface label{display:grid;gap:7px;margin:16px 0;font-size:13px;font-weight:600;min-width:0}
+.surface :is(input:not([type=checkbox]),select){width:100%;min-width:0;box-sizing:border-box;min-height:44px;padding:10px 12px;border:1px solid var(--g300);border-radius:8px;background:white;color:var(--ui-ink);font:inherit}
+.surface :is(fieldset,section,details)>button{margin:8px 10px 4px 0;max-width:100%;white-space:normal;line-height:1.4;min-height:40px}
+.surface summary{padding:8px 0;line-height:1.5;font-size:13px;font-weight:600;cursor:pointer}
+.surface :is(p,legend){overflow-wrap:anywhere;line-height:1.6}
+.surface :is(h3,legend){font-family:var(--fb);font-size:16px;letter-spacing:0;line-height:1.5;font-weight:700}
+.surface .selected{padding:18px;border:1px solid var(--g200);border-radius:12px;margin:20px 0;background:white}
+.selected legend{padding:0 6px;max-width:100%}
+.snapshotList{list-style:none;padding:0;margin:16px 0;display:grid;gap:10px}
+.snapshotList li{min-width:0}.snapshotList button{display:grid!important;gap:4px;width:100%;padding:13px 15px!important;text-align:left;white-space:normal!important;margin:0!important}
+.snapshotList strong{font-size:13px;font-weight:600;overflow-wrap:anywhere}.snapshotList span{font-size:12px;font-weight:400;line-height:1.5;color:var(--g600)}
+.snapshotList button[aria-pressed=true]{border-color:var(--ui-accent);background:var(--ui-accent-soft)}
+.notice{padding:12px 14px;background:var(--g50);border-left:3px solid var(--ui-accent);border-radius:0 8px 8px 0}
+.reviewActions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;width:100%}.reviewActions button{margin:0!important;max-width:100%;white-space:normal}
+@media(max-width:480px){.surface .selected{padding:14px}.reviewActions button{width:100%}.surface :is(fieldset,section,details)>button{width:100%;margin-right:0}}

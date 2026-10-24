@@ -8,3 +8,12 @@
 
 .viewTabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 20px}.viewTabs button{font-size:13px!important}.viewTabs button[aria-pressed="true"]{background:var(--ui-accent-soft);color:var(--ui-accent-strong);border-color:var(--ui-accent)}
 .createForm{border:0;padding:0;margin:0;min-width:0}.createForm legend{font-size:17px;font-weight:600;margin-bottom:8px}.createForm>p{font-size:13px;line-height:1.6;color:var(--g600);margin:0 0 18px}.createForm>label{display:grid;gap:7px;margin:0 0 16px;font-size:13px;font-weight:600;min-width:0}.createForm select,.createForm input:not([type="checkbox"]){width:100%;min-width:0;box-sizing:border-box;border:1px solid var(--g300);border-radius:8px;background:white;color:var(--ui-ink);padding:11px 12px;font:inherit;font-weight:400;min-height:44px}.createForm .draftChoice{display:flex;align-items:center;gap:10px;font-weight:400;line-height:1.5}.draftChoice input{flex:0 0 auto;width:18px;height:18px}.createActions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.createActions button{margin:0!important}
+/* Secondary and recovery paths should be as calm as the main template view. */
+.reviewActions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;width:100%}
+.reviewActions button{margin:0!important;max-width:100%;white-space:normal}
+.reviewActions p{flex-basis:100%;margin:4px 0 0!important;font-size:13px;line-height:1.6;color:var(--g600)}
+.manage>button{margin:10px 10px 0 0!important;max-width:100%;white-space:normal}
+.manage label{display:grid;gap:7px;margin:14px 0 4px;min-width:0}
+.manage input{width:100%;min-width:0;box-sizing:border-box;padding:10px 12px;border:1px solid var(--g300);border-radius:8px;background:white;color:var(--ui-ink);font:inherit;min-height:44px}
+.selected legend{max-width:100%;overflow-wrap:anywhere;line-height:1.5}
+@media(max-width:480px){.reviewActions button,.manage>button{width:100%;margin-right:0!important}.createActions>button{flex:1 1 140px}}

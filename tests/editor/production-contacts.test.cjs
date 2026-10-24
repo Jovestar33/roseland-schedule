@@ -3,12 +3,12 @@ const {sourceLoader}=require('./source-loader.cjs');
 function nodes(n){if(Array.isArray(n))return n.flatMap(nodes);if(!n||typeof n!=='object')return [];return[n,...nodes(n.props?.children)];}
 function harness(access=null){
  const load=sourceLoader(),store=load('lib/store/scheduleStore.ts').useScheduleStore,time=load('lib/time.ts');store.getState().loadSchedule('Contacts',{meta:{},rows:[]});
- let cursor=0,tree;const hooks=[];const react={...React,useEffect(){},useRef(v){const i=cursor++;if(!(i in hooks))hooks[i]={current:v};return hooks[i];},useState(v){const i=cursor++;if(!(i in hooks))hooks[i]=typeof v==='function'?v():v;return[hooks[i],v=>hooks[i]=typeof v==='function'?v(hooks[i]):v];}};
+ let cursor=0,tree,changed=false;const hooks=[],effects=[];const react={...React,useEffect(fn,deps){const i=cursor++,old=hooks[i];if(!old||deps.some((v,k)=>v!==old.deps[k]))effects.push(()=>{old?.cleanup?.();hooks[i]={deps,cleanup:fn()};});},useRef(v){const i=cursor++;if(!(i in hooks))hooks[i]={current:v};return hooks[i];},useState(v){const i=cursor++;if(!(i in hooks))hooks[i]=typeof v==='function'?v():v;return[hooks[i],v=>{const next=typeof v==='function'?v(hooks[i]):v;if(next!==hooks[i]){hooks[i]=next;changed=true;}}];}};
  const mock={react,'./ContactDirectoryContext':{useContactDirectory:()=>access},'@/lib/platform/contact-directory':load('lib/platform/contact-directory.ts'),'@/lib/time':time,'@/lib/store/scheduleStore':{useScheduleStore:Object.assign(fn=>fn(store.getState()),{getState:store.getState})}};
  const mod={exports:{}};const js=ts.transpileModule(fs.readFileSync('components/local/ProductionContacts.tsx','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX}}).outputText;
  vm.runInThisContext('(function(require,module,exports){'+js+'\n})')(n=>mock[n]??require(n),mod,mod.exports);
- const render=(readOnly=false)=>{cursor=0;tree=mod.exports.default({readOnly});return tree;};render();
- return{store,render,find:f=>nodes(tree).find(f),field(label){return nodes(nodes(tree).find(n=>n.type==='label'&&nodes(n).some(x=>x===n)&&n.props.children[0]===label)).find(n=>n.type==='input'||n.type==='select');}};
+ const render=(readOnly=false)=>{let n=0;do{assert.ok(n++<20);changed=false;cursor=0;tree=mod.exports.default({readOnly});effects.splice(0).forEach(f=>f());}while(changed);return tree;};render();
+ return{store,render,replaceAccess(value){access=value;render();},find:f=>nodes(tree).find(f),field(label){return nodes(nodes(tree).find(n=>n.type==='label'&&nodes(n).some(x=>x===n)&&n.props.children[0]===label)).find(n=>n.type==='input'||n.type==='select');}};
 }
 function button(h,label){return h.find(n=>n.type==='button'&&n.props.children===label);}
 test('contact form applies typed details, supports cancel, edit, remove and undo',()=>{
@@ -28,4 +28,33 @@ test('shared selection copies only chosen contact and keeps daily edits out of s
  button(h,'Add to schedule').props.onClick();h.render();let c=h.store.getState().meta.productionContacts[0];assert.equal(c.directoryScope,'production');assert.equal(c.callTime,'');assert.equal(c.directoryLabel,'Test production');
  h.store.getState().updateMeta({productionContacts:[{...c,phone:'old',callTime:'9:30 AM',notes:'Day only'}]});h.render();button(h,'Use latest contact details').props.onClick();h.render();assert.equal(h.store.getState().meta.productionContacts[0].callTime,'9:30 AM');
  button(h,'Edit shared contact').props.onClick();h.render();assert.equal(h.field('Call time (optional)'),undefined);h.field('Name').props.onChange({target:{value:'Alex Smith'}});h.render();await h.find(n=>n.type==='form').props.onSubmit({preventDefault(){}});h.render();assert.equal(calls.length,1);assert.equal(calls[0][2].callTime,undefined);assert.equal(calls[0][2].notes,undefined);assert.equal(h.store.getState().meta.productionContacts[0].name,'Alex');
+});
+
+
+test('a schedule reaching the contact limit keeps the unfinished contact form',()=>{
+ const h=harness();button(h,'Add contact').props.onClick();h.render();h.field('Name').props.onChange({target:{value:'Keep this draft'}});h.render();
+ h.store.getState().updateMeta({productionContacts:Array.from({length:300},(_,i)=>({id:'contact-'+i,type:'crew',name:'Person '+i,role:'',phone:'',email:'',callTime:''}))});
+ h.render();h.find(n=>n.type==='form').props.onSubmit({preventDefault(){}});h.render();
+ assert.equal(h.store.getState().meta.productionContacts.length,300);assert.equal(h.field('Name').props.value,'Keep this draft');
+});
+test('rapid repeat submissions of a shared contact create only one in-flight save',async()=>{
+ const entry={id:'shared-1',scope:'production',label:'Test production',version:1,canManage:true,contact:{id:'shared-1',type:'crew',name:'Alex',role:'Camera',phone:'',email:''}};
+ let resolve,calls=0;const pending=new Promise(r=>resolve=r),access={schedule:'schedule-1',current:()=>true,repository:{list:async()=>({entries:[entry],scopes:[{scope:'production',label:'Test production',canManage:true}]}),save:async()=>{calls++;return pending;}}};
+ const h=harness(access);button(h,'Choose from shared contacts').props.onClick();await new Promise(setImmediate);h.render();button(h,'Edit shared contact').props.onClick();h.render();
+ const submit=h.find(n=>n.type==='form').props.onSubmit;const first=submit({preventDefault(){}}),second=submit({preventDefault(){}});assert.equal(calls,1);resolve({...entry,version:2});await Promise.all([first,second]);h.render();assert.equal(h.field('Name'),undefined);
+});
+
+test('same-account token renewal and temporary authentication preserve an unfinished contact',async()=>{
+ const access={actor:'actor-1',schedule:'schedule-1',current:()=>true,repository:{list:async()=>({entries:[],scopes:[]})}},h=harness(access);
+ button(h,'Add contact').props.onClick();await new Promise(setImmediate);h.render();h.field('Name').props.onChange({target:{value:'Unfinished crew contact'}});h.render();
+ h.replaceAccess({...access});await new Promise(setImmediate);h.render();assert.equal(h.field('Name').props.value,'Unfinished crew contact');
+ h.replaceAccess(null);assert.equal(h.field('Name').props.value,'Unfinished crew contact');h.replaceAccess({...access});await new Promise(setImmediate);h.render();assert.equal(h.field('Name').props.value,'Unfinished crew contact');
+ h.find(n=>n.type==='form').props.onSubmit({preventDefault(){}});h.render();assert.equal(h.store.getState().meta.productionContacts[0].name,'Unfinished crew contact');
+});
+test('unfinished contact entries do not follow a different account or document',async()=>{
+ const access={actor:'actor-1',schedule:'schedule-1',current:()=>true,repository:{list:async()=>({entries:[],scopes:[]})}},h=harness(access);
+ button(h,'Add contact').props.onClick();await new Promise(setImmediate);h.render();h.field('Name').props.onChange({target:{value:'Private draft'}});h.render();
+ h.replaceAccess({...access,actor:'actor-2'});assert.equal(h.field('Name'),undefined);
+ button(h,'Add contact').props.onClick();await new Promise(setImmediate);h.render();h.field('Name').props.onChange({target:{value:'Another private draft'}});h.render();
+ h.store.getState().loadSchedule('Other schedule',{meta:{},rows:[]});h.render();assert.equal(h.field('Name'),undefined);
 });

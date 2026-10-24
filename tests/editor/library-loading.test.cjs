@@ -20,11 +20,11 @@ test('readiness pause during library load starts a replacement read and rejects 
  const h=harness();h.render();assert.equal(h.requests.length,1);h.render({enabled:false});h.render({enabled:true});
  assert.equal(h.requests.length,2,'resumed access must not lose its load behind the previous request');
  h.requests[0].resolve([{id:'stale',production_id:'production',display_name:'Stale'}]);await h.flush();assert.ok(!h.text().includes('1 visible schedules'));
- h.requests[1].resolve([]);await h.flush();assert.ok(h.text().includes('0 visible schedules'));assert.ok(!h.text().includes('Loading complete library'));
+ h.requests[1].resolve([]);await h.flush();assert.ok(h.text().includes('0 visible schedules'));assert.ok(!h.text().includes('Loading schedules'));
 });
 test('failed library load reports an error instead of claiming it is still loading',async()=>{
  const h=harness();h.render();h.requests[0].reject(new Error('Fictional connection unavailable'));await h.flush();
- assert.ok(h.text().includes('We couldn’t load your library.'));assert.ok(!h.text().includes('Loading complete library'));assert.equal(h.find(n=>n.type==='div'&&n.props.className==='empty').length,0,'a failed read is not an empty library');assert.equal(h.find(n=>n.props.role==='alert').length,1);
+ assert.ok(h.text().includes('We couldn’t load your library.'));assert.ok(!h.text().includes('Loading schedules'));assert.equal(h.find(n=>n.type==='div'&&n.props.className==='empty').length,0,'a failed read is not an empty library');assert.equal(h.find(n=>n.props.role==='alert').length,1);
 });
 
 test('phase-only and day-assigned records share a hub and collapse stays actor/org scoped',async()=>{
@@ -65,5 +65,5 @@ test('returning from the editor and closing a Library tool refresh saved records
  h.requests[1].resolve([{id:'old',production_id:'production',display_name:'Old'}]);
  h.requests[2].resolve([{id:'older',production_id:'production',display_name:'Older'}]);
  h.requests[3].resolve([]);await h.flush();
- assert.ok(h.text().includes('0 visible schedules'));assert.ok(!h.text().includes('Loading complete library'));
+ assert.ok(h.text().includes('0 visible schedules'));assert.ok(!h.text().includes('Loading schedules'));
 });

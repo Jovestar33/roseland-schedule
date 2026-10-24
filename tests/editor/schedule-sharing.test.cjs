@@ -33,3 +33,20 @@ test('imported sharing is distinct from active read-only links and revocation ex
 
 
 test('creation and revocation replace the redundant launch controls while under review',async()=>{const h=fixture();h.setReview({version:1,can_create:true,links:[h.link]});h.render();await h.flush();h.click('Create another read-only link');assert.ok(h.find(n=>n.props?.hidden===true&&text(n).includes('Create another read-only link')&&text(n).includes('Refresh')));assert.ok(h.button('Create link'));h.click('Cancel');h.click('Revoke');assert.equal(h.button('Revoke').props.hidden,true);assert.ok(h.button('Cancel'));assert.ok(!h.text().includes('Downloaded or printed'));});
+
+
+test('resuming access replaces an interrupted link read and rejects its stale permissions',async()=>{
+ const h=fixture();const reads=[];h.setRead(()=>new Promise(resolve=>reads.push(resolve)));h.render();assert.equal(reads.length,1);
+ h.render({enabled:false});h.render({enabled:true});assert.equal(reads.length,2);
+ reads[0]({version:1,can_create:true,links:[{...h.link,id:'stale-access'}]});await h.flush();
+ assert.equal(h.button('Create read-only link'),undefined);assert.ok(h.button('Checking…'));
+ reads[1]({version:2,can_create:false,links:[]});await h.flush();assert.match(h.text(),/not creating them/);assert.equal(h.button('Checking…'),undefined);
+});
+test('access changes during link creation retain the request and ignore its late URL',async()=>{
+ const h=fixture();let finish;h.setCreate(a=>new Promise(resolve=>finish=()=>resolve({id:a.request,expires_at:h.link.expires_at,revoked:false})));
+ h.render();await h.flush();h.click('Create read-only link');h.click('Create link');await h.flush();
+ h.render({enabled:false});h.render({enabled:true});await h.flush();finish();await h.flush();
+ assert.equal(h.find(n=>n.type==='input'&&n.props.value.includes('/client#')),undefined);assert.match(h.text(),/previous request hasn’t been confirmed/);
+ h.click('Not now');h.setCreate(async a=>({id:a.request,expires_at:h.link.expires_at,revoked:false}));h.click('Retry read-only link');h.click('Retry same link');await h.flush();
+ assert.equal(h.calls.create.length,2);assert.equal(h.calls.create[0],h.calls.create[1]);
+});

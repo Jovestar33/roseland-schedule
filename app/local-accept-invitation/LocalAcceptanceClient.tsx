@@ -10,7 +10,7 @@ import { useLocalWorkspace, useWorkspacePanelState } from '@/components/local/Lo
 const errors: Record<AcceptanceFailure, string> = {
   auth: 'Sign in again with the same account. Your invitation ID and review are retained.',
   unavailable: 'This invitation is unavailable for this account. If an earlier attempt may have completed, check its result.',
-  unknown: 'Acceptance is uncertain. Check the result or retry the same invitation.',
+  unknown: 'We couldn’t confirm whether you joined. Check the result or retry this invitation.',
 };
 export default function LocalAcceptanceClient({ config, pendingInvitation, onInvitationUsed }: { config: LocalEditorConfig; pendingInvitation?: {actor:string;id:string}|null; onInvitationUsed?():void }) {
   const workspace = useLocalWorkspace();
@@ -39,6 +39,8 @@ export default function LocalAcceptanceClient({ config, pendingInvitation, onInv
   const dialog = useRef<HTMLDialogElement>(null), review = useRef<HTMLElement>(null);
   const dirty = controller.phase !== 'success' && (!!invitationId || !!controller.attempt);
   const ready = !!session && !authNeeded && !workspace?.authNeeded;
+  const latest = useRef({ token: session?.access_token, ready, active });
+  latest.current = { token: (workspace?.session ?? session)?.access_token, ready, active };
   useWorkspacePanelState(dirty, busy);
   function clearAccount() {
     account.current = null; setPreview(null); controller.bind(null); setInvitationId(''); setPassword(''); setEmail(''); setAuthNeeded(false); refresh();
@@ -73,7 +75,7 @@ export default function LocalAcceptanceClient({ config, pendingInvitation, onInv
   useEffect(() => {
     if (!active || !ready || !pendingInvitation || account.current !== pendingInvitation.actor || invitationId || controller.attempt) return;
     setInvitationId(pendingInvitation.id); onInvitationUsed?.();
-    setMessage('Your verified email supplied this invitation. Review it before accepting.');
+    setMessage('Your invitation is ready. Review the details before joining.');
   }, [active, ready, pendingInvitation, invitationId, controller, onInvitationUsed]);
   async function login(event: React.FormEvent) {
     event.preventDefault(); if (busyRef.current) return;
@@ -104,19 +106,22 @@ export default function LocalAcceptanceClient({ config, pendingInvitation, onInv
     finally{busyRef.current=false;setBusy(false);}
   }
   async function execute(checkOnly: boolean) {
-    if (!ready || busyRef.current) return;
-    busyRef.current = true; setBusy(true); const attempt = controller.attempt;
+    if (!ready || !active || busyRef.current) return;
+    busyRef.current = true; setBusy(true); const attempt = controller.attempt, token = sessionRef.current?.access_token;
+    const current = () => controller.attempt === attempt && account.current === attempt?.actor && latest.current.token === token && latest.current.ready && latest.current.active;
     try {
       if(config.accountOnboarding&&!checkOnly&&controller.phase==='review'&&attempt){
-        const result=await client.rpc('preview_my_invitation',{invitation_id:attempt.invitationId}).setHeader('Authorization',`Bearer ${sessionRef.current!.access_token}`);
-        if(controller.attempt!==attempt||account.current!==attempt.actor)return;
+        const result=await client.rpc('preview_my_invitation',{invitation_id:attempt.invitationId}).setHeader('Authorization',`Bearer ${token}`);
+        if(!current())return;
         if(result.error||!result.data){setPreview(null);setMessage('This invitation is unavailable. Check its result or sign in with the verified matching account.');return;}
         setPreview(result.data);
       }
       const operation = controller.execute(repository, checkOnly); refresh(); await operation;
       if (controller.attempt !== attempt) return;
       if (controller.failure) { setMessage(errors[controller.failure]); if (controller.failure === 'auth') { setAuthNeeded(true); workspace?.requireAuth(); } }
-      else setMessage(controller.phase === 'success' ? 'Acceptance confirmed. Review the result below.' : 'No completed acceptance is visible for this account. This does not prove an earlier request failed. Keep the same invitation ID.');
+      else setMessage(controller.phase === 'success' ? 'Invitation accepted. Review the result below.' : 'No completed acceptance is visible for this account. This does not prove an earlier request failed. Keep the same invitation ID.');
+    } catch {
+      if (current()) setMessage('We couldn’t check this invitation. Try again.');
     } finally { busyRef.current = false; setBusy(false); refresh(); }
   }
   async function signOut() {
@@ -149,26 +154,26 @@ export default function LocalAcceptanceClient({ config, pendingInvitation, onInv
       <form className={styles.form} onSubmit={event => { event.preventDefault(); void reviewInvitation(); }}>
         <label>{workspace?.review?'Invitation ID':'Fictional invitation ID'}<input required autoComplete="off" maxLength={36} disabled={!ready || busy || !!attempt} value={invitationId} onChange={event => setInvitationId(event.target.value)} /></label>
         <button disabled={!ready || busy || !!attempt}>Review invitation</button>
-        <button type="button" className={styles.secondary} disabled={busy||!!attempt} onClick={()=>{setInvitationId('');setPreview(null);setMessage('Invitation draft cleared. Nothing was accepted.');}}>Cancel invitation draft</button>
+        <button type="button" className={styles.secondary} disabled={busy||!!attempt} onClick={()=>{setInvitationId('');setPreview(null);setMessage('Invitation draft cleared. Nothing was accepted.');}}>Cancel</button>
       </form>
     </section>}
     {attempt && <section ref={review} tabIndex={-1} className={`${styles.card} ${styles.review}`} aria-label="Acceptance review">
-      <h2>{controller.phase === 'success' ? 'Acceptance confirmed' : 'Review acceptance'}</h2>
+      <h2>{controller.phase === 'success' ? 'Invitation accepted' : 'Review invitation'}</h2>
       <p>Account: <strong>{session?.user.email ?? email}</strong></p><p className={styles.identifier}>Invitation: {attempt.invitationId}</p>
-      {config.accountOnboarding&&preview&&<dl><dt>Organization</dt><dd>{preview.organizationName}</dd>{preview.productionName&&<><dt>Production</dt><dd>{preview.productionName}</dd></>}<dt>Organization role</dt><dd>{preview.organizationRole==='owner'?'Organization Super Admin':preview.organizationRole}</dd>{preview.productionRole&&<><dt>Production role</dt><dd>{preview.productionRole}</dd></>}<dt>Expires</dt><dd>{new Date(preview.expiresAt).toLocaleString()}</dd></dl>}
+      {config.accountOnboarding&&preview&&<dl className={styles.detailsList}><dt>Organization</dt><dd>{preview.organizationName}</dd>{preview.productionName&&<><dt>Production</dt><dd>{preview.productionName}</dd></>}<dt>Organization role</dt><dd>{preview.organizationRole==='owner'?'Organization Super Admin':preview.organizationRole==='admin'?'Organization Admin':'Member'}</dd>{preview.productionRole&&<><dt>Production role</dt><dd>{preview.productionRole[0].toUpperCase()+preview.productionRole.slice(1)}</dd></>}<dt>Expires</dt><dd>{new Date(preview.expiresAt).toLocaleString()}</dd></dl>}
       {controller.failure && <p role="alert">{errors[controller.failure]}</p>}
       {controller.receipt && <><p>Invitation accepted. Access may change if an administrator changes your membership.</p><p className={styles.identifier}>Organization: {controller.receipt.organizationId}</p>{controller.receipt.acceptedAt && <p>Accepted {new Date(controller.receipt.acceptedAt).toLocaleString()}</p>}</>}
       <div className={styles.actions}>
-        {workspace && controller.receipt && <button disabled={busy || !ready} onClick={() => workspace.openOrganization(controller.receipt!.organizationId)}>Open organization schedules</button>}
-        {controller.phase === 'success' ? <button disabled={busy} onClick={() => { controller.clear(); setInvitationId(''); refresh(); setMessage('Result acknowledged. You can review another fictional invitation.'); }}>Acknowledge result</button> : <>
-          <button disabled={!ready || busy || (config.accountOnboarding&&controller.phase==='review'&&!preview)} onClick={() => void execute(false)}>{controller.phase === 'review' ? 'Confirm acceptance' : 'Retry same invitation'}</button>
+        {workspace && controller.receipt && <button disabled={busy || !ready} onClick={() => workspace.openOrganization(controller.receipt!.organizationId)}>Open Library</button>}
+        {controller.phase === 'success' ? <button disabled={busy} onClick={() => { controller.clear(); setInvitationId(''); refresh(); setMessage('You can now review another invitation.'); }}>Done</button> : <>
+          <button disabled={!ready || busy || (config.accountOnboarding&&controller.phase==='review'&&!preview)} onClick={() => void execute(false)}>{controller.phase === 'review' ? 'Accept invitation' : 'Retry same invitation'}</button>
           <button className={styles.secondary} disabled={!ready || busy} onClick={() => void execute(true)}>Check acceptance result</button>
-          {controller.phase !== 'review' && <button className={styles.secondary} disabled={busy} onClick={() => setConfirmClear('review')}>Discard local review</button>}
+          {controller.phase !== 'review' && <button className={styles.secondary} disabled={busy} onClick={() => setConfirmClear('review')}>Close review</button>}
           {controller.phase === 'review' && <button className={styles.secondary} disabled={busy} onClick={() => { controller.clear(); refresh(); setMessage('Review closed. Your invitation ID is still here.'); }}>← Back</button>}
         </>}
       </div>
-      {controller.phase !== 'success' && controller.phase !== 'review' && <p>Keep this invitation ID when retrying. To review another invitation, explicitly discard this local review. Sign out to use a different account. Clearing the review does not undo accepted access.</p>}
+      {controller.phase !== 'success' && controller.phase !== 'review' && <p>Retry checks the same invitation. Closing this review won’t undo an invitation you already accepted.</p>}
     </section>}
-    <dialog ref={dialog} className={styles.dialog} onCancel={() => setConfirmClear(null)} aria-label="Clear local acceptance details"><h2>{confirmClear === 'review' ? 'Discard this local review?' : 'Sign out and clear this review?'}</h2><p>An earlier acceptance may have completed. Clearing this tab does not undo access. Check its result before continuing.</p><div className={styles.actions}><button className={styles.secondary} disabled={busy} onClick={() => setConfirmClear(null)}>Keep working</button><button disabled={busy} onClick={() => { if (confirmClear === 'review') { controller.clear(); setConfirmClear(null); refresh(); setMessage('Local review discarded. Your invitation ID is still here. Any accepted access is unchanged.'); } else void signOut(); }}>{confirmClear === 'review' ? 'Discard local review' : 'Sign out and clear'}</button></div></dialog>
+    <dialog ref={dialog} className={styles.dialog} onCancel={() => setConfirmClear(null)} aria-label="Clear local acceptance details"><h2>{confirmClear === 'review' ? 'Close this review?' : 'Sign out and clear this review?'}</h2><p>You may already have joined this organization. Check the result first; closing this review won’t remove your access.</p><div className={styles.actions}><button className={styles.secondary} disabled={busy} onClick={() => setConfirmClear(null)}>Keep working</button><button disabled={busy} onClick={() => { if (confirmClear === 'review') { controller.clear(); setConfirmClear(null); refresh(); setMessage('Review closed. Your invitation ID is still here.'); } else void signOut(); }}>{confirmClear === 'review' ? 'Close review' : 'Sign out and clear'}</button></div></dialog>
   </main></div>;
 }

@@ -69,3 +69,20 @@ test('empty weather Refresh reports pending state and respects missing coordinat
  assert.equal(h.render({enabled:false}).props.children[1].props.disabled,true);
  h.store.getState().updateMeta({lat:null});assert.equal(h.render({enabled:true}).props.children[1].props.disabled,true);
 });
+
+
+test('opening a saved schedule never inserts sun rows or changes its weather',()=>{
+ let calls=0;const h=harness({kind:'fictional',weather:async()=>{calls++;return null;}});
+ h.store.setState({rows:h.store.getState().rows.filter(row=>!row.sunLocked)});
+ const before=h.store.getState().getScheduleData();h.render();h.flushEffect();
+ assert.deepEqual(h.store.getState().getScheduleData(),before);assert.equal(calls,0);
+});
+test('editing the date or coordinates refreshes weather even when an old forecast exists',async()=>{
+ const calls=[],next={sunrise:'6:00 AM',sunset:'6:00 PM',noForecast:true};
+ const h=harness({kind:'fictional',weather:async(...args)=>{calls.push(args);return next;}});
+ h.render();h.flushEffect();assert.equal(calls.length,0);
+ h.store.getState().updateMeta({date:'2026-11-03'});h.render();h.flushEffect();await Promise.resolve();await Promise.resolve();
+ assert.equal(calls.length,1);assert.equal(calls[0][0],'2026-11-03');assert.deepEqual(h.store.getState().meta.wx,next);
+ h.store.getState().updateMeta({lat:35.2,lng:-79.8});h.render();h.flushEffect();await Promise.resolve();await Promise.resolve();
+ assert.equal(calls.length,2);assert.equal(calls[1][1],35.2);
+});

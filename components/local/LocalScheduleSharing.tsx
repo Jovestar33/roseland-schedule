@@ -16,14 +16,16 @@ export default function LocalScheduleSharing({expanded=false,workspacePath='/loc
  const createTrigger=useRef<HTMLButtonElement|null>(null),revokeTrigger=useRef<HTMLButtonElement|null>(null);
  const priorConfirmation=useRef({creating:false,confirm:false});
  useEffect(()=>{const previous=priorConfirmation.current;if(previous.creating&&!creating)createTrigger.current?.focus();if(previous.confirm&&!confirm)revokeTrigger.current?.focus();priorConfirmation.current={creating,confirm:!!confirm};},[creating,confirm]);
- const working=useRef(false),mounted=useRef(true),current=useRef({actor,organization,schedule,enabled});current.current={actor,organization,schedule,enabled};
+ const working=useRef(false),mounted=useRef(true),current=useRef({actor,organization,schedule,enabled,generation:0});
+ const previous=current.current;const generation=previous.generation+(previous.actor!==actor||previous.organization!==organization||previous.schedule!==schedule||previous.enabled!==enabled?1:0);current.current={actor,organization,schedule,enabled,generation};
+ useEffect(()=>{working.current=false;setBusy(false);},[actor,organization,schedule,enabled]);
  useEffect(()=>{mounted.current=true;setOrigin(window.location.origin);return()=>{mounted.current=false;};},[]);
  useEffect(()=>{onState?.(!!pending,busy);},[pending,busy,onState]);
- function same(){const now=current.current;return mounted.current&&now.actor===actor&&now.organization===organization&&now.schedule===schedule&&now.enabled;}
+ function same(){const now=current.current;return mounted.current&&now.generation===generation&&now.actor===actor&&now.organization===organization&&now.schedule===schedule&&now.enabled;}
  async function run(work:()=>Promise<void>){
   if(!actor||!enabled||working.current)return;working.current=true;setBusy(true);setError('');setMessage('');
   try{await work();}catch(e){if(same()){if(e instanceof ClientLinkVersionError){setPending(null);setCreating(false);}setError(e instanceof Error?e.message:'Sharing is unavailable. Please try again.');}}
-  finally{working.current=false;if(mounted.current)setBusy(false);}
+  finally{if(mounted.current&&current.current.generation===generation){working.current=false;setBusy(false);}}
  }
  async function load(append=false){
   if(!actor)return;const data=await repository.read(actor,schedule,append?review?.links.at(-1)?.id??null:null);

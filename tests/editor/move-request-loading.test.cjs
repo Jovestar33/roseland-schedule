@@ -8,7 +8,7 @@ function harness(){
  const mocks={react,'react/jsx-runtime':{jsx,jsxs:jsx},'@/lib/platform/schedule-transfers':{createTransferRepository:()=>repo},'@/lib/platform/schedule-library':{createScheduleLibraryRepository:()=>({})},'@/lib/platform/schedule-lifecycle-repository':{createLifecycleRepository:()=>({})},'@/lib/rowNormalizer':{makeMeta:()=>({})}};
  const source=ts.transpileModule(fs.readFileSync(path.resolve(__dirname,'../../components/local/LocalScheduleTransfers.tsx'),'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,jsx:ts.JsxEmit.ReactJSX}}).outputText;
  const mod={exports:{}};vm.runInNewContext('(function(require,module,exports){'+source+'\n})',{Error,console})(name=>mocks[name]??{default:{}},mod,mod.exports);
- function render(){index=0;tree=mod.exports.default(props);const run=queued;queued=[];run.forEach(fn=>fn());}
+ function render(patch={}){Object.assign(props,patch);index=0;tree=mod.exports.default(props);const run=queued;queued=[];run.forEach(fn=>fn());}
  function nodes(node,result=[]){if(Array.isArray(node))node.forEach(n=>nodes(n,result));else if(node&&typeof node==='object'&&!node.props?.hidden){result.push(node);nodes(node.props?.children,result);}return result;}
  function text(node){if(node==null||typeof node==='boolean'||node?.props?.hidden)return '';if(Array.isArray(node))return node.map(text).join('');if(typeof node==='object')return text(node.props?.children);return String(node);}
  return{render,requests,text:()=>text(tree),refresh:()=>nodes(tree).find(n=>n.type==='button'&&n.props.children==='↻ Refresh').props.onClick(),flush:async()=>{await new Promise(resolve=>setImmediate(resolve));render();}};
@@ -21,4 +21,18 @@ test('failed move-request reads show a useful error and a successful retry clear
  const h=harness();h.render();h.requests[0].reject(new Error('Internal provider error'));await h.flush();
  assert.match(h.text(),/Couldn’t load move requests/);assert.doesNotMatch(h.text(),/No move requests|Internal provider error/);
  h.refresh();h.requests[1].resolve([]);await h.flush();assert.match(h.text(),/No move requests/);assert.doesNotMatch(h.text(),/Couldn’t load|Internal provider error/);
+});
+
+
+test('switching organization while requests load starts a fresh read and ignores the old queue',async()=>{
+ const h=harness();h.render();assert.equal(h.requests.length,1);
+ h.render({organization:'second-org'});assert.equal(h.requests.length,2);
+ h.requests[0].resolve([{id:'old-request',source:'Old organization source',destination:'Old destination',status:'approved'}]);await h.flush();
+ assert.doesNotMatch(h.text(),/Old organization source|No move requests/);
+ h.requests[1].resolve([]);await h.flush();assert.match(h.text(),/No move requests/);assert.doesNotMatch(h.text(),/Old organization source|Loading requests/);
+});
+test('resuming access replaces an interrupted inbox read without the old response releasing the new busy guard',async()=>{
+ const h=harness();h.render();h.render({enabled:false});h.render({enabled:true});assert.equal(h.requests.length,2);
+ h.requests[0].resolve([]);await h.flush();assert.match(h.text(),/Checking…/);assert.doesNotMatch(h.text(),/No move requests/);
+ h.requests[1].resolve([]);await h.flush();assert.match(h.text(),/No move requests/);assert.doesNotMatch(h.text(),/Checking…/);
 });

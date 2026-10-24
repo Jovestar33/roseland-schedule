@@ -19,7 +19,7 @@ const inp: React.CSSProperties = {
   border: '1.5px solid var(--g200)',
   borderRadius: '7px',
   width: '100%',
-  outline: 'none',
+  boxSizing: 'border-box',
 };
 
 export default function ContactModal({ open, row, onSave, onClose }: Props) {

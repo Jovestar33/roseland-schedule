@@ -154,3 +154,9 @@
 
 /* Override the legacy overlay tab strip only inside the new Library. */
 .library :global(.lib-tabs){flex-wrap:wrap!important;overflow:visible!important;white-space:normal;gap:4px!important}
+/* Long names and recovery actions must remain usable outside the happy path. */
+.reviewDialog :is(p,h2){overflow-wrap:anywhere;line-height:1.5}.reviewDialog button{max-width:100%;white-space:normal;line-height:1.4}
+.reviewDialog .dialogHeading{align-items:flex-start;margin-bottom:16px}.reviewDialog .dialogClose{flex:0 0 36px}
+.orderRecovery{padding:18px;border:1px solid var(--g200);border-radius:10px;background:white;margin:18px 0;line-height:1.6}
+.orderRecovery p{margin:0 0 12px}.orderRecovery button{margin:4px 10px 4px 0;white-space:normal}
+@media(max-width:480px){.reviewDialog form>button,.reviewDialog>button,.orderRecovery button{width:100%;margin:8px 0 0}.reviewDialog .dialogActions>button{flex:1 1 140px}.reviewDialog{width:calc(100% - 24px);max-height:calc(100dvh - 24px);padding:18px}}

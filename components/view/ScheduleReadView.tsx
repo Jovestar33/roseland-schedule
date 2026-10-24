@@ -71,7 +71,7 @@ export default function ScheduleReadView({ data, name }: Props) {
   const label=(key:string,fallback:string)=>config.labels?.[key]||fallback;
   const { meta, rows } = data;
   const wx = meta.wx;
-  const visibleRows = rows.filter(r => r.action || r.timeIn || r.keyInstruction || r.cast);
+  const visibleRows = rows.filter(r => r.action || r.timeIn || r.desc || r.notes || r.keyInstruction || r.cast || r.loc || r.locName || r.locAddress || r.subLocations?.some(location=>location.name||location.loc||location.address||location.desc));
   const callTime = rows.find(r => !r.sunLocked)?.timeIn || '';
 
   const scheduleName = name || '';

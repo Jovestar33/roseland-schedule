@@ -1,6 +1,7 @@
 'use client';
 import {useEffect,useRef,useState} from 'react';
 import {useLocalWorkspace} from './LocalWorkspaceContext';
+import styles from './trial-sync-review.module.css';
 type Row={id:string;name:string;state:'matching'|'different'|'changed-during-check'|'unavailable';checkedAt?:string};
 type Inventory={legacyUnmapped:string[];legacyMissing:string[];targetUnmapped:{id:string;name:string}[];targetMissing:string[]};
 const labels={matching:'Contents match',different:'Contents differ','changed-during-check':'Edited during comparison',unavailable:'Could not compare'};
@@ -34,11 +35,11 @@ export default function LocalTrialSyncComparison(){
  }
  const attention=rows.filter(r=>r.state!=='matching');
  const inventoryCount=inventory?inventory.legacyUnmapped.length+inventory.legacyMissing.length+inventory.targetUnmapped.length+inventory.targetMissing.length:0;
- return <section aria-label="Compare saved copies" style={{padding:'16px 0',borderBottom:'1px solid var(--g200)'}}>
+ return <section className={styles.comparison} aria-label="Compare saved copies">
   <h3>Compare saved copies</h3>
-  <p>Check the current contents of both apps while synchronization is paused. This check never copies or changes a schedule.</p>
-  <div style={{display:'flex',flexWrap:'wrap',gap:8}}><button className="btn btn-pink" disabled={busy} onClick={()=>void compare()}>{busy?'Comparing…':'Compare copies'}</button>{busy&&<button className="btn btn-light" onClick={()=>{controller.current?.abort();setBusy(false);setComplete(false);setMessage('Comparison stopped. No schedules were changed.');}}>Cancel comparison</button>}</div>
-  {message&&<p role="status">{message}</p>}
+  <p>Compare the saved contents in both apps. This check does not copy or change any schedules.</p>
+  <div className={styles.actions}><button className="btn btn-pink" disabled={busy} onClick={()=>void compare()}>{busy?'Comparing…':'Compare copies'}</button>{busy&&<button className="btn btn-light" onClick={()=>{controller.current?.abort();setBusy(false);setComplete(false);setMessage('Comparison stopped. No schedules were changed.');}}>Cancel comparison</button>}</div>
+  {message&&<p className={styles.notice} role="status">{message}</p>}
   {rows.length>0&&<p>{rows.filter(r=>r.state==='matching').length} match · {attention.length} need attention{!complete?' · Partial results':''}</p>}
   {attention.length>0&&<ul>{attention.map(r=><li key={r.id}><strong>{r.name}</strong>: {labels[r.state]}</li>)}</ul>}
   {!!inventoryCount&&<details><summary>{inventoryCount} library differences</summary><ul>{inventory!.legacyUnmapped.map(k=><li key={'lu'+k}>Legacy app, not connected: {k}</li>)}{inventory!.legacyMissing.map(k=><li key={'lm'+k}>Legacy app, missing: {k}</li>)}{inventory!.targetUnmapped.map(r=><li key={r.id}>New app, not connected: {r.name}</li>)}{inventory!.targetMissing.map(k=><li key={'tm'+k}>New app, missing: {k}</li>)}</ul></details>}

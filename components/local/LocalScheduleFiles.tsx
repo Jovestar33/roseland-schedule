@@ -26,6 +26,7 @@ export default function LocalScheduleFiles({embedded=false,client,actor,organiza
   const latest=useRef({actor,organization,enabled});latest.current={actor,organization,enabled};
   const inScope=!reviewOrg||reviewOrg===organization;
   useEffect(()=>{onState(entries.length>0||!!review,busy);},[entries.length,review,busy,onState]);
+  useEffect(()=>{ticket.current++;busyRef.current=false;setBusy(false);},[actor,organization,enabled]);
   useEffect(()=>{const requests=ticket;return()=>{requests.current++;};},[]);
   async function run(work:(current:()=>boolean)=>Promise<void>){
     if(busyRef.current||!enabled||!actor)return;busyRef.current=true;setBusy(true);const seq=++ticket.current,a=actor,o=organization;
@@ -37,23 +38,23 @@ export default function LocalScheduleFiles({embedded=false,client,actor,organiza
     const choices=copy?[]:await repo.productions(actor!,organization!);
     const d=copy?await repo.destinations(actor!,organization!):[];
     if(!current())return;setEntries(next);setReview(null);setReviewOrg(organization);setDays(d);setDay(copy?(d[0]?.id??''):'');setProductions(choices);setProduction(choices[0]?.id??'');
-    setMessage((copy?d.length:choices.length)?'Review names, destination and complete documents before importing.':copy?'No existing days are editable by this account.':'No productions allow this account to create schedules.');
+    setMessage((copy?d.length:choices.length)?'Choose where to import these schedules, then check their names and contents.':copy?'You don’t have access to an editable production day.':'You don’t have permission to add schedules to any available production.');
   }
-  function clear(){setSource(null);setEntries([]);setReview(null);setReviewOrg(null);setMessage('Review closed. Your source draft is unchanged.');if(fileRef.current)fileRef.current.value='';}
+  function clear(){setSource(null);setEntries([]);setReview(null);setReviewOrg(null);setMessage(review?.complete?'':'Import cancelled.');if(fileRef.current)fileRef.current.value='';}
   return <section className={`${styles.files} ${fileStyles.files}`} aria-label="Schedule backups">
     {!embedded&&<h2>Backup &amp; import</h2>}
-    <p className={fileStyles.intro}>Keep a copy of your saved schedules, or bring schedules in from a backup.</p>
-    <div className={fileStyles.cards}>
+    <p hidden={entries.length>0||!!review} className={fileStyles.intro}>Keep a copy of your saved schedules, or bring schedules in from a backup.</p>
+    <div hidden={entries.length>0||!!review} className={fileStyles.cards}>
      <section className={fileStyles.card} aria-label="Download backup"><h3>Download backup</h3><p>Save your schedules as a JSON file.</p>
      <details><summary>What’s included</summary><p>All saved schedules you can read across organizations, including archived and trashed schedules. Only saved changes are included. History, snapshots, templates, settings and permissions are excluded.</p></details>
       <button className="btn btn-light" disabled={!enabled||busy} onClick={()=>void run(async current=>{const file=await repo.exportAll(actor!);if(current()){download(file,safeDownloadName('All-authorized-schedules',new Date().toISOString().slice(0,10)+'.json'));setMessage(`Exported ${file.schedules.length} saved schedules. Draft edits were not changed.`);}})}>Download backup</button>
      </section>
      <section className={fileStyles.card} aria-label="Import backup"><h3>Import backup</h3><p>Choose a JSON backup, then review its schedules and destination. Existing schedules won’t be overwritten.</p>
 
-      <label>Choose JSON backup<input ref={fileRef} type="file" accept=".json,application/json" disabled={!enabled||!organization||busy||entries.length>0||!!review} onChange={e=>{const file=e.target.files?.[0];if(!file)return;void run(async current=>{if(file.size>FILE_BYTES)throw new Error('File exceeds 20 MB.');setSource(null);setMessage(`Reading ${file.name}…`);const contents=await file.text();const next=await parseScheduleFile(contents,file.name.replace(/\.json$/i,''));await loadEntries(next,current);});e.target.value='';}}/></label>
+      <label>Choose JSON backup<input ref={fileRef} type="file" accept=".json,application/json" disabled={!enabled||!organization||busy||entries.length>0||!!review} onChange={e=>{const file=e.target.files?.[0];if(!file)return;void run(async current=>{if(file.size>FILE_BYTES)throw new Error('Choose a backup smaller than 20 MB.');setSource(null);setMessage(`Reading ${file.name}…`);const contents=await file.text();const next=await parseScheduleFile(contents,file.name.replace(/\.json$/i,''));await loadEntries(next,current);});e.target.value='';}}/></label>
      </section>
     </div>
-      <button hidden={!getSource()} className="btn btn-light" disabled={!enabled||!copyEnabled||!organization||busy||entries.length>0||!!review} onClick={()=>{if(onCopy){onCopy();return;}const data=structuredClone(getDraft()),record=getSource();if(!record)return;void run(async current=>{const policy=await repo.copyPolicy(actor!,record.id);if(!current())return;setSource({id:record.id,version:record.document_version,policy});await loadEntries([{name:`${name} copy`,slug:suggestedSlug(`${name} copy`),data}],current,true);});}}>Copy / Save As current draft</button>
+      <button hidden={!getSource()} className="btn btn-light" disabled={!enabled||!copyEnabled||!organization||busy||entries.length>0||!!review} onClick={()=>{if(onCopy){onCopy();return;}const data=structuredClone(getDraft()),record=getSource();if(!record)return;void run(async current=>{const policy=await repo.copyPolicy(actor!,record.id);if(!current())return;setSource({id:record.id,version:record.document_version,policy});await loadEntries([{name:`${name} copy`,slug:suggestedSlug(`${name} copy`),data}],current,true);});}}>Duplicate current draft</button>
     <p hidden={!message} className={fileStyles.feedback} role="status">{message}</p>
     {!inScope&&<p>A file review is retained in another organization. Return there to continue.</p>}
     {inScope&&entries.length>0&&!review&&<fieldset disabled={!enabled||busy}>
@@ -63,19 +64,20 @@ export default function LocalScheduleFiles({embedded=false,client,actor,organiza
       <label>Destination production day<select value={day} onChange={e=>setDay(e.target.value)}><option value="">{source?'Choose an editable day':'No production day'}</option>{source?days.map(d=><option key={d.id} value={d.id}>{d.label}</option>):selectedProduction?.days.map(d=><option key={d.id} value={d.id}>Day {d.number??d.position+1}{' · '+dateLabel(d.date)}</option>)}</select></label>
       {entries.map((entry,i)=><div key={i} className={styles.fileEntry}>
         <label>New schedule name {i+1}<input value={entry.name} onChange={e=>setEntries(all=>all.map((v,j)=>j===i?{...v,name:e.target.value}:v))}/></label>
-        <label>New schedule slug {i+1}<input value={entry.slug} onChange={e=>setEntries(all=>all.map((v,j)=>j===i?{...v,slug:e.target.value}:v))}/></label>
-        <details><summary>Review full document {i+1} ({entry.data.rows?.length??0} rows)</summary><ScheduleDocumentPreview document={entry.data}/></details>
+        <label>Schedule address {i+1}<input value={entry.slug} onChange={e=>setEntries(all=>all.map((v,j)=>j===i?{...v,slug:e.target.value}:v))}/></label>
+        <details><summary>Preview schedule {i+1} ({entry.data.rows?.length??0} rows)</summary><ScheduleDocumentPreview document={entry.data}/></details>
       </div>)}
-      <button className="btn btn-pink" disabled={source?!day:!selectedProduction} onClick={()=>void run(async current=>{const placement=source?undefined:{productionId:production,phaseId:null};const proposed=new ScheduleFileImport(actor!,organization!,day||null,entries,undefined,placement);await repo.preflight(actor!,organization!,day||null,entries,placement);if(current()){setReview(proposed);setMessage('Review locked. Confirm to create these exact documents; later source edits remain in your draft.');}})}>Continue to review</button>
+      <button className="btn btn-pink" disabled={source?!day:!selectedProduction} onClick={()=>void run(async current=>{const placement=source?undefined:{productionId:production,phaseId:null};const proposed=new ScheduleFileImport(actor!,organization!,day||null,entries,undefined,placement);await repo.preflight(actor!,organization!,day||null,entries,placement);if(current()){setReview(proposed);setMessage('Ready to import. Review the schedules below, then choose Import schedules.');}})}>Continue to review</button>
       <button className="btn btn-light" onClick={clear}>Cancel</button>
     </fieldset>}
-    {inScope&&review&&<div className={styles.recovery}>
-      <h3>{review.complete?'New schedules confirmed':'Confirm or recover creation'}</h3>
-      <p>Destination: {review.placement?`${productions.find(p=>p.id===review.placement!.productionId)?.name??'Selected production'} · ${review.day?'Selected production day':'No production day'}`:days.find(d=>d.id===review.day)?.label}. {review.items.filter(c=>c.phase==='success').length} of {review.items.length} confirmed. Keep this tab for recovery; closing or reloading loses request details. Download the receipt to retain IDs.</p>
-      <ul>{review.receipt().map(r=><li key={r.id}>{r.name} · {r.state}{r.failure?` (${r.failure})`:''}<br/><small>{r.id}</small></li>)}</ul>
-      <button className="btn btn-pink" disabled={!enabled||busy||review.complete} onClick={()=>void run(async current=>{await review.execute({...repo.lifecycle,send:attempt=>repo.lifecycle.send(attempt,source??undefined),probe:attempt=>repo.lifecycle.probe(attempt,source??undefined)},current);if(current()){setMessage(review.complete?'Creation confirmed. Source and newer draft edits are unchanged.':'Stopped at an unconfirmed item. Check the original IDs before retrying.');if(review.items.some(c=>c.failure==='unauthenticated'))requireAuth();}})}>{review.started?'Retry unconfirmed original IDs':'Confirm create new schedules'}</button>
-      {review.started&&!review.complete&&<button className="btn btn-light" disabled={!enabled||busy} onClick={()=>void run(async current=>{await review.execute({...repo.lifecycle,send:attempt=>repo.lifecycle.send(attempt,source??undefined),probe:attempt=>repo.lifecycle.probe(attempt,source??undefined)},current,true);if(current())setMessage('Original IDs checked. Review the recorded results.');})}>Check original IDs</button>}
-      <button className="btn btn-light" disabled={busy} onClick={()=>download({format:'schedule-create-receipt',fictional:true,items:review.receipt()},safeDownloadName('Schedule-create','receipt.json'))}>Download creation receipt</button>
+    {inScope&&review&&<div className={`${styles.recovery} ${fileStyles.recovery}`} >
+      <h3>{review.complete?'Import complete':review.started?'Check import progress':'Ready to import'}</h3>
+      <p>Destination: {review.placement?`${productions.find(p=>p.id===review.placement!.productionId)?.name??'Selected production'} · ${review.day?'Selected production day':'No production day'}`:days.find(d=>d.id===review.day)?.label}. {review.items.filter(c=>c.phase==='success').length} of {review.items.length} imported. {!review.complete&&'Keep this tab open until the import finishes. '}Download a receipt to keep the results.</p>
+      <ul className={fileStyles.results}>{review.receipt().map(r=><li key={r.id}><strong>{r.name}</strong><span>{({review:'Ready',pending:'Importing…',success:'Imported',uncertain:'Checking needed',conflict:'Needs review',blocked:'Needs review'} as Record<string,string>)[r.state]??'Needs review'}</span>{r.failure&&<p>Check this schedule before trying again.</p>}</li>)}</ul>
+      <button className="btn btn-pink" disabled={!enabled||busy||review.complete} onClick={()=>void run(async current=>{await review.execute({...repo.lifecycle,send:attempt=>repo.lifecycle.send(attempt,source??undefined),probe:attempt=>repo.lifecycle.probe(attempt,source??undefined)},current);if(current()){setMessage(review.complete?'Schedules imported successfully.':'The import paused. Check the results before retrying the remaining schedules.');if(review.items.some(c=>c.failure==='unauthenticated'))requireAuth();}})}>{review.started?'Retry remaining schedules':'Import schedules'}</button>
+      {review.started&&!review.complete&&<button className="btn btn-light" disabled={!enabled||busy} onClick={()=>void run(async current=>{await review.execute({...repo.lifecycle,send:attempt=>repo.lifecycle.send(attempt,source??undefined),probe:attempt=>repo.lifecycle.probe(attempt,source??undefined)},current,true);if(current())setMessage('Results checked. Review the import progress above.');})}>Check import results</button>}
+      <button className="btn btn-light" disabled={busy} onClick={()=>download({format:'schedule-create-receipt',items:review.receipt()},safeDownloadName('Schedule-create','receipt.json'))}>Download receipt</button>
+      {!review.started&&<button className="btn btn-light" disabled={busy} onClick={()=>{setReview(null);setMessage('');}}>Back</button>}
       {(!review.started||review.complete)&&<button className="btn btn-light" disabled={busy} onClick={clear}>{review.complete?'Close':'Cancel'}</button>}
     </div>}
   </section>;

@@ -1,12 +1,12 @@
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),ts=require('typescript'),React=require('react');
 // Run the real component effects with controlled read responses. No credentials,
 // enrollment, provider grants or account changes are performed by this harness.
-function fixture(){
+function fixture(options={}){
  let hooks=[],cursor=0,pending=[],effects=[],tree,ready=[],stage=[],batches=[];
  let props={review:true,managedRecovery:true,session:{user:{id:'fixture'},access_token:'not-a-token'},authNeeded:false,organization:'org-a',revision:0,recentRequired:false,onReady:v=>ready.push(v),onStageChange:v=>stage.push(v),onVerified:()=>{}};
  let batch;
  function deferred(){let resolve;const promise=new Promise(r=>resolve=r);return {promise,resolve};}
- const client={rpc(name){if(name==='get_my_mfa_status'){batch={status:deferred(),orgs:deferred(),factors:deferred()};batches.push(batch);}return {setHeader:()=>batch[name==='get_my_mfa_status'?'status':'orgs'].promise};},auth:{mfa:{listFactors:()=>batch.factors.promise}}};props.client=client;
+ const client={rpc(name){if(name==='get_my_mfa_status'){batch={status:deferred(),orgs:deferred(),factors:deferred()};batches.push(batch);}return {setHeader:()=>batch[name==='get_my_mfa_status'?'status':'orgs'].promise};},auth:{mfa:{listFactors:()=>batch.factors.promise,enroll:async()=>({data:{id:'new-fixture-factor',totp:{secret:'fixture-secret',qr_code:'data:image/svg+xml,fixture'}},error:null}),unenroll:async({factorId})=>{assert.equal(factorId,'new-fixture-factor');return {error:options.cancelFails?{message:'fixture error'}:null};}}}};props.client=client;
  const react={...React,useState(initial){const i=cursor++;if(!(i in hooks))hooks[i]=typeof initial==='function'?initial():initial;return [hooks[i],value=>{const next=typeof value==='function'?value(hooks[i]):value;if(next!==hooks[i]){hooks[i]=next;pending.push(true);}}];},useRef(value){const i=cursor++;return hooks[i]??(hooks[i]={current:value});},useEffect(fn,deps){const i=cursor++;const previous=hooks[i];if(!previous||deps.some((d,k)=>d!==previous.deps[k]))effects.push(()=>{previous?.cleanup?.();hooks[i]={deps,cleanup:fn()};});}};
  const code=ts.transpileModule(fs.readFileSync('components/local/LocalMfaAccess.tsx','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX}}).outputText;
  const mod={exports:{}};vm.runInThisContext('(function(require,module,exports){'+code+'\n})')(name=>name==='react'?react:require(name),mod,mod.exports);
@@ -40,4 +40,19 @@ test('expired session invalidates pending checks and excludes the authenticator 
 
 test('successful retry clears unavailable copy before showing a required challenge',async()=>{
  const f=fixture();f.reply(f.batches[0],{error:true});await f.flush();f.update({revision:1});f.reply(f.batches[1],{required:true,verified:true});await f.flush();assert.equal(f.stage.at(-1),'code');assert.doesNotMatch(text(f.tree),/temporarily unavailable/);
+});
+
+function button(tree,label){if(Array.isArray(tree)){for(const n of tree){const found=button(n,label);if(found)return found;}return;}if(!tree||!tree.props)return;if(tree.type==='button'&&text(tree).trim()===label)return tree;return button(tree.props.children,label);}
+test('cancel optional authenticator setup rechecks policy and returns ordinary users to ready',async()=>{
+ const f=fixture();f.reply(f.batches[0]);await f.flush();button(f.tree,'Two-step verification').props.onClick();f.render();button(f.tree,'Set up authenticator').props.onClick();await f.flush();assert.equal(f.stage.at(-1),'code');
+ button(f.tree,'Cancel setup').props.onClick();await f.flush();assert.equal(f.stage.at(-1),'checking');assert.equal(f.ready.at(-1),false);assert.equal(f.batches.length,2);
+ f.reply(f.batches[1]);await f.flush();assert.equal(f.stage.at(-1),'ready');assert.equal(f.ready.at(-1),true);assert.doesNotMatch(text(f.tree),/required before you can open/);
+});
+test('cancelling required enrollment does not bypass the organization requirement',async()=>{
+ const f=fixture();f.reply(f.batches[0],{required:true});await f.flush();button(f.tree,'Set up authenticator').props.onClick();await f.flush();button(f.tree,'Cancel setup').props.onClick();await f.flush();
+ f.reply(f.batches[1],{required:true});await f.flush();assert.equal(f.stage.at(-1),'enroll');assert.equal(f.ready.at(-1),false);assert.match(text(f.tree),/requires two-step/);
+});
+test('failed cancellation keeps the unfinished authenticator and lets the user retry',async()=>{
+ const f=fixture({cancelFails:true});f.reply(f.batches[0]);await f.flush();button(f.tree,'Two-step verification').props.onClick();f.render();button(f.tree,'Set up authenticator').props.onClick();await f.flush();button(f.tree,'Cancel setup').props.onClick();await f.flush();
+ assert.equal(f.stage.at(-1),'code');assert.equal(f.ready.at(-1),false);assert.equal(f.batches.length,1);assert.ok(button(f.tree,'Cancel setup'));assert.match(text(f.tree),/could not be cancelled/);
 });

@@ -1,12 +1,12 @@
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),ts=require('typescript'),React=require('react');
-function fixture(fetcher,hash='',search=''){
+function fixture(fetcher,hash='',search=''){let printRequest;const dispatched=[];
  const hooks=[],events=new Map();let cursor=0,effects=[],pending=false,tree;const location={pathname:'/local-client',hash,search};
  const mockReact={...React,useState(initial){const i=cursor++;if(!(i in hooks))hooks[i]=typeof initial==='function'?initial():initial;return [hooks[i],value=>{const n=typeof value==='function'?value(hooks[i]):value;if(n!==hooks[i]){hooks[i]=n;pending=true;}}];},useRef(value){const i=cursor++;return hooks[i]??(hooks[i]={current:value});},useEffect(fn,deps){const i=cursor++;if(!hooks[i]){hooks[i]={deps};effects.push(fn);}}};
  const code=ts.transpileModule(fs.readFileSync('components/view/LocalClientViewer.tsx','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX,target:ts.ScriptTarget.ES2022}}).outputText;
- const mod={exports:{}};vm.runInNewContext('(function(require,module,exports){'+code+'\n})',{URLSearchParams,fetch:fetcher,window:{location,addEventListener:(n,f)=>events.set(n,f),removeEventListener:()=>{}},history:{replaceState:(_,__,url)=>{const v=new URL(url,'http://localhost');location.search=v.search;location.hash=v.hash;}},setInterval:()=>1,clearInterval:()=>{}})(name=>name==='react'?mockReact:name==='react/jsx-runtime'?require(name):{default:()=>null},mod,mod.exports);
+ const mod={exports:{}};vm.runInNewContext('(function(require,module,exports){'+code+'\n})',{Event,URLSearchParams,fetch:fetcher,window:{location,dispatchEvent:event=>dispatched.push(event.type),addEventListener:(n,f)=>events.set(n,f),removeEventListener:()=>{}},history:{replaceState:(_,__,url)=>{const v=new URL(url,'http://localhost');location.search=v.search;location.hash=v.hash;}},setInterval:()=>1,clearInterval:()=>{}})(name=>name==='@/lib/print'?{printSchedule:async(name,data,authorize)=>{printRequest={name,data,authorize};}}:name==='react'?mockReact:name==='react/jsx-runtime'?require(name):{default:()=>null},mod,mod.exports);
  function render(){let i=0;do{assert.ok(i++<20);pending=false;cursor=0;tree=mod.exports.default({});const e=effects;effects=[];e.forEach(f=>f());}while(pending);return tree;}
  async function flush(){for(let n=0;n<4;n++){await new Promise(setImmediate);render();}return tree;}
- render();return {flush,get tree(){return tree;},location,changeHash(hash){location.hash=hash;events.get('hashchange')();render();}};
+ render();return {flush,get tree(){return tree;},get printRequest(){return printRequest;},dispatched,location,changeHash(hash){location.hash=hash;events.get('hashchange')();render();}};
 }
 const response=(value,status=200)=>({ok:status>=200&&status<300,status,json:async()=>value});
 function text(n){return Array.isArray(n)?n.map(text).join(' '):typeof n==='string'?n:n?.props?text(n.props.children):'';}
@@ -25,4 +25,12 @@ test('changing the fragment ignores a late previous exchange and shows only the 
 });
 test('invalid new token never falls back to the previous valid recipient',async()=>{
  const calls=[],id='1'.repeat(32);const f=fixture(async(url,init)=>{calls.push(url);return init.body?response({},404):response({name:'A',document:{}});},'','?recipient='+id);await f.flush();assert.equal(view(f.tree),'A');f.changeHash('#invalid');await f.flush();assert.equal(view(f.tree),null);assert.match(text(f.tree),/unavailable/);assert.equal(calls.filter(x=>x.endsWith(id)).length,1);
+});
+
+test('old shared-schedule print previews cannot authorize against a different recipient session',async()=>{
+ const idA='1'.repeat(32),idB='2'.repeat(32),calls=[];
+ const f=fixture(async(url,init)=>{calls.push(url);if(init.body)return response({recipient:JSON.parse(init.body).token[0]==='a'?idA:idB});return response({name:url.endsWith(idB)?'B':'A',document:{}});},'#'+'a'.repeat(64));await f.flush();
+ function nodes(n){return Array.isArray(n)?n.flatMap(nodes):n?.props?[n,...nodes(n.props.children)]:[];}
+ nodes(f.tree).find(n=>n.type==='button'&&n.props.children==='Print / Save PDF').props.onClick();await f.flush();const old=f.printRequest;assert.equal(old.name,'A');assert.equal(await old.authorize(),true);await f.flush();
+ const closes=f.dispatched.length;f.changeHash('#'+'b'.repeat(64));await f.flush();assert.ok(f.dispatched.length>closes);const before=calls.length;assert.equal(await old.authorize(),false);assert.equal(calls.length,before);
 });

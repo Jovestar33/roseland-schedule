@@ -3,7 +3,7 @@ const settle=()=>new Promise(resolve=>setImmediate(resolve));
 function harness(role='owner',options={}){
  const values=[],refs=[];let slot=0,refSlot=0,panel={};
  const calls=[];const directory={productions:[{id:'production-1',name:'Production One'}],schedules:[{id:'schedule-1',name:'Day One',production:'production-1'}],members:[{id:'member-1',name:'Example Member',role:'member'}]};
- const workspace={session:{access_token:'test-only'},active:true,authNeeded:false,readOnly:!!options.readOnly,organization:{id:'organization-1',name:'Example Organization',role},client:{rpc(name,args){calls.push({name,args});return{setHeader:async()=>({data:name==='schedule_permission_directory'?directory:{restrictions:[],effective:{read:true,permissions:options.canManage!==false}},error:name==='assign_production_role'&&options.failAssignment?{code:'test_failure'}:null})};}}};
+ const workspace={session:{access_token:'test-only'},active:true,authNeeded:false,readOnly:!!options.readOnly,organization:{id:'organization-1',name:'Example Organization',role},client:{rpc(name,args){calls.push({name,args});return{setHeader:async()=>({data:name==='schedule_permission_directory'?directory:{restrictions:[],effective:{read:true,permissions:options.canManage!==false}},error:(name==='assign_production_role'&&options.failAssignment||name==='schedule_permission_directory'&&options.failDirectory)?{code:'test_failure'}:null})};}}};
  const mocks={react:{...React,useState(initial){const i=slot++;if(!(i in values))values[i]=typeof initial==='function'?initial():initial;return[values[i],v=>{values[i]=typeof v==='function'?v(values[i]):v;}];},useRef(initial){const i=refSlot++;return refs[i]??(refs[i]={current:initial});}},'./LocalWorkspaceContext':{useLocalWorkspace:()=>workspace,useWorkspacePanelState:(dirty,busy)=>{panel={dirty,busy};}},'@/app/local-workspace/workspace.module.css':{default:{}}};
  const output=ts.transpileModule(fs.readFileSync('components/local/LocalSchedulePermissions.tsx','utf8'),{compilerOptions:{jsx:ts.JsxEmit.ReactJSX,module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,esModuleInterop:true}}).outputText;
  const module={exports:{}};vm.runInThisContext('(function(require,module,exports){'+output+'\n})')(name=>mocks[name]||require(name),module,module.exports);
@@ -23,7 +23,7 @@ test('scope selection cannot expose a save form until its production and schedul
  assert.deepEqual(h.calls.at(-1).args,{target_organization_id:'organization-1',target_production_id:'production-1',target_schedule_id:'schedule-1'});
  h.nodes().find(n=>n.type==='input'&&n.props.type==='checkbox').props.onChange({target:{checked:true}});h.render();
  assert.equal(h.find('button','Organization').props.disabled,true,'unfinished permission draft prevents changing its target');
- h.find('button','Discard permission draft').props.onClick();h.render();h.find('button','Organization').props.onClick();await settle();h.render();
+ h.find('button','Cancel changes').props.onClick();h.render();h.find('button','Organization').props.onClick();await settle();h.render();
  assert.deepEqual(h.calls.at(-1).args,{target_organization_id:'organization-1',target_production_id:null,target_schedule_id:null});
 });
 test('Admin scope navigation preserves restricted role choices',async()=>{
@@ -44,7 +44,7 @@ test('production role draft protects its scope and can be cancelled without assi
  assert.equal(h.find('button','Schedule').props.disabled,true);
  assert.equal(h.nodes().find(n=>n.type==='select').props.disabled,true);
  assert.equal(h.nodes().find(n=>n.type==='fieldset').props.disabled,true);
- h.find('button','Cancel role draft').props.onClick();h.render();
+ h.find('button','Cancel').props.onClick();h.render();
  assert.equal(h.panel.dirty,false);assert.equal(h.find('button','Schedule').props.disabled,false);
  assert.equal(h.nodes().find(n=>n.type==='fieldset').props.disabled,false);
  assert.equal(h.calls.some(c=>c.name==='assign_production_role'),false);
@@ -68,4 +68,9 @@ test('read-only or restricted management access leaves review available while di
   assert.equal(h.find('button','Schedule').props.disabled,false);
   assert.equal(h.find('button','Refresh permissions').props.disabled,false);
  }
+});
+
+test('failed permission directory has a visible retry without requiring a hidden details toggle',async()=>{
+ const options={failDirectory:true},h=harness('owner',options);await h.open();assert.ok(h.find('button','Try again'));assert.equal(h.find('button','Try again').props.disabled,false);
+ options.failDirectory=false;h.find('button','Try again').props.onClick();await settle();h.render();assert.ok(h.find('button','Organization'));assert.equal(h.find('button','Try again'),undefined);
 });

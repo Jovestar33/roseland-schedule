@@ -7,9 +7,10 @@ import { documentContacts, contactsCsv, safeDownloadName, type DocumentContact }
 import { printDocument } from '@/lib/print';
 import DocumentPrintFurniture from './DocumentPrintFurniture';
 import { dateLabel } from '@/lib/date-label';
-import { useContext } from 'react';
+import { useCallback, useContext, useState } from 'react';
 import { ModalVisibilityContext } from './Modal';
 import { useLocalEditor } from '@/components/schedule/LocalEditorContext';
+import {useDocumentOutput} from './useDocumentOutput';
 
 function downloadCsv(contacts: DocumentContact[], scheduleName: string) {
   const blob = new Blob([contactsCsv(contacts)], { type: 'text/csv;charset=utf-8' });
@@ -67,10 +68,15 @@ export default function ContactSheetModal({ open, onClose, authorizeOutput, read
   const rows         = useScheduleStore((s) => s.rows);
   const scheduleName = useScheduleStore((s) => s.scheduleName) ?? '';
   const meta         = useScheduleStore((s) => s.meta);
+  const documentSession = useScheduleStore((s) => s.documentSession);
 
   const contacts = documentContacts(rows);
   const visible = useContext(ModalVisibilityContext);
   const local = useLocalEditor();
+  const output=useDocumentOutput({open,visible,identity:`${documentSession}:${scheduleName}`,authorize:authorizeOutput});
+  const [contactState,setContactState]=useState({dirty:false,busy:false});
+  const [closeNotice,setCloseNotice]=useState(false);
+  const reportContacts=useCallback((dirty:boolean,busy:boolean)=>setContactState({dirty,busy}),[]);
   const productionContacts=local?(meta.productionContacts??[]):[];
   const exportContacts:DocumentContact[]=[...productionContacts.map(c=>({name:c.name,title:c.role,phone:c.phone,email:c.email,rows:[],type:c.type,callTime:c.callTime,department:c.department,reportTo:c.reportTo})),...contacts];
 
@@ -85,25 +91,31 @@ export default function ContactSheetModal({ open, onClose, authorizeOutput, read
       {/* ── Screen modal ── */}
       <Modal
         open={open}
-        onClose={onClose}
+        onClose={()=>{output.cancel();onClose();}}
         title="Contact Sheet"
         className="cs-modal"
+        retainWhenHidden={local}
+        beforeClose={()=>{if(local&&(contactState.dirty||contactState.busy)){setCloseNotice(true);return false;}return true;}}
         footer={
           <>
             <button
               type="button"
               className="btn btn-light btn-sm"
-              onClick={async()=>{if(!authorizeOutput||await authorizeOutput())void printDocument(scheduleName,'contacts',local);}}
+              disabled={output.busy}
+              onClick={()=>void output.run(current=>printDocument(scheduleName,'contacts',local,current))}
             >
               🖨 Print
             </button>
             <button
               type="button"
               className="btn btn-light btn-sm"
-              onClick={async()=>{if(!authorizeOutput||await authorizeOutput())downloadCsv(exportContacts,scheduleName);}}
+              disabled={output.busy}
+              onClick={()=>void output.run(()=>downloadCsv(exportContacts,scheduleName))}
             >
               ⬇ Download CSV
             </button>
+            {output.busy&&<span role="status">Preparing document…</span>}
+            {output.error&&<p role="alert">{output.error}</p>}
           </>
         }
       >
@@ -112,7 +124,7 @@ export default function ContactSheetModal({ open, onClose, authorizeOutput, read
           <span className="cs-date">{formattedDate || 'Date not set'}</span>
           <span className="cs-count">· {contacts.length+productionContacts.length} contact{contacts.length+productionContacts.length !== 1 ? 's' : ''}</span>
         </div>
-        {local&&<ProductionContacts readOnly={readOnly}/>}
+        {local&&<ProductionContacts readOnly={readOnly} onState={reportContacts} closeNotice={closeNotice}/>}
         {local&&<h2 className="cs-section-heading">Schedule contacts</h2>}<ContactCards contacts={contacts} />
       </Modal>
 

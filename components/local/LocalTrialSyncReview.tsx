@@ -6,7 +6,7 @@ type Review={name:string;mappingId:string;sequence:number;reviewHash:string|null
 const fieldNames:Record<string,string>={desc:'Description',notes:'Notes',contactName:'Contact name',contactPhone:'Contact phone',contactEmail:'Contact email',timeIn:'Time in',dur:'Duration',town:'Town',date:'Date',action:'Action',loc:'Location'};
 function label(path:string){const p=path.split('.');return p[0]==='rows'&&/^\d+$/.test(p[1])?`Row ${Number(p[1])+1} · ${fieldNames[p[2]]??p.slice(2).join('.')??'Row'}`:fieldNames[p.at(-1)!]??path??'Schedule';}
 function value(v:unknown){return v===null||v===undefined?'—':typeof v==='string'?v:JSON.stringify(v,null,2);}
-export default function LocalTrialSyncReview({mappingId,onBack,onResolved}:{mappingId:string;onBack:()=>void;onResolved:()=>void}){
+export default function LocalTrialSyncReview({mappingId,onBack,onResolved,onSaving}:{mappingId:string;onBack:()=>void;onResolved:()=>void;onSaving?:(saving:boolean)=>void}){
  const {client,session,organization,active,authNeeded}=useLocalWorkspace()!;
  const [review,setReview]=useState<Review|null>(null),[busy,setBusy]=useState(false),[message,setMessage]=useState(''),[take,setTake]=useState<'netlify'|'supabase'|null>(null),[confirmed,setConfirmed]=useState(false);
  const running=useRef(false),request=useRef<AbortController|null>(null),scope=useRef('');
@@ -15,7 +15,7 @@ export default function LocalTrialSyncReview({mappingId,onBack,onResolved}:{mapp
  async function load(resolve=false){
   if(running.current||!active||authNeeded||!session||!organization)return;
   if(resolve&&(!review?.resolvable||!take||!confirmed))return;
-  running.current=true;setBusy(true);setMessage('');const current=scope.current,controller=new AbortController();request.current=controller;
+  running.current=true;setBusy(true);if(resolve)onSaving?.(true);setMessage('');const current=scope.current,controller=new AbortController();request.current=controller;
   const valid=()=>!controller.signal.aborted&&scope.current===current;
   try{
    const fresh=await client.auth.getSession();if(fresh.error||fresh.data.session?.user.id!==session.user.id)throw Error('Sign in again to review these copies.');
@@ -26,16 +26,16 @@ export default function LocalTrialSyncReview({mappingId,onBack,onResolved}:{mapp
    if(resolve){setReview(null);setTake(null);setConfirmed(false);setMessage(data.resolved?'Both apps now have the chosen copy. Previous copies are retained in recovery history.':'This schedule still needs attention. Refresh the comparison before making another choice.');if(data.resolved)onResolved();}
    else{if(data.mappingId!==mappingId||!Array.isArray(data.differences)||typeof data.resolvable!=='boolean')throw Error('The comparison could not be verified.');setReview(data);setTake(null);setConfirmed(false);}
   }catch(error){if(valid()){setReview(null);setTake(null);setConfirmed(false);setMessage(error instanceof Error?error.message:'The comparison is unavailable. Try refreshing it.');}}
-  finally{running.current=false;if(valid())setBusy(false);}
+  finally{running.current=false;if(resolve)onSaving?.(false);if(valid())setBusy(false);}
  }
  // Opening a review is read-only. Resolving always requires a separate choice and confirmation.
  useEffect(()=>{void load();return()=>{request.current?.abort();};},[mappingId]); // eslint-disable-line react-hooks/exhaustive-deps
  return <section className={styles.review} aria-label="Compare saved schedule copies">
-  <div className={styles.actions}><button className="btn btn-light" onClick={onBack}>← Back</button><button className="btn btn-light" disabled={busy} onClick={()=>void load()}>Refresh comparison</button></div>
+  <div className={styles.actions}><button className="btn btn-light" disabled={busy&&!!take&&confirmed} onClick={onBack}>← Back</button><button className="btn btn-light" disabled={busy} onClick={()=>void load()}>Refresh comparison</button></div>
   <h3>{review?.name??'Review schedule copies'}</h3>
-  {(busy||message)&&<p role="status" aria-live="polite">{busy?'Checking the saved copies…':message}</p>}
+  {(busy||message)&&<p role="status" aria-live="polite">{busy?(take&&confirmed?'Updating both copies…':'Checking the saved copies…'):message}</p>}
   {review&&<>
-   {!review.copies?<p>This schedule has not been compared by the worker yet. No copy has been replaced.</p>:<>
+   {!review.copies?<p>The automatic check has not compared this schedule yet. Both saved copies are unchanged.</p>:<>
     <p>Compared {review.checkedAt?new Date(review.checkedAt).toLocaleString():'at the last sync check'}. Review the differences below. Any newer edits will need another check before a copy can be replaced.</p>
     <div className={styles.tableWrap} tabIndex={0} aria-label="Differences between saved copies"><table><thead><tr><th>Changed field</th><th>Last matching copy</th><th>Legacy app</th><th>New app</th></tr></thead><tbody>{review.differences.map((d,i)=><tr key={`${d.path}:${i}`}><th scope="row">{label(d.path)}</th>{d.values.map((v,j)=><td key={j}>{value(v)}</td>)}</tr>)}</tbody></table>{!review.differences.length&&<p>No content differences in this comparison.</p>}</div>
     <details><summary>View complete saved copies</summary><div className={styles.copies}>{(['common','netlify','supabase'] as const).map((key,i)=><section key={key}><h4>{['Last matching copy','Legacy app','New app'][i]}</h4><pre>{JSON.stringify(review.copies![key],null,2)}</pre></section>)}</div></details>

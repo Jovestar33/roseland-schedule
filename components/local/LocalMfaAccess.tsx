@@ -41,7 +41,7 @@ export default function LocalMfaAccess({review=false,managedRecovery=false,focus
   finally{working.current=false;setBusy(false);}
  }
  async function cancelEnrollment(){await run(async current=>{const pending=factor;if(pending&&pendingFactor.current){const result=await client.auth.mfa.unenroll({factorId:pending});if(!current())return;if(result.error){setMessage('Setup could not be cancelled. Your account is unchanged; retry or complete verification.');return;}}
-   pendingFactor.current=false;setFactor('');setSecret('');setQr('');setCode('');setStage('enroll');setOpen(false);setMessage('Authenticator setup cancelled. You can return when you are ready.');
+   pendingFactor.current=false;setFactor('');setSecret('');setQr('');setCode('');setStage('checking');setOpen(false);setMessage('Authenticator setup cancelled.');setRetry(v=>v+1);
   });}
  const codeRejected=message.startsWith('That code was not accepted');
  if(!session||authNeeded)return null;
@@ -60,7 +60,7 @@ export default function LocalMfaAccess({review=false,managedRecovery=false,focus
     if(result.error||!result.data){setMessage('We couldn’t start setup. Please try again.');return;}
     pendingFactor.current=true;setFactor(result.data.id);setSecret(result.data.totp.secret);setQr(result.data.totp.qr_code);setStage('code');onReady(false);setMessage('Scan the code, then enter the six-digit code from your authenticator.');
    })}>Set up authenticator</button>}
-   {secret&&<div data-mfa-setup><img src={qr} alt="Authenticator setup QR code" width={200} height={200}/><p>Manual setup secret: <code>{secret}</code></p></div>}
+   {secret&&<div data-mfa-setup><img src={qr} alt="Authenticator setup QR code" width={200} height={200}/><p>Manual setup key: <code>{secret}</code></p></div>}
    {stage==='code'&&<form onSubmit={e=>{e.preventDefault();void run(async current=>{
     const result=await client.auth.mfa.challengeAndVerify({factorId:factor,code});
     if(!current())return;setCode('');

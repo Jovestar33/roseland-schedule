@@ -14,3 +14,18 @@
 .choice{display:grid;gap:16px;border:1px solid var(--g200,#e5e7eb);border-radius:12px;padding:20px}
 .choice legend{font-weight:600;padding:0 8px}
 @media(max-width:700px){.copies{grid-template-columns:1fr}.choice{padding:14px}}
+.overview{display:grid;gap:16px;min-width:0;font:400 14px/1.6 var(--fb);color:var(--ui-ink)}
+.overview>p{margin:0}.overview>button{justify-self:start}
+.comparison{display:grid;gap:16px;min-width:0;padding:4px 0 24px;margin-bottom:24px;border-bottom:1px solid var(--g200);font:400 14px/1.6 var(--fb);overflow-wrap:anywhere}
+.comparison h3,.comparison p{margin:0}.comparison h3{font:600 18px/1.4 var(--fb);letter-spacing:normal}
+.comparison summary,.review summary{cursor:pointer;font-weight:600;line-height:1.5;color:var(--ui-accent-strong);padding:8px 0}
+.comparison ul{display:grid;gap:8px;padding-left:20px;margin:12px 0}
+.notice{padding:12px 16px;border-left:3px solid var(--pink);background:var(--g50);line-height:1.6}
+.actions :global(.btn){max-width:100%;white-space:normal;line-height:1.4}
+.review>p,.choice p{line-height:1.6}.choice p{margin:0}
+.choice>label{min-width:0;overflow-wrap:anywhere}
+@media(max-width:600px){.actions{gap:10px}.choice .actions label{flex-basis:100%}.review h3{overflow-wrap:anywhere}}
+
+.choice input:is([type="radio"],[type="checkbox"]){flex:0 0 18px;width:18px;height:18px;min-height:18px;max-width:18px;padding:0;accent-color:var(--pink);margin-top:3px}
+.choice .actions>label{flex:1 1 220px;min-width:0;align-items:center;padding:12px;border:1px solid var(--g200);border-radius:8px;background:white}
+.choice .actions>label input{margin-top:0}

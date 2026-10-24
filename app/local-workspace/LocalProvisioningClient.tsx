@@ -21,8 +21,8 @@ const errors: Record<FailureKind,string> = {
   mfa:'Verify a fresh authenticator code, then retry the same request.',
   denied:'Provisioning is unavailable for this account or input. Organization roles do not grant Platform Super Admin access.',
   rate:'The provisioning rate limit was reached. Wait before retrying the same request.',
-  conflict:'This request or organization address conflicts with existing data. The original review is retained; do not silently replace its key.',
-  unknown:'The result is uncertain. Retry the exact request to recover its existing result or complete it once.',
+  conflict:'This organization address or request conflicts with an existing record. Check the details before starting again.',
+  unknown:'We couldn’t confirm creation. Retry to check the same request without creating a duplicate.',
 };
 export default function LocalProvisioningClient() {
   const workspace = useLocalWorkspace()!;
@@ -62,8 +62,8 @@ export default function LocalProvisioningClient() {
     // One retained panel belongs to the workspace account; session changes preserve its review.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[workspace.active,workspace.authNeeded,workspace.session?.access_token]);
-  function clearReview(){controller.clear();setDiscard(false);refresh();setMessage('Local review cleared. Draft retained; no completed organization is undone.');}
-  async function submit(){await run(async()=>{const pending=controller.submit(value=>sendProvisioningAttempt(value,session.current));refresh();await pending;if(controller.failure)failure(controller.failure);else if(controller.result)setMessage('Provisioning confirmed. Organization access still requires the current account’s own membership.');});}
+  function clearReview(){controller.clear();setDiscard(false);refresh();setMessage('Review closed. Your organization details are still here.');}
+  async function submit(){await run(async()=>{const pending=controller.submit(value=>sendProvisioningAttempt(value,session.current));refresh();await pending;if(controller.failure)failure(controller.failure);else if(controller.result)setMessage('Organization created. You’ll need membership to open its workspace.');});}
   return <div className={`${styles.page} ${workspace.review?styles.product+' '+consoleStyles.provisioning:''}`}><main className={styles.main}>
     <header className={styles.header}><div>{!workspace.review&&<span className={styles.eyebrow}>LOCAL PLATFORM REHEARSAL</span>}<h1>Create an organization</h1><p>Assign an existing verified account as its Organization Super Admin.</p></div></header>
     <p className={styles.notice}>Enter the account ID supplied through the verified onboarding process. Organization setup requires recent two-step verification.</p>
@@ -80,7 +80,7 @@ export default function LocalProvisioningClient() {
       });}}><label>Authenticator code<input required inputMode="numeric" pattern="[0-9]{6}" maxLength={6} autoComplete="off" value={code} onChange={event=>setCode(event.target.value)}/></label><button disabled={busy}>Verify authenticator</button></form>}
     </section>}
     <section className={styles.card} aria-label="Organization provisioning draft"><h2>Organization details</h2><p>The new organization will belong to the verified account below. Creating it does not add you to its team.</p>
-      <form className={styles.form} onSubmit={event=>{event.preventDefault();if(!ready||busyRef.current||attempt)return;try{controller.prepare(draft);refresh();setMessage('Review the exact owner and organization settings before confirming.');}catch{setMessage('Check the Super Admin account ID, organization name and address, and regional settings.');}}}>
+      <form className={styles.form} onSubmit={event=>{event.preventDefault();if(!ready||busyRef.current||attempt)return;try{controller.prepare(draft);refresh();setMessage('Review the Super Admin and organization details before creating it.');}catch{setMessage('Check the Super Admin account ID, organization name and address, and regional settings.');}}}>
         <fieldset disabled={!ready||busy||!!attempt}>{fields.map(([key,label,max])=>{
  const options=key==='timezone'?timezones:key==='locale'?languages:key==='countryCode'?countries:key==='currency'?currencies:null;
  const values=options?[...new Set([...options,...(draft[key]?[draft[key]]:[])])]:[];
@@ -89,15 +89,15 @@ export default function LocalProvisioningClient() {
         <button disabled={!ready||busy||!!attempt}>Review organization</button>
       </form>
     </section>
-    {attempt&&<section ref={review} tabIndex={-1} className={`${styles.card} ${styles.review}`} aria-label="Provisioning request review" style={{overflowWrap:'anywhere'}}><div className={styles.sectionTitle}><h2>Review organization</h2><span className={styles.badge}>{controller.phase}</span></div>
-      <p className={styles.identifier}>Request key: {attempt.key}</p>{fields.map(([key,label])=><p key={key}><strong>{label}:</strong> <span className={key==='ownerUserId'?styles.identifier:undefined}>{attempt.body[key]||'Not supplied'}</span></p>)}
+    {attempt&&<section ref={review} tabIndex={-1} className={`${styles.card} ${styles.review}`} aria-label="Provisioning request review" style={{overflowWrap:'anywhere'}}><div className={styles.sectionTitle}><h2>Review organization</h2><span className={styles.badge}>{{review:'Ready to review',pending:'Working…',unknown:'Needs checking',blocked:'Action needed',conflict:'Changed elsewhere',success:'Complete'}[controller.phase]}</span></div>
+      <details><summary>Request details</summary><p className={styles.identifier}>Reference: {attempt.key}</p></details>{fields.map(([key,label])=><p key={key}><strong>{label}:</strong> <span className={key==='ownerUserId'?styles.identifier:undefined}>{attempt.body[key]||'Not supplied'}</span></p>)}
       {controller.failure&&<p role="alert">{errors[controller.failure]}</p>}
-      {controller.result&&<><p className={styles.identifier}>Organization: {controller.result}</p><p>Creating an organization for another owner does not add your account as a member.</p><button disabled={!ready||busy} onClick={()=>workspace.openOrganization(controller.result!)}>Open organization if accessible</button></>}
-      <div className={styles.actions}>{controller.phase==='success'?<button disabled={busy} onClick={()=>{controller.clear();setDraft({...blank});refresh();setMessage('Result acknowledged.');}}>Done</button>:<>
-        <button disabled={!ready||mfa!=='ready'||busy||controller.phase==='conflict'} onClick={()=>void submit()}>{controller.phase==='review'?'Create organization':'Retry same request'}</button>
-        <button className={styles.secondary} disabled={busy} onClick={()=>controller.phase==='review'?clearReview():setDiscard(true)}>{controller.phase==='review'?'← Back':'Discard provisioning review'}</button>
+      {controller.result&&<><p className={styles.identifier}>Organization: {controller.result}</p><p>Creating an organization for another owner does not add your account as a member.</p><button disabled={!ready||busy} onClick={()=>workspace.openOrganization(controller.result!)}>Open workspace</button></>}
+      <div className={styles.actions}>{controller.phase==='success'?<button disabled={busy} onClick={()=>{controller.clear();setDraft({...blank});refresh();setMessage('Organization setup complete.');}}>Done</button>:<>
+        <button disabled={!ready||mfa!=='ready'||busy||controller.phase==='conflict'} onClick={()=>void submit()}>{controller.phase==='review'?'Create organization':'Retry creation'}</button>
+        <button className={styles.secondary} disabled={busy} onClick={()=>controller.phase==='review'?clearReview():setDiscard(true)}>{controller.phase==='review'?'← Back':'Close review'}</button>
       </>}</div>
     </section>}
-    <dialog ref={dialog} className={styles.dialog} aria-label="Discard provisioning review" onCancel={()=>setDiscard(false)}><h2>Discard this local review?</h2><p>An earlier request may have completed. Discarding its key does not undo it; a new key could create another organization. Retry the same request to recover its result first.</p><div className={styles.actions}><button onClick={()=>setDiscard(false)}>Keep review</button><button onClick={clearReview}>Discard local review</button></div></dialog>
+    <dialog ref={dialog} className={styles.dialog} aria-label="Close review" onCancel={()=>setDiscard(false)}><h2>Close this review?</h2><p>The organization may already have been created. Retry to check the result first. Closing this review won’t remove an organization that exists.</p><div className={styles.actions}><button onClick={()=>setDiscard(false)}>Back</button><button onClick={clearReview}>Close review</button></div></dialog>
   </main></div>;
 }

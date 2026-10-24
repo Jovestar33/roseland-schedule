@@ -1,9 +1,10 @@
 'use client';
 import {useCmsStore} from '@/lib/store/cmsStore';
-import { useState, useEffect, useRef, useContext, createContext } from 'react';
+import { useCallback, useState, useEffect, useRef, useContext, createContext } from 'react';
 import { createPortal } from 'react-dom';
 import { useScheduleStore } from '@/lib/store/scheduleStore';
 import Modal, { ModalVisibilityContext } from './Modal';
+import {useDocumentOutput} from './useDocumentOutput';
 import { useLocalEditor } from '@/components/schedule/LocalEditorContext';
 import { useDocumentProviders } from '@/components/local/DocumentProvidersContext';
 import { documentContacts } from '@/lib/document-tools';
@@ -236,13 +237,15 @@ interface PrintDocProps {
   enhanced: boolean;
   fullDetails?: boolean;
   overview?: ReturnType<typeof callSheetOverview>;
+  onContactsState?:(dirty:boolean,busy:boolean)=>void;
+  contactCloseNotice?:boolean;
 }
 
 /** One content order for the editable view and its read-only print portal. */
 function CallSheetDocument({
   scheduleName, formattedDate, dayStr, projectName, phase, prod, dir, dp,
   town, weather, generalCall, lines, cs, contacts, showContacts, productionContacts = [], enhanced = false,
-  print = false, onCommit, fullDetails = true, overview,
+  print = false, onCommit, fullDetails = true, overview, onContactsState, contactCloseNotice,
 }: PrintDocProps & {print?: boolean; onCommit: (key: CSKey, value: string) => void}) {
   const organizationLogo = useCmsStore(s => s.config.logo);
   const readOnly = useContext(CallSheetReadOnly);
@@ -310,7 +313,7 @@ function CallSheetDocument({
     {enhanced&&(!print||productionContacts.some(c=>c.type==='crew'||c.type==='cast'))&&<section className="csh-section" id={print?undefined:'csh-people'}><h2 className="csh-sh">Crew &amp; cast calls</h2>
       <ProductionContactGroups contacts={productionContacts.filter(c=>c.type==='crew'||c.type==='cast')} showPrivate={showContacts}/>
       {!productionContacts.some(c=>c.type==='crew'||c.type==='cast')&&!print&&<p className="csh-empty">Add crew and cast contacts below to include individual call times.</p>}
-      {!print&&!readOnly&&<details className="pc-manage"><summary>Add or edit people &amp; individual calls</summary><ProductionContacts/></details>}
+      {!print&&!readOnly&&<details className="pc-manage"><summary>Add or edit people &amp; individual calls</summary><ProductionContacts onState={onContactsState} closeNotice={contactCloseNotice}/></details>}
     </section>}
     <section className="csh-section" id={print?undefined:'csh-schedule'}>
       <h2 className="csh-sh">Day schedule</h2>
@@ -369,14 +372,20 @@ export default function CallSheetModal({ open, onClose, readOnly = false, author
   const rows         = useScheduleStore((s) => s.rows);
   const meta         = useScheduleStore((s) => s.meta);
   const scheduleName = useScheduleStore((s) => s.scheduleName) ?? '';
+  const documentSession = useScheduleStore((s) => s.documentSession);
   const updateMeta   = useScheduleStore((s) => s.updateMeta);
 
   const local = useLocalEditor();
   const publishing=useCallSheetPublishing();
   const visible = useContext(ModalVisibilityContext);
+  const output=useDocumentOutput({open,visible,identity:`${documentSession}:${scheduleName}`,authorize:authorizeOutput});
   const [showContacts, setShowContacts] = useState(false);
   const [fullDetails,setFullDetails]=useState(true);
+  const [contactState,setContactState]=useState({dirty:false,busy:false});
+  const [closeNotice,setCloseNotice]=useState(false);
+  const reportContacts=useCallback((dirty:boolean,busy:boolean)=>setContactState({dirty,busy}),[]);
   const [printRequest,setPrintRequest]=useState<CallSheetPrintRequest|null>(null);
+  useEffect(()=>{setPrintRequest(null);},[open,visible,documentSession]);
 
   // Reset contacts toggle to OFF each time the modal opens
   useEffect(() => {
@@ -408,10 +417,11 @@ export default function CallSheetModal({ open, onClose, readOnly = false, author
     <CallSheetReadOnly.Provider value={readOnly}>
       <Modal
         open={open}
-        onClose={onClose}
+        onClose={()=>{output.cancel();onClose();}}
         title="Call Sheet"
         className="csh-modal"
         retainWhenHidden={local}
+        beforeClose={()=>{if(local&&(contactState.dirty||contactState.busy)){setCloseNotice(true);return false;}return true;}}
         footer={
           <>
             <label className="csh-contacts-toggle">
@@ -426,22 +436,25 @@ export default function CallSheetModal({ open, onClose, readOnly = false, author
             <button
               type="button"
               className="btn btn-light btn-sm"
-              onClick={async()=>{if(authorizeOutput&&!await authorizeOutput())return;if(local)setPrintRequest({name:scheduleName,data:structuredClone(useScheduleStore.getState().getScheduleData()),options:{contacts:showContacts,details:fullDetails}});else void printDocument(scheduleName,'callsheet',false);}}
+              disabled={output.busy}
+              onClick={()=>void output.run(current=>{if(local)setPrintRequest({name:scheduleName,data:structuredClone(useScheduleStore.getState().getScheduleData()),options:{contacts:showContacts,details:fullDetails}});else return printDocument(scheduleName,'callsheet',false,current);})}
             >
               🖨 Print
             </button>
+            {output.busy&&<span role="status">Preparing document…</span>}
+            {output.error&&<p role="alert">{output.error}</p>}
           </>
         }
       >
         {local&&<><nav className="csh-section-nav" aria-label="Call sheet sections">{[['overview','Overview'],['arrival','Arrival & parking'],['safety','Safety'],['people','People & calls'],['schedule','Schedule'],['meals','Meals'],['notes','Notes & next day'],...(publishing?[["issue","Issue & share"]]:[])].map(([id,label])=><button type="button" key={id} onClick={()=>document.getElementById('csh-'+id)?.scrollIntoView({block:'start',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'})}>{label}</button>)}</nav>{!readOnly&&checks.length>0&&<details className="csh-readiness"><summary>{checks.length} {checks.length===1?'detail':'details'} to review before sharing</summary><ul>{checks.map(check=><li key={check}>{check}</li>)}</ul></details>}</>}
-        <CallSheetDocument fullDetails={fullDetails} overview={overview} scheduleName={scheduleName} formattedDate={formattedDate} dayStr={dayStr}
+        <CallSheetDocument onContactsState={reportContacts} contactCloseNotice={closeNotice} fullDetails={fullDetails} overview={overview} scheduleName={scheduleName} formattedDate={formattedDate} dayStr={dayStr}
           projectName={meta.projectName} phase={meta.phase} prod={meta.prod} dir={meta.dir} dp={meta.dp}
           town={meta.town} weather={weather} generalCall={generalCall} lines={lines} cs={cs}
           contacts={contacts} showContacts={showContacts} productionContacts={meta.productionContacts??[]} enhanced={local} onCommit={commit} />
         {local&&publishing&&<CallSheetPublishing includeContacts={showContacts} fullDetails={fullDetails} checks={checks} renderEdition={value=><IssuedCallSheet value={value}/>}/>}
       </Modal>
 
-      {printRequest&&<CallSheetPrintPreview request={printRequest} onClose={()=>setPrintRequest(null)} authorize={authorizeOutput}/>}
+      {open&&visible&&printRequest&&<CallSheetPrintPreview request={printRequest} onClose={()=>setPrintRequest(null)} authorize={authorizeOutput}/>}
       {/* Print portal — rendered on document.body, outside modal DOM */}
       {open && visible && typeof document !== 'undefined' && createPortal(
         <div className="callsheet-print-only">

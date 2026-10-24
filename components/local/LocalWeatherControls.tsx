@@ -31,18 +31,13 @@ export default function LocalWeatherControls({ enabled, scope }: { enabled: bool
     const pending = ticket;
     pending.current++; setBusy(false);
     if (!enabled || !provider) return;
-    // Restore legacy sun markers from existing saved weather without fetching. Coordinate/date edits
-    // fetch through the deterministic local seam, never the legacy provider.
+    // Opening an existing schedule is read-only. Refresh automatically only
+    // after the user changes this document's date or coordinates; saved weather
+    // must not prevent a new forecast, and opening must not insert timing rows.
     if (lastKey.current !== key) {
       const sameDocument = lastDocument.current === documentKey;
       lastDocument.current = documentKey; lastKey.current = key;
-      if (!sameDocument && meta.wx?.sunrise && meta.wx?.sunset) {
-        const state = useScheduleStore.getState();
-        if (!state.rows.some(row => row.sunLocked)) {
-          state.pushUndo();
-          state.insertSunRows(meta.wx.sunrise, meta.wx.sunset);
-        }
-      } else if (!meta.wx) void refresh();
+      if (sameDocument) void refresh();
     }
     return () => { pending.current++; };
     // eslint-disable-next-line react-hooks/exhaustive-deps

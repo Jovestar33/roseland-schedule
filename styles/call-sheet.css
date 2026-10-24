@@ -121,3 +121,21 @@
 @media print{.csh-section-nav,.csh-readiness{display:none!important}.csh-day-times{display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}.csh-report-grid{grid-template-columns:minmax(0,1.5fr) minmax(0,1fr)}.csh-overview{background:transparent;padding:8pt;border-radius:0}.csh-overview .csh-fv{font-size:10pt}.csh-document thead{display:table-header-group!important}.csh-document tr{page-break-inside:avoid!important;break-inside:avoid!important}.csh-document .csh-long-row{page-break-inside:auto!important;break-inside:auto!important}}
 
 .csh-publishing{scroll-margin-top:100px;margin:24px 0 0;padding:20px;border:1px solid var(--g200,#ddd);border-radius:10px;background:#fff;font:14px/1.5 var(--fb)}.csh-publishing h3{font:600 16px var(--fb)}.csh-publishing>p,.csh-publish-hint{font-size:13px;color:var(--g600,#60606a)}.csh-issue-status{display:grid;gap:4px;padding:12px 0}.csh-issue-status span{font-size:12px;color:var(--g600)}.csh-share-options{border-top:1px solid var(--g200);padding:16px 0}.csh-share-options summary{font-weight:600;cursor:pointer}.csh-share-options form{display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap;margin:18px 0}.csh-share-options label{display:grid;gap:7px;flex:1;min-width:180px;font-size:13px}.csh-share-options input{width:100%;box-sizing:border-box;min-width:0;font:14px var(--fb);padding:10px;border:1px solid var(--g300);border-radius:6px;background:#fff;color:var(--ui-ink)}.csh-share-options ul{list-style:none;padding:0}.csh-share-options li{display:flex;justify-content:space-between;align-items:center;gap:12px;border-top:1px solid var(--g200);padding:12px 0}.csh-share-options small{display:block;font-size:12px;color:var(--g600);margin-top:5px}.csh-created-link{padding:16px;background:var(--g50);border:1px solid var(--g200);border-radius:8px}.csh-issued-stamp{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;margin:18px 0;font:12px var(--fb);color:#555}.csh-edition-preview{border-top:2px solid var(--g200);margin-top:16px;padding-top:16px}.csh-recipient{max-width:900px;padding:24px;margin:auto;background:white;min-height:100vh;box-sizing:border-box}.csh-recipient-controls{display:flex;justify-content:space-between;align-items:center;gap:16px;font:16px var(--fb);padding-bottom:20px;border-bottom:1px solid #ddd}.csh-recipient-controls>div{display:flex;flex-wrap:wrap;gap:8px}@media(max-width:600px){.csh-recipient{padding:16px}.csh-recipient-controls{align-items:flex-start;flex-direction:column}.csh-publishing{padding:16px}.csh-share-options li{align-items:flex-start}.csh-publishing .pc-form-actions{flex-wrap:wrap}}@media print{.csh-recipient-controls,.csh-publishing{display:none!important}.csh-recipient{max-width:none;padding:0;min-height:0}.csh-recipient .csh-document{font-size:10pt}}
+
+/* Issuing, sharing and recipient recovery use the same comfortable rhythm. */
+.csh-publishing{overflow-wrap:anywhere}
+.csh-publishing>p{margin:12px 0;line-height:1.6}
+.csh-publishing>p[role=status]{padding:12px 14px;background:var(--g50);border-left:3px solid var(--pink);color:var(--ui-ink)}
+.csh-publishing>.pc-form-actions{margin:18px 0}
+.csh-share-options li>div{min-width:0;flex:1}
+.csh-share-options li>.btn{flex:0 0 auto;max-width:100%;white-space:normal}
+.csh-share-options input{min-height:44px}
+.csh-created-link .pc-form-actions{justify-content:flex-start;margin-top:14px}
+.csh-edition-preview>.btn{margin-bottom:18px}
+.csh-recipient-message,.csh-recipient-empty{font:400 15px/1.6 var(--fb);overflow-wrap:anywhere;padding:18px;margin:20px 0;border:1px solid var(--g200);border-radius:12px;background:var(--g50);color:var(--ui-ink)}
+.csh-recipient-empty h1{font:600 22px/1.3 var(--fb);letter-spacing:normal;margin:0 0 12px}
+.csh-recipient-empty p{margin:0}
+.csh-recipient-controls>strong{min-width:0;overflow-wrap:anywhere}
+.csh-recipient-controls .btn{white-space:normal;min-height:40px}
+@media(max-width:600px){.csh-share-options li{flex-wrap:wrap}.csh-share-options input{font-size:16px}.csh-share-options form label{min-width:0;flex-basis:100%}.csh-recipient-controls>div{gap:10px}.csh-recipient-empty{padding:16px}.csh-share-options form>.btn{max-width:100%;white-space:normal}}
+@media print{.csh-recipient-message,.csh-recipient-empty,.csh-document-tabs{display:none!important}}

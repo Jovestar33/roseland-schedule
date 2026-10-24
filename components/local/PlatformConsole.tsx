@@ -35,8 +35,8 @@ export default function PlatformConsole({onVerify}:{onVerify:()=>void}){
   <header className={styles.heading}><div><span className={styles.eyebrow}>Platform Super Admin</span><h2>Platform administration</h2><p>Manage organization setup and review operational status across the platform.</p></div>{ready&&<button className="btn btn-light" disabled={busy} onClick={()=>setRefresh(x=>x+1)}>Refresh overview</button>}</header>
   {state==='loading'&&<p role="status">Checking platform access and loading organizations…</p>}
   {state==='denied'&&<div className={styles.empty}><h3>Platform access unavailable</h3><p>This console requires an active Platform Super Admin designation. Organization roles do not grant platform access.</p></div>}
-  {state==='mfa'&&<div className={styles.empty}><h3>Verify your authenticator</h3><p>Viewing platform organizations requires recent two-step verification. Your unfinished work is retained.</p><button className="btn btn-pink" onClick={onVerify}>Verify to continue</button></div>}
-  {state==='error'&&<div className={styles.empty}><h3>Overview unavailable</h3><p>Organizations could not be loaded. Retry to check current access.</p><button className="btn btn-light" onClick={()=>setRefresh(x=>x+1)}>Try again</button></div>}
+  {state==='mfa'&&<div className={styles.empty}><h3>Confirm your identity</h3><p>Viewing platform organizations requires recent two-step verification. Your unfinished work is retained.</p><button className="btn btn-pink" onClick={onVerify}>Verify to continue</button></div>}
+  {state==='error'&&<div className={styles.empty}><h3>Overview unavailable</h3><p>We couldn’t load the organizations. Try again.</p><button className="btn btn-light" onClick={()=>setRefresh(x=>x+1)}>Try again</button></div>}
   {ready&&<><nav className={styles.tabs} aria-label="Platform sections"><button ref={organizationsTab} aria-current={tab==='organizations'?'page':undefined} onClick={()=>setTab('organizations')}>Organizations</button><button aria-current={tab==='create'?'page':undefined} onClick={()=>setTab('create')}>New organization</button></nav>
    <div hidden={tab!=='organizations'}>
     <form className={styles.search} onSubmit={e=>{e.preventDefault();setQuery(search.trim());if(query===search.trim())setRefresh(x=>x+1);}}><label>Find an organization<input placeholder="Search by name or address" maxLength={100} value={search} onChange={e=>setSearch(e.target.value)}/></label><button className="btn btn-light" disabled={busy}>Search</button></form>
@@ -46,6 +46,6 @@ export default function PlatformConsole({onVerify}:{onVerify:()=>void}){
     <aside className={styles.billing}><h3>Billing & services</h3><p>Billing is not connected in this build. Subscription, payment, and service changes are unavailable.</p></aside>
    </div>
   </>}
-  <div hidden={!ready||tab!=='create'}><div className={styles.returnRow}><button className="btn btn-light" onClick={()=>{setTab('organizations');organizationsTab.current?.focus();}}>← Back</button><span>Your setup draft stays here until you clear it.</span></div><LocalProvisioningClient/></div>
+  <div hidden={!ready||tab!=='create'}><div className={styles.returnRow}><button className="btn btn-light" onClick={()=>{setTab('organizations');organizationsTab.current?.focus();}}>← Back</button><span>Your setup draft stays here while you review other sections.</span></div><LocalProvisioningClient/></div>
  </section>;
 }

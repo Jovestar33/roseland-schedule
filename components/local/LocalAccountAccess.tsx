@@ -17,6 +17,7 @@ export default function LocalAccountAccess({ review=false, showMaintenance=true,
   const [policy, setPolicy] = useState<Policy | null>(null), [policyChecked, setPolicyChecked] = useState(false);
   const [retry, setRetry] = useState(0), deadline = useRef<number | null>(null), generation = useRef(0);
   const [callback, setCallback] = useState<AccountCallback | null>(null), [callbackEmail, setCallbackEmail] = useState('');
+  const [callbackFailure, setCallbackFailure] = useState<'unavailable' | 'retryable' | null>(null);
   const [callbackClient] = useState(() => createClient(config.supabaseUrl, config.anonymousKey, {
     auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
     global: { fetch: (input, init) => fetch(input, { ...init, cache: 'no-store', redirect: 'error', signal: AbortSignal.timeout(15000) }) },
@@ -40,7 +41,7 @@ export default function LocalAccountAccess({ review=false, showMaintenance=true,
       const parsed = parseAccountCallback(location.hash);
       history.replaceState(null, '', location.pathname + location.search);
       if (callbackActive.current || busyRef.current) { setMessage('Finish this step or cancel before opening another link.'); return; }
-      if (parsed) { callbackActive.current=true; setCallback(parsed); setMessage(''); }
+      if (parsed) { callbackActive.current=true; setCallback(parsed); setCallbackFailure(null); setMessage(''); }
       else setMessage('This link has expired or is invalid. Please request a new one.');
     };
     receive(); window.addEventListener('hashchange',receive);
@@ -131,12 +132,38 @@ export default function LocalAccountAccess({ review=false, showMaintenance=true,
     setFactorChecked(true); setMessage('');
   }
   async function verifyLink() { await run(async () => {
-    if (!callback) return;
-    const result = await callbackClient.auth.verifyOtp({ token_hash: callback.tokenHash, type: callback.type });
-    if (result.error || !result.data.session) { setMessage('This link has expired or has already been used. Please request a new one.'); return; }
-    setCallbackEmail(result.data.user?.email ?? 'Verified account');
+    if (!callback || callbackFailure === 'unavailable') return;
+    setMessage('');
+    let result;
+    try { result = await callbackClient.auth.verifyOtp({ token_hash: callback.tokenHash, type: callback.type }); }
+    catch {
+      setCallbackFailure('retryable'); setMessage('We couldn’t open this link. Check your connection and try again.'); return;
+    }
+    if (result.error || !result.data.session) {
+      // Only a rejected token is terminal. A network, rate-limit or server error
+      // must not falsely tell someone that their link has expired.
+      const unavailable = !result.error || result.error.code === 'otp_expired'
+        || [400, 401, 403, 404, 410, 422].includes(result.error.status ?? 0);
+      setCallbackFailure(unavailable ? 'unavailable' : 'retryable');
+      setMessage(unavailable
+        ? callback.type === 'invite'
+          ? 'This invitation link has expired or can no longer be used. Ask the sender for a new invitation.'
+          : 'This reset link has expired or can no longer be used. Request a new link to continue.'
+        : result.error?.status === 429
+          ? 'Please wait a moment, then try opening the link again.'
+          : 'We couldn’t open this link. Check your connection and try again.');
+      return;
+    }
+    setCallbackFailure(null); setCallbackEmail(result.data.user?.email ?? 'Verified account');
     await checkCallbackSecurity();
   }); }
+  async function closeCallback(nextMode: 'recovery' | null = null) { await run(async () => {
+    const result = await callbackClient.auth.signOut({ scope: 'local' });
+    if (result.error) { setMessage('We couldn’t close this step. Please try again.'); return; }
+    callbackActive.current=false; returnEntry.current=callback?.type === 'invite' ? 'signup' : 'recovery';
+    setCallback(null); setCallbackEmail(''); setCallbackFailure(null); setFactor(null); setFactorChecked(false);
+    setPassword(''); setConfirmation(''); setCode(''); setMessage(''); setMode(nextMode); setMailSent(false);
+  }, 'We couldn’t close this step. Please try again.'); }
   async function changePassword(event: React.FormEvent) { event.preventDefault(); await run(async () => {
     if (!factorChecked) { setMessage('Please retry the security check before continuing.'); return; }
     if (password !== confirmation) { setMessage('Passwords must match.'); return; }
@@ -150,7 +177,7 @@ export default function LocalAccountAccess({ review=false, showMaintenance=true,
     await callbackClient.auth.signOut({ scope: 'local' });
     if (sessionRef.current?.user.id === result.data.user.id) { onReady(false); requireAuth(); }
     const id = callback?.invitationId; if (id) onInvitation({actor:result.data.user.id,id});
-    callbackActive.current=false; setCallback(null); setCallbackEmail(''); setFactor(null); setFactorChecked(false);
+    callbackActive.current=false; setCallback(null); setCallbackEmail(''); setCallbackFailure(null); setFactor(null); setFactorChecked(false);
     setMode(null); setMailSent(false);
     setMessage(id ? 'Password updated. Sign in to finish joining your team.' : 'Password updated. Sign in with your new password.');
   }); }
@@ -172,11 +199,13 @@ export default function LocalAccountAccess({ review=false, showMaintenance=true,
       <p><button disabled={busy || !policyChecked}>Continue</button></p>
     </form>}
     {callback ? <div data-account-flow>
-      <h2 ref={taskHeading} tabIndex={-1}>{callback.type === 'invite' ? 'Set your password' : callbackEmail ? 'Choose a new password' : 'Reset your password'}</h2>
+      <h2 ref={taskHeading} tabIndex={-1}>{callbackFailure === 'unavailable' ? 'Link unavailable' : callback.type === 'invite' ? 'Set your password' : callbackEmail ? 'Choose a new password' : 'Reset your password'}</h2>
       {notice}
-      {!callbackEmail ? <>
-        <p>Continue to choose a new password for your account.</p>
-        <button data-account-primary disabled={busy} onClick={() => void verifyLink()}>{busy?'Opening link…':'Continue'}</button>
+      {callbackFailure === 'unavailable' ? <button data-account-primary disabled={busy} onClick={() => void closeCallback(callback.type === 'recovery' ? 'recovery' : null)}>
+        {callback.type === 'recovery' ? 'Request a new reset link' : session && !authNeeded ? 'Back' : 'Back to sign in'}
+      </button> : !callbackEmail ? <>
+        {!callbackFailure && <p>Continue to choose a new password for your account.</p>}
+        <button data-account-primary disabled={busy} onClick={() => void verifyLink()}>{busy?'Opening link…':callbackFailure === 'retryable'?'Try again':'Continue'}</button>
       </> : !factorChecked ? <button data-account-primary disabled={busy} onClick={()=>void run(checkCallbackSecurity)}>{busy?'Checking account…':'Retry security check'}</button> : <form onSubmit={changePassword}>
         <p data-account-address>{callbackEmail}</p>
         <label>New password <input required minLength={12} maxLength={128} type="password" autoComplete="new-password" aria-describedby="reset-password-help" value={password} onChange={e => setPassword(e.target.value)}/></label>
@@ -190,7 +219,7 @@ export default function LocalAccountAccess({ review=false, showMaintenance=true,
         <button data-account-primary disabled={busy}>{busy?'Updating password…':callback.type==='invite'?'Set password':'Update password'}</button>
         <p data-account-help>For security, you’ll be signed out of your other sessions.</p>
       </form>}
-      <div data-account-entry><button disabled={busy} onClick={() => void run(async () => { await callbackClient.auth.signOut({ scope: 'local' }); callbackActive.current=false; returnEntry.current='recovery'; setCallback(null); setCallbackEmail(''); setFactor(null); setFactorChecked(false); setPassword(''); setConfirmation(''); setCode(''); setMessage(''); setMode(null); setMailSent(false); })}>Cancel</button></div>
+      {!(callbackFailure === 'unavailable' && callback.type === 'invite') && <div data-account-entry><button disabled={busy} onClick={() => void closeCallback()}>{callbackFailure === 'unavailable' ? session && !authNeeded ? 'Back' : 'Back to sign in' : 'Cancel'}</button></div>}
     </div> : <div hidden={!showMaintenance}>
       {review&&(!session||authNeeded)?<div data-account-entry hidden={!!mode}>
         <button ref={recoveryEntry} type="button" disabled={busy} aria-expanded={mode==='recovery'} onClick={()=>setMode(mode==='recovery'?null:'recovery')}>Forgot password?</button>

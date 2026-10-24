@@ -150,7 +150,7 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
       if(!current())return {data:null,error:{code:'PT401'}};
       return result;
     }});
-    return {schedule:record.id,repository,current};
+    return {actor,schedule:record.id,repository,current};
   },[client,controller,documentSession,session?.user.id,session?.access_token,active,recordInScope,ready,permission?.read]);
 
   useEffect(()=>{
@@ -160,16 +160,17 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
     }
   },[review,selected,recordInScope,permission?.read]);
 
-  // A fresh provider identity invalidates pending selections when document/account scope changes.
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const documentProviders = useMemo(() => config.liveDocumentProviders ? createLiveDocumentProviders(async()=>{
     const record=controller.record;
     if(!activeRef.current||!record)throw new Error('Open an editable schedule first.');
     const result=await client.auth.getSession();
     if(result.error||!result.data.session||controller.record!==record)throw new Error('Sign in again.');
     return {token:result.data.session.access_token,schedule:record.id};
-  },fetch,config.hosted?'/api/platform/document-providers':'/api/platform/local-document-providers') : {...fictionalDocumentProviders}, [config.liveDocumentProviders,config.hosted,client,controller,documentSession,workspace?.organization?.id,session?.user.id]);
+  },fetch,config.hosted?'/api/platform/document-providers':'/api/platform/local-document-providers') : {...fictionalDocumentProviders},
+  // These scope dependencies intentionally replace provider identity so children
+  // discard pending location/weather selections when a document or account changes.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  [config.liveDocumentProviders,config.hosted,client,controller,documentSession,workspace?.organization?.id,session?.user.id]);
 
   useEffect(() => {
     const requestEpoch = epoch, requests = listTicket;
@@ -322,7 +323,7 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
     const record=await repository.read(c.id);
     if(!safe()||record.document_version!==receipt.schedule_version)return false;
     state().loadSchedule(record.display_name,{rows:record.document.rows??[],meta:makeMeta(record.document.meta),savedAt:record.document.savedAt??0});
-    controller.record=record;setVersion(record.document_version);if(review)setReviewTool(null);setMessage('Snapshot content restored. Your previous draft and undo history remain available through Recover retained source draft.');return true;
+    controller.record=record;setVersion(record.document_version);if(review)setReviewTool(null);setMessage('Snapshot restored. Choose Recover previous draft to return to your earlier edits.');return true;
   }
   async function recoverSourceDraft(){
     const record=controller.record,actor=accountRef.current;if(!record||!actor)return;
@@ -331,7 +332,7 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
     if(!retained||controller.record?.id!==record.id||accountRef.current!==actor||scopeRef.current!==record.organization_id||!activeRef.current)return;
     state().loadSchedule(record.display_name,{rows:retained.document.rows??[],meta:makeMeta(retained.document.meta),savedAt:retained.document.savedAt??0});
     useScheduleStore.setState({dirty:true,templateUses:retained.templateUses??[],undoStack:retained.undo as typeof currentUndo,redoStack:retained.redo as typeof currentUndo});
-    controller.record=retained.before;setVersion(retained.before.document_version);setMessage('Source draft and undo history recovered. Saving still checks its original server version.');
+    controller.record=retained.before;setVersion(retained.before.document_version);setMessage('Previous draft recovered, including its undo history. Save when you are ready.');
   }
   const currentUndo=state().undoStack;
   useEffect(() => {
@@ -415,7 +416,7 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
         {workspace&&reviewTool==='contacts'&&<ContactsDrawer open={active} onClose={()=>setReviewTool(null)} onState={reportContacts}/>}
         {workspace&&<ReviewToolPanel enabled={review} open={active&&reviewTool==='transfers'} title="Move requests" onClose={()=>setReviewTool(null)}><div><LocalScheduleTransfers embedded={review} onClose={()=>setReviewTool(null)} client={client} actor={session?.user.id??null} organization={workspace.organization?.id??null} enabled={active&&ready&&!confirmation} request={transferRequest} onState={reportTransfers} getDraft={id=>controller.record?.id===id?{record:controller.record,document:structuredClone(state().getScheduleData())}:null} captureOpen={captureCopyOpen} onCopy={openConfirmedCopy}/></div></ReviewToolPanel>}
         {workspace&&sharingTarget&&<ReviewToolPanel enabled={review} open={active&&reviewTool==='sharing'} title="Share schedule" onClose={()=>setReviewTool(null)}><LocalScheduleSharing expanded={review&&reviewTool==='sharing'} workspacePath={config.hosted?'/workspace':review?'/review':'/local-workspace'} key={`${session?.user.id}:${sharingTarget.id}`} client={client} actor={session?.user.id??null} organization={sharingTarget.organization} schedule={sharingTarget.id} name={sharingTarget.name} enabled={active&&ready&&sharingTarget.organization===workspace.organization?.id&&!confirmation} readOnly={workspace.readOnly===true} onInvite={workspace.openInvitations} onState={reportSharing}/></ReviewToolPanel>}
-        {workspace&&selected&&!recordInScope&&<p>A schedule draft is retained in another organization. Return there to continue, or explicitly discard it when opening another schedule.</p>}
+        {workspace&&selected&&!recordInScope&&<p>You have an unfinished schedule in another organization. Return to that organization to continue editing.</p>}
         {!workspace&&<nav aria-label="Local schedules" className={styles.list}>
           {items.map(item=><button key={item.id} className="btn btn-light" disabled={busy||!ready} aria-current={selected===item.id?'page':undefined} onClick={()=>guarded(()=>void run(()=>open(item.id)),'Open schedule and discard unsaved changes')}>{item.display_name} · {item.status}</button>)}
           {more&&<button className="btn btn-light" disabled={busy} onClick={()=>void run(()=>list(true))}>Load more schedules</button>}
@@ -433,7 +434,7 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
             {review&&shareTools}
             {review&&<button className="btn btn-light btn-sm tbar-tools" aria-label="Tools" onClick={()=>openReviewTool('templates')}><PanelRight size={15}/><span className="tbar-btn-text">Tools</span></button>}
             <button className="btn btn-light btn-sm tbar-close" disabled={busy} aria-label={review?'Close':'Close schedule'} onClick={() => guarded(closeSchedule, 'Close schedule and discard unsaved changes')}><span className="tbar-btn-text">{review?'Close':'Close schedule'}</span><span className="tbar-close-icon" aria-hidden="true">✕</span></button>
-            {draftAvailable&&canEdit&&ready&&<button className="btn btn-light" disabled={busy||!!controller.attempt} onClick={()=>guarded(()=>void run(recoverSourceDraft),'Recover retained source draft and replace current edits')}>Recover retained source draft</button>}
+            {draftAvailable&&canEdit&&ready&&<button className="btn btn-light" disabled={busy||!!controller.attempt} onClick={()=>guarded(()=>void run(recoverSourceDraft),'Recover retained source draft and replace current edits')}>Recover previous draft</button>}
             </div>
           </div>
 
@@ -442,16 +443,16 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
           {(controller.attempt || controller.result) && <section className={styles.recovery} aria-label="Save recovery">
             <h2>{controller.result?.state === 'matched' ? 'Saved version confirmed' : controller.result?.state === 'different' ? 'Newer changes found' : 'Check your save'}</h2>
             <p>{controller.result?.state === 'matched'
-              ? `Your attempted document matches saved version ${controller.result.saved!.document_version}. ${controller.attempt ? `The current schedule is version ${controller.result.currentVersion}; your draft is retained. Review or reload before saving again.` : 'Newer local edits, if any, remain unsaved.'}`
-              : controller.result?.state === 'retryable' ? 'The original saved version is still current. You can retry the exact attempted document; newer edits stay in your draft.'
+              ? `Your changes were saved as version ${controller.result.saved!.document_version}. ${controller.attempt ? `A newer version (${controller.result.currentVersion}) is available. Your draft is still here. Review or load the saved version before saving again.` : 'Any edits made since that save are still unsaved.'}`
+              : controller.result?.state === 'retryable' ? 'The saved version has not changed. You can retry the previous save; newer edits will stay in your draft.'
               : controller.result?.state === 'different' ? 'This schedule was updated in another tab or app. Your edits are still here. Use Share → Export JSON to keep a copy before loading the latest saved version.'
-              : controller.result?.state === 'unavailable' ? 'The schedule is unavailable to this account. That does not establish whether your save committed. Your draft and attempted save are retained.'
+              : controller.result?.state === 'unavailable' ? 'We cannot access this schedule right now or confirm the save. Your edits are still here. Try checking again when access is restored.'
               : 'We could not confirm whether your changes were saved. Your edits are still here. Check the saved result before trying again.'}</p>
             {controller.attempt && <><p>Your edits started from version {controller.attempt.before.document_version}. Checking will keep them intact.</p>
               <button className="btn btn-light" disabled={busy || !ready} onClick={() => void run(async () => { if (await controller.recover()) { setVersion(controller.record!.document_version); setMessage(''); } })}>Check saved result</button>
-              <button className="btn btn-light" disabled={busy || !ready || !canEdit || controller.result?.state !== 'retryable'} onClick={() => void run(async () => { if (await controller.recover(true)) { setVersion(controller.record!.document_version); setMessage('Retry checked against the original saved version. Review the recovery status.'); } })}>Retry exact save</button>
+              <button className="btn btn-light" disabled={busy || !ready || !canEdit || controller.result?.state !== 'retryable'} onClick={() => void run(async () => { if (await controller.recover(true)) { setVersion(controller.record!.document_version); setMessage('Retry checked against the original saved version. Review the recovery status.'); } })}>Retry previous save</button>
               {controller.result?.state === 'different' && <button className="btn btn-light" disabled={busy || !ready} onClick={() => guarded(() => void run(() => open(selected!,true)), 'Discard my edits and load latest version')}>Load latest saved version</button>}
-              {!!controller.attempt.templateUses?.length && controller.result?.state === 'retryable' && <button className="btn btn-light" disabled={busy || !ready || !canEdit} onClick={() => void run(async () => { if (await controller.resumeTemplateEditing()) setMessage('Draft retained. Undo the earlier Apply or review and apply a current template before saving. Reapplying replaces all rows; metadata stays intact.'); })}>Keep draft and review template again</button>}
+              {!!controller.attempt.templateUses?.length && controller.result?.state === 'retryable' && <button className="btn btn-light" disabled={busy || !ready || !canEdit} onClick={() => void run(async () => { if (await controller.resumeTemplateEditing()) setMessage('Draft retained. Undo the earlier Apply or review and apply a current template before saving. Reapplying replaces all rows; metadata stays intact.'); })}>Review template again</button>}
             </>}
           </section>}
           {!canEdit && <><p>Read-only schedule access.</p><ScheduleReadView data={state().getScheduleData()} name={state().scheduleName ?? undefined}/></>}
@@ -473,13 +474,14 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
         </section>}
       </>}
       <dialog ref={dialogRef} onCancel={() => setConfirmation(null)} aria-label="Discard unsaved changes" className={styles.confirm}>
+        <h2>Leave this schedule?</h2>
         <p>{controller.attempt ? controller.result?.state === 'matched'
-          ? 'Your unsaved edits and retained save review will be discarded. The confirmed save will remain in the schedule’s history.'
-          : 'Your unsaved edits and retained save attempt will be discarded. The save may already have completed; discarding does not undo it.'
+          ? 'Your unsaved edits will be discarded. The confirmed save will remain in the schedule’s history.'
+          : 'Your unsaved edits and save review will be discarded. A save may already have completed; discarding does not undo it.'
           : 'Your unsaved changes will be discarded.'}</p>
-        <button className="btn btn-light" onClick={() => setConfirmation(null)}>Keep editing</button>
+        <div className={styles.confirmActions}><button className="btn btn-light" onClick={() => setConfirmation(null)}>Keep editing</button>
         {dirty&&!controller.attempt&&canEdit&&<button className="btn btn-light" disabled={busy||!ready} onClick={() => {setConfirmation(null);void saveAndClose();}}>Save and close</button>}
-        <button className="btn btn-pink" onClick={() => { const action = confirmation?.action; setConfirmation(null); action?.(); }}>{confirmation?.label}</button>
+        <button className="btn btn-pink" onClick={() => { const action = confirmation?.action; setConfirmation(null); action?.(); }}>{confirmation?.label}</button></div>
       </dialog>
     </main>
     </DocumentProvidersContext.Provider>

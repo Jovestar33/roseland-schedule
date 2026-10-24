@@ -31,6 +31,7 @@ function fixture(file, component, props = {}, options = {}) {
       if (!(i in hooks)) hooks[i]=typeof initial==='function'?initial():initial;
       return [hooks[i], value=>{const next=typeof value==='function'?value(hooks[i]):value;if(next!==hooks[i]){hooks[i]=next;changed=true;}}];
     },
+    useCallback(fn,deps){const i=cursor++,old=hooks[i];if(!old||deps.some((v,k)=>v!==old.deps[k]))hooks[i]={deps,fn};return hooks[i].fn;},
     useRef(value){const i=cursor++;return hooks[i]??(hooks[i]={current:value});},
     useId(){const i=cursor++;return hooks[i]??(hooks[i]='audit-menu-'+i);},
     useContext(ctx){return ctx === modalVisibility ? context.visible : context.readOnly;},
@@ -66,6 +67,8 @@ function fixture(file, component, props = {}, options = {}) {
     '@/components/modals/CallSheetModal':{default:()=>null},
     '@/components/schedule/PlacesAutocomplete':{default:function PlacesAutocomplete(){}},
   };
+  const outputCode=ts.transpileModule(fs.readFileSync('components/modals/useDocumentOutput.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS}}).outputText;
+  const outputModule={exports:{}};vm.runInThisContext('(function(require,module,exports){'+outputCode+'\n})')(name=>mocks[name],outputModule,outputModule.exports);mocks['./useDocumentOutput']=outputModule.exports;
   const extra=file.includes('CallSheetModal')?'\nexport {Field, LocationField, Notes, CallSheetDocument};':'';
   const code=ts.transpileModule(fs.readFileSync(file,'utf8')+extra,{compilerOptions:{module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX}}).outputText;
   const mod={exports:{}};
@@ -193,4 +196,13 @@ test('new-app call sheet includes expanded logistics and crew/cast while keeping
  const doc=fixture(callFile,'CallSheetDocument',{...content.props,productionContacts:[{id:'crew',type:'crew',name:'Crew',role:'Camera',callTime:'8:00 AM',phone:'PRIVATE',email:''},{id:'location',type:'location',name:'Location',role:'Host',phone:'PRIVATE',email:'',callTime:''}]});
  for(const field of ['productionOffice','hospitalPhone','hospitalNotes','advanceSchedule'])assert.ok(doc.find(n=>n.props?.fieldKey===field));
  const people=doc.find(n=>n.type?.name==='ProductionContactGroups');assert.equal(people.props.contacts.length,1);assert.equal(people.props.showPrivate,false);
+});
+
+
+test('closing a call sheet preserves an unfinished or saving contact until it is applied or canceled',()=>{
+ const f=fixture(callFile,'default',{open:true,onClose:()=>{}});
+ let doc=f.find(n=>n.type?.name==='CallSheetDocument');doc.props.onContactsState(true,false);f.render();
+ let modal=f.find(n=>n.props?.className==='csh-modal');assert.equal(modal.props.beforeClose(),false);f.render();assert.equal(f.find(n=>n.type?.name==='CallSheetDocument').props.contactCloseNotice,true);
+ doc=f.find(n=>n.type?.name==='CallSheetDocument');doc.props.onContactsState(false,true);f.render();modal=f.find(n=>n.props?.className==='csh-modal');assert.equal(modal.props.beforeClose(),false);
+ doc.props.onContactsState(false,false);f.render();assert.equal(f.find(n=>n.props?.className==='csh-modal').props.beforeClose(),true);
 });
