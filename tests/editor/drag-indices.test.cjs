@@ -8,6 +8,7 @@ function grid(rows) {
   const state = { rows, rowKeys: rows.map((_, i) => `row-${i}`), reorderRows() {}, pushUndo() {} };
   const jsx = (type, props) => ({ type, props });
   const mocks = {
+    './LocalEditorContext': {useLocalEditor:()=>true},
     'react/jsx-runtime': { jsx, jsxs: jsx, Fragment: 'Fragment' },
     '@hello-pangea/dnd': { DragDropContext: 'Context', Droppable: 'Droppable', Draggable: 'Draggable' },
     '@/lib/store/scheduleStore': { useScheduleStore: select => select(state) },

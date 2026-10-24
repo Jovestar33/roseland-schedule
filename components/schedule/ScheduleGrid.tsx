@@ -1,4 +1,5 @@
 'use client';
+import { useLocalEditor } from './LocalEditorContext';
 import { DragDropContext, Droppable, Draggable, type DropResult } from '@hello-pangea/dnd';
 import { useScheduleStore } from '@/lib/store/scheduleStore';
 import { useCmsLabel } from '@/lib/store/cmsStore';
@@ -19,6 +20,7 @@ function hasOpenRows(rows: ReturnType<typeof useScheduleStore.getState>['rows'])
 }
 
 export default function ScheduleGrid({ onOpenContact, onOpenStatus, onOpenNotes }: Props) {
+  const local = useLocalEditor();
   const rows        = useScheduleStore((s) => s.rows);
   const rowKeys     = useScheduleStore((s) => s.rowKeys);
   const reorderRows = useScheduleStore((s) => s.reorderRows);
@@ -77,7 +79,7 @@ export default function ScheduleGrid({ onOpenContact, onOpenStatus, onOpenNotes 
       <div className="scroll-hint"><span>&#8592; Scroll to see all columns &#8594;</span></div>
       <div className="tbl-wrap">
         <DragDropContext onDragEnd={handleDragEnd}>
-          <table className="sched">
+          <table className={`sched${local ? ' has-contact-column' : ''}`}>
             <colgroup>
               <col className="c-n" />
               <col className="c-a" />
@@ -89,6 +91,7 @@ export default function ScheduleGrid({ onOpenContact, onOpenStatus, onOpenNotes 
               <col className="c-du" />
               <col className="c-to" />
               <col className="c-cb" />
+              {local && <col className="c-ct" />}
               <col className="c-x" />
             </colgroup>
             <thead>
@@ -103,7 +106,8 @@ export default function ScheduleGrid({ onOpenContact, onOpenStatus, onOpenNotes 
                 <th className="tc tp">{colDur}</th>
                 <th className="tc tp">{colTimeOut}</th>
                 <th className="tc">{colDone}</th>
-                <th aria-label="Row tools" />
+                {local && <th className="tc contact-heading">Contact</th>}
+                <th className={local ? 'delete-gutter' : undefined} aria-label="Row tools" />
               </tr>
             </thead>
             <Droppable droppableId="schedule">
@@ -142,7 +146,7 @@ export default function ScheduleGrid({ onOpenContact, onOpenStatus, onOpenNotes 
                 <td colSpan={6} />
                 <td className="tc" style={{textAlign:'right',paddingRight:'6px',fontWeight:600,fontSize:'0.78rem',color:'#555',whiteSpace:'nowrap'}}>Total</td>
                 <td className="tc" style={{textAlign:'center',fontWeight:700,fontSize:'0.85rem'}}>{totalLabel}</td>
-                <td colSpan={3} />
+                <td colSpan={local ? 4 : 3} />
               </tr>
             </tfoot>
           </table>

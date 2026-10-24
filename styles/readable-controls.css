@@ -100,3 +100,21 @@
   /* Suggestions now use a viewport-aware portal; no blank buffer is needed. */
   .tbl-wrap { padding-bottom:16px !important; }
 }
+
+/* Contact is schedule data; deleting an action sits in a separate quiet gutter. */
+@media screen {
+ .tbl-wrap table.sched.has-contact-column col.c-nt{width:calc(14% - 12px)!important}
+ .tbl-wrap table.sched.has-contact-column col.c-ct{width:60px!important}
+ .tbl-wrap table.sched.has-contact-column col.c-x{width:30px!important}
+ .tbl-wrap .sched.has-contact-column :is(thead,tbody) tr>:nth-child(10){right:90px}
+ .tbl-wrap .sched.has-contact-column :is(thead,tbody) tr>:nth-child(11){right:30px;padding:4px 4px!important;border-left:0;box-shadow:none}
+ .tbl-wrap .sched.has-contact-column :is(thead,tbody) tr>:nth-child(12){position:sticky;right:0;z-index:2;background:var(--g50);border:0!important;border-left:6px solid white!important;padding:4px 0!important;box-shadow:none}
+ .tbl-wrap .sched.has-contact-column thead tr>.contact-heading{font-size:14px;letter-spacing:.65px;text-align:center}
+ .tbl-wrap .sched.has-contact-column thead tr>.delete-gutter{background:var(--g50)!important;border-top:0!important;z-index:3}
+ .tbl-wrap .sched.has-contact-column .delete-gutter .del-btn{width:24px;min-width:24px;color:var(--g500);background:transparent;border:0}
+ .tbl-wrap .sched.has-contact-column .delete-gutter .del-btn:hover,.tbl-wrap .sched.has-contact-column .delete-gutter .del-btn:focus-visible{color:#b42318;background:#fef0ee}
+ .tbl-wrap .sched.has-contact-column tr.dragging>:is(:nth-child(10),:nth-child(11),:nth-child(12)){position:static}
+ .tbl-wrap .sched.has-contact-column tr.completed>.contact-cell{opacity:1}
+}
+@media screen and (max-width:760px){.tbl-wrap table.sched.has-contact-column col.c-nt{width:178px!important}}
+@media print{.sched.has-contact-column :is(.c-ct,.contact-heading,.contact-cell,.delete-gutter){display:none!important}}

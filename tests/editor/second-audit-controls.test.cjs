@@ -43,6 +43,7 @@ function fixture(file, component, props = {}, options = {}) {
   const mockNode = () => ({focus(){focusCount++;},contains:()=>false,querySelector:()=>({focus(){focusCount++;}}),getBoundingClientRect:()=>({bottom:20,right:100})});
   const schedule={rows:[],meta:{callsheet:{},date:'',projectName:'',phase:'',dayNumber:null,totalDays:null},scheduleName:'Fictional',getScheduleData:()=>({}),updateMeta(){throw Error('Unexpected store mutation');}};
   const mocks={
+    '@/components/local/ScheduleEmail':{default:()=>null},
     react,
     'react-dom':{createPortal:()=>null},
     '@/components/print/CallSheetPrintPreview':{default:()=>null},

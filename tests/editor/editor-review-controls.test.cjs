@@ -2,12 +2,12 @@ const test=require('node:test'),assert=require('node:assert/strict'),fs=require(
 const {sourceLoader}=require('./source-loader.cjs');
 const load=sourceLoader(),time=load('lib/time.ts'),{makeRow,makeMeta}=load('lib/rowNormalizer.ts');
 function nodes(n){if(Array.isArray(n))return n.flatMap(nodes);if(!n||typeof n!=='object')return [];return [n,...nodes(n.props?.children)];}
-function harness(component,rows){
+function harness(component,rows,local=true){
  const store=load('lib/store/scheduleStore.ts').useScheduleStore;
  store.getState().loadSchedule('Review fixture',{savedAt:0,meta:makeMeta(),rows:rows.map(makeRow)});
  let cursor=0,contactOpened=0;const hooks=[];
  const react={...React,useState(v){const i=cursor++;if(!(i in hooks))hooks[i]=v;return[hooks[i],v=>hooks[i]=typeof v==='function'?v(hooks[i]):v];},useRef(v){const i=cursor++;return hooks[i]??(hooks[i]={current:v});},useLayoutEffect(){}};
- const mocks={react,'@/lib/time':time,'@/lib/store/scheduleStore':{useScheduleStore:Object.assign(fn=>fn(store.getState()),{getState:store.getState})},'./PlacesAutocomplete':{default:function PlacesAutocomplete(){}},'@/components/modals/Modal':{default:function Modal(){}},'./LocalEditorContext':{useLocalEditor:()=>true},'@/components/local/DocumentProvidersContext':{useDocumentProviders:()=>null},'@/lib/observe-textarea-size':{observeTextareaSize:()=>()=>{}}};
+ const mocks={react,'@/lib/time':time,'@/lib/store/scheduleStore':{useScheduleStore:Object.assign(fn=>fn(store.getState()),{getState:store.getState})},'./PlacesAutocomplete':{default:function PlacesAutocomplete(){}},'@/components/modals/Modal':{default:function Modal(){}},'./LocalEditorContext':{useLocalEditor:()=>local},'@/components/local/DocumentProvidersContext':{useDocumentProviders:()=>null},'@/lib/observe-textarea-size':{observeTextareaSize:()=>()=>{}}};
  const mod={exports:{}};const source=ts.transpileModule(fs.readFileSync('components/schedule/'+component+'.tsx','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX}}).outputText;
  vm.runInThisContext('(function(require,module,exports){'+source+'\n})')(n=>mocks[n]??require(n),mod,mod.exports);
  let tree;function render(index=0){cursor=0;tree=mod.exports.default({index,row:store.getState().rows[index],onOpenContact:()=>contactOpened++});return tree;}
@@ -39,10 +39,14 @@ test('both time locks expose an icon, accessible state, and reversible toggle',(
  for(const [component,key] of [['TimeInCell','fixedIn'],['TimeOutCell','fixedOut']]){const h=harness(component,[row]);let button=h.find(n=>n.type==='button');assert.equal(button.props['aria-pressed'],false);assert.ok(button.props.children);button.props.onClick();assert.equal(h.store.getState().rows[0][key],true);h.render();button=h.find(n=>n.type==='button');assert.equal(button.props['aria-pressed'],true);button.props.onClick();assert.equal(h.store.getState().rows[0][key],false);}
 });
 
-test('Done and row tools occupy separate cells without an extra table column',()=>{
- const h=harness('DoneContactCell',[row]),tree=h.render();const cells=nodes(tree).filter(n=>n.type==='td');
- assert.equal(cells.length,2);assert.equal(nodes(cells[0]).filter(n=>n.type==='button').length,0);assert.equal(nodes(cells[0]).filter(n=>n.type==='input').length,1);
- assert.equal(nodes(cells[1]).filter(n=>n.type==='button').length,2);assert.equal(nodes(cells[1]).filter(n=>n.type==='input').length,0);
+test('Contact and delete have separate columns in the new app while legacy layout is retained',()=>{
+ for(const local of [true,false]){
+  const h=harness('DoneContactCell',[row],local),tree=h.render(),cells=nodes(tree).filter(n=>n.type==='td');
+  assert.equal(cells.length,local?3:2);
+  assert.equal(nodes(cells[0]).filter(n=>n.type==='input').length,1);
+  assert.equal(nodes(cells[1]).filter(n=>n.type==='button').length,local?1:2);
+  if(local){assert.equal(cells[1].props.className.includes('contact-cell'),true);assert.equal(cells[2].props.className.includes('delete-gutter'),true);assert.equal(nodes(cells[2]).find(n=>n.type==='button').props['aria-label'],'Delete row');}
+ }
 });
 test('custom durations remain editable with both boundaries locked and warn without rewriting the plan',()=>{
  const h=harness('DurationCell',[{...row,fixedIn:true,fixedOut:true,fixedOutTime:'10:00 AM'}]);

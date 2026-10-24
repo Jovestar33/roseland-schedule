@@ -1,4 +1,5 @@
 'use client';
+import { useLocalEditor } from './LocalEditorContext';
 import { UserRound } from 'lucide-react';
 import { useScheduleStore } from '@/lib/store/scheduleStore';
 import type { ScheduleRow } from '@/lib/types';
@@ -11,6 +12,7 @@ interface Props {
 }
 
 export default function DoneContactCell({ index, row, onOpenContact, onDelete }: Props) {
+  const local = useLocalEditor();
   const updateRow = useScheduleStore((s) => s.updateRow);
   const pushUndo  = useScheduleStore((s) => s.pushUndo);
 
@@ -35,7 +37,7 @@ export default function DoneContactCell({ index, row, onOpenContact, onDelete }:
       />
     </div>
     </td>
-    <td className="row-tools-cell">
+    <td className={local ? 'contact-cell' : 'row-tools-cell'}>
     <div className="row-tools">
       <button
         className={`contact-done-btn${hasContact ? ' has-contact' : ''}`}
@@ -44,9 +46,10 @@ export default function DoneContactCell({ index, row, onOpenContact, onDelete }:
         onClick={onOpenContact}
         title={hasContact ? 'Edit contact' : 'Add contact'}
       ><UserRound size={17} aria-hidden="true" /></button>
-      <button type="button" className="del-btn" onClick={onDelete} aria-label="Delete row" title="Delete row">✕</button>
+      {!local && <button type="button" className="del-btn" onClick={onDelete} aria-label="Delete row" title="Delete row">✕</button>}
     </div>
     </td>
+    {local && <td className="delete-gutter"><div className="row-tools"><button type="button" className="del-btn" onClick={onDelete} aria-label="Delete row" title="Delete row">✕</button></div></td>}
     </>
   );
 }

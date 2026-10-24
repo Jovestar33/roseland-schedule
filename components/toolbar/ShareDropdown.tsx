@@ -6,8 +6,12 @@ import { useLocalEditor } from '@/components/schedule/LocalEditorContext';
 import { ModalVisibilityContext } from '@/components/modals/Modal';
 import ContactSheetModal from '@/components/modals/ContactSheetModal';
 import CallSheetModal from '@/components/modals/CallSheetModal';
+import ScheduleEmail from '@/components/local/ScheduleEmail';
+import {useCallSheetPublishing} from '@/components/local/CallSheetPublishingContext';
 
 export default function ShareDropdown({ readOnly = false, onModalChange, authorizeOutput, onManageLinks }: { readOnly?: boolean; onModalChange?: (open: boolean) => void; authorizeOutput?:()=>Promise<boolean>; onManageLinks?:()=>void } = {}) {
+  const publishing=useCallSheetPublishing();
+  const [emailOpen,setEmailOpen]=useState(false);
   const local = useLocalEditor(), visible = useContext(ModalVisibilityContext);
   const scheduleName    = useScheduleStore((s) => s.scheduleName);
   const getScheduleData = useScheduleStore((s) => s.getScheduleData);
@@ -40,7 +44,7 @@ export default function ShareDropdown({ readOnly = false, onModalChange, authori
     };
   }, [open]);
 
-  useEffect(() => { onModalChange?.(callSheetOpen || contactSheetOpen); }, [callSheetOpen, contactSheetOpen, onModalChange]);
+  useEffect(() => { onModalChange?.(callSheetOpen || contactSheetOpen || emailOpen); }, [callSheetOpen, contactSheetOpen, emailOpen, onModalChange]);
   useEffect(() => { if (!visible) setOpen(false); }, [visible]);
 
   function toggle() {
@@ -109,6 +113,7 @@ export default function ShareDropdown({ readOnly = false, onModalChange, authori
           className="tbar-drop"
           style={{ position: 'fixed', top: dropPos.top, right: dropPos.right, left: 'auto', zIndex: 9999 }}
         >
+          {local && publishing && !readOnly && <button className="tbar-drop-item" onClick={()=>{close();setEmailOpen(true);}}>✉ Send to group</button>}
           {onManageLinks && <button className="tbar-drop-item" onClick={()=>{close();onManageLinks();}}>🔗 Share schedule</button>}
           <button className="tbar-drop-item" onClick={handlePrint}>🖨 Print / PDF</button>
           <button className="tbar-drop-item" onClick={handleExportJson}>⬇ Export JSON</button>
@@ -117,6 +122,7 @@ export default function ShareDropdown({ readOnly = false, onModalChange, authori
         </div>
       )}
     </div>
+    {local && publishing && !readOnly && <ScheduleEmail open={emailOpen} onClose={()=>setEmailOpen(false)}/>}
     <ContactSheetModal
       readOnly={readOnly}
       authorizeOutput={authorizeOutput}

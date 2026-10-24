@@ -1,4 +1,5 @@
 import 'server-only';
+import {documentEmail} from './document-email';
 import {createHash,randomUUID} from 'node:crypto';
 import {NextRequest,NextResponse} from 'next/server';
 import {readHostedWorkspaceConfig} from './hosted-workspace-config';
@@ -34,7 +35,7 @@ export async function emailCallSheet(request:NextRequest){
  if(!r.ok)return response({error:r.status===409?'A newer version is available. Refresh before sending.':'Email could not be authorized. Sign in again or refresh the call sheet.'},r.status===409?409:403);
  const job=await r.json();if(job?.state!=='claimed')return response({state:job?.state??'uncertain'});
  let accepted=false;
- try{accepted=await sendHostedNotification(mail,{recipient:job.recipient,event:`call-sheet-${body.link}-v${job.edition}`,subject:`Call sheet: ${job.name} — Version ${job.edition}`,text:`Your call sheet is ready.\n\n${job.name}\nVersion ${job.edition}\n\nOpen the call sheet to view arrival details, individual calls and the day's schedule:\n${ctx.config.appOrigin}/call-sheet#${body.token}\n\nPlease select “Confirm received” after reviewing it. If a revised version is issued, this link will open the latest instructions. You can print or save a PDF from that page.\n\nRoseland Pictures`});}catch{/* An SMTP timeout does not prove that no email was sent. */}
+ try{accepted=await sendHostedNotification(mail,{recipient:job.recipient,event:`call-sheet-${body.link}-v${job.edition}`,...documentEmail({name:job.name,edition:job.edition,documents:job.documents,url:`${ctx.config.appOrigin}/call-sheet#${body.token}`})});}catch{/* An SMTP timeout does not prove that no email was sent. */}
  const finished=await serviceRpc(ctx,'finish_call_sheet_email',{target_link_id:body.link,claim_id:claim,accepted});return response({state:accepted&&finished.ok?'accepted':'uncertain'});
  }catch{return response({error:'Email could not be confirmed. Refresh its status before sending again.'},503);}
 }

@@ -1,4 +1,5 @@
 'use client';
+import { useLocalEditor } from './LocalEditorContext';
 import { computeTimeOut } from '@/lib/time';
 import type { ScheduleRow } from '@/lib/types';
 
@@ -8,6 +9,7 @@ interface Props {
 }
 
 export default function SunriseSunsetRow({ index, row }: Props) {
+  const local = useLocalEditor();
   const isSunrise = row.action.includes('Sunrise') || row.timeIn < '12:00 PM';
   const timeColor = isSunrise ? '#92400e' : '#9a3412';
   const timeOut = computeTimeOut(row);
@@ -33,6 +35,7 @@ export default function SunriseSunsetRow({ index, row }: Props) {
       </td>
       <td />
       <td />
+      {local && <td className="delete-gutter" />}
     </tr>
   );
 }

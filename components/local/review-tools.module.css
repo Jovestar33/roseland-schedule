@@ -14,7 +14,23 @@
 .body fieldset { border-color:var(--g200); border-radius:10px; }
 .body button { max-width:100%; }
 @media(max-width:640px){.panel{inset:auto 0 0; width:100%; height:92dvh; max-height:92dvh; border-radius:18px 18px 0 0;}.header,.body{padding:16px;}}
-@media(prefers-reduced-motion:no-preference){.panel[open]{animation:appear .15s ease-out;}@keyframes appear{from{opacity:0;transform:translateX(12px)}to{opacity:1;transform:translateX(0)}}}
+/* Same travel and timing as Tools and Contacts; keep the native dialog focus scope. */
+@media(prefers-reduced-motion:no-preference){
+ .panel[open]:not(.compact){animation:drawer-in 250ms ease backwards}
+ .panel[open]:not(.compact)::backdrop{animation:backdrop-in 200ms ease backwards}
+ .panel[open][data-closing]:not(.compact){animation:drawer-out 200ms ease forwards;pointer-events:none}
+ .panel[open][data-closing]:not(.compact)::backdrop{animation:backdrop-out 200ms ease forwards}
+ @keyframes drawer-in{from{transform:translateX(100%)}to{transform:translateX(0)}}
+ @keyframes drawer-out{from{transform:translateX(0)}to{transform:translateX(100%)}}
+ @keyframes backdrop-in{from{background:transparent}to{background:#0005}}
+ @keyframes backdrop-out{from{background:#0005}to{background:transparent}}
+ @media(max-width:640px){
+  .panel[open]:not(.compact){animation-name:drawer-up}
+  .panel[open][data-closing]:not(.compact){animation-name:drawer-down}
+  @keyframes drawer-up{from{transform:translateY(100%)}to{transform:translateY(0)}}
+  @keyframes drawer-down{from{transform:translateY(0)}to{transform:translateY(100%)}}
+ }
+}
 
 .body [hidden] { display:none !important; }
 .body input[type="file"] { border:0; padding:0; font-size:12px; }
