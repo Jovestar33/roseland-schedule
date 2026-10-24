@@ -1,7 +1,4 @@
 'use client';
-import { Fragment } from 'react';
-import { timingAnalysis } from '@/lib/flexible-time';
-import TimingGap from './TimingGap';
 import { DragDropContext, Droppable, Draggable, type DropResult } from '@hello-pangea/dnd';
 import { useScheduleStore } from '@/lib/store/scheduleStore';
 import { useCmsLabel } from '@/lib/store/cmsStore';
@@ -23,10 +20,6 @@ function hasOpenRows(rows: ReturnType<typeof useScheduleStore.getState>['rows'])
 
 export default function ScheduleGrid({ onOpenContact, onOpenStatus, onOpenNotes }: Props) {
   const rows        = useScheduleStore((s) => s.rows);
-  const savedTiming = useScheduleStore(s=>s.meta.timing);
-  const timingEditor = useScheduleStore(s=>s.timingEditor);
-  const timing = savedTiming??(timingEditor?{mode:'flexible' as const,between:'backward' as const}:undefined);
-  const gaps = new Map(timing ? timingAnalysis(rows,timing.between).gaps.map(g=>[g.index,g]) : []);
   const rowKeys     = useScheduleStore((s) => s.rowKeys);
   const reorderRows = useScheduleStore((s) => s.reorderRows);
   const pushUndo    = useScheduleStore((s) => s.pushUndo);
@@ -55,11 +48,11 @@ export default function ScheduleGrid({ onOpenContact, onOpenStatus, onOpenNotes 
 
   function handleDragEnd(result: DropResult) {
     if (!result.destination) return;
-    if (!timing && (result.source.index === 0 || result.destination.index === 0)) {
+    if (result.source.index === 0 || result.destination.index === 0) {
       addToast('The first row is the call-time anchor and cannot be moved or displaced.', 'info');
       return;
     }
-    if (!timing && hasOpenRows(rows)) {
+    if (hasOpenRows(rows)) {
       addToast('Fill in Duration on all actions before reordering', 'info');
       return;
     }
@@ -75,8 +68,9 @@ export default function ScheduleGrid({ onOpenContact, onOpenStatus, onOpenNotes 
 
   // Droppable can invoke its render callback repeatedly during a drag without
   // rerendering this component. Capture stable indices, not a mutable counter.
-  let nextDraggable=0;
-  const draggableIndices = rows.map(row=>row.sunLocked?-1:nextDraggable++);
+  const draggableIndices = rows.map((row, index) =>
+    row.sunLocked ? -1 : rows.slice(0, index).filter(r => !r.sunLocked).length
+  );
 
   return (
     <>
@@ -122,9 +116,7 @@ export default function ScheduleGrid({ onOpenContact, onOpenStatus, onOpenNotes 
                     }
                     const dIdx = draggableIndices[index];
                     return (
-                      <Fragment key={key}>
-                      {gaps.has(index)&&<TimingGap gap={gaps.get(index)!}/>}
-                      <Draggable draggableId={key} index={dIdx} isDragDisabled={!timing && dIdx === 0}>
+                      <Draggable key={key} draggableId={key} index={dIdx} isDragDisabled={dIdx === 0}>
                         {(draggable, snapshot) => (
                           <ScheduleRow
                             ref={draggable.innerRef}
@@ -138,7 +130,7 @@ export default function ScheduleGrid({ onOpenContact, onOpenStatus, onOpenNotes 
                             onOpenNotes={() => onOpenNotes(index)}
                           />
                         )}
-                      </Draggable></Fragment>
+                      </Draggable>
                     );
                   })}
                   {provided.placeholder}

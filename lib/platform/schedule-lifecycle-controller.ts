@@ -28,7 +28,7 @@ export class ScheduleLifecycleController {
   failure:ScheduleRepositoryError['kind']|null=null; busy=false; private generation=0;
   bind(actor:string|null){if(actor!==this.actor){this.clear();this.actor=actor;}}
   clear(){this.generation++;this.attempt=null;this.result=null;this.phase='review';this.failure=null;this.busy=false;}
-  prepareCreate(organization:string,id:string,dayId:string|null,name:string,slug:string,document:StoredSchedule['document']={meta:{timing:{mode:'flexible',between:'backward'}},rows:[]} as unknown as StoredSchedule['document'],placement?:{productionId:string;phaseId:string|null}){
+  prepareCreate(organization:string,id:string,dayId:string|null,name:string,slug:string,document:StoredSchedule['document']={meta:{},rows:[]} as unknown as StoredSchedule['document'],placement?:{productionId:string;phaseId:string|null}){
     if(!this.actor||this.attempt||(!dayId&&!placement))throw new ScheduleRepositoryError('invalid');namePair(name,slug);
     this.attempt=freeze({actor:this.actor,organization:parseInvitationId(organization),id:parseInvitationId(id),dayId:dayId===null?null:parseInvitationId(dayId),...(placement?{productionId:parseInvitationId(placement.productionId),phaseId:placement.phaseId===null?null:parseInvitationId(placement.phaseId)}:{}),kind:'create',expectedVersion:0,name,slug,before:null,payload:{},document:structuredClone(document)});
   }

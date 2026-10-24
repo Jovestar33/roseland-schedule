@@ -1,5 +1,5 @@
 import type { ScheduleData } from './types';
-import { displayTimeIn, displayTimeOut, durm, mDur } from './time';
+import { computeTimeOut, durm, mDur } from './time';
 
 export type SchedulePrintMode = 'compact' | 'inline';
 export type SchedulePaper = 'letter' | 'a4';
@@ -53,7 +53,7 @@ export function layoutSchedulePrint(data: ScheduleData, name: string, mode: Sche
   const header = [
     name || 'Schedule',
     [meta.projectName, meta.phase, meta.dayNumber == null ? '' : `Day ${meta.dayNumber}${meta.totalDays ? ` of ${meta.totalDays}` : ''}`].filter(Boolean).join(' · '),
-    [meta.town, meta.date, data.rows.find(row => !row.sunLocked&&row.timeIn) ? `Call: ${displayTimeIn(data.rows.find(row => !row.sunLocked&&row.timeIn)!)}` : ''].filter(Boolean).join(' · '),
+    [meta.town, meta.date, data.rows.find(row => !row.sunLocked)?.timeIn ? `Call: ${data.rows.find(row => !row.sunLocked)?.timeIn}` : ''].filter(Boolean).join(' · '),
     [meta.prod && `Producer: ${meta.prod}`, meta.dir && `Director: ${meta.dir}`, meta.dp && `Camera: ${meta.dp}`].filter(Boolean).join(' · '),
     meta.wx ? [meta.wx.sunrise && `Sunrise: ${meta.wx.sunrise}`, meta.wx.sunset && `Sunset: ${meta.wx.sunset}`, meta.wx.cond, meta.wx.maxF == null ? '' : `High: ${meta.wx.maxF}°F`, meta.wx.minF == null ? '' : `Low: ${meta.wx.minF}°F`, meta.wx.prec == null ? '' : `Rain: ${meta.wx.prec}%`].filter(Boolean).join(' · ') : '',
   ].filter(Boolean).flatMap(text => wrap(text, contentWidth - 160));
@@ -73,7 +73,7 @@ export function layoutSchedulePrint(data: ScheduleData, name: string, mode: Sche
     const detail = (value: string, col: number, ref: string, label: string): Line[] => {
       const lines = wrap(value || '', columns[col]);
       if (mode === 'compact' && lines.length > 3) {
-        appendix.push({ ref, title: `${ref} · Row ${index + 1} · ${displayTimeIn(row) || 'Time not set'} · ${row.locName || row.loc || action || 'Location not set'} · ${label}`, text: value });
+        appendix.push({ ref, title: `${ref} · Row ${index + 1} · ${row.timeIn || 'Time not set'} · ${row.locName || row.loc || action || 'Location not set'} · ${label}`, text: value });
         return [...lines.slice(0, 3).map(text => ({ text })), { text: '', ref }];
       }
       return lines.map(text => ({ text }));
@@ -83,7 +83,7 @@ export function layoutSchedulePrint(data: ScheduleData, name: string, mode: Sche
       ...wrap(row.keyInstruction ? `KEY: ${row.keyInstruction}` : '', columns[4], true).map(text => ({ text, bold: true })),
       ...detail([!castUnderDescription && row.cast ? `Cast: ${row.cast}` : '', row.notes].filter(Boolean).join('\n\n'), 4, `N${index + 1}`, 'Notes'),
     ];
-    const cells = [[], wrap(action, columns[1]).map(text => ({ text })), wrap(loc, columns[2]).map(text => ({ text })), [...detail(row.desc, 3, `D${index + 1}`, 'Description'),...wrap(castUnderDescription&&row.cast?`Cast / participants: ${row.cast}`:'',columns[3]).map(text=>({text}))], notes, wrap(displayTimeIn(row), columns[5]).map(text => ({ text })), wrap(row.dur, columns[6]).map(text => ({ text })), wrap(displayTimeOut(row), columns[7]).map(text => ({ text }))];
+    const cells = [[], wrap(action, columns[1]).map(text => ({ text })), wrap(loc, columns[2]).map(text => ({ text })), [...detail(row.desc, 3, `D${index + 1}`, 'Description'),...wrap(castUnderDescription&&row.cast?`Cast / participants: ${row.cast}`:'',columns[3]).map(text=>({text}))], notes, wrap(row.timeIn, columns[5]).map(text => ({ text })), wrap(row.dur, columns[6]).map(text => ({ text })), wrap(computeTimeOut(row), columns[7]).map(text => ({ text }))];
     const totalLines = Math.max(1, ...cells.map(cell => cell.length));
     const rowHeight = totalLines * LINE + ROW_PAD;
     if (used && rowHeight <= pageCapacity(pages.length, 'schedule') && used + rowHeight > capacity()) { pages.push({ kind: 'schedule', rows: [], notes: [] }); used = 0; }

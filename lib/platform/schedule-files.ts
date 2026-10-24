@@ -16,8 +16,6 @@ export function validateFileDocument(doc: unknown): asserts doc is Doc {
     if ('town date prod dir dp projectName phase'.split(' ').includes(k)) { if (!text(v)) invalid('Invalid metadata text: '+k); }
     else if (['lat','lng','dayNumber','totalDays'].includes(k)) {
       if (v !== null && (!number(v,k==='lat'?90:k==='lng'?180:1000000) || (['dayNumber','totalDays'].includes(k) && (!Number.isInteger(v) || (v as number)<1)))) invalid('Invalid metadata number: '+k);
-    } else if(k==='timing') {
-      if(!object(v)||v.mode!=='flexible'||!['backward','forward'].includes(String(v.between))||Object.keys(v).some(k=>!['mode','between'].includes(k))) invalid('Invalid timing settings.');
     } else if (k==='wx') {
       if (v===null) continue;
       if (!object(v)) invalid('Invalid weather.');
@@ -49,7 +47,6 @@ export function validateFileDocument(doc: unknown): asserts doc is Doc {
         if (!text(v)) invalid('Invalid row text: '+k);
         if (v && (['timeIn','fixedOutTime'].includes(k) ? !/^(0?[1-9]|1[0-2]):[0-5][0-9] (AM|PM)$/.test(v as string) : k==='dur' ? !/^[0-9]{1,3}:[0-5][0-9]$/.test(v as string) : false)) invalid('Invalid row time: '+k);
       } else if (['done','sunLocked','fixedIn','fixedOut'].includes(k)) { if (typeof v!=='boolean') invalid('Invalid row flag.'); }
-      else if (['timeInDay','fixedOutDay'].includes(k)) {if(!number(v,1000000)||!Number.isInteger(v)) invalid('Invalid timing day.');}
       else if (['locLat','locLng'].includes(k)) { if (v!==null&&!number(v,k==='locLat'?90:180)) invalid('Invalid coordinate.'); }
       else if (k==='subLocations') {
         if (!Array.isArray(v)||v.length>100) invalid('Invalid nested locations.');

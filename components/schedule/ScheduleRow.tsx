@@ -5,7 +5,6 @@ import { useCmsActionClassMap } from '@/lib/store/cmsStore';
 import { useScheduleStore } from '@/lib/store/scheduleStore';
 import type { ScheduleRow as ScheduleRowType } from '@/lib/types';
 import ActionCell from './ActionCell';
-import FlexibleTimeCell from './FlexibleTimeCell';
 import TimeInCell from './TimeInCell';
 import DurationCell from './DurationCell';
 import TimeOutCell from './TimeOutCell';
@@ -28,7 +27,6 @@ interface Props {
 
 const ScheduleRow = forwardRef<HTMLTableRowElement, Props>(
   ({ index, row, draggableProps, dragHandleProps, isDragging, onOpenContact, onOpenStatus, onOpenNotes }, ref) => {
-    const flexible = useScheduleStore(s=>s.timingEditor || s.meta.timing?.mode === 'flexible');
     const deleteRow = useScheduleStore((s) => s.deleteRow);
     const pushUndo  = useScheduleStore((s) => s.pushUndo);
 
@@ -72,13 +70,13 @@ const ScheduleRow = forwardRef<HTMLTableRowElement, Props>(
         </td>
         <td className="col-dv" />
         <td className="tc-t">
-          {flexible?<FlexibleTimeCell index={index} row={row} edge="start"/>:<TimeInCell index={index} row={row} />}
+          <TimeInCell index={index} row={row} />
         </td>
         <td className="tc-t">
           <DurationCell index={index} row={row} />
         </td>
         <td className="tc-t">
-          {flexible?<FlexibleTimeCell index={index} row={row} edge="finish"/>:<TimeOutCell index={index} row={row} />}
+          <TimeOutCell index={index} row={row} />
         </td>
         <DoneContactCell index={index} row={row} onOpenContact={onOpenContact} onDelete={handleDelete} />
       </tr>

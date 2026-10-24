@@ -15,12 +15,11 @@ export default function RowControls({ index, dragHandleProps }: Props) {
   const { addToast } = useToast();
   const editable = rows.flatMap((row, i) => row.sunLocked ? [] : [i]);
   const position = editable.indexOf(index);
-  const flexible = useScheduleStore(s=>s.timingEditor || s.meta.timing?.mode === 'flexible');
-  const canMoveUp = position > (flexible?0:1);
-  const canMoveDown = position >= (flexible?0:1) && position < editable.length - 1;
+  const canMoveUp = position > 1;
+  const canMoveDown = position > 0 && position < editable.length - 1;
 
   function guardReorder(): boolean {
-    if (!flexible && rows.some(r => !r.sunLocked && r.action !== '' && r.dur === '')) {
+    if (rows.some(r => !r.sunLocked && r.action !== '' && r.dur === '')) {
       addToast('Fill in Duration on all actions before reordering', 'info');
       return true;
     }
@@ -46,8 +45,8 @@ export default function RowControls({ index, dragHandleProps }: Props) {
       <span
         className="drag-handle"
         {...(dragHandleProps ?? {})}
-        title={!flexible && position === 0 ? "Call-time anchor" : "Drag to reorder"}
-        aria-label={!flexible && position === 0 ? "Call-time anchor" : `Reorder action ${position + 1}`}
+        title={position === 0 ? "Call-time anchor" : "Drag to reorder"}
+        aria-label={position === 0 ? "Call-time anchor" : `Reorder action ${position + 1}`}
       >
         ≡
       </span>

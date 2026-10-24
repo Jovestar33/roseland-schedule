@@ -23,6 +23,8 @@
     grid-row:1; grid-column:1; box-sizing:border-box; height:36px !important; min-height:36px !important; max-height:36px !important; margin:0; line-height:20px !important;
   }
   .tbl-wrap .time-cell-wrap > :is(.tdsp,.anchor-text) { display:flex; align-items:center; justify-content:center; }
+  /* Duration shares the same value slot as Time In/Out; it has no lock row. */
+  .tbl-wrap .duration-cell-wrap { grid-template-rows:36px; }
   .tbl-wrap .time-cell-wrap > .time-lock-btn { grid-row:2; grid-column:1; min-height:24px !important; max-height:24px; margin:0; }
   .tbl-wrap .time-lock-btn {
     order:2; flex:0 0 24px; width:24px; min-width:24px; height:24px; padding:4px !important;

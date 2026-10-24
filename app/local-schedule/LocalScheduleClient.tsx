@@ -11,7 +11,6 @@ import { makeMeta } from '@/lib/rowNormalizer';
 import { useScheduleStore } from '@/lib/store/scheduleStore';
 import { LocalEditorContext } from '@/components/schedule/LocalEditorContext';
 import ScheduleHeader from '@/components/schedule/ScheduleHeader';
-import ScheduleTiming from '@/components/schedule/ScheduleTiming';
 import ScheduleGrid from '@/components/schedule/ScheduleGrid';
 import SaveDropdown from '@/components/toolbar/SaveDropdown';
 import SyncStatusPill from '@/components/toolbar/SyncStatusPill';
@@ -86,7 +85,7 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
       const doc = record.document;
       useScheduleStore.getState().loadSchedule(record.display_name, {
         rows: doc.rows ?? [], meta: makeMeta(doc.meta), savedAt: doc.savedAt ?? 0,
-      },true);
+      });
     },
   }));
   const [session, setSession] = useState<Session | null>(null);
@@ -322,7 +321,7 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
     if(!safe()||!c)return false;
     const record=await repository.read(c.id);
     if(!safe()||record.document_version!==receipt.schedule_version)return false;
-    state().loadSchedule(record.display_name,{rows:record.document.rows??[],meta:makeMeta(record.document.meta),savedAt:record.document.savedAt??0},true);
+    state().loadSchedule(record.display_name,{rows:record.document.rows??[],meta:makeMeta(record.document.meta),savedAt:record.document.savedAt??0});
     controller.record=record;setVersion(record.document_version);if(review)setReviewTool(null);setMessage('Snapshot content restored. Your previous draft and undo history remain available through Recover retained source draft.');return true;
   }
   async function recoverSourceDraft(){
@@ -330,7 +329,7 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
     if(!await directory.canEdit(actor,record.production_id,record.id,'edit'))throw new Error('Draft recovery is unavailable under current permissions.');
     const retained=readSourceDraft(localStorage,actor,record.organization_id,record.id);
     if(!retained||controller.record?.id!==record.id||accountRef.current!==actor||scopeRef.current!==record.organization_id||!activeRef.current)return;
-    state().loadSchedule(record.display_name,{rows:retained.document.rows??[],meta:makeMeta(retained.document.meta),savedAt:retained.document.savedAt??0},true);
+    state().loadSchedule(record.display_name,{rows:retained.document.rows??[],meta:makeMeta(retained.document.meta),savedAt:retained.document.savedAt??0});
     useScheduleStore.setState({dirty:true,templateUses:retained.templateUses??[],undoStack:retained.undo as typeof currentUndo,redoStack:retained.redo as typeof currentUndo});
     controller.record=retained.before;setVersion(retained.before.document_version);setMessage('Source draft and undo history recovered. Saving still checks its original server version.');
   }
@@ -460,7 +459,6 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
           <fieldset disabled={!ready || !canEdit} style={{border:0,padding:0,margin:0,minWidth:0,order:2,flexDirection:'column',display:canEdit?'flex':'none'}}>
           <ScheduleHeader />
           <LocalWeatherControls enabled={active && recordInScope && ready && canEdit && !confirmation} scope={`${accountRef.current}:${controller.record?.id}`} />
-          <ScheduleTiming />
           <ScheduleGrid onOpenContact={setContact} onOpenStatus={setStatus} onOpenNotes={setNotes} />
           <div className="add-area"><button className="btn btn-light" onClick={() => { state().pushUndo(); state().addRowAfter(rows.length - 1); }}>{addRowLabel}</button></div>
           <ContactModal open={contact !== null} row={contact !== null ? rows[contact] : null} onClose={() => setContact(null)}

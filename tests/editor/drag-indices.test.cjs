@@ -5,12 +5,9 @@ const vm = require('node:vm');
 const ts = require('typescript');
 
 function grid(rows) {
-  const state = { meta: {}, rows, rowKeys: rows.map((_, i) => `row-${i}`), reorderRows() {}, pushUndo() {} };
+  const state = { rows, rowKeys: rows.map((_, i) => `row-${i}`), reorderRows() {}, pushUndo() {} };
   const jsx = (type, props) => ({ type, props });
   const mocks = {
-    'react':{Fragment:'Fragment'},
-    '@/lib/flexible-time':{timingAnalysis:()=>({gaps:[]})},
-    './TimingGap':{default:'TimingGap'},
     'react/jsx-runtime': { jsx, jsxs: jsx, Fragment: 'Fragment' },
     '@hello-pangea/dnd': { DragDropContext: 'Context', Droppable: 'Droppable', Draggable: 'Draggable' },
     '@/lib/store/scheduleStore': { useScheduleStore: select => select(state) },
@@ -43,7 +40,7 @@ test('drag indices stay contiguous across repeated Droppable renders with sun ro
   const render = find(tree, 'Droppable').props.children;
   for (let iteration = 0; iteration < 5; iteration++) {
     const body = render({ innerRef() {}, droppableProps: {}, placeholder: null });
-    const items = body.props.children.flat(Infinity).flatMap(x=>x?.type==='Fragment'?[x.props.children].flat(Infinity):[x]).filter(x => x?.type === 'Draggable');
+    const items = body.props.children.flat(Infinity).filter(x => x?.type === 'Draggable');
     assert.deepEqual(Array.from(items, x => x.props.index), [0,1,2,3]);
     assert.deepEqual(Array.from(items, x => x.props.draggableId), ['row-1','row-2','row-4','row-5']);
   }

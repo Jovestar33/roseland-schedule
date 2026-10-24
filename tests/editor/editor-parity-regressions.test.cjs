@@ -4,7 +4,7 @@ function component(file,mocks){const mod={exports:{}};const code=ts.transpileMod
 function elements(node,predicate){if(!node||typeof node!=='object')return [];return [...(predicate(node)?[node]:[]),...[node.props?.children].flat(Infinity).flatMap(child=>elements(child,predicate))];}
 test('arrow controls skip sun markers and cannot displace the call-time anchor',()=>{
  const calls=[],rows=[{sunLocked:true},{action:'Crew Call',dur:'00:15'},{action:'Shoot',dur:'01:00'},{sunLocked:true},{action:'Wrap',dur:'00:15'},{sunLocked:true}];
- const state={meta:{},rows,pushUndo(){calls.push('undo')},reorderRows(...args){calls.push(args)}};
+ const state={rows,pushUndo(){calls.push('undo')},reorderRows(...args){calls.push(args)}};
  const Row=component('components/schedule/RowControls.tsx',{'@/lib/store/scheduleStore':{useScheduleStore:select=>select(state)},'@/components/ui/ToastProvider':{useToast:()=>({addToast:message=>calls.push(message)})}});
  const buttons=index=>elements(Row({index}),el=>el.type==='button');
  assert.deepEqual(buttons(1).map(b=>b.props.disabled),[true,true]);

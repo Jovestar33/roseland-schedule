@@ -2,16 +2,11 @@ import { create } from 'zustand';
 import type {TemplateUse} from '../platform/schedule-templates';
 import { makeRow, makeMeta, normalizeRows } from '../rowNormalizer';
 import { recalcRows, t12m, computeTimeOut } from '../time';
-import { startMinutes, finishMinutes, hasPlannedWork } from '../flexible-time';
 import { UNDO_LIMIT, DEFAULT_ROW_COUNT } from '../constants';
 import type { ScheduleRow, ScheduleMeta, ScheduleData, WeatherData, SyncStatus, ConflictState } from '../types';
 
-const planStart=(rows:ScheduleRow[])=>{const first=rows.find(hasPlannedWork);return first?startMinutes(first):null;};
-const flexibleDefault={mode:'flexible',between:'backward'} as const;
-const timingFor=(s:{meta:ScheduleMeta;timingEditor:boolean})=>s.meta.timing??(s.timingEditor?flexibleDefault:undefined);
-
 // After any row mutation, re-position sun-locked rows to their correct chronological slot.
-function repositionSunRows(rows: ScheduleRow[], rowKeys: string[], timing?: ScheduleMeta['timing'], calculate=true, fallbackStart?:number|null): { rows: ScheduleRow[]; rowKeys: string[] } {
+function repositionSunRows(rows: ScheduleRow[], rowKeys: string[]): { rows: ScheduleRow[]; rowKeys: string[] } {
   const sunRows: ScheduleRow[] = [];
   const sunKeys: string[] = [];
   const cleanRows: ScheduleRow[] = [];
@@ -22,19 +17,19 @@ function repositionSunRows(rows: ScheduleRow[], rowKeys: string[], timing?: Sche
     else             { cleanRows.push(r); cleanKeys.push(rowKeys[i]); }
   });
 
-  if (sunRows.length === 0) return { rows: (calculate?recalcRows(rows,timing,fallbackStart):rows), rowKeys };
+  if (sunRows.length === 0) return { rows: recalcRows(rows), rowKeys };
 
-  const recalced = calculate?recalcRows(cleanRows,timing,fallbackStart):cleanRows;
-  const times = recalced.map(r => ({ in: timing?startMinutes(r):(t12m(r.timeIn)<0?null:t12m(r.timeIn)), out: timing?finishMinutes(r):(t12m(computeTimeOut(r))<0?null:t12m(computeTimeOut(r))) }));
-  const hasT = times.some(t => t.in !== null);
+  const recalced = recalcRows(cleanRows);
+  const times = recalced.map(r => ({ in: t12m(r.timeIn), out: t12m(computeTimeOut(r)) }));
+  const hasT = times.some(t => t.in >= 0);
 
   function findPt(timeMin: number, isRise: boolean): { idx: number; note: string } {
     if (!hasT) return { idx: isRise ? 0 : 1, note: '' };
     const evtName = isRise ? 'Sunrise' : 'Sunset';
     for (let i = 0; i < times.length; i++) {
       const { in: inM, out: outM } = times[i];
-      if (inM !== null && timeMin <= inM) return { idx: i, note: '' };
-      if (inM !== null && outM !== null && timeMin > inM && timeMin < outM && recalced[i].action) {
+      if (inM >= 0 && timeMin <= inM) return { idx: i, note: '' };
+      if (inM >= 0 && outM >= 0 && timeMin > inM && timeMin < outM && recalced[i].action) {
         return { idx: i + 1, note: `${evtName} during: ${recalced[i].action}` };
       }
     }
@@ -56,7 +51,7 @@ function repositionSunRows(rows: ScheduleRow[], rowKeys: string[], timing?: Sche
     newKeys.splice(idx, 0, key);
   });
 
-  return { rows: calculate?recalcRows(newRows,timing,fallbackStart):newRows, rowKeys: newKeys };
+  return { rows: recalcRows(newRows), rowKeys: newKeys };
 }
 
 type Snapshot = { rows: ScheduleRow[]; meta: ScheduleMeta; templateUses?: TemplateUse[] };
@@ -73,7 +68,6 @@ export interface ScheduleStore {
   rows: ScheduleRow[];
   rowKeys: string[];
   meta: ScheduleMeta;
-  timingEditor: boolean; // New editor capability; never stored in the document.
   // Retain fields introduced by the other app across a legacy editor round trip.
   documentExtras: Record<string, unknown>;
   scheduleName: string | null;
@@ -96,12 +90,12 @@ export interface ScheduleStore {
   redo: () => void;
 
   updateRow: (index: number, patch: Partial<ScheduleRow>) => void;
-  addRowAfter: (afterIndex: number, row?: Partial<ScheduleRow>) => void;
+  addRowAfter: (afterIndex: number) => void;
   deleteRow: (index: number) => void;
   reorderRows: (from: number, to: number) => void;
   updateMeta: (patch: Partial<ScheduleMeta>) => void;
 
-  loadSchedule: (name: string, data: ScheduleData, timingEditor?: boolean) => void;
+  loadSchedule: (name: string, data: ScheduleData) => void;
   newSchedule: (name?: string) => void;
   markClean: () => void;
   getScheduleData: () => ScheduleData;
@@ -126,7 +120,6 @@ export const useScheduleStore = create<ScheduleStore>((set, get) => ({
   rows: makeDefaultRows(),
   rowKeys: makeDefaultKeys(DEFAULT_ROW_COUNT),
   meta: makeMeta(),
-  timingEditor: false,
   documentExtras: {},
   scheduleName: null,
   dirty: false,
@@ -157,7 +150,7 @@ export const useScheduleStore = create<ScheduleStore>((set, get) => ({
     if (position < 0) { set({ undoStack: [] }); return; }
     const prev = undoStack[position];
     set({
-      rows: get().timingEditor?prev.rows:recalcRows(prev.rows,prev.meta.timing),
+      rows: recalcRows(prev.rows),
       rowKeys: makeDefaultKeys(prev.rows.length),
       meta: prev.meta,
       templateUses: prev.templateUses ?? [],
@@ -174,7 +167,7 @@ export const useScheduleStore = create<ScheduleStore>((set, get) => ({
     const next = redoStack[redoStack.length - 1];
     const cur: Snapshot = { rows: structuredClone(rows), meta: structuredClone(meta), templateUses: structuredClone(templateUses) };
     set({
-      rows: get().timingEditor?next.rows:recalcRows(next.rows,next.meta.timing),
+      rows: recalcRows(next.rows),
       rowKeys: makeDefaultKeys(next.rows.length),
       meta: next.meta,
       templateUses: next.templateUses ?? [],
@@ -188,20 +181,17 @@ export const useScheduleStore = create<ScheduleStore>((set, get) => ({
   updateRow(index, patch) {
     const { rows, rowKeys } = get();
     const updated = rows.map((r, i) => (i === index ? { ...r, ...patch } : r));
-    const timingEdit=['dur','timeIn','timeInDay','fixedIn','fixedOut','fixedOutTime','fixedOutDay'].some(k=>k in patch);
-    const calculate=!get().timingEditor||timingEdit;
-    const timing=timingFor(get());
-    const result=calculate?repositionSunRows(updated,rowKeys,timing,true,planStart(rows)):{rows:updated,rowKeys};
-    set({...result,...(get().timingEditor&&timingEdit?{meta:{...get().meta,timing}}:{}),dirty:true,redoStack:[],editRevision:get().editRevision+1});
+    const result = repositionSunRows(updated, rowKeys);
+    set({ rows: result.rows, rowKeys: result.rowKeys, dirty: true, redoStack: [], editRevision: get().editRevision + 1 });
   },
 
-  addRowAfter(afterIndex, row = {}) {
+  addRowAfter(afterIndex) {
     const { rows, rowKeys } = get();
-    const newRow = makeRow({ action: '',...row });
+    const newRow = makeRow({ action: '' });
     const updated = [...rows.slice(0, afterIndex + 1), newRow, ...rows.slice(afterIndex + 1)];
     const updatedKeys = [...rowKeys.slice(0, afterIndex + 1), newKey(), ...rowKeys.slice(afterIndex + 1)];
-    const result = repositionSunRows(updated, updatedKeys,timingFor(get()),!get().timingEditor||!!row.dur||!!row.fixedIn||!!row.fixedOut,planStart(rows));
-    set({ rows: result.rows, rowKeys: result.rowKeys,...(get().timingEditor?{meta:{...get().meta,timing:timingFor(get())}}:{}), dirty: true, redoStack: [], editRevision: get().editRevision + 1 });
+    const result = repositionSunRows(updated, updatedKeys);
+    set({ rows: result.rows, rowKeys: result.rowKeys, dirty: true, redoStack: [], editRevision: get().editRevision + 1 });
   },
 
   deleteRow(index) {
@@ -209,8 +199,8 @@ export const useScheduleStore = create<ScheduleStore>((set, get) => ({
     if (rows.length <= 1) return;
     const updated = rows.filter((_, i) => i !== index);
     const updatedKeys = rowKeys.filter((_, i) => i !== index);
-    const result = repositionSunRows(updated, updatedKeys,timingFor(get()),true,planStart(rows));
-    set({ rows: result.rows, rowKeys: result.rowKeys,...(get().timingEditor?{meta:{...get().meta,timing:timingFor(get())}}:{}), dirty: true, redoStack: [], editRevision: get().editRevision + 1 });
+    const result = repositionSunRows(updated, updatedKeys);
+    set({ rows: result.rows, rowKeys: result.rowKeys, dirty: true, redoStack: [], editRevision: get().editRevision + 1 });
   },
 
   reorderRows(from, to) {
@@ -221,8 +211,8 @@ export const useScheduleStore = create<ScheduleStore>((set, get) => ({
     const [movedKey] = updatedKeys.splice(from, 1);
     updatedRows.splice(to, 0, movedRow);
     updatedKeys.splice(to, 0, movedKey);
-    const result = repositionSunRows(updatedRows, updatedKeys,timingFor(get()),true,planStart(rows));
-    set({ rows: result.rows, rowKeys: result.rowKeys,...(get().timingEditor?{meta:{...get().meta,timing:timingFor(get())}}:{}), dirty: true, redoStack: [], editRevision: get().editRevision + 1 });
+    const result = repositionSunRows(updatedRows, updatedKeys);
+    set({ rows: result.rows, rowKeys: result.rowKeys, dirty: true, redoStack: [], editRevision: get().editRevision + 1 });
   },
 
   updateMeta(patch) {
@@ -231,17 +221,16 @@ export const useScheduleStore = create<ScheduleStore>((set, get) => ({
     const next = { ...meta, ...patch };
     if (locationChanged) next.wx = null;
     set({ meta: next,
-      ...((locationChanged||'timing' in patch) ? repositionSunRows(locationChanged?rows.filter(row=>!row.sunLocked):rows,locationChanged?rowKeys.filter((_,i)=>!rows[i].sunLocked):rowKeys,next.timing, !get().timingEditor||'timing' in patch) : {}),
+      ...(locationChanged ? { rows: recalcRows(rows.filter(row => !row.sunLocked)), rowKeys: rowKeys.filter((_, i) => !rows[i].sunLocked) } : {}),
       dirty: true, redoStack: [], editRevision: get().editRevision + 1 });
   },
 
-  loadSchedule(name, data, timingEditor=false) {
+  loadSchedule(name, data) {
     const normalized = normalizeRows(data.rows);
     const { rows: _rows, meta: _meta, savedAt: _savedAt, ...extras } = data;
     set({
       documentExtras: structuredClone(extras),
-      rows: timingEditor?normalized:recalcRows(normalized,data.meta.timing),
-      timingEditor,
+      rows: recalcRows(normalized),
       rowKeys: makeDefaultKeys(normalized.length),
       meta: data.meta,
       scheduleName: name,
@@ -262,7 +251,6 @@ export const useScheduleStore = create<ScheduleStore>((set, get) => ({
       rows,
       rowKeys: makeDefaultKeys(rows.length),
       meta: makeMeta(),
-      timingEditor:false,
       documentExtras: {},
       scheduleName: name,
       documentSession: get().documentSession + 1,
@@ -279,10 +267,10 @@ export const useScheduleStore = create<ScheduleStore>((set, get) => ({
 
   applyTemplateRows(rows, use) {
     get().pushUndo();
-    const normalized = recalcRows(normalizeRows(structuredClone(rows).map(row => ({...row,sunLocked:false}))),timingFor(get()));
+    const normalized = recalcRows(normalizeRows(structuredClone(rows).map(row => ({...row,sunLocked:false}))));
     // Every row is replaced; Undo retains the previous rows and their provenance.
     const templateUses = [structuredClone(use)];
-    set({meta:{...get().meta,...(get().timingEditor?{timing:timingFor(get())}:{})},rows:normalized,rowKeys:makeDefaultKeys(normalized.length),templateUses,dirty:true,redoStack:[],editRevision:get().editRevision+1});
+    set({rows:normalized,rowKeys:makeDefaultKeys(normalized.length),templateUses,dirty:true,redoStack:[],editRevision:get().editRevision+1});
   },
   acknowledgeTemplateUses(uses) {
     const remove=(values:TemplateUse[]=[])=>values.filter(v=>!uses.some(u=>u.id===v.id&&u.version===v.version&&u.policy===v.policy));
@@ -301,20 +289,20 @@ export const useScheduleStore = create<ScheduleStore>((set, get) => ({
     const { rows, rowKeys } = get();
     const clean = rows.filter(r => !r.sunLocked);
     const cleanKeys = rowKeys.filter((_, i) => !rows[i].sunLocked);
-    const recalced = get().timingEditor?clean:recalcRows(clean,get().meta.timing);
+    const recalced = recalcRows(clean);
 
     const srMin = t12m(sunrise);
     const ssMin = t12m(sunset);
-    const times = recalced.map(r => ({ in: timingFor(get())?startMinutes(r):(t12m(r.timeIn)<0?null:t12m(r.timeIn)), out: timingFor(get())?finishMinutes(r):(t12m(computeTimeOut(r))<0?null:t12m(computeTimeOut(r))) }));
-    const hasT = times.some(t => t.in !== null);
+    const times = recalced.map(r => ({ in: t12m(r.timeIn), out: t12m(computeTimeOut(r)) }));
+    const hasT = times.some(t => t.in >= 0);
 
     function findPt(timeMin: number, isRise: boolean): { idx: number; note: string } {
       if (!hasT) return { idx: isRise ? 0 : 1, note: '' };
       const evtName = isRise ? 'Sunrise' : 'Sunset';
       for (let i = 0; i < times.length; i++) {
         const { in: inM, out: outM } = times[i];
-        if (inM !== null && timeMin <= inM) return { idx: i, note: '' };
-        if (inM !== null && outM !== null && timeMin > inM && timeMin < outM && recalced[i].action) {
+        if (inM >= 0 && timeMin <= inM) return { idx: i, note: '' };
+        if (inM >= 0 && outM >= 0 && timeMin > inM && timeMin < outM && recalced[i].action) {
           return { idx: i + 1, note: `${evtName} during: ${recalced[i].action}` };
         }
       }
@@ -334,14 +322,14 @@ export const useScheduleStore = create<ScheduleStore>((set, get) => ({
       newKeys.splice(pt.idx, 0, newKey());
     });
 
-    set({ rows: get().timingEditor?newRows:recalcRows(newRows,get().meta.timing), rowKeys: newKeys, dirty: true, redoStack: [], editRevision: get().editRevision + 1 });
+    set({ rows: recalcRows(newRows), rowKeys: newKeys, dirty: true, redoStack: [], editRevision: get().editRevision + 1 });
   },
 
   clearSunRows() {
     const { rows, rowKeys } = get();
     const newRows = rows.filter(r => !r.sunLocked);
     const newKeys = rowKeys.filter((_, i) => !rows[i].sunLocked);
-    set({ rows: get().timingEditor?newRows:recalcRows(newRows,get().meta.timing), rowKeys: newKeys, dirty: true, redoStack: [], editRevision: get().editRevision + 1 });
+    set({ rows: recalcRows(newRows), rowKeys: newKeys, dirty: true, redoStack: [], editRevision: get().editRevision + 1 });
   },
 
   setWx(wx) {

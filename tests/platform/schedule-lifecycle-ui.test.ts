@@ -13,7 +13,7 @@ const repository:LifecycleTransport={send:async()=>saved,probe:async()=>({state:
 function deferred<T>(){let resolve!:(value:T)=>void;const promise=new Promise<T>(r=>{resolve=r;});return {promise,resolve};}
 test('creation retains a deeply immutable ID, destination and empty document',()=>{
   const c=new ScheduleLifecycleController();c.bind(actor);c.prepareCreate(org,id,day,'Fictional day','fictional-day');const attempt=c.attempt!;
-  assert.ok(Object.isFrozen(attempt)&&Object.isFrozen(attempt.document.meta));assert.equal(attempt.expectedVersion,0);assert.deepEqual(attempt.document,{meta:{timing:{mode:'flexible',between:'backward'}},rows:[]});assert.throws(()=>c.prepareCreate(org,prod,day,'Other','other'));
+  assert.ok(Object.isFrozen(attempt)&&Object.isFrozen(attempt.document.meta));assert.equal(attempt.expectedVersion,0);assert.deepEqual(attempt.document,{meta:{},rows:[]});assert.throws(()=>c.prepareCreate(org,prod,day,'Other','other'));
   c.bind(actor);assert.equal(c.attempt,attempt);assert.throws(()=>{attempt.document.rows!.push({} as never);});
 });
 test('lifecycle review snapshots the saved version and payload independently of future edits',()=>{

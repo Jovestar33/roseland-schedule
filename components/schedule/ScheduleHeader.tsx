@@ -6,7 +6,6 @@ import {useDocumentProviders} from '@/components/local/DocumentProvidersContext'
 import { useLocalEditor } from './LocalEditorContext';
 import CrewIdentityBlock from './CrewIdentityBlock';
 import HeaderIdentityLine from './HeaderIdentityLine';
-import {displayTimeIn} from '@/lib/time';
 import type { GeoResult } from '@/lib/googlePlaces';
 
 interface Props {
@@ -31,8 +30,7 @@ export default function ScheduleHeader({ readOnly = false }: Props) {
     ? selectedDate.toLocaleDateString('en-US', { weekday: 'long', timeZone: 'UTC' })
     : '';
 
-  const firstTimedRow=rows.find(r=>!r.sunLocked&&r.timeIn);
-  const callTime = firstTimedRow?displayTimeIn(firstTimedRow):'';
+  const callTime = rows.find(r => !r.sunLocked)?.timeIn || '';
 
   function handleTownSelect(address: string, geo: GeoResult | null) {
     updateMeta({
