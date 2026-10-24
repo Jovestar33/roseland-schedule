@@ -38,6 +38,8 @@ export interface ScheduleRow {
   fixedIn: boolean;
   fixedOut: boolean;
   fixedOutTime: string;
+  timeInDay?: number; // Offset from the shoot date; also retained for computed starts.
+  fixedOutDay?: number; // Explicit date of a fixed finish.
   subLocations?: SubLocation[]; // absent on old schedules — treated as undefined
 }
 
@@ -111,7 +113,10 @@ export interface CallSheetData {
   notes?: string;
 }
 
+export interface TimingSettings { mode: 'flexible'; between: 'backward' | 'forward' }
+
 export interface ScheduleMeta {
+  timing?: TimingSettings;
   town: string;
   date: string;
   prod: string;

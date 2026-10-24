@@ -21,9 +21,12 @@ export default function DurationCell({ index, row }: Props) {
   const selectRef = useRef<HTMLSelectElement>(null);
   const closeCustom = () => { setEditing(false); selectRef.current?.focus(); };
 
-  const disabled = !row.action;
+  const savedTiming = useScheduleStore(s=>s.meta.timing);
+  const timingEditor = useScheduleStore(s=>s.timingEditor);
+  const timing = savedTiming??(timingEditor?{mode:'flexible' as const,between:'backward' as const}:undefined);
+  const disabled = !timing && !row.action;
   const opts = DURATIONS.includes(row.dur) ? DURATIONS : [...DURATIONS, row.dur].filter(Boolean);
-  const conflict = rowConflictInfo(rows, index);
+  const conflict = rowConflictInfo(rows, index, timing);
 
   function handleChange(dur: string) {
     if (dur === '__custom__') {
@@ -71,6 +74,7 @@ export default function DurationCell({ index, row }: Props) {
         </label>
         {error && <p role="alert" className="dur-warn">{error}</p>}
       </Modal>}
+      {timing && !row.dur && (row.action || row.fixedIn || row.fixedOut) && <div className="dur-warn">Set duration</div>}
       {conflict && <div className="dur-warn" role="status" title={conflict.detail || conflict.msg}>{conflict.msg}</div>}
     </>
   );

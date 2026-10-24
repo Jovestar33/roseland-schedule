@@ -1,3 +1,5 @@
+import { solveFlexibleTimes, timingAnalysis, startMinutes, hasPlannedWork, finishMinutes, dayLabel } from './flexible-time.ts';
+import type { TimingSettings } from './types';
 import type { ScheduleRow } from './types';
 
 // 15-minute interval time options for Time In / Time Out selectors (96 entries)
@@ -87,7 +89,8 @@ export type ConflictInfo = { kind: string; msg: string; detail?: string };
 export type GapInfo = { kind: 'gap' | 'overlap'; minutes: number; msg: string };
 
 // Detect duration conflicts: overrun, fixedOut mismatch, negative duration.
-export function rowConflictInfo(rows: ScheduleRow[], i: number): ConflictInfo | null {
+export function rowConflictInfo(rows: ScheduleRow[], i: number, timing?: TimingSettings): ConflictInfo | null {
+  if(timing?.mode==='flexible'){const result=timingAnalysis(rows);return result.conflicts.find(c=>c.index===i)??null;}
   const r = rows[i];
   if (!r || r.sunLocked) return null;
 
@@ -150,13 +153,14 @@ export function parseCustomDuration(value: string): string | null {
   const clock = text.match(/^(\d+):([0-5]\d)$/);
   const minutes = clock ? Number(clock[1]) * 60 + Number(clock[2])
     : /^\d+$/.test(text) ? Number(text) : NaN;
-  if (!Number.isSafeInteger(minutes) || minutes < 0) return null;
+  if (!Number.isSafeInteger(minutes) || minutes < 0 || minutes > 59999) return null;
   return minutes === 0 ? '00:00' : mDur(minutes);
 }
 
 // Detect a gap or overlap between this fixedIn row and the previous row's computed time out.
 // Only applies to fixedIn rows (not the first editable row — that's the call-time anchor).
-export function rowGapInfo(rows: ScheduleRow[], i: number): GapInfo | null {
+export function rowGapInfo(rows: ScheduleRow[], i: number, timing?: TimingSettings): GapInfo | null {
+  if(timing?.mode==='flexible'){const gap=timingAnalysis(rows,timing.between).gaps.find(g=>g.index===i);return gap?{kind:gap.minutes>0?'gap':'overlap',minutes:Math.abs(gap.minutes),msg:`${Math.abs(gap.minutes)} min ${gap.minutes>0?'available':'overlap'} before this action.`}:null;}
   const r = rows[i];
   if (!r || r.sunLocked || !r.fixedIn || !r.timeIn) return null;
 
@@ -205,7 +209,8 @@ export function isLocked(rows: ScheduleRow[], i: number): boolean {
 //   first editable   — treated like fixedIn: call time is owned by the user, never overwritten
 //   fixedOut         — timeOut is user-pinned via fixedOutTime; preserve requested duration and warn on mismatch
 //   default          — timeIn = previous timeOut; timeOut = timeIn + dur
-export function recalcRows(rows: ScheduleRow[]): ScheduleRow[] {
+export function recalcRows(rows: ScheduleRow[], timing?: TimingSettings, fallbackStart?: number|null): ScheduleRow[] {
+  if(timing?.mode==='flexible') return solveFlexibleTimes(rows,timing.between,fallbackStart===undefined?(rows.find(hasPlannedWork)?startMinutes(rows.find(hasPlannedWork)!):null):fallbackStart).rows;
   const result = rows.map((r) => ({ ...r }));
   let cursor = -1;
   let firstEditableSeen = false;
@@ -245,3 +250,6 @@ export function recalcRows(rows: ScheduleRow[]): ScheduleRow[] {
 
   return result;
 }
+
+export function displayTimeIn(row:ScheduleRow){return row.timeIn?`${row.timeIn}${dayLabel(row.timeInDay??0)}`:'';}
+export function displayTimeOut(row:ScheduleRow){const time=computeTimeOut(row);if(!time)return '';if(row.timeInDay===undefined&&row.fixedOutDay===undefined)return time;const end=finishMinutes(row);return time+dayLabel(end===null?0:Math.floor(end/1440));}

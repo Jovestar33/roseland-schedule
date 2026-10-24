@@ -3,7 +3,7 @@ import CollapsibleText from '@/components/schedule/CollapsibleText';
 import { useLocalEditor } from '@/components/schedule/LocalEditorContext';
 import {useCmsStore,useCmsActionClassMap} from '@/lib/store/cmsStore';
 import { wxIcon } from '@/lib/weather';
-import { computeTimeOut } from '@/lib/time';
+import { displayTimeIn, displayTimeOut } from '@/lib/time';
 import type { ScheduleData, SubLocation } from '@/lib/types';
 
 const ACTION_CLASSES: Record<string, string> = {
@@ -72,7 +72,7 @@ export default function ScheduleReadView({ data, name }: Props) {
   const { meta, rows } = data;
   const wx = meta.wx;
   const visibleRows = rows.filter(r => r.action || r.timeIn || r.keyInstruction || r.cast);
-  const callTime = rows.find(r => !r.sunLocked)?.timeIn || '';
+  const callTime = rows.find(r => !r.sunLocked) ? displayTimeIn(rows.find(r=>!r.sunLocked)!) : '';
 
   const scheduleName = name || '';
   const projectName = meta.projectName || '';
@@ -197,7 +197,7 @@ export default function ScheduleReadView({ data, name }: Props) {
                         {row.desc && <span style={{ marginLeft: '8px', opacity: 0.7 }}>{row.desc}</span>}
                       </td>
                       <td className="col-dv" />
-                      <td className="tc" style={{ color: '#64748b', fontStyle: 'italic' }}>{row.timeIn}</td>
+                      <td className="tc" style={{ color: '#64748b', fontStyle: 'italic' }}>{displayTimeIn(row)}</td>
                       <td />
                       <td />
                     </tr>
@@ -244,9 +244,9 @@ export default function ScheduleReadView({ data, name }: Props) {
                     <td><CollapsibleText value={row.desc} label="Description" />{local&&row.cast&&<div style={{marginTop:8}}><strong>Cast / participants</strong><CollapsibleText value={row.cast} label="Cast / participants"/></div>}</td>
                     <td>{!local && row.cast && <div><strong>Cast</strong><CollapsibleText value={row.cast} label="Cast" /></div>}{row.keyInstruction && <div style={{ fontWeight: 600, whiteSpace: 'pre-wrap', overflowWrap: 'anywhere', marginBottom: 5 }}>Key instruction: {row.keyInstruction}</div>}<CollapsibleText value={row.notes} label="Notes" /></td>
                     <td className="col-dv" />
-                    <td className="tc">{row.timeIn}</td>
+                    <td className="tc">{displayTimeIn(row)}</td>
                     <td className="tc">{row.dur}</td>
-                    <td className="tc">{computeTimeOut(row)}</td>
+                    <td className="tc">{displayTimeOut(row)}</td>
                   </tr>
                 );
               })}

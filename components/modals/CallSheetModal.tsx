@@ -204,9 +204,9 @@ function Notes({ label, fieldKey, value, onCommit }: {
 }
 
 function TimeField({label,fieldKey,value,onCommit}:{label:string;fieldKey:CSKey;value:string;onCommit:(key:CSKey,value:string)=>void}) {
- const readOnly=useContext(CallSheetReadOnly),minutes=t12m(value);
+ const readOnly=useContext(CallSheetReadOnly),daySuffix=value.match(/ \([+-]?\d+ days?\)$/)?.[0]??'',minutes=t12m(value.replace(daySuffix,''));
  const clock=minutes<0?'':`${String(Math.floor(minutes/60)).padStart(2,'0')}:${String(minutes%60).padStart(2,'0')}`;
- return <div className="csh-field"><span className="csh-fl">{label}</span>{readOnly?<strong className="csh-fv">{value||'Not set'}</strong>:<input className="csh-time-input" aria-label={label} type="time" value={clock} onChange={e=>{const [h,m]=e.target.value.split(':').map(Number);onCommit(fieldKey,e.target.value?m12(h*60+m):'');}}/>}</div>;
+ return <div className="csh-field"><span className="csh-fl">{label}</span>{readOnly?<strong className="csh-fv">{value||'Not set'}</strong>:<input className="csh-time-input" aria-label={label} type="time" value={clock} onChange={e=>{const [h,m]=e.target.value.split(':').map(Number);onCommit(fieldKey,e.target.value?m12(h*60+m)+daySuffix:'');}}/>}{!readOnly&&daySuffix&&<small>{daySuffix.trim()}</small>}</div>;
 }
 function TimeZoneField({value,onCommit}:{value:string;onCommit:(key:CSKey,value:string)=>void}) {
  const readOnly=useContext(CallSheetReadOnly);

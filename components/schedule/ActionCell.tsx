@@ -17,7 +17,10 @@ export default function ActionCell({ index, row }: Props) {
   const actionClassMap = useCmsActionClassMap();
 
   const isOther  = row.action === 'Other';
-  const locked   = isLocked(rows, index);
+  const savedTiming = useScheduleStore(s=>s.meta.timing);
+  const timingEditor = useScheduleStore(s=>s.timingEditor);
+  const timing = savedTiming??(timingEditor?{mode:'flexible' as const,between:'backward' as const}:undefined);
+  const locked   = !timing && isLocked(rows, index);
   const showHint = locked;
 
   function handleSelectChange(action: string) {

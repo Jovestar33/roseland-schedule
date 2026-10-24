@@ -29,11 +29,15 @@ function snapshot(value){
 }
 function same(a,b){return hash(a)===hash(b);}
 function sameSnapshot(a,b){return a.version===b.version&&same(a.document,b.document)&&same(a.guard,b.guard);}
+// The legacy editor does not solve backward timing. Its timing edits must be
+// reviewed rather than silently replacing the new app's resolved anchors.
+function timingShape(d){return {settings:d.meta.timing??null,rows:d.rows.map(r=>Object.fromEntries(['action','sunLocked','timeIn','timeInDay','dur','fixedIn','fixedOut','fixedOutTime','fixedOutDay'].map(k=>[k,r[k]??null])))};}
 function classify(entry,left,right){
  if(!entry.base)return same(left.document,right.document)?'establish':'initial-conflict';
  if(!same(entry.guards.netlify,left.guard)||!same(entry.guards.supabase,right.guard))return 'structure-conflict';
  if(same(left.document,right.document))return same(left.document,entry.base)?'unchanged':'converged';
  const l=!same(left.document,entry.base),r=!same(right.document,entry.base);
+ if(l&&entry.base.meta.timing?.mode==='flexible'&&!same(timingShape(left.document),timingShape(entry.base)))return 'content-conflict';
  return l&&r?'content-conflict':l?'to-supabase':'to-netlify';
 }
 async function observe(adapters,mapping){
