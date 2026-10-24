@@ -24,9 +24,10 @@ interface ModalProps {
   zIndex?: number;
   retainWhenHidden?: boolean;
   exitDuration?: number;
+  beforeClose?: () => boolean;
 }
 
-export default function Modal({ open, onClose, title, children, footer, className, zIndex, retainWhenHidden = false, exitDuration = 0 }: ModalProps) {
+export default function Modal({ open, onClose, title, children, footer, className, zIndex, retainWhenHidden = false, exitDuration = 0, beforeClose }: ModalProps) {
   const visible = useContext(ModalVisibilityContext);
   const dialogRef = useRef<HTMLDivElement>(null);
   const [closing, setClosing] = useState(false);
@@ -34,7 +35,7 @@ export default function Modal({ open, onClose, title, children, footer, classNam
   const onCloseRef = useRef(onClose);
   onCloseRef.current = onClose;
   function requestClose() {
-    if (exitTimer.current) return;
+    if (exitTimer.current || beforeClose?.() === false) return;
     if (!exitDuration || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       onCloseRef.current(); return;
     }
