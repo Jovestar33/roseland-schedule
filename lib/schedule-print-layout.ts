@@ -53,7 +53,7 @@ export function layoutSchedulePrint(data: ScheduleData, name: string, mode: Sche
   const header = [
     name || 'Schedule',
     [meta.projectName, meta.phase, meta.dayNumber == null ? '' : `Day ${meta.dayNumber}${meta.totalDays ? ` of ${meta.totalDays}` : ''}`].filter(Boolean).join(' · '),
-    [meta.town, meta.date, data.rows.find(row => !row.sunLocked)?.timeIn ? `Call: ${displayTimeIn(data.rows.find(row => !row.sunLocked)!)}` : ''].filter(Boolean).join(' · '),
+    [meta.town, meta.date, data.rows.find(row => !row.sunLocked&&row.timeIn) ? `Call: ${displayTimeIn(data.rows.find(row => !row.sunLocked&&row.timeIn)!)}` : ''].filter(Boolean).join(' · '),
     [meta.prod && `Producer: ${meta.prod}`, meta.dir && `Director: ${meta.dir}`, meta.dp && `Camera: ${meta.dp}`].filter(Boolean).join(' · '),
     meta.wx ? [meta.wx.sunrise && `Sunrise: ${meta.wx.sunrise}`, meta.wx.sunset && `Sunset: ${meta.wx.sunset}`, meta.wx.cond, meta.wx.maxF == null ? '' : `High: ${meta.wx.maxF}°F`, meta.wx.minF == null ? '' : `Low: ${meta.wx.minF}°F`, meta.wx.prec == null ? '' : `Rain: ${meta.wx.prec}%`].filter(Boolean).join(' · ') : '',
   ].filter(Boolean).flatMap(text => wrap(text, contentWidth - 160));

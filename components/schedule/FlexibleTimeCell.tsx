@@ -14,6 +14,8 @@ export default function FlexibleTimeCell({index,row,edge}:{index:number;row:Sche
  const fixed=edge==='start'?row.fixedIn:row.fixedOut;
  const label=edge==='start'?'start':'finish';
  const display=edge==='start'?displayTimeIn(row):displayTimeOut(row);
+ const daySuffix=display.match(/^(.*?)( \([+-]\d+ days?\))$/);
+ const visibleClock=daySuffix?daySuffix[1]:display;
  function begin(){
   const value=edge==='start'?row.timeIn:(row.fixedOut?row.fixedOutTime:clockAt(finishMinutes(row)??0));
   const minute=clockMinutes(value);
@@ -30,7 +32,7 @@ export default function FlexibleTimeCell({index,row,edge}:{index:number;row:Sche
   state.pushUndo();state.updateRow(i,edge==='start'?(release?{fixedIn:false}:{fixedIn:true,timeIn:value,timeInDay:Number(enteredDay)}):(release?{fixedOut:false,fixedOutTime:'',fixedOutDay:0}:{fixedOut:true,fixedOutTime:value,fixedOutDay:Number(enteredDay)}));setOpen(false);
  }
  return <><button type="button" className={`flex-time-value${fixed?' is-fixed':''}`} onClick={begin} aria-label={`${fixed?'Edit fixed':'Set fixed'} ${label}${display?`: ${display}`:''}`} title={fixed?`Fixed ${label} — edit or release`:`Set a fixed ${label}`}>
-  {fixed&&<LockKeyhole size={12} aria-hidden="true"/>}<span>{display||'—'}</span>
+  <span className="flex-time-clock">{fixed&&<LockKeyhole size={12} aria-hidden="true"/>}{visibleClock||'—'}</span>{daySuffix&&<small className="flex-time-day">{daySuffix[2].trim()}</small>}
  </button>{open&&<Modal open title={`Fixed ${label}`} className="timing-modal" onClose={()=>setOpen(false)} footer={<>
   {fixed&&<button className="btn btn-light" onClick={()=>commit(true)}>Release fixed time</button>}<button className="btn btn-light" onClick={()=>setOpen(false)}>Cancel</button><button className="btn btn-pink" onClick={()=>commit()}>Set time</button>
  </>}><p>Durations stay unchanged. Other actions work {edge==='finish'?'backward from this finish':'around this start'}.</p>
