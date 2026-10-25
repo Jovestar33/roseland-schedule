@@ -7,7 +7,7 @@
 .csh-masthead{border-bottom:2px solid #9d1468;margin-bottom:14px;padding-bottom:12px}
 .csh-identity-grid{display:grid;grid-template-columns:minmax(0,1fr) 220px;gap:24px;align-items:start}
 .csh-brand-title{display:flex;align-items:center;gap:12px}
-.csh-logo{width:48px;height:48px;object-fit:contain;flex-shrink:0;background:#111;padding:5px}
+.csh-logo{width:48px;height:48px;object-fit:contain;flex-shrink:0;background:#fff;padding:0}
 .csh-kicker{font-size:11px;letter-spacing:1.2px;font-weight:600;text-transform:uppercase}
 .csh-identity-grid h1{font-family:inherit;font-size:22px;line-height:1.15;font-weight:650;letter-spacing:-.3px;margin:3px 0 0}
 .csh-schedule-name{font-weight:600;margin:8px 0 2px}
@@ -82,7 +82,7 @@
  .callsheet-print-only .csh-document{font-family:var(--fb,'DM Sans',Arial,sans-serif)!important;font-size:10pt!important;line-height:1.25!important}
  .callsheet-print-only .csh-masthead{margin-bottom:8pt;padding-bottom:6pt;break-inside:avoid}
  .callsheet-print-only .csh-identity-grid{grid-template-columns:minmax(0,1fr) 155pt;gap:14pt}
- .callsheet-print-only .csh-logo{width:30pt;height:30pt;padding:3pt;print-color-adjust:exact;-webkit-print-color-adjust:exact}
+ .callsheet-print-only .csh-logo{width:30pt;height:30pt;padding:0;print-color-adjust:exact;-webkit-print-color-adjust:exact}
  .callsheet-print-only h1{font-size:17pt}
  .callsheet-print-only .csh-call-time{font-size:24pt;margin-bottom:3pt}
  .callsheet-print-only :is(.csh-phase,.csh-date,.csh-day,.csh-call-lbl,.csh-weather){font-size:9pt}

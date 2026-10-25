@@ -255,7 +255,7 @@ function CallSheetDocument({
         <div className="csh-production">
           <div className="csh-brand-title">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img className="csh-logo" src={organizationLogo || '/logo-header.png'} alt="Organization logo" />
+            <img className="csh-logo" src={organizationLogo && organizationLogo !== '/logo-header.png' ? organizationLogo : '/logo-call-sheet.png'} alt="Organization logo" />
             <div><span className="csh-kicker">Call Sheet</span><h1>{projectName || scheduleName || 'Production'}</h1></div>
           </div>
           {projectName && scheduleName && <p className="csh-schedule-name">{scheduleName}</p>}
