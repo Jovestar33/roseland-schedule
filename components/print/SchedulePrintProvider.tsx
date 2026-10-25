@@ -1,13 +1,14 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
+import {organizationLogo} from '@/lib/branding';
 import { useCmsStore } from '@/lib/store/cmsStore';
 import type { SchedulePrintRequest } from '@/lib/print';
 import { layoutSchedulePrint, renderSchedulePrint, type SchedulePaper, type SchedulePrintMode, type PrintLayout } from '@/lib/schedule-print-layout';
 import styles from './schedule-print.module.css';
 
 export default function SchedulePrintProvider() {
-  const logo = useCmsStore(state => state.config.logo);
+  const logo = useCmsStore(state => organizationLogo(state.config,'light'));
   const [request, setRequest] = useState<SchedulePrintRequest | null>(null);
   const [mode, setMode] = useState<SchedulePrintMode>('compact');
   const [paper, setPaper] = useState<SchedulePaper>('letter');
@@ -57,7 +58,7 @@ export default function SchedulePrintProvider() {
       },request.castUnderDescription);
       setLayout(next);
       setPreviewRevision(value => value + 1);
-      setHtml(renderSchedulePrint(next, new URL(logo || '/logo-header.png', window.location.href).href).replace('<head>', '<head><base href="about:srcdoc">'));
+      setHtml(renderSchedulePrint(next, new URL(request.logo??logo, window.location.href).href).replace('<head>', '<head><base href="about:srcdoc">'));
     } catch (err) { setLayout(null); setError((err as Error).message); }
   }, [request, mode, paper, logo]);
   async function print() {

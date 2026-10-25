@@ -1,5 +1,5 @@
 'use client';
-import {useEffect,useRef,useState} from 'react';
+import {useEffect,useMemo,useRef,useState} from 'react';
 import CallSheetPrintPreview from '@/components/print/CallSheetPrintPreview';
 import {IssuedCallSheet,type IssuedCallSheetData} from '@/components/modals/CallSheetModal';
 import ScheduleReadView from './ScheduleReadView';
@@ -19,7 +19,7 @@ export default function CallSheetRecipient(){
    const r=await fetch('/api/call-sheet/read',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({token:token.current,...(acknowledge?{acknowledge}:{})}),cache:'no-store'}),data=await r.json();
    if(ticket!==generation.current)return false;
    if(!r.ok){if(r.status===403||r.status===404){setValue(null);setPrinting(false);window.dispatchEvent(new Event('schedule-print-close'));}throw Error(data.error||'These documents are unavailable.');}
-   setValue(data);if(data.documents==='schedule')setTab('schedule');if(data.documents==='call_sheet'||!data.documents)setTab('call_sheet');if(acknowledge)setMessage('Received—thank you. The production team can see your confirmation.');return data as Value;
+   setValue(previous=>JSON.stringify(previous)===JSON.stringify(data)?previous:data);if(data.documents==='schedule')setTab('schedule');if(data.documents==='call_sheet'||!data.documents)setTab('call_sheet');if(acknowledge)setMessage('Received—thank you. The production team can see your confirmation.');return data as Value;
   }catch(e){if(ticket===generation.current){setError(true);setMessage((e as Error).message);}return false;}
   finally{if(ticket===generation.current){running.current=false;setBusy(false);}}
  }
@@ -37,14 +37,18 @@ export default function CallSheetRecipient(){
  // Token remains in the fragment and memory, never in a request URL or analytics event.
  // eslint-disable-next-line react-hooks/exhaustive-deps
  },[]);
- const selection=value?.documents??'call_sheet',normalized=value?{...value.document,meta:makeMeta(value.document.meta),rows:value.document.rows.map(makeRow)}:null;
+ // Public documents use the issuer's branding, never a signed-in viewer's organization.
+ const logo=value?.logo_on_light||'/logo-call-sheet.png';
+ const selection=value?.documents??'call_sheet';
+ const normalized=useMemo(()=>value?{...value.document,meta:makeMeta(value.document.meta),rows:value.document.rows.map(makeRow)}:null,[value]);
+ const printRequest=useMemo(()=>value&&normalized?{name:value.name,data:normalized,options:{contacts:value.include_contacts,details:value.full_details,edition:value.edition,issuedAt:value.created_at,logo}}:null,[value,normalized,logo]);
  async function print(){
   const ticket=generation.current,expectedToken=token.current;
   const current=()=>ticket===generation.current&&token.current===expectedToken;
   const latest=await load();if(!latest||!current())return;
   const data={...latest.document,meta:makeMeta(latest.document.meta),rows:latest.document.rows.map(makeRow)};
-  if(tab==='schedule')await printSchedule(latest.name,data,async()=>{if(!current())return false;const refreshed=await load();return !!refreshed&&current();},true);
+  if(tab==='schedule')await printSchedule(latest.name,data,async()=>{if(!current())return false;const refreshed=await load();return !!refreshed&&current();},true,latest.logo_on_light||'/logo-call-sheet.png');
   else setPrinting(true);
  }
- return <main className="csh-recipient"><header className="csh-recipient-controls"><strong>{documentLabels[selection]}</strong><div><button className="btn btn-light btn-sm" disabled={busy||!token.current} onClick={()=>void load()}>Refresh</button>{value&&<button className="btn btn-light btn-sm" disabled={busy} onClick={()=>void print()}>Print / PDF</button>}{value?.recipient&&<button className="btn btn-pink btn-sm" disabled={busy||!!value.acknowledged} onClick={()=>void load(value.edition)}>{value.acknowledged?'Received':'Confirm received'}</button>}</div></header>{message&&<section className={!value&&error?'csh-recipient-empty':'csh-recipient-message'} role={error?'alert':'status'}>{!value&&error&&<h1>Documents unavailable</h1>}<p>{message}</p>{!value&&error&&<p>Ask the production team for a current link if you still cannot open these documents.</p>}</section>}{busy&&!value&&<p role="status">Loading documents…</p>}{selection==='both'&&<nav className="csh-document-tabs" aria-label="Documents"><button className={`btn ${tab==='schedule'?'btn-pink':'btn-light'}`} aria-pressed={tab==='schedule'} onClick={()=>setTab('schedule')}>Schedule</button><button className={`btn ${tab==='call_sheet'?'btn-pink':'btn-light'}`} aria-pressed={tab==='call_sheet'} onClick={()=>setTab('call_sheet')}>Call sheet</button></nav>}{value&&normalized&&(tab==='schedule'?<LocalEditorContext.Provider value={true}><ScheduleReadView data={normalized} name={value.name}/></LocalEditorContext.Provider>:<IssuedCallSheet value={{...value,document:normalized}}/>)}{printing&&value&&normalized&&<CallSheetPrintPreview request={{name:value.name,data:normalized,options:{contacts:value.include_contacts,details:value.full_details,edition:value.edition,issuedAt:value.created_at}}} authorize={async()=>!!await load()} onClose={()=>setPrinting(false)}/>}</main>;
+ return <main className="csh-recipient"><header className="csh-recipient-controls"><strong>{documentLabels[selection]}</strong><div><button className="btn btn-light btn-sm" disabled={busy||!token.current} onClick={()=>void load()}>Refresh</button>{value&&<button className="btn btn-light btn-sm" disabled={busy} onClick={()=>void print()}>Print / PDF</button>}{value?.recipient&&<button className="btn btn-pink btn-sm" disabled={busy||!!value.acknowledged} onClick={()=>void load(value.edition)}>{value.acknowledged?'Received':'Confirm received'}</button>}</div></header>{message&&<section className={!value&&error?'csh-recipient-empty':'csh-recipient-message'} role={error?'alert':'status'}>{!value&&error&&<h1>Documents unavailable</h1>}<p>{message}</p>{!value&&error&&<p>Ask the production team for a current link if you still cannot open these documents.</p>}</section>}{busy&&!value&&<p role="status">Loading documents…</p>}{selection==='both'&&<nav className="csh-document-tabs" aria-label="Documents"><button className={`btn ${tab==='schedule'?'btn-pink':'btn-light'}`} aria-pressed={tab==='schedule'} onClick={()=>setTab('schedule')}>Schedule</button><button className={`btn ${tab==='call_sheet'?'btn-pink':'btn-light'}`} aria-pressed={tab==='call_sheet'} onClick={()=>setTab('call_sheet')}>Call sheet</button></nav>}{value&&normalized&&(tab==='schedule'?<LocalEditorContext.Provider value={true}><ScheduleReadView data={normalized} name={value.name}/></LocalEditorContext.Provider>:<IssuedCallSheet value={{...value,document:normalized,logo_on_light:logo}}/>)}{printing&&printRequest&&<CallSheetPrintPreview request={printRequest} authorize={async()=>!!await load()} onClose={()=>setPrinting(false)}/>}</main>;
 }

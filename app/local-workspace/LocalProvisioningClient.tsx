@@ -8,7 +8,7 @@ import consoleStyles from '@/components/local/platform-console.module.css';
 
 const blank = { ownerUserId:'', name:'', slug:'', timezone:'UTC', locale:'en', countryCode:'', currency:'', reason:'Organization created through platform administration.' };
 const fields = [
-  ['ownerUserId','Organization Super Admin account ID',36],['name','Organization name',120],['slug','Organization address',120],
+  ['ownerUserId','Owner account ID',36],['name','Organization name',120],['slug','Organization address',120],
   ['timezone','Timezone',100],['locale','Language & region',35],['countryCode','Country (optional)',2],['currency','Currency (optional)',3],
 ] as const;
 const timezones=['UTC',...(Intl as typeof Intl & {supportedValuesOf?:(key:string)=>string[]}).supportedValuesOf?.('timeZone')??[]];
@@ -66,7 +66,7 @@ export default function LocalProvisioningClient() {
   async function submit(){await run(async()=>{const pending=controller.submit(value=>sendProvisioningAttempt(value,session.current));refresh();await pending;if(controller.failure)failure(controller.failure);else if(controller.result)setMessage('Organization created. You’ll need membership to open its workspace.');});}
   return <div className={`${styles.page} ${workspace.review?styles.product+' '+consoleStyles.provisioning:''}`}><main className={styles.main}>
     <header className={styles.header}><div>{!workspace.review&&<span className={styles.eyebrow}>LOCAL PLATFORM REHEARSAL</span>}<h1>Create an organization</h1><p>Assign an existing verified account as its Organization Super Admin.</p></div></header>
-    <p className={styles.notice}>Enter the account ID supplied through the verified onboarding process. Organization setup requires recent two-step verification.</p>
+    <p className={styles.notice}>Choose the existing account that will own this organization. Its account ID identifies the user; it is not a password.</p>
     <p role="status" className={styles.status}>{message}</p>
     {ready&&<section className={`${styles.card} ${workspace.review&&mfa==='ready'?consoleStyles.verifiedAuth:''}`} aria-label="Provisioning authentication">{(!workspace.review||mfa!=='ready')&&<h2>Authenticator verification</h2>}
       {mfa==='checking'&&<p>Checking this session’s authenticator state.</p>}
@@ -84,13 +84,13 @@ export default function LocalProvisioningClient() {
         <fieldset disabled={!ready||busy||!!attempt}>{fields.map(([key,label,max])=>{
  const options=key==='timezone'?timezones:key==='locale'?languages:key==='countryCode'?countries:key==='currency'?currencies:null;
  const values=options?[...new Set([...options,...(draft[key]?[draft[key]]:[])])]:[];
- return <label key={key}>{label}{options?<select required={!['countryCode','currency'].includes(key)} value={draft[key]} onChange={event=>setDraft(previous=>({...previous,[key]:event.target.value}))}>{['countryCode','currency'].includes(key)&&<option value="">Not specified</option>}{values.map(value=><option key={value} value={value}>{key==='countryCode'?regionNames.of(value):key==='currency'?`${currencyNames.of(value)} (${value})`:key==='locale'?languageNames.of(value):value.replaceAll('_',' ')}</option>)}</select>:<input required maxLength={max} autoComplete="off" value={draft[key]} onChange={event=>setDraft(previous=>({...previous,[key]:event.target.value}))}/>}{key==='slug'&&<small>Used in the organization’s web address. Use lowercase letters, numbers and hyphens.</small>}{key==='locale'&&<small>Controls language and regional date and number formats where supported.</small>}</label>;
+ return <label key={key}>{label}{options?<select required={!['countryCode','currency'].includes(key)} value={draft[key]} onChange={event=>setDraft(previous=>({...previous,[key]:event.target.value}))}>{['countryCode','currency'].includes(key)&&<option value="">Not specified</option>}{values.map(value=><option key={value} value={value}>{key==='countryCode'?regionNames.of(value):key==='currency'?`${currencyNames.of(value)} (${value})`:key==='locale'?languageNames.of(value):value.replaceAll('_',' ')}</option>)}</select>:<input required maxLength={max} autoComplete="off" value={draft[key]} onChange={event=>setDraft(previous=>({...previous,[key]:event.target.value}))}/>}{key==='ownerUserId'&&<><small>Every registered user has an account ID. Use your account below, or enter the ID supplied for another verified owner.</small>{workspace.session&&<button type="button" className={styles.secondary} onClick={()=>setDraft(previous=>({...previous,ownerUserId:workspace.session!.user.id}))}>Use my account · {workspace.session.user.email}</button>}</>}{key==='slug'&&<small>Used in the organization’s web address. Use lowercase letters, numbers and hyphens.</small>}{key==='locale'&&<small>Controls language and regional date and number formats where supported.</small>}</label>;
  })}</fieldset>
         <button disabled={!ready||busy||!!attempt}>Review organization</button>
       </form>
     </section>
     {attempt&&<section ref={review} tabIndex={-1} className={`${styles.card} ${styles.review}`} aria-label="Provisioning request review" style={{overflowWrap:'anywhere'}}><div className={styles.sectionTitle}><h2>Review organization</h2><span className={styles.badge}>{{review:'Ready to review',pending:'Working…',unknown:'Needs checking',blocked:'Action needed',conflict:'Changed elsewhere',success:'Complete'}[controller.phase]}</span></div>
-      <details><summary>Request details</summary><p className={styles.identifier}>Reference: {attempt.key}</p></details>{fields.map(([key,label])=><p key={key}><strong>{label}:</strong> <span className={key==='ownerUserId'?styles.identifier:undefined}>{attempt.body[key]||'Not supplied'}</span></p>)}
+      <details><summary>Request details</summary><p className={styles.identifier}>Reference: {attempt.key}</p></details>{fields.map(([key,label])=><p key={key}><strong>{key==='ownerUserId'?'Owner account':label}:</strong> <span className={key==='ownerUserId'?styles.identifier:undefined}>{key==='ownerUserId'&&attempt.body[key]===workspace.session?.user.id?workspace.session.user.email:attempt.body[key]||'Not supplied'}</span></p>)}
       {controller.failure&&<p role="alert">{errors[controller.failure]}</p>}
       {controller.result&&<><p className={styles.identifier}>Organization: {controller.result}</p><p>Creating an organization for another owner does not add your account as a member.</p><button disabled={!ready||busy} onClick={()=>workspace.openOrganization(controller.result!)}>Open workspace</button></>}
       <div className={styles.actions}>{controller.phase==='success'?<button disabled={busy} onClick={()=>{controller.clear();setDraft({...blank});refresh();setMessage('Organization setup complete.');}}>Done</button>:<>

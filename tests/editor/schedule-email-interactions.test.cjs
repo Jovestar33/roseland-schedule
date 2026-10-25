@@ -18,7 +18,7 @@ function fixture(){
  async function flush(){for(let n=0;n<6;n++){await new Promise(setImmediate);render();}}
  render();return{flush,render,get tree(){return tree;},calls,states:serverStates,setFetch(fn){fetchHandler=fn;},button(label){return nodes(tree).find(n=>n.type==='button'&&text(n)===label);},async prepare(){await flush(); // Opening loads source and intentionally keeps the preseeded review after setting identity.
  // Drive the real group/preview controls instead of depending on preseeded source state.
- const choose=nodes(tree).find(n=>n.type==='select');choose.props.onChange({target:{value:''}});render();
+ assert.equal(nodes(tree).filter(n=>n.type==='select').length,0);assert.equal(nodes(tree).filter(n=>n.type==='legend'&&text(n)==='New recipient group').length,1);
  // Add recipients through the actual form controls.
  for(const person of members){const labels=nodes(tree).filter(n=>n.type==='label');const name=labels.find(n=>text(n)==='Name'),email=labels.find(n=>text(n)==='Email');nodes(name).find(n=>n.type==='input').props.onChange({target:{value:person.name}});nodes(email).find(n=>n.type==='input').props.onChange({target:{value:person.email}});render();this.button('Add recipient').props.onClick();render();}
  this.button('Preview email').props.onClick();render();},reopen(){open=false;render();open=true;render();},switchScope(next){scope=next;updateAccess();render();}};

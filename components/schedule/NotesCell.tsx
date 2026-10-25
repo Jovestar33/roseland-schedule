@@ -35,7 +35,12 @@ export default function NotesCell({ index, row, onOpenStatus, onOpenNotes }: Pro
           <AutoResizeTextarea className="ci-ta" label="Cast" value={row.cast} onChange={(cast) => updateRow(index, { cast })} onFocus={pushUndo} placeholder="Cast…" />
           {row.cast && <div className="print-field-text" aria-hidden="true">Cast: {row.cast}</div>}
         </div>}
-        <KeyInstruction value={row.keyInstruction} onChange={(keyInstruction) => updateRow(index, { keyInstruction })} onFocus={pushUndo} />
+        {(!local || !!row.notes.trim() || !!row.keyInstruction?.trim()) && <KeyInstruction value={row.keyInstruction} onChange={(keyInstruction) => updateRow(index, { keyInstruction })} onFocus={pushUndo} onRemoveHighlight={() => {
+          pushUndo();
+          const instruction = row.keyInstruction?.trim() || '';
+          const notes = row.notes.trim() === instruction ? row.notes : [instruction, row.notes].filter(Boolean).join('\n');
+          updateRow(index, { keyInstruction: '', notes });
+        }} />}
         <AutoResizeTextarea
           className="ci-ta"
           label="Notes"

@@ -1,10 +1,11 @@
 'use client';
 import { useEffect, type ReactNode } from 'react';
 import styles from './AppHeader.module.css';
+import {organizationLogo} from '@/lib/branding';
 import { useCmsStore, useCmsLabel } from '@/lib/store/cmsStore';
 
 export default function AppHeader({actions, compact = false}: {actions?: ReactNode; compact?: boolean} = {}) {
-  const logo     = useCmsStore((s) => s.config.logo as string | undefined);
+  const logo     = useCmsStore((s) => organizationLogo(s.config,'dark'));
   const hdrTitle = useCmsLabel('hdrTitle', 'Production Schedule');
 
   useEffect(() => {

@@ -116,6 +116,11 @@ reset role;set local role service_role;
 select lives_ok($$select public.finish_call_sheet_email('b3000000-0000-4000-8000-000000000001','b4000000-0000-4000-8000-000000000001',true)$$,'Server confirms first recipient acceptance');
 select is(public.read_call_sheet_recipient(repeat('b',64))->>'edition','1','Batch link stays on its original issued version after a later issue');
 select is(public.read_call_sheet_recipient(repeat('b',64))->>'documents','both','Recipient can view both selected documents');
+reset role;
+insert into private.organization_presentation(organization_id,version,config,updated_by) values('fa200000-0000-4000-8000-000000000001',1,'{"logoOnLight":"data:image/png;base64,SVNTVUVS"}','fa000000-0000-4000-8000-000000000001');
+set local role service_role;
+select is(public.read_call_sheet_recipient(repeat('b',64))->>'logo_on_light','data:image/png;base64,SVNTVUVS','Frozen group documents carry the issuing organization light logo');
+
 select is(public.read_call_sheet_recipient(repeat('b',64))#>>'{document,meta,productionContacts,0,email}',null::text,'Personal email is excluded unless explicitly selected');
 select is(public.read_call_sheet_recipient(repeat('b',64),1)->>'acknowledged','true','Recipient confirms exactly the sent version');
 reset role;set local role authenticated;

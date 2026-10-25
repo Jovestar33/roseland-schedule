@@ -3,11 +3,14 @@ import {useContext,useEffect,useRef,useState} from 'react';
 import {createPortal} from 'react-dom';
 import {ModalVisibilityContext} from '@/components/modals/Modal';
 import type {ScheduleData} from '@/lib/types';
+import {useCmsStore} from '@/lib/store/cmsStore';
+import {organizationLogo} from '@/lib/branding';
 import {layoutCallSheetPrint,renderCallSheetPrint,type CallSheetPrintOptions} from '@/lib/call-sheet-print';
 import styles from './schedule-print.module.css';
 export interface CallSheetPrintRequest {data:ScheduleData;name:string;options:CallSheetPrintOptions}
 export default function CallSheetPrintPreview({request,onClose,authorize}:{request:CallSheetPrintRequest;onClose:()=>void;authorize?:()=>Promise<boolean>}){
  const visible=useContext(ModalVisibilityContext);
+ const logo=useCmsStore(s=>organizationLogo(s.config,'light'));
  const [paper,setPaper]=useState<'letter'|'a4'>('letter'),[html,setHtml]=useState(''),[pages,setPages]=useState(0),[error,setError]=useState(''),[ready,setReady]=useState(false),[busy,setBusy]=useState(false),[previewKey,setPreviewKey]=useState(0);
  const frame=useRef<HTMLIFrameElement>(null),close=useRef<HTMLButtonElement>(null),dialog=useRef<HTMLDialogElement>(null);
  const generation=useRef(0),printing=useRef(false),mounted=useRef(true),latest=useRef({request,visible,previewKey});latest.current={request,visible,previewKey};
@@ -22,10 +25,10 @@ export default function CallSheetPrintPreview({request,onClose,authorize}:{reque
    invalidate();setError('');setPages(0);if(!visible)return;
    try{
      const context=document.createElement('canvas').getContext('2d');if(!context)throw Error('Print preview unavailable.');
-     const layout=layoutCallSheetPrint(request.data,request.name,{...request.options,paper},(text,bold,size)=>{context.font=`${bold?'bold ':''}${size}px Arial`;return context.measureText(text).width;});
+     const layout=layoutCallSheetPrint(request.data,request.name,{...request.options,paper,logo:request.options.logo??logo},(text,bold,size)=>{context.font=`${bold?'bold ':''}${size}px Arial`;return context.measureText(text).width;});
      setPages(layout.pages.length);setHtml(renderCallSheetPrint(layout));setPreviewKey(value=>value+1);
    }catch(e){setError((e as Error).message);}
- },[request,paper,visible]);
+ },[request,paper,visible,logo]);
  async function print(){
    const target=frame.current?.contentWindow;
    if(!ready||!visible||!target||printing.current)return;

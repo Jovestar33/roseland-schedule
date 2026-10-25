@@ -298,9 +298,9 @@ export default function LocationCell({ index, row }: Props) {
         );
       })}
 
-      <button type="button" className="loc-add-subloc" onClick={addSubLoc}>
+      {(!local || !!mainNameValue.trim() || !!row.locAddress?.trim() || subLocs.length > 0) && <button type="button" className="loc-add-subloc" onClick={addSubLoc}>
         + sub-location
-      </button>
+      </button>}
     </div>
   );
 }

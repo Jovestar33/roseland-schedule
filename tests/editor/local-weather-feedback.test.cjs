@@ -74,8 +74,20 @@ test('empty weather Refresh reports pending state and respects missing coordinat
 test('opening a saved schedule never inserts sun rows or changes its weather',()=>{
  let calls=0;const h=harness({kind:'fictional',weather:async()=>{calls++;return null;}});
  h.store.setState({rows:h.store.getState().rows.filter(row=>!row.sunLocked)});
- const before=h.store.getState().getScheduleData();h.render();h.flushEffect();
- assert.deepEqual(h.store.getState().getScheduleData(),before);assert.equal(calls,0);
+ // getScheduleData stamps each export with Date.now(); that timestamp is not
+ // persisted state and may legitimately advance while opening the component.
+ function snapshot(){
+  const started=Date.now(),{savedAt,...document}=h.store.getState().getScheduleData(),finished=Date.now();
+  assert.ok(savedAt>=started&&savedAt<=finished,'export timestamp matches the snapshot time');
+  return structuredClone(document);
+ }
+ const before=snapshot(),beforeState=h.store.getState();h.render();h.flushEffect();
+ assert.deepEqual(snapshot(),before);
+ assert.equal(h.store.getState().editRevision,beforeState.editRevision);
+ assert.equal(h.store.getState().dirty,beforeState.dirty);
+ assert.equal(h.store.getState().undoStack,beforeState.undoStack);
+ assert.equal(h.store.getState().redoStack,beforeState.redoStack);
+ assert.equal(calls,0);
 });
 test('editing the date or coordinates refreshes weather even when an old forecast exists',async()=>{
  const calls=[],next={sunrise:'6:00 AM',sunset:'6:00 PM',noForecast:true};

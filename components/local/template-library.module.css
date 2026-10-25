@@ -17,3 +17,5 @@
 .manage input{width:100%;min-width:0;box-sizing:border-box;padding:10px 12px;border:1px solid var(--g300);border-radius:8px;background:white;color:var(--ui-ink);font:inherit;min-height:44px}
 .selected legend{max-width:100%;overflow-wrap:anywhere;line-height:1.5}
 @media(max-width:480px){.reviewActions button,.manage>button{width:100%;margin-right:0!important}.createActions>button{flex:1 1 140px}}
+
+.confirmation{padding:6px 0 14px}.confirmation h3{font-family:var(--fb);font-size:18px;line-height:1.4;font-weight:700;letter-spacing:0;margin:0 0 16px;overflow-wrap:anywhere}.confirmation>p{margin:0 0 18px;font-size:14px;line-height:1.6}.confirmation .preview{border-top:1px solid var(--g200);padding-top:8px;margin-top:20px}.selected>.preview{margin-bottom:16px}.preview[open]>summary{margin-bottom:16px}

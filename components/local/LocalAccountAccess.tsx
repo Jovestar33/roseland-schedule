@@ -26,12 +26,14 @@ export default function LocalAccountAccess({ review=false, showMaintenance=true,
   const [factorChecked, setFactorChecked] = useState(false);
   const [factor, setFactor] = useState<string | null>(null), [code, setCode] = useState('');
   const entry=review&&(!session||authNeeded);
-  useLayoutEffect(()=>{onEntryTaskChange?.(!!callback||(entry&&!!mode));},[callback,entry,mode,onEntryTaskChange]);
+  const passwordUpdated=!callback&&!mode&&message.startsWith('Password updated.');
+  const policyUnavailable=!!config.hosted&&!!policy&&!accountPolicyAllowsEntry(policy,true);
+  useLayoutEffect(()=>{onEntryTaskChange?.(!!callback||(entry&&(!!mode||passwordUpdated)));},[callback,entry,mode,passwordUpdated,onEntryTaskChange]);
   useEffect(()=>{
     if(!review||busy)return;
-    if(callback||mode)taskHeading.current?.focus();
+    if(callback||mode||passwordUpdated)taskHeading.current?.focus();
     else if(returnEntry.current){(returnEntry.current==='signup'?invitationEntry:recoveryEntry).current?.focus();returnEntry.current=null;}
-  },[callback,mode,review,busy]);
+  },[callback,mode,passwordUpdated,review,busy]);
   const callbackActive=useRef(false);
   const sessionRef = useRef(session); sessionRef.current = session;
   const sessionToken=session?.access_token;
@@ -182,10 +184,10 @@ export default function LocalAccountAccess({ review=false, showMaintenance=true,
     setMessage(id ? 'Password updated. Sign in to finish joining your team.' : 'Password updated. Sign in with your new password.');
   }); }
   const notice = <p hidden={!message||(review&&authNeeded&&/^(You have been inactive|Account checks)/.test(message))} role="status" aria-live="polite">{message}</p>;
-  return <section aria-label="Account access" data-account-task={entry&&!!mode||review&&!!callback||undefined} aria-busy={busy} style={{ margin: '12px 0', maxWidth: 720 }}>
-    {!callback&&!mode&&notice}
+  return <section aria-label="Account access" data-account-task={entry&&(!!mode||passwordUpdated)||review&&!!callback||undefined} aria-busy={busy} style={{ margin: '12px 0', maxWidth: 720 }}>
+    {passwordUpdated?<div data-account-flow data-account-success><h2 ref={taskHeading} tabIndex={-1}>Password updated</h2><p>{message.includes('joining your team')?'Sign in with your new password to finish joining your team.':'You can now sign in with your new password.'}</p><button data-account-primary type="button" onClick={()=>{setMessage('');returnEntry.current=null;}}>Back to sign in</button></div>:!callback&&!mode&&notice}
     {session && !authNeeded && !policy && (!review||!callback) && <button disabled={busy} onClick={() => setRetry(value => value + 1)}>Retry account checks</button>}
-    {config.hosted && policy && !accountPolicyAllowsEntry(policy,true) && <p role="alert">Account notices are not ready for review. Contact your administrator. Your unfinished work is retained.</p>}
+    {policyUnavailable && <div data-account-flow data-account-notice><h2>Account notices unavailable</h2><p role="alert">We couldn’t load the current account notices. Try again, or contact your administrator.</p><button type="button" disabled={busy} onClick={()=>setRetry(value=>value+1)}>Try again</button></div>}
     {!config.hosted && policy && !policy.accepted && (!review||(!callback&&!!session&&!authNeeded)) && <form onSubmit={event => { event.preventDefault(); void run(async () => {
       if (!policyChecked || !session) return;
       const token = session.access_token;
@@ -220,7 +222,7 @@ export default function LocalAccountAccess({ review=false, showMaintenance=true,
         <p data-account-help>For security, you’ll be signed out of your other sessions.</p>
       </form>}
       {!(callbackFailure === 'unavailable' && callback.type === 'invite') && <div data-account-entry><button disabled={busy} onClick={() => void closeCallback()}>{callbackFailure === 'unavailable' ? session && !authNeeded ? 'Back' : 'Back to sign in' : 'Cancel'}</button></div>}
-    </div> : <div hidden={!showMaintenance}>
+    </div> : <div hidden={!showMaintenance||passwordUpdated||(!mode&&policyUnavailable)}>
       {review&&(!session||authNeeded)?<div data-account-entry hidden={!!mode}>
         <button ref={recoveryEntry} type="button" disabled={busy} aria-expanded={mode==='recovery'} onClick={()=>setMode(mode==='recovery'?null:'recovery')}>Forgot password?</button>
         <button ref={invitationEntry} type="button" disabled={busy} aria-expanded={mode==='signup'} onClick={()=>setMode(mode==='signup'?null:'signup')}>Have an invitation?</button>
@@ -228,7 +230,7 @@ export default function LocalAccountAccess({ review=false, showMaintenance=true,
         {!review&&<><button disabled={busy} onClick={() => setMode(mode === 'signup' ? null : 'signup')}>Create invited account</button>{' '}</>}
         <button disabled={busy} onClick={() => setMode(mode === 'recovery' ? null : 'recovery')}>{review&&session&&!authNeeded?'Reset password':'Forgot password'}</button>
       </>}
-      {mode && (mailSent ? <div data-account-flow>
+      {mode && (mode==='signup'&&config.hosted&&!mailSent ? <div data-account-flow><h2 ref={taskHeading} tabIndex={-1}>Open your invitation</h2><p>Use the button in your invitation email to set up your account and join your team.</p><p data-account-help>If the link has expired, ask the sender for a new invitation.</p><details data-account-invitation-help><summary>I was given an invitation ID</summary><form onSubmit={requestMail} aria-label="Invitation setup"><p>Use this only if your administrator gave you an ID instead of an email link.</p>{notice}<label>Email address<input required type="email" maxLength={320} autoComplete="email" value={email} onChange={e=>setEmail(e.target.value)}/></label><label>Invitation ID<input required value={invitation} onChange={e=>setInvitation(e.target.value)}/></label><button data-account-primary disabled={busy}>{busy?'Sending…':'Email my setup link'}</button></form></details><div data-account-entry><button type="button" disabled={busy} onClick={()=>{returnEntry.current='signup';setMode(null);setMessage('');}}>Back to sign in</button></div></div> : mailSent ? <div data-account-flow>
         <h2 ref={taskHeading} tabIndex={-1}>Check your email</h2>
         <p data-account-address>{email}</p>
         {notice}

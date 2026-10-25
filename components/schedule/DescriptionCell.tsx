@@ -30,7 +30,7 @@ export default function DescriptionCell({ index, row }: Props) {
           {row.desc}
         </div>
       )}
-      {local&&<CastAssignment index={index} row={row}/>}
+      {local&&(!!row.desc.trim()||!!row.cast?.trim())&&<CastAssignment index={index} row={row}/>}
     </>
   );
 }

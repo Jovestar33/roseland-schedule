@@ -1,9 +1,9 @@
 import type { ScheduleData } from './types';
-export interface SchedulePrintRequest { name: string; data: ScheduleData; authorize?: () => Promise<boolean>; castUnderDescription?:boolean }
+export interface SchedulePrintRequest { name: string; data: ScheduleData; authorize?: () => Promise<boolean>; castUnderDescription?:boolean; logo?:string }
 /** Open a deterministic, paginated preview; screen expansion state is irrelevant. */
-export async function printSchedule(name: string, data: ScheduleData, authorize?: () => Promise<boolean>, castUnderDescription=false) {
+export async function printSchedule(name: string, data: ScheduleData, authorize?: () => Promise<boolean>, castUnderDescription=false, logo?:string) {
   window.dispatchEvent(new CustomEvent<SchedulePrintRequest>('schedule-print-preview', {
-    detail: { name, data: structuredClone(data), authorize, castUnderDescription },
+    detail: { name, data: structuredClone(data), authorize, castUnderDescription, logo },
   }));
 }
 

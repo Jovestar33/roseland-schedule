@@ -13,3 +13,8 @@
 @media(max-width:600px){.schedule-email-modal :is(input:not([type=checkbox]):not([type=radio]),select){font-size:16px}.email-members li{align-items:flex-start}.email-contact-list>label{align-items:flex-start}.email-contact-list input{margin-top:3px}.email-preview{padding:16px}}
 
 .email-revoke{flex-basis:100%;display:grid;gap:12px;padding:14px;background:var(--g50);border:1px solid var(--g200);border-radius:10px}.email-revoke>div{display:flex;flex-wrap:wrap;gap:10px}.email-revoke p{margin:0;font-size:14px}
+
+.email-group-actions,.email-editor-actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center}.email-editor-actions{justify-content:flex-end;padding-top:4px}.email-group-editor>p{font-size:13px}.email-group-row{gap:14px}.email-group-actions>.btn{white-space:normal}.email-group-editor{margin:0}.email-group-editor legend{font-size:16px}.email-members{min-width:0}
+
+/* Native choice controls must not inherit the 40px text-field minimum. */
+.schedule-email-modal :is(input[type=checkbox],input[type=radio]){min-height:18px!important;max-height:18px!important;padding:0!important;margin:1px 0 0;box-sizing:border-box}

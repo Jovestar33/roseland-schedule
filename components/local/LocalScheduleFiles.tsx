@@ -63,9 +63,8 @@ export default function LocalScheduleFiles({embedded=false,client,actor,organiza
       {!source&&<label>Destination production<select value={production} onChange={e=>{setProduction(e.target.value);setDay('');}}><option value="">Choose a production</option>{productions.map(p=><option key={p.id} value={p.id}>{p.name}</option>)}</select></label>}
       <label>Destination production day<select value={day} onChange={e=>setDay(e.target.value)}><option value="">{source?'Choose an editable day':'No production day'}</option>{source?days.map(d=><option key={d.id} value={d.id}>{d.label}</option>):selectedProduction?.days.map(d=><option key={d.id} value={d.id}>Day {d.number??d.position+1}{' · '+dateLabel(d.date)}</option>)}</select></label>
       {entries.map((entry,i)=><div key={i} className={styles.fileEntry}>
-        <label>New schedule name {i+1}<input value={entry.name} onChange={e=>setEntries(all=>all.map((v,j)=>j===i?{...v,name:e.target.value}:v))}/></label>
-        <label>Schedule address {i+1}<input value={entry.slug} onChange={e=>setEntries(all=>all.map((v,j)=>j===i?{...v,slug:e.target.value}:v))}/></label>
-        <details><summary>Preview schedule {i+1} ({entry.data.rows?.length??0} rows)</summary><ScheduleDocumentPreview document={entry.data}/></details>
+        <label>New schedule name {i+1}<input value={entry.name} onChange={e=>setEntries(all=>all.map((v,j)=>j===i?{...v,name:e.target.value,slug:suggestedSlug(e.target.value)}:v))}/></label>
+        <details><summary>Preview schedule {i+1} ({entry.data.rows?.length??0} actions)</summary><ScheduleDocumentPreview document={entry.data}/></details>
       </div>)}
       <button className="btn btn-pink" disabled={source?!day:!selectedProduction} onClick={()=>void run(async current=>{const placement=source?undefined:{productionId:production,phaseId:null};const proposed=new ScheduleFileImport(actor!,organization!,day||null,entries,undefined,placement);await repo.preflight(actor!,organization!,day||null,entries,placement);if(current()){setReview(proposed);setMessage('Ready to import. Review the schedules below, then choose Import schedules.');}})}>Continue to review</button>
       <button className="btn btn-light" onClick={clear}>Cancel</button>

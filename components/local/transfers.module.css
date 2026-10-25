@@ -4,18 +4,7 @@
 .dialog p { line-height:1.6; margin:10px 0; }
 .dialog button { margin:6px 8px 6px 0; }
 .preview { background:white; color:var(--ui-ink); padding:12px 0; overflow:auto; }
-.preview :global(.meta) label { color:var(--ui-muted) !important; }
 @media(max-width:760px){.dialog{padding:16px;width:calc(100% - 20px);max-height:calc(100dvh - 20px);}}
-.preview :global(.call-disp), .preview :global(.wx-val) { white-space:normal !important; overflow:visible !important; overflow-wrap:anywhere; line-height:1.35 !important; text-overflow:clip !important; }
-.preview :global(.sched) { table-layout:fixed !important; min-width:1040px !important; width:100% !important; }
-.preview :global(col.c-n) { width:32px !important; }
-.preview :global(col.c-a) { width:130px !important; }
-.preview :global(col.c-l) { width:180px !important; }
-.preview :global(col.c-d) { width:250px !important; }
-.preview :global(col.c-nt) { width:160px !important; }
-.preview :global(col.c-dv) { width:3px !important; }
-.preview :global(col.c-ti), .preview :global(col.c-to) { width:100px !important; }
-.preview :global(col.c-du) { width:85px !important; }
 
 .dialog h2{font-family:var(--fd);font-size:var(--ui-dialog-title-size);letter-spacing:1.5px}.dialog :is(p,label,input,select,button){font-family:var(--fb);font-size:var(--ui-body-size)}
 
@@ -32,3 +21,6 @@
 .dialog :is(input,select){box-sizing:border-box;min-width:0;min-height:44px;padding:10px 12px;border:1px solid var(--g300);border-radius:8px;background:white;color:var(--ui-ink);font:inherit}
 .dialog>details{margin:18px 0;padding:14px;border:1px solid var(--g200);border-radius:10px;background:white}.dialog summary{font-size:13px;line-height:1.5;font-weight:600;cursor:pointer}.dialog pre{font-size:12px;line-height:1.6;max-width:100%;overflow:auto}
 @media(max-width:480px){.dialog>button{width:100%;margin:10px 0 0}.dialog>details{padding:12px}.requestActions>button{flex:1 1 140px}}
+
+/* Transfer previews are documents, not a shrunken editor header. */
+.preview{overflow:visible;padding:16px 0 0}.preview :global(dl){margin-top:0}.dialog>details{margin-top:24px}.dialog>details>summary{padding:2px 0 8px}.dialog>button{margin-right:12px}

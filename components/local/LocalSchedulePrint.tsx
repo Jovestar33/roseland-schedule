@@ -1,11 +1,12 @@
 'use client';
 import { createPortal } from 'react-dom';
 import { useScheduleStore } from '@/lib/store/scheduleStore';
+import {organizationLogo} from '@/lib/branding';
 import {useCmsStore,useCmsLabel} from '@/lib/store/cmsStore';
 import ScheduleReadView from '@/components/view/ScheduleReadView';
 
 export default function LocalSchedulePrint({ visible }: { visible: boolean }) {
-  const logo=useCmsStore(s=>s.config.logo),subtitle=useCmsLabel('hdrTitle','Production Schedule');
+  const logo=useCmsStore(s=>organizationLogo(s.config,'dark')),subtitle=useCmsLabel('hdrTitle','Production Schedule');
   const meta = useScheduleStore(s => s.meta), rows = useScheduleStore(s => s.rows), name = useScheduleStore(s => s.scheduleName);
   if (!visible || typeof document === 'undefined') return null;
   return createPortal(<div className="local-schedule-print">

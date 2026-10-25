@@ -16,7 +16,7 @@ function render(file,state,props){
  const client={auth:{}},identity={actor:'fixture-actor',generation:1};
  const mocks={react:{...React,useState:({key,initial})=>[Object.hasOwn(state,key)?state[key]:typeof initial==='function'?initial():initial,()=>{}],useRef:value=>({current:value}),useEffect:()=>{},useLayoutEffect:()=>{},useCallback:f=>f},
   '@supabase/supabase-js':{createClient:()=>client},
-  '@/lib/platform/account-session':{accountSessionStorage:()=>({}),FICTIONAL_TERMS:'fictional',FICTIONAL_PRIVACY:'fictional'},
+  '@/lib/platform/account-session':{accountPolicyAllowsEntry:require('./source-loader.cjs').sourceLoader()('lib/platform/account-session.ts').accountPolicyAllowsEntry,accountSessionStorage:()=>({}),FICTIONAL_TERMS:'fictional',FICTIONAL_PRIVACY:'fictional'},
   '@/lib/platform/workspace-navigation':{WorkspaceIdentity:class{constructor(){Object.assign(this,identity);}},workspaceHref:()=>'/review'},
   '@/lib/platform/workspace-repository':{createWorkspaceRepository:()=>({})},
   '@/lib/store/scheduleStore':{useScheduleStore:{getState:()=>({})}},
@@ -142,4 +142,32 @@ test('invalid sign-in feedback is inside the unchanged sign-in form and associat
  assert.ok(!visible.some(({node})=>node.props?.role==='status'&&node.props.children==='Email or password is incorrect. Please try again.'));
  const clean=workspace({session:null,authNeeded:false,message:''}).filter(v=>v.shown);
  assert.ok(!clean.some(({node})=>node.props?.id==='signin-feedback'));
+});
+
+test('password success is a single finished task with one sign-in return action',()=>{
+ const props={config:{...config,hosted:true},review:true,session:null,authNeeded:false,onReady:()=>{},requireAuth:()=>{},onInvitation:()=>{}};
+ const all=nodes(render('components/local/LocalAccountAccess.tsx',{message:'Password updated. Sign in with your new password.'},props)).filter(v=>v.shown);
+ assert.equal(all.filter(({node})=>node.type==='h2'&&node.props.children==='Password updated').length,1);
+ assert.equal(all.filter(({node})=>node.type==='button').length,1);
+ assert.equal(all.find(({node})=>node.type==='button').node.props.children,'Back to sign in');
+ assert.ok(!all.some(({node})=>node.type==='form'));
+});
+test('hosted invitation landing explains the email link and reserves manual entry for its fallback',()=>{
+ const props={config:{...config,hosted:true},review:true,session:null,authNeeded:false,onReady:()=>{},requireAuth:()=>{},onInvitation:()=>{}};
+ const all=nodes(render('components/local/LocalAccountAccess.tsx',{mode:'signup',email:'retained@example.test',invitation:'retained-id'},props));
+ const fallback=all.find(({node})=>node.type==='details'&&node.props['data-account-invitation-help']!==undefined);
+ assert.ok(fallback);assert.equal(fallback.node.props.open,undefined);
+ const fields=nodes(fallback.node).filter(({node})=>node.type==='input');
+ assert.ok(fields.some(({node})=>node.props.value==='retained-id'&&node.props.required));
+ assert.ok(fields.some(({node})=>node.props.value==='retained@example.test'&&node.props.required));
+ const callback=nodes(render('components/local/LocalAccountAccess.tsx',{mode:'signup',callback:{type:'invite'},message:''},props));
+ assert.ok(!callback.some(({node,shown})=>shown&&node.props['data-account-invitation-help']!==undefined));
+});
+
+test('unavailable hosted notices keep a single branded retry task without unrelated password maintenance',()=>{
+ const props={config:{...config,hosted:true},review:true,session,authNeeded:false,onReady:()=>{},requireAuth:()=>{},onInvitation:()=>{}};
+ const all=nodes(render('components/local/LocalAccountAccess.tsx',{policy:{termsVersion:'current',privacyVersion:'current',accepted:false,enforced:true}},props)).filter(v=>v.shown);
+ assert.ok(all.some(({node})=>node.props['data-account-notice']!==undefined&&node.props['data-account-flow']!==undefined));
+ assert.equal(all.filter(({node})=>node.type==='button').length,1);
+ assert.equal(all.find(({node})=>node.type==='button').node.props.children,'Try again');
 });

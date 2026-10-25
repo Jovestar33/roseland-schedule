@@ -48,7 +48,11 @@
   padding: 3px 8px;
   border-radius: 5px;
   font-size: 12px;
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  max-width:100%;
+  box-sizing:border-box;
+  line-height:1.5;
 }
 
 /* ── Main location (name + optional address) ─────────────────────────────── */
@@ -229,4 +233,22 @@ a.rv-subloc-loc:hover {
     line-height: 1.2 !important;
     margin-top: 0 !important;
   }
+}
+
+/* Read views have nine columns and no editor controls. Keep their grid independent. */
+@media screen {
+ .rv-panel .tbl-wrap table.rv-schedule{width:100%;min-width:1106px!important;table-layout:fixed}
+ .rv-schedule .rv-col-number{width:38px}.rv-schedule .rv-col-action{width:150px}.rv-schedule .rv-col-location{width:180px}.rv-schedule .rv-col-description{width:225px}.rv-schedule .rv-col-notes{width:200px}.rv-schedule .rv-col-divider{width:3px}.rv-schedule .rv-col-in,.rv-schedule .rv-col-out{width:110px}.rv-schedule .rv-col-duration{width:90px}
+ .rv-panel .rv-schedule :is(th,td){box-sizing:border-box;min-width:0!important;overflow-wrap:anywhere}
+ .rv-panel .rv-schedule th.tc,.rv-panel .rv-schedule td.rv-time{text-align:center;padding:10px 6px!important;white-space:nowrap;font-variant-numeric:tabular-nums}
+ .rv-panel .rv-schedule td:not(.col-dv){padding:10px 8px;line-height:1.5}
+ .rv-panel .rv-schedule .rv-action{display:block;max-width:100%;white-space:normal;overflow-wrap:anywhere;line-height:1.5}
+ .rv-panel .meta .call-disp{white-space:normal;overflow-wrap:anywhere;min-width:0}
+ .rv-panel :is(.rv-identity-name,.rv-identity-title){white-space:normal;overflow-wrap:anywhere;text-overflow:clip;line-height:1.25}
+}
+
+/* The printed read view keeps the same nine-column geometry without screen widths. */
+@media print {
+ .rv-schedule .rv-col-number{width:3%!important}.rv-schedule .rv-col-action{width:12%!important}.rv-schedule .rv-col-location{width:22%!important}.rv-schedule .rv-col-description{width:20%!important}.rv-schedule .rv-col-notes{width:13%!important}.rv-schedule .rv-col-divider{width:0!important}.rv-schedule :is(.rv-col-in,.rv-col-duration,.rv-col-out){width:10%!important}
+ .rv-schedule th.tc,.rv-schedule td.rv-time{text-align:center!important;font-variant-numeric:tabular-nums}
 }

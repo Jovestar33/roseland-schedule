@@ -109,10 +109,10 @@
  .tbl-wrap table.sched.has-contact-column col.c-ct{width:76px!important}
  .tbl-wrap table.sched.has-contact-column col.c-x{width:30px!important}
  .tbl-wrap .sched.has-contact-column :is(thead,tbody) tr>:nth-child(10){right:106px}
- .tbl-wrap .sched.has-contact-column :is(thead,tbody) tr>:nth-child(11){right:30px;padding:4px 4px!important;border-left:0;box-shadow:none}
- .tbl-wrap .sched.has-contact-column :is(thead,tbody) tr>:nth-child(12){position:sticky;right:0;z-index:2;background:var(--g50);border:0!important;border-left:6px solid white!important;padding:4px 0!important;box-shadow:none}
+ .tbl-wrap .sched.has-contact-column :is(thead,tbody) tr>:nth-child(11){right:30px;padding:4px 4px!important;border-left:1px solid var(--g200);box-shadow:none}
+ .tbl-wrap .sched.has-contact-column :is(thead,tbody) tr>:nth-child(12){position:sticky;right:0;z-index:2;background:white;border:0!important;border-left:6px solid white!important;padding:4px 0!important;box-shadow:none}
  .tbl-wrap .sched.has-contact-column thead tr>.contact-heading{text-align:center}
- .tbl-wrap .sched.has-contact-column thead tr>.delete-gutter{background:var(--g50)!important;border-top:0!important;z-index:3}
+ .tbl-wrap .sched.has-contact-column thead tr>.delete-gutter{background:white!important;border-top:0!important;z-index:3}
  .tbl-wrap .sched.has-contact-column .delete-gutter .del-btn{width:24px;min-width:24px;color:var(--g500);background:transparent;border:0}
  .tbl-wrap .sched.has-contact-column .delete-gutter .del-btn:hover,.tbl-wrap .sched.has-contact-column .delete-gutter .del-btn:focus-visible{color:#b42318;background:#fef0ee}
  .tbl-wrap .sched.has-contact-column tr.dragging>:is(:nth-child(10),:nth-child(11),:nth-child(12)){position:static}
@@ -124,4 +124,15 @@
 @media screen {
  body:has([data-review-ui]) .tbar-drop{box-sizing:border-box;min-width:190px;max-width:calc(100vw - 16px);max-height:calc(100dvh - 100px);overflow:auto;overscroll-behavior:contain}
  body:has([data-review-ui]) .tbar-drop-item{white-space:normal;overflow-wrap:anywhere;line-height:1.45;min-height:40px}
+}
+
+/* One quiet grid; the timing divider is deliberately wider. */
+@media screen {
+ .tbl-wrap .sched.has-contact-column :is(thead,tbody) tr>:nth-child(n+2):nth-child(-n+11):not(.col-dv){border-left:1px solid var(--g200);box-shadow:none}
+ .tbl-wrap .sched.has-contact-column :is(thead,tbody) tr>:nth-child(7){border-left:0!important}
+ .tbl-wrap .sched.has-contact-column :is(th,td).col-dv{background:var(--g200)!important;border:0!important;padding:0!important}
+ .tbl-wrap .sched.has-contact-column tbody tr.completed{opacity:1;background:var(--g100)!important}
+ .tbl-wrap .sched.has-contact-column tbody tr.completed>td:not(.col-dv):not(.delete-gutter){background:var(--g100)!important}
+ .tbl-wrap .sched.has-contact-column tbody tr.completed>td:not(.rn):not(.done-cell):not(.contact-cell):not(.delete-gutter)>*{opacity:.55}
+ .tbl-wrap .sched.has-contact-column tbody tr.completed>.delete-gutter{background:white!important}
 }

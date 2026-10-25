@@ -161,17 +161,17 @@ export default function ScheduleReadView({ data, name }: Props) {
         <div className="scroll-hint" aria-hidden="true">← Scroll to view time columns →</div>
 
         <div className="tbl-wrap">
-          <table className="sched">
+          <table className="sched rv-schedule">
             <colgroup>
-              <col className="c-n" />
-              <col className="c-a" />
-              <col className="c-l" />
-              <col className="c-d" />
-              <col className="c-nt" />
-              <col className="c-dv" />
-              <col className="c-ti" />
-              <col className="c-du" />
-              <col className="c-to" />
+              <col className="rv-col-number" />
+              <col className="rv-col-action" />
+              <col className="rv-col-location" />
+              <col className="rv-col-description" />
+              <col className="rv-col-notes" />
+              <col className="rv-col-divider" />
+              <col className="rv-col-in" />
+              <col className="rv-col-duration" />
+              <col className="rv-col-out" />
             </colgroup>
             <thead>
               <tr>
@@ -197,7 +197,7 @@ export default function ScheduleReadView({ data, name }: Props) {
                         {row.desc && <span style={{ marginLeft: '8px', opacity: 0.7 }}>{row.desc}</span>}
                       </td>
                       <td className="col-dv" />
-                      <td className="tc" style={{ color: '#64748b', fontStyle: 'italic' }}>{row.timeIn}</td>
+                      <td className="tc rv-time" style={{ color: '#64748b', fontStyle: 'italic' }}>{row.timeIn}</td>
                       <td />
                       <td />
                     </tr>
@@ -244,9 +244,9 @@ export default function ScheduleReadView({ data, name }: Props) {
                     <td><CollapsibleText value={row.desc} label="Description" />{local&&row.cast&&<div style={{marginTop:8}}><strong>Cast / participants</strong><CollapsibleText value={row.cast} label="Cast / participants"/></div>}</td>
                     <td>{!local && row.cast && <div><strong>Cast</strong><CollapsibleText value={row.cast} label="Cast" /></div>}{row.keyInstruction && <div style={{ fontWeight: 600, whiteSpace: 'pre-wrap', overflowWrap: 'anywhere', marginBottom: 5 }}>Key instruction: {row.keyInstruction}</div>}<CollapsibleText value={row.notes} label="Notes" /></td>
                     <td className="col-dv" />
-                    <td className="tc">{row.timeIn}</td>
-                    <td className="tc">{row.dur}</td>
-                    <td className="tc">{computeTimeOut(row)}</td>
+                    <td className="tc rv-time">{row.timeIn}</td>
+                    <td className="tc rv-time">{row.dur}</td>
+                    <td className="tc rv-time">{computeTimeOut(row)}</td>
                   </tr>
                 );
               })}

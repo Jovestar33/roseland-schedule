@@ -186,7 +186,7 @@ export default function LocalInvitationsClient({ config, reviewMode=false }: { c
     <p className={styles.notice}>{config.hosted ? 'Choose their role and production access, then review the invitation.' : reviewMode ? 'Choose organization and optional production access, then review before creating the invitation. Email delivery is disabled in this local preview.' : 'Creating an invitation records access; this rehearsal does not send email. Drafts stay in this tab and are lost when it closes or reloads.'}</p>
     <p className={styles.status} role="status" aria-live="polite">{message}</p>
     {!workspace && (!session || authNeeded) && <section className={styles.card} aria-label="Account sign in"><h2>{account.current ? 'Sign in again' : 'Sign in'}</h2>
-      {account.current && <p>Your draft and original request key are retained for this account.</p>}
+      {account.current && <p>Your invitation draft is still here.</p>}
       <form className={styles.form} onSubmit={login}>
         <label>Fictional account email<input type="email" required autoComplete="off" readOnly={!!account.current} value={session?.user.email ?? email} onChange={event => setEmail(event.target.value)} /></label>
         <label>Password<input type="password" required autoComplete="off" value={password} onChange={event => setPassword(event.target.value)} /></label>
@@ -232,7 +232,7 @@ export default function LocalInvitationsClient({ config, reviewMode=false }: { c
         <fieldset disabled={busy || !!attempt || !ready || !currentOrg}>
           <label>Recipient email<input type="email" required maxLength={320} autoComplete="off" value={recipient} onChange={event => setRecipient(event.target.value)} /></label>
           <label>Organization role<select value={role} onChange={event => setRole(event.target.value)}><option value="member">Member</option>{!roleAvailable && <option value={role}>{organizationRoleName(role)} — no longer available</option>}{currentOrg?.role === 'owner' && <><option value="admin">Organization Admin</option><option value="owner">Organization Super Admin</option></>}</select></label>
-          <label>Production access<select value={production} onChange={event => setProduction(event.target.value)}><option value="">No production assignment</option>{!productionAvailable && <option value={production}>Previous production unavailable</option>}{productions.map(item => <option key={item.id} value={item.id}>{item.name}</option>)}</select></label>
+          <label>Production access<select value={production} onChange={event => setProduction(event.target.value)}><option value="">No production</option>{!productionAvailable && <option value={production}>Previous production unavailable</option>}{productions.map(item => <option key={item.id} value={item.id}>{item.name}</option>)}</select></label>
           {production && <label>Production role<select value={productionRole} onChange={event => setProductionRole(event.target.value)}><option value="viewer">Viewer</option><option value="editor">Editor</option><option value="organizer">Organizer</option></select></label>}
           {productionMore && <button type="button" className={styles.secondary} onClick={() => void run(() => loadProductions(selected, true))}>Load more productions</button>}
           <label>Expires after (days)<input type="number" required min={1} max={30} value={days} onChange={event => setDays(Number(event.target.value))} /></label>
@@ -249,7 +249,7 @@ export default function LocalInvitationsClient({ config, reviewMode=false }: { c
     {attempt && <section ref={review} tabIndex={-1} className={`${styles.card} ${styles.review}`} aria-label="Request review"><div className={styles.sectionTitle}><h2>{controller.phase === 'success' ? 'Result confirmed' : attempt.kind==='create'?'Review invitation':'Review revocation'}</h2><span className={styles.badge}>{{review:'Ready to review',pending:'Working…',unknown:'Needs checking',blocked:'Action needed',conflict:'Changed elsewhere',success:'Complete'}[controller.phase]}</span></div>
       <p><strong>{attempt.kind === 'create' ? `Invite ${attempt.body.email}` : `Revoke ${revoking?.email ?? attempt.target}`}</strong><br />{organizations.find(item => item.id === attempt.organization)?.name ?? attempt.organization}</p>
       {attempt.kind === 'create' ? <p>{organizationRoleName(String(attempt.body.organizationRole))} · {Number(attempt.body.expiresInDays)} days{attempt.body.productionId ? ` · ${attempt.body.productionRole} in ${productions.find(item => item.id === attempt.body.productionId)?.name ?? attempt.body.productionId}` : ' · no production assignment'}</p> : <p>Reason: {String(attempt.body.reason)}</p>}
-      <details><summary>Request details</summary><p className={styles.identifier}>Request key: {attempt.key}</p>{controller.result && <p className={styles.identifier}>Invitation: {controller.result.id}</p>}</details>
+
       {controller.failure && <p role="alert">{errors[controller.failure]}</p>}
       {controller.result && <p>{controller.result.description}{!controller.result.matches && ' — this does not match the current request.'}</p>}
       <div className={styles.actions}>

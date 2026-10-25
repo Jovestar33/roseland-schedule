@@ -2,10 +2,10 @@ import type { ScheduleRow } from '@/lib/types';
 import styles from './template-preview.module.css';
 
 /** A complete, readable preview of the exact rows being reviewed. */
-export default function TemplateRowsPreview({rows,label='Template rows'}: {rows: readonly ScheduleRow[];label?:string}) {
-  if (!rows.length) return <p className={styles.empty}>No rows in this preview.</p>;
+export default function TemplateRowsPreview({rows,label='Template actions'}: {rows: readonly ScheduleRow[];label?:string}) {
+  if (!rows.length) return <p className={styles.empty}>No actions in this preview.</p>;
   return <ol className={styles.rows} aria-label={label}>{rows.map((row,index) => <li key={index} className={styles.row}>
-    <header><span className={styles.number}>{index+1}</span><strong>{row.action==='Other' ? row.otherText||'Other' : row.action||'Untitled row'}</strong><span className={styles.time}>{row.timeIn||'No start time'}{row.dur ? ` · ${row.dur}` : ''}</span></header>
+    <header><span className={styles.number}>{index+1}</span><strong>{row.action==='Other' ? row.otherText||'Other' : row.action||'Untitled action'}</strong><span className={styles.time}>{row.timeIn||'No start time'}{row.dur ? ` · ${row.dur}` : ''}</span></header>
     <div className={styles.content}>
       {(row.locName||row.loc||row.locAddress)&&<p><strong>{row.locName||row.loc}</strong>{row.locAddress&&<span className={styles.block}>{row.locAddress}</span>}{row.loc&&row.loc!==row.locName&&row.loc!==row.locAddress&&row.locName&&<span className={styles.block}>{row.loc}</span>}</p>}
       {row.desc&&<p>{row.desc}</p>}

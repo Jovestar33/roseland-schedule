@@ -9,6 +9,8 @@ export interface CmsConfig {
   colors?: Record<string, string>;
   labels?: Record<string, string>;
   logo?: string | null;
+  logoOnLight?: string | null;
+  logoOnDark?: string | null;
 }
 
 export async function loadCmsConfig(): Promise<CmsConfig> {

@@ -7,7 +7,7 @@ function harness(component,rows,local=true){
  store.getState().loadSchedule('Review fixture',{savedAt:0,meta:makeMeta(),rows:rows.map(makeRow)});
  let cursor=0,contactOpened=0;const hooks=[];
  const react={...React,useState(v){const i=cursor++;if(!(i in hooks))hooks[i]=v;return[hooks[i],v=>hooks[i]=typeof v==='function'?v(hooks[i]):v];},useRef(v){const i=cursor++;return hooks[i]??(hooks[i]={current:v});},useLayoutEffect(){}};
- const mocks={react,'@/lib/time':time,'@/lib/store/scheduleStore':{useScheduleStore:Object.assign(fn=>fn(store.getState()),{getState:store.getState})},'./PlacesAutocomplete':{default:function PlacesAutocomplete(){}},'@/components/modals/Modal':{default:function Modal(){}},'./LocalEditorContext':{useLocalEditor:()=>local},'@/components/local/DocumentProvidersContext':{useDocumentProviders:()=>null},'@/lib/observe-textarea-size':{observeTextareaSize:()=>()=>{}}};
+ const mocks={react,'@/lib/time':time,'@/lib/store/scheduleStore':{useScheduleStore:Object.assign(fn=>fn(store.getState()),{getState:store.getState})},'./PlacesAutocomplete':{default:function PlacesAutocomplete(){}},'./AutoResizeTextarea':{default:function AutoResizeTextarea(){}},'./CastAssignment':{default:function CastAssignment(){}},'./KeyInstruction':{default:function KeyInstruction(){}},'./key-instruction.module.css':{default:{}},'@/components/modals/Modal':{default:function Modal(){}},'./LocalEditorContext':{useLocalEditor:()=>local},'@/components/local/DocumentProvidersContext':{useDocumentProviders:()=>null},'@/lib/observe-textarea-size':{observeTextareaSize:()=>()=>{}}};
  const mod={exports:{}};const source=ts.transpileModule(fs.readFileSync('components/schedule/'+component+'.tsx','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX}}).outputText;
  vm.runInThisContext('(function(require,module,exports){'+source+'\n})')(n=>mocks[n]??require(n),mod,mod.exports);
  let tree;function render(index=0){cursor=0;tree=mod.exports.default({index,row:store.getState().rows[index],onOpenContact:()=>contactOpened++});return tree;}
@@ -55,4 +55,23 @@ test('custom durations remain editable with both boundaries locked and warn with
  const modal=h.find(n=>n.props?.title==='Custom duration');nodes(modal.props.footer).find(n=>n.type==='button'&&n.props.children==='Apply').props.onClick();
  const saved=h.store.getState().rows[0];assert.equal(saved.dur,'01:37');assert.equal(saved.timeIn,'9:00 AM');assert.equal(saved.fixedOutTime,'10:00 AM');assert.equal(time.rowConflictInfo([saved],0).kind,'fixedOutMismatch');
  h.store.getState().undo();assert.equal(h.store.getState().rows[0].dur,'00:30');h.store.getState().redo();assert.equal(h.store.getState().rows[0].dur,'01:37');
+});
+
+test('optional action details appear after their primary field, while saved details remain editable',()=>{
+ const description=harness('DescriptionCell',[{action:'Shoot',desc:''}]);
+ assert.equal(description.find(n=>n.type?.name==='CastAssignment'),undefined);
+ description.store.getState().updateRow(0,{desc:'Interview'});description.render();assert.ok(description.find(n=>n.type?.name==='CastAssignment'));
+ description.store.getState().updateRow(0,{desc:'',cast:'Presenter'});description.render();assert.ok(description.find(n=>n.type?.name==='CastAssignment'));
+ const location=harness('LocationCell',[{action:'Shoot',loc:'',locName:''}]);assert.equal(location.find(n=>n.props?.className==='loc-add-subloc'),undefined);
+ location.store.getState().updateRow(0,{locName:'Museum'});location.render();assert.ok(location.find(n=>n.props?.className==='loc-add-subloc'));
+ const notes=harness('NotesCell',[{action:'Shoot',notes:''}]);assert.equal(notes.find(n=>n.type?.name==='KeyInstruction'),undefined);
+ notes.store.getState().updateRow(0,{notes:'Keep clear'});notes.render();assert.ok(notes.find(n=>n.type?.name==='KeyInstruction'));
+ notes.store.getState().updateRow(0,{notes:'',keyInstruction:'Use rear entrance'});notes.render();assert.ok(notes.find(n=>n.type?.name==='KeyInstruction'));
+});
+test('removing a highlight preserves its text as ordinary notes and can be undone',()=>{
+ const h=harness('NotesCell',[{...row,notes:'Existing notes',keyInstruction:'Keep the exit clear'}]);
+ h.find(n=>n.type?.name==='KeyInstruction').props.onRemoveHighlight();
+ assert.equal(h.store.getState().rows[0].keyInstruction,'');assert.equal(h.store.getState().rows[0].notes,'Keep the exit clear\nExisting notes');
+ h.store.getState().undo();assert.equal(h.store.getState().rows[0].keyInstruction,'Keep the exit clear');assert.equal(h.store.getState().rows[0].notes,'Existing notes');
+ const same=harness('NotesCell',[{...row,notes:'Same instruction',keyInstruction:'Same instruction'}]);same.find(n=>n.type?.name==='KeyInstruction').props.onRemoveHighlight();assert.equal(same.store.getState().rows[0].notes,'Same instruction');
 });

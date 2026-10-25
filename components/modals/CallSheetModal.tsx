@@ -1,5 +1,6 @@
 'use client';
 import {useCmsStore} from '@/lib/store/cmsStore';
+import {organizationLogo} from '@/lib/branding';
 import { useCallback, useState, useEffect, useRef, useContext, createContext } from 'react';
 import { createPortal } from 'react-dom';
 import { useScheduleStore } from '@/lib/store/scheduleStore';
@@ -218,6 +219,7 @@ function TimeZoneField({value,onCommit}:{value:string;onCommit:(key:CSKey,value:
 // ---- Print-only document ----
 
 interface PrintDocProps {
+  logo?: string;
   scheduleName: string;
   formattedDate: string;
   dayStr: string;
@@ -245,9 +247,10 @@ interface PrintDocProps {
 function CallSheetDocument({
   scheduleName, formattedDate, dayStr, projectName, phase, prod, dir, dp,
   town, weather, generalCall, lines, cs, contacts, showContacts, productionContacts = [], enhanced = false,
-  print = false, onCommit, fullDetails = true, overview, onContactsState, contactCloseNotice,
+  print = false, onCommit, fullDetails = true, overview, onContactsState, contactCloseNotice, logo: suppliedLogo,
 }: PrintDocProps & {print?: boolean; onCommit: (key: CSKey, value: string) => void}) {
-  const organizationLogo = useCmsStore(s => s.config.logo);
+  const organizationLightLogo = useCmsStore(s => organizationLogo(s.config, 'light'));
+  const logo = suppliedLogo ?? organizationLightLogo;
   const readOnly = useContext(CallSheetReadOnly);
   return <div className={`csh-document${print ? ' csh-pdoc' : ''}`}>
     <header className="csh-masthead">
@@ -255,7 +258,7 @@ function CallSheetDocument({
         <div className="csh-production">
           <div className="csh-brand-title">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img className="csh-logo" src={organizationLogo && organizationLogo !== '/logo-header.png' ? organizationLogo : '/logo-call-sheet.png'} alt="Organization logo" />
+            <img className="csh-logo" src={logo} alt="Organization logo" />
             <div><span className="csh-kicker">Call Sheet</span><h1>{projectName || scheduleName || 'Production'}</h1></div>
           </div>
           {projectName && scheduleName && <p className="csh-schedule-name">{scheduleName}</p>}
@@ -368,6 +371,7 @@ function CallSheetDocument({
 interface Props { authorizeOutput?:()=>Promise<boolean>; open: boolean; onClose: () => void; readOnly?: boolean; }
 
 export default function CallSheetModal({ open, onClose, readOnly = false, authorizeOutput }: Props) {
+  const issuerLogo = useCmsStore(s => organizationLogo(s.config, 'light'));
 
   const rows         = useScheduleStore((s) => s.rows);
   const meta         = useScheduleStore((s) => s.meta);
@@ -451,7 +455,7 @@ export default function CallSheetModal({ open, onClose, readOnly = false, author
           projectName={meta.projectName} phase={meta.phase} prod={meta.prod} dir={meta.dir} dp={meta.dp}
           town={meta.town} weather={weather} generalCall={generalCall} lines={lines} cs={cs}
           contacts={contacts} showContacts={showContacts} productionContacts={meta.productionContacts??[]} enhanced={local} onCommit={commit} />
-        {local&&publishing&&<CallSheetPublishing includeContacts={showContacts} fullDetails={fullDetails} checks={checks} renderEdition={value=><IssuedCallSheet value={value}/>}/>}
+        {local&&publishing&&<CallSheetPublishing includeContacts={showContacts} fullDetails={fullDetails} checks={checks} renderEdition={value=><IssuedCallSheet value={{...value,logo_on_light:issuerLogo}}/>}/>}
       </Modal>
 
       {open&&visible&&printRequest&&<CallSheetPrintPreview request={printRequest} onClose={()=>setPrintRequest(null)} authorize={authorizeOutput}/>}
@@ -472,8 +476,8 @@ export default function CallSheetModal({ open, onClose, readOnly = false, author
   );
 }
 
-export interface IssuedCallSheetData {name:string;document:ScheduleData;edition:number;created_at:string;include_contacts:boolean;full_details:boolean;acknowledged?:boolean;recipient?:boolean}
+export interface IssuedCallSheetData {name:string;document:ScheduleData;edition:number;created_at:string;include_contacts:boolean;full_details:boolean;acknowledged?:boolean;recipient?:boolean;logo_on_light?:string}
 export function IssuedCallSheet({value}:{value:IssuedCallSheetData}){
  const {meta,rows}=value.document,cs=meta.callsheet??{};
- return <CallSheetReadOnly.Provider value={true}><div className="csh-issued-stamp"><strong>{value.edition===1?'Issued':'Revised'} · Version {value.edition}</strong><span>{new Date(value.created_at).toLocaleString()}</span></div><CallSheetDocument scheduleName={value.name} formattedDate={dateLabel(meta.date)} dayStr={buildDayStr(meta.dayNumber,meta.totalDays)} projectName={meta.projectName} phase={meta.phase} prod={meta.prod} dir={meta.dir} dp={meta.dp} town={meta.town} weather={callSheetWeather(meta.wx)} generalCall={cs.crewCall?{label:'Crew Call',time:cs.crewCall}:callSheetCall(rows)} lines={callSheetLines(rows)} cs={cs} contacts={documentContacts(rows)} showContacts={value.include_contacts} productionContacts={meta.productionContacts??[]} enhanced fullDetails={value.full_details} overview={callSheetOverview(rows)} onCommit={()=>{}} print/></CallSheetReadOnly.Provider>;
+ return <CallSheetReadOnly.Provider value={true}><div className="csh-issued-stamp"><strong>{value.edition===1?'Issued':'Revised'} · Version {value.edition}</strong><span>{new Date(value.created_at).toLocaleString()}</span></div><CallSheetDocument logo={value.logo_on_light??'/logo-call-sheet.png'} scheduleName={value.name} formattedDate={dateLabel(meta.date)} dayStr={buildDayStr(meta.dayNumber,meta.totalDays)} projectName={meta.projectName} phase={meta.phase} prod={meta.prod} dir={meta.dir} dp={meta.dp} town={meta.town} weather={callSheetWeather(meta.wx)} generalCall={cs.crewCall?{label:'Crew Call',time:cs.crewCall}:callSheetCall(rows)} lines={callSheetLines(rows)} cs={cs} contacts={documentContacts(rows)} showContacts={value.include_contacts} productionContacts={meta.productionContacts??[]} enhanced fullDetails={value.full_details} overview={callSheetOverview(rows)} onCommit={()=>{}} print/></CallSheetReadOnly.Provider>;
 }

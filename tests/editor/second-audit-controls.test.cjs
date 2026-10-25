@@ -53,7 +53,7 @@ function fixture(file, component, props = {}, options = {}) {
     '@/lib/time':require('./source-loader.cjs').sourceLoader()('lib/time.ts'),
     '@/components/local/ProductionContacts':{default:function ProductionContacts(){},ProductionContactGroups:function ProductionContactGroups(){}},
     '@/lib/store/scheduleStore':{useScheduleStore:select=>select(schedule)},
-    '@/lib/store/cmsStore':{useCmsStore:select=>select({config:{}})},
+    '@/lib/branding':require('./source-loader.cjs').sourceLoader()('lib/branding.ts'),'@/lib/store/cmsStore':{useCmsStore:select=>select({config:context.config??{}})},
     '@/components/schedule/LocalEditorContext':{useLocalEditor:()=>context.local},
     '@/components/local/DocumentProvidersContext':{useDocumentProviders:()=>context.provider},
     '@/lib/document-tools':{documentContacts:()=>[]},
@@ -205,4 +205,20 @@ test('closing a call sheet preserves an unfinished or saving contact until it is
  let modal=f.find(n=>n.props?.className==='csh-modal');assert.equal(modal.props.beforeClose(),false);f.render();assert.equal(f.find(n=>n.type?.name==='CallSheetDocument').props.contactCloseNotice,true);
  doc=f.find(n=>n.type?.name==='CallSheetDocument');doc.props.onContactsState(false,true);f.render();modal=f.find(n=>n.props?.className==='csh-modal');assert.equal(modal.props.beforeClose(),false);
  doc.props.onContactsState(false,false);f.render();assert.equal(f.find(n=>n.props?.className==='csh-modal').props.beforeClose(),true);
+});
+
+test('issued call-sheet branding overrides a signed-in viewer from another organization',()=>{
+ const logo='data:image/png;base64,SVNTVUVS',ambient='data:image/png;base64,T1RIRVI=';
+ const value={name:'Issuer schedule',document:{meta:{callsheet:{},productionContacts:[]},rows:[]},edition:1,created_at:'2026-10-24T12:00:00Z',include_contacts:false,full_details:false,logo_on_light:logo};
+ const issued=fixture(callFile,'IssuedCallSheet',{value},{config:{logoOnLight:ambient}});
+ const content=issued.find(n=>n.type?.name==='CallSheetDocument');
+ assert.equal(content.props.logo,logo);
+ const document=fixture(callFile,'CallSheetDocument',content.props,{config:{logoOnLight:ambient},readOnly:true});
+ assert.equal(document.find(n=>n.type==='img').props.src,logo);
+});
+
+test('an unbranded issued call sheet cannot inherit the viewer organization logo',()=>{
+ const value={name:'Issuer schedule',document:{meta:{callsheet:{},productionContacts:[]},rows:[]},edition:1,created_at:'2026-10-24T12:00:00Z',include_contacts:false,full_details:false};
+ const issued=fixture(callFile,'IssuedCallSheet',{value},{config:{logoOnLight:'data:image/png;base64,T1RIRVI='}});
+ assert.equal(issued.find(n=>n.type?.name==='CallSheetDocument').props.logo,'/logo-call-sheet.png');
 });
