@@ -440,7 +440,7 @@ export default function LocalScheduleClient({ config }: { config: LocalEditorCon
 
           {!review&&<div className={styles.toolbar}>{shareTools}</div>}
           <LocalSchedulePrint visible={active && recordInScope && ready && !confirmation} />
-          {(controller.attempt || controller.result) && <section className={styles.recovery} aria-label="Save recovery">
+          {!busy && (controller.attempt || controller.result) && <section className={styles.recovery} aria-label="Save recovery">
             <h2>{controller.result?.state === 'matched' ? 'Saved version confirmed' : controller.result?.state === 'different' ? 'Newer changes found' : 'Check your save'}</h2>
             <p>{controller.result?.state === 'matched'
               ? `Your changes were saved as version ${controller.result.saved!.document_version}. ${controller.attempt ? `A newer version (${controller.result.currentVersion}) is available. Your draft is still here. Review or load the saved version before saving again.` : 'Any edits made since that save are still unsaved.'}`

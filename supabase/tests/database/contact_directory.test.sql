@@ -67,7 +67,7 @@ select throws_ok($$select public.save_directory_contact('fa600000-0000-4000-8000
 reset role;
 select ok(not has_table_privilege('authenticated','private.contact_directory','SELECT'),'Raw directory is not exposed');
 select ok(not has_function_privilege('anon','public.schedule_contact_directory(uuid)','EXECUTE'),'Anonymous directory reads denied');
-select is((select count(*)::integer from private.contact_directory),3,'Only three intended directory records');
+select is((select count(*)::integer from private.contact_directory where organization_id='fa200000-0000-4000-8000-000000000001'),3,'Only three intended directory records');
 select is((select document->'meta' from public.schedules where id='fa600000-0000-4000-8000-000000000001'),'{}'::jsonb,'Shared contact writes do not rewrite schedule documents');
 select * from finish();
 rollback;

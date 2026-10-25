@@ -1,3 +1,4 @@
+import { enrollLocalTestMfa } from './local-test-mfa.ts';
 import {execFileSync} from 'node:child_process';
 import {existsSync,readFileSync,writeFileSync} from 'node:fs';
 import {resolve} from 'node:path';
@@ -67,10 +68,11 @@ async function identity(label: string) {
   ensure(!login.error && login.data.session && login.data.user.id === id, 'Password login failed');
   const verified = await c.auth.getUser();
   ensure(!verified.error && verified.data.user.id === id, 'Auth could not verify the login-issued session');
+  if (label.includes('owner')) await enrollLocalTestMfa(c,base.origin);
   return { c, id, email, password };
 }
 
-ensure(['roseland-templates-20260917','roseland-template-replay-20260917'].includes(project),'Only the new isolated template stack is allowed');
+ensure(['roseland-templates-20260917','roseland-template-replay-20260917','roseland-ci-auth-20261020'].includes(project),'Only the new isolated template stack is allowed');
 
 let passed=0;const check=(value:unknown,label:string)=>{ensure(value,label);passed++;console.log('PASS '+label);};
 async function ok(c:SupabaseClient,name:string,args:Record<string,unknown>){const result=await c.rpc(name,args);ensure(!result.error,JSON.stringify(result.error));return result.data;}

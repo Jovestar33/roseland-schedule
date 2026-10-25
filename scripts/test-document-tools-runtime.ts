@@ -1,3 +1,4 @@
+import { enrollLocalTestMfa } from './local-test-mfa.ts';
 import { documentFixture, emptyDocumentFixture } from '../tests/fixtures/document-fixtures.ts';
 import { recalcRows } from '../lib/time.ts';
 import { contactsCsv, documentContacts } from '../lib/document-tools.ts';
@@ -79,6 +80,7 @@ async function identity(label: string) {
   ensure(!login.error && login.data.session && login.data.user.id === id, 'Password login failed');
   const verified = await c.auth.getUser();
   ensure(!verified.error && verified.data.user.id === id, 'Auth could not verify the login-issued session');
+  if (label.includes('owner')) await enrollLocalTestMfa(c,base.origin);
   return { c, id, email, password };
 }
 const delay=(ms:number)=>new Promise(resolve=>setTimeout(resolve,ms));

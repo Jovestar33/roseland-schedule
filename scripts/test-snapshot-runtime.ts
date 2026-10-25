@@ -1,3 +1,4 @@
+import { enrollLocalTestMfa } from './local-test-mfa.ts';
 import {execFileSync} from 'node:child_process';
 import {existsSync,readFileSync,writeFileSync} from 'node:fs';
 import {resolve} from 'node:path';
@@ -70,10 +71,11 @@ async function identity(label: string) {
   const verified = await c.auth.getUser();
   ensure(!verified.error && verified.data.user.id === id, 'Auth could not verify the login-issued session: '+JSON.stringify({code:verified.error?.code??null,status:verified.error?.status??null,name:verified.error?.name??null,userMatches:verified.data.user?.id===id}));
   console.log('Fixture verified: '+label);
+  if (label.includes('owner')) await enrollLocalTestMfa(c,base.origin);
   return { c, id, email, password };
 }
 
-ensure(['roseland-b05-20260917','roseland-b05-finish-20260917'].includes(project),'Only the isolated B05 stacks are allowed');
+ensure((['roseland-b05-20260917','roseland-b05-finish-20260917'].includes(project))||['roseland-ci-auth-20261020','roseland-schedule'].includes(project),'Only the isolated B05 stacks are allowed');
 if(args.includes('--diagnose-login')){try{const fixture=await identity('b05-diagnostic');console.log('PASS ordinary fictional signup, password login and getUser identity verification');writeFileSync('/private/tmp/b05-diagnostic-fixture.json',JSON.stringify({project,id:fixture.id,email:fixture.email,password:fixture.password}),{mode:0o600});}finally{await Promise.all(clients.map(c=>c.auth.signOut({scope:'local'}).catch(()=>undefined)));}process.exit(0);}
 let passed=0;const check=(v:unknown,label:string)=>{ensure(v,label);passed++;console.log('PASS '+label);};
 const quote=(v:unknown)=>"'"+JSON.stringify(v).replaceAll("'","''")+"'::jsonb";
