@@ -3,11 +3,11 @@ const {sourceLoader}=require('./source-loader.cjs');
 const members=[{name:'Alex',email:'alex@example.test'},{name:'Jordan',email:'jordan@example.test'}];
 function nodes(n){return Array.isArray(n)?n.flatMap(nodes):n?.props?[n,...nodes(n.props.children),...nodes(n.props.footer)]:[];}
 function text(n){return Array.isArray(n)?n.map(text).join(''):typeof n==='string'||typeof n==='number'?String(n):n?.props?text(n.props.children):'';}
-function fixture(){
+function fixture(savedGroups=[]){
  const hooks=[],effects=[];let cursor=0,pending=false,tree,open=true,access,scope='schedule-1',id=0,fetchHandler,serverStates={};const calls=[];
  const saved=()=>({id:scope,display_name:'Example',document_version:4,document:{meta:{},rows:[]}});
  const initial={members,review:true,source:saved()};
- const client={auth:{getSession:async()=>({data:{session:{user:{id:'actor'},access_token:'test-token'}}})},rpc:async(fn,args)=>{calls.push({fn,args});if(fn==='list_schedule_email_groups'||fn==='list_schedule_email_batches')return{data:[]};if(fn==='schedule_contact_directory')return{data:{entries:[]}};if(fn==='prepare_schedule_email_batch')return{data:{id:args.request_id,edition:1,recipients:args.recipient_requests.map(r=>({id:r.id,state:serverStates[r.id]??'not_sent'}))}};throw Error('Unexpected RPC '+fn);}};
+ const client={auth:{getSession:async()=>({data:{session:{user:{id:'actor'},access_token:'test-token'}}})},rpc:async(fn,args)=>{calls.push({fn,args});if(fn==='list_schedule_email_groups')return{data:savedGroups};if(fn==='list_schedule_email_batches')return{data:[]};if(fn==='schedule_contact_directory')return{data:{entries:[]}};if(fn==='prepare_schedule_email_batch')return{data:{id:args.request_id,edition:1,recipients:args.recipient_requests.map(r=>({id:r.id,state:serverStates[r.id]??'not_sent'}))}};throw Error('Unexpected RPC '+fn);}};
  function updateAccess(){access={actor:'actor',schedule:scope,enabled:true,client,getSource:saved,hasDraft:()=>false};}updateAccess();
  const react={...React,useState(arg){const i=cursor++;if(!(i in hooks))hooks[i]=arg?.__state?(Object.hasOwn(initial,arg.key)?initial[arg.key]:typeof arg.initial==='function'?arg.initial():arg.initial):typeof arg==='function'?arg():arg;return[hooks[i],value=>{const next=typeof value==='function'?value(hooks[i]):value;if(next!==hooks[i]){hooks[i]=next;pending=true;}}];},useRef(v){const i=cursor++;return hooks[i]??(hooks[i]={current:v});},useEffect(fn,deps){const i=cursor++,old=hooks[i];if(!old||deps.some((v,k)=>v!==old.deps[k]))effects.push(()=>{old?.cleanup?.();hooks[i]={deps,cleanup:fn()};});}};
  const tag=context=>node=>ts.visitNode(node,function visit(n){if(ts.isVariableDeclaration(n)&&ts.isArrayBindingPattern(n.name)&&n.initializer&&ts.isCallExpression(n.initializer)&&n.initializer.expression.getText()==='useState'){return ts.factory.updateVariableDeclaration(n,n.name,n.exclamationToken,n.type,ts.factory.updateCallExpression(n.initializer,n.initializer.expression,n.initializer.typeArguments,[ts.factory.createObjectLiteralExpression([ts.factory.createPropertyAssignment('__state',ts.factory.createTrue()),ts.factory.createPropertyAssignment('key',ts.factory.createStringLiteral(n.name.elements[0].name.text)),ts.factory.createPropertyAssignment('initial',n.initializer.arguments[0])])]))}return ts.visitEachChild(n,visit,context)});
@@ -55,4 +55,16 @@ test('switching document types retains the explicit call-sheet preferences witho
  option(f,contactsLabel).props.onChange({target:{checked:true}});f.render();chooseDocument(f,'Call sheet');option(f,'Include full shooting descriptions').props.onChange({target:{checked:true}});f.render();
  chooseDocument(f,'Schedule');assert.equal(option(f,contactsLabel),undefined);chooseDocument(f,'Schedule & call sheet');assert.equal(option(f,contactsLabel).props.checked,true);chooseDocument(f,'Call sheet');assert.equal(option(f,'Include full shooting descriptions').props.checked,true);
  f.button('Preview email').props.onClick();f.render();assert.match(text(f.tree),/included on the call sheet/);f.setFetch(async()=>accepted());f.button('Send to 2 people').props.onClick();await f.flush();const prepared=f.calls.find(c=>c.fn==='prepare_schedule_email_batch');assert.equal(prepared.args.document_selection,'call_sheet');assert.equal(prepared.args.include_contacts,true);assert.equal(prepared.args.full_details,true);
+});
+
+test('saved recipient groups remain selectable while creating or editing a group',async()=>{
+ const f=fixture([{id:'crew',name:'Core crew',recipients:members,version:1},{id:'client',name:'Client team',recipients:[{name:'Client Example',email:'client@example.test'}],version:1}]);await f.flush();
+ const chooser=()=>nodes(f.tree).find(n=>n.type==='select');
+ assert.match(text(f.tree),/Saved recipient group/);assert.ok(chooser());
+ chooser().props.onChange({target:{value:'crew'}});f.render();assert.ok(f.button('Edit group'));assert.match(text(f.tree),/Recipients · 2/);
+ f.button('New group').props.onClick();f.render();assert.ok(chooser());assert.match(text(f.tree),/New recipient group/);
+ chooser().props.onChange({target:{value:'client'}});f.render();assert.doesNotMatch(text(f.tree),/New recipient group/);assert.match(text(f.tree),/Recipients · 1/);assert.match(text(f.tree),/client@example.test/);assert.doesNotMatch(text(f.tree),/alex@example.test/);
+ f.button('Edit group').props.onClick();f.render();assert.ok(chooser());
+ chooser().props.onChange({target:{value:'crew'}});f.render();f.button('Preview email').props.onClick();f.render();assert.ok(f.button('Send to 2 people'));
+ assert.equal(f.calls.filter(c=>c.url||c.fn==='save_schedule_email_group'||c.fn==='prepare_schedule_email_batch').length,0);
 });
