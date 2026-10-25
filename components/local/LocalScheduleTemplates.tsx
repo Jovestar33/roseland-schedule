@@ -4,6 +4,7 @@ import type {SupabaseClient} from '@supabase/supabase-js';
 import {createScheduleLibraryRepository,type LibraryRecord} from '@/lib/platform/schedule-library';
 import {createLifecycleRepository} from '@/lib/platform/schedule-lifecycle-repository';
 import TemplateRowsPreview from './TemplateRowsPreview';
+import LocalBrowserTemplates from './LocalBrowserTemplates';
 import styles from './template-library.module.css';
 import ScheduleToolsTabs from './ScheduleToolsTabs';
 import toolStyles from './schedule-tools.module.css';
@@ -13,12 +14,12 @@ import {ScheduleRepositoryError,type StoredSchedule} from '@/lib/platform/schedu
 import {templateDraftRows,captureTemplateAttempt,clearTemplateRequest,createTemplateRepository,readTemplateRequest,retainTemplateRequest,type RetainedTemplateRequest,type TemplateApplyReview,type TemplateOperation,type TemplateProduction,type TemplateRecord} from '@/lib/platform/schedule-templates';
 export interface TemplateDraftContext {id:string;version:number;documentSession:number;editRevision:number}
 const templateSuccess:Record<TemplateOperation,string>={create:'Template saved.',replace:'Template updated.',rename:'Template renamed.',trash:'Template moved to Trash.',restore:'Template restored.',publish:'Template shared with your organization.',unpublish:'Template sharing stopped.',import:'Template imported.'};
-const operationLabel:Record<TemplateOperation,string>={create:'Save template',replace:'Update template',rename:'Rename template',trash:'Move to trash',restore:'Restore template',publish:'Share template',unpublish:'Stop sharing',import:'Import browser template'};
+const operationLabel:Record<TemplateOperation,string>={create:'Save template',replace:'Update template',rename:'Rename template',trash:'Move to trash',restore:'Restore template',publish:'Share template',unpublish:'Stop sharing',import:'Import template'};
 interface Props {animateEntry?:boolean;onRecovery?:()=>void;embedded?:boolean;onClose?:()=>void;openRequest?:number;client:SupabaseClient;actor:string|null;organization:string|null;enabled:boolean;canWriteCurrent:boolean;getSource:()=>StoredSchedule|null;canApply:()=>boolean;onApply:(review:TemplateApplyReview,context:TemplateDraftContext)=>boolean;onState:(dirty:boolean,busy:boolean)=>void;requireAuth:()=>void}
 export default function LocalScheduleTemplates({animateEntry=true,embedded=false,onRecovery,onClose,openRequest,client,actor,organization,enabled,canWriteCurrent,getSource,canApply,onApply,onState,requireAuth}:Props){
  const [repo]=useState(()=>createTemplateRepository(client));
  const [library]=useState(()=>createScheduleLibraryRepository(client)),[lifecycle]=useState(()=>createLifecycleRepository(client));
- const [view,setView]=useState<'browse'|'create'>('browse'),[sources,setSources]=useState<LibraryRecord[]>([]),[createProduction,setCreateProduction]=useState(''),[sourceId,setSourceId]=useState(''),[useDraft,setUseDraft]=useState(false);
+ const [view,setView]=useState<'browse'|'create'|'import'>('browse'),[sources,setSources]=useState<LibraryRecord[]>([]),[createProduction,setCreateProduction]=useState(''),[sourceId,setSourceId]=useState(''),[useDraft,setUseDraft]=useState(false);
  const [open,setOpen]=useState(false),[productions,setProductions]=useState<TemplateProduction[]>([]),[production,setProduction]=useState('');
  const [mode,setMode]=useState<'production'|'organization'|'trash'>('production'),[items,setItems]=useState<TemplateRecord[]>([]),[name,setName]=useState(''),[newName,setNewName]=useState('');
  const [selected,setSelected]=useState<TemplateRecord|null>(null),[pending,setPending]=useState<RetainedTemplateRequest|null>(null);
@@ -90,7 +91,7 @@ export default function LocalScheduleTemplates({animateEntry=true,embedded=false
    {!pending&&!apply&&<p className={styles.intro}>Reuse a complete schedule layout, or save one as a template.</p>}
    <p hidden={!message} role="status" aria-live="polite" className={styles.feedback}>{message}</p>
    {pendingUses>0&&<p>Save the applied template in your schedule before saving that draft as another template or making a copy.</p>}
-   {!pending&&!apply&&<div className={styles.viewTabs} role="group" aria-label="Template options"><button className="btn btn-light" aria-pressed={view==='browse'} disabled={busy} onClick={()=>{setView('browse');setMessage('');}}>Saved templates</button><button className="btn btn-light" aria-pressed={view==='create'} disabled={busy||!productions.some(p=>p.can_manage)} onClick={()=>void run(openCreate)}>Create a template</button></div>}
+   {!pending&&!apply&&<div className={styles.viewTabs} role="group" aria-label="Template options"><button className="btn btn-light" aria-pressed={view==='browse'} disabled={busy} onClick={()=>{setView('browse');setMessage('');}}>Saved templates</button><button className="btn btn-light" aria-pressed={view==='create'} disabled={busy||!productions.some(p=>p.can_manage)} onClick={()=>void run(openCreate)}>Create a template</button><button className="btn btn-light" aria-pressed={view==='import'} disabled={busy||!productions.some(p=>p.can_manage)} onClick={()=>{setView('import');setMessage('');}}>Import templates</button></div>}
    <fieldset hidden={view!=='browse'||!!pending||!!apply} disabled={busy||!!pending||!!apply} style={{border:0,padding:0}}>
     <div className={styles.filters}><label hidden={mode==='trash'}>Show saved templates<select value={mode} onChange={e=>{const m=e.target.value as typeof mode;setMode(m);setSelected(null);void run(current=>refresh(current,production,m));}}><option value="production">Production templates</option><option value="organization">Shared with organization</option></select></label>
     {mode!=='organization'&&<label>Filter by production<select value={production} onChange={e=>{const p=e.target.value;setProduction(p);setSelected(null);void run(current=>refresh(current,p));}}><option value="">Choose production</option>{productions.map(p=><option key={p.id} value={p.id}>{p.name}</option>)}</select></label>}
@@ -121,8 +122,12 @@ export default function LocalScheduleTemplates({animateEntry=true,embedded=false
    </fieldset>}
    {view==='browse'&&!pending&&!apply&&mode!=='trash'&&writeProduction&&<div className={styles.secondary}><button className="btn btn-light btn-sm" disabled={busy} onClick={()=>{setMode('trash');setSelected(null);void run(current=>refresh(current,production,'trash'));}}>Deleted templates</button></div>}
 
+   {actor&&organization&&<div hidden={view!=='import'||!!pending||!!apply}>
+    <LocalBrowserTemplates key={key} actor={actor} organization={organization} productions={productions} disabled={!open||view!=='import'||busy||!!pending||!!apply||!enabled||!inScope} onPrepare={begin}/>
+   </div>}
    {pending&&<section className={styles.confirmation} aria-label="Template change review"><h3>{operationLabel[pending.attempt.operation]}: {pending.attempt.previewName}</h3>
-    <p>{pending.attempt.operation==='create'?'Save this schedule layout as a template.':pending.attempt.operation==='import'?'Import the reviewed browser content into the selected production only. Original browser data and files stay untouched.':pending.attempt.operation==='publish'?'Make this template available across your organization.':pending.attempt.operation==='unpublish'?'Keep this template in its production only. Existing copies are unchanged.':pending.attempt.operation==='trash'?'Move this template to Trash and stop sharing it. You can restore it later.':pending.attempt.operation==='restore'?'Restore this template to its production.':pending.attempt.operation==='rename'?'Save the new template name.':'Replace the saved template with the current schedule layout. You can share the updated template afterward.'}</p>
+    <p>{pending.attempt.operation==='create'?'Save this schedule layout as a template.':pending.attempt.operation==='import'?'Save this template in the selected production. You can share it with your organization afterward.':pending.attempt.operation==='publish'?'Make this template available across your organization.':pending.attempt.operation==='unpublish'?'Keep this template in its production only. Existing copies are unchanged.':pending.attempt.operation==='trash'?'Move this template to Trash and stop sharing it. You can restore it later.':pending.attempt.operation==='restore'?'Restore this template to its production.':pending.attempt.operation==='rename'?'Save the new template name.':'Replace the saved template with the current schedule layout. You can share the updated template afterward.'}</p>
+    {pending.attempt.operation==='import'&&<p>Destination: <strong>{productions.find(p=>p.id===pending.attempt.production)?.name??'Selected production'}</strong></p>}
     {pending.attempt.name&&pending.attempt.operation==='rename'&&<p>Name: {pending.attempt.name}</p>}
     {['create','replace','import'].includes(pending.attempt.operation)&&<details className={styles.preview}><summary>Preview template</summary><TemplateRowsPreview rows={pending.attempt.previewRows??[]}/></details>}
 
