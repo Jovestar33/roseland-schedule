@@ -118,7 +118,13 @@
  .tbl-wrap .sched.has-contact-column tr.dragging>:is(:nth-child(10),:nth-child(11),:nth-child(12)){position:static}
  .tbl-wrap .sched.has-contact-column tr.completed>.contact-cell{opacity:1}
 }
-@media screen and (max-width:760px){.tbl-wrap table.sched.has-contact-column col.c-nt{width:178px!important}}
+@media screen and (max-width:760px) {
+ .tbl-wrap table.sched.has-contact-column col.c-nt{width:178px!important}
+ /* On mobile, row controls belong at the end of the horizontally scrolled
+    grid. Headers may still stick vertically, but never to the right edge. */
+ .tbl-wrap .sched.has-contact-column :is(thead,tbody) tr>:is(:nth-child(10),:nth-child(11),:nth-child(12)){right:auto}
+ .tbl-wrap .sched.has-contact-column tbody tr>:is(:nth-child(10),:nth-child(11),:nth-child(12)){position:static;z-index:auto}
+}
 @media print{.sched.has-contact-column :is(.c-ct,.contact-heading,.contact-cell,.delete-gutter){display:none!important}}
 
 @media screen {
