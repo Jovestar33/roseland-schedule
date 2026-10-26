@@ -1,5 +1,12 @@
 # Remaining gates after the local control checkpoint
 
+## October 25 reconciliation
+
+Use [CURRENT_STATUS.md](CURRENT_STATUS.md) for the dated release/trial checkpoint and [ROADMAP.md](ROADMAP.md#october-25-2026--approved-order-of-operations) for the user-approved delivery order. The real-data mirror, scoped two-way synchronization, reviewed release and authorized invitation sending have occurred; final cutover and public launch have not. Older statements below about “local only,” synchronization inactive, invitations withheld, naming, or the next batch describe their historical checkpoint and are superseded for present planning. Their evidence limits and applicable data-protection requirements remain intact; this notice does not retroactively mark untested cases passed.
+
+## Retained historical record
+
+
 Current update: [PRE_REVIEW_TECHNICAL_COMPLETION.md](PRE_REVIEW_TECHNICAL_COMPLETION.md) supersedes the direct-Move and active-member inherited-restriction fixture gaps below. It records the completed six-file native-print follow-up after the user-confirmed unlock and preserves the remaining recipient, device, hosted, migration and human-review limits. This earlier checkpoint remains as historical context.
 
 September19,2026. This reconciliation uses the actual saved evidence through document checkpoint `d172f50` and the following inline-control candidate. It does not interpret Partial as a request to replay every variant.

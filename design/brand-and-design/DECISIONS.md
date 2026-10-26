@@ -1,5 +1,14 @@
 # Decisions and open choices
 
+## October 25 — current identity and sequence
+
+John reconfirmed **Rally** as the public-product name (“rally is good”). This supersedes earlier open-name or tentative-name statements, but does not approve a logo, palette, typography, domain purchase or implementation. The earlier Bounce logo remains rejected; exploratory visual assets are not selected. Preserve the Roseland preset and company-independent default, with separate organization/document branding and operational templates.
+
+The [approved roadmap](../../ROADMAP.md#october-25-2026--approved-order-of-operations) controls sequencing; [current status](../../CURRENT_STATUS.md) distinguishes the live trial from future public rollout. Public identity/neutral theme is step 5, with brand research permitted alongside the internal trial. Older coordinator assignments, dispatches and milestone labels below are historical, not new work instructions.
+
+## Retained exploration history
+
+
 ## Confirmed
 
 - September 18: consumer naming, logo and identity are reopened. Production Command is a working title, superseding September 16 final-name wording.

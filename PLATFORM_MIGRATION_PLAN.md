@@ -1,5 +1,12 @@
 # Roseland Schedule — Multi-User Platform Migration Plan
 
+## October 25 reconciliation
+
+Use [CURRENT_STATUS.md](CURRENT_STATUS.md) for the dated release/trial checkpoint and [ROADMAP.md](ROADMAP.md#october-25-2026--approved-order-of-operations) for the user-approved delivery order. The real-data mirror, scoped two-way synchronization, reviewed release and authorized invitation sending have occurred; final cutover and public launch have not. Older statements below about “local only,” synchronization inactive, invitations withheld, naming, or the next batch describe their historical checkpoint and are superseded for present planning. Their evidence limits and applicable data-protection requirements remain intact; this notice does not retroactively mark untested cases passed.
+
+## Retained historical record
+
+
 > **October 20 rollout update:** the user wants a multi-week parallel mirror before full migration: one real organization with the user as Organization Super Admin and two Admins, all existing Netlify schedules copied and verified, and no fictional data in the launch environment. This supersedes the earlier small-production pilot sequencing. See [the current mirror launch plan](./MIGRATION_RUNBOOK.md#october-20-direction--multi-week-mirror-before-cutover). The organization is Roseland Pictures. Both apps will accept real edits during the trial, so bidirectional reconciliation with conflict review must be implemented before launch; the old single-writer assumption does not apply to that trial. Netlify remains available and launch is not cutover.
 
 > **TOTAL PARITY GATE (2026-09-15): NOT PASSED.** Before beginning migration of any real schedules, verify total parity between actual current Netlify production behavior and the eventual Supabase/Vercel target runtime, then obtain explicit user approval. This includes PDF creation, printing, navigation, data entry, input-field sizing and every existing feature. Local SQL/API tests or Netlify staging results cannot satisfy this gate. Each item requires Pass/Fail/Not tested and reproducible comparison evidence; unknown/untested blocks migration. Verified improvements may Pass without copying old pixels or needing waivers solely for differing; regressions and untested required behavior block migration. Surface material workflow tradeoffs and unclear cases for user review. Synthetic rehearsals may continue within their existing authorization. See [REGRESSION_MATRIX.md](./REGRESSION_MATRIX.md).

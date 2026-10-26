@@ -1,4 +1,14 @@
-# Roseland Schedule
+# Roseland Schedule / Rally
+
+Start with [Current status](CURRENT_STATUS.md) and the [approved order of operations](ROADMAP.md#october-25-2026--approved-order-of-operations), reconciled October 25, 2026. The Supabase/Vercel app is in the authorized Roseland parallel trial; Netlify cutover is still pending.
+
+Rally is the selected public-product name. The repository name and live Roseland branding remain unchanged; neutral theme/logo decisions are still ahead.
+
+[Timing playground](TIMING_PLAYGROUND_PLAN.md) · [Schedule templates](SCHEDULE_TEMPLATE_PLAN.md) · [Design brief](PRODUCTION_COMMAND_DESIGN_BRIEF.md) · [Hosted trial](HOSTED_TRIAL_LAUNCH.md) · [Offline plan](INSTALLATION_OFFLINE_PLAN.md)
+
+The first 22 schedule templates are live in **Rally Template Library**, shared across Roseland Pictures. The current application release is `ae004ce`; the separate timing playground remains experimental. See the status and template documents above for verification and use.
+
+## Historical September introduction — superseded for current status and sequencing
 
 B01 ordinary save-result recovery is complete locally after explicit dispatch: [review and acceptance evidence](./LOCAL_SAVE_RECOVERY_REVIEW.md). Lost responses can be checked without replacing newer drafts; exact retry preserves the attempted document. This does not establish hosted parity or authorize migration.
 

@@ -1,5 +1,12 @@
 # Hosted parallel trial launch
 
+## October 25 reconciliation
+
+Use [CURRENT_STATUS.md](CURRENT_STATUS.md) for the dated release/trial checkpoint and [ROADMAP.md](ROADMAP.md#october-25-2026--approved-order-of-operations) for the user-approved delivery order. The real-data mirror, scoped two-way synchronization, reviewed release and authorized invitation sending have occurred; final cutover and public launch have not. Older statements below about “local only,” synchronization inactive, invitations withheld, naming, or the next batch describe their historical checkpoint and are superseded for present planning. Their evidence limits and applicable data-protection requirements remain intact; this notice does not retroactively mark untested cases passed.
+
+## Retained historical record
+
+
 Updated October 20, 2026. User selected Vercel for the new app and the existing Supabase project for data. The existing Netlify app continues during the trial. Both apps will receive real edits. No cutover has occurred.
 
 ## Current launch checkpoint — October 20, 2026

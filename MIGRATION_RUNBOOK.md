@@ -1,5 +1,12 @@
 # Platform Migration Runbook
 
+## October 25 reconciliation
+
+Use [CURRENT_STATUS.md](CURRENT_STATUS.md) for the dated release/trial checkpoint and [ROADMAP.md](ROADMAP.md#october-25-2026--approved-order-of-operations) for the user-approved delivery order. The real-data mirror, scoped two-way synchronization, reviewed release and authorized invitation sending have occurred; final cutover and public launch have not. Older statements below about “local only,” synchronization inactive, invitations withheld, naming, or the next batch describe their historical checkpoint and are superseded for present planning. Their evidence limits and applicable data-protection requirements remain intact; this notice does not retroactively mark untested cases passed.
+
+## Retained historical record
+
+
 ## October 20 direction — multi-week mirror before cutover
 
 **Current user direction supersedes the earlier small-production pilot sequence below.** Launch the new application as a parallel mirror for a few weeks before any full migration or authority switch. Keep Netlify operating throughout the trial. The launch organization, **Roseland Pictures**, will contain the user as **Organization Super Admin** and two named **Organization Admins**. Copy **all existing Netlify schedules**, verify their contents and placement, and remove test/fictional data from the launch environment. No cutover, Netlify retirement or billing cancellation follows automatically from launching the mirror or reaching a date.

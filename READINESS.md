@@ -1,3 +1,11 @@
+# Roseland Schedule — readiness and historical evidence
+
+## October 25 reconciliation
+
+Use [CURRENT_STATUS.md](CURRENT_STATUS.md) for the dated release/trial checkpoint and [ROADMAP.md](ROADMAP.md#october-25-2026--approved-order-of-operations) for the user-approved delivery order. The real-data mirror, scoped two-way synchronization, reviewed release and authorized invitation sending have occurred; final cutover and public launch have not. Older statements below about “local only,” synchronization inactive, invitations withheld, naming, or the next batch describe their historical checkpoint and are superseded for present planning. Their evidence limits and applicable data-protection requirements remain intact; this notice does not retroactively mark untested cases passed.
+
+## Retained historical record
+
 ## September 16: authorized B02/B04 bundle complete locally
 
 Durable checkout: `/Users/johnsammon/.codex/worktrees/roseland-b02/roseland-schedule`, branch `codex/migration-schedule-contract`. B02 checkpoint `c14e03fe3416eb5f07688ad8c7abebbaffb1046d`; the separate B04 commit containing this entry completes the resumed dispatch B02-B04-AUTH-20260916. See [document-tools review](./LOCAL_DOCUMENT_TOOLS_REVIEW.md) and [schedule-files review](./LOCAL_SCHEDULE_FILES_REVIEW.md). Earlier pause and pending-browser statuses below are historical.

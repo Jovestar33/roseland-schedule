@@ -1,5 +1,12 @@
 # Approved follow-on decisions — September 17, 2026
 
+## October 25 reconciliation
+
+Use [CURRENT_STATUS.md](CURRENT_STATUS.md) for the dated release/trial checkpoint and [ROADMAP.md](ROADMAP.md#october-25-2026--approved-order-of-operations) for the user-approved delivery order. The real-data mirror, scoped two-way synchronization, reviewed release and authorized invitation sending have occurred; final cutover and public launch have not. Older statements below about “local only,” synchronization inactive, invitations withheld, naming, or the next batch describe their historical checkpoint and are superseded for present planning. Their evidence limits and applicable data-protection requirements remain intact; this notice does not retroactively mark untested cases passed.
+
+## Retained historical record
+
+
 Planning record from Voice and Planning. B08 implementation continues separately. These approvals define product behavior; they do not authorize actual account changes, deletion, notifications, hosted changes or implementation of B05/B09/B10. Detailed acceptance and enforcement remain to be verified. This record supersedes older statements that these particular decisions are unanswered.
 
 ## B05 — Snapshots

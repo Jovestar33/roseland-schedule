@@ -1,5 +1,16 @@
 # Production Command — brand and design direction
 
+## Current direction — October 25, 2026
+
+**Rally is the selected public-product name**, reconfirmed by John (“rally is good”). Production Command remains a historical working label for broader planning. The prior Bounce logo is rejected. Logo, palette, typography and exact neutral-theme execution remain unselected; naming does not establish trademark/domain availability or authorize purchases, code/route renames or a live reskin.
+
+The [approved roadmap](ROADMAP.md#october-25-2026--approved-order-of-operations) supersedes the September requirement to finish a reskin before the now-authorized Roseland real-data trial. Public identity/neutral theme is step 5; research can run alongside the trial. Preserve the existing Roseland appearance and separate product UI, organization branding, document presentation and content templates. Broad production planning should extend the same product while keeping the daily editor simple. Validate its focused overview/readiness/day-plan pilot before expanding scope.
+
+Latest cross-worktree naming evidence before this reconfirmation is retained in `/Users/johnsammon/roseland-schedule/design/brand-and-design/DECISIONS.md` (BD-022/023 and September 20 exploration). The later user reconfirmation selects the name only, not those exploratory assets.
+
+## Historical brief and design-process requirements
+
+
 Confirmed by the user on September 16, 2026. This is the shared decision record for planning and development tasks. Read it alongside [ROADMAP.md](./ROADMAP.md), [READINESS.md](./READINESS.md), and [REGRESSION_MATRIX.md](./REGRESSION_MATRIX.md).
 
 ## Confirmed product decisions

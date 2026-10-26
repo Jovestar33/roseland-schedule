@@ -1,5 +1,10 @@
 # Installation and offline delivery plan
 
+## October 25 sequencing clarification
+
+The [approved roadmap](ROADMAP.md#october-25-2026--approved-order-of-operations) controls delivery order. Retain the I1 → I2 → I3 dependency sequence below; do not infer completion or make the full offline program an automatic prerequisite for the isolated timing or focused planning pilots. Installation/read-only offline access remain useful follow-up work, with private-data and reconnect validation required before release.
+
+
 Status: planned, 2026-09-14. Source inspection of development revision `b9d6523`; no installation or airplane-mode device test was performed for this assessment. This document does not authorize implementation, deployment, migration, credential changes, or live cutover.
 
 Migration readiness is the near-term critical path; see [MIGRATION_READINESS.md](./MIGRATION_READINESS.md). Installation and offline use precede broader Production Command and production-management expansion, but must not delay migration or become new cutover prerequisites. Offline delivery may follow cutover. Deliver them incrementally alongside the necessary platform work. The complete database migration is not a prerequisite for an installation-only preview.

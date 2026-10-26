@@ -1,5 +1,12 @@
 # Accelerated pre-reskin sequence
 
+## October 25 reconciliation
+
+Use [CURRENT_STATUS.md](CURRENT_STATUS.md) for the dated release/trial checkpoint and [ROADMAP.md](ROADMAP.md#october-25-2026--approved-order-of-operations) for the user-approved delivery order. The real-data mirror, scoped two-way synchronization, reviewed release and authorized invitation sending have occurred; final cutover and public launch have not. Older statements below about “local only,” synchronization inactive, invitations withheld, naming, or the next batch describe their historical checkpoint and are superseded for present planning. Their evidence limits and applicable data-protection requirements remain intact; this notice does not retroactively mark untested cases passed.
+
+## Retained historical record
+
+
 September 18, 2026. User-approved coordination plan from Voice and Planning. Target: be ready for reskin within approximately 18 hours of this discussion, including human review. This is a planning target, not a promised completion time or permission to lower acceptance standards.
 
 ## Delivery and authorization

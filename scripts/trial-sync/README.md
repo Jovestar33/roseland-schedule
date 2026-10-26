@@ -1,5 +1,10 @@
 # Trial schedule synchronization
 
+## October 25 hosted status clarification
+
+See [current status](../../CURRENT_STATUS.md): automatic hosted synchronization was activated for the approved 63 mappings and the last audit reported them synced. Lexington-only/inactive/full-trial-unverified statements below are earlier checkpoints. The foreground operator tool and hosted leased worker are distinct execution modes; limitations describing the former are not a claim that no hosted scheduler exists. Existing new/renamed/structural and related-store boundaries remain in force. No new live health check or scope expansion occurred in this documentation reconciliation.
+
+
 October 20, 2026. **Hosted Lexington-only pilot enabled; live round-trip verification pending.** This is an operator-controlled bidirectional schedule-document synchronizer for the Roseland Pictures parallel trial. The new app continues to store documents in Supabase; the existing app continues to use Netlify Blobs.
 
 ## Hosted trial preparation (current)

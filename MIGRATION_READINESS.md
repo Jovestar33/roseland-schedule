@@ -1,5 +1,12 @@
 # Migration critical path — pilot to cutover
 
+## October 25 reconciliation
+
+Use [CURRENT_STATUS.md](CURRENT_STATUS.md) for the dated release/trial checkpoint and [ROADMAP.md](ROADMAP.md#october-25-2026--approved-order-of-operations) for the user-approved delivery order. The real-data mirror, scoped two-way synchronization, reviewed release and authorized invitation sending have occurred; final cutover and public launch have not. Older statements below about “local only,” synchronization inactive, invitations withheld, naming, or the next batch describe their historical checkpoint and are superseded for present planning. Their evidence limits and applicable data-protection requirements remain intact; this notice does not retroactively mark untested cases passed.
+
+## Retained historical record
+
+
 > **September 16 current-state reconciliation:** The editor, local account workspace, lifecycle recovery, invitations/acceptance and restricted provisioning are now implemented and tested locally at `379e066`. Older missing-feature statements below are historical. Full related application integration, account recovery, security/hosted parity and connected rollback still remain. See [TECHNICAL_ACCEPTANCE_AUDIT.md](./TECHNICAL_ACCEPTANCE_AUDIT.md) for evidence, gates and bounded dispatch proposals.
 
 > **Related-store implementation:** shared snapshot/template/library/CMS preservation, stable catalogue mapping, import history, catch-up and per-record reconciliation are now tested locally. This closes the prior inventory-only coverage gap at the private migration-catalogue layer, not at the application/UI layer. See [RELATED_MIGRATION_CONTRACT.md](./RELATED_MIGRATION_CONTRACT.md) and [READINESS.md](./READINESS.md). Next: local-only authenticated account/library/editor integration and explicit related application projections. Real migration remains blocked by the parity and complete-export gates.

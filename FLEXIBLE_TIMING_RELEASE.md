@@ -1,5 +1,10 @@
 # Timing trial reverted
 
+## October 25 follow-up
+
+The rollback remains controlling for the live editor. John approved [isolated timing-playground exploration](TIMING_PLAYGROUND_PLAN.md), including optional endpoint locks, backward planning and continuity warnings, with minimal visual change. This does not reactivate the rejected trial or authorize deployment.
+
+
 The experimental fixed-start/fixed-finish and backward-planning release was reverted at the user's request. The editor, store, time calculation, templates, call sheet, printing and synchronization behavior are restored to pre-trial commit b6391247dcc1da4c0ed5686574eff281b59a81b5. Contacts, cast, call-sheet improvements, navigation, drawer animation and all earlier work are retained.
 
 Duration now uses the same 36px value slot as Time In and Time Out, keeping their values aligned. Existing custom durations and the original time locks remain available.

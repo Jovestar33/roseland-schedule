@@ -1,5 +1,39 @@
 # Roseland Schedule — Master Roadmap
 
+## October 25, 2026 — approved order of operations
+
+John explicitly approved and locked this sequence on October 25. This is the controlling delivery order where older roadmap sequencing conflicts; historical completion claims still require their own evidence. Approval of this roadmap is not authorization to deploy experiments or retire Netlify.
+
+1. **Run the Roseland team trial.** Nancy and Melissa complete ordinary work without coaching; capture and resolve operational issues.
+2. **Reconcile the roadmap.** Maintain one current view of shipped, trial, prototype, deferred, and planned work.
+3. **Play with timing in isolation.** Preserve the live duration-based editor. Validate the approved sandbox concepts against real scenarios; John must be able to predict the behavior comfortably before any live adoption.
+4. **Build the first schedule-template collection.** Curate useful production starting points, review with John, and verify they reduce setup effort with little cleanup. Keep content templates separate from visual presets.
+5. **Define the public identity and neutral theme.** Approve representative application screens and documents; preserve the Roseland preset. Rally is selected; logo and visual identity still require approval.
+6. **Validate the broader product concept.** Use outside-producer interviews and actual workflows to establish recurring problems that the proposed experience solves.
+7. **Build a small Production Command pilot.** Start with production overview, day plan, readiness, responsibilities, deliverables, and links into existing schedules. Keep one integrated product and preserve the simple daily editor.
+8. **Complete cutover and public-beta preparation.** Reconcile data and verify recovery, onboarding, operational and commercial readiness. Netlify retirement and external rollout require explicit release decisions.
+
+**Allowed parallel work:** brand research and outside-producer interviews may run alongside the internal trial. This does not bypass validation before the broader planning pilot. Timing experimentation stays isolated until user usability approval and release authorization.
+
+**Expansion discipline:** broader resource planning, itinerary tools, financial integrations, and richer CRM follow evidence from the focused pilot rather than automatically expanding its first scope. The roadmap's acceptance criteria remain evidence-based; CI alone does not establish human usability acceptance.
+
+## October 25 delivery checkpoint
+
+- **Planning reconciliation:** current release/trial status, approved sequence, Rally naming and bounded follow-on plans are recorded in these documents. Historical evidence remains clearly separated from current status.
+- **Schedule templates:** the initial 22-template collection is delivered in Rally Template Library and shared across Roseland Pictures. Content verification covers 343 actions; practical use and refinement continue under [the template plan](SCHEDULE_TEMPLATE_PLAN.md).
+- **Timing:** remains an isolated playground in a separate chat. Its plan records the agreed experiments; no sandbox code or experimental timing behavior is included in this documentation commit or the live release.
+- **Live application:** latest verified code release is `ae004ce`; see [current status](CURRENT_STATUS.md) for release and validation evidence. Team-trial learning continues; public identity, the broader planning pilot and final cutover remain ahead.
+
+John authorized template delivery alongside the separate timing exploration. These completion notes do not reorder the approved sequence or bypass the timing acceptance gate.
+
+## Current status and bounded plans
+
+[Current status](CURRENT_STATUS.md) records the live trial and remaining verification limits. [Timing playground](TIMING_PLAYGROUND_PLAN.md) defines the isolated experiment; [schedule templates](SCHEDULE_TEMPLATE_PLAN.md) records the delivered collection and its next refinement pass. Rally is now selected; visual identity remains open.
+
+## Historical roadmap baseline and release notes
+
+The dated entries and phase checkboxes below are retained for traceability, not as a current completion dashboard. October 25's approved order overrides older ordering, naming, invitation holds and pre-trial restrictions. Real-data import and two-way trial were subsequently authorized and completed at their recorded scope; this does not imply final cutover or universal parity/security acceptance.
+
 ## October 23, 2026 — contacts and call-sheet release
 
 - Central Contacts is available from the Library, with production/phase/type/level filters, sorting, shared profiles, and source-schedule links. Existing schedule-row contacts are included without duplicating or changing their source records.
