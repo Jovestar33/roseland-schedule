@@ -1,9 +1,9 @@
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),ts=require('typescript'),React=require('react');
 
 // Actual component handlers and state transitions; no network, credentials or mail.
-function fixture({type='recovery',outcomes=[],signOutError=null,session=null}={}){
+function fixture({type='recovery',outcomes=[],signOutError=null,session=null,mailOk=true}={}){
  const state={callback:{type,tokenHash:'preview-only',invitationId:type==='invite'?'invitation-preview':null},policy:session?{accepted:true,enforced:false}:null};
- let tree,refIndex=0,refs=[],verifications=0,securityChecks=0,callbackSignOuts=0,workspaceChanges=0,mailRequests=0;
+ let lastMail; let tree,refIndex=0,refs=[],verifications=0,securityChecks=0,callbackSignOuts=0,workspaceChanges=0,mailRequests=0;
  const callbackClient={auth:{verifyOtp:async()=>{const value=outcomes[verifications++];if(value instanceof Error)throw value;return value;},signOut:async()=>{callbackSignOuts++;if(signOutError instanceof Error)throw signOutError;return{error:signOutError};},mfa:{listFactors:async()=>{securityChecks++;return{data:{totp:[{id:'existing-factor',status:'verified'}]},error:null};}}}};
  const react={...React,useEffect(){},useLayoutEffect(){},useState({key,initial}){if(!Object.hasOwn(state,key))state[key]=typeof initial==='function'?initial():initial;return[state[key],value=>{state[key]=typeof value==='function'?value(state[key]):value;}];},useRef(initial){const i=refIndex++;return refs[i]??=( {current:initial} );}};
  const tag=context=>root=>ts.visitNode(root,function visit(n){
@@ -14,13 +14,13 @@ function fixture({type='recovery',outcomes=[],signOutError=null,session=null}={}
  });
  const code=ts.transpileModule(fs.readFileSync('components/local/LocalAccountAccess.tsx','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX,target:ts.ScriptTarget.ES2022,esModuleInterop:true},transformers:{before:[tag]}}).outputText;
  const mocks={react,'@supabase/supabase-js':{createClient:()=>callbackClient},'@/lib/platform/account-session':{accountPolicyAllowsEntry:()=>true}};
- const mod={exports:{}};vm.runInThisContext('(function(require,module,exports,fetch){'+code+'\n})')(name=>mocks[name]??require(name),mod,mod.exports,async()=>{mailRequests++;return{ok:true,json:async()=>({message:'Fixture email requested'})};});
+ const mod={exports:{}};vm.runInThisContext('(function(require,module,exports,fetch){'+code+'\n})')(name=>mocks[name]??require(name),mod,mod.exports,async(url,options)=>{mailRequests++;lastMail={url,body:JSON.parse(options.body)};return{ok:mailOk,json:async()=>({message:mailOk?'Fixture email requested':'Please try again'})};});
  const props={review:true,config:{hosted:true,supabaseUrl:'http://example.test',anonymousKey:'fixture-only'},client:{auth:{signOut(){throw Error('Must not sign out workspace');}}},session,authNeeded:false,onReady(){workspaceChanges++;},requireAuth(){workspaceChanges++;},policyRevision:0,onInvitation(){workspaceChanges++;}};
  function render(){refIndex=0;tree=mod.exports.default(props);}
  function nodes(n=tree){if(!n||typeof n!=='object'||n.props?.hidden)return[];return[n,...React.Children.toArray(n.props?.children).flatMap(child=>nodes(child))];}
  const text=n=>typeof n==='string'?n:React.Children.toArray(n?.props?.children).map(text).join(' ');
  const buttons=()=>nodes().filter(n=>n.type==='button').map(n=>text(n));
- render();return{state,buttons,text:()=>text(tree),nodes,async click(label){const button=nodes().find(n=>n.type==='button'&&text(n)===label);assert.ok(button,`Missing ${label}; available: ${buttons()}`);assert.notEqual(button.props.disabled,true);button.props.onClick();await new Promise(setImmediate);render();},counts:()=>({verifications,securityChecks,callbackSignOuts,workspaceChanges,mailRequests})};
+ render();return{state,async submitEmail(value){state.email=value;render();await nodes().find(n=>n.type==='form').props.onSubmit({preventDefault(){}});render();},lastMail:()=>lastMail,buttons,text:()=>text(tree),nodes,async click(label){const button=nodes().find(n=>n.type==='button'&&text(n)===label);assert.ok(button,`Missing ${label}; available: ${buttons()}`);assert.notEqual(button.props.disabled,true);button.props.onClick();await new Promise(setImmediate);render();},counts:()=>({verifications,securityChecks,callbackSignOuts,workspaceChanges,mailRequests})};
 }
 const rejected=(status=403,code='otp_expired')=>({error:{status,code,message:'Token has expired or is invalid'},data:{session:null,user:null}});
 const verified={error:null,data:{session:{user:{id:'fixture'}},user:{id:'fixture',email:'fixture@example.test'}}};
@@ -35,9 +35,9 @@ test('expired reset link replaces Continue with a new-link form and does not sen
  assert.ok(f.buttons().includes('Send reset link'));assert.ok(f.buttons().includes('Back to sign in'));
  assert.deepEqual(f.counts(),{verifications:1,securityChecks:0,callbackSignOuts:1,workspaceChanges:0,mailRequests:0});
 });
-test('expired invitation directs user to its sender and back, without offering another token verification',async()=>{
+test('expired invitation offers email-verified renewal without offering another token verification',async()=>{
  const f=fixture({type:'invite',outcomes:[rejected()]});await f.click('Continue');
- assert.match(f.text(),/Ask the sender for a new invitation/);assert.ok(!f.buttons().includes('Continue'));assert.ok(!f.buttons().includes('Request a new reset link'));
+ assert.match(f.text(),/request a fresh link below/);assert.ok(f.buttons().includes('Send a new setup link'));assert.ok(!f.buttons().includes('Continue'));assert.ok(!f.buttons().includes('Request a new reset link'));
  await f.click('Back to sign in');assert.equal(f.state.callback,null);assert.equal(f.state.mode,null);assert.ok(f.buttons().includes('Have an invitation?'));assert.equal(f.counts().workspaceChanges,0);
 });
 test('terminal link inside a signed-in workspace uses contextual Back without signing out workspace',async()=>{
@@ -64,4 +64,21 @@ test('verification response without a session cannot expose the password form',a
 });
 for(const signOutError of [{message:'not confirmed'},new Error('offline')])test(`failed callback cleanup (${signOutError instanceof Error?'thrown':'returned'}) preserves the step for retry`,async()=>{
  const f=fixture({outcomes:[rejected()],signOutError});await f.click('Continue');await f.click('Request a new reset link');assert.ok(f.state.callback);assert.equal(f.state.mode,null);assert.match(f.text(),/couldn’t close this step/);assert.ok(f.buttons().includes('Request a new reset link'));assert.equal(f.counts().workspaceChanges,0);
+});
+
+test('renewal uses the original invitation and invited email without authenticating the user',async()=>{
+ const f=fixture({type:'invite',outcomes:[rejected()]});await f.click('Continue');
+ await f.submitEmail(' guest@example.test ');
+ assert.deepEqual(f.lastMail(),{url:'/api/platform/account/mail',body:{action:'signup',email:'guest@example.test',invitationId:'invitation-preview'}});
+ assert.equal(f.counts().mailRequests,1);assert.equal(f.counts().workspaceChanges,0);assert.equal(f.counts().securityChecks,0);
+ assert.equal(f.state.mailSent,true);assert.ok(!f.buttons().includes('Send a new setup link'));assert.match(f.text(),/Use the newest email/);
+});
+
+test('failed renewal retains the email and form for retry',async()=>{
+ const f=fixture({type:'invite',outcomes:[rejected()],mailOk:false});await f.click('Continue');await f.submitEmail('guest@example.test');
+ assert.equal(f.state.mailSent,false);assert.equal(f.state.email,'guest@example.test');assert.ok(f.buttons().includes('Send a new setup link'));assert.equal(f.counts().workspaceChanges,0);
+});
+test('a link without an invitation ID cannot request invitation renewal',async()=>{
+ const f=fixture({type:'invite',outcomes:[rejected()]});f.state.callback.invitationId=null;await f.click('Continue');
+ assert.ok(!f.buttons().includes('Send a new setup link'));assert.match(f.text(),/Ask the sender for a new invitation/);assert.equal(f.counts().mailRequests,0);
 });

@@ -43,7 +43,7 @@ export default function LocalAccountAccess({ review=false, showMaintenance=true,
       const parsed = parseAccountCallback(location.hash);
       history.replaceState(null, '', location.pathname + location.search);
       if (callbackActive.current || busyRef.current) { setMessage('Finish this step or cancel before opening another link.'); return; }
-      if (parsed) { callbackActive.current=true; setCallback(parsed); setCallbackFailure(null); setMessage(''); }
+      if (parsed) { callbackActive.current=true; setCallback(parsed); setCallbackFailure(null); setMailSent(false); setEmail(''); setMessage(''); }
       else setMessage('This link has expired or is invalid. Please request a new one.');
     };
     receive(); window.addEventListener('hashchange',receive);
@@ -119,8 +119,11 @@ export default function LocalAccountAccess({ review=false, showMaintenance=true,
   }
   async function requestMail(event: React.FormEvent) {
     event.preventDefault(); await run(async () => {
+      const renewal = callback?.type === 'invite' && callbackFailure === 'unavailable' && callback.invitationId;
+      const action = renewal ? 'signup' : mode;
+      const invitationId = renewal || invitation;
       const result = await fetch(config.hosted?'/api/platform/account/mail':'/api/platform/local-account/mail', { method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: mode, email, ...(mode === 'signup' ? { invitationId: invitation, ...(config.hosted?{}:{accepted}) } : {}) }),
+        body: JSON.stringify({ action, email: email.trim(), ...(action === 'signup' ? { invitationId, ...(config.hosted?{}:{accepted}) } : {}) }),
         cache: 'no-store', redirect: 'error', signal: AbortSignal.timeout(15000) });
       const data = await result.json(); setMessage(data.message ?? 'We couldn’t send the link. Please try again.');
       if (result.ok) setMailSent(true);
@@ -149,7 +152,9 @@ export default function LocalAccountAccess({ review=false, showMaintenance=true,
       setCallbackFailure(unavailable ? 'unavailable' : 'retryable');
       setMessage(unavailable
         ? callback.type === 'invite'
-          ? 'This invitation link has expired or can no longer be used. Ask the sender for a new invitation.'
+          ? callback.invitationId
+            ? 'This setup link has expired or has already been used. You can request a fresh link below, or sign in if you have already set your password.'
+            : 'This invitation link has expired or can no longer be used. Ask the sender for a new invitation.'
           : 'This reset link has expired or can no longer be used. Request a new link to continue.'
         : result.error?.status === 429
           ? 'Please wait a moment, then try opening the link again.'
@@ -201,9 +206,16 @@ export default function LocalAccountAccess({ review=false, showMaintenance=true,
       <p><button disabled={busy || !policyChecked}>Continue</button></p>
     </form>}
     {callback ? <div data-account-flow>
-      <h2 ref={taskHeading} tabIndex={-1}>{callbackFailure === 'unavailable' ? 'Link unavailable' : callback.type === 'invite' ? 'Set your password' : callbackEmail ? 'Choose a new password' : 'Reset your password'}</h2>
+      <h2 ref={taskHeading} tabIndex={-1}>{callbackFailure === 'unavailable' ? mailSent ? 'Check your email' : 'Link unavailable' : callback.type === 'invite' ? 'Set your password' : callbackEmail ? 'Choose a new password' : 'Reset your password'}</h2>
       {notice}
-      {callbackFailure === 'unavailable' ? <button data-account-primary disabled={busy} onClick={() => void closeCallback(callback.type === 'recovery' ? 'recovery' : null)}>
+      {callbackFailure === 'unavailable' ? callback.type === 'invite' && callback.invitationId ? <>
+        {mailSent ? <p data-account-help>Use the newest email to finish setting up your account. If it does not arrive, check your spam folder or ask your administrator to check the invitation.</p> : <form onSubmit={requestMail} aria-label="Request a fresh setup link">
+          <label>Email address<input required type="email" maxLength={320} autoComplete="email" value={email} onChange={e=>setEmail(e.target.value)}/></label>
+          <p data-account-help>Enter the address your invitation was sent to. A new link can be sent while your invitation is still valid.</p>
+          <button data-account-primary disabled={busy}>{busy?'Sending…':'Send a new setup link'}</button>
+        </form>}
+        <div data-account-entry><button disabled={busy} onClick={()=>void closeCallback()}>{session && !authNeeded?'Back':'Back to sign in'}</button></div>
+      </> : <button data-account-primary disabled={busy} onClick={() => void closeCallback(callback.type === 'recovery' ? 'recovery' : null)}>
         {callback.type === 'recovery' ? 'Request a new reset link' : session && !authNeeded ? 'Back' : 'Back to sign in'}
       </button> : !callbackEmail ? <>
         {!callbackFailure && <p>Continue to choose a new password for your account.</p>}
